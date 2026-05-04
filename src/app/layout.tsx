@@ -1,0 +1,56 @@
+import type { Metadata } from "next";
+import { Inter, Archivo_Black, JetBrains_Mono } from "next/font/google";
+import "./globals.css";
+import SmoothScroll from "@/components/SmoothScroll";
+import RevealObserver from "@/components/RevealObserver";
+
+const sans = Inter({
+  variable: "--font-sans-stack",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const display = Archivo_Black({
+  variable: "--font-display-stack",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  variable: "--font-mono-stack",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: "MakeIt — Members",
+  description:
+    "MakeIt — det interne univers for vores atleter, coaches og crew. Coaching, community og loyalitet samlet ét sted. Made in Denmark.",
+  metadataBase: new URL("https://members.nowmakeit.eu"),
+  openGraph: {
+    title: "MakeIt — Members",
+    description:
+      "Det interne univers for MakeIt-crewet. Coaching, community og loyalitet samlet ét sted.",
+    type: "website",
+  },
+  robots: { index: false, follow: false },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html
+      lang="da"
+      className={`${sans.variable} ${display.variable} ${mono.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
+      <body className="min-h-full flex flex-col grain vignette">
+        <SmoothScroll />
+        <RevealObserver />
+        {children}
+      </body>
+    </html>
+  );
+}

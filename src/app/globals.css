@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------- *
+ * MakeIt — design tokens (monochrome / strength editorial)
+ * ---------------------------------------------------------------- */
+:root {
+  /* Surfaces */
+  --bg:           #0A0A0B;
+  --bg-2:         #111113;
+  --bg-3:         #18181B;
+  --bg-elev:      #1F1F23;
+
+  /* Text */
+  --fg:           #F5F2EC;
+  --fg-dim:       #A8A6A0;
+  --fg-faint:     #56554F;
+
+  /* Lines */
+  --line:         rgba(245, 242, 236, 0.08);
+  --line-strong:  rgba(245, 242, 236, 0.18);
+  --line-bright:  rgba(245, 242, 236, 0.34);
+
+  /* Accents (still monochrome — depth via cool undertone) */
+  --steel:        #1A1D24;
+  --signal:       #F5F2EC; /* emphasis = white, not color */
+}
+
+@theme inline {
+  --color-bg:          var(--bg);
+  --color-bg-2:        var(--bg-2);
+  --color-bg-3:        var(--bg-3);
+  --color-bg-elev:     var(--bg-elev);
+  --color-fg:          var(--fg);
+  --color-fg-dim:      var(--fg-dim);
+  --color-fg-faint:    var(--fg-faint);
+  --color-line:        var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-line-bright: var(--line-bright);
+  --color-steel:       var(--steel);
+  --color-signal:      var(--signal);
+
+  --font-sans:    var(--font-sans-stack);
+  --font-display: var(--font-display-stack);
+  --font-mono:    var(--font-mono-stack);
+}
+
+/* ---------------------------------------------------------------- *
+ * Base
+ * ---------------------------------------------------------------- */
+* { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+html, body { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  letter-spacing: -0.01em;
+}
+
+::selection { background: var(--fg); color: var(--bg); }
+
+::-webkit-scrollbar       { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg-elev); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--line-bright); }
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ---------------------------------------------------------------- *
+ * Type system — strength editorial
+ * ---------------------------------------------------------------- */
+.font-display {
+  font-family: var(--font-display), Impact, "Helvetica Neue", sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.numeric {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* ---------------------------------------------------------------- *
+ * Surfaces & utilities
+ * ---------------------------------------------------------------- */
+.surface         { background: var(--bg-2); border: 1px solid var(--line); }
+.surface-2       { background: var(--bg-3); border: 1px solid var(--line); }
+.hairline        { border-color: var(--line); }
+.hairline-strong { border-color: var(--line-strong); }
+
+.grain::before {
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1   0 0 0 0 0.95   0 0 0 0 0.92   0 0 0 0.045 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: 0.55;
+  mix-blend-mode: overlay;
+}
+
+.vignette::after {
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background: radial-gradient(120% 80% at 50% 0%, transparent 40%, rgba(0,0,0,0.45) 100%);
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong) 20%, var(--line-strong) 80%, transparent);
+}
+
+/* Marquee */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 38s linear infinite;
+  will-change: transform;
+}
+
+/* Focus ring */
+*:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Reveal-on-scroll */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 900ms cubic-bezier(.2,.7,.2,1), transform 900ms cubic-bezier(.2,.7,.2,1);
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.5rem;
+  height: 2.75rem;
+  padding: 0 1.25rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fg);
+  transition: background 220ms ease, color 220ms ease, border-color 220ms ease, transform 220ms ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.btn-primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.btn-primary:hover { background: transparent; color: var(--fg); }
+.btn-ghost { border-color: transparent; color: var(--fg-dim); }
+.btn-ghost:hover { background: var(--bg-3); color: var(--fg); border-color: var(--line); }
+.btn-sm { height: 2.25rem; padding: 0 0.875rem; font-size: 0.6875rem; }
+
+/* Pulse dot */
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 242, 236, 0.55); }
+  50%      { box-shadow: 0 0 0 6px rgba(245, 242, 236, 0); }
+}
+.pulse-dot {
+  width: 8px; height: 8px; border-radius: 999px; background: var(--fg);
+  animation: pulseDot 1.8s ease-out infinite;
+}
+
+/* Input */
+.field {
+  width: 100%;
+  height: 3rem;
+  padding: 0 1rem;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--fg);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  transition: border-color 200ms ease, background 200ms ease;
+}
+.field:hover  { border-color: var(--line-strong); }
+.field:focus  { border-color: var(--fg); background: var(--bg); outline: none; }
+.field::placeholder { color: var(--fg-faint); }
+
+/* Card hover lift */
+.lift { transition: transform 380ms cubic-bezier(.2,.7,.2,1), border-color 380ms ease, background 380ms ease; }
+.lift:hover { transform: translateY(-3px); border-color: var(--line-strong); }
