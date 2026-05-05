@@ -10,7 +10,7 @@ export default function MarketingFooter() {
           <div className="md:col-span-5">
             <Logo />
             <p className="mt-6 text-fg-dim max-w-md text-sm leading-relaxed">
-              MakeIt Members er det interne univers for vores crew, atleter og coaches.
+              MakeIt // HQ er det interne univers for vores crew, atleter og coaches.
               Webshoppen{" "}
               <a href="https://www.nowmakeit.eu" className="underline hover:text-fg">
                 nowmakeit.eu

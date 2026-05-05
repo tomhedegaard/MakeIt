@@ -24,14 +24,14 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MakeIt — Members",
+  title: "MakeIt // HQ",
   description:
-    "MakeIt — det interne univers for vores atleter, coaches og crew. Coaching, community og loyalitet samlet ét sted. Made in Denmark.",
-  metadataBase: new URL("https://members.nowmakeit.eu"),
+    "MakeIt // HQ — det interne univers for vores atleter, coaches og crew. Coaching, community, events og loyalitet samlet ét sted. Made in Denmark.",
+  metadataBase: new URL("https://hq.nowmakeit.eu"),
   openGraph: {
-    title: "MakeIt — Members",
+    title: "MakeIt // HQ",
     description:
-      "Det interne univers for MakeIt-crewet. Coaching, community og loyalitet samlet ét sted.",
+      "Det interne univers for MakeIt-crewet. Coaching, community, events og loyalitet samlet ét sted.",
     type: "website",
   },
   robots: { index: false, follow: false },

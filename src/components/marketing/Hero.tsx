@@ -23,7 +23,9 @@ export default function Hero() {
           className="flex items-center gap-3 mb-10"
         >
           <span className="pulse-dot" />
-          <span className="eyebrow">Closed Beta · Invite only · est. 2026</span>
+          <span className="eyebrow">
+            MakeIt <span className="text-fg-faint">//</span> HQ &nbsp;·&nbsp; Closed Beta · Invite only · est. 2026
+          </span>
         </motion.div>
 
         <motion.h1

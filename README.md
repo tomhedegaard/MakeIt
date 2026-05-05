@@ -1,9 +1,9 @@
-# MakeIt — Members
+# MakeIt // HQ
 
 Det interne univers for MakeIt-crewet. Lukket beta. Bygget separat fra
 webshoppen [nowmakeit.eu](https://www.nowmakeit.eu) — webshoppen røres ikke.
 
-> Coaching · Community · Reps loyalty program — samlet ét sted.
+> Coaching · Community · Events · Reps loyalty program — samlet ét sted.
 
 ---
 

@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { isValidInvite, SESSION_COOKIE } from "@/lib/auth";
 
 export const metadata = {
-  title: "Log ind — MakeIt",
+  title: "Log ind — MakeIt // HQ",
 };
 
 async function login(formData: FormData) {
