@@ -2,6 +2,7 @@ import MarketingNav from "@/components/marketing/MarketingNav";
 import Hero from "@/components/marketing/Hero";
 import CrewSection from "@/components/marketing/CrewSection";
 import PillarsSection from "@/components/marketing/PillarsSection";
+import ValueSection from "@/components/marketing/ValueSection";
 import OriginSection from "@/components/marketing/OriginSection";
 import MarketingFooter from "@/components/marketing/Footer";
 import Marquee from "@/components/Marquee";
@@ -25,6 +26,7 @@ export default function Home() {
         />
         <CrewSection />
         <PillarsSection />
+        <ValueSection />
         <OriginSection />
       </main>
       <MarketingFooter />

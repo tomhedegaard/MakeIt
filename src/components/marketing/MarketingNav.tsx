@@ -12,11 +12,12 @@ export default function MarketingNav() {
           <Link href="/" aria-label="MakeIt" className="text-fg">
             <Logo />
           </Link>
-          <nav className="hidden md:flex items-center gap-8 text-[12px] tracking-[0.18em] uppercase text-fg-dim font-mono">
+          <nav className="hidden md:flex items-center gap-7 text-[12px] tracking-[0.18em] uppercase text-fg-dim font-mono">
             <a href="#crew"     className="hover:text-fg transition-colors">Crew</a>
             <a href="#coaching" className="hover:text-fg transition-colors">Coaching</a>
             <a href="#community" className="hover:text-fg transition-colors">Community</a>
             <a href="#reps"     className="hover:text-fg transition-colors">Reps</a>
+            <a href="#how"      className="hover:text-fg transition-colors">Pris &amp; AI</a>
             <a href="#origin"   className="hover:text-fg transition-colors">Made in DK</a>
           </nav>
           <div className="flex items-center gap-2">
