@@ -24,7 +24,7 @@ export default function Hero() {
         >
           <span className="pulse-dot" />
           <span className="eyebrow">
-            MakeIt <span className="text-fg-faint">//</span> HQ &nbsp;·&nbsp; Closed Beta · Invite only · est. 2026
+            MakeIt <span className="text-fg-faint">{"//"}</span> HQ &nbsp;·&nbsp; Closed Beta · Invite only · est. 2026
           </span>
         </motion.div>
 

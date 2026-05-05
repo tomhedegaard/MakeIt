@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Archivo_Black, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -35,6 +35,14 @@ export const metadata: Metadata = {
     type: "website",
   },
   robots: { index: false, follow: false },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0A0A0B",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

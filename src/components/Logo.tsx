@@ -28,7 +28,7 @@ export default function Logo({
       </svg>
       <span className="font-display text-[0.95rem] tracking-[-0.02em] leading-none">
         MAKEIT
-        <span className="mx-1.5 text-fg-faint" aria-hidden>//</span>
+        <span className="mx-1.5 text-fg-faint" aria-hidden>{"//"}</span>
         HQ
       </span>
     </div>

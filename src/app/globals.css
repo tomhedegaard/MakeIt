@@ -210,3 +210,171 @@ html.lenis, html.lenis body { height: auto; }
 /* Card hover lift */
 .lift { transition: transform 380ms cubic-bezier(.2,.7,.2,1), border-color 380ms ease, background 380ms ease; }
 .lift:hover { transform: translateY(-3px); border-color: var(--line-strong); }
+
+/* ---------------------------------------------------------------- *
+ * Mobile / safe-area helpers
+ * ---------------------------------------------------------------- */
+:root {
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --tabbar-h:    64px;
+}
+
+.h-dvh   { height: 100dvh; }
+.minh-dvh { min-height: 100dvh; }
+.pb-tabbar { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 8px); }
+
+/* ---------------------------------------------------------------- *
+ * Stepper (weight / reps quick input)
+ * ---------------------------------------------------------------- */
+.stepper {
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  align-items: stretch;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg-2);
+  user-select: none;
+}
+.stepper-btn {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  color: var(--fg);
+  background: var(--bg-3);
+  transition: background 160ms ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.stepper-btn:active { background: var(--bg-elev); }
+.stepper-btn:disabled { color: var(--fg-faint); }
+
+.stepper-value {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 0.625rem 0;
+}
+.stepper-num {
+  font-family: var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.stepper-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin-top: 0.25rem;
+}
+
+/* ---------------------------------------------------------------- *
+ * Pill group (RPE selector)
+ * ---------------------------------------------------------------- */
+.pillgroup { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill {
+  flex: 1 1 0;
+  min-width: 44px;
+  height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.pill[data-active="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+
+/* ---------------------------------------------------------------- *
+ * Bottom Sheet (Radix Dialog)
+ * ---------------------------------------------------------------- */
+.sheet-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 60;
+  animation: sheet-fade 220ms cubic-bezier(.2,.7,.2,1);
+}
+.sheet-content {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  background: var(--bg-2);
+  border-top: 1px solid var(--line-strong);
+  border-radius: 18px 18px 0 0;
+  padding: 18px 18px calc(18px + var(--safe-bottom));
+  z-index: 61;
+  max-height: 92dvh;
+  overflow-y: auto;
+  animation: sheet-up 320ms cubic-bezier(.2,.7,.2,1);
+}
+.sheet-grabber {
+  width: 38px; height: 4px; border-radius: 2px;
+  background: var(--line-bright);
+  margin: 0 auto 12px;
+}
+@keyframes sheet-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sheet-up   { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+/* ---------------------------------------------------------------- *
+ * Mobile tab-bar
+ * ---------------------------------------------------------------- */
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  background: rgba(10, 10, 11, 0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line);
+  padding: 0 4px calc(var(--safe-bottom));
+  z-index: 50;
+}
+.tabbar-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: var(--tabbar-h);
+}
+.tab {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px;
+  color: var(--fg-faint);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+.tab[data-active="true"] { color: var(--fg); }
+.tab[data-active="true"]::before {
+  content: "";
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 24px; height: 2px;
+  background: var(--fg);
+  border-radius: 0 0 2px 2px;
+}
+.tab-icon { width: 22px; height: 22px; }
+
+/* ---------------------------------------------------------------- *
+ * Big touch primary (mobile-first session CTA)
+ * ---------------------------------------------------------------- */
+.btn-xl {
+  height: 64px;
+  padding: 0 24px;
+  font-size: 0.8125rem;
+  letter-spacing: 0.18em;
+  border-radius: 16px;
+  width: 100%;
+}
+
+/* Disable iOS double-tap-zoom for app surfaces */
+.touch-app { touch-action: manipulation; }

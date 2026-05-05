@@ -8,6 +8,7 @@ const PROTECTED = [
   "/community",
   "/reps",
   "/profile",
+  "/session",
 ];
 
 export function middleware(req: NextRequest) {
@@ -26,5 +27,12 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/coaching/:path*", "/community/:path*", "/reps/:path*", "/profile/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/coaching/:path*",
+    "/community/:path*",
+    "/reps/:path*",
+    "/profile/:path*",
+    "/session/:path*",
+  ],
 };

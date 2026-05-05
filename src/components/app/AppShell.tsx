@@ -6,13 +6,14 @@ import Logo from "@/components/Logo";
 import { cn } from "@/lib/utils";
 import type { Member } from "@/lib/auth";
 import { logoutAction } from "@/app/(app)/actions";
+import MobileTabBar from "@/components/app/MobileTabBar";
 
 const NAV = [
-  { href: "/dashboard", label: "Overview", num: "01" },
-  { href: "/coaching",  label: "Coaching", num: "02" },
-  { href: "/community", label: "Community", num: "03" },
+  { href: "/dashboard", label: "Today",     num: "01" },
+  { href: "/coaching",  label: "Træn",      num: "02" },
+  { href: "/community", label: "Crew",      num: "03" },
   { href: "/reps",      label: "Reps",      num: "04" },
-  { href: "/profile",   label: "Profile",   num: "05" },
+  { href: "/profile",   label: "Mig",       num: "05" },
 ];
 
 export default function AppShell({
@@ -23,10 +24,17 @@ export default function AppShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  // Immersive mode for the active workout — hide chrome.
+  const immersive = pathname?.startsWith("/session");
+
+  if (immersive) {
+    return <div className="relative z-10 flex-1 minh-dvh">{children}</div>;
+  }
 
   return (
-    <div className="relative z-10 flex min-h-screen flex-1">
-      <aside className="hidden md:flex w-[260px] shrink-0 flex-col border-r hairline bg-bg-2/40">
+    <div className="relative z-10 flex flex-1 minh-dvh">
+      {/* Desktop sidebar (≥ lg) */}
+      <aside className="hidden lg:flex w-[260px] shrink-0 flex-col border-r hairline bg-bg-2/40 sticky top-0 h-dvh">
         <div className="px-6 py-6 border-b hairline">
           <Logo />
         </div>
@@ -81,13 +89,23 @@ export default function AppShell({
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="md:hidden flex h-14 items-center justify-between px-5 border-b hairline">
+        {/* Mobile top header */}
+        <header className="lg:hidden flex h-14 items-center justify-between px-5 border-b hairline sticky top-0 z-30 bg-bg/85 backdrop-blur">
           <Logo />
-          <span className="eyebrow">@{member.handle}</span>
+          <Link
+            href="/profile"
+            className="size-9 rounded-full surface-2 flex items-center justify-center text-xs font-mono uppercase"
+            aria-label="Min profil"
+          >
+            {member.handle.slice(0, 2)}
+          </Link>
         </header>
 
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pb-tabbar lg:pb-0">{children}</main>
       </div>
+
+      {/* Mobile tab-bar */}
+      <MobileTabBar />
     </div>
   );
 }
