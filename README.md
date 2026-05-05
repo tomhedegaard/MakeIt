@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MakeIt — Members
 
-## Getting Started
+Det interne univers for MakeIt-crewet. Lukket beta. Bygget separat fra
+webshoppen [nowmakeit.eu](https://www.nowmakeit.eu) — webshoppen røres ikke.
 
-First, run the development server:
+> Coaching · Community · Reps loyalty program — samlet ét sted.
+
+---
+
+## Quick start (lokalt på din Mac)
+
+Du skal have **Node.js 20+** installeret. Tjek med `node --version`.
+Hvis du ikke har det: `brew install node` eller hent fra [nodejs.org](https://nodejs.org).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# 1) Klon repoet og skift til feature-branchen
+git clone https://github.com/tomhedegaard/MakeIt.git
+cd MakeIt
+git checkout claude/makeit-online-platform-XF2UE
+
+# 2) Installer dependencies
+npm install
+
+# 3) Start dev-serveren
+npm run dev -- -p 3002
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Åbn så [http://localhost:3002](http://localhost:3002) i Chrome.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Test-koder til login
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+På `/login` bruger du én af disse invite-koder under beta:
 
-## Learn More
+```
+ANTON-01
+MAKEIT-CREW
+STRAPIT-50K
+FOUNDERS-2026
+AMAGERBRO-169
+```
 
-To learn more about Next.js, take a look at the following resources:
+Mock-auth sætter en cookie (`mi_session`) i 30 dage. Log ud via sidebar
+nederst til venstre.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Ruter
 
-## Deploy on Vercel
+| Rute         | Beskyttet | Beskrivelse                                             |
+| ------------ | :-------: | ------------------------------------------------------- |
+| `/`          |     —     | Marketing-landing for inviterede                        |
+| `/login`     |     —     | Invite-kode adgang                                      |
+| `/dashboard` |     ✓     | Overview, KPI, aktivt program, crew-aktivitet           |
+| `/coaching`  |     ✓     | 12-ugers programmer + 1:1                               |
+| `/community` |     ✓     | Live feed, challenges, leaderboard, IRL-meets           |
+| `/reps`      |     ✓     | Loyalty: 4 tiers, earn-mekanik, reward shop             |
+| `/profile`   |     ✓     | Lifts på record, indstillinger                          |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Stack
+
+- **Next.js 16** (App Router) + **React 19** + **TypeScript**
+- **Tailwind CSS v4** + custom design tokens (CSS-variabler)
+- **Framer Motion** — hero-stagger, transitions
+- **Lenis** — smooth scroll
+- **JetBrains Mono · Inter · Archivo Black** via `next/font/google`
+
+### Designsprog
+Monokromt, strength-editorial. Sort `#0A0A0B`, off-white `#F5F2EC`, fire grader linjer, ingen farve-accent. Bold display-typografi, tight tracking, store tal.
+
+---
+
+## Scripts
+
+```bash
+npm run dev       # dev server (Turbopack)
+npm run build     # produktion build + typecheck
+npm run start     # serve production build
+npm run lint      # ESLint
+```
+
+---
+
+## Mappestruktur
+
+```
+src/
+├─ app/
+│  ├─ (app)/                # Beskyttede ruter (sidebar layout)
+│  │  ├─ dashboard/
+│  │  ├─ coaching/
+│  │  ├─ community/
+│  │  ├─ reps/
+│  │  ├─ profile/
+│  │  ├─ layout.tsx         # AppShell + auth guard
+│  │  └─ actions.ts         # logout server action
+│  ├─ login/                # Invite-kode form (server action)
+│  ├─ layout.tsx            # Root: fonts + smooth-scroll + observers
+│  ├─ page.tsx              # Marketing-landing
+│  └─ globals.css           # Design tokens + utilities
+├─ components/
+│  ├─ marketing/            # Hero, Crew, Pillars, Origin, Footer, Nav
+│  ├─ app/                  # AppShell, PageHeader
+│  └─ ...                   # Logo, Container, Marquee, SmoothScroll
+├─ lib/
+│  ├─ auth.ts               # Mock invite-codes + session
+│  └─ utils.ts              # cn(), formatNumber()
+└─ middleware.ts            # Beskytter /dashboard, /coaching, ...
+```
+
+---
+
+## Næste skridt (når intern beta er klar til mere)
+
+- [ ] Skift mock-auth ud med rigtig (Clerk eller Supabase Auth)
+- [ ] Database (Supabase Postgres) til crew-feed, PR-log, Reps-balance
+- [ ] Realtime feed med Supabase channels
+- [ ] CMS til coaching-programmer (Sanity eller Payload)
+- [ ] Email-notifikationer ved PR og challenge-vinder (Resend)
+- [ ] Custom domain — fx `members.nowmakeit.eu` eller `crew.nowmakeit.eu`
