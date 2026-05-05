@@ -8,6 +8,7 @@ import Stepper from "@/components/ui/Stepper";
 import RpeSelect from "@/components/ui/RpeSelect";
 import RestTimer from "@/components/ui/RestTimer";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
+import FormCheckSheet from "@/components/ui/FormCheckSheet";
 import Container from "@/components/Container";
 
 type Logged = Record<string, { weight: number; reps: number; rpe: number | null; done: boolean }>;
@@ -24,6 +25,7 @@ export default function SessionClient({ session }: { session: Session }) {
   const [resting, setResting] = useState<{ secs: number } | null>(null);
   const [doneOpen, setDoneOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
+  const [formCheckOpen, setFormCheckOpen] = useState(false);
 
   const ex = session.exercises[exIdx];
   const set = ex.sets[setIdx];
@@ -139,6 +141,24 @@ export default function SessionClient({ session }: { session: Session }) {
               {ex.cue}
             </p>
           ) : null}
+
+          <button
+            type="button"
+            onClick={() => setFormCheckOpen(true)}
+            className="mt-4 w-full text-left flex items-center justify-between gap-3 surface rounded-xl px-4 py-3 lift touch-app"
+          >
+            <span className="flex items-center gap-3">
+              <svg viewBox="0 0 24 24" className="size-4 text-fg-dim" fill="none" aria-hidden>
+                <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
+                <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
+              </svg>
+              <span className="text-sm">Form-check med AI</span>
+            </span>
+            <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+              ~6 sek →
+            </span>
+          </button>
         </section>
 
         {/* Targets row */}
@@ -313,6 +333,12 @@ export default function SessionClient({ session }: { session: Session }) {
           </div>
         </SheetContent>
       </Sheet>
+
+      <FormCheckSheet
+        open={formCheckOpen}
+        onOpenChange={setFormCheckOpen}
+        exerciseName={ex.name}
+      />
     </div>
   );
 }
