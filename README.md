@@ -27,7 +27,11 @@ npm run dev -- -p 3002
 
 Åbn så [http://localhost:3002](http://localhost:3002) i Chrome.
 
-### Test-koder til login
+> **Demo mode (default).** Uden Supabase env-vars kører appen med
+> mock-data og cookie-baseret invite-kode login. Perfekt til at klikke
+> rundt og demonstrere flow uden backend.
+
+### Test-koder til login (demo mode)
 
 På `/login` bruger du én af disse invite-koder under beta:
 
@@ -41,6 +45,65 @@ AMAGERBRO-169
 
 Mock-auth sætter en cookie (`mi_session`) i 30 dage. Log ud via sidebar
 nederst til venstre.
+
+---
+
+## Connected mode — kobl rigtig Supabase backend på (5 min)
+
+Når du vil have rigtig auth, persistens og data, sæt et Supabase-projekt
+op (gratis tier rækker langt). Appen skifter automatisk til magic-link
+login + database, så snart env-variablerne er sat.
+
+### 1. Opret Supabase-projekt
+
+1. Gå til [supabase.com](https://supabase.com), log ind, klik **New project**
+2. Vælg fx `makeit-hq` som navn, en region tæt på (Frankfurt), og et
+   stærkt database-password (gem det)
+3. Vent ~1 minut på projektet bliver klar
+
+### 2. Kør migrations
+
+I Supabase dashboard → **SQL Editor**:
+
+1. Kopier indholdet af `supabase/migrations/0001_init.sql` ind, kør det
+2. Kopier indholdet af `supabase/seed.sql` ind, kør det
+
+Det opretter alle tabeller (members, programs, sessions, posts, Reps,
+challenges, form-checks m.v.) med RLS-policies, triggers og demo-data.
+
+### 3. Sæt env-vars op
+
+```bash
+cp .env.example .env.local
+```
+
+I Supabase dashboard → **Settings → API**, kopier:
+
+- `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
+- `anon public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+Indsæt dem i `.env.local`.
+
+### 4. Konfigurer email
+
+I Supabase dashboard → **Authentication → URL Configuration**:
+
+- **Site URL**: `http://localhost:3002`
+- **Redirect URLs**: tilføj `http://localhost:3002/auth/callback`
+
+Magic-link mailen kommer fra Supabase's dev-mail-server som standard
+(forsinket op til 60 sek). Til produktion: tilkobl Resend, Postmark eller
+SendGrid via SMTP.
+
+### 5. Genstart dev-serveren
+
+```bash
+npm run dev -- -p 3002
+```
+
+Login-siden viser nu et **email + invite-kode**-form i stedet for det
+gamle cookie-form. Du modtager et login-link på mail; klik det → du er
+inde med en rigtig Supabase-session og en rigtig `members`-row i DB'en.
 
 ---
 
@@ -64,6 +127,8 @@ nederst til venstre.
 - **Tailwind CSS v4** + custom design tokens (CSS-variabler)
 - **Framer Motion** — hero-stagger, transitions
 - **Lenis** — smooth scroll
+- **Radix UI Dialog** — bottom sheets, modaler
+- **Supabase** — auth (magic-link), Postgres, RLS, Storage *(connected mode)*
 - **JetBrains Mono · Inter · Archivo Black** via `next/font/google`
 
 ### Designsprog
@@ -87,35 +152,52 @@ npm run lint      # ESLint
 ```
 src/
 ├─ app/
-│  ├─ (app)/                # Beskyttede ruter (sidebar layout)
-│  │  ├─ dashboard/
-│  │  ├─ coaching/
-│  │  ├─ community/
-│  │  ├─ reps/
-│  │  ├─ profile/
-│  │  ├─ layout.tsx         # AppShell + auth guard
+│  ├─ (app)/                # Beskyttede ruter (sidebar/tab-bar layout)
+│  │  ├─ dashboard/         # Today
+│  │  ├─ coaching/          # Træn
+│  │  ├─ community/         # Crew
+│  │  ├─ reps/              # Reps loyalty
+│  │  ├─ profile/           # Mig
+│  │  ├─ session/[id]/      # Aktiv workout-flow (immersiv)
+│  │  ├─ layout.tsx
 │  │  └─ actions.ts         # logout server action
-│  ├─ login/                # Invite-kode form (server action)
+│  ├─ auth/callback/        # Supabase magic-link callback
+│  ├─ login/                # Login (dual mode)
 │  ├─ layout.tsx            # Root: fonts + smooth-scroll + observers
 │  ├─ page.tsx              # Marketing-landing
 │  └─ globals.css           # Design tokens + utilities
 ├─ components/
-│  ├─ marketing/            # Hero, Crew, Pillars, Origin, Footer, Nav
-│  ├─ app/                  # AppShell, PageHeader
+│  ├─ marketing/            # Hero, Crew, Pillars, Value, Origin, Footer, Nav
+│  ├─ app/                  # AppShell (sidebar + mobile tab-bar), PageHeader
+│  ├─ community/            # PostComposer
+│  ├─ ui/                   # Sheet, Stepper, RpeSelect, RestTimer, FormCheckSheet
 │  └─ ...                   # Logo, Container, Marquee, SmoothScroll
 ├─ lib/
-│  ├─ auth.ts               # Mock invite-codes + session
-│  └─ utils.ts              # cn(), formatNumber()
-└─ middleware.ts            # Beskytter /dashboard, /coaching, ...
+│  ├─ auth.ts               # Auth (dual mode: Supabase or mock)
+│  ├─ pricing.ts            # Centralized price placeholders
+│  ├─ workout.ts            # Workout types + mock data
+│  ├─ utils.ts              # cn(), formatNumber()
+│  └─ supabase/             # Server / browser / middleware clients + env gate
+└─ middleware.ts            # Beskytter /dashboard, /coaching, /session, ...
+
+supabase/
+├─ migrations/0001_init.sql  # Schema + RLS + triggers
+└─ seed.sql                  # Invite codes, exercises, programs, challenges
 ```
 
 ---
 
-## Næste skridt (når intern beta er klar til mere)
+## Næste skridt
 
-- [ ] Skift mock-auth ud med rigtig (Clerk eller Supabase Auth)
-- [ ] Database (Supabase Postgres) til crew-feed, PR-log, Reps-balance
+- [x] Database + auth (Supabase, dual-mode kører)
+- [ ] Migrer alle sider til at læse fra DB (start med `/dashboard`)
+- [ ] Persistér aktiv session: gem logged sets, pause/genoptag
+- [ ] Onboarding-flow (mål, equipment, 1RM)
+- [ ] AI-program-generation v1 (LLM bygger programmet ud fra profil)
+- [ ] AI form-check pipeline (video → pose → LLM-feedback → coach review)
+- [ ] Coach-dashboard (program-builder, review-kø, medlemsoversigt)
+- [ ] Stripe abonnement + 1:1 add-on
+- [ ] Shopify Storefront-bro (vis produkter, brug Reps som rabat)
+- [ ] Resend / SMTP for production magic-link mails
 - [ ] Realtime feed med Supabase channels
-- [ ] CMS til coaching-programmer (Sanity eller Payload)
-- [ ] Email-notifikationer ved PR og challenge-vinder (Resend)
-- [ ] Custom domain — fx `members.nowmakeit.eu` eller `crew.nowmakeit.eu`
+- [ ] Custom domain — `hq.nowmakeit.eu`

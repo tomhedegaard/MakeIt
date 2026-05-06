@@ -1,13 +1,16 @@
 /**
- * Mock auth — closed beta only. Replace with real auth later.
- * A handful of invite codes are hardcoded for the internal alpha.
- * Session is a signed-ish opaque cookie value (no real signing yet — beta).
+ * Auth — dual mode.
+ * - When SUPABASE_ENABLED: we use Supabase Auth + the public.members table.
+ * - Otherwise: we fall back to the mock invite-code/cookie session so the
+ *   demo keeps working locally without a backend.
  */
 import { cookies } from "next/headers";
+import { createClient } from "./supabase/server";
+import { SUPABASE_ENABLED } from "./supabase/env";
 
 export const SESSION_COOKIE = "mi_session";
 
-const INVITE_CODES = new Set([
+const MOCK_INVITES = new Set([
   "ANTON-01",
   "MAKEIT-CREW",
   "FOUNDERS-2026",
@@ -15,23 +18,59 @@ const INVITE_CODES = new Set([
   "AMAGERBRO-169",
 ]);
 
+export type Tier = "Lifter" | "Athlete" | "Beast" | "Legend";
+
 export type Member = {
+  id: string;
   handle: string;
-  tier: "Lifter" | "Athlete" | "Beast" | "Legend";
+  displayName?: string | null;
+  email?: string | null;
+  tier: Tier;
   joinedAt: string;
 };
 
 const MOCK_MEMBER: Member = {
+  id: "mock-anton",
   handle: "anton",
+  displayName: "Anton",
+  email: "anton@nowmakeit.eu",
   tier: "Legend",
   joinedAt: "2024-09-12",
 };
 
-export function isValidInvite(code: string) {
-  return INVITE_CODES.has(code.trim().toUpperCase());
+export function isValidMockInvite(code: string) {
+  return MOCK_INVITES.has(code.trim().toUpperCase());
 }
 
 export async function getSession(): Promise<Member | null> {
+  if (SUPABASE_ENABLED) {
+    const supabase = await createClient();
+    if (!supabase) return null;
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return null;
+
+    const { data: m } = await supabase
+      .from("members")
+      .select("id, handle, display_name, email, tier, joined_at")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (!m) return null;
+
+    return {
+      id: m.id,
+      handle: m.handle,
+      displayName: m.display_name,
+      email: m.email,
+      tier: m.tier as Tier,
+      joinedAt: m.joined_at,
+    };
+  }
+
+  // Demo mode — cookie-based mock
   const c = await cookies();
   const v = c.get(SESSION_COOKIE)?.value;
   if (!v) return null;
