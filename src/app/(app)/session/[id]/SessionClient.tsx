@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Session } from "@/lib/workout";
@@ -10,22 +10,67 @@ import RestTimer from "@/components/ui/RestTimer";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
 import Container from "@/components/Container";
+import { logSetAction, completeSessionAction } from "./actions";
 
-type Logged = Record<string, { weight: number; reps: number; rpe: number | null; done: boolean }>;
+type Logged = Record<
+  string,
+  { weight: number; reps: number; rpe: number | null; done: boolean }
+>;
 
 function setKey(exId: string, setId: string) {
   return `${exId}:${setId}`;
 }
 
+/**
+ * Hydrate `logged` from any sets that already have logged_at set in DB.
+ */
+function buildInitialLogged(session: Session): Logged {
+  const m: Logged = {};
+  for (const ex of session.exercises) {
+    for (const s of ex.sets) {
+      if (s.done) {
+        m[setKey(ex.id, s.id)] = {
+          weight: s.loggedWeight ?? s.targetWeight,
+          reps: s.loggedReps ?? s.targetReps,
+          rpe: s.loggedRpe ?? s.targetRpe ?? null,
+          done: true,
+        };
+      }
+    }
+  }
+  return m;
+}
+
+/**
+ * Find the first not-yet-logged set across all exercises.
+ */
+function findResumePoint(session: Session): { exIdx: number; setIdx: number } {
+  for (let i = 0; i < session.exercises.length; i++) {
+    const ex = session.exercises[i];
+    for (let j = 0; j < ex.sets.length; j++) {
+      if (!ex.sets[j].done) return { exIdx: i, setIdx: j };
+    }
+  }
+  // All done — point at the last set so UI doesn't crash.
+  const last = session.exercises.length - 1;
+  return { exIdx: last, setIdx: session.exercises[last].sets.length - 1 };
+}
+
 export default function SessionClient({ session }: { session: Session }) {
   const router = useRouter();
-  const [exIdx, setExIdx] = useState(0);
-  const [setIdx, setSetIdx] = useState(0);
-  const [logged, setLogged] = useState<Logged>({});
+
+  const initialLogged = useMemo(() => buildInitialLogged(session), [session]);
+  const initialPoint = useMemo(() => findResumePoint(session), [session]);
+
+  const [exIdx, setExIdx] = useState(initialPoint.exIdx);
+  const [setIdx, setSetIdx] = useState(initialPoint.setIdx);
+  const [logged, setLogged] = useState<Logged>(initialLogged);
   const [resting, setResting] = useState<{ secs: number } | null>(null);
   const [doneOpen, setDoneOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
   const [formCheckOpen, setFormCheckOpen] = useState(false);
+  const [repsAwarded, setRepsAwarded] = useState<number>(250);
+  const [, startTransition] = useTransition();
 
   const ex = session.exercises[exIdx];
   const set = ex.sets[setIdx];
@@ -55,24 +100,39 @@ export default function SessionClient({ session }: { session: Session }) {
   }
 
   function logSet() {
+    // Optimistic local update
     const updated: Logged = {
       ...logged,
       [k]: { ...current, done: true },
     };
     setLogged(updated);
 
+    // Persist (no-op in demo mode)
+    startTransition(async () => {
+      await logSetAction({
+        sessionId: session.id,
+        setId: set.id,
+        weight: current.weight,
+        reps: current.reps,
+        rpe: current.rpe,
+      });
+    });
+
     const isLastSetOfEx = setIdx === ex.sets.length - 1;
     const isLastEx = exIdx === session.exercises.length - 1;
 
     if (isLastSetOfEx && isLastEx) {
+      // Complete the session and award Reps
+      startTransition(async () => {
+        const res = await completeSessionAction(session.id);
+        if (res.ok) setRepsAwarded(res.repsAwarded || 250);
+      });
       setDoneOpen(true);
       return;
     }
 
-    // Start rest timer
     if (set.restSec && set.restSec > 0) setResting({ secs: set.restSec });
 
-    // Advance pointer
     if (isLastSetOfEx) {
       setExIdx(exIdx + 1);
       setSetIdx(0);
@@ -80,6 +140,15 @@ export default function SessionClient({ session }: { session: Session }) {
       setSetIdx(setIdx + 1);
     }
   }
+
+  const sessionVolume = useMemo(
+    () =>
+      Object.values(logged).reduce(
+        (a, v) => a + (v.done ? v.weight * v.reps : 0),
+        0
+      ),
+    [logged]
+  );
 
   return (
     <div className="minh-dvh flex flex-col bg-bg">
@@ -123,14 +192,17 @@ export default function SessionClient({ session }: { session: Session }) {
         <section className="surface-2 rounded-2xl p-5 lg:p-7">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <div className="eyebrow mb-1">Øvelse {exIdx + 1} / {session.exercises.length}</div>
+              <div className="eyebrow mb-1">
+                Øvelse {exIdx + 1} / {session.exercises.length}
+              </div>
               <h1 className="font-display text-3xl lg:text-4xl leading-[1]">
                 {ex.name}
               </h1>
             </div>
             <div className="text-right">
               <div className="numeric text-3xl lg:text-4xl">
-                {setIdx + 1}<span className="text-fg-dim text-base">/{ex.sets.length}</span>
+                {setIdx + 1}
+                <span className="text-fg-dim text-base">/{ex.sets.length}</span>
               </div>
               <div className="eyebrow">sæt</div>
             </div>
@@ -165,7 +237,10 @@ export default function SessionClient({ session }: { session: Session }) {
         <section className="grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
           <div className="bg-bg-2 p-4 text-center">
             <div className="eyebrow mb-1">Mål</div>
-            <div className="numeric text-xl">{set.targetWeight}<span className="text-fg-dim text-sm">kg</span></div>
+            <div className="numeric text-xl">
+              {set.targetWeight}
+              <span className="text-fg-dim text-sm">kg</span>
+            </div>
           </div>
           <div className="bg-bg-2 p-4 text-center">
             <div className="eyebrow mb-1">Reps</div>
@@ -173,9 +248,7 @@ export default function SessionClient({ session }: { session: Session }) {
           </div>
           <div className="bg-bg-2 p-4 text-center">
             <div className="eyebrow mb-1">RPE</div>
-            <div className="numeric text-xl">
-              {set.targetRpe ? set.targetRpe : "—"}
-            </div>
+            <div className="numeric text-xl">{set.targetRpe ? set.targetRpe : "—"}</div>
           </div>
         </section>
 
@@ -202,13 +275,10 @@ export default function SessionClient({ session }: { session: Session }) {
         {/* RPE */}
         <section>
           <div className="eyebrow mb-3">RPE — hvor tungt føltes det?</div>
-          <RpeSelect
-            value={current.rpe}
-            onChange={(rpe) => patch({ rpe })}
-          />
+          <RpeSelect value={current.rpe} onChange={(rpe) => patch({ rpe })} />
         </section>
 
-        {/* Remaining sets list */}
+        {/* Sets list for this exercise */}
         <section>
           <div className="eyebrow mb-3">Sæt i dette øvelse</div>
           <ol className="surface-2 rounded-lg divide-y hairline overflow-hidden">
@@ -251,10 +321,18 @@ export default function SessionClient({ session }: { session: Session }) {
         style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
       >
         <div className="mx-auto max-w-3xl px-4 lg:px-6 pt-3 flex items-center gap-3">
-          <button type="button" className="btn btn-sm" onClick={() => setResting({ secs: 90 })}>
+          <button
+            type="button"
+            className="btn btn-sm"
+            onClick={() => setResting({ secs: 90 })}
+          >
             Hvil
           </button>
-          <button type="button" className="btn btn-primary btn-xl flex-1" onClick={logSet}>
+          <button
+            type="button"
+            className="btn btn-primary btn-xl flex-1"
+            onClick={logSet}
+          >
             Log sæt →
           </button>
         </div>
@@ -295,16 +373,15 @@ export default function SessionClient({ session }: { session: Session }) {
               <div className="bg-bg-2 p-3 text-center">
                 <div className="eyebrow mb-1">Volumen</div>
                 <div className="numeric text-2xl">
-                  {Object.values(logged).reduce(
-                    (a, v) => a + (v.done ? v.weight * v.reps : 0),
-                    0
-                  )}
+                  {sessionVolume}
                   <span className="text-fg-dim text-sm">kg</span>
                 </div>
               </div>
               <div className="bg-bg-2 p-3 text-center">
                 <div className="eyebrow mb-1">Reps</div>
-                <div className="numeric text-2xl">+ 250</div>
+                <div className="numeric text-2xl">
+                  + {repsAwarded}
+                </div>
               </div>
             </div>
 
@@ -318,7 +395,10 @@ export default function SessionClient({ session }: { session: Session }) {
 
       {/* Exit confirm */}
       <Sheet open={exitOpen} onOpenChange={setExitOpen}>
-        <SheetContent title="Afslut session?" description="Dine loggede sæt gemmes — du kan fortsætte senere.">
+        <SheetContent
+          title="Afslut session?"
+          description="Dine loggede sæt er allerede gemt — du kan fortsætte senere."
+        >
           <div className="grid grid-cols-2 gap-3 mt-4">
             <button type="button" className="btn" onClick={() => setExitOpen(false)}>
               Bliv
