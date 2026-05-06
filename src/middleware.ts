@@ -10,6 +10,7 @@ const PROTECTED = [
   "/reps",
   "/profile",
   "/session",
+  "/onboarding",
 ];
 
 function needsAuth(pathname: string) {

@@ -27,6 +27,7 @@ export type Member = {
   email?: string | null;
   tier: Tier;
   joinedAt: string;
+  onboardedAt?: string | null;
 };
 
 const MOCK_MEMBER: Member = {
@@ -36,6 +37,7 @@ const MOCK_MEMBER: Member = {
   email: "anton@nowmakeit.eu",
   tier: "Legend",
   joinedAt: "2024-09-12",
+  onboardedAt: "2024-09-12T00:00:00Z",
 };
 
 export function isValidMockInvite(code: string) {
@@ -54,7 +56,7 @@ export async function getSession(): Promise<Member | null> {
 
     const { data: m } = await supabase
       .from("members")
-      .select("id, handle, display_name, email, tier, joined_at")
+      .select("id, handle, display_name, email, tier, joined_at, onboarded_at")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -67,6 +69,7 @@ export async function getSession(): Promise<Member | null> {
       email: m.email,
       tier: m.tier as Tier,
       joinedAt: m.joined_at,
+      onboardedAt: m.onboarded_at,
     };
   }
 

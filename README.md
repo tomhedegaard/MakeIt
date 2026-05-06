@@ -67,14 +67,16 @@ I Supabase dashboard → **SQL Editor**:
 
 1. Kopier indholdet af `supabase/migrations/0001_init.sql` ind, kør det
 2. Kopier indholdet af `supabase/migrations/0002_session_actions.sql` ind, kør det
-3. Kopier indholdet af `supabase/seed.sql` ind, kør det
+3. Kopier indholdet af `supabase/migrations/0003_member_profile.sql` ind, kør det
+4. Kopier indholdet af `supabase/seed.sql` ind, kør det
 
 Det opretter alle tabeller (members, programs, sessions, posts, Reps,
 challenges, form-checks m.v.) med RLS-policies, triggers, RPC-funktioner
 og demo-data.
 
-> **Tip**: Hvis du allerede har kørt 0001 fra en tidligere version,
-> behøver du kun at køre 0002 (idempotent — sikker at gentage).
+> **Tip**: Migrationerne er idempotente — du kan køre dem igen uden
+> bekymring. Hvis du allerede har kørt tidligere versioner, behøver du
+> kun at køre de nye numre.
 
 ### 3. Sæt env-vars op
 
