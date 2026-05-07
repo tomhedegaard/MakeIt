@@ -6,7 +6,7 @@
  *   - Following: letters, digits, _, ., -
  *   - Length 2-31 (matches public.members handle constraints in spirit)
  *
- * Examples that match:  @anton  @nina_dl  @maria.lift  @Munk
+ * Examples that match:  @Munk  @nina_dl  @maria.lift  @kasper_s
  * Examples that don't:  @1abc  @x  email-like name@host.com (the @ is preceded by a word char)
  */
 
