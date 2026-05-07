@@ -32,6 +32,29 @@ const KIND_LABELS: Record<string, string> = {
   digital: "Digital",
 };
 
+const TIER_THRESHOLDS = [
+  { name: "Lifter",  min: 0 },
+  { name: "Athlete", min: 1000 },
+  { name: "Beast",   min: 5000 },
+  { name: "Legend",  min: 15000 },
+] as const;
+
+function tierProgress(balance: number) {
+  const current = [...TIER_THRESHOLDS].reverse().find((t) => balance >= t.min)!;
+  const next = TIER_THRESHOLDS.find((t) => t.min > balance);
+  if (!next) {
+    return { current: current.name, next: null, toNext: null, pct: 100 };
+  }
+  const span = next.min - current.min;
+  const got = balance - current.min;
+  return {
+    current: current.name,
+    next: next.name,
+    toNext: next.min - balance,
+    pct: Math.round((got / span) * 100),
+  };
+}
+
 export default async function RepsPage() {
   const member = (await getSession())!;
 
@@ -40,6 +63,7 @@ export default async function RepsPage() {
     getMyRedemptions(member.id, 10),
     getRepsBalance(member.id),
   ]);
+  const progress = tierProgress(balance);
 
   return (
     <>
@@ -48,14 +72,31 @@ export default async function RepsPage() {
         title="Du arbejder. Du får."
         subtitle="Tjen Reps for hvad du allerede gør. Bruge dem på ting du faktisk vil have."
         right={
-          <div className="surface-2 rounded-lg px-6 py-4 text-right">
+          <div className="surface-2 rounded-lg px-6 py-4 text-right min-w-[220px]">
             <div className="eyebrow mb-1">Din balance</div>
             <div className="numeric text-4xl">
               {balance.toLocaleString("da-DK")}
             </div>
             <div className="text-xs text-fg-faint font-mono mt-1">
-              Tier: {member.tier}
+              Tier: {progress.current}
             </div>
+            {progress.next ? (
+              <>
+                <div className="mt-3 h-1 bg-bg-3 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-fg"
+                    style={{ width: `${progress.pct}%` }}
+                  />
+                </div>
+                <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-2">
+                  {progress.toNext?.toLocaleString("da-DK")} til {progress.next}
+                </div>
+              </>
+            ) : (
+              <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-3">
+                Topcap nået · ★
+              </div>
+            )}
           </div>
         }
       />
@@ -64,20 +105,38 @@ export default async function RepsPage() {
         <section>
           <div className="eyebrow mb-6">Tiers</div>
           <div className="grid gap-px bg-line border hairline md:grid-cols-4">
-            {TIERS.map((t) => (
-              <div key={t.name} className="bg-bg p-6">
-                <div className="font-display text-2xl mb-1">{t.name}</div>
-                <div className="numeric text-xs text-fg-dim mb-4">{t.range} Reps</div>
-                <ul className="space-y-2 text-sm text-fg/85">
-                  {t.perks.map((p) => (
-                    <li key={p} className="flex gap-2">
-                      <span className="text-fg-faint">·</span>
-                      <span>{p}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            {TIERS.map((t) => {
+              const active = t.name === progress.current;
+              return (
+                <div
+                  key={t.name}
+                  className="p-6 transition-colors"
+                  style={{
+                    background: active ? "var(--bg-3)" : "var(--bg)",
+                    borderColor: active ? "var(--line-bright)" : undefined,
+                  }}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="font-display text-2xl">{t.name}</div>
+                    {active ? (
+                      <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 inline-flex items-center gap-1.5">
+                        <span className="size-1.5 rounded-full bg-fg" />
+                        Du
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="numeric text-xs text-fg-dim mb-4">{t.range} Reps</div>
+                  <ul className="space-y-2 text-sm text-fg/85">
+                    {t.perks.map((p) => (
+                      <li key={p} className="flex gap-2">
+                        <span className="text-fg-faint">·</span>
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
         </section>
 
