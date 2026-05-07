@@ -335,7 +335,32 @@ function asHypertrophy(session: GeneratedSession): GeneratedSession {
  * Public API
  * ----------------------------------------------------------------- */
 
-export function generateProgram(profile: ProfileInput): {
+/**
+ * Public API — async dispatcher. When ANTHROPIC_API_KEY is set, we try
+ * Claude (Sonnet 4.6) first; on any failure we silently fall back to
+ * the rule-based generator. Both paths return the same shape.
+ */
+export async function generateProgram(profile: ProfileInput): Promise<{
+  programCode: string;
+  programName: string;
+  sessions: GeneratedSession[];
+}> {
+  if (process.env.ANTHROPIC_API_KEY) {
+    try {
+      const { generateWithClaude } = await import("./program-generator-claude");
+      const ai = await generateWithClaude(profile);
+      if (ai) return ai;
+    } catch (err) {
+      console.warn("[generator] Claude path failed, using rule-based:", err);
+    }
+  }
+  return generateRuleBased(profile);
+}
+
+/**
+ * Rule-based generator (deterministic). Always available as fallback.
+ */
+export function generateRuleBased(profile: ProfileInput): {
   programCode: string;
   programName: string;
   sessions: GeneratedSession[];

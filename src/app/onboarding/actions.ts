@@ -83,7 +83,7 @@ export async function completeOnboardingAction(formData: FormData) {
   if (profErr) redirect("/onboarding?err=save");
 
   // 2) Generate program week 1
-  const generated = generateProgram(profile);
+  const generated = await generateProgram(profile);
 
   // Resolve program template id (matching code)
   const { data: prog } = await supabase

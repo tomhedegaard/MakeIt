@@ -173,6 +173,32 @@ Stripe → **Settings → Billing → Customer portal** → aktivér og gem stan
 
 ---
 
+## AI program-generation (valgfrit)
+
+Onboarding-flowet bruger som standard en rule-based generator (skaleret
+af brugerens 1RM, mål og niveau). Du kan opgradere til **Claude
+(Sonnet 4.6)** for mere personlige programmer ved at sætte én env-var:
+
+```env
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+Når nøglen er sat:
+- Onboarding kalder Claude med medlemmets profil og en cached system-prompt
+- Sonnet 4.6 returnerer struktureret JSON via tool-use (Zod-valideret)
+- Vægte rundes til 2.5 kg og programmet skrives til DB som normalt
+- **Fallback**: hvis Claude fejler eller timer ud, bruges rule-based
+  uden at brugeren mærker noget
+
+**Cost-overvejelser**: System-prompten er ~3K tokens og caches mellem
+requests (5 min TTL). Andet kald koster ~0.1× af første. Med caching
+ligger en typisk onboarding på under 1 cent.
+
+Få en API-nøgle på [console.anthropic.com](https://console.anthropic.com)
+(starter med `$5` gratis kredit).
+
+---
+
 ## Ruter
 
 | Rute         | Beskyttet | Beskrivelse                                             |
