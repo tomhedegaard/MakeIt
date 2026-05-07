@@ -71,7 +71,8 @@ I Supabase dashboard → **SQL Editor**:
 4. Kopier indholdet af `supabase/migrations/0004_coach.sql` ind, kør det
 5. Kopier indholdet af `supabase/migrations/0005_subscriptions.sql` ind, kør det
 6. Kopier indholdet af `supabase/migrations/0006_form_check_storage.sql` ind, kør det
-7. Kopier indholdet af `supabase/seed.sql` ind, kør det
+7. Kopier indholdet af `supabase/migrations/0007_rewards.sql` ind, kør det
+8. Kopier indholdet af `supabase/seed.sql` ind, kør det
 
 Det opretter alle tabeller (members, programs, sessions, posts, Reps,
 challenges, form-checks m.v.) med RLS-policies, triggers, RPC-funktioner

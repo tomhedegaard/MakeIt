@@ -7,9 +7,10 @@ import { cn } from "@/lib/utils";
 import type { Member } from "@/lib/auth";
 
 const NAV = [
-  { href: "/coach",          label: "Overview", num: "01" },
-  { href: "/coach/members",  label: "Members",  num: "02" },
-  { href: "/coach/queue",    label: "Form-check kø", num: "03" },
+  { href: "/coach",             label: "Overview",        num: "01" },
+  { href: "/coach/members",     label: "Members",         num: "02" },
+  { href: "/coach/queue",       label: "Form-check kø",   num: "03" },
+  { href: "/coach/redemptions", label: "Reps-indløsninger", num: "04" },
 ];
 
 export default function CoachShell({

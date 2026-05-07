@@ -33,10 +33,11 @@ export default async function CoachOverviewPage() {
       </header>
 
       {/* KPI row */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline rounded-lg overflow-hidden">
+      <section className="grid grid-cols-2 md:grid-cols-5 gap-px bg-line border hairline rounded-lg overflow-hidden">
         <KPI label="Medlemmer"           value={overview.totalMembers} />
         <KPI label="Aktive programmer"   value={overview.activeAssignments} />
         <KPI label="Form-checks i kø"    value={overview.pendingFormChecks} pulse={overview.pendingFormChecks > 0} />
+        <KPI label="Reps-indløsninger"   value={overview.pendingRedemptions} pulse={overview.pendingRedemptions > 0} />
         <KPI label="Sessioner / uge"     value={overview.sessionsThisWeek} />
       </section>
 

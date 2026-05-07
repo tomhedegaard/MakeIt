@@ -9,6 +9,17 @@ export type CoachOverview = {
   activeAssignments: number;
   pendingFormChecks: number;
   sessionsThisWeek: number;
+  pendingRedemptions: number;
+};
+
+export type PendingRedemption = {
+  id: string;
+  memberHandle: string;
+  memberId: string;
+  rewardName: string;
+  costReps: number;
+  status: "pending" | "approved" | "shipped" | "fulfilled" | "cancelled";
+  redeemedAt: string;
 };
 
 export type MemberSummary = {
@@ -90,7 +101,14 @@ const MOCK_OVERVIEW: CoachOverview = {
   activeAssignments: 188,
   pendingFormChecks: 4,
   sessionsThisWeek: 642,
+  pendingRedemptions: 3,
 };
+
+const MOCK_PENDING_REDEMPTIONS: PendingRedemption[] = [
+  { id: "rd-mock-1", memberId: "m-nina",   memberHandle: "nina_dl",    rewardName: "Limited Cuff — Olive", costReps: 1200, status: "pending", redeemedAt: new Date(Date.now() - 1000 * 60 * 45).toISOString() },
+  { id: "rd-mock-2", memberId: "m-kasper", memberHandle: "kasper_s",   rewardName: "1:1 Form-check med Mikael", costReps: 2000, status: "pending", redeemedAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString() },
+  { id: "rd-mock-3", memberId: "m-maria",  memberHandle: "maria.lift", rewardName: "Custom-broderet strap", costReps: 3500, status: "approved", redeemedAt: new Date(Date.now() - 1000 * 60 * 60 * 22).toISOString() },
+];
 
 const MOCK_MEMBERS: MemberSummary[] = [
   { id: "m-nina",     handle: "nina_dl",    tier: "Beast",   programCode: "STR-12", programWeek: 6, lastSessionDate: "2026-05-04" },
@@ -192,7 +210,7 @@ export async function getCoachOverview(): Promise<CoachOverview> {
   const supabase = await createClient();
   if (!supabase) return MOCK_OVERVIEW;
 
-  const [members, assignments, formChecks, sessions] = await Promise.all([
+  const [members, assignments, formChecks, sessions, redemptions] = await Promise.all([
     supabase.from("members").select("id", { count: "exact", head: true }),
     supabase.from("program_assignments").select("id", { count: "exact", head: true }).eq("status", "active"),
     supabase.from("form_checks").select("id", { count: "exact", head: true }).is("coach_reviewed_at", null),
@@ -201,6 +219,10 @@ export async function getCoachOverview(): Promise<CoachOverview> {
       .select("id", { count: "exact", head: true })
       .eq("status", "completed")
       .gte("completed_at", weekStart()),
+    supabase
+      .from("reward_redemptions")
+      .select("id", { count: "exact", head: true })
+      .in("status", ["pending", "approved"]),
   ]);
 
   return {
@@ -208,7 +230,37 @@ export async function getCoachOverview(): Promise<CoachOverview> {
     activeAssignments: assignments.count ?? 0,
     pendingFormChecks: formChecks.count ?? 0,
     sessionsThisWeek: sessions.count ?? 0,
+    pendingRedemptions: redemptions.count ?? 0,
   };
+}
+
+export async function getPendingRedemptions(limit = 30): Promise<PendingRedemption[]> {
+  const supabase = await createClient();
+  if (!supabase) return MOCK_PENDING_REDEMPTIONS;
+
+  const { data } = await supabase
+    .from("reward_redemptions")
+    .select(`
+      id, reward_name_snapshot, cost_reps, status, redeemed_at,
+      member:members(id, handle)
+    `)
+    .in("status", ["pending", "approved"])
+    .order("redeemed_at", { ascending: false })
+    .limit(limit);
+
+  if (!data) return [];
+  return data.map((r) => {
+    const m = Array.isArray(r.member) ? r.member[0] : r.member;
+    return {
+      id: r.id,
+      memberId: m?.id ?? "",
+      memberHandle: m?.handle ?? "—",
+      rewardName: r.reward_name_snapshot,
+      costReps: r.cost_reps,
+      status: r.status as PendingRedemption["status"],
+      redeemedAt: r.redeemed_at,
+    };
+  });
 }
 
 export async function getMembersSummary(): Promise<MemberSummary[]> {

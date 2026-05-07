@@ -1,5 +1,13 @@
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
+import { getSession } from "@/lib/auth";
+import {
+  getRewardCatalog,
+  getMyRedemptions,
+  getRepsBalance,
+  statusLabel,
+} from "@/lib/data/rewards";
+import RedeemButton from "./RedeemButton";
 
 const TIERS = [
   { name: "Lifter",  range: "0 — 999",        perks: ["Adgang til crew-feed", "Månedlige challenges", "5% medlemsrabat"] },
@@ -17,14 +25,22 @@ const HOW = [
   { v: "−",     k: "Reps udløber aldrig",              sub: "De er dine. Punktum." },
 ];
 
-const REWARDS = [
-  { v: "1.200", k: "Limited cuff-farve",       sub: "Olive · kun 80 stk" },
-  { v: "2.000", k: "1:1 form-check",            sub: "30 min med Mikael Munk" },
-  { v: "3.500", k: "Custom-broderet strap",     sub: "Dit handle på din strap" },
-  { v: "8.000", k: "Open House VIP-pakke",      sub: "Træning + middag · Amagerbro" },
-];
+const KIND_LABELS: Record<string, string> = {
+  drop: "Limited drop",
+  experience: "Experience",
+  physical: "Fysisk vare",
+  digital: "Digital",
+};
 
-export default function RepsPage() {
+export default async function RepsPage() {
+  const member = (await getSession())!;
+
+  const [rewards, redemptions, balance] = await Promise.all([
+    getRewardCatalog(),
+    getMyRedemptions(member.id, 10),
+    getRepsBalance(member.id),
+  ]);
+
   return (
     <>
       <PageHeader
@@ -34,8 +50,12 @@ export default function RepsPage() {
         right={
           <div className="surface-2 rounded-lg px-6 py-4 text-right">
             <div className="eyebrow mb-1">Din balance</div>
-            <div className="numeric text-4xl">1.420</div>
-            <div className="text-xs text-fg-faint font-mono mt-1">Tier: Legend (i stub)</div>
+            <div className="numeric text-4xl">
+              {balance.toLocaleString("da-DK")}
+            </div>
+            <div className="text-xs text-fg-faint font-mono mt-1">
+              Tier: {member.tier}
+            </div>
           </div>
         }
       />
@@ -77,20 +97,82 @@ export default function RepsPage() {
         <section>
           <div className="flex items-end justify-between mb-6">
             <div className="eyebrow">Reward shop</div>
-            <span className="numeric text-xs text-fg-dim">Saldo: 1.420 Reps</span>
+            <span className="numeric text-xs text-fg-dim">
+              Saldo: {balance.toLocaleString("da-DK")} Reps
+            </span>
           </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {REWARDS.map((r) => (
-              <article key={r.k} className="surface-2 rounded-lg p-6 lift">
-                <div className="numeric text-3xl mb-1">{r.v}</div>
-                <div className="eyebrow mb-3">Reps</div>
-                <div className="font-display text-lg mb-1">{r.k}</div>
-                <p className="text-xs text-fg-dim font-mono">{r.sub}</p>
-                <button className="btn btn-sm mt-5 w-full">Indløs</button>
-              </article>
-            ))}
-          </div>
+          {rewards.length === 0 ? (
+            <div className="surface-2 rounded-lg p-6 text-sm text-fg-dim">
+              Ingen aktive belønninger lige nu. Mikael lægger nye drops ind løbende.
+            </div>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {rewards.map((r) => (
+                <article key={r.id} className="surface-2 rounded-lg p-6 lift flex flex-col">
+                  <div className="numeric text-3xl mb-1">
+                    {r.costReps.toLocaleString("da-DK")}
+                  </div>
+                  <div className="eyebrow mb-3">Reps</div>
+                  <div className="font-display text-lg mb-1">{r.name}</div>
+                  {r.description ? (
+                    <p className="text-xs text-fg-dim font-mono mb-3 flex-1">
+                      {r.description}
+                    </p>
+                  ) : <div className="flex-1" />}
+                  <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                    <span>{KIND_LABELS[r.kind] ?? r.kind}</span>
+                    {r.stock !== null ? (
+                      <span>{r.stock} tilbage</span>
+                    ) : (
+                      <span>Ubegrænset</span>
+                    )}
+                  </div>
+                  <RedeemButton reward={r} balance={balance} />
+                </article>
+              ))}
+            </div>
+          )}
         </section>
+
+        {redemptions.length > 0 ? (
+          <section>
+            <div className="flex items-end justify-between mb-3">
+              <div className="eyebrow">Mine indløsninger</div>
+              <span className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+                {redemptions.length} samlet
+              </span>
+            </div>
+            <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">
+              {redemptions.map((r) => (
+                <li key={r.id} className="px-5 py-3 flex items-center gap-4 text-sm">
+                  <span className="numeric text-xs text-fg-faint w-20 shrink-0">
+                    {new Date(r.redeemedAt).toLocaleDateString("da-DK", {
+                      day: "numeric",
+                      month: "short",
+                    })}
+                  </span>
+                  <span className="flex-1 truncate">{r.rewardName}</span>
+                  <span className="numeric text-fg-dim text-xs shrink-0">
+                    − {r.costReps.toLocaleString("da-DK")}
+                  </span>
+                  <span
+                    className="text-[10px] font-mono uppercase tracking-[0.14em] border hairline-strong rounded-full px-2 py-0.5 shrink-0"
+                    style={{
+                      color:
+                        r.status === "fulfilled" || r.status === "shipped"
+                          ? "var(--fg)"
+                          : r.status === "cancelled"
+                            ? "var(--fg-faint)"
+                            : "var(--fg-dim)",
+                    }}
+                  >
+                    {statusLabel(r.status)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
       </Container>
     </>
   );
