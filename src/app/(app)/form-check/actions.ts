@@ -19,9 +19,9 @@ import type { AIVerdict } from "@/lib/data/form-check-claude";
 export async function analyzeFormCheckAction(input: {
   frames: string[];
   exerciseName?: string;
-}): Promise<{ ok: boolean; verdict: AIVerdict | null }> {
+}): Promise<{ ok: boolean; verdict: AIVerdict | null; formCheckId: string | null }> {
   if (!input.frames || input.frames.length === 0) {
-    return { ok: false, verdict: null };
+    return { ok: false, verdict: null, formCheckId: null };
   }
 
   // Cap at 4 frames — payload safety + cost cap.
@@ -41,8 +41,10 @@ export async function analyzeFormCheckAction(input: {
   }
 
   if (!verdict) {
-    return { ok: false, verdict: null };
+    return { ok: false, verdict: null, formCheckId: null };
   }
+
+  let formCheckId: string | null = null;
 
   // Persist when Supabase is configured. RLS scopes the insert to the
   // authed member; coach reviewers see it via the additive coach SELECT
@@ -55,17 +57,21 @@ export async function analyzeFormCheckAction(input: {
           data: { user },
         } = await supabase.auth.getUser();
         if (user) {
-          await supabase.from("form_checks").insert({
-            member_id: user.id,
-            exercise_name: input.exerciseName ?? verdict.detectedExercise,
-            video_url: null, // v1: frames sent inline, no storage upload yet
-            ai_score: verdict.score,
-            ai_headline: verdict.headline,
-            ai_pos: verdict.pos,
-            ai_neg: verdict.neg,
-            ai_fix: verdict.fix,
-          });
-          // Coach queue refreshes on next visit.
+          const { data } = await supabase
+            .from("form_checks")
+            .insert({
+              member_id: user.id,
+              exercise_name: input.exerciseName ?? verdict.detectedExercise,
+              video_url: null, // attached separately once upload completes
+              ai_score: verdict.score,
+              ai_headline: verdict.headline,
+              ai_pos: verdict.pos,
+              ai_neg: verdict.neg,
+              ai_fix: verdict.fix,
+            })
+            .select("id")
+            .single();
+          formCheckId = data?.id ?? null;
           revalidatePath("/coach");
           revalidatePath("/coach/queue");
         }
@@ -75,5 +81,34 @@ export async function analyzeFormCheckAction(input: {
     }
   }
 
-  return { ok: true, verdict };
+  return { ok: true, verdict, formCheckId };
+}
+
+/**
+ * Attach the uploaded video's storage path to a form-check row. Called
+ * after the parallel browser-side upload to Supabase Storage finishes.
+ * No-op when Supabase isn't configured.
+ */
+export async function attachFormCheckVideoAction(input: {
+  formCheckId: string;
+  videoPath: string;
+}): Promise<{ ok: boolean }> {
+  if (!SUPABASE_ENABLED) return { ok: true };
+
+  const supabase = await createClient();
+  if (!supabase) return { ok: false };
+
+  const { error } = await supabase
+    .from("form_checks")
+    .update({ video_url: input.videoPath })
+    .eq("id", input.formCheckId);
+
+  if (error) {
+    console.warn("[form-check-action] attach video failed:", error.message);
+    return { ok: false };
+  }
+
+  revalidatePath("/coach");
+  revalidatePath("/coach/queue");
+  return { ok: true };
 }

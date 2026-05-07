@@ -45,6 +45,21 @@ export default function CoachReviewButton({
           </div>
         </div>
 
+        {formCheck.videoUrl ? (
+          <div className="mb-4 rounded-xl overflow-hidden surface bg-bg-3">
+            <video
+              src={formCheck.videoUrl}
+              controls
+              playsInline
+              preload="metadata"
+              className="w-full max-h-[420px] object-contain bg-black"
+            />
+            <div className="px-4 py-2 text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint border-t hairline">
+              Signeret afspillings-link · udløber om 1 time
+            </div>
+          </div>
+        ) : null}
+
         <div className="space-y-3">
           {formCheck.aiPos.length > 0 ? (
             <Card title="Positive observationer" items={formCheck.aiPos} />

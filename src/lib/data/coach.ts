@@ -49,8 +49,11 @@ export type FormCheckRow = {
   reviewedAt: string | null;
   reviewedBy: string | null;
   coachNotes: string | null;
+  videoUrl: string | null;       // Time-limited signed playback URL (1h)
   createdAt: string;
 };
+
+const FORM_CHECK_BUCKET = "form-check-videos";
 
 export type MemberDetail = {
   id: string;
@@ -109,7 +112,7 @@ const MOCK_FORM_CHECKS: FormCheckRow[] = [
     aiPos: ["Bar holder kontakt med kroppen hele vejen op", "Lats engageret fra setup", "God pace — ingen tøven ved knæene"],
     aiNeg: ["Hyperextension i lock-out (læn 5° tilbage)", "Hofte stiger marginalt før skuldrene"],
     aiFix: "Lås ud med squeeze i baller, ikke ved at læne tilbage. Tænk \"stå op\" frem for \"læn tilbage\".",
-    reviewedAt: null, reviewedBy: null, coachNotes: null,
+    reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
     createdAt: new Date(Date.now() - 1000 * 60 * 32).toISOString(),
   },
   {
@@ -120,7 +123,7 @@ const MOCK_FORM_CHECKS: FormCheckRow[] = [
     aiPos: ["Solid pause i bunden", "Ben i gulvet hele sættet", "Lige bar-path"],
     aiNeg: ["Lidt for hurtig på vej ned — accelerer i stedet for at kontrollere"],
     aiFix: "Tæl 3 sek på vej ned næste gang. Brug mindre vægt hvis nødvendigt — kvaliteten betyder mere.",
-    reviewedAt: null, reviewedBy: null, coachNotes: null,
+    reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
   },
   {
@@ -131,7 +134,7 @@ const MOCK_FORM_CHECKS: FormCheckRow[] = [
     aiPos: ["Bardepth ramt på alle 3 reps", "Konsistent bar-path", "God spinal kontrol"],
     aiNeg: ["Højre knæ kollapser let indad på rep 2 og 3"],
     aiFix: "Driv knæene aktivt udad i bunden (\"spread the floor\"). Hold 1 sek pause i bunden næste sæt.",
-    reviewedAt: null, reviewedBy: null, coachNotes: null,
+    reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
   },
   {
@@ -142,7 +145,7 @@ const MOCK_FORM_CHECKS: FormCheckRow[] = [
     aiPos: ["Ryggen flad", "God ROM"],
     aiNeg: ["Bevæger sig mest fra knæene — RDL skal være hofte-dominant", "Bar drifter en smule fremad"],
     aiFix: "Tænk \"skub bagdelen mod væggen\" frem for \"bøj knæene\". Hofterne bagud — knæene holder kun en let bøjning.",
-    reviewedAt: null, reviewedBy: null, coachNotes: null,
+    reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 18).toISOString(),
   },
 ];
@@ -287,8 +290,14 @@ export async function getMemberDetail(memberId: string): Promise<MemberDetail | 
       .limit(10),
     supabase.from("member_reps_balance").select("balance").eq("member_id", memberId).maybeSingle(),
     supabase.from("reps_transactions").select("id, delta, reason, created_at").eq("member_id", memberId).order("created_at", { ascending: false }).limit(10),
-    supabase.from("form_checks").select("id, exercise_name, ai_score, ai_headline, ai_pos, ai_neg, ai_fix, coach_reviewed_at, coach_reviewed_by, coach_notes, created_at").eq("member_id", memberId).order("created_at", { ascending: false }).limit(10),
+    supabase.from("form_checks").select("id, exercise_name, ai_score, ai_headline, ai_pos, ai_neg, ai_fix, video_url, coach_reviewed_at, coach_reviewed_by, coach_notes, created_at").eq("member_id", memberId).order("created_at", { ascending: false }).limit(10),
   ]);
+
+  // Sign storage paths in one batch.
+  const fcPaths = (fcRes.data ?? [])
+    .map((f) => f.video_url)
+    .filter((p): p is string => typeof p === "string" && p.length > 0);
+  const signedByPath = await batchSignVideoUrls(supabase, fcPaths);
 
   return {
     id: m.id,
@@ -335,6 +344,7 @@ export async function getMemberDetail(memberId: string): Promise<MemberDetail | 
       reviewedAt: f.coach_reviewed_at,
       reviewedBy: f.coach_reviewed_by,
       coachNotes: f.coach_notes,
+      videoUrl: f.video_url ? signedByPath.get(f.video_url) ?? null : null,
       createdAt: f.created_at,
     })),
   };
@@ -347,7 +357,8 @@ export async function getPendingFormChecks(limit = 30): Promise<FormCheckRow[]> 
   const { data } = await supabase
     .from("form_checks")
     .select(`
-      id, exercise_name, ai_score, ai_headline, ai_pos, ai_neg, ai_fix, created_at,
+      id, exercise_name, ai_score, ai_headline, ai_pos, ai_neg, ai_fix,
+      video_url, created_at,
       coach_reviewed_at, coach_reviewed_by, coach_notes,
       member:members(id, handle)
     `)
@@ -356,6 +367,12 @@ export async function getPendingFormChecks(limit = 30): Promise<FormCheckRow[]> 
     .limit(limit);
 
   if (!data) return [];
+
+  // Sign storage paths in a single batch where possible.
+  const paths = data
+    .map((f) => f.video_url)
+    .filter((p): p is string => typeof p === "string" && p.length > 0);
+  const signedByPath = await batchSignVideoUrls(supabase, paths);
 
   return data.map((f) => {
     const m = Array.isArray(f.member) ? f.member[0] : f.member;
@@ -372,9 +389,49 @@ export async function getPendingFormChecks(limit = 30): Promise<FormCheckRow[]> 
       reviewedAt: f.coach_reviewed_at,
       reviewedBy: f.coach_reviewed_by,
       coachNotes: f.coach_notes,
+      videoUrl: f.video_url ? signedByPath.get(f.video_url) ?? null : null,
       createdAt: f.created_at,
     };
   });
+}
+
+/**
+ * Generate signed URLs for an array of storage paths (1-hour expiry).
+ * Uses createSignedUrls (plural) when supported, falls back to per-path.
+ */
+async function batchSignVideoUrls(
+  supabase: NonNullable<Awaited<ReturnType<typeof createClient>>>,
+  paths: string[]
+): Promise<Map<string, string>> {
+  const result = new Map<string, string>();
+  if (paths.length === 0) return result;
+
+  try {
+    const { data } = await supabase.storage
+      .from(FORM_CHECK_BUCKET)
+      .createSignedUrls(paths, 3600);
+    if (data) {
+      for (const item of data) {
+        if (item.path && item.signedUrl) {
+          result.set(item.path, item.signedUrl);
+        }
+      }
+    }
+  } catch {
+    // Fallback: sign one by one. Slower but tolerant of any single
+    // failed path (e.g. file deleted) so the rest still play.
+    for (const p of paths) {
+      try {
+        const { data } = await supabase.storage
+          .from(FORM_CHECK_BUCKET)
+          .createSignedUrl(p, 3600);
+        if (data?.signedUrl) result.set(p, data.signedUrl);
+      } catch {
+        // skip
+      }
+    }
+  }
+  return result;
 }
 
 /* ---------------------------------------------------------------- */

@@ -3,7 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import { cn } from "@/lib/utils";
-import { analyzeFormCheckAction } from "@/app/(app)/form-check/actions";
+import {
+  analyzeFormCheckAction,
+  attachFormCheckVideoAction,
+} from "@/app/(app)/form-check/actions";
+import { createClient as createBrowserSupabase } from "@/lib/supabase/client";
+
+const FORM_CHECK_BUCKET = "form-check-videos";
 
 type Step = "choose" | "uploading" | "analyzing" | "result";
 
@@ -132,14 +138,20 @@ function FormCheckBody({
     resetProgress();
     setStep("uploading");
 
+    // Kick off video upload in parallel with frame extraction. The
+    // upload typically takes 5-30s depending on file size; we don't
+    // want it on the critical path of showing the verdict.
+    const uploadPromise = uploadVideoToStorage(file).catch((err) => {
+      console.warn("[form-check] upload failed (non-fatal):", err);
+      return null;
+    });
+
     // 1. Extract 3 keyframes via canvas (no server-side ffmpeg needed)
     let frames: string[] = [];
     try {
       frames = await extractKeyframes(file, 3, 1024);
     } catch (err) {
       console.warn("[form-check] extraction failed:", err);
-      // Couldn't read the video — fall back to canned mock so the user
-      // still sees a result rather than an error.
       setIsMockResult(true);
       setVerdict(pickVerdict(exerciseName));
       setStep("result");
@@ -150,6 +162,7 @@ function FormCheckBody({
     setStep("analyzing");
 
     // 2. Server action: Claude vision (or null if not configured)
+    let formCheckId: string | null = null;
     try {
       const res = await analyzeFormCheckAction({ frames, exerciseName });
       if (res.ok && res.verdict) {
@@ -162,16 +175,28 @@ function FormCheckBody({
           fix: res.verdict.fix,
         });
         setStep("result");
-        return;
+        formCheckId = res.formCheckId;
+      } else {
+        setIsMockResult(true);
+        setVerdict(pickVerdict(exerciseName));
+        setStep("result");
       }
     } catch (err) {
       console.warn("[form-check] action failed:", err);
+      setIsMockResult(true);
+      setVerdict(pickVerdict(exerciseName));
+      setStep("result");
     }
 
-    // 3. Fall back to canned mock (Claude unavailable or failed)
-    setIsMockResult(true);
-    setVerdict(pickVerdict(exerciseName));
-    setStep("result");
+    // 3. Attach the uploaded video to the form_check row as soon as the
+    //    upload finishes. Fire-and-forget — verdict is already shown.
+    if (formCheckId) {
+      uploadPromise.then((videoPath) => {
+        if (videoPath) {
+          attachFormCheckVideoAction({ formCheckId, videoPath }).catch(() => {});
+        }
+      });
+    }
   }
 
   function runDemo() {
@@ -537,4 +562,46 @@ function seekVideo(video: HTMLVideoElement, t: number): Promise<void> {
     video.addEventListener("seeked", onSeeked);
     video.currentTime = t;
   });
+}
+
+/* ---------------------------------------------------------------- *
+ * Supabase Storage upload (browser-side)
+ * Uploads to form-check-videos/<auth.uid()>/<id>.<ext>. RLS scopes
+ * writes to the authed user's own folder. Returns the storage path
+ * (relative to bucket root) on success, null otherwise.
+ * ---------------------------------------------------------------- */
+async function uploadVideoToStorage(file: File): Promise<string | null> {
+  const supabase = createBrowserSupabase();
+  if (!supabase) return null; // demo mode — no storage
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  if (!file.type.startsWith("video/")) return null;
+  if (file.size > 100 * 1024 * 1024) return null; // 100 MB ceiling
+
+  const ext = (file.name.split(".").pop() ?? "mp4")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "")
+    .slice(0, 6) || "mp4";
+  const stamp = Date.now();
+  const rand = Math.random().toString(36).slice(2, 8);
+  const path = `${user.id}/${stamp}-${rand}.${ext}`;
+
+  const { error } = await supabase.storage
+    .from(FORM_CHECK_BUCKET)
+    .upload(path, file, {
+      cacheControl: "3600",
+      contentType: file.type || "video/mp4",
+      upsert: false,
+    });
+
+  if (error) {
+    console.warn("[form-check] storage upload failed:", error.message);
+    return null;
+  }
+
+  return path;
 }

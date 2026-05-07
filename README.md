@@ -70,7 +70,8 @@ I Supabase dashboard → **SQL Editor**:
 3. Kopier indholdet af `supabase/migrations/0003_member_profile.sql` ind, kør det
 4. Kopier indholdet af `supabase/migrations/0004_coach.sql` ind, kør det
 5. Kopier indholdet af `supabase/migrations/0005_subscriptions.sql` ind, kør det
-6. Kopier indholdet af `supabase/seed.sql` ind, kør det
+6. Kopier indholdet af `supabase/migrations/0006_form_check_storage.sql` ind, kør det
+7. Kopier indholdet af `supabase/seed.sql` ind, kør det
 
 Det opretter alle tabeller (members, programs, sessions, posts, Reps,
 challenges, form-checks m.v.) med RLS-policies, triggers, RPC-funktioner
@@ -213,6 +214,23 @@ at brænde tokens.
 
 **Uden API-nøgle**: alle paths bruger mock-svar — designet er identisk,
 kun beslutningen er ikke ægte.
+
+### Video upload til Supabase Storage
+
+Når en bruger laver en form-check, uploader browseren videoen direkte
+til Supabase Storage (bucket: `form-check-videos`) i parallel med
+keyframe-ekstraktionen. Storage er **privat**:
+
+- Medlemmer uploader kun til deres egen mappe (RLS: path prefix = auth.uid)
+- Coaches kan læse alt via `is_current_user_coach()` policy
+- Afspilning sker via **signed URLs** (1 times udløb), genereret server-side
+
+**Begrænsninger**: 100 MB pr. fil, kun video-MIME-typer. Migration
+0006 opretter bucket + policies idempotent — sikkert at gentage.
+
+I `/coach/queue` og `/coach/members/[id]` viser CoachReview-sheet'en
+nu en `<video controls>`-afspiller med den signerede URL — coachen
+kan se den faktiske video sammen med AI-vurderingen før godkendelse.
 
 ---
 
