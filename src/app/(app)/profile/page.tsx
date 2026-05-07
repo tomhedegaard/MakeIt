@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -10,6 +11,13 @@ export default async function ProfilePage() {
         eyebrow="05 — Profil"
         title={`@${m.handle}`}
         subtitle={`Tier: ${m.tier} · Medlem siden ${new Date(m.joinedAt).toLocaleDateString("da-DK")}`}
+        right={
+          m.isCoach ? (
+            <Link href="/coach" className="btn btn-primary btn-sm">
+              Åbn coach-konsol →
+            </Link>
+          ) : undefined
+        }
       />
 
       <Container className="py-12 grid gap-6 md:grid-cols-2">

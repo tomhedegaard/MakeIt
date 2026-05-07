@@ -68,7 +68,8 @@ I Supabase dashboard → **SQL Editor**:
 1. Kopier indholdet af `supabase/migrations/0001_init.sql` ind, kør det
 2. Kopier indholdet af `supabase/migrations/0002_session_actions.sql` ind, kør det
 3. Kopier indholdet af `supabase/migrations/0003_member_profile.sql` ind, kør det
-4. Kopier indholdet af `supabase/seed.sql` ind, kør det
+4. Kopier indholdet af `supabase/migrations/0004_coach.sql` ind, kør det
+5. Kopier indholdet af `supabase/seed.sql` ind, kør det
 
 Det opretter alle tabeller (members, programs, sessions, posts, Reps,
 challenges, form-checks m.v.) med RLS-policies, triggers, RPC-funktioner
@@ -77,6 +78,11 @@ og demo-data.
 > **Tip**: Migrationerne er idempotente — du kan køre dem igen uden
 > bekymring. Hvis du allerede har kørt tidligere versioner, behøver du
 > kun at køre de nye numre.
+
+> **Coach-rolle**: 0004 promoverer automatisk en bruger med handle
+> `anton` eller email `anton@nowmakeit.eu` til coach. Andre coaches
+> kan flippes manuelt med `update public.members set is_coach = true
+> where handle = 'X';` i SQL Editor.
 
 ### 3. Sæt env-vars op
 

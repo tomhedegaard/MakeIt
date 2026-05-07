@@ -11,6 +11,7 @@ const PROTECTED = [
   "/profile",
   "/session",
   "/onboarding",
+  "/coach",
 ];
 
 function needsAuth(pathname: string) {

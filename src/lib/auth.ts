@@ -28,6 +28,7 @@ export type Member = {
   tier: Tier;
   joinedAt: string;
   onboardedAt?: string | null;
+  isCoach?: boolean;
 };
 
 const MOCK_MEMBER: Member = {
@@ -38,6 +39,7 @@ const MOCK_MEMBER: Member = {
   tier: "Legend",
   joinedAt: "2024-09-12",
   onboardedAt: "2024-09-12T00:00:00Z",
+  isCoach: true, // demo mode: treat ANTON-01 as the head coach
 };
 
 export function isValidMockInvite(code: string) {
@@ -56,7 +58,7 @@ export async function getSession(): Promise<Member | null> {
 
     const { data: m } = await supabase
       .from("members")
-      .select("id, handle, display_name, email, tier, joined_at, onboarded_at")
+      .select("id, handle, display_name, email, tier, joined_at, onboarded_at, is_coach")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -70,14 +72,16 @@ export async function getSession(): Promise<Member | null> {
       tier: m.tier as Tier,
       joinedAt: m.joined_at,
       onboardedAt: m.onboarded_at,
+      isCoach: !!m.is_coach,
     };
   }
 
-  // Demo mode — cookie-based mock
+  // Demo mode — cookie-based mock. ANTON-01 acts as the head coach so
+  // we can demo the /coach surfaces; other invite codes are regular crew.
   const c = await cookies();
   const v = c.get(SESSION_COOKIE)?.value;
   if (!v) return null;
-  return MOCK_MEMBER;
+  return { ...MOCK_MEMBER, isCoach: v === "ANTON-01" };
 }
 
 export async function isAuthed() {

@@ -69,6 +69,22 @@ export default function AppShell({
         </nav>
 
         <div className="px-3 py-4 border-t hairline">
+          {member.isCoach ? (
+            <Link
+              href="/coach"
+              className="block surface-2 p-3 rounded-lg mb-3 hover:bg-bg-3 transition-colors group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+                    Coach
+                  </span>
+                  <span className="text-sm">Konsol</span>
+                </div>
+                <span className="text-fg-dim group-hover:text-fg" aria-hidden>→</span>
+              </div>
+            </Link>
+          ) : null}
           <div className="surface-2 p-4 rounded-lg">
             <div className="flex items-center justify-between">
               <div>
