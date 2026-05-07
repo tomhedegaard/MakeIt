@@ -15,6 +15,8 @@ import {
 } from "@/lib/data/dashboard";
 import { ensureMemberStarter } from "@/lib/data/seed-member";
 import { getMyFormChecks } from "@/lib/data/me";
+import { getLatestUnseenPromotion } from "@/lib/data/tier-events";
+import TierBanner from "@/components/app/TierBanner";
 
 const MOCK_UPCOMING = [
   { d: "I morgen", t: "Pause-bench, ringe-row, push-press", m: "55m" },
@@ -91,6 +93,9 @@ export default async function TodayPage() {
     (c) => c.reviewedAt && c.coachNotes
   ).length;
 
+  // Tier promotion banner: surface latest unseen tier-up.
+  const promotion = await getLatestUnseenPromotion(member.id);
+
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       {/* Greeting */}
@@ -107,6 +112,14 @@ export default async function TodayPage() {
           <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">dage</div>
         </div>
       </header>
+
+      {promotion ? (
+        <TierBanner
+          eventId={promotion.id}
+          fromTier={promotion.fromTier}
+          toTier={promotion.toTier}
+        />
+      ) : null}
 
       {reviewedCount > 0 ? (
         <Link

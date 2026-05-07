@@ -14,6 +14,15 @@ export type FeedPost = {
   reactedByMe: boolean;
 };
 
+export type Comment = {
+  id: string;
+  who: string;        // "@handle"
+  tier: string;
+  content: string;
+  whenLabel: string;
+  createdAt: string;
+};
+
 type RawRow = {
   id: string;
   content: string;
@@ -87,6 +96,71 @@ export async function getFeedPosts(limit = 30): Promise<FeedPost[] | null> {
       reactionsCount: reactions.length,
       commentsCount: row.comments?.length ?? 0,
       reactedByMe,
+    };
+  });
+}
+
+const MOCK_COMMENTS: Comment[] = [
+  {
+    id: "cm-1",
+    who: "@kasper_s",
+    tier: "Athlete",
+    content: "Stærkt @nina_dl — hvad var dit warm-up sæt?",
+    whenLabel: "5m",
+    createdAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+  },
+  {
+    id: "cm-2",
+    who: "@maria.lift",
+    tier: "Beast",
+    content: "Sygt sæt. Du er klar til 180 til næste cyklus.",
+    whenLabel: "12m",
+    createdAt: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+  },
+  {
+    id: "cm-3",
+    who: "@Munk",
+    tier: "Legend",
+    content: "Bemærk: hold lidt længere pause mellem sættene næste gang. +1.",
+    whenLabel: "32m",
+    createdAt: new Date(Date.now() - 1000 * 60 * 32).toISOString(),
+  },
+];
+
+/**
+ * Comments for a single post. Returns null in demo mode so callers
+ * can show mock content; returns [] in connected mode when none exist.
+ */
+export async function getComments(postId: string, limit = 50): Promise<Comment[] | null> {
+  const supabase = await createClient();
+  if (!supabase) return MOCK_COMMENTS;
+
+  // Mock-feed posts won't exist in DB — short-circuit those.
+  if (postId.startsWith("m") && postId.length <= 4) return MOCK_COMMENTS;
+
+  const { data, error } = await supabase
+    .from("post_comments")
+    .select(
+      `
+      id, content, created_at,
+      member:members(handle, tier)
+    `
+    )
+    .eq("post_id", postId)
+    .order("created_at", { ascending: true })
+    .limit(limit);
+
+  if (error || !data) return [];
+
+  return data.map((c) => {
+    const m = Array.isArray(c.member) ? c.member[0] : c.member;
+    return {
+      id: c.id,
+      who: m ? `@${m.handle}` : "@member",
+      tier: m?.tier ?? "Lifter",
+      content: c.content,
+      whenLabel: humanWhen(c.created_at),
+      createdAt: c.created_at,
     };
   });
 }
