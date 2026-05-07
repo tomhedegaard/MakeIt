@@ -215,6 +215,38 @@ at brænde tokens.
 **Uden API-nøgle**: alle paths bruger mock-svar — designet er identisk,
 kun beslutningen er ikke ægte.
 
+### Email notifikationer (Resend)
+
+Når Mikael Munk gennemgår en form-check og skriver coach-noter,
+sendes en email til medlemmet med noten inline plus link tilbage
+til platformen. Sættes op med [Resend](https://resend.com) (gratis
+op til 3.000 mails/md).
+
+**Env-vars** (alle valgfri — uden dem skipper review-action stille
+email-delen og fortsætter normalt):
+
+```env
+RESEND_API_KEY=re_...                                   # API-nøgle
+RESEND_FROM_EMAIL=MakeIt // HQ <hq@nowmakeit.eu>        # verificeret domæne
+RESEND_REPLY_TO=munk@nowmakeit.eu                       # default: Mikael
+```
+
+**Setup**:
+1. Sign up på [resend.com](https://resend.com)
+2. **Domains → Add Domain** → `nowmakeit.eu` → tilføj DNS-records (SPF, DKIM, DMARC)
+3. Vent 5-10 min på verifikation
+4. Hent API-nøgle fra **API Keys**
+5. Sæt env-vars i `.env.local`
+
+**Til test uden domæne**: brug `RESEND_FROM_EMAIL=onboarding@resend.dev`
+— Resend's sandbox accepterer mail til den email der er knyttet til
+din Resend-konto.
+
+Email-design er **dark on-brand**: sort baggrund, off-white tekst,
+Archivo-style display, coach-noter i en venstre-stribet callout med
+"Mikael Munk · @Munk" attribution. Inline CSS only (de fleste klienter
+stripper `<style>`-tags).
+
 ### Video upload til Supabase Storage
 
 Når en bruger laver en form-check, uploader browseren videoen direkte
