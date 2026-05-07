@@ -197,6 +197,23 @@ ligger en typisk onboarding på under 1 cent.
 Få en API-nøgle på [console.anthropic.com](https://console.anthropic.com)
 (starter med `$5` gratis kredit).
 
+### Form-check (vision)
+
+Samme `ANTHROPIC_API_KEY` aktiverer også **rigtig form-check**: når
+medlemmet uploader en video, ekstraherer browseren 3 keyframes via
+canvas, sender dem til server-action der kalder Claude Sonnet 4.6
+med vision. Claude returnerer struktureret verdict (score, headline,
+positive observationer, ting at stramme op, coach-tip), som persisteres
+i `form_checks`-tabellen og dukker op i coach-køen til verifikation.
+
+**Cost pr. form-check**: ~3 frames @ 1024px ≈ 4.5K image-tokens +
+~1.5K cached system + ~500 output ≈ 2 cents. Demoknappen ("Demo med
+eksempelvideo") bruger stadig canned mock så designet kan vises uden
+at brænde tokens.
+
+**Uden API-nøgle**: alle paths bruger mock-svar — designet er identisk,
+kun beslutningen er ikke ægte.
+
 ---
 
 ## Ruter

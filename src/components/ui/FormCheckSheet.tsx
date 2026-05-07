@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import { cn } from "@/lib/utils";
+import { analyzeFormCheckAction } from "@/app/(app)/form-check/actions";
 
 type Step = "choose" | "uploading" | "analyzing" | "result";
 
@@ -101,32 +102,92 @@ function FormCheckBody({
   const [progress, setProgress] = useState(0);
   const [fileName, setFileName] = useState<string | null>(null);
   const [verdict, setVerdict] = useState<AIVerdict | null>(null);
+  const [isMockResult, setIsMockResult] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  // Mock progress for upload + analyze
+  // Indeterminate-style progress for the upload + analyzing phases.
+  // Real work (frame extraction + Claude call) is async and finishes
+  // when the action returns; this just provides visual continuity.
   useEffect(() => {
     if (step !== "uploading" && step !== "analyzing") return;
     let p = 0;
+    const cap = step === "analyzing" ? 92 : 95;
+    const speed = step === "uploading" ? 8 : 1.2;
+    const tick = step === "uploading" ? 100 : 180;
     const id = window.setInterval(() => {
-      p += step === "uploading" ? 12 : 8;
-      setProgress(Math.min(100, p));
-      if (p >= 100) {
-        clearInterval(id);
-        if (step === "uploading") {
-          setStep("analyzing");
-          setProgress(0);
-        } else if (step === "analyzing") {
-          setVerdict(pickVerdict(exerciseName));
-          setStep("result");
-        }
-      }
-    }, step === "uploading" ? 90 : 140);
+      p = Math.min(cap, p + speed);
+      setProgress(p);
+    }, tick);
     return () => clearInterval(id);
-  }, [step, exerciseName]);
+  }, [step]);
 
-  function pickFile(f: File) {
-    setFileName(f.name);
+  // Reset progress in the click handlers (not via effect) when entering
+  // upload/analyse phases — keeps the effect free of setState.
+  function resetProgress() {
+    setProgress(0);
+  }
+
+  async function pickFile(file: File) {
+    setFileName(file.name);
+    resetProgress();
     setStep("uploading");
+
+    // 1. Extract 3 keyframes via canvas (no server-side ffmpeg needed)
+    let frames: string[] = [];
+    try {
+      frames = await extractKeyframes(file, 3, 1024);
+    } catch (err) {
+      console.warn("[form-check] extraction failed:", err);
+      // Couldn't read the video — fall back to canned mock so the user
+      // still sees a result rather than an error.
+      setIsMockResult(true);
+      setVerdict(pickVerdict(exerciseName));
+      setStep("result");
+      return;
+    }
+
+    resetProgress();
+    setStep("analyzing");
+
+    // 2. Server action: Claude vision (or null if not configured)
+    try {
+      const res = await analyzeFormCheckAction({ frames, exerciseName });
+      if (res.ok && res.verdict) {
+        setIsMockResult(false);
+        setVerdict({
+          score: res.verdict.score,
+          headline: res.verdict.headline,
+          pos: res.verdict.pos,
+          neg: res.verdict.neg,
+          fix: res.verdict.fix,
+        });
+        setStep("result");
+        return;
+      }
+    } catch (err) {
+      console.warn("[form-check] action failed:", err);
+    }
+
+    // 3. Fall back to canned mock (Claude unavailable or failed)
+    setIsMockResult(true);
+    setVerdict(pickVerdict(exerciseName));
+    setStep("result");
+  }
+
+  function runDemo() {
+    // No real frames — straight-to-mock with progress simulation
+    setFileName("squat-set-3.mov");
+    setIsMockResult(true);
+    resetProgress();
+    setStep("uploading");
+    window.setTimeout(() => {
+      resetProgress();
+      setStep("analyzing");
+    }, 700);
+    window.setTimeout(() => {
+      setVerdict(pickVerdict(exerciseName));
+      setStep("result");
+    }, 2200);
   }
 
   return (
@@ -193,11 +254,7 @@ function FormCheckBody({
               <button
                 type="button"
                 className="surface-2 rounded-2xl p-5 text-left lift touch-app"
-                onClick={() => {
-                  // Mock — uses a fake file name and skips real upload
-                  setFileName("squat-set-3.mov");
-                  setStep("uploading");
-                }}
+                onClick={runDemo}
               >
                 <div className="flex items-center gap-3 mb-1">
                   <SparkIcon />
@@ -257,7 +314,9 @@ function FormCheckBody({
             </div>
 
             <p className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint mb-5">
-              Mock-svar i beta · ægte AI tilkobles før launch
+              {isMockResult
+                ? "Demo-svar · ægte AI aktiveres med ANTHROPIC_API_KEY"
+                : "AI-vurdering · godkendes af head coach inden for 24t"}
             </p>
 
             <div className="space-y-3">
@@ -396,4 +455,86 @@ function SparkIcon() {
       <path d="M12 3v6M12 15v6M3 12h6M15 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M5.6 18.4l4.2-4.2M14.2 9.8l4.2-4.2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   );
+}
+
+/* ---------------------------------------------------------------- *
+ * Keyframe extraction (browser-side, no ffmpeg needed)
+ * ---------------------------------------------------------------- */
+
+/**
+ * Read a video File and return N evenly-spaced JPEG frames as
+ * data URLs (data:image/jpeg;base64,...). Frames are downscaled so
+ * the long edge ≤ maxDim, keeping the action payload small.
+ */
+async function extractKeyframes(
+  file: File,
+  count = 3,
+  maxDim = 1024
+): Promise<string[]> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.muted = true;
+    video.playsInline = true;
+    video.crossOrigin = "anonymous";
+
+    video.onloadedmetadata = async () => {
+      try {
+        const duration = video.duration;
+        if (!isFinite(duration) || duration <= 0) {
+          throw new Error("Invalid video duration");
+        }
+
+        // Spread frames between 15% and 85% of duration to skip blank
+        // start/end frames common in mobile recordings.
+        const ts = Array.from({ length: count }, (_, i) => {
+          const f = count === 1 ? 0.5 : 0.15 + (0.7 * i) / (count - 1);
+          return duration * f;
+        });
+
+        const w = video.videoWidth;
+        const h = video.videoHeight;
+        if (!w || !h) throw new Error("Video has no dimensions");
+        const scale = Math.min(1, maxDim / Math.max(w, h));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(w * scale);
+        canvas.height = Math.round(h * scale);
+        const ctx = canvas.getContext("2d");
+        if (!ctx) throw new Error("Canvas 2d context unavailable");
+
+        const frames: string[] = [];
+        for (const t of ts) {
+          await seekVideo(video, t);
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          frames.push(canvas.toDataURL("image/jpeg", 0.7));
+        }
+
+        URL.revokeObjectURL(url);
+        resolve(frames);
+      } catch (err) {
+        URL.revokeObjectURL(url);
+        reject(err);
+      }
+    };
+
+    video.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load video"));
+    };
+
+    video.src = url;
+  });
+}
+
+function seekVideo(video: HTMLVideoElement, t: number): Promise<void> {
+  return new Promise((resolve) => {
+    const onSeeked = () => {
+      video.removeEventListener("seeked", onSeeked);
+      // Small delay lets Safari finalise the frame paint.
+      window.setTimeout(resolve, 30);
+    };
+    video.addEventListener("seeked", onSeeked);
+    video.currentTime = t;
+  });
 }
