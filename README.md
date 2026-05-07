@@ -69,7 +69,8 @@ I Supabase dashboard → **SQL Editor**:
 2. Kopier indholdet af `supabase/migrations/0002_session_actions.sql` ind, kør det
 3. Kopier indholdet af `supabase/migrations/0003_member_profile.sql` ind, kør det
 4. Kopier indholdet af `supabase/migrations/0004_coach.sql` ind, kør det
-5. Kopier indholdet af `supabase/seed.sql` ind, kør det
+5. Kopier indholdet af `supabase/migrations/0005_subscriptions.sql` ind, kør det
+6. Kopier indholdet af `supabase/seed.sql` ind, kør det
 
 Det opretter alle tabeller (members, programs, sessions, posts, Reps,
 challenges, form-checks m.v.) med RLS-policies, triggers, RPC-funktioner
@@ -117,6 +118,58 @@ npm run dev -- -p 3002
 Login-siden viser nu et **email + invite-kode**-form i stedet for det
 gamle cookie-form. Du modtager et login-link på mail; klik det → du er
 inde med en rigtig Supabase-session og en rigtig `members`-row i DB'en.
+
+---
+
+## Stripe-billing (valgfrit — for rigtige betalinger)
+
+Når du er klar til at tage betaling, sæt Stripe op. Uden disse env-vars
+står `/billing`-siden i "demo mode" og knapperne viser bare et banner.
+
+### 1. Opret Stripe-projekt
+
+1. Log ind på [dashboard.stripe.com](https://dashboard.stripe.com), brug **test mode** (toggle øverst til højre)
+2. **Products** → opret to produkter:
+   - **MakeIt HQ Crew** → recurring price, fx 199 DKK/måned
+   - **MakeIt HQ 1:1 Coaching** → recurring price, fx 1.500 DKK/måned
+3. Notér de to **Price IDs** (starter med `price_...`)
+
+### 2. Konfigurer webhook (lokalt med Stripe CLI)
+
+I et tredje terminal-vindue:
+
+```bash
+brew install stripe/stripe-cli/stripe   # første gang
+stripe login
+stripe listen --forward-to localhost:3002/api/stripe/webhook
+```
+
+Output viser et **webhook signing secret** (`whsec_...`) — kopier det.
+
+### 3. Tilføj env-vars til `.env.local`
+
+```env
+SUPABASE_SERVICE_ROLE_KEY=eyJhb...   # Settings → API → service_role
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRICE_CREW=price_...
+STRIPE_PRICE_ONE_ON_ONE=price_...
+```
+
+### 4. Aktivér Customer Portal
+
+Stripe → **Settings → Billing → Customer portal** → aktivér og gem standardindstillingerne.
+
+### 5. Test flowet
+
+1. Genstart dev-serveren
+2. Log ind, gå til `/billing`
+3. Tap "Aktivér Crew-medlemskab →"
+4. Brug Stripe test-kort: `4242 4242 4242 4242`, CVC `123`, expire en hvilken som helst fremtidig dato
+5. Du redirectes tilbage med `?success=1`, webhooket har skrevet en `subscriptions`-row, og statussen er nu "Aktiv"
+
+> Webhook'et bruger service-role nøglen så det kan skrive `subscriptions`
+> uden om RLS. Behold den hemmelig.
 
 ---
 

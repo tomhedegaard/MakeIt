@@ -228,7 +228,9 @@ export default function TrainPage() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <button type="button" className="btn btn-primary">Søg om plads</button>
+          <Link href="/billing" className="btn btn-primary">
+            Søg om plads →
+          </Link>
           <button type="button" className="btn">Læs mere</button>
         </div>
       </section>

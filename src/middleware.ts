@@ -12,6 +12,7 @@ const PROTECTED = [
   "/session",
   "/onboarding",
   "/coach",
+  "/billing",
 ];
 
 function needsAuth(pathname: string) {
@@ -46,8 +47,9 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    // Run on everything except static and API internals — Supabase needs to
-    // refresh cookies on every request when enabled.
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)).*)",
+    // Run on everything except static, API routes (incl. Stripe webhook),
+    // and image assets. Supabase needs to refresh cookies on every
+    // matched request.
+    "/((?!_next/static|_next/image|favicon.ico|api/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)).*)",
   ],
 };

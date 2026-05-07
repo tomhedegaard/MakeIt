@@ -58,6 +58,21 @@ export default async function ProfilePage() {
             </li>
           </ul>
         </section>
+
+        <section className="surface-2 rounded-lg p-8 md:col-span-2">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <div className="eyebrow mb-2">Billing</div>
+              <div className="font-display text-xl">Abonnement &amp; betaling</div>
+              <p className="text-sm text-fg-dim mt-1 max-w-md">
+                Administrér dit Crew-medlemskab og 1:1 add-on. Sikker checkout via Stripe.
+              </p>
+            </div>
+            <Link href="/billing" className="btn btn-sm btn-primary">
+              Åbn billing →
+            </Link>
+          </div>
+        </section>
       </Container>
     </>
   );
