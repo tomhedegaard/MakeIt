@@ -104,7 +104,7 @@ export default async function BillingPage({
             <div>
               <div className="eyebrow mb-1">1:1 Coaching · add-on</div>
               <h2 className="font-display text-2xl md:text-3xl">
-                Direkte adgang til Anton
+                Direkte adgang til Mikael Munk
               </h2>
             </div>
             <StatusPill sub={oneOnOne} />

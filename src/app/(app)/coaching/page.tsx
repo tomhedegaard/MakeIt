@@ -15,7 +15,7 @@ const WEEK = [
 
 const PROGRAMS = [
   {
-    code: "STR-12", name: "PR-Block",  type: "Strength",       weeks: 12, coach: "Anton",  level: "Inter./Adv.",
+    code: "STR-12", name: "PR-Block",  type: "Strength",       weeks: 12, coach: "Mikael Munk",  level: "Inter./Adv.",
     desc: "Klassisk linær periodisering med RPE. Bygget til nye PR'er på squat, bench og DL.",
     active: true, week: 4,
   },
@@ -30,7 +30,7 @@ const PROGRAMS = [
     active: false,
   },
   {
-    code: "DL-06",  name: "Deadlift Spec.", type: "Specialization", weeks: 6, coach: "Anton", level: "Advanced",
+    code: "DL-06",  name: "Deadlift Spec.", type: "Specialization", weeks: 6, coach: "Mikael Munk", level: "Advanced",
     desc: "Seks uger fokuseret 100% på dødløft. Pause-pulls, deficits, peak-protokol.",
     active: false,
   },
@@ -213,7 +213,7 @@ export default function TrainPage() {
           1:1 Coaching · Den eneste 100% menneskelige del
         </div>
         <h3 className="font-display text-2xl md:text-4xl leading-[1] mb-3">
-          Vil du have Anton i dit øre direkte?
+          Vil du have Mikael Munk i dit øre direkte?
         </h3>
         <p className="text-fg-dim text-sm md:text-base max-w-xl mb-5">
           Personligt program, ugentlige form-checks via video, og direkte adgang

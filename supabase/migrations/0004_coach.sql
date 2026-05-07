@@ -68,10 +68,10 @@ create policy "coach update form_checks"
   with check (public.is_current_user_coach());
 
 -- ---------------------------------------------------------------- *
--- Bootstrap: promote Anton (the head coach) when he signs up.
+-- Bootstrap: promote Mikael Munk (the head coach) when he signs up.
 -- Idempotent — only flips the row if it exists.
 -- ---------------------------------------------------------------- *
 update public.members
    set is_coach = true
- where handle = 'anton'
-    or email  = 'anton@nowmakeit.eu';
+ where lower(handle) = 'munk'
+    or email  = 'munk@nowmakeit.eu';

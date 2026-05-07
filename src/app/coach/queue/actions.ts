@@ -36,5 +36,8 @@ export async function reviewFormCheckAction(
 
   revalidatePath("/coach");
   revalidatePath("/coach/queue");
+  // Surface the new note immediately on the member's surfaces.
+  revalidatePath("/profile");
+  revalidatePath("/dashboard");
   return { ok: true };
 }

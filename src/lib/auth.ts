@@ -11,7 +11,7 @@ import { SUPABASE_ENABLED } from "./supabase/env";
 export const SESSION_COOKIE = "mi_session";
 
 const MOCK_INVITES = new Set([
-  "ANTON-01",
+  "MUNK-01",
   "MAKEIT-CREW",
   "FOUNDERS-2026",
   "STRAPIT-50K",
@@ -32,14 +32,14 @@ export type Member = {
 };
 
 const MOCK_MEMBER: Member = {
-  id: "mock-anton",
-  handle: "anton",
-  displayName: "Anton",
-  email: "anton@nowmakeit.eu",
+  id: "mock-munk",
+  handle: "Munk",
+  displayName: "Mikael Munk",
+  email: "munk@nowmakeit.eu",
   tier: "Legend",
   joinedAt: "2024-09-12",
   onboardedAt: "2024-09-12T00:00:00Z",
-  isCoach: true, // demo mode: treat ANTON-01 as the head coach
+  isCoach: true, // demo mode: treat MUNK-01 as the head coach
 };
 
 export function isValidMockInvite(code: string) {
@@ -76,12 +76,12 @@ export async function getSession(): Promise<Member | null> {
     };
   }
 
-  // Demo mode — cookie-based mock. ANTON-01 acts as the head coach so
+  // Demo mode — cookie-based mock. MUNK-01 acts as the head coach so
   // we can demo the /coach surfaces; other invite codes are regular crew.
   const c = await cookies();
   const v = c.get(SESSION_COOKIE)?.value;
   if (!v) return null;
-  return { ...MOCK_MEMBER, isCoach: v === "ANTON-01" };
+  return { ...MOCK_MEMBER, isCoach: v === "MUNK-01" };
 }
 
 export async function isAuthed() {

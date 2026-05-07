@@ -5,7 +5,7 @@ const pillars = [
     id: "coaching",
     label: "02 — Coaching",
     title: "Programmer der virker. Coaches der løfter selv.",
-    body: "1:1 sessioner, 12-ugers strength- og hypertrofi-blokke, formchecks via video. Kurateret af Anton og crewets head coaches. Ikke generisk app-content.",
+    body: "1:1 sessioner, 12-ugers strength- og hypertrofi-blokke, formchecks via video. Kurateret af Mikael Munk og crewets head coaches. Ikke generisk app-content.",
     bullets: [
       "Strength · Hypertrophy · Powerbuilding",
       "Video form-check inden for 24 timer",
@@ -29,7 +29,7 @@ const pillars = [
     id: "reps",
     label: "04 — Reps Program",
     title: "Dit arbejde belønner sig.",
-    body: "Tjen Reps for køb, programmer du gennemfører, PR'er du poster, og folk du inviterer ind. Bytt dem til limited drops, custom-strap-farver, early access og 1:1 tid med Anton.",
+    body: "Tjen Reps for køb, programmer du gennemfører, PR'er du poster, og folk du inviterer ind. Bytt dem til limited drops, custom-strap-farver, early access og 1:1 tid med Mikael Munk.",
     bullets: [
       "Tier: Lifter → Athlete → Beast → Legend",
       "Limited drops kun for medlemmer",

@@ -6,7 +6,7 @@
 
 -- Invite codes (initial batch — same set as the dev mock)
 insert into public.invite_codes (code, max_uses, note) values
-  ('ANTON-01',       100, 'Personal invite from Anton'),
+  ('MUNK-01',       100, 'Personal invite from Mikael Munk'),
   ('MAKEIT-CREW',    100, 'Crew invite'),
   ('FOUNDERS-2026',  50,  'Founders cohort'),
   ('STRAPIT-50K',    25,  'Celebrating 50.000 sold straps'),

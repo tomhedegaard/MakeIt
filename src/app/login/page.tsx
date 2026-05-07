@@ -60,8 +60,8 @@ function MockForm({ err }: { err?: string }) {
       <p className="text-fg-dim mb-10 leading-relaxed">
         Indtast din invite-kode for at få adgang. Har du ikke en?
         Skriv til{" "}
-        <a className="underline hover:text-fg" href="mailto:anton@nowmakeit.eu">
-          anton@nowmakeit.eu
+        <a className="underline hover:text-fg" href="mailto:munk@nowmakeit.eu">
+          munk@nowmakeit.eu
         </a>
         .
       </p>
@@ -75,7 +75,7 @@ function MockForm({ err }: { err?: string }) {
             autoFocus
             autoComplete="off"
             spellCheck={false}
-            placeholder="ANTON-01"
+            placeholder="MUNK-01"
             className="field"
           />
         </label>
@@ -92,7 +92,7 @@ function MockForm({ err }: { err?: string }) {
       </form>
 
       <p className="mt-6 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
-        Test-koder: <span className="text-fg-dim">ANTON-01 · MAKEIT-CREW · STRAPIT-50K</span>
+        Test-koder: <span className="text-fg-dim">MUNK-01 · MAKEIT-CREW · STRAPIT-50K</span>
       </p>
     </>
   );
@@ -126,7 +126,7 @@ function SupabaseForm({ err }: { err?: string }) {
             required
             autoComplete="off"
             spellCheck={false}
-            placeholder="ANTON-01"
+            placeholder="MUNK-01"
             className="field"
           />
         </label>

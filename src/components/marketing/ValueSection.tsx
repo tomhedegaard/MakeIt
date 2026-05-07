@@ -25,7 +25,7 @@ const PILLARS = [
     eyebrow: "Mennesker til milepæle",
     title: "Crew + coach når det tæller",
     body:
-      "PR-fejringer, deload-snak, og 1:1 tid med Anton når du er på vej mod et nyt loft. " +
+      "PR-fejringer, deload-snak, og 1:1 tid med Mikael Munk når du er på vej mod et nyt loft. " +
       "Resten af tiden holder fællesskabet dig ansvarlig.",
     foot: "Crew-feed · 1:1 ved milepæle",
   },

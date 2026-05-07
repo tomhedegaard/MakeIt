@@ -33,7 +33,7 @@ export default function MarketingFooter() {
             <div className="eyebrow mb-4">Kontakt</div>
             <ul className="space-y-2.5 text-fg/85 text-sm">
               <li>Engvej 169, 2300 København S</li>
-              <li><a href="mailto:anton@nowmakeit.eu">anton@nowmakeit.eu</a></li>
+              <li><a href="mailto:munk@nowmakeit.eu">munk@nowmakeit.eu</a></li>
               <li><a href="https://www.instagram.com/makeiteu/">Instagram @makeiteu</a></li>
             </ul>
 

@@ -5,7 +5,7 @@ import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getFeedPosts, type FeedPost } from "@/lib/data/community";
 
 const STORIES = [
-  { who: "@anton",      tier: "Legend",  trained: true },
+  { who: "@Munk",      tier: "Legend",  trained: true },
   { who: "@nina_dl",    tier: "Beast",   trained: true },
   { who: "@kasper_s",   tier: "Athlete", trained: true },
   { who: "@maria.lift", tier: "Beast",   trained: true },
@@ -34,7 +34,7 @@ const MOCK_FEED: FeedPost[] = [
     reactionsCount: 28, commentsCount: 8, reactedByMe: false,
   },
   {
-    id: "m4", who: "@anton", tier: "Legend",
+    id: "m4", who: "@Munk", tier: "Legend",
     content: "Limited cuff-farve drops på fredag — kun for crewet. Olive er tilbage.",
     tag: null, isPr: false, whenLabel: "5t",
     reactionsCount: 122, commentsCount: 31, reactedByMe: false,
@@ -51,7 +51,7 @@ const LEADERBOARD = [
   { rank: "01", who: "@nina_dl",    score: "412.5", lift: "Total · kg" },
   { rank: "02", who: "@kasper_s",   score: "405.0", lift: "Total · kg" },
   { rank: "03", who: "@maria.lift", score: "382.5", lift: "Total · kg" },
-  { rank: "04", who: "@anton",      score: "377.5", lift: "Total · kg" },
+  { rank: "04", who: "@Munk",      score: "377.5", lift: "Total · kg" },
   { rank: "05", who: "@frederik",   score: "340.0", lift: "Total · kg" },
 ];
 

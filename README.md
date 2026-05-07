@@ -36,7 +36,7 @@ npm run dev -- -p 3002
 På `/login` bruger du én af disse invite-koder under beta:
 
 ```
-ANTON-01
+MUNK-01
 MAKEIT-CREW
 STRAPIT-50K
 FOUNDERS-2026
@@ -82,9 +82,9 @@ og demo-data.
 > kun at køre de nye numre.
 
 > **Coach-rolle**: 0004 promoverer automatisk en bruger med handle
-> `anton` eller email `anton@nowmakeit.eu` til coach. Andre coaches
-> kan flippes manuelt med `update public.members set is_coach = true
-> where handle = 'X';` i SQL Editor.
+> `Munk` (case-insensitive) eller email `munk@nowmakeit.eu` til coach.
+> Andre coaches kan flippes manuelt med `update public.members set
+> is_coach = true where handle = 'X';` i SQL Editor.
 
 ### 3. Sæt env-vars op
 

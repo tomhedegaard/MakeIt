@@ -5,7 +5,7 @@ const TIERS = [
   { name: "Lifter",  range: "0 — 999",        perks: ["Adgang til crew-feed", "Månedlige challenges", "5% medlemsrabat"] },
   { name: "Athlete", range: "1.000 — 4.999",  perks: ["Alt fra Lifter", "Early access til drops", "10% rabat", "1 form-check pr. md."] },
   { name: "Beast",   range: "5.000 — 14.999", perks: ["Alt fra Athlete", "Custom strap-farve (1 stk/år)", "15% rabat", "VIP til IRL-meets"] },
-  { name: "Legend",  range: "15.000+",        perks: ["Alt fra Beast", "1:1 tid med Anton", "Limited drops i navnet dit", "20% rabat livstid"] },
+  { name: "Legend",  range: "15.000+",        perks: ["Alt fra Beast", "1:1 tid med Mikael Munk", "Limited drops i navnet dit", "20% rabat livstid"] },
 ];
 
 const HOW = [
@@ -19,7 +19,7 @@ const HOW = [
 
 const REWARDS = [
   { v: "1.200", k: "Limited cuff-farve",       sub: "Olive · kun 80 stk" },
-  { v: "2.000", k: "1:1 form-check",            sub: "30 min med Anton" },
+  { v: "2.000", k: "1:1 form-check",            sub: "30 min med Mikael Munk" },
   { v: "3.500", k: "Custom-broderet strap",     sub: "Dit handle på din strap" },
   { v: "8.000", k: "Open House VIP-pakke",      sub: "Træning + middag · Amagerbro" },
 ];

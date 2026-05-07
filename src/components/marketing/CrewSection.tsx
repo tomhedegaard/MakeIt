@@ -30,7 +30,7 @@ export default function CrewSection() {
               {[
                 {
                   k: "Inviteret adgang",
-                  v: "Kun via personlig kode fra Anton eller en eksisterende crew-medlem.",
+                  v: "Kun via personlig kode fra Mikael Munk eller en eksisterende crew-medlem.",
                 },
                 {
                   k: "Bygget internt",

@@ -14,6 +14,7 @@ import {
   type MemberStats,
 } from "@/lib/data/dashboard";
 import { ensureMemberStarter } from "@/lib/data/seed-member";
+import { getMyFormChecks } from "@/lib/data/me";
 
 const MOCK_UPCOMING = [
   { d: "I morgen", t: "Pause-bench, ringe-row, push-press", m: "55m" },
@@ -82,6 +83,14 @@ export default async function TodayPage() {
     today = todayCardFromMock();
   }
 
+  // Coach-review notification: surface a banner when there are new
+  // form-checks with coach notes the member hasn't seen yet. (No
+  // "read" state in v1, so we just show count of reviewed-with-notes.)
+  const myChecks = await getMyFormChecks(member.id, 5);
+  const reviewedCount = myChecks.filter(
+    (c) => c.reviewedAt && c.coachNotes
+  ).length;
+
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       {/* Greeting */}
@@ -98,6 +107,32 @@ export default async function TodayPage() {
           <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">dage</div>
         </div>
       </header>
+
+      {reviewedCount > 0 ? (
+        <Link
+          href="/profile#form-checks"
+          className="block surface-2 rounded-xl px-5 py-4 lift"
+          style={{ borderColor: "var(--line-bright)" }}
+        >
+          <div className="flex items-center gap-3">
+            <span className="pulse-dot" />
+            <div className="flex-1 min-w-0">
+              <div className="text-sm">
+                Mikael Munk har besvaret{" "}
+                <span className="text-fg">
+                  {reviewedCount} form-check{reviewedCount === 1 ? "" : "s"}
+                </span>
+              </div>
+              <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-0.5">
+                Læs noter på din profil
+              </div>
+            </div>
+            <span className="text-fg-dim shrink-0" aria-hidden>
+              →
+            </span>
+          </div>
+        </Link>
+      ) : null}
 
       {/* Today's session */}
       <section
