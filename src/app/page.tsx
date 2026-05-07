@@ -2,8 +2,11 @@ import MarketingNav from "@/components/marketing/MarketingNav";
 import Hero from "@/components/marketing/Hero";
 import CrewSection from "@/components/marketing/CrewSection";
 import PillarsSection from "@/components/marketing/PillarsSection";
+import AppShowcase from "@/components/marketing/AppShowcase";
 import ValueSection from "@/components/marketing/ValueSection";
+import Testimonials from "@/components/marketing/Testimonials";
 import OriginSection from "@/components/marketing/OriginSection";
+import FAQ from "@/components/marketing/FAQ";
 import MarketingFooter from "@/components/marketing/Footer";
 import Marquee from "@/components/Marquee";
 
@@ -26,8 +29,11 @@ export default function Home() {
         />
         <CrewSection />
         <PillarsSection />
+        <AppShowcase />
         <ValueSection />
+        <Testimonials />
         <OriginSection />
+        <FAQ />
       </main>
       <MarketingFooter />
     </>
