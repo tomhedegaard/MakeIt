@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
@@ -10,6 +11,7 @@ import {
   type EquipmentLevel,
   type ProfileInput,
 } from "@/lib/data/program-generator";
+import { sendWelcomeEmail } from "@/lib/email/templates/welcome";
 
 const GOALS: GoalFocus[] = [
   "strength",
@@ -154,6 +156,31 @@ export async function completeOnboardingAction(formData: FormData) {
         }))
       );
     }
+  }
+
+  // Welcome email — best-effort, never blocks the redirect.
+  try {
+    const { data: m } = await supabase
+      .from("members")
+      .select("email, handle")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (m?.email) {
+      const firstSession = generated.sessions[0];
+      const h = await headers();
+      const proto = h.get("x-forwarded-proto") ?? "http";
+      const host = h.get("host") ?? "localhost:3002";
+      await sendWelcomeEmail({
+        to: m.email,
+        handle: m.handle,
+        programName: generated.programName,
+        firstSessionLabel: firstSession?.dayLabel ?? null,
+        baseUrl: `${proto}://${host}`,
+      });
+    }
+  } catch (err) {
+    console.warn("[onboarding] welcome email failed:", err);
   }
 
   redirect("/dashboard");

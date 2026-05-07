@@ -1,6 +1,7 @@
 import Container from "@/components/Container";
 import PostComposer from "@/components/community/PostComposer";
 import PostCard from "@/components/community/PostCard";
+import RealtimeIndicator from "@/components/community/RealtimeIndicator";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getFeedPosts, type FeedPost } from "@/lib/data/community";
 
@@ -65,6 +66,7 @@ export default async function CrewPage() {
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
+      <RealtimeIndicator />
       {/* Header + post composer */}
       <header className="flex items-end justify-between gap-4 pt-2">
         <div>

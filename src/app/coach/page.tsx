@@ -5,6 +5,7 @@ import {
   getMembersSummary,
   getPendingFormChecks,
 } from "@/lib/data/coach";
+import SendDigestButton from "@/components/coach/SendDigestButton";
 
 export default async function CoachOverviewPage() {
   const [overview, members, pending] = await Promise.all([
@@ -21,15 +22,18 @@ export default async function CoachOverviewPage() {
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
-      <header className="pt-2">
-        <div className="eyebrow mb-2">Coach console</div>
-        <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">
-          Overblik.
-        </h1>
-        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-          Hele crewets aktivitet samlet — fra form-check-kø til hvem der venter
-          på et nyt program.
-        </p>
+      <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2">Coach console</div>
+          <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">
+            Overblik.
+          </h1>
+          <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+            Hele crewets aktivitet samlet — fra form-check-kø til hvem der venter
+            på et nyt program.
+          </p>
+        </div>
+        <SendDigestButton />
       </header>
 
       {/* KPI row */}
