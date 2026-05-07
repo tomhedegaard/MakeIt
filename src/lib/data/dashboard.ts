@@ -11,6 +11,7 @@ export type TodayCard = {
   programCode: string;
   programName?: string;
   week: number;
+  isDeload: boolean;
   dayLabel: string;
   title: string;
   estimatedMinutes: number;
@@ -88,11 +89,13 @@ export async function getTodayCard(memberId: string): Promise<TodayCard | null> 
   const setCount = exercises.reduce((a, e) => a + (e.sets?.length ?? 0), 0);
   const program = unwrapProgram(data.program);
 
+  const week = data.week ?? 1;
   return {
     id: data.id,
     programCode: program?.code ?? "—",
     programName: program?.name,
-    week: data.week ?? 1,
+    week,
+    isDeload: week > 0 && week % 4 === 0,
     dayLabel: data.day_label ?? "",
     title: data.title,
     estimatedMinutes: data.estimated_minutes ?? 0,

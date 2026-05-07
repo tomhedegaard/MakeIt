@@ -1,5 +1,8 @@
 import Container from "@/components/Container";
 import PostComposer from "@/components/community/PostComposer";
+import PostCard from "@/components/community/PostCard";
+import { SUPABASE_ENABLED } from "@/lib/supabase/env";
+import { getFeedPosts, type FeedPost } from "@/lib/data/community";
 
 const STORIES = [
   { who: "@anton",      tier: "Legend",  trained: true },
@@ -11,31 +14,36 @@ const STORIES = [
   { who: "@oliver",     tier: "Lifter",  trained: false },
 ];
 
-const FEED = [
+const MOCK_FEED: FeedPost[] = [
   {
-    who: "@nina_dl", tier: "Beast",
-    what: "Ny DL PR — 175 kg @ 68 kg BW. Brugte sorte StrapIts, hænderne overlevede.",
-    when: "2m", pr: true, reps: 84, comments: 12,
+    id: "m1", who: "@nina_dl", tier: "Beast",
+    content: "Ny DL PR — 175 kg @ 68 kg BW. Brugte sorte StrapIts, hænderne overlevede.",
+    tag: "PR", isPr: true, whenLabel: "2m",
+    reactionsCount: 84, commentsCount: 12, reactedByMe: false,
   },
   {
-    who: "@kasper_s", tier: "Athlete",
-    what: "Afsluttet uge 8 af PR-Block. Squat top single 162.5 kg, sad let.",
-    when: "1t", pr: false, reps: 41, comments: 5,
+    id: "m2", who: "@kasper_s", tier: "Athlete",
+    content: "Afsluttet uge 8 af PR-Block. Squat top single 162.5 kg, sad let.",
+    tag: null, isPr: false, whenLabel: "1t",
+    reactionsCount: 41, commentsCount: 5, reactedByMe: false,
   },
   {
-    who: "@maria.lift", tier: "Beast",
-    what: "Form-check video uploadet — bench-pause med 90 kg. Tager gerne kommentarer.",
-    when: "3t", pr: false, reps: 28, comments: 8, formcheck: true,
+    id: "m3", who: "@maria.lift", tier: "Beast",
+    content: "Form-check video uploadet — bench-pause med 90 kg. Tager gerne kommentarer.",
+    tag: "Form-check", isPr: false, formcheck: true, whenLabel: "3t",
+    reactionsCount: 28, commentsCount: 8, reactedByMe: false,
   },
   {
-    who: "@anton", tier: "Legend",
-    what: "Limited cuff-farve drops på fredag — kun for crewet. Olive er tilbage.",
-    when: "5t", pr: false, reps: 122, comments: 31,
+    id: "m4", who: "@anton", tier: "Legend",
+    content: "Limited cuff-farve drops på fredag — kun for crewet. Olive er tilbage.",
+    tag: null, isPr: false, whenLabel: "5t",
+    reactionsCount: 122, commentsCount: 31, reactedByMe: false,
   },
   {
-    who: "@frederik", tier: "Lifter",
-    what: "Første dag på Build Phase. 4 sæt squat. Allerede pumped.",
-    when: "8t", pr: false, reps: 12, comments: 3,
+    id: "m5", who: "@frederik", tier: "Lifter",
+    content: "Første dag på Build Phase. 4 sæt squat. Allerede pumped.",
+    tag: null, isPr: false, whenLabel: "8t",
+    reactionsCount: 12, commentsCount: 3, reactedByMe: false,
   },
 ];
 
@@ -47,7 +55,14 @@ const LEADERBOARD = [
   { rank: "05", who: "@frederik",   score: "340.0", lift: "Total · kg" },
 ];
 
-export default function CrewPage() {
+export default async function CrewPage() {
+  // In connected mode: fetch real feed. Empty array = no posts yet (show empty state).
+  // In demo mode: getFeedPosts returns null → render mock feed.
+  const realFeed = await getFeedPosts(30);
+  const useReal = SUPABASE_ENABLED && realFeed !== null;
+  const feed = useReal ? realFeed : MOCK_FEED;
+  const isEmpty = useReal && feed.length === 0;
+
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       {/* Header + post composer */}
@@ -142,76 +157,32 @@ export default function CrewPage() {
       <section>
         <div className="flex items-end justify-between mb-3">
           <div className="eyebrow">Live feed</div>
-          <span className="text-xs font-mono text-fg-faint">Senest opdateret · nu</span>
+          <span className="text-xs font-mono text-fg-faint">
+            {useReal ? `${feed.length} posts` : "Senest opdateret · nu"}
+          </span>
         </div>
-        <ul className="space-y-3">
-          {FEED.map((f, i) => (
-            <li key={i}>
-              <article className="surface-2 rounded-2xl p-5 lift">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
-                      {f.who.slice(1, 3).toUpperCase()}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-sm truncate">{f.who}</div>
-                      <div className="eyebrow text-[10px]">{f.tier}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    {f.pr ? (
-                      <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
-                        ★ PR
-                      </span>
-                    ) : null}
-                    {f.formcheck ? (
-                      <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
-                        AI
-                      </span>
-                    ) : null}
-                    <span className="numeric text-xs text-fg-faint">{f.when}</span>
-                  </div>
-                </div>
 
-                <p className="text-fg/90 text-sm md:text-base leading-relaxed mb-4">
-                  {f.what}
-                </p>
-
-                {f.formcheck ? (
-                  <div className="surface rounded-xl p-3 mb-4 flex items-center gap-3">
-                    <div className="size-12 rounded bg-bg-3 flex items-center justify-center shrink-0">
-                      <svg viewBox="0 0 24 24" className="size-5 text-fg-dim" fill="none" aria-hidden>
-                        <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
-                        <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-                        <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
-                      </svg>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-xs font-mono text-fg-dim">Form-check video · 0:14</div>
-                      <div className="text-sm">Bench Press · AI score 87/100</div>
-                    </div>
-                    <button type="button" className="btn btn-sm">Se</button>
-                  </div>
-                ) : null}
-
-                <div className="border-t hairline pt-3 flex items-center gap-1 text-xs font-mono text-fg-dim">
-                  <button type="button" className="px-3 py-1.5 rounded-md hover:text-fg hover:bg-bg-3 flex items-center gap-2">
-                    <span>+</span>
-                    <span className="numeric">{f.reps}</span>
-                    <span>Reps</span>
-                  </button>
-                  <button type="button" className="px-3 py-1.5 rounded-md hover:text-fg hover:bg-bg-3 flex items-center gap-2">
-                    <span className="numeric">{f.comments}</span>
-                    <span>Kommentar</span>
-                  </button>
-                  <button type="button" className="ml-auto px-3 py-1.5 rounded-md hover:text-fg hover:bg-bg-3">
-                    Del
-                  </button>
-                </div>
-              </article>
-            </li>
-          ))}
-        </ul>
+        {isEmpty ? (
+          <div className="surface-2 rounded-2xl p-8 text-center">
+            <div className="font-display text-2xl mb-2">Crewet er stille.</div>
+            <p className="text-fg-dim text-sm mb-4 max-w-sm mx-auto">
+              Vær den første til at dele en PR, en note eller et form-check. De andre kommer.
+            </p>
+            <PostComposer
+              trigger={
+                <button type="button" className="btn btn-primary btn-sm">+ Del</button>
+              }
+            />
+          </div>
+        ) : (
+          <ul className="space-y-3">
+            {feed.map((p) => (
+              <li key={p.id}>
+                <PostCard post={p} />
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       {/* Leaderboard */}

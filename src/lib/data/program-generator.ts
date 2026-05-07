@@ -394,3 +394,96 @@ export function generateProgram(profile: ProfileInput): {
     sessions,
   };
 }
+
+/* ----------------------------------------------------------------- *
+ * Week progression
+ * ----------------------------------------------------------------- */
+
+export type PrevSet = {
+  position: number;
+  target_reps: number;
+  target_weight: number | string;
+  target_rpe: number | string | null;
+  rest_sec: number | null;
+  logged_reps: number | null;
+  logged_weight: number | string | null;
+  logged_rpe: number | string | null;
+  logged_at: string | null;
+};
+
+export type PrevExercise = {
+  exercise_name: string;
+  cue: string | null;
+  position: number;
+  sets: PrevSet[];
+};
+
+export type PrevSession = {
+  day_label: string | null;
+  title: string;
+  estimated_minutes: number | null;
+  exercises: PrevExercise[];
+};
+
+/** Progressive overload rules — week N+1 from week N. */
+function progressSet(prev: PrevSet, isDeload: boolean): GeneratedSet {
+  const targetW = Number(prev.target_weight ?? 0);
+  const targetReps = prev.target_reps ?? 0;
+  const targetRpe = prev.target_rpe != null ? Number(prev.target_rpe) : null;
+  const restSec = prev.rest_sec ?? 0;
+
+  if (isDeload) {
+    return {
+      reps: targetReps,
+      weight: r25(targetW * 0.7),
+      rpe: null,
+      restSec,
+    };
+  }
+
+  const completed = prev.logged_at != null;
+  const loggedW = prev.logged_weight != null ? Number(prev.logged_weight) : null;
+  const loggedRpe = prev.logged_rpe != null ? Number(prev.logged_rpe) : null;
+  const baseW = completed && loggedW != null ? loggedW : targetW;
+
+  // Bodyweight stays bodyweight (we'd need a reps-progression rule instead)
+  if (baseW <= 0) {
+    return { reps: targetReps, weight: 0, rpe: targetRpe, restSec };
+  }
+
+  // If logged at RPE > 8.5, hold weight — too heavy to add yet.
+  if (completed && loggedRpe != null && loggedRpe > 8.5) {
+    return { reps: targetReps, weight: r25(baseW), rpe: targetRpe, restSec };
+  }
+
+  return { reps: targetReps, weight: r25(baseW * 1.025), rpe: targetRpe, restSec };
+}
+
+export function progressWeek(
+  prev: PrevSession[],
+  isDeload: boolean
+): GeneratedSession[] {
+  const offsets = [0, 1, 3, 4];
+  return prev.map((s, idx) => ({
+    dayLabel: s.day_label ?? `Dag ${idx + 1}`,
+    title: isDeload ? `${s.title} — DELOAD` : s.title,
+    estimatedMinutes: s.estimated_minutes ?? 60,
+    scheduledOffsetDays: offsets[idx] ?? idx,
+    exercises: s.exercises
+      .slice()
+      .sort((a, b) => a.position - b.position)
+      .map((ex) => ({
+        name: ex.exercise_name,
+        cue: ex.cue ?? "",
+        sets: ex.sets
+          .slice()
+          .sort((a, b) => a.position - b.position)
+          .map((st) => progressSet(st, isDeload)),
+      })),
+  }));
+}
+
+/** Returns true when this week index is a deload (every 4th). */
+export function isDeloadWeek(weekNumber: number): boolean {
+  return weekNumber > 0 && weekNumber % 4 === 0;
+}

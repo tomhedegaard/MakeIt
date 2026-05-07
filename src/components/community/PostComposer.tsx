@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
+import { createPostAction } from "@/app/(app)/community/actions";
 
 export default function PostComposer({
   trigger,
@@ -13,6 +15,27 @@ export default function PostComposer({
   const [text, setText] = useState("");
   const [tag, setTag] = useState<"PR" | "Note" | "Form-check" | null>(null);
   const [formCheckOpen, setFormCheckOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  function reset() {
+    setText("");
+    setTag(null);
+  }
+
+  function submit() {
+    const fd = new FormData();
+    fd.set("content", text);
+    if (tag) fd.set("tag", tag);
+    startTransition(async () => {
+      const res = await createPostAction(fd);
+      if (res.ok) {
+        reset();
+        setOpen(false);
+        router.refresh();
+      }
+    });
+  }
 
   return (
     <>
@@ -78,21 +101,17 @@ export default function PostComposer({
               type="button"
               className="btn"
               onClick={() => setOpen(false)}
+              disabled={isPending}
             >
               Annullér
             </button>
             <button
               type="button"
               className="btn btn-primary"
-              disabled={!text.trim() && !tag}
-              onClick={() => {
-                // Mock: just close — real persistence comes with auth/db
-                setText("");
-                setTag(null);
-                setOpen(false);
-              }}
+              disabled={!text.trim() || isPending}
+              onClick={submit}
             >
-              Del →
+              {isPending ? "Sender…" : "Del →"}
             </button>
           </div>
         </SheetContent>

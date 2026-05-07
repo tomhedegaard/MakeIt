@@ -33,6 +33,7 @@ function todayCardFromMock(): TodayCard {
     programCode: TODAY_SESSION.programCode,
     programName: TODAY_SESSION.programName,
     week: TODAY_SESSION.week,
+    isDeload: false,
     dayLabel: TODAY_SESSION.dayLabel,
     title: TODAY_SESSION.title,
     estimatedMinutes: TODAY_SESSION.estimatedMinutes,
@@ -104,9 +105,14 @@ export default async function TodayPage() {
         className="surface-2 rounded-2xl overflow-hidden"
       >
         <div className="px-5 pt-5 pb-4 border-b hairline">
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-2 mb-3 flex-wrap">
             <span className="pulse-dot" />
             <span className="eyebrow">Dagens session · {today.programCode} · uge {today.week}</span>
+            {today.isDeload ? (
+              <span className="ml-auto numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+                Deload
+              </span>
+            ) : null}
           </div>
           <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
             {today.dayLabel}

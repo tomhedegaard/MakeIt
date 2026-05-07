@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { revalidatePath } from "next/cache";
+import { maybeAdvanceWeek } from "@/lib/data/week-progression";
 
 /**
  * Persist a single logged set. No-op in demo mode so UI keeps working.
@@ -66,6 +67,15 @@ export async function completeSessionAction(sessionId: string): Promise<{
   const { data: awarded } = await supabase.rpc("award_session_reps", {
     p_session_id: sessionId,
   });
+
+  // After completing this session, see if the week is done.
+  // If yes, generate next week (idempotent — bails if not done).
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    await maybeAdvanceWeek(user.id);
+  }
 
   // Revalidate views that show member stats / today card / feed.
   revalidatePath("/dashboard");
