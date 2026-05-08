@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Container from "@/components/Container";
+import { Display } from "@/components/DisplayHeading";
 import Link from "next/link";
 
 const ease = [0.2, 0.7, 0.2, 1] as const;
@@ -46,7 +47,7 @@ export default function Hero() {
               }}
               className="inline-block overflow-hidden mr-[0.18em] last:mr-0"
             >
-              <span className="block">{word}</span>
+              <span className="block"><Display>{word}</Display></span>
             </motion.span>
           ))}
         </motion.h1>
