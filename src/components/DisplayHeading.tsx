@@ -1,36 +1,35 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Stylized uppercase "A" — two filled triangles flanking an inner
- * triangular counter, sharp miters in the same geometric language as
- * the MakeIt mark. Sized in em so it tracks the parent font-size.
+ * Stylized uppercase "A" — two filled triangles meeting at the apex
+ * with a visible base-gap between them, in the same geometric language
+ * as the MakeIt mark. Sized in em so it tracks the parent font-size.
  */
 export function DisplayA({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 32 32"
+      viewBox="0 0 40 32"
       aria-hidden
       className={cn("inline-block", className)}
       style={{
-        height: "0.72em",
-        width: "0.78em",
+        height: "0.78em",
+        width: "0.92em",
         verticalAlign: "baseline",
         marginRight: "0.01em",
       }}
     >
-      <path
-        d="M2 30 L16 2 L30 30 Z M10 25 L16 13 L22 25 Z"
-        fill="currentColor"
-        fillRule="evenodd"
-      />
+      {/* Left triangle: bottom-left → apex → split-base */}
+      <path d="M2 31 L20 1 L17 31 Z" fill="currentColor" />
+      {/* Right triangle: apex → bottom-right → split-base */}
+      <path d="M20 1 L38 31 L23 31 Z" fill="currentColor" />
     </svg>
   );
 }
 
 /**
  * Wraps a headline string and replaces every uppercase "A" with the
- * triangle-A glyph. The original text is preserved on the wrapper via
- * aria-label so screen readers and copy-paste still see "A".
+ * triangle-A glyph. Strings without an "A" are returned untouched so
+ * they don't pick up extra DOM nesting that would shift line-height.
  */
 export function Display({
   children,
@@ -39,6 +38,9 @@ export function Display({
   children: string;
   className?: string;
 }) {
+  if (!children.includes("A")) {
+    return className ? <span className={className}>{children}</span> : <>{children}</>;
+  }
   const parts = children.split("A");
   return (
     <span aria-label={children} className={className}>
