@@ -56,29 +56,36 @@ export default async function CoachOverviewPage() {
             <Link href="/coach/members" className="btn btn-sm">Alle members →</Link>
           </div>
 
-          <ul className="divide-y hairline">
-            {recentlyActive.map((m) => (
-              <li key={m.id} className="px-5 py-3 flex items-center gap-4">
-                <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
-                  {m.handle.slice(0, 2).toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm">@{m.handle}</div>
-                  <div className="text-[11px] font-mono text-fg-faint">
-                    {m.programCode ? `${m.programCode} · uge ${m.programWeek}` : "Ingen aktivt program"}
+          {recentlyActive.length === 0 ? (
+            <div className="p-6 text-sm text-fg-dim text-center">
+              Ingen sessioner registreret endnu — så snart crewet logger træning,
+              dukker de senest aktive op her.
+            </div>
+          ) : (
+            <ul className="divide-y hairline">
+              {recentlyActive.map((m) => (
+                <li key={m.id} className="px-5 py-3 flex items-center gap-4">
+                  <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
+                    {m.handle.slice(0, 2).toUpperCase()}
                   </div>
-                </div>
-                <span className="numeric text-xs text-fg-dim shrink-0">{m.lastSessionDate}</span>
-                <Link
-                  href={`/coach/members/${m.id}`}
-                  className="text-fg-dim hover:text-fg"
-                  aria-label={`Åbn ${m.handle}`}
-                >
-                  →
-                </Link>
-              </li>
-            ))}
-          </ul>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm">@{m.handle}</div>
+                    <div className="text-[11px] font-mono text-fg-faint">
+                      {m.programCode ? `${m.programCode} · uge ${m.programWeek}` : "Ingen aktivt program"}
+                    </div>
+                  </div>
+                  <span className="numeric text-xs text-fg-dim shrink-0">{m.lastSessionDate}</span>
+                  <Link
+                    href={`/coach/members/${m.id}`}
+                    className="text-fg-dim hover:text-fg"
+                    aria-label={`Åbn ${m.handle}`}
+                  >
+                    →
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
 
         <aside className="surface-2 rounded-2xl overflow-hidden">
