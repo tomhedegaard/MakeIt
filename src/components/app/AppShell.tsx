@@ -11,9 +11,10 @@ import MobileTabBar from "@/components/app/MobileTabBar";
 const NAV = [
   { href: "/dashboard", label: "Today",     num: "01" },
   { href: "/coaching",  label: "Træn",      num: "02" },
-  { href: "/community", label: "Crew",      num: "03" },
-  { href: "/reps",      label: "Reps",      num: "04" },
-  { href: "/profile",   label: "Mig",       num: "05" },
+  { href: "/nutrition", label: "Mad",       num: "03" },
+  { href: "/community", label: "Crew",      num: "04" },
+  { href: "/reps",      label: "Reps",      num: "05" },
+  { href: "/profile",   label: "Mig",       num: "06" },
 ];
 
 export default function AppShell({

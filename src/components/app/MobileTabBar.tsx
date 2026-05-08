@@ -38,11 +38,18 @@ const Icon = {
       <path d="M4 20c0-3.5 3.6-6 8-6s8 2.5 8 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   ),
+  food: (
+    <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
+      <path d="M3 12h18a9 9 0 0 1-18 0z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M9 7c0 1 1 1.5 1 3M14 6c0 1.2 1 1.8 1 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  ),
 };
 
 const TABS: Tab[] = [
   { href: "/dashboard", label: "Today", icon: Icon.today },
   { href: "/coaching",  label: "Træn",  icon: Icon.train },
+  { href: "/nutrition", label: "Mad",   icon: Icon.food },
   { href: "/community", label: "Crew",  icon: Icon.crew },
   { href: "/reps",      label: "Reps",  icon: Icon.reps },
   { href: "/profile",   label: "Mig",   icon: Icon.me },
