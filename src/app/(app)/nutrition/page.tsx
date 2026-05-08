@@ -39,12 +39,20 @@ export default async function NutritionPage() {
             smør, ikke rapsolie. Skyr og hytteost, ikke proteinbarer. Hele varer.
           </p>
         </div>
-        <Link
-          href="/nutrition/preferences"
-          className="btn btn-sm"
-        >
-          Indstillinger
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/nutrition/shopping"
+            className="btn btn-sm"
+          >
+            Indkøbsliste
+          </Link>
+          <Link
+            href="/nutrition/preferences"
+            className="btn btn-ghost btn-sm"
+          >
+            Indstillinger
+          </Link>
+        </div>
       </header>
 
       {plan === null ? (
