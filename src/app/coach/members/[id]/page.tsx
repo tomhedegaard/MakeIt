@@ -120,6 +120,12 @@ export default async function CoachMemberDetailPage({
                 >
                   {STATUS_LABELS[s.status] ?? s.status}
                 </span>
+                <Link
+                  href={`/coach/sessions/${s.id}/edit`}
+                  className="btn btn-sm btn-ghost shrink-0"
+                >
+                  Rediger
+                </Link>
               </li>
             ))
           )}

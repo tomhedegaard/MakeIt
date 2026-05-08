@@ -17,6 +17,7 @@ import { ensureMemberStarter } from "@/lib/data/seed-member";
 import { getMyFormChecks } from "@/lib/data/me";
 import { getLatestUnseenPromotion } from "@/lib/data/tier-events";
 import TierBanner from "@/components/app/TierBanner";
+import FirstTimeTour from "@/components/app/FirstTimeTour";
 
 const MOCK_UPCOMING = [
   { d: "I morgen", t: "Pause-bench, ringe-row, push-press", m: "55m" },
@@ -98,6 +99,7 @@ export default async function TodayPage() {
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
+      <FirstTimeTour />
       {/* Greeting */}
       <header className="flex items-end justify-between gap-4 pt-2">
         <div>
