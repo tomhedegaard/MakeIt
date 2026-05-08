@@ -23,11 +23,16 @@ export default async function ProfilePage() {
         title={`@${m.handle}`}
         subtitle={`Tier: ${m.tier} · Medlem siden ${new Date(m.joinedAt).toLocaleDateString("da-DK")}`}
         right={
-          m.isCoach ? (
-            <Link href="/coach" className="btn btn-primary btn-sm">
-              Åbn coach-konsol →
+          <div className="flex flex-wrap items-center gap-2">
+            <Link href="/settings" className="btn btn-sm">
+              Indstillinger
             </Link>
-          ) : undefined
+            {m.isCoach ? (
+              <Link href="/coach" className="btn btn-primary btn-sm">
+                Åbn coach-konsol →
+              </Link>
+            ) : null}
+          </div>
         }
       />
 

@@ -13,6 +13,7 @@ const PROTECTED = [
   "/onboarding",
   "/coach",
   "/billing",
+  "/settings",
 ];
 
 function needsAuth(pathname: string) {

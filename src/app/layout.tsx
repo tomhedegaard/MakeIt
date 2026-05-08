@@ -3,6 +3,7 @@ import { Inter, Archivo_Black, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import RevealObserver from "@/components/RevealObserver";
+import CookieBanner from "@/components/marketing/CookieBanner";
 
 const sans = Inter({
   variable: "--font-sans-stack",
@@ -58,6 +59,7 @@ export default function RootLayout({
         <SmoothScroll />
         <RevealObserver />
         {children}
+        <CookieBanner />
       </body>
     </html>
   );

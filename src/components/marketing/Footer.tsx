@@ -43,6 +43,10 @@ export default function MarketingFooter() {
 
         <div className="py-6 border-t hairline flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-fg-faint uppercase tracking-[0.16em]">
           <span>© {new Date().getFullYear()} MakeIt Danmark ApS</span>
+          <div className="flex items-center gap-5">
+            <Link href="/privacy" className="hover:text-fg">Privacy</Link>
+            <Link href="/terms" className="hover:text-fg">Vilkår</Link>
+          </div>
           <span>Made in DK · Closed Beta · v0.1</span>
         </div>
       </Container>

@@ -129,7 +129,7 @@ export async function addCommentAction(input: {
         supabase.from("members").select("handle, tier").eq("id", user.id).maybeSingle(),
         supabase
           .from("members")
-          .select("id, handle, email")
+          .select("id, handle, email, notif_mention")
           .filter("handle", "in", `(${handles.map((h) => `"${h}"`).join(",")})`)
           .or(lower.map((h) => `handle.ilike.${h}`).join(",")),
         supabase
@@ -148,9 +148,10 @@ export async function addCommentAction(input: {
       const host = h.get("host") ?? "localhost:3002";
       const baseUrl = `${proto}://${host}`;
 
-      // Skip self-mention; skip rows missing email.
+      // Skip self-mention; skip rows missing email; respect notif pref.
       for (const target of mentioned) {
         if (!target.email || target.id === user.id) continue;
+        if (target.notif_mention === false) continue;
         await sendMentionEmail({
           to: target.email,
           recipientHandle: target.handle,

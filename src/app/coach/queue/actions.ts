@@ -46,8 +46,8 @@ export async function reviewFormCheckAction(
         .from("form_checks")
         .select(
           `
-          exercise_name, ai_score, ai_headline,
-          member:members(email, handle)
+          exercise_name, ai_score, ai_headline, member_id,
+          member:members(email, handle, notif_form_check_review)
         `
         )
         .eq("id", formCheckId)
@@ -59,7 +59,7 @@ export async function reviewFormCheckAction(
           : fc.member
         : null;
 
-      if (m?.email) {
+      if (m?.email && m.notif_form_check_review !== false) {
         const h = await headers();
         const proto = h.get("x-forwarded-proto") ?? "http";
         const host = h.get("host") ?? "localhost:3002";

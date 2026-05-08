@@ -45,8 +45,9 @@ export async function sendWeeklyDigestAction(): Promise<{
 
   const { data: targets } = await supabase
     .from("members")
-    .select("email, handle")
-    .not("email", "is", null);
+    .select("email, handle, notif_digest")
+    .not("email", "is", null)
+    .neq("notif_digest", false);
 
   const h = await headers();
   const proto = h.get("x-forwarded-proto") ?? "http";
