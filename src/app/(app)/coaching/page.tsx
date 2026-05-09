@@ -2,43 +2,49 @@ import Link from "next/link";
 import Container from "@/components/Container";
 import { pricing } from "@/lib/pricing";
 import { TODAY_SESSION, totalSets } from "@/lib/workout";
+import { getSession } from "@/lib/auth";
+import { SUPABASE_ENABLED } from "@/lib/supabase/env";
+import {
+  getTodayCard,
+  getMemberStats,
+  type TodayCard,
+} from "@/lib/data/dashboard";
+import {
+  getActiveProgram,
+  getProgramLibrary,
+  getSessionStreak,
+  getWeekStrip,
+  mockWeekStrip,
+  type ActiveProgram,
+  type ProgramListing,
+  type WeekDay,
+} from "@/lib/data/coaching";
 
-const WEEK = [
-  { d: "Man", date: 4, label: "Squat",      done: true,  rest: false },
-  { d: "Tir", date: 5, label: "Push",       done: false, today: true,  rest: false },
-  { d: "Ons", date: 6, label: "Pull",       done: false, rest: false },
-  { d: "Tor", date: 7, label: "Deadlift",   done: false, rest: false },
-  { d: "Fre", date: 8, label: "Hyper",      done: false, rest: false },
-  { d: "Lør", date: 9, label: "Hvile",      done: false, rest: true  },
-  { d: "Søn", date: 10, label: "Aktiv",     done: false, rest: true  },
-];
+export default async function TrainPage() {
+  const member = await getSession();
+  const memberId = member?.id ?? null;
 
-const PROGRAMS = [
-  {
-    code: "STR-12", name: "PR-Block",  type: "Strength",       weeks: 12, coach: "Mikael Munk",  level: "Inter./Adv.",
-    desc: "Klassisk linær periodisering med RPE. Bygget til nye PR'er på squat, bench og DL.",
-    active: true, week: 4,
-  },
-  {
-    code: "HYP-08", name: "Build Phase", type: "Hypertrofi",   weeks: 8,  coach: "Maria",  level: "All levels",
-    desc: "Volumen-fokuseret blok med bro-split logik for ben, ryg og skuldre.",
-    active: false,
-  },
-  {
-    code: "PWR-10", name: "Powerbuilding", type: "Hybrid",     weeks: 10, coach: "Kasper", level: "Intermediate",
-    desc: "50/50 strength og hypertrofi. Tunge top-sets, accessory til æstetik.",
-    active: false,
-  },
-  {
-    code: "DL-06",  name: "Deadlift Spec.", type: "Specialization", weeks: 6, coach: "Mikael Munk", level: "Advanced",
-    desc: "Seks uger fokuseret 100% på dødløft. Pause-pulls, deficits, peak-protokol.",
-    active: false,
-  },
-];
+  const [todayCardDb, weekDb, activeDb, libraryDb, statsDb, streakDb] =
+    SUPABASE_ENABLED && memberId
+      ? await Promise.all([
+          getTodayCard(memberId),
+          getWeekStrip(memberId),
+          getActiveProgram(memberId),
+          getProgramLibrary(memberId),
+          getMemberStats(memberId),
+          getSessionStreak(memberId),
+        ])
+      : ([null, null, null, null, null, 0] as const);
 
-export default function TrainPage() {
-  const today = TODAY_SESSION;
-  const sets = totalSets(today);
+  const today: TodayCard = todayCardDb ?? todayCardFromMock();
+  const week: WeekDay[] = weekDb ?? mockWeekStrip();
+  const active: ActiveProgram | null = activeDb;
+  const library: ProgramListing[] = libraryDb ?? mockLibrary();
+  const sets = today.setCount > 0 ? today.setCount : totalSets(TODAY_SESSION);
+
+  const volumeKg = statsDb?.volumeKg ?? 0;
+  const prsThisMonth = statsDb?.prsThisMonth ?? 0;
+  const streakDays = streakDb;
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
@@ -58,37 +64,56 @@ export default function TrainPage() {
         className="-mx-6 md:mx-0 px-6 md:px-0 overflow-x-auto"
       >
         <ol className="flex gap-2 md:grid md:grid-cols-7 min-w-max md:min-w-0">
-          {WEEK.map((day) => {
-            const isToday = !!day.today;
-            return (
-              <li key={day.date} className="shrink-0 md:shrink">
-                <div
-                  className="surface-2 rounded-xl p-3 md:p-4 w-[78px] md:w-auto text-center lift"
-                  data-active={isToday}
-                  style={{
-                    background: isToday ? "var(--bg-3)" : undefined,
-                    borderColor: isToday ? "var(--line-bright)" : undefined,
-                  }}
-                >
-                  <div className="eyebrow mb-1.5">{day.d}</div>
-                  <div className="numeric text-2xl mb-1">
-                    {String(day.date).padStart(2, "0")}
-                  </div>
-                  <div className={`text-[10px] font-mono uppercase tracking-[0.14em] ${day.rest ? "text-fg-faint" : "text-fg-dim"}`}>
-                    {day.label}
-                  </div>
-                  <div className="mt-2 flex justify-center">
-                    {day.done ? (
-                      <span className="size-2 rounded-full bg-fg" aria-label="Gennemført" />
-                    ) : isToday ? (
-                      <span className="pulse-dot" aria-label="I dag" />
-                    ) : day.rest ? (
-                      <span className="size-2 rounded-full bg-fg-faint" aria-hidden />
-                    ) : (
-                      <span className="size-2 rounded-full border hairline-strong" aria-hidden />
-                    )}
-                  </div>
+          {week.map((day) => {
+            const inner = (
+              <div
+                className="surface-2 rounded-xl p-3 md:p-4 w-[78px] md:w-auto text-center lift"
+                data-active={day.today}
+                style={{
+                  background: day.today ? "var(--bg-3)" : undefined,
+                  borderColor: day.today ? "var(--line-bright)" : undefined,
+                }}
+              >
+                <div className="eyebrow mb-1.5">{day.label}</div>
+                <div className="numeric text-2xl mb-1">
+                  {String(day.date).padStart(2, "0")}
                 </div>
+                <div
+                  className={`text-[10px] font-mono uppercase tracking-[0.14em] ${
+                    day.rest ? "text-fg-faint" : "text-fg-dim"
+                  }`}
+                >
+                  {day.sessionLabel}
+                </div>
+                <div className="mt-2 flex justify-center">
+                  {day.done ? (
+                    <span
+                      className="size-2 rounded-full bg-fg"
+                      aria-label="Gennemført"
+                    />
+                  ) : day.today ? (
+                    <span className="pulse-dot" aria-label="I dag" />
+                  ) : day.rest ? (
+                    <span
+                      className="size-2 rounded-full bg-fg-faint"
+                      aria-hidden
+                    />
+                  ) : (
+                    <span
+                      className="size-2 rounded-full border hairline-strong"
+                      aria-hidden
+                    />
+                  )}
+                </div>
+              </div>
+            );
+            return (
+              <li key={day.iso} className="shrink-0 md:shrink">
+                {day.sessionId ? (
+                  <Link href={`/session/${day.sessionId}`}>{inner}</Link>
+                ) : (
+                  inner
+                )}
               </li>
             );
           })}
@@ -100,7 +125,9 @@ export default function TrainPage() {
         <div className="px-5 pt-5 pb-4 border-b hairline">
           <div className="flex items-center gap-2 mb-3">
             <span className="pulse-dot" />
-            <span className="eyebrow">I dag · {today.programCode} · uge {today.week}</span>
+            <span className="eyebrow">
+              I dag · {today.programCode} · uge {today.week}
+            </span>
           </div>
           <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
             {today.dayLabel}
@@ -109,7 +136,7 @@ export default function TrainPage() {
         </div>
 
         <div className="grid grid-cols-3 gap-px bg-line border-b hairline">
-          <Mini label="Øvelser" value={today.exercises.length} />
+          <Mini label="Øvelser" value={today.exerciseCount} />
           <Mini label="Sæt" value={sets} />
           <Mini label="Est. tid" value={today.estimatedMinutes} suffix="m" />
         </div>
@@ -122,45 +149,65 @@ export default function TrainPage() {
       </section>
 
       {/* Active program progress */}
-      <section className="surface-2 rounded-2xl p-5 lg:p-6">
-        <div className="flex items-end justify-between mb-3">
-          <div>
-            <div className="eyebrow mb-1">Aktivt program</div>
-            <div className="font-display text-2xl md:text-3xl">PR-Block</div>
+      {active ? (
+        <section className="surface-2 rounded-2xl p-5 lg:p-6">
+          <div className="flex items-end justify-between mb-3">
+            <div>
+              <div className="eyebrow mb-1">Aktivt program</div>
+              <div className="font-display text-2xl md:text-3xl">{active.name}</div>
+            </div>
+            <div className="text-right">
+              <div className="numeric text-3xl">
+                {String(active.currentWeek).padStart(2, "0")}{" "}
+                <span className="text-fg-dim text-base">/ {active.weeks}</span>
+              </div>
+              <div className="eyebrow">uger</div>
+            </div>
           </div>
-          <div className="text-right">
-            <div className="numeric text-3xl">04 <span className="text-fg-dim text-base">/ 12</span></div>
-            <div className="eyebrow">uger</div>
+          <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-fg"
+              style={{
+                width: `${Math.min(100, (active.currentWeek / active.weeks) * 100)}%`,
+              }}
+            />
           </div>
-        </div>
-        <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
-          <div className="h-full bg-fg" style={{ width: `${(4 / 12) * 100}%` }} />
-        </div>
-        <div className="mt-4 grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
-          <Mini label="Volumen" value="84.2K" suffix="kg" small />
-          <Mini label="PR'er" value="03" small />
-          <Mini label="Streak" value="12" suffix="d" small />
-        </div>
-      </section>
+          <div className="mt-4 grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
+            <Mini
+              label="Volumen"
+              value={formatVolume(volumeKg)}
+              suffix={volumeKg >= 1000 ? "" : "kg"}
+              small
+            />
+            <Mini
+              label="PR'er"
+              value={String(prsThisMonth).padStart(2, "0")}
+              small
+            />
+            <Mini label="Streak" value={streakDays} suffix="d" small />
+          </div>
+        </section>
+      ) : null}
 
       {/* Programs library */}
       <section>
         <div className="flex items-end justify-between mb-3">
           <div className="eyebrow">Programmer</div>
-          <span className="text-xs font-mono text-fg-faint">{PROGRAMS.length}</span>
+          <span className="text-xs font-mono text-fg-faint">{library.length}</span>
         </div>
 
         <ul className="space-y-3">
-          {PROGRAMS.map((p) => (
+          {library.map((p) => (
             <li key={p.code}>
               <article className="surface-2 rounded-2xl p-5 lg:p-6 lift">
                 <div className="flex items-start justify-between gap-4 mb-3">
                   <div className="min-w-0">
                     <div className="eyebrow mb-2">
                       {p.code} · {p.type}
-                      {p.active ? (
+                      {p.active && p.currentWeek ? (
                         <span className="ml-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border hairline-strong">
-                          <span className="size-1.5 rounded-full bg-fg" /> Aktiv · uge {p.week}
+                          <span className="size-1.5 rounded-full bg-fg" /> Aktiv
+                          · uge {p.currentWeek}
                         </span>
                       ) : null}
                     </div>
@@ -174,30 +221,37 @@ export default function TrainPage() {
                   </div>
                 </div>
 
-                <p className="text-fg-dim text-sm leading-relaxed mb-4">{p.desc}</p>
+                {p.description ? (
+                  <p className="text-fg-dim text-sm leading-relaxed mb-4">
+                    {p.description}
+                  </p>
+                ) : null}
 
                 <div className="grid grid-cols-2 gap-px bg-line border hairline rounded-lg overflow-hidden mb-4">
                   <div className="bg-bg-2 px-3 py-2.5">
                     <div className="eyebrow mb-0.5">Coach</div>
-                    <div className="text-sm">{p.coach}</div>
+                    <div className="text-sm">{p.coachName ?? "AI + team"}</div>
                   </div>
                   <div className="bg-bg-2 px-3 py-2.5">
                     <div className="eyebrow mb-0.5">Niveau</div>
-                    <div className="text-sm">{p.level}</div>
+                    <div className="text-sm">{p.level ?? "—"}</div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
                   {p.active ? (
-                    <Link href={`/session/${today.id}`} className="btn btn-primary btn-sm flex-1">
+                    <Link
+                      href={`/session/${today.id}`}
+                      className="btn btn-primary btn-sm flex-1"
+                    >
                       Fortsæt →
                     </Link>
                   ) : (
-                    <button type="button" className="btn btn-sm flex-1">
+                    <button type="button" className="btn btn-sm flex-1" disabled>
                       Start program
                     </button>
                   )}
-                  <button type="button" className="btn btn-sm">
+                  <button type="button" className="btn btn-sm" disabled>
                     Detaljer
                   </button>
                 </div>
@@ -258,4 +312,99 @@ function Mini({
       </div>
     </div>
   );
+}
+
+/* ---------------------------------------------------------------- *
+ * Volume formatting: 84_200 → "84.2K", 950 → "950"
+ * ---------------------------------------------------------------- */
+
+function formatVolume(kg: number): string {
+  if (kg >= 1000) {
+    const thousands = kg / 1000;
+    // 84.231 → "84.2"; 100.0 → "100"; locale uses dot for the K-form
+    const fixed = thousands >= 100 ? thousands.toFixed(0) : thousands.toFixed(1);
+    return `${fixed}K`;
+  }
+  return Math.round(kg).toString();
+}
+
+/* ---------------------------------------------------------------- *
+ * Mock fallbacks (mirror the previous static markup so demo mode and
+ * unconnected sessions still render the page).
+ * ---------------------------------------------------------------- */
+
+function todayCardFromMock(): TodayCard {
+  return {
+    id: TODAY_SESSION.id,
+    programCode: TODAY_SESSION.programCode,
+    programName: TODAY_SESSION.programName,
+    week: TODAY_SESSION.week,
+    isDeload: false,
+    dayLabel: TODAY_SESSION.dayLabel,
+    title: TODAY_SESSION.title,
+    estimatedMinutes: TODAY_SESSION.estimatedMinutes,
+    exerciseCount: TODAY_SESSION.exercises.length,
+    setCount: totalSets(TODAY_SESSION),
+    exercises: TODAY_SESSION.exercises.map((ex) => ({
+      name: ex.name,
+      setCount: ex.sets.length,
+    })),
+  };
+}
+
+function mockLibrary(): ProgramListing[] {
+  return [
+    {
+      id: "mock-str-12",
+      code: "STR-12",
+      name: "PR-Block",
+      type: "Strength",
+      weeks: 12,
+      level: "Inter./Adv.",
+      description:
+        "Klassisk linær periodisering med RPE. Bygget til nye PR'er på squat, bench og DL.",
+      coachName: "Mikael Munk",
+      active: true,
+      currentWeek: 4,
+    },
+    {
+      id: "mock-hyp-08",
+      code: "HYP-08",
+      name: "Build Phase",
+      type: "Hypertrofi",
+      weeks: 8,
+      level: "All levels",
+      description:
+        "Volumen-fokuseret blok med bro-split logik for ben, ryg og skuldre.",
+      coachName: "Maria",
+      active: false,
+      currentWeek: null,
+    },
+    {
+      id: "mock-pwr-10",
+      code: "PWR-10",
+      name: "Powerbuilding",
+      type: "Hybrid",
+      weeks: 10,
+      level: "Intermediate",
+      description:
+        "50/50 strength og hypertrofi. Tunge top-sets, accessory til æstetik.",
+      coachName: "Kasper",
+      active: false,
+      currentWeek: null,
+    },
+    {
+      id: "mock-dl-06",
+      code: "DL-06",
+      name: "Deadlift Spec.",
+      type: "Specialization",
+      weeks: 6,
+      level: "Advanced",
+      description:
+        "Seks uger fokuseret 100% på dødløft. Pause-pulls, deficits, peak-protokol.",
+      coachName: "Mikael Munk",
+      active: false,
+      currentWeek: null,
+    },
+  ];
 }
