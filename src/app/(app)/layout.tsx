@@ -1,4 +1,5 @@
 import AppShell from "@/components/app/AppShell";
+import PushSWRegister from "@/components/push/PushSWRegister";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
@@ -17,5 +18,10 @@ export default async function AppLayout({
     redirect("/onboarding");
   }
 
-  return <AppShell member={member}>{children}</AppShell>;
+  return (
+    <AppShell member={member}>
+      <PushSWRegister />
+      {children}
+    </AppShell>
+  );
 }

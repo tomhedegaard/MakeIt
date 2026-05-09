@@ -19,6 +19,7 @@ import {
   type ProgramListing,
   type WeekDay,
 } from "@/lib/data/coaching";
+import StartProgramButton from "./StartProgramButton";
 
 export default async function TrainPage() {
   const member = await getSession();
@@ -43,8 +44,11 @@ export default async function TrainPage() {
   const sets = today.setCount > 0 ? today.setCount : totalSets(TODAY_SESSION);
 
   const volumeKg = statsDb?.volumeKg ?? 0;
-  const prsThisMonth = statsDb?.prsThisMonth ?? 0;
-  const streakDays = streakDb;
+  const volumeKgPrev = statsDb?.volumeKgPrev ?? 0;
+  const prs4w = statsDb?.prs4w ?? 0;
+  const prsPrev = statsDb?.prsPrev ?? 0;
+  // Prefer the dedicated streak getter; fall back to the stats one.
+  const streakDays = streakDb || statsDb?.streakDays || 0;
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
@@ -173,16 +177,18 @@ export default async function TrainPage() {
             />
           </div>
           <div className="mt-4 grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
-            <Mini
-              label="Volumen"
+            <MiniWithTrend
+              label="Volumen · 4u"
               value={formatVolume(volumeKg)}
               suffix={volumeKg >= 1000 ? "" : "kg"}
-              small
+              current={volumeKg}
+              previous={volumeKgPrev}
             />
-            <Mini
-              label="PR'er"
-              value={String(prsThisMonth).padStart(2, "0")}
-              small
+            <MiniWithTrend
+              label="PR'er · 4u"
+              value={String(prs4w).padStart(2, "0")}
+              current={prs4w}
+              previous={prsPrev}
             />
             <Mini label="Streak" value={streakDays} suffix="d" small />
           </div>
@@ -247,9 +253,11 @@ export default async function TrainPage() {
                       Fortsæt →
                     </Link>
                   ) : (
-                    <button type="button" className="btn btn-sm flex-1" disabled>
-                      Start program
-                    </button>
+                    <StartProgramButton
+                      programId={p.id}
+                      programName={p.name}
+                      hasOtherActive={Boolean(active)}
+                    />
                   )}
                   <button type="button" className="btn btn-sm" disabled>
                     Detaljer
@@ -312,6 +320,58 @@ function Mini({
       </div>
     </div>
   );
+}
+
+function MiniWithTrend({
+  label,
+  value,
+  suffix,
+  current,
+  previous,
+}: {
+  label: string;
+  value: number | string;
+  suffix?: string;
+  current: number;
+  previous: number;
+}) {
+  const trend = computeTrend(current, previous);
+  return (
+    <div className="bg-bg-2 px-4 py-3 text-center">
+      <div className="eyebrow mb-1">{label}</div>
+      <div className="numeric text-xl lg:text-2xl">
+        {value}
+        {suffix ? <span className="text-fg-dim text-sm ml-0.5">{suffix}</span> : null}
+      </div>
+      {trend ? (
+        <div
+          className={`mt-0.5 text-[10px] font-mono ${
+            trend.direction === "up"
+              ? "text-fg"
+              : trend.direction === "down"
+              ? "text-fg-dim"
+              : "text-fg-faint"
+          }`}
+        >
+          {trend.label}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function computeTrend(
+  current: number,
+  previous: number
+): { direction: "up" | "down" | "flat"; label: string } | null {
+  if (previous === 0 && current === 0) return null;
+  if (previous === 0) return { direction: "up", label: "↑ ny" };
+  const pct = Math.round(((current - previous) / previous) * 100);
+  if (Math.abs(pct) < 3) return { direction: "flat", label: "·" };
+  return {
+    direction: pct > 0 ? "up" : "down",
+    label: `${pct > 0 ? "↑" : "↓"} ${Math.abs(pct)}%`,
+  };
 }
 
 /* ---------------------------------------------------------------- *

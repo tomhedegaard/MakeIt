@@ -222,14 +222,24 @@ export default async function TodayPage() {
           <div className="numeric text-2xl lg:text-3xl">
             {stats ? formatVolume(stats.volumeKg) : "84.2K"}
           </div>
-          <div className="text-[10px] font-mono text-fg-faint mt-1">kg · md.</div>
+          <div className="text-[10px] font-mono text-fg-faint mt-1 flex items-center gap-1">
+            <span>kg · 4 uger</span>
+            {stats ? (
+              <TrendArrow current={stats.volumeKg} previous={stats.volumeKgPrev} />
+            ) : null}
+          </div>
         </div>
         <div className="bg-bg p-4 lg:p-5">
           <div className="eyebrow mb-2">PR&apos;er</div>
           <div className="numeric text-2xl lg:text-3xl">
-            {stats ? String(stats.prsThisMonth).padStart(2, "0") : "03"}
+            {stats ? String(stats.prs4w).padStart(2, "0") : "03"}
           </div>
-          <div className="text-[10px] font-mono text-fg-faint mt-1">denne md.</div>
+          <div className="text-[10px] font-mono text-fg-faint mt-1 flex items-center gap-1">
+            <span>4 uger</span>
+            {stats ? (
+              <TrendArrow current={stats.prs4w} previous={stats.prsPrev} />
+            ) : null}
+          </div>
         </div>
         <div className="bg-bg p-4 lg:p-5">
           <div className="eyebrow mb-2">Reps</div>
@@ -340,4 +350,42 @@ function formatVolume(kg: number): string {
 
 function formatReps(n: number): string {
   return new Intl.NumberFormat("da-DK").format(n);
+}
+
+/**
+ * Tiny trend chip: shows "↑ 12%" / "↓ 4%" relative to a previous-
+ * period number. Hidden when prev is 0 (no signal) or when both
+ * windows are empty. ±2% rounds to flat ("·") to suppress noise.
+ */
+function TrendArrow({
+  current,
+  previous,
+}: {
+  current: number;
+  previous: number;
+}) {
+  if (previous === 0 && current === 0) return null;
+  if (previous === 0) {
+    return (
+      <span className="text-fg-dim" aria-label="Ny aktivitet">
+        ↑ ny
+      </span>
+    );
+  }
+  const pct = Math.round(((current - previous) / previous) * 100);
+  if (Math.abs(pct) < 3) {
+    return (
+      <span className="text-fg-faint" aria-label="Stabil">
+        ·
+      </span>
+    );
+  }
+  return (
+    <span
+      className={pct > 0 ? "text-fg" : "text-fg-dim"}
+      aria-label={pct > 0 ? `Op ${pct} procent` : `Ned ${Math.abs(pct)} procent`}
+    >
+      {pct > 0 ? "↑" : "↓"} {Math.abs(pct)}%
+    </span>
+  );
 }

@@ -8,6 +8,7 @@ import {
   deleteAccountAction,
 } from "./actions";
 import type { MemberSettings } from "@/lib/data/settings";
+import PushToggle from "@/components/push/PushToggle";
 
 const ERROR_LABELS: Record<string, string> = {
   handle_invalid: "Handle skal starte med et bogstav (a-z) og være 2-31 tegn (a-z, 0-9, _, ., -).",
@@ -17,7 +18,13 @@ const ERROR_LABELS: Record<string, string> = {
   service_key_missing: "Konto-sletning kræver server-konfiguration der ikke er sat op.",
 };
 
-export default function SettingsClient({ settings }: { settings: MemberSettings }) {
+export default function SettingsClient({
+  settings,
+  vapidPublicKey,
+}: {
+  settings: MemberSettings;
+  vapidPublicKey: string;
+}) {
   const router = useRouter();
 
   /* Profile */
@@ -149,6 +156,16 @@ export default function SettingsClient({ settings }: { settings: MemberSettings 
         <div>
           <div className="eyebrow mb-1">Notifikationer</div>
           <h2 className="font-display text-2xl">Hvornår vi må skrive til dig</h2>
+        </div>
+        <div className="rounded-xl border hairline px-4 py-3 flex items-start gap-4">
+          <div className="flex-1">
+            <div className="text-sm font-medium mb-1">Push-påmindelser</div>
+            <div className="text-xs text-fg-dim leading-relaxed">
+              Notifikation på telefonen når det er tid til at logge mad eller
+              starte session. Kræver at du tillader notifikationer i browseren.
+            </div>
+          </div>
+          <PushToggle vapidPublicKey={vapidPublicKey} />
         </div>
         <ul className="divide-y hairline">
           <Toggle

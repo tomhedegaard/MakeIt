@@ -38,9 +38,17 @@ export type CrewItem = {
 };
 
 export type MemberStats = {
+  /** Volume (kg) lifted in the rolling last 28 days */
   volumeKg: number;
-  prsThisMonth: number;
+  /** Volume (kg) in the previous 28-56 day window, for trend */
+  volumeKgPrev: number;
+  /** PR count in the rolling last 28 days */
+  prs4w: number;
+  /** PR count in the previous 28-56 day window */
+  prsPrev: number;
+  /** Reps balance, all-time (existing) */
   repsBalance: number;
+  /** Consecutive completed scheduled sessions ending today */
   streakDays: number;
 };
 
@@ -172,46 +180,83 @@ export async function getMemberStats(memberId: string): Promise<MemberStats | nu
   const supabase = await createClient();
   if (!supabase) return null;
 
-  // Reps balance via the materialized-style view
-  const { data: balance } = await supabase
-    .from("member_reps_balance")
-    .select("balance")
-    .eq("member_id", memberId)
-    .maybeSingle();
+  // Two windows: rolling [now-28d, now] and previous [now-56d, now-28d].
+  // Returning both lets the UI show a trend arrow without a second
+  // round-trip. ISO strings used everywhere for storage comparison.
+  const now = Date.now();
+  const day = 24 * 60 * 60 * 1000;
+  const winCurr = new Date(now - 28 * day).toISOString();
+  const winPrev = new Date(now - 56 * day).toISOString();
 
-  // Volume (current month) — sum logged_weight * logged_reps from sets
-  // belonging to this member's sessions, completed this month.
-  const monthStart = new Date();
-  monthStart.setDate(1);
-  monthStart.setHours(0, 0, 0, 0);
+  // Reps balance via the materialized-style view (all-time)
+  // + sets in the last 56 days (covers both windows in one query)
+  // + post counts for both windows in parallel
+  const [balanceRes, setsRes, prsCurrRes, prsPrevRes, streakRes] =
+    await Promise.all([
+      supabase
+        .from("member_reps_balance")
+        .select("balance")
+        .eq("member_id", memberId)
+        .maybeSingle(),
+      supabase
+        .from("session_sets")
+        .select(
+          "logged_weight, logged_reps, logged_at, session_exercise:session_exercises!inner(session:sessions!inner(member_id))"
+        )
+        .gte("logged_at", winPrev)
+        .filter("session_exercise.session.member_id", "eq", memberId),
+      supabase
+        .from("posts")
+        .select("id", { count: "exact", head: true })
+        .eq("member_id", memberId)
+        .eq("is_pr", true)
+        .gte("created_at", winCurr),
+      supabase
+        .from("posts")
+        .select("id", { count: "exact", head: true })
+        .eq("member_id", memberId)
+        .eq("is_pr", true)
+        .gte("created_at", winPrev)
+        .lt("created_at", winCurr),
+      // Inline the streak walk to avoid coupling the dashboard to /coaching.
+      // Same heuristic as getSessionStreak: consecutive completed sessions
+      // walking back from today; first non-completed (skipped or overdue
+      // scheduled) breaks the streak.
+      supabase
+        .from("sessions")
+        .select("status, scheduled_for")
+        .eq("member_id", memberId)
+        .lte("scheduled_for", new Date().toISOString().slice(0, 10))
+        .order("scheduled_for", { ascending: false })
+        .limit(60),
+    ]);
 
-  const { data: setsRows } = await supabase
-    .from("session_sets")
-    .select("logged_weight, logged_reps, logged_at, session_exercise:session_exercises!inner(session:sessions!inner(member_id))")
-    .gte("logged_at", monthStart.toISOString())
-    // RLS already scopes to own sessions, but double-fence:
-    .filter("session_exercise.session.member_id", "eq", memberId);
-
+  // Bucket sets by window using their logged_at timestamp.
   let volumeKg = 0;
-  for (const r of setsRows ?? []) {
+  let volumeKgPrev = 0;
+  for (const r of setsRes.data ?? []) {
     const w = Number(r.logged_weight ?? 0);
     const reps = Number(r.logged_reps ?? 0);
-    volumeKg += w * reps;
+    const kg = w * reps;
+    if (!r.logged_at) continue;
+    if (r.logged_at >= winCurr) volumeKg += kg;
+    else volumeKgPrev += kg;
   }
 
-  // PR count this month — posts with is_pr=true
-  const { count: prCount } = await supabase
-    .from("posts")
-    .select("id", { count: "exact", head: true })
-    .eq("member_id", memberId)
-    .eq("is_pr", true)
-    .gte("created_at", monthStart.toISOString());
+  // Walk session streak inline.
+  let streakDays = 0;
+  for (const s of streakRes.data ?? []) {
+    if (s.status === "completed") streakDays += 1;
+    else break;
+  }
 
   return {
     volumeKg,
-    prsThisMonth: prCount ?? 0,
-    repsBalance: balance?.balance ?? 0,
-    streakDays: 0, // TODO: derive from logged_at history
+    volumeKgPrev,
+    prs4w: prsCurrRes.count ?? 0,
+    prsPrev: prsPrevRes.count ?? 0,
+    repsBalance: balanceRes.data?.balance ?? 0,
+    streakDays,
   };
 }
 

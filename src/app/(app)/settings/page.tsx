@@ -20,7 +20,10 @@ export default async function SettingsPage() {
         subtitle="Profil, notifikationer, data og konto-sletning. Alt under dine egne fingre."
       />
       <Container className="py-8 lg:py-12">
-        <SettingsClient settings={settings} />
+        <SettingsClient
+          settings={settings}
+          vapidPublicKey={process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? ""}
+        />
       </Container>
     </>
   );
