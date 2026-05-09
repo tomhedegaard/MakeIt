@@ -100,6 +100,20 @@ export default function DailyCheckInCard({
           <div className="text-right shrink-0">
             <div className="numeric text-2xl">{checkin.streakDays}</div>
             <div className="eyebrow">streak</div>
+            {checkin.nextMilestone ? (
+              <div className="mt-1 text-[10px] font-mono text-fg-dim whitespace-nowrap">
+                +50 om {checkin.nextMilestone.daysAway}{" "}
+                {checkin.nextMilestone.daysAway === 1 ? "dag" : "dage"}
+              </div>
+            ) : null}
+          </div>
+        ) : checkin.nextMilestone ? (
+          <div className="text-right shrink-0">
+            <div className="text-[11px] font-mono text-fg-dim leading-tight">
+              Log mad i {checkin.nextMilestone.days} dage
+              <br />
+              <span className="text-fg">→ +50 Reps</span>
+            </div>
           </div>
         ) : null}
       </div>

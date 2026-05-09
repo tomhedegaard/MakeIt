@@ -28,8 +28,19 @@ export type DailyCheckIn = {
    * "already logged" state and lets the card show what was eaten.
    */
   existingLogId: string | null;
-  /** Consecutive days with at least one log (eaten OR skipped). */
+  /**
+   * Consecutive days ending on (or just before) today with at least
+   * one `status='eaten'` log. Skipped days break the streak. This
+   * mirrors the Reps cooking-streak reward, so the number on the
+   * card and the "+50 at 3/7/14/30" milestone are the same number.
+   */
   streakDays: number;
+  /**
+   * Next streak milestone (3 / 7 / 14 / 30) and how many cooked
+   * days away the member is. Null after 30 — the long game is its
+   * own reward. Used for "Næste belønning: +50 om 2 dage" on the card.
+   */
+  nextMilestone: { days: number; daysAway: number } | null;
   /** Today's logged meals so far (for the "X/3 logget i dag" pip) */
   loggedToday: number;
   mealsToday: number;
@@ -112,6 +123,7 @@ export async function getDailyCheckIn(memberId: string): Promise<DailyCheckIn> {
     meal: null,
     existingLogId: null,
     streakDays: 0,
+    nextMilestone: nextMilestoneFor(0),
     loggedToday: 0,
     mealsToday: 0,
   };
@@ -132,7 +144,7 @@ export async function getDailyCheckIn(memberId: string): Promise<DailyCheckIn> {
   if (!plan) {
     // No plan, but we still want to surface streak from past logs.
     const streakDays = await computeStreak(memberId, dateIso, supabase);
-    return { ...empty, streakDays };
+    return { ...empty, streakDays, nextMilestone: nextMilestoneFor(streakDays) };
   }
 
   // Today's meals only.
@@ -191,7 +203,14 @@ export async function getDailyCheckIn(memberId: string): Promise<DailyCheckIn> {
   if (!window) {
     // After aften — nothing to log for today. Show the streak only.
     const streakDays = await computeStreak(memberId, dateIso, supabase);
-    return { ...empty, state: "logged", streakDays, loggedToday, mealsToday };
+    return {
+      ...empty,
+      state: "logged",
+      streakDays,
+      nextMilestone: nextMilestoneFor(streakDays),
+      loggedToday,
+      mealsToday,
+    };
   }
 
   const meal = meals.find((m) => m.slot === window.slot) ?? null;
@@ -236,9 +255,18 @@ export async function getDailyCheckIn(memberId: string): Promise<DailyCheckIn> {
       : null,
     existingLogId: existingLog?.id ?? null,
     streakDays,
+    nextMilestone: nextMilestoneFor(streakDays),
     loggedToday,
     mealsToday,
   };
+}
+
+const COOKING_MILESTONES = [3, 7, 14, 30] as const;
+
+function nextMilestoneFor(streakDays: number): { days: number; daysAway: number } | null {
+  const next = COOKING_MILESTONES.find((m) => m > streakDays);
+  if (!next) return null;
+  return { days: next, daysAway: next - streakDays };
 }
 
 /* ---------------------------------------------------------------- *
@@ -246,10 +274,11 @@ export async function getDailyCheckIn(memberId: string): Promise<DailyCheckIn> {
  * ---------------------------------------------------------------- */
 
 /**
- * Consecutive days (including today if anything is logged today)
- * with at least one log row. Skipped logs count — the goal is daily
- * check-in habit, not perfect adherence. Capped at 365 to bound the
- * walk on long-running members. Walks backwards from today's date.
+ * Consecutive days (including today if logged today) with at least
+ * one `status='eaten'` row. Skipped days break the streak — this
+ * matches the Reps cooking-streak award trigger so the number on
+ * the card and the milestone payout (+50 at 3/7/14/30) are the same
+ * number. Capped at 365 to bound the walk; walks backwards from today.
  */
 async function computeStreak(
   memberId: string,
@@ -262,6 +291,7 @@ async function computeStreak(
     .from("nutrition_logs")
     .select("logged_for_date")
     .eq("member_id", memberId)
+    .eq("status", "eaten")
     .gte("logged_for_date", horizonStart)
     .lte("logged_for_date", todayIso);
 
