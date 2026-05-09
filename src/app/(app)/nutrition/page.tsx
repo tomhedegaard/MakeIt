@@ -13,6 +13,8 @@ import { suggestSupplements } from "@/lib/nutrition/brand";
 import MealCard from "./MealCard";
 import GeneratePlanButton from "./GeneratePlanButton";
 import LogMealButton from "./LogMealButton";
+import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
+import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
 
 export const metadata = {
   title: "Mad — MakeIt",
@@ -22,8 +24,11 @@ const DAY_LABELS = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
 
 export default async function NutritionPage() {
   const member = (await getSession())!;
-  const profile = await getOrCreateNutritionProfile(member.id);
-  const plan = await getCurrentPlan(member.id);
+  const [profile, plan, checkin] = await Promise.all([
+    getOrCreateNutritionProfile(member.id),
+    getCurrentPlan(member.id),
+    getDailyCheckIn(member.id),
+  ]);
   const todayIndex = todayDayIndex();
 
   return (
@@ -54,6 +59,8 @@ export default async function NutritionPage() {
           </Link>
         </div>
       </header>
+
+      <DailyCheckInCard checkin={checkin} />
 
       {plan === null ? (
         <EmptyState weekStart={currentIsoMonday()} hasProfile={Boolean(profile)} />

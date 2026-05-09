@@ -268,4 +268,54 @@ export async function logMealAction(formData: FormData): Promise<void> {
   }
 
   revalidatePath("/nutrition");
+  revalidatePath("/dashboard");
+}
+
+/* ---------------------------------------------------------------- *
+ * Quick-log — daily check-in actions (no photo, no modal)
+ *
+ * Used by DailyCheckInCard for the "Som planlagt" / "Skippet"
+ * buttons. Records a single nutrition_logs row with status=eaten
+ * (default) or status=skipped. Idempotent on the (member, date,
+ * slot) tuple isn't enforced at the DB level, so the action
+ * short-circuits if a log already exists for the slot.
+ * ---------------------------------------------------------------- */
+
+export async function quickLogAction(formData: FormData): Promise<void> {
+  const member = await requireMember();
+  const mealId = String(formData.get("mealId") ?? "") || null;
+  const loggedForDate = String(formData.get("loggedForDate") ?? "");
+  const slot = String(formData.get("loggedForSlot") ?? "") as MealSlot | "";
+  const status = String(formData.get("status") ?? "eaten") as "eaten" | "skipped";
+
+  if (!loggedForDate || !slot) return;
+
+  const supabase = await createClient();
+  if (supabase) {
+    const { data: existing } = await supabase
+      .from("nutrition_logs")
+      .select("id")
+      .eq("member_id", member.id)
+      .eq("logged_for_date", loggedForDate)
+      .eq("logged_for_slot", slot)
+      .limit(1);
+    if (existing && existing.length > 0) {
+      // Already logged this slot — do nothing rather than duplicate.
+      return;
+    }
+  }
+
+  await createLog({
+    memberId: member.id,
+    mealId,
+    loggedForDate,
+    loggedForSlot: slot as MealSlot,
+    status,
+    photoPath: null,
+    rating: status === "eaten" ? 4 : null,
+    notes: null,
+  });
+
+  revalidatePath("/nutrition");
+  revalidatePath("/dashboard");
 }

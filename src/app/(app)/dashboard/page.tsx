@@ -18,6 +18,8 @@ import { getMyFormChecks } from "@/lib/data/me";
 import { getLatestUnseenPromotion } from "@/lib/data/tier-events";
 import TierBanner from "@/components/app/TierBanner";
 import FirstTimeTour from "@/components/app/FirstTimeTour";
+import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
+import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
 
 const MOCK_UPCOMING = [
   { d: "I morgen", t: "Pause-bench, ringe-row, push-press", m: "55m" },
@@ -94,6 +96,10 @@ export default async function TodayPage() {
     (c) => c.reviewedAt && c.coachNotes
   ).length;
 
+  // Daily nutrition check-in. Renders only when there's a meal slot
+  // to surface; the component itself returns null on "no-plan".
+  const checkin = await getDailyCheckIn(member.id);
+
   // Tier promotion banner: surface latest unseen tier-up.
   const promotion = await getLatestUnseenPromotion(member.id);
 
@@ -122,6 +128,8 @@ export default async function TodayPage() {
           toTier={promotion.toTier}
         />
       ) : null}
+
+      <DailyCheckInCard checkin={checkin} variant="compact" />
 
       {reviewedCount > 0 ? (
         <Link

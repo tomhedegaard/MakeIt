@@ -75,12 +75,15 @@ export type Plan = {
   meals: Meal[];
 };
 
+export type LogStatus = "eaten" | "skipped";
+
 export type NutritionLog = {
   id: string;
   memberId: string;
   mealId: string | null;
   loggedForDate: string;
   loggedForSlot: MealSlot | null;
+  status: LogStatus;
   photoPath: string | null;
   matchScore: number | null;
   proteinEstimate: "low" | "on_target" | "high" | null;
@@ -401,6 +404,7 @@ export async function createLog(input: {
   mealId: string | null;
   loggedForDate: string;
   loggedForSlot: MealSlot | null;
+  status?: LogStatus;
   photoPath: string | null;
   rating: number | null;
   notes: string | null;
@@ -414,6 +418,7 @@ export async function createLog(input: {
       meal_id: input.mealId,
       logged_for_date: input.loggedForDate,
       logged_for_slot: input.loggedForSlot,
+      status: input.status ?? "eaten",
       photo_path: input.photoPath,
       rating: input.rating,
       notes: input.notes,
@@ -610,6 +615,7 @@ type LogRow = {
   meal_id: string | null;
   logged_for_date: string;
   logged_for_slot: MealSlot | null;
+  status: LogStatus | null;
   photo_path: string | null;
   match_score: number | null;
   protein_estimate: "low" | "on_target" | "high" | null;
@@ -628,6 +634,7 @@ function rowToLog(row: LogRow): NutritionLog {
     mealId: row.meal_id,
     loggedForDate: row.logged_for_date,
     loggedForSlot: row.logged_for_slot,
+    status: row.status ?? "eaten",
     photoPath: row.photo_path,
     matchScore: row.match_score,
     proteinEstimate: row.protein_estimate,
