@@ -65,12 +65,20 @@ CLI'en sender migration 0001-0018 i rækkefølge og tracker dem i
 
 ### Kør seed-data
 
+Hurtigste vej (ingen `psql` nødvendig):
+
+1. Åbn Supabase Dashboard → **SQL Editor** → **New query**
+2. Åbn `supabase/seed.sql` i din editor, kopiér hele indholdet
+3. Paste i SQL Editor → **Run**
+
+Alternativ via psql (kræver `brew install libpq` på macOS):
+
 ```bash
-# Via CLI (anbefalet):
-psql "$(supabase status -o json | jq -r .DB_URL)" -f supabase/seed.sql
+psql "postgresql://postgres:<DB-password>@db.<project-ref>.supabase.co:5432/postgres" \
+     -f supabase/seed.sql
 ```
 
-Eller paste `supabase/seed.sql` i SQL Editor. Den indsætter:
+Den indsætter:
 - 5 invite-koder (MUNK-01, MAKEIT-CREW, FOUNDERS-2026, STRAPIT-50K, AMAGERBRO-169)
 - 11 øvelser i bibliotekets
 - 4 program-skabeloner

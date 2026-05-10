@@ -64,13 +64,12 @@ subject = "Dit MakeIt login-link"
 [auth.email.template.recovery]
 subject = "Nulstil dit MakeIt-password"
 
-# OAuth providers — keys are configured in the Supabase Dashboard under
-# Authentication → Providers (NOT in this file). The toggles here only
-# tell the CLI to expose them in the local stack.
-[auth.external.google]
-enabled = true
-[auth.external.apple]
-enabled = true
+# OAuth providers (Google + Apple) are configured in the Supabase
+# Dashboard → Authentication → Providers, NOT in this file. The CLI
+# requires client_id + secret when [auth.external.<provider>] is
+# present, so we omit the blocks entirely and let the Dashboard be
+# the single source of truth. See docs/SETUP.md → "OAuth providers"
+# for the bring-up walkthrough.
 
 [realtime]
 enabled = true
