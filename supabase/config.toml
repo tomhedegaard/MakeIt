@@ -1,0 +1,79 @@
+# Supabase CLI configuration for the MakeIt project.
+#
+# Usage:
+#   1. Install the CLI:  brew install supabase/tap/supabase
+#                        (or: npm install -g supabase)
+#   2. Log in:           supabase login
+#   3. Link the cloud project once:
+#                        supabase link --project-ref <your-project-ref>
+#      (the project-ref is the subdomain of your Supabase URL —
+#       e.g. https://abc123xyz.supabase.co → project-ref = abc123xyz)
+#   4. Apply migrations: npm run db:push
+#
+# After linking, the CLI tracks which migrations have been applied via
+# the supabase_migrations.schema_migrations table on the remote project,
+# so re-runs are idempotent.
+
+project_id = "makeit-hq"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+file_size_limit = "100MiB"
+
+[auth]
+enabled = true
+# Site URL used for the email links — overridden via dashboard for prod.
+site_url = "http://localhost:3002"
+additional_redirect_urls = [
+  "http://localhost:3002/auth/callback",
+  "https://nowmakeit.eu/auth/callback",
+]
+jwt_expiry = 3600
+enable_signup = true
+enable_anonymous_sign_ins = false
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
+# Mailer subjects — kept short, on-brand.
+[auth.email.template.confirmation]
+subject = "Bekræft din MakeIt-konto"
+[auth.email.template.magic_link]
+subject = "Dit MakeIt login-link"
+[auth.email.template.recovery]
+subject = "Nulstil dit MakeIt-password"
+
+# OAuth providers — keys are configured in the Supabase Dashboard under
+# Authentication → Providers (NOT in this file). The toggles here only
+# tell the CLI to expose them in the local stack.
+[auth.external.google]
+enabled = true
+[auth.external.apple]
+enabled = true
+
+[realtime]
+enabled = true
+
+[edge_runtime]
+enabled = false
