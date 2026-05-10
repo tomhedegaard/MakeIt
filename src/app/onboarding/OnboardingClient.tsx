@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
-import BrandHeading from "@/components/BrandHeading";
 import { cn } from "@/lib/utils";
 import { completeOnboardingAction } from "./actions";
 
@@ -255,9 +254,9 @@ function Intro({ eyebrow, title, sub }: { eyebrow: string; title: string; sub: s
   return (
     <div>
       <div className="eyebrow mb-3">{eyebrow}</div>
-      <BrandHeading className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92] mb-4">
+      <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92] mb-4">
         {title}
-      </BrandHeading>
+      </h1>
       <p className="text-fg-dim text-base md:text-lg max-w-md leading-relaxed">{sub}</p>
     </div>
   );

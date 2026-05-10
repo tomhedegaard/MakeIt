@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
-import BrandHeading from "@/components/BrandHeading";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import {
   mockLoginAction,
@@ -59,10 +58,10 @@ export default async function LoginPage({
           <span className="pulse-dot" /> Closed Beta · Invite only
         </div>
 
-        <BrandHeading className="font-display text-5xl md:text-6xl mb-4">
+        <h1 className="font-display text-5xl md:text-6xl mb-4">
           Velkommen
           <br /> til crewet.
-        </BrandHeading>
+        </h1>
 
         {sent ? (
           <SentState email={email} />
