@@ -69,6 +69,16 @@ export default function OnboardingClient({
       </header>
 
       <form action={completeOnboardingAction} className="flex-1 flex flex-col">
+        {/* Persisted state across step navigation. Step 1's radio inputs only
+            render when step === 1, so without these the form would submit
+            blank goal/experience/equipment when the user clicks Generér on
+            step 3. Frequency already had a hidden input below; pulled that
+            up here for consistency. */}
+        <input type="hidden" name="goal" value={goal ?? ""} />
+        <input type="hidden" name="experience" value={level ?? ""} />
+        <input type="hidden" name="equipment" value={equip ?? ""} />
+        <input type="hidden" name="frequency" value={freq} />
+
         <Container size="narrow" className="py-8 lg:py-14 flex-1 space-y-10">
           {step === 1 ? (
             <>
@@ -115,7 +125,6 @@ export default function OnboardingClient({
               </Section>
 
               <Section eyebrow="Frekvens" title="Hvor ofte træner du?">
-                <input type="hidden" name="frequency" value={freq} />
                 <div className="grid grid-cols-3 gap-2">
                   {FREQ_OPTS.map((f) => (
                     <button
