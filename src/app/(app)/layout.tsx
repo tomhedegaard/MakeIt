@@ -3,6 +3,7 @@ import PushSWRegister from "@/components/push/PushSWRegister";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
+import { getUnreadCount } from "@/lib/data/messages";
 
 export default async function AppLayout({
   children,
@@ -18,8 +19,12 @@ export default async function AppLayout({
     redirect("/onboarding");
   }
 
+  // Unread chat count for the nav badge. Cheap count(*) — runs on
+  // every (app) navigation, so kept tight in messages.ts.
+  const unreadMessages = SUPABASE_ENABLED ? await getUnreadCount(member.id) : 0;
+
   return (
-    <AppShell member={member}>
+    <AppShell member={member} unreadMessages={unreadMessages}>
       <PushSWRegister />
       {children}
     </AppShell>

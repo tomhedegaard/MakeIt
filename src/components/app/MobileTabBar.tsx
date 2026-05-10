@@ -44,6 +44,16 @@ const Icon = {
       <path d="M9 7c0 1 1 1.5 1 3M14 6c0 1.2 1 1.8 1 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   ),
+  chat: (
+    <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
+      <path
+        d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4 3.5v-3.5H6.5A2.5 2.5 0 0 1 4 14.5v-8z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
 };
 
 const TABS: Tab[] = [
@@ -51,11 +61,16 @@ const TABS: Tab[] = [
   { href: "/coaching",  label: "Træn",  icon: Icon.train },
   { href: "/nutrition", label: "Mad",   icon: Icon.food },
   { href: "/community", label: "Crew",  icon: Icon.crew },
+  { href: "/messages",  label: "Chat",  icon: Icon.chat },
   { href: "/reps",      label: "Reps",  icon: Icon.reps },
   { href: "/profile",   label: "Mig",   icon: Icon.me },
 ];
 
-export default function MobileTabBar() {
+export default function MobileTabBar({
+  unreadMessages = 0,
+}: {
+  unreadMessages?: number;
+}) {
   const pathname = usePathname();
   return (
     <nav
@@ -68,15 +83,24 @@ export default function MobileTabBar() {
             t.href === "/dashboard"
               ? pathname === "/dashboard"
               : pathname?.startsWith(t.href);
+          const showBadge = t.href === "/messages" && unreadMessages > 0;
           return (
             <Link
               key={t.href}
               href={t.href}
-              className="tab"
+              className="tab relative"
               data-active={active || false}
             >
               {t.icon}
               <span>{t.label}</span>
+              {showBadge ? (
+                <span
+                  className="absolute top-1 right-2 numeric text-[9px] tabular-nums px-1 py-0.5 rounded-full bg-fg text-bg leading-none min-w-[14px] text-center"
+                  aria-label={`${unreadMessages} ulæste`}
+                >
+                  {unreadMessages > 9 ? "9+" : unreadMessages}
+                </span>
+              ) : null}
             </Link>
           );
         })}

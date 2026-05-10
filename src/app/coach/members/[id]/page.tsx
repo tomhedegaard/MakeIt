@@ -2,6 +2,13 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Container from "@/components/Container";
 import { getMemberDetail } from "@/lib/data/coach";
+import { getSession } from "@/lib/auth";
+import { SUPABASE_ENABLED } from "@/lib/supabase/env";
+import {
+  getOrCreateConversation,
+  listMessages,
+} from "@/lib/data/messages";
+import MessagesView from "@/components/chat/MessagesView";
 
 const STATUS_LABELS: Record<string, string> = {
   scheduled: "Planlagt",
@@ -18,6 +25,17 @@ export default async function CoachMemberDetailPage({
   const { id } = await params;
   const m = await getMemberDetail(id);
   if (!m) notFound();
+
+  // Coach-side chat: resolve thread + initial messages so the panel
+  // streams with content. Realtime channel takes over for new
+  // arrivals client-side.
+  const coach = await getSession();
+  let chatConvId: string | null = null;
+  let chatInitial: Awaited<ReturnType<typeof listMessages>> = [];
+  if (SUPABASE_ENABLED && coach?.isCoach) {
+    chatConvId = await getOrCreateConversation(id, coach.id);
+    if (chatConvId) chatInitial = await listMessages(chatConvId);
+  }
 
   const programPct =
     m.programWeek != null && m.programWeeks
@@ -131,6 +149,24 @@ export default async function CoachMemberDetailPage({
           )}
         </ul>
       </section>
+
+      {/* Chat */}
+      {coach?.isCoach ? (
+        <section>
+          <div className="eyebrow mb-3">Chat med @{m.handle}</div>
+          <div
+            className="surface-2 rounded-2xl overflow-hidden flex flex-col"
+            style={{ height: "560px" }}
+          >
+            <MessagesView
+              conversationId={chatConvId}
+              initialMessages={chatInitial}
+              myMemberId={coach.id}
+              canSendVideo={true}
+            />
+          </div>
+        </section>
+      ) : null}
 
       {/* Form-checks */}
       <section>

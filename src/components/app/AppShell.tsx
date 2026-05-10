@@ -15,13 +15,16 @@ const NAV = [
   { href: "/community", label: "Crew",      num: "04" },
   { href: "/reps",      label: "Reps",      num: "05" },
   { href: "/profile",   label: "Mig",       num: "06" },
+  { href: "/messages",  label: "Beskeder",  num: "07" },
 ];
 
 export default function AppShell({
   member,
+  unreadMessages = 0,
   children,
 }: {
   member: Member;
+  unreadMessages?: number;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -62,6 +65,14 @@ export default function AppShell({
                       {item.num}
                     </span>
                     <span className="tracking-tight">{item.label}</span>
+                    {item.href === "/messages" && unreadMessages > 0 ? (
+                      <span
+                        className="ml-auto numeric text-[10px] tabular-nums px-1.5 py-0.5 rounded-full bg-fg text-bg"
+                        aria-label={`${unreadMessages} ulæste`}
+                      >
+                        {unreadMessages > 99 ? "99+" : unreadMessages}
+                      </span>
+                    ) : null}
                   </Link>
                 </li>
               );
@@ -122,7 +133,7 @@ export default function AppShell({
       </div>
 
       {/* Mobile tab-bar */}
-      <MobileTabBar />
+      <MobileTabBar unreadMessages={unreadMessages} />
     </div>
   );
 }
