@@ -15,8 +15,15 @@
 
 -- ---------------------------------------------------------------- *
 -- Pure function: balance → tier name
+--
+-- Parameter is bigint, not integer: sum(integer) over a column
+-- returns bigint in Postgres, and Postgres won't implicitly narrow
+-- bigint → integer at the call site (only widen integer → bigint).
+-- Using bigint here means callers can pass either type without
+-- explicit casts, both from SQL queries (sum(delta)) and from
+-- plpgsql trigger functions with integer locals.
 -- ---------------------------------------------------------------- *
-create or replace function public.tier_for_balance(balance integer)
+create or replace function public.tier_for_balance(balance bigint)
 returns text
 language sql
 immutable
@@ -29,7 +36,7 @@ as $$
   end;
 $$;
 
-grant execute on function public.tier_for_balance(integer) to authenticated;
+grant execute on function public.tier_for_balance(bigint) to authenticated;
 
 -- ---------------------------------------------------------------- *
 -- Trigger function — recompute the affected member's tier
