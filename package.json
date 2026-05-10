@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "vapid:generate": "node scripts/generate-vapid.mjs",
+    "apple:jwt": "node scripts/generate-apple-jwt.mjs",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
