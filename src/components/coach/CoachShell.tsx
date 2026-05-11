@@ -6,13 +6,15 @@ import Logo from "@/components/Logo";
 import { cn } from "@/lib/utils";
 import type { Member } from "@/lib/auth";
 
-const NAV = [
+type NavItem = { href: string; label: string; num: string; adminOnly?: boolean };
+
+const NAV: NavItem[] = [
   { href: "/coach",             label: "Overview",        num: "01" },
   { href: "/coach/members",     label: "Members",         num: "02" },
   { href: "/coach/queue",       label: "Form-check kø",   num: "03" },
   { href: "/coach/redemptions", label: "Reps-indløsninger", num: "04" },
   { href: "/coach/analytics",   label: "Analytics",       num: "05" },
-  { href: "/coach/system",      label: "System",          num: "06" },
+  { href: "/coach/system",      label: "System",          num: "06", adminOnly: true },
 ];
 
 export default function CoachShell({
@@ -23,6 +25,7 @@ export default function CoachShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const nav = NAV.filter((item) => !item.adminOnly || member.isAdmin);
 
   return (
     <div className="relative z-10 flex flex-1 minh-dvh">
@@ -39,7 +42,7 @@ export default function CoachShell({
 
         <nav className="flex-1 px-3 py-5">
           <ul className="space-y-1">
-            {NAV.map((item) => {
+            {nav.map((item) => {
               const active =
                 item.href === "/coach"
                   ? pathname === "/coach"
@@ -92,7 +95,7 @@ export default function CoachShell({
           </div>
           <nav aria-label="Coach-navigation" className="overflow-x-auto">
             <ul className="flex gap-1 px-3 py-2 min-w-max">
-              {NAV.map((item) => {
+              {nav.map((item) => {
                 const active =
                   item.href === "/coach"
                     ? pathname === "/coach"

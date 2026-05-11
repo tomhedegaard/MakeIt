@@ -1,5 +1,7 @@
+import { redirect } from "next/navigation";
 import Container from "@/components/Container";
 import { getDevStatus, type Severity } from "@/lib/dev-status";
+import { getSession } from "@/lib/auth";
 
 export const metadata = {
   title: "System — Coach · MakeIt // HQ",
@@ -9,6 +11,13 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function CoachSystemPage() {
+  // Admin-only. The /coach layout has already gated on isCoach;
+  // this is the second-tier check that keeps integration status,
+  // credential reminders, and DB stats restricted to founders +
+  // trusted ops, not every form-check reviewer.
+  const member = await getSession();
+  if (!member?.isAdmin) redirect("/coach");
+
   const status = await getDevStatus();
 
   const configured = status.services.filter((s) => s.configured).length;

@@ -29,6 +29,7 @@ export type Member = {
   joinedAt: string;
   onboardedAt?: string | null;
   isCoach?: boolean;
+  isAdmin?: boolean;
 };
 
 const MOCK_MEMBER: Member = {
@@ -40,6 +41,7 @@ const MOCK_MEMBER: Member = {
   joinedAt: "2024-09-12",
   onboardedAt: "2024-09-12T00:00:00Z",
   isCoach: true, // demo mode: treat MUNK-01 as the head coach
+  isAdmin: true, // and the founder/admin
 };
 
 export function isValidMockInvite(code: string) {
@@ -58,7 +60,7 @@ export async function getSession(): Promise<Member | null> {
 
     const { data: m } = await supabase
       .from("members")
-      .select("id, handle, display_name, email, tier, joined_at, onboarded_at, is_coach")
+      .select("id, handle, display_name, email, tier, joined_at, onboarded_at, is_coach, is_admin")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -73,6 +75,7 @@ export async function getSession(): Promise<Member | null> {
       joinedAt: m.joined_at,
       onboardedAt: m.onboarded_at,
       isCoach: !!m.is_coach,
+      isAdmin: !!m.is_admin,
     };
   }
 

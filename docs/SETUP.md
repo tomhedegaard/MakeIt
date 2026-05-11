@@ -84,16 +84,30 @@ Den indsætter:
 - 4 program-skabeloner
 - 1 challenge
 
-### Promote dig selv til coach
+### Promote dig selv til coach (+ admin)
 
-Efter du har signed up første gang (se Fase 4), promoter din konto til
-coach via SQL Editor:
+Efter du har signed up første gang (se Fase 4), promoter din konto via
+SQL Editor.
 
+**Coach** giver adgang til `/coach/*` undtagen System:
 ```sql
 update public.members
    set is_coach = true
  where email = 'din@email.dk';
 ```
+
+**Admin** (superset af coach) giver adgang til alt inkl. `/coach/system`
+hvor credential-rotation, integration-status og DB-stats vises:
+```sql
+update public.members
+   set is_coach = true, is_admin = true
+ where email = 'din@email.dk';
+```
+
+Konventionen er `is_admin = true` ⇒ `is_coach = true` (det er ikke en
+DB-constraint, men SQL'en ovenfor sætter altid begge). Tilbageskridt
+fra admin → almindelig coach: `update ... set is_admin = false` —
+`is_coach` rør vi ikke.
 
 ---
 
