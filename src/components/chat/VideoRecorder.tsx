@@ -12,8 +12,9 @@ import { useEffect, useRef, useState } from "react";
  *   recording → live preview + red dot + counter, tap to stop
  *   preview   → playback + send / discard
  *
- * Caps at 2 minutes — video grows fast (~5-15 MB per minute in
- * webm/vp9), and the storage bucket has a 100 MB ceiling.
+ * Caps at 5 minutes — keeps file sizes within the bucket's 100 MB
+ * ceiling (webm/vp9 at 720p averages ~5-15 MB per minute, so a
+ * 5-min recording lands in the 25-75 MB band).
  *
  * MIME negotiation: prefer video/mp4 first (best Safari + iOS
  * compatibility, plays natively in <video>), fall back to webm
@@ -134,7 +135,7 @@ export default function VideoRecorder({
       tickRef.current = setInterval(() => {
         const sec = Math.floor((Date.now() - startedAtRef.current) / 1000);
         setElapsed(sec);
-        if (sec >= 120) stop(); // hard cap at 2 min
+        if (sec >= 300) stop(); // hard cap at 5 min
       }, 250);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "ukendt fejl";
@@ -225,7 +226,7 @@ export default function VideoRecorder({
             Annullér
           </button>
           <span className="text-[10px] font-mono text-fg-faint ml-auto">
-            max 2:00
+            max 5:00
           </span>
         </div>
       ) : null}
@@ -249,7 +250,7 @@ export default function VideoRecorder({
           </div>
           <div className="flex items-center gap-3">
             <span className="text-[10px] font-mono text-fg-faint">
-              max 2:00
+              max 5:00
             </span>
             <button
               type="button"
