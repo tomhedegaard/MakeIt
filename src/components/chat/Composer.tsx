@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import { createClient as createBrowserSupabase } from "@/lib/supabase/client";
 import { sendMessageAction } from "@/app/(app)/messages/actions";
 import AudioRecorder from "./AudioRecorder";
+import VideoRecorder from "./VideoRecorder";
 
 const CHAT_MEDIA_BUCKET = "chat-media";
 
@@ -35,8 +36,8 @@ export default function Composer({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [recording, setRecording] = useState(false);
+  const [recordingVideo, setRecordingVideo] = useState(false);
   const imageInputRef = useRef<HTMLInputElement | null>(null);
-  const videoInputRef = useRef<HTMLInputElement | null>(null);
 
   function flashError(msg: string) {
     setError(msg);
@@ -65,18 +66,14 @@ export default function Composer({
   }
 
   /* -------------------------------------------------- *
-   * Image / video — file-picker upload then insert
+   * Image — file-picker upload then insert
    * -------------------------------------------------- */
 
-  async function handleFile(file: File, kind: "image" | "video") {
+  async function handleImageFile(file: File) {
     if (pending) return;
 
-    if (kind === "image" && !file.type.startsWith("image/")) {
+    if (!file.type.startsWith("image/")) {
       flashError("Vælg et billede");
-      return;
-    }
-    if (kind === "video" && !file.type.startsWith("video/")) {
-      flashError("Vælg en video");
       return;
     }
     if (file.size > 100 * 1024 * 1024) {
@@ -93,7 +90,7 @@ export default function Composer({
     const ext = (file.name.split(".").pop() ?? "")
       .toLowerCase()
       .replace(/[^a-z0-9]/g, "")
-      .slice(0, 6) || (kind === "image" ? "jpg" : "mp4");
+      .slice(0, 6) || "jpg";
     const stamp = Date.now();
     const rand = Math.random().toString(36).slice(2, 8);
     const path = `${conversationId}/${stamp}-${rand}.${ext}`;
@@ -114,7 +111,7 @@ export default function Composer({
 
       const res = await sendMessageAction({
         conversationId,
-        kind,
+        kind: "image",
         mediaPath: path,
         mediaMime: file.type,
       });
@@ -171,6 +168,52 @@ export default function Composer({
   }
 
   /* -------------------------------------------------- *
+   * Video — Blob comes from the live recorder, then upload + insert
+   * -------------------------------------------------- */
+
+  async function handleVideoSubmit(blob: Blob, durationSec: number, mime: string) {
+    const supabase = createBrowserSupabase();
+    if (!supabase) {
+      flashError("Storage er ikke tilgængelig");
+      throw new Error("no_storage");
+    }
+    const ext = mime.includes("mp4")
+      ? "mp4"
+      : mime.includes("webm")
+      ? "webm"
+      : "mov";
+    const stamp = Date.now();
+    const rand = Math.random().toString(36).slice(2, 8);
+    const path = `${conversationId}/${stamp}-${rand}.${ext}`;
+
+    const { error: upErr } = await supabase.storage
+      .from(CHAT_MEDIA_BUCKET)
+      .upload(path, blob, {
+        cacheControl: "3600",
+        contentType: mime,
+        upsert: false,
+      });
+    if (upErr) {
+      flashError("Upload fejlede");
+      throw upErr;
+    }
+
+    const res = await sendMessageAction({
+      conversationId,
+      kind: "video",
+      mediaPath: path,
+      mediaMime: mime,
+      mediaDurationSec: durationSec,
+    });
+    if (!res.ok) {
+      await supabase.storage.from(CHAT_MEDIA_BUCKET).remove([path]).catch(() => undefined);
+      flashError(reasonToLabel(res.reason));
+      throw new Error(res.reason ?? "send_failed");
+    }
+    setRecordingVideo(false);
+  }
+
+  /* -------------------------------------------------- *
    * Render
    * -------------------------------------------------- */
 
@@ -189,6 +232,21 @@ export default function Composer({
     );
   }
 
+  if (recordingVideo) {
+    return (
+      <div className="border-t hairline px-4 py-3">
+        <VideoRecorder
+          onCancel={() => setRecordingVideo(false)}
+          onSubmit={handleVideoSubmit}
+          disabled={pending}
+        />
+        {error ? (
+          <p className="mt-2 text-[10px] font-mono text-red-400">{error}</p>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <div className="border-t hairline px-3 py-3 flex items-end gap-2">
       <input
@@ -198,23 +256,10 @@ export default function Composer({
         className="hidden"
         onChange={(e) => {
           const f = e.target.files?.[0];
-          if (f) handleFile(f, "image");
+          if (f) handleImageFile(f);
           e.target.value = "";
         }}
       />
-      {canSendVideo ? (
-        <input
-          ref={videoInputRef}
-          type="file"
-          accept="video/*"
-          className="hidden"
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            if (f) handleFile(f, "video");
-            e.target.value = "";
-          }}
-        />
-      ) : null}
 
       <div className="flex flex-col gap-1">
         <button
@@ -240,13 +285,13 @@ export default function Composer({
         {canSendVideo ? (
           <button
             type="button"
-            onClick={() => videoInputRef.current?.click()}
+            onClick={() => setRecordingVideo(true)}
             disabled={pending}
             className="btn btn-sm btn-ghost"
-            aria-label="Vedhæft video"
-            title="Video"
+            aria-label="Optag live video"
+            title="Live video"
           >
-            🎬
+            🎥
           </button>
         ) : null}
       </div>
