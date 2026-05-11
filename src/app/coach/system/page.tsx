@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Container from "@/components/Container";
 import { getDevStatus, type Severity } from "@/lib/dev-status";
 import { getSession } from "@/lib/auth";
+import Backlog from "./Backlog";
 
 export const metadata = {
   title: "System — Coach · MakeIt // HQ",
@@ -185,6 +186,8 @@ export default async function CoachSystemPage() {
           </p>
         </section>
       ) : null}
+
+      <Backlog />
     </Container>
   );
 }
