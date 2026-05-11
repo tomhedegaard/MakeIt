@@ -12,6 +12,7 @@ const NAV = [
   { href: "/coach/queue",       label: "Form-check kø",   num: "03" },
   { href: "/coach/redemptions", label: "Reps-indløsninger", num: "04" },
   { href: "/coach/analytics",   label: "Analytics",       num: "05" },
+  { href: "/coach/system",      label: "System",          num: "06" },
 ];
 
 export default function CoachShell({
