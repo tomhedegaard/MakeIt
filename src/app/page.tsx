@@ -2,6 +2,7 @@ import MarketingNav from "@/components/marketing/MarketingNav";
 import Hero from "@/components/marketing/Hero";
 import CrewSection from "@/components/marketing/CrewSection";
 import PillarsSection from "@/components/marketing/PillarsSection";
+import TierJourney from "@/components/marketing/TierJourney";
 import AppShowcase from "@/components/marketing/AppShowcase";
 import ValueSection from "@/components/marketing/ValueSection";
 import Testimonials from "@/components/marketing/Testimonials";
@@ -21,7 +22,7 @@ export default function Home() {
             "STRAPIT",
             "HOOKIT",
             "MADE IN DENMARK",
-            "AMAGERBRO 169",
+            "KØBENHAVN",
             "50.000+ LIFTS",
             "CLOSED BETA",
             "FOR THE CREW",
@@ -29,6 +30,7 @@ export default function Home() {
         />
         <CrewSection />
         <PillarsSection />
+        <TierJourney />
         <AppShowcase />
         <ValueSection />
         <Testimonials />

@@ -15,6 +15,7 @@ export default function MarketingNav() {
           <nav className="hidden md:flex items-center gap-6 text-[12px] tracking-[0.18em] uppercase text-fg-dim font-mono">
             <a href="#crew"     className="hover:text-fg transition-colors">Crew</a>
             <a href="#coaching" className="hover:text-fg transition-colors">Coaching</a>
+            <a href="#tiers"    className="hover:text-fg transition-colors">Tiers</a>
             <a href="#app"      className="hover:text-fg transition-colors">Appen</a>
             <a href="#how"      className="hover:text-fg transition-colors">Pris</a>
             <a href="#faq"      className="hover:text-fg transition-colors">FAQ</a>
