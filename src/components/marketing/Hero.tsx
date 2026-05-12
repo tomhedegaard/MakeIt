@@ -4,7 +4,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Container from "@/components/Container";
 import CountUp from "@/components/CountUp";
-import { Display } from "@/components/DisplayHeading";
 import Spotlight from "@/components/Spotlight";
 import Link from "next/link";
 
@@ -83,7 +82,7 @@ export default function Hero() {
               }}
               className="inline-block overflow-hidden mr-[0.18em] last:mr-0"
             >
-              <span className="block"><Display>{word}</Display></span>
+              <span className="block">{word}</span>
             </motion.span>
           ))}
         </motion.h1>
