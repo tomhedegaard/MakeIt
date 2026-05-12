@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Container from "@/components/Container";
 import CountUp from "@/components/CountUp";
@@ -24,57 +24,62 @@ const STATS: Stat[] = [
  * Pinned hero — the section is 260vh tall, its inner content is
  * position: sticky so it stays glued to the viewport for 1.6vh of
  * scroll while six layers reveal in sequence driven by scroll
- * progress 0→1:
+ * progress 0→1.
  *
- *   0.00–0.05   eyebrow + headline (on-mount stagger; no scroll dep)
- *   0.05–0.32   subline mask-reveals left → right (5% soft edge so
- *                the leading edge "burns through" rather than hard-
- *                cuts — closer to ink etching than a wipe)
- *   0.28–0.48   CTA pair fades + scales + lifts
- *   0.50–0.85   stats row reveals each tile in a staggered cascade
- *   0.92–1.00   whole hero fades to 0.15 opacity as the marquee
- *                emerges underneath (the section is about to scroll
- *                past — the dissolve sells the transition)
+ * Performance notes (added after a 60Hz-display jank report):
  *
- * The on-mount animations (eyebrow + headline stagger) still play
- * the first time the hero mounts, then stay. Scroll-driven reveals
- * take over from there. Lenis smooth-scroll plays nicely with
- * framer-motion's scroll values — no special handling needed.
+ *   - clip-path inset() instead of WebKit mask-image gradient.
+ *     mask-image with a linear-gradient regenerates the gradient
+ *     string + reparses + repaints per scroll frame. clip-path is
+ *     a single percentage interpolation, GPU-accelerated, and
+ *     doesn't trigger paint
+ *   - will-change: transform, opacity + translateZ(0) on the
+ *     sticky container to promote it to its own GPU compositing
+ *     layer, so the dissolve + nested transforms don't repaint
+ *     the document below
+ *   - useReducedMotion gates the pinning entirely: when the user
+ *     has prefers-reduced-motion set, we skip the 260vh outer
+ *     container + scroll-driven progress entirely and render the
+ *     hero at its end state (everything visible, no exit fade).
+ *     This also avoids the cumulative scroll-listener cost on
+ *     low-power devices
  *
- * Spotlight (mouse-tracked glow) sits inside the sticky so it
- * follows the cursor for the full pinned duration, not just the
- * first viewport.
+ * The "burn through" feel of the subline reveal loses its soft
+ * edge with clip-path (which only does hard clips); the trade was
+ * worth it for predictable performance. If the brand wants the
+ * soft edge back, the path would be a thin gradient overlay that
+ * moves with the clip edge — costs more than it adds.
  */
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const reduced = useReducedMotion();
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
   });
 
-  // Background glow drift — pre-existing flourish; kept but rebased
-  // to use the new pinned scroll range.
+  // Background glow drift.
   const glowY = useTransform(scrollYProgress, [0, 1], [0, -180]);
   const glowOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  // Subline mask-reveal. A gradient with a 5% soft edge between the
-  // visible and clipped regions gives the "burn" feel rather than a
-  // hard wipe. We drive the edge position from 0 → 110 so it sweeps
-  // past the right side (>100) and removes the soft fade at the end.
-  const sublineEdge = useTransform(scrollYProgress, [0.05, 0.32], [0, 110]);
-  const sublineMask = useTransform(
-    sublineEdge,
-    (p) =>
-      `linear-gradient(95deg, #000 0%, #000 ${Math.max(0, p - 5)}%, transparent ${p}%, transparent 100%)`
+  // Subline — hard clip from right edge in. Interpolating a single
+  // string with one ${number}% token; framer-motion's useTransform
+  // round-trips the value through requestAnimationFrame so the
+  // string update is batched with the next paint.
+  const sublineClip = useTransform(
+    scrollYProgress,
+    [0.05, 0.32],
+    ["inset(0 100% 0 0)", "inset(0 0% 0 0)"]
   );
   const sublineOpacity = useTransform(scrollYProgress, [0.05, 0.12], [0, 1]);
 
-  // CTAs — scale + lift + fade in together.
+  // CTAs.
   const ctaY = useTransform(scrollYProgress, [0.28, 0.48], [40, 0]);
   const ctaOpacity = useTransform(scrollYProgress, [0.28, 0.48], [0, 1]);
   const ctaScale = useTransform(scrollYProgress, [0.28, 0.48], [0.94, 1]);
 
-  // Stats row — each tile gets its own ramp so they cascade.
+  // Stats row — staggered cascade.
   const stat0 = useTransform(scrollYProgress, [0.50, 0.60], [0, 1]);
   const stat1 = useTransform(scrollYProgress, [0.56, 0.66], [0, 1]);
   const stat2 = useTransform(scrollYProgress, [0.62, 0.72], [0, 1]);
@@ -85,14 +90,37 @@ export default function Hero() {
   // Exit dissolve.
   const exitOpacity = useTransform(scrollYProgress, [0.92, 1], [1, 0.15]);
 
+  // Reduced-motion mode: short section, no pin, no scroll-driven
+  // anything. Everything renders at its end state.
+  if (reduced) {
+    return (
+      <section
+        ref={sectionRef}
+        className="relative overflow-hidden pt-28 md:pt-40 pb-24 md:pb-40"
+      >
+        <HeroContent
+          // Static end-state — no motion values; just plain styles.
+          staticMode
+        />
+      </section>
+    );
+  }
+
   return (
     <section ref={sectionRef} className="relative h-[260vh]">
-      <div className="sticky top-0 h-screen overflow-hidden flex flex-col">
+      <div
+        className="sticky top-0 h-screen overflow-hidden flex flex-col"
+        style={{
+          willChange: "transform, opacity",
+          // Promote to a GPU compositing layer so the dissolve +
+          // nested transforms below don't repaint the document.
+          transform: "translateZ(0)",
+        }}
+      >
         <motion.div
           style={{ opacity: exitOpacity }}
           className="relative flex-1 flex flex-col justify-center pt-28 md:pt-40 pb-12"
         >
-          {/* gradient glow behind type — drifts up on scroll */}
           <motion.div
             style={{ y: glowY, opacity: glowOpacity }}
             className="pointer-events-none absolute inset-0 z-0"
@@ -101,7 +129,6 @@ export default function Hero() {
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-line-strong to-transparent" />
           </motion.div>
 
-          {/* mouse-tracked spotlight on top of the glow, under the type */}
           <Spotlight />
 
           <Container className="relative z-10">
@@ -149,8 +176,7 @@ export default function Hero() {
               <motion.p
                 style={{
                   opacity: sublineOpacity,
-                  WebkitMaskImage: sublineMask,
-                  maskImage: sublineMask,
+                  clipPath: sublineClip,
                 }}
                 className="md:col-span-6 text-fg-dim text-lg md:text-xl leading-relaxed max-w-xl"
               >
@@ -172,7 +198,6 @@ export default function Hero() {
               </motion.div>
             </div>
 
-            {/* Stats row — values count up from 0 when scrolled into view */}
             <motion.div
               style={{ y: statY }}
               className="mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline"
@@ -201,3 +226,63 @@ export default function Hero() {
     </section>
   );
 }
+
+/* ---------------------------------------------------------------- *
+ * Static end-state for reduced-motion users. Mirrors the motion
+ * version's final visual state without any animation wiring.
+ * ---------------------------------------------------------------- */
+
+function HeroContent({ staticMode: _staticMode }: { staticMode: true }) {
+  return (
+    <>
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <div className="absolute -top-40 left-1/2 h-[640px] w-[1100px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(245,242,236,0.10),transparent_70%)] blur-2xl" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-line-strong to-transparent" />
+      </div>
+
+      <Container className="relative z-10">
+        <div className="flex items-center gap-3 mb-10">
+          <span className="pulse-dot" />
+          <span className="eyebrow">
+            MakeIt <span className="text-fg-faint">{"//"}</span> HQ &nbsp;·&nbsp; Closed Beta · Invite only · est. 2026
+          </span>
+        </div>
+
+        <h1 className="font-display text-[clamp(3.4rem,12vw,11rem)] leading-[0.9]">
+          MADE FOR THOSE WHO LIFT.
+        </h1>
+
+        <div className="mt-12 grid gap-10 md:grid-cols-12 items-end">
+          <p className="md:col-span-6 text-fg-dim text-lg md:text-xl leading-relaxed max-w-xl">
+            MakeIt er ikke bare straps og cuffs.
+            <br />
+            Det er det interne univers for crewet bag — coaching, community og loyalitet
+            samlet ét sted. Bygget i København. Lavet til atleter der løfter tungt.
+          </p>
+          <div className="md:col-span-6 flex flex-wrap items-center gap-3 md:justify-end">
+            <Link href="/login" className="btn btn-primary">
+              Få adgang
+              <span aria-hidden>→</span>
+            </Link>
+            <a href="#crew" className="btn">Læs mere</a>
+          </div>
+        </div>
+
+        <div className="mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline">
+          {STATS.map((s) => (
+            <div key={s.k} className="bg-bg p-6 md:p-8">
+              <div className="eyebrow mb-3">{s.k}</div>
+              <div className="numeric text-3xl md:text-5xl font-medium text-fg">
+                {"literal" in s ? s.literal : (
+                  <CountUp to={s.to} pad={s.pad} duration={1.8} scramble={false} />
+                )}
+              </div>
+              <div className="mt-2 text-xs text-fg-faint font-mono">{s.s}</div>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </>
+  );
+}
+

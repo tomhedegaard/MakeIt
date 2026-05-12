@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import Container from "@/components/Container";
 
@@ -135,9 +135,13 @@ function TierRow({
   isLast: boolean;
 }) {
   const ref = useRef<HTMLLIElement>(null);
+  const reduced = useReducedMotion();
   // Unlock when the card is 40% into the viewport; once: true so we
-  // don't re-lock on scroll-back which would feel jittery.
-  const unlocked = useInView(ref, { amount: 0.4, once: true });
+  // don't re-lock on scroll-back which would feel jittery. Reduced-
+  // motion users get every tier pre-unlocked so they don't have to
+  // chase the reveal animation as they scroll.
+  const inView = useInView(ref, { amount: 0.4, once: true });
+  const unlocked = reduced ? true : inView;
 
   return (
     <li ref={ref} className="relative pl-12 md:pl-20">
