@@ -32,8 +32,10 @@ export const COMPANY = {
     entity: "MakeIt Danmark ApS",
     /** Danish CVR-number (8 digits). null until incorporated. */
     cvr: null as string | null,
-    /** Postal address visible on legal pages. */
-    address: "Engvej 169, 2300 København S",
+    /** Public address visible on legal pages. Kept at city + country
+     *  for now; switch to a full postal address when we have a public
+     *  HQ to publish. */
+    address: "København, Danmark",
     /** Two-letter ISO country code for legal jurisdiction. */
     country: "DK",
     /** Year the platform launched (used for copyright lines + about). */
