@@ -4,6 +4,7 @@
  */
 import "server-only";
 import { sendEmail, type SendResult } from "@/lib/email/resend";
+import { emailFooterHtml } from "@/lib/email/footer";
 import type { WeekDigest } from "@/lib/data/digest";
 
 function esc(s: string): string {
@@ -135,7 +136,7 @@ function renderHtml(args: { recipientHandle: string; digest: WeekDigest; baseUrl
             Sendt mandag morgen til alle aktive medlemmer. Slå fra i indstillinger.
           </p>
           <p style="margin:12px 0 0;color:#56554F;font-size:11px;line-height:1.7;">
-            MakeIt Danmark ApS · Engvej 169 · 2300 København S · <a href="https://www.nowmakeit.eu" style="color:#A8A6A0;">nowmakeit.eu</a>
+            ${emailFooterHtml()}
           </p>
         </td></tr>
       </table>

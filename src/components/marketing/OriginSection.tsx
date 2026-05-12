@@ -1,4 +1,5 @@
 import Container from "@/components/Container";
+import { COMPANY } from "@/lib/company";
 
 export default function OriginSection() {
   return (
@@ -24,8 +25,7 @@ export default function OriginSection() {
             <ul className="grid grid-cols-2 gap-px border hairline bg-line">
               {[
                 { k: "Etableret",   v: "2018" },
-                { k: "Adresse",     v: "Engvej 169" },
-                { k: "By",          v: "København S" },
+                { k: "Sted",        v: COMPANY.legal.address ?? "København, Danmark" },
                 { k: "Made in",     v: "Denmark" },
                 { k: "Sælges hos",  v: "PureGym, SDU, Fitness Engros m.fl." },
                 { k: "Garanti",     v: "100 dages retur" },

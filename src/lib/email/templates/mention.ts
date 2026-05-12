@@ -4,6 +4,7 @@
  */
 import "server-only";
 import { sendEmail, type SendResult } from "@/lib/email/resend";
+import { emailFooterHtml } from "@/lib/email/footer";
 
 export type MentionEmailArgs = {
   to: string;
@@ -87,7 +88,7 @@ function renderHtml(args: MentionEmailArgs): string {
             Slå mention-mails fra i indstillinger på din profil hvis det bliver for meget.
           </p>
           <p style="margin:12px 0 0;color:#56554F;font-size:11px;line-height:1.7;">
-            MakeIt Danmark ApS · Engvej 169 · 2300 København S · <a href="https://www.nowmakeit.eu" style="color:#A8A6A0;">nowmakeit.eu</a>
+            ${emailFooterHtml()}
           </p>
         </td></tr>
       </table>

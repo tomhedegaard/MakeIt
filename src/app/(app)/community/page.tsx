@@ -221,7 +221,7 @@ export default async function CrewPage() {
         <div className="eyebrow mb-2">Næste IRL-meet</div>
         <div className="font-display text-2xl mb-1">Open House — Amagerbro</div>
         <p className="text-sm text-fg-dim mb-4">
-          Lørdag 24/05 · Engvej 169 · Træning, kaffe, og en sneak peek af nye produkter.
+          Lørdag 24/05 · København · Træning, kaffe, og en sneak peek af nye produkter.
         </p>
         <div className="flex gap-2">
           <button type="button" className="btn btn-primary btn-sm flex-1">RSVP</button>

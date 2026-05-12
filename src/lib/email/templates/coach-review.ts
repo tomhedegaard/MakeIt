@@ -5,6 +5,7 @@
  */
 import "server-only";
 import { sendEmail, type SendResult } from "@/lib/email/resend";
+import { emailFooterHtml, emailFooterPlain } from "@/lib/email/footer";
 
 export type CoachReviewEmailArgs = {
   to: string;
@@ -136,7 +137,7 @@ function renderHtml(args: CoachReviewEmailArgs): string {
                 Svar gerne direkte på denne mail — den lander hos Mikael.
               </p>
               <p style="margin:12px 0 0;color:#56554F;font-size:11px;line-height:1.7;">
-                MakeIt Danmark ApS · Engvej 169 · 2300 København S · <a href="https://www.nowmakeit.eu" style="color:#A8A6A0;">nowmakeit.eu</a>
+                ${emailFooterHtml()}
               </p>
             </td>
           </tr>
@@ -165,7 +166,7 @@ function renderText(args: CoachReviewEmailArgs): string {
     `Åbn: ${args.baseUrl}/profile#form-checks`,
     "",
     "— MakeIt // HQ",
-    "MakeIt Danmark ApS · Engvej 169 · 2300 København S",
+    emailFooterPlain(),
   ].join("\n");
 }
 
