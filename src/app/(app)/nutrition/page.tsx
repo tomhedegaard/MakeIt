@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import Container from "@/components/Container";
 import { getSession } from "@/lib/auth";
 import {
@@ -9,10 +10,12 @@ import {
   type MealSlot,
   type Plan,
 } from "@/lib/data/nutrition";
+import { getLatestWeight, getWeightTrend } from "@/lib/data/weight";
 import { suggestSupplements } from "@/lib/nutrition/brand";
 import MealCard from "./MealCard";
 import GeneratePlanButton from "./GeneratePlanButton";
 import LogMealButton from "./LogMealButton";
+import LogWeightCard from "@/components/nutrition/LogWeightCard";
 import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
 
@@ -24,11 +27,20 @@ const DAY_LABELS = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
 
 export default async function NutritionPage() {
   const member = (await getSession())!;
-  const [profile, plan, checkin] = await Promise.all([
+  const [profile, plan, checkin, latestWeight, weightTrend] = await Promise.all([
     getOrCreateNutritionProfile(member.id),
     getCurrentPlan(member.id),
     getDailyCheckIn(member.id),
+    getLatestWeight(member.id),
+    getWeightTrend(member.id),
   ]);
+
+  // First-time visit (no plan, no weigh-in) → wizard. The wizard
+  // itself also guards against a second visit by redirecting back
+  // here once a plan exists.
+  if (plan === null && latestWeight === null) {
+    redirect("/nutrition/setup");
+  }
   const todayIndex = todayDayIndex();
 
   return (
@@ -61,6 +73,12 @@ export default async function NutritionPage() {
       </header>
 
       <DailyCheckInCard checkin={checkin} />
+
+      <LogWeightCard
+        latestKg={latestWeight?.kg ?? null}
+        latestLoggedAt={latestWeight?.loggedAt ?? null}
+        deltaKg={weightTrend.deltaKg}
+      />
 
       {plan === null ? (
         <EmptyState weekStart={currentIsoMonday()} hasProfile={Boolean(profile)} />

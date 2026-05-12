@@ -20,6 +20,7 @@ import {
 } from "@/lib/data/nutrition";
 import { gradeMealPhoto } from "@/lib/data/nutrition-photo-claude";
 import { generatePlanWithClaude } from "@/lib/data/nutrition-planner-claude";
+import { logWeight } from "@/lib/data/weight";
 import { randomUUID } from "crypto";
 
 /* ---------------------------------------------------------------- *
@@ -318,4 +319,96 @@ export async function quickLogAction(formData: FormData): Promise<void> {
 
   revalidatePath("/nutrition");
   revalidatePath("/dashboard");
+}
+
+/* ---------------------------------------------------------------- *
+ * Weigh-in log — minimal append. The meal planner reads
+ * getLatestWeight() at plan-generation time + the ugentlige
+ * adjust-engine reads getWeightTrend() for cut/bulk drift signal.
+ * ---------------------------------------------------------------- */
+export async function logWeightAction(formData: FormData): Promise<void> {
+  const member = await getSession();
+  if (!member) redirect("/login");
+
+  // Accept either decimal-point or comma (Danish locale habit).
+  const raw = String(formData.get("kg") ?? "").replace(",", ".").trim();
+  const kg = parseFloat(raw);
+  const notes = String(formData.get("notes") ?? "").slice(0, 200) || null;
+
+  // Hard-rejects: empty, NaN, out of realistic range. Silent no-op
+  // — the form validates client-side; this is a server backstop.
+  if (!isFinite(kg) || kg <= 30 || kg >= 300) {
+    revalidatePath("/nutrition");
+    return;
+  }
+
+  await logWeight({ memberId: member.id, kg, notes });
+  revalidatePath("/nutrition");
+  revalidatePath("/nutrition/setup");
+  revalidatePath("/coach/members");
+}
+
+/* ---------------------------------------------------------------- *
+ * Setup-wizard completion — wraps savePreferences + logWeight +
+ * initial plan generation in one atomic submit so the wizard can
+ * stay a single POST. Returns the user to /nutrition where the
+ * fresh plan renders.
+ *
+ * Validation mirrors savePreferencesAction; the only addition is
+ * the bodyweight field. We deliberately don't expose every
+ * preference here (allergies, dislikes, household_size, etc.) —
+ * the wizard is the KISS 4-question intro, power-user edits go
+ * via /nutrition/preferences afterwards.
+ * ---------------------------------------------------------------- */
+export async function completeSetupAction(formData: FormData): Promise<void> {
+  const member = await getSession();
+  if (!member) redirect("/login");
+
+  const goal = String(formData.get("goal") ?? "maintain") as NutritionGoal;
+  const diet = String(formData.get("diet") ?? "omnivore") as Diet;
+  const cooking_level = String(
+    formData.get("cooking_level") ?? "basic",
+  ) as CookingLevel;
+  const kgRaw = String(formData.get("kg") ?? "").replace(",", ".").trim();
+  const kg = parseFloat(kgRaw);
+
+  // Strict-enum guard. Anything that didn't match a known value
+  // gets coerced to a safe default rather than rejected — the
+  // wizard is the user's first taste, we don't want a blank
+  // failure page on edge inputs.
+  const safeGoal: NutritionGoal = (
+    ["cut", "recomp", "maintain", "mass"] satisfies NutritionGoal[]
+  ).includes(goal)
+    ? goal
+    : "maintain";
+  const safeDiet: Diet = (
+    ["omnivore", "pescatarian", "vegetarian", "vegan"] satisfies Diet[]
+  ).includes(diet)
+    ? diet
+    : "omnivore";
+  const safeCooking: CookingLevel = (
+    ["basic", "intermediate", "advanced"] satisfies CookingLevel[]
+  ).includes(cooking_level)
+    ? cooking_level
+    : "basic";
+
+  await saveNutritionProfile(member.id, {
+    goal: safeGoal,
+    diet: safeDiet,
+    cookingLevel: safeCooking,
+  });
+
+  if (isFinite(kg) && kg > 30 && kg < 300) {
+    await logWeight({ memberId: member.id, kg, notes: "setup wizard" });
+  }
+
+  // Kick off an initial plan with the just-saved preferences.
+  // Mirrors generatePlanAction: Claude first, mock fallback. We
+  // don't duplicate persistAiPlan here — instead we call
+  // generatePlanAction so any future change to its logic stays
+  // in one place.
+  await generatePlanAction();
+
+  revalidatePath("/nutrition");
+  redirect("/nutrition");
 }
