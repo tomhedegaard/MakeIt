@@ -4,6 +4,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import RevealObserver from "@/components/RevealObserver";
 import CookieBanner from "@/components/marketing/CookieBanner";
+import CustomCursor from "@/components/CustomCursor";
 import { COMPANY } from "@/lib/company";
 
 const sans = Inter({
@@ -57,6 +58,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col grain vignette">
         <SmoothScroll />
         <RevealObserver />
+        <CustomCursor />
         {children}
         <CookieBanner />
       </body>

@@ -72,6 +72,17 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
 
+/* Custom cursor — the .cursor-custom class is applied by
+ * <CustomCursor> after gating on (hover: hover) + (pointer: fine),
+ * so touch + assistive setups keep the native cursor. We hide it
+ * on all elements (not just html) because button/anchor styles
+ * elsewhere set `cursor: pointer` which would otherwise re-show
+ * the system cursor on top of our custom one. */
+html.cursor-custom,
+html.cursor-custom * {
+  cursor: none !important;
+}
+
 /* ---------------------------------------------------------------- *
  * Type system — strength editorial
  * ---------------------------------------------------------------- */
@@ -108,10 +119,33 @@ html.lenis, html.lenis body { height: auto; }
 
 .grain::before {
   content: "";
-  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  position: fixed; inset: -10%; pointer-events: none; z-index: 1;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1   0 0 0 0 0.95   0 0 0 0 0.92   0 0 0 0.045 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   opacity: 0.55;
   mix-blend-mode: overlay;
+  /* Subtle film-projector drift — the tile shifts in 8 steps so
+   * it never reads as smooth motion (which would feel like a
+   * texture sliding) but instead as the grain pattern itself
+   * resampling, the way real film grain does frame-to-frame. */
+  animation: grain-drift 7s steps(8) infinite;
+}
+
+@keyframes grain-drift {
+  0%   { transform: translate(0%, 0%); }
+  10%  { transform: translate(-4%, -3%); }
+  20%  { transform: translate(3%, -5%); }
+  30%  { transform: translate(-2%, 4%); }
+  40%  { transform: translate(5%, 2%); }
+  50%  { transform: translate(-4%, -1%); }
+  60%  { transform: translate(2%, 3%); }
+  70%  { transform: translate(-5%, -4%); }
+  80%  { transform: translate(4%, -2%); }
+  90%  { transform: translate(-1%, 5%); }
+  100% { transform: translate(0%, 0%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain::before { animation: none; }
 }
 
 .vignette::after {
