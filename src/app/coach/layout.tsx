@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
 import CoachShell from "@/components/coach/CoachShell";
 import { getSession } from "@/lib/auth";
+import { COMPANY } from "@/lib/company";
 
 export const metadata = {
-  title: "Coach — MakeIt // HQ",
+  title: `Coach — ${COMPANY.product}`,
 };
 
 export default async function CoachLayout({

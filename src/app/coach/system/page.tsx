@@ -2,10 +2,11 @@ import { redirect } from "next/navigation";
 import Container from "@/components/Container";
 import { getDevStatus, type Severity } from "@/lib/dev-status";
 import { getSession } from "@/lib/auth";
+import { COMPANY } from "@/lib/company";
 import Backlog from "./Backlog";
 
 export const metadata = {
-  title: "System — Coach · MakeIt // HQ",
+  title: `System — Coach · ${COMPANY.product}`,
 };
 
 // Refetch on each load — this page is internal and called rarely.
@@ -187,12 +188,66 @@ export default async function CoachSystemPage() {
         </section>
       ) : null}
 
+      <section className="space-y-4">
+        <div>
+          <div className="eyebrow mb-1">Company config</div>
+          <h2 className="font-display text-2xl md:text-3xl">Virksomhedsoplysninger</h2>
+          <p className="mt-1 text-sm text-fg-dim max-w-md">
+            Single source of truth — vises alle steder i app'en. Rediger i{" "}
+            <code className="text-fg numeric text-xs">src/lib/company.ts</code> og
+            redeploy.
+          </p>
+        </div>
+        <dl className="surface-2 rounded-2xl divide-y hairline overflow-hidden text-sm">
+          <Row label="Name" value={COMPANY.name} />
+          <Row label="Product" value={COMPANY.product} />
+          <Row label="Tagline" value={COMPANY.tagline} />
+          <Row label="App URL" value={COMPANY.appUrl} />
+          <Row label="Marketing URL" value={COMPANY.marketingUrl} />
+          <Row label="Legal entity" value={COMPANY.legal.entity} />
+          <Row label="CVR" value={COMPANY.legal.cvr ?? "—"} dim={!COMPANY.legal.cvr} />
+          <Row label="Address" value={COMPANY.legal.address} />
+          <Row label="Founded" value={String(COMPANY.legal.foundedYear)} />
+          <Row label="Support email" value={COMPANY.emails.support} />
+          <Row label="Billing email" value={COMPANY.emails.billing} />
+          <Row label="Transactional FROM" value={COMPANY.emails.transactionalFrom} />
+          <Row label="Reply-to" value={COMPANY.emails.replyTo} />
+          <Row
+            label="Instagram"
+            value={COMPANY.social.instagramHandle ? `@${COMPANY.social.instagramHandle}` : "—"}
+            dim={!COMPANY.social.instagramHandle}
+          />
+        </dl>
+      </section>
+
       <Backlog />
     </Container>
   );
 }
 
 /* ---------------------------- atoms ---------------------------- */
+
+function Row({
+  label,
+  value,
+  dim = false,
+}: {
+  label: string;
+  value: string | null;
+  dim?: boolean;
+}) {
+  return (
+    <div className="px-5 py-3 flex items-center gap-4">
+      <dt className="eyebrow w-36 shrink-0">{label}</dt>
+      <dd
+        className={`flex-1 break-all font-mono text-xs ${dim ? "text-fg-faint" : "text-fg"}`}
+      >
+        {value ?? "—"}
+      </dd>
+    </div>
+  );
+}
+
 
 function KPI({
   label,

@@ -4,6 +4,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import RevealObserver from "@/components/RevealObserver";
 import CookieBanner from "@/components/marketing/CookieBanner";
+import { COMPANY } from "@/lib/company";
 
 const sans = Inter({
   variable: "--font-sans-stack",
@@ -25,14 +26,12 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MakeIt // HQ",
-  description:
-    "MakeIt // HQ — det interne univers for vores atleter, coaches og crew. Coaching, community, events og loyalitet samlet ét sted. Made in Denmark.",
-  metadataBase: new URL("https://hq.nowmakeit.eu"),
+  title: COMPANY.product,
+  description: `${COMPANY.product} — ${COMPANY.tagline} Made in Denmark.`,
+  metadataBase: new URL(COMPANY.appUrl),
   openGraph: {
-    title: "MakeIt // HQ",
-    description:
-      "Det interne univers for MakeIt-crewet. Coaching, community, events og loyalitet samlet ét sted.",
+    title: COMPANY.product,
+    description: COMPANY.tagline,
     type: "website",
   },
   robots: { index: false, follow: false },

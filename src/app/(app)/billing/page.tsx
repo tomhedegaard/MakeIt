@@ -5,6 +5,7 @@ import { pricing } from "@/lib/pricing";
 import { STRIPE_ENABLED } from "@/lib/stripe";
 import { getActiveSubscriptions, type ActiveSubscription } from "@/lib/data/billing";
 import { startCheckoutAction, openPortalAction } from "./actions";
+import { BILLING_MAILTO, COMPANY } from "@/lib/company";
 
 const STATUS_LABEL: Record<string, string> = {
   trialing:           "Prøveperiode",
@@ -145,8 +146,8 @@ export default async function BillingPage({
           <div className="eyebrow mb-2">Hjælp</div>
           <p className="text-sm text-fg-dim mb-3">
             Spørgsmål om faktura, refund eller pause? Skriv til{" "}
-            <a className="underline hover:text-fg" href="mailto:billing@nowmakeit.eu">
-              billing@nowmakeit.eu
+            <a className="underline hover:text-fg" href={BILLING_MAILTO}>
+              {COMPANY.emails.billing}
             </a>
             .
           </p>

@@ -1,4 +1,5 @@
 import Container from "@/components/Container";
+import { SUPPORT_MAILTO } from "@/lib/company";
 
 const ITEMS: { q: string; a: string }[] = [
   {
@@ -48,7 +49,7 @@ export default function FAQ() {
             <p className="text-fg-dim text-base md:text-lg leading-relaxed max-w-md">
               Det vi typisk bliver spurgt om. Mangler dit svar?
               {" "}
-              <a className="underline hover:text-fg" href="mailto:munk@nowmakeit.eu">
+              <a className="underline hover:text-fg" href={SUPPORT_MAILTO}>
                 Skriv direkte til Mikael
               </a>
               .

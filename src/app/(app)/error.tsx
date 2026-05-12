@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import Container from "@/components/Container";
+import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 
 /**
  * Logged-in app error boundary. Sits inside (app) so it preserves the
@@ -30,8 +31,8 @@ export default function AppError({
         </h1>
         <p className="text-fg-dim text-base leading-relaxed mb-8">
           Tjek din forbindelse og prøv igen. Hvis det fortsætter, skriv til{" "}
-          <a className="underline hover:text-fg" href="mailto:munk@nowmakeit.eu">
-            munk@nowmakeit.eu
+          <a className="underline hover:text-fg" href={SUPPORT_MAILTO}>
+            {COMPANY.emails.support}
           </a>
           .
         </p>

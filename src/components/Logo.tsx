@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { COMPANY } from "@/lib/company";
 
 export default function Logo({
   className,
@@ -19,7 +20,7 @@ export default function Logo({
   return (
     <div
       className={cn("flex items-center gap-2.5 select-none", className)}
-      aria-label="MakeIt // HQ"
+      aria-label={COMPANY.product}
     >
       <svg viewBox="0 0 32 32" className="h-5 w-5" aria-hidden>
         <rect x="1" y="1" width="30" height="30" rx="6" stroke="currentColor" strokeWidth="1.5" fill="none" />

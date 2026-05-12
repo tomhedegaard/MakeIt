@@ -5,6 +5,7 @@ import Sparkline from "@/components/ui/Sparkline";
 import { getSession } from "@/lib/auth";
 import { getMyFormChecks } from "@/lib/data/me";
 import { getMyLifts, type LiftPr, type LiftStats } from "@/lib/data/lifts";
+import { COMPANY } from "@/lib/company";
 
 export default async function ProfilePage() {
   const m = (await getSession())!;
@@ -130,7 +131,7 @@ export default async function ProfilePage() {
             <ul className="space-y-3 text-sm">
               <li className="flex items-center justify-between border-b hairline pb-3">
                 <span className="text-fg-dim">Email</span>
-                <span>{m.email ?? `${m.handle}@nowmakeit.eu`}</span>
+                <span>{m.email ?? `${m.handle}@${COMPANY.marketingDomain}`}</span>
               </li>
               <li className="flex items-center justify-between border-b hairline pb-3">
                 <span className="text-fg-dim">Notifikationer</span>

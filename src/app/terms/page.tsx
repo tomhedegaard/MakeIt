@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Container from "@/components/Container";
 import Logo from "@/components/Logo";
+import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 
 export const metadata = {
-  title: "Vilkår — MakeIt // HQ",
+  title: `Vilkår — ${COMPANY.product}`,
 };
 
 export default function TermsPage() {
@@ -19,18 +20,20 @@ export default function TermsPage() {
           Spillereglerne.
         </h1>
         <p className="text-fg-dim text-base leading-relaxed mb-10">
-          Senest opdateret: maj 2026 · Ved at bruge MakeIt // HQ accepterer du
+          Senest opdateret: maj 2026 · Ved at bruge {COMPANY.product} accepterer du
           disse vilkår. Spørgsmål?{" "}
-          <a className="underline hover:text-fg" href="mailto:munk@nowmakeit.eu">
-            munk@nowmakeit.eu
+          <a className="underline hover:text-fg" href={SUPPORT_MAILTO}>
+            {COMPANY.emails.support}
           </a>
           .
         </p>
 
         <Section eyebrow="01" title="Tjenesten">
           <p>
-            MakeIt // HQ er en lukket coaching-platform leveret af MakeIt Danmark ApS
-            (CVR — kontakt). Vi giver adgang til AI-genererede styrketrænings-programmer,
+            {COMPANY.product} er en lukket coaching-platform leveret af{" "}
+            {COMPANY.legal.entity ?? COMPANY.name}
+            {COMPANY.legal.cvr ? ` (CVR ${COMPANY.legal.cvr})` : " (CVR — kontakt)"}.
+            Vi giver adgang til AI-genererede styrketrænings-programmer,
             video-baseret form-feedback, et community af crew-medlemmer, og et Reps-loyalty
             program. Adgang kræver invite-kode og aktivt medlemskab.
           </p>
@@ -101,7 +104,8 @@ export default function TermsPage() {
         </Section>
 
         <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint mt-16">
-          MakeIt Danmark ApS · Engvej 169 · 2300 København S
+          {COMPANY.legal.entity ?? COMPANY.name}
+          {COMPANY.legal.address ? ` · ${COMPANY.legal.address}` : ""}
         </p>
       </Container>
     </main>

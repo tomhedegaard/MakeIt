@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
+import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 import {
   mockLoginAction,
   magicLinkAction,
@@ -9,7 +10,7 @@ import {
 } from "./actions";
 
 export const metadata = {
-  title: "Log ind — MakeIt // HQ",
+  title: `Log ind — ${COMPANY.product}`,
 };
 
 type Tab = "magic" | "password" | "oauth";
@@ -96,8 +97,8 @@ function MockForm({ err }: { err?: string }) {
       <p className="text-fg-dim mb-10 leading-relaxed">
         Indtast din invite-kode for at få adgang. Har du ikke en?
         Skriv til{" "}
-        <a className="underline hover:text-fg" href="mailto:munk@nowmakeit.eu">
-          munk@nowmakeit.eu
+        <a className="underline hover:text-fg" href={SUPPORT_MAILTO}>
+          {COMPANY.emails.support}
         </a>
         .
       </p>

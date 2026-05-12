@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Container from "@/components/Container";
 import Logo from "@/components/Logo";
+import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 
 export const metadata = {
-  title: "Privacy Policy — MakeIt // HQ",
+  title: `Privacy Policy — ${COMPANY.product}`,
 };
 
 export default function PrivacyPage() {
@@ -19,17 +20,19 @@ export default function PrivacyPage() {
           Hvad vi gemmer.
         </h1>
         <p className="text-fg-dim text-base leading-relaxed mb-10">
-          Senest opdateret: maj 2026 · Dataansvarlig: MakeIt Danmark ApS,
-          Engvej 169, 2300 København S · CVR — kontakt{" "}
-          <a className="underline hover:text-fg" href="mailto:munk@nowmakeit.eu">
-            munk@nowmakeit.eu
+          Senest opdateret: maj 2026 · Dataansvarlig:{" "}
+          {COMPANY.legal.entity ?? COMPANY.name}
+          {COMPANY.legal.address ? `, ${COMPANY.legal.address}` : ""} ·{" "}
+          {COMPANY.legal.cvr ? `CVR ${COMPANY.legal.cvr}` : "CVR — kontakt"}{" "}
+          <a className="underline hover:text-fg" href={SUPPORT_MAILTO}>
+            {COMPANY.emails.support}
           </a>
           .
         </p>
 
         <Section eyebrow="01" title="Hvad vi indsamler">
           <p>
-            Som medlem af MakeIt // HQ behandler vi følgende:
+            Som medlem af {COMPANY.product} behandler vi følgende:
           </p>
           <List
             items={[
@@ -76,7 +79,7 @@ export default function PrivacyPage() {
               ["Indsigt + portabilitet", "Eksportér alle dine data som JSON fra Indstillinger → Data."],
               ["Berigtigelse", "Opdatér din profil under Indstillinger eller skriv til os."],
               ["Sletning", "Slet din konto permanent under Indstillinger → Danger zone."],
-              ["Begrænsning + indsigelse", "Skriv til munk@nowmakeit.eu — vi svarer inden 30 dage."],
+              ["Begrænsning + indsigelse", `Skriv til ${COMPANY.emails.support} — vi svarer inden 30 dage.`],
               ["Klage", "Du kan klage til Datatilsynet hvis du mener vi behandler din data forkert."],
             ]}
           />
@@ -107,7 +110,8 @@ export default function PrivacyPage() {
         </Section>
 
         <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint mt-16">
-          MakeIt Danmark ApS · Engvej 169 · 2300 København S
+          {COMPANY.legal.entity ?? COMPANY.name}
+          {COMPANY.legal.address ? ` · ${COMPANY.legal.address}` : ""}
         </p>
       </Container>
     </main>

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
+import { COMPANY } from "@/lib/company";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -65,7 +66,7 @@ export async function GET() {
   const payload = {
     exportedAt: new Date().toISOString(),
     note:
-      "Personlig dataeksport fra MakeIt // HQ. Indeholder alt vi gemmer der er dit. Kontakt munk@nowmakeit.eu hvis noget mangler eller ser forkert ud.",
+      `Personlig dataeksport fra ${COMPANY.product}. Indeholder alt vi gemmer der er dit. Kontakt ${COMPANY.emails.support} hvis noget mangler eller ser forkert ud.`,
     member: member.data ?? null,
     program_assignments: programAssignments.data ?? [],
     sessions: sessions.data ?? [],
