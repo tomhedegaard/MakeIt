@@ -107,6 +107,15 @@ export async function getDevStatus(): Promise<DevStatus> {
       dashboardUrl: "https://resend.com/emails",
     },
     {
+      id: "unsplash",
+      name: "Unsplash (meal images)",
+      configured: Boolean(process.env.UNSPLASH_ACCESS_KEY),
+      notes: process.env.UNSPLASH_ACCESS_KEY
+        ? "Meal cards include hero images"
+        : "Typography-only meal cards",
+      dashboardUrl: "https://unsplash.com/oauth/applications",
+    },
+    {
       id: "vapid",
       name: "Web Push (VAPID)",
       configured: Boolean(

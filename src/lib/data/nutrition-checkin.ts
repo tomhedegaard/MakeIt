@@ -179,6 +179,10 @@ export async function getDailyCheckIn(memberId: string): Promise<DailyCheckIn> {
     prep_minutes: number | null;
     swappable: boolean;
     position: number;
+    image_url: string | null;
+    image_thumb_url: string | null;
+    image_attribution_name: string | null;
+    image_attribution_url: string | null;
   }>;
   const logs = (todayLogs ?? []) as Array<{
     id: string;
@@ -251,6 +255,10 @@ export async function getDailyCheckIn(memberId: string): Promise<DailyCheckIn> {
           prepMinutes: meal.prep_minutes,
           swappable: meal.swappable,
           position: meal.position,
+          imageUrl: meal.image_url ?? null,
+          imageThumbUrl: meal.image_thumb_url ?? null,
+          imageAttributionName: meal.image_attribution_name ?? null,
+          imageAttributionUrl: meal.image_attribution_url ?? null,
         }
       : null,
     existingLogId: existingLog?.id ?? null,

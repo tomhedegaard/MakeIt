@@ -69,6 +69,37 @@ export default function MealCard({
 
   return (
     <article className="surface-2 rounded-xl overflow-hidden">
+      {/* Unsplash hero image — rendered above the title when the
+          cache has a match. Click goes to the photographer's profile
+          (Unsplash ToS requirement). aspect-[5/3] sits between
+          square and 16/9; matches food photography conventions
+          without dominating the card vertically. */}
+      {meal.imageUrl ? (
+        <a
+          href={meal.imageAttributionUrl ?? "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative block aspect-[5/3] overflow-hidden group"
+          aria-label={
+            meal.imageAttributionName
+              ? `Foto af ${meal.imageAttributionName} på Unsplash`
+              : "Foto via Unsplash"
+          }
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={meal.imageUrl}
+            alt={meal.title}
+            loading="lazy"
+            className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+          />
+          {meal.imageAttributionName ? (
+            <span className="absolute bottom-2 right-2 text-[9px] font-mono uppercase tracking-[0.14em] text-white/85 bg-black/40 backdrop-blur-sm rounded px-1.5 py-0.5">
+              📷 {meal.imageAttributionName}
+            </span>
+          ) : null}
+        </a>
+      ) : null}
       <div className="px-5 pt-4 pb-3 flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="eyebrow mb-1.5 flex items-center gap-2">

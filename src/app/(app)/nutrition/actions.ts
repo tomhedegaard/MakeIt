@@ -21,6 +21,7 @@ import {
 import { gradeMealPhoto } from "@/lib/data/nutrition-photo-claude";
 import { generatePlanWithClaude } from "@/lib/data/nutrition-planner-claude";
 import { logWeight } from "@/lib/data/weight";
+import { getMealImagesBatch } from "@/lib/nutrition/unsplash";
 import { randomUUID } from "crypto";
 
 /* ---------------------------------------------------------------- *
@@ -168,24 +169,38 @@ async function persistAiPlan(
 
   if (!planRow) return;
 
-  const mealRows = shape.meals.map((m) => ({
-    plan_id: planRow.id,
-    day_index: m.dayIndex,
-    slot: m.slot,
-    kind: m.kind,
-    title: m.title,
-    description: m.description,
-    ingredients: m.ingredients,
-    steps: m.steps,
-    est_kcal: m.estKcal,
-    est_protein_g: m.estProteinG,
-    est_carbs_g: m.estCarbsG,
-    est_fat_g: m.estFatG,
-    carb_density: m.carbDensity,
-    prep_minutes: m.prepMinutes,
-    swappable: m.swappable,
-    position: m.position,
-  }));
+  // Fetch meal images in parallel — Unsplash queries run with a
+  // 2s timeout each, cache hits return instantly. Worst case +2s
+  // added latency on the first plan; ~0ms thereafter as the cache
+  // dominates. Failures fall through to null image_url and the
+  // meal card renders its typography-only fallback.
+  const images = await getMealImagesBatch(shape.meals.map((m) => m.title));
+
+  const mealRows = shape.meals.map((m) => {
+    const img = images.get(m.title);
+    return {
+      plan_id: planRow.id,
+      day_index: m.dayIndex,
+      slot: m.slot,
+      kind: m.kind,
+      title: m.title,
+      description: m.description,
+      ingredients: m.ingredients,
+      steps: m.steps,
+      est_kcal: m.estKcal,
+      est_protein_g: m.estProteinG,
+      est_carbs_g: m.estCarbsG,
+      est_fat_g: m.estFatG,
+      carb_density: m.carbDensity,
+      prep_minutes: m.prepMinutes,
+      swappable: m.swappable,
+      position: m.position,
+      image_url: img?.url ?? null,
+      image_thumb_url: img?.thumbUrl ?? null,
+      image_attribution_name: img?.attributionName ?? null,
+      image_attribution_url: img?.attributionUrl ?? null,
+    };
+  });
   await supabase.from("nutrition_meals").insert(mealRows);
 }
 

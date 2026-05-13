@@ -314,6 +314,12 @@ function shapeForPersistence(parsed: ParsedPlan): GeneratedPlanShape {
       prepMinutes: m.prepMinutes,
       swappable: true,
       position: i,
+      // Image fields are null at generation time — the persist
+      // path looks them up via Unsplash before insert.
+      imageUrl: null,
+      imageThumbUrl: null,
+      imageAttributionName: null,
+      imageAttributionUrl: null,
     })),
   };
 }

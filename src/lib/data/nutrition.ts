@@ -1,6 +1,7 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { generateMockPlan } from "@/lib/nutrition/mock-plan";
+import { getMealImage, getMealImagesBatch } from "@/lib/nutrition/unsplash";
 
 /* ---------------------------------------------------------------- *
  * Types
@@ -58,6 +59,11 @@ export type Meal = {
   prepMinutes: number | null;
   swappable: boolean;
   position: number;
+  /** Unsplash image — null when integration is off or no match was found. */
+  imageUrl: string | null;
+  imageThumbUrl: string | null;
+  imageAttributionName: string | null;
+  imageAttributionUrl: string | null;
 };
 
 export type Plan = {
@@ -270,6 +276,10 @@ export async function generatePlan(
         ...m,
         id: `demo-meal-${i}`,
         planId: `demo-${weekStart}`,
+        imageUrl: null,
+        imageThumbUrl: null,
+        imageAttributionName: null,
+        imageAttributionUrl: null,
       })),
     };
   }
@@ -299,24 +309,35 @@ export async function generatePlan(
 
   if (planErr || !planRow) throw new Error(planErr?.message ?? "Failed to create plan");
 
-  const mealRows = planShape.meals.map((m) => ({
-    plan_id: planRow.id,
-    day_index: m.dayIndex,
-    slot: m.slot,
-    kind: m.kind,
-    title: m.title,
-    description: m.description,
-    ingredients: m.ingredients,
-    steps: m.steps,
-    est_kcal: m.estKcal,
-    est_protein_g: m.estProteinG,
-    est_carbs_g: m.estCarbsG,
-    est_fat_g: m.estFatG,
-    carb_density: m.carbDensity,
-    prep_minutes: m.prepMinutes,
-    swappable: m.swappable,
-    position: m.position,
-  }));
+  // Parallel image fetch + 2s timeout each (see unsplash.ts).
+  // Cache hits dominate after first plan; first time may add 1-3s.
+  const images = await getMealImagesBatch(planShape.meals.map((m) => m.title));
+
+  const mealRows = planShape.meals.map((m) => {
+    const img = images.get(m.title);
+    return {
+      plan_id: planRow.id,
+      day_index: m.dayIndex,
+      slot: m.slot,
+      kind: m.kind,
+      title: m.title,
+      description: m.description,
+      ingredients: m.ingredients,
+      steps: m.steps,
+      est_kcal: m.estKcal,
+      est_protein_g: m.estProteinG,
+      est_carbs_g: m.estCarbsG,
+      est_fat_g: m.estFatG,
+      carb_density: m.carbDensity,
+      prep_minutes: m.prepMinutes,
+      swappable: m.swappable,
+      position: m.position,
+      image_url: img?.url ?? null,
+      image_thumb_url: img?.thumbUrl ?? null,
+      image_attribution_name: img?.attributionName ?? null,
+      image_attribution_url: img?.attributionUrl ?? null,
+    };
+  });
 
   const { data: insertedMeals } = await supabase
     .from("nutrition_meals")
@@ -355,6 +376,11 @@ export async function swapMeal(
     avoidTitle: existing.title,
   });
 
+  // Single-meal image fetch — same 2s timeout + null-fallback as
+  // the batch path. Worst case adds 2s to a meal swap which the
+  // user is already expecting to take a moment.
+  const image = await getMealImage(replacement.title);
+
   const { data: updated, error } = await supabase
     .from("nutrition_meals")
     .update({
@@ -369,6 +395,10 @@ export async function swapMeal(
       est_fat_g: replacement.estFatG,
       carb_density: replacement.carbDensity,
       prep_minutes: replacement.prepMinutes,
+      image_url: image?.url ?? null,
+      image_thumb_url: image?.thumbUrl ?? null,
+      image_attribution_name: image?.attributionName ?? null,
+      image_attribution_url: image?.attributionUrl ?? null,
     })
     .eq("id", mealId)
     .select("*")
@@ -568,6 +598,10 @@ type MealRow = {
   prep_minutes: number | null;
   swappable: boolean;
   position: number;
+  image_url: string | null;
+  image_thumb_url: string | null;
+  image_attribution_name: string | null;
+  image_attribution_url: string | null;
 };
 
 function rowToMeal(row: MealRow): Meal {
@@ -589,6 +623,10 @@ function rowToMeal(row: MealRow): Meal {
     prepMinutes: row.prep_minutes,
     swappable: row.swappable,
     position: row.position,
+    imageUrl: row.image_url,
+    imageThumbUrl: row.image_thumb_url,
+    imageAttributionName: row.image_attribution_name,
+    imageAttributionUrl: row.image_attribution_url,
   };
 }
 

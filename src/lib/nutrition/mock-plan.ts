@@ -906,5 +906,10 @@ function templateToMeal(
     prepMinutes: t.prepMinutes,
     swappable: true,
     position,
+    // Image fields filled in by the persist path via Unsplash.
+    imageUrl: null,
+    imageThumbUrl: null,
+    imageAttributionName: null,
+    imageAttributionUrl: null,
   };
 }
