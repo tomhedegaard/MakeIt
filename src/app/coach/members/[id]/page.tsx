@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Container from "@/components/Container";
 import { getMemberDetail } from "@/lib/data/coach";
+import { getMemberAdherence } from "@/lib/data/nutrition-adherence";
 import { getSession } from "@/lib/auth";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import {
@@ -41,6 +42,11 @@ export default async function CoachMemberDetailPage({
     m.programWeek != null && m.programWeeks
       ? (m.programWeek / m.programWeeks) * 100
       : 0;
+
+  // Last 7 days nutrition adherence — coach scans this before
+  // reaching out. Heuristic suggestedAction tells them whether to
+  // praise, check in, or stand back.
+  const adherence = await getMemberAdherence(id, 7);
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
@@ -167,6 +173,57 @@ export default async function CoachMemberDetailPage({
           </div>
         </section>
       ) : null}
+
+      {/* Nutrition adherence — last 7 days */}
+      <section>
+        <div className="eyebrow mb-3">Mad-adherence (sidste 7 dage)</div>
+        <div className="surface-2 rounded-2xl p-5 grid gap-4 md:grid-cols-4">
+          <div>
+            <div className="eyebrow mb-1">Adherence</div>
+            <div className="font-display text-3xl numeric leading-none">
+              {adherence.adherencePct}%
+            </div>
+            <div className="mt-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+              {adherence.mealsLogged}/{adherence.mealsPlanned} meals loggede
+            </div>
+          </div>
+          <div>
+            <div className="eyebrow mb-1">Vægt-trend</div>
+            <div className="font-display text-3xl numeric leading-none">
+              {adherence.weightDeltaKg === null
+                ? "—"
+                : `${adherence.weightDeltaKg > 0 ? "+" : ""}${adherence.weightDeltaKg.toFixed(1)}`}
+            </div>
+            <div className="mt-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+              kg / 7 dage
+            </div>
+          </div>
+          <div>
+            <div className="eyebrow mb-1">Skip-dage</div>
+            <div className="font-display text-3xl numeric leading-none">
+              {adherence.skipDaysCount}
+            </div>
+            <div className="mt-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+              pre-declared off-plan
+            </div>
+          </div>
+          {adherence.suggestedAction ? (
+            <div className="md:col-span-1">
+              <div className="eyebrow text-yellow-400 mb-1">Coach-action</div>
+              <p className="text-sm leading-relaxed">
+                {adherence.suggestedAction}
+              </p>
+            </div>
+          ) : (
+            <div className="md:col-span-1">
+              <div className="eyebrow text-green-400 mb-1">Status</div>
+              <p className="text-sm text-fg-dim leading-relaxed">
+                Inden for normalt — ingen action påkrævet.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Form-checks */}
       <section>
