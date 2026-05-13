@@ -403,11 +403,24 @@ export async function completeSetupAction(formData: FormData): Promise<void> {
   }
 
   // Kick off an initial plan with the just-saved preferences.
-  // Mirrors generatePlanAction: Claude first, mock fallback. We
-  // don't duplicate persistAiPlan here — instead we call
-  // generatePlanAction so any future change to its logic stays
-  // in one place.
-  await generatePlanAction();
+  // Mirrors generatePlanAction: Claude first, mock fallback. If
+  // either path throws we DON'T want to lose the redirect — the
+  // user still hits /nutrition where the empty state offers a
+  // "Generér ugeplan" retry button. Logging the underlying error
+  // server-side preserves diagnostic signal.
+  try {
+    await generatePlanAction();
+  } catch (err) {
+    // NEXT_REDIRECT is how Next.js implements redirect() — it
+    // throws a sentinel error that the framework catches outside
+    // the action. We must rethrow it; swallowing it would turn
+    // generatePlanAction's internal redirect (if any) into a
+    // silent no-op. Other errors (DB write, Claude validation
+    // edge cases) get logged and we proceed to /nutrition.
+    const e = err as { digest?: string; message?: string };
+    if (e?.digest?.startsWith("NEXT_REDIRECT")) throw err;
+    console.warn("[setup] generatePlanAction failed:", e?.message ?? err);
+  }
 
   revalidatePath("/nutrition");
   redirect("/nutrition");

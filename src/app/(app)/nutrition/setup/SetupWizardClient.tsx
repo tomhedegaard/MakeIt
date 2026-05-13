@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/utils";
 import { completeSetupAction } from "../actions";
 
@@ -135,14 +136,39 @@ export default function SetupWizardClient() {
       </Section>
 
       <div className="border-t hairline pt-6 flex flex-wrap items-center gap-4">
-        <button type="submit" className="btn btn-primary btn-xl flex-1 md:flex-none">
-          Generér min plan →
-        </button>
+        <SubmitButton />
         <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
           Tager 5-10 sek · Claude bygger ugen
         </p>
       </div>
     </form>
+  );
+}
+
+/**
+ * Pending state via useFormStatus — must be a child of the form so
+ * the hook can read the submitting state of the enclosing <form>.
+ * Disables the button + swaps the label so the user sees the
+ * Claude generation is in flight rather than wondering whether
+ * the click registered.
+ */
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="btn btn-primary btn-xl flex-1 md:flex-none disabled:opacity-60"
+    >
+      {pending ? (
+        <>
+          <span className="inline-block size-2 rounded-full bg-current animate-pulse mr-2" />
+          Genererer plan…
+        </>
+      ) : (
+        <>Generér min plan →</>
+      )}
+    </button>
   );
 }
 
