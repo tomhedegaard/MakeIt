@@ -180,13 +180,17 @@ export async function generatePlanWithClaude(
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return null;
 
-  // 25s timeout — Claude meal-plan generation usually lands in
-  // 5-15s; anything longer and we'd rather show the user a quick
-  // mock plan than spin the wizard indefinitely. maxRetries: 0 so
-  // the SDK doesn't silently extend the hang via retries.
+  // 50s timeout — initial benchmark showed Claude rounds-trips at
+  // 25s edge with the 7-day structured-output schema; we were
+  // timing out on the first few generations and falling back to
+  // mock. Doubling the budget gives the model headroom for cache
+  // misses + cold starts while staying inside Vercel's 60s ceiling
+  // on the function. maxRetries: 0 so the SDK doesn't silently
+  // extend the hang via retries (our mock fallback covers retry-
+  // worthy errors anyway).
   const client = new Anthropic({
     apiKey,
-    timeout: 25_000,
+    timeout: 50_000,
     maxRetries: 0,
   });
 
@@ -195,7 +199,10 @@ export async function generatePlanWithClaude(
   try {
     const response = await client.messages.parse({
       model: "claude-sonnet-4-6",
-      max_tokens: 8000,
+      // 5000 is plenty for 21 meals × ~200 tokens each + targets +
+      // notes. 8000 was overshooting and adding ~10s of generation
+      // time without buying us additional headroom for the schema.
+      max_tokens: 5000,
       // Cache the system prompt — it's the same for every plan
       // generation, and the brand policy block is the bulk of the
       // tokens. Cuts cost and latency for every member after the

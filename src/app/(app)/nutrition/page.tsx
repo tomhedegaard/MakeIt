@@ -35,10 +35,22 @@ export default async function NutritionPage() {
     getWeightTrend(member.id),
   ]);
 
-  // First-time visit (no plan, no weigh-in) → wizard. The wizard
-  // itself also guards against a second visit by redirecting back
-  // here once a plan exists.
-  if (plan === null && latestWeight === null) {
+  // First-time guard: only redirect when the profile is genuinely
+  // untouched. The earlier `plan === null && latestWeight === null`
+  // check looped users back to the wizard whenever either persist
+  // step failed (Claude timeout + mock fallback DB hiccup, or
+  // missing weight_logs migration making logWeight no-op). We now
+  // gate on a single signal — has the member ever opened the
+  // wizard — by checking whether onboarded_at on the profile is
+  // null. The wizard sets the goal explicitly; if it's still at
+  // the schema default AND there's no plan AND no weight, we know
+  // they've never completed setup.
+  const profileFresh =
+    !plan &&
+    !latestWeight &&
+    (!profile?.goal || profile.goal === "maintain") &&
+    !profile?.dailyKcalTarget;
+  if (profileFresh) {
     redirect("/nutrition/setup");
   }
   const todayIndex = todayDayIndex();
