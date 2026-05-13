@@ -180,7 +180,15 @@ export async function generatePlanWithClaude(
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return null;
 
-  const client = new Anthropic({ apiKey });
+  // 25s timeout — Claude meal-plan generation usually lands in
+  // 5-15s; anything longer and we'd rather show the user a quick
+  // mock plan than spin the wizard indefinitely. maxRetries: 0 so
+  // the SDK doesn't silently extend the hang via retries.
+  const client = new Anthropic({
+    apiKey,
+    timeout: 25_000,
+    maxRetries: 0,
+  });
 
   const userMessage = buildUserMessage(opts);
 
