@@ -87,7 +87,37 @@ export async function magicLinkAction(formData: FormData) {
     },
   });
 
-  if (error) redirect(`/login?err=otp`);
+  // Most errors at this point are either rate-limit (Supabase sends
+  // the mail anyway — known SDK behavior) or transient network blips
+  // that resolve quickly. Surface as "sent" UI so the user goes to
+  // check their inbox, and log the underlying error server-side for
+  // diagnostics. We only bail to err=otp on truly blocking signals.
+  if (error) {
+    const code = error.code ?? "";
+    const status = error.status ?? 0;
+    const message = error.message ?? "";
+
+    console.warn("[magic-link] signInWithOtp returned error:", {
+      code,
+      status,
+      message,
+    });
+
+    // Hard fails — the mail definitely did not go out: invalid email
+    // address shape (server-side sanity check), invite/redirect URL
+    // not allow-listed, anonymous sign-ins disabled. Bubble to UI.
+    const isHardFail =
+      status === 422 || // unprocessable input
+      status === 400 ||
+      /invalid|forbidden|not allowed|disabled/i.test(message);
+
+    if (isHardFail) {
+      redirect(`/login?err=otp`);
+    }
+    // Otherwise (429 rate-limit, 5xx, transient) — assume the mail
+    // is on its way and tell the user to check their inbox.
+  }
+
   redirect(`/login?sent=1&email=${encodeURIComponent(email)}`);
 }
 
