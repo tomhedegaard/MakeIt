@@ -24,6 +24,11 @@ import { logWeight } from "@/lib/data/weight";
 import { getMealImagesBatch } from "@/lib/nutrition/unsplash";
 import { checkLimit, recordAction } from "@/lib/data/rate-limits";
 import { getTrainingDaysForWeek } from "@/lib/data/training-week";
+import {
+  addSkipDay,
+  getSkipDayIndices,
+  removeSkipDay,
+} from "@/lib/data/skip-days";
 import { randomUUID } from "crypto";
 
 /* ---------------------------------------------------------------- *
@@ -123,9 +128,12 @@ export async function generatePlanAction(): Promise<void> {
   const profile = await getOrCreateNutritionProfile(member.id);
   const weekStart = currentIsoMonday();
 
-  // Pull training-day flags so the planner can bias carbs toward
-  // workout days. Skip-day + meal-prep arrive in subsequent commits.
-  const trainingDays = await getTrainingDaysForWeek(member.id, weekStart);
+  // Pull training-day flags + skip-day flags in parallel so the
+  // planner has both contexts. Meal-prep mode arrives in commit 3.
+  const [trainingDays, skipDayIndices] = await Promise.all([
+    getTrainingDaysForWeek(member.id, weekStart),
+    getSkipDayIndices(member.id, weekStart),
+  ]);
 
   // Try Claude first; fall back to mock generator inside generatePlan
   // when the AI hook returns null (no key, error, or invalid output).
@@ -133,6 +141,7 @@ export async function generatePlanAction(): Promise<void> {
     profile,
     weekStart,
     trainingDays,
+    skipDayIndices,
   });
 
   // Persist with containment — if BOTH Claude rejection + mock fallback
@@ -527,4 +536,34 @@ export async function completeSetupAction(formData: FormData): Promise<void> {
 
   revalidatePath("/nutrition");
   redirect("/nutrition");
+}
+
+/* ---------------------------------------------------------------- *
+ * Skip-day actions — let the member pre-declare a day as off-plan
+ * (eat-out / travelling / fasting). Toggle: add if not present,
+ * remove if present. Plan does not regenerate automatically — the
+ * skip surfaces on next plan generation. To apply immediately, the
+ * UI also offers a "regenerate week" CTA after toggling.
+ * ---------------------------------------------------------------- */
+
+export async function toggleSkipDayAction(formData: FormData): Promise<void> {
+  const member = await requireMember();
+  const date = String(formData.get("date") ?? "").trim();
+  const presentRaw = String(formData.get("present") ?? "false");
+  const present = presentRaw === "true" || presentRaw === "1";
+  const reason = (String(formData.get("reason") ?? "").trim() || null) as string | null;
+
+  // Date sanity — must look like ISO yyyy-mm-dd.
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    revalidatePath("/nutrition");
+    return;
+  }
+
+  if (present) {
+    await removeSkipDay(member.id, date);
+  } else {
+    await addSkipDay(member.id, date, reason);
+  }
+
+  revalidatePath("/nutrition");
 }

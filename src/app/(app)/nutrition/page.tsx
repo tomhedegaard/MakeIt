@@ -17,10 +17,12 @@ import {
   describeNextAvailable,
   type RateLimitStatus,
 } from "@/lib/data/rate-limits";
+import { getSkipDayIndices } from "@/lib/data/skip-days";
 import MealCard from "./MealCard";
 import GeneratePlanButton from "./GeneratePlanButton";
 import LogMealButton from "./LogMealButton";
 import LogWeightCard from "@/components/nutrition/LogWeightCard";
+import SkipDaysCard from "@/components/nutrition/SkipDaysCard";
 import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
 
@@ -37,16 +39,26 @@ export default async function NutritionPage({
 }) {
   const { err } = await searchParams;
   const member = (await getSession())!;
-  const [profile, plan, checkin, latestWeight, weightTrend, planLimit, swapLimit] =
-    await Promise.all([
-      getOrCreateNutritionProfile(member.id),
-      getCurrentPlan(member.id),
-      getDailyCheckIn(member.id),
-      getLatestWeight(member.id),
-      getWeightTrend(member.id),
-      checkLimit(member.id, "plan_regen"),
-      checkLimit(member.id, "meal_swap"),
-    ]);
+  const weekStart = currentIsoMonday();
+  const [
+    profile,
+    plan,
+    checkin,
+    latestWeight,
+    weightTrend,
+    planLimit,
+    swapLimit,
+    skipDayIndices,
+  ] = await Promise.all([
+    getOrCreateNutritionProfile(member.id),
+    getCurrentPlan(member.id),
+    getDailyCheckIn(member.id),
+    getLatestWeight(member.id),
+    getWeightTrend(member.id),
+    checkLimit(member.id, "plan_regen"),
+    checkLimit(member.id, "meal_swap"),
+    getSkipDayIndices(member.id, weekStart),
+  ]);
 
   // First-time guard: only redirect when the profile is genuinely
   // untouched. The earlier `plan === null && latestWeight === null`
@@ -112,9 +124,11 @@ export default async function NutritionPage({
         deltaKg={weightTrend.deltaKg}
       />
 
+      <SkipDaysCard weekStart={weekStart} skipDayIndices={skipDayIndices} />
+
       {plan === null ? (
         <EmptyState
-          weekStart={currentIsoMonday()}
+          weekStart={weekStart}
           hasProfile={Boolean(profile)}
           planLimit={planLimit}
         />
