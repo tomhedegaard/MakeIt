@@ -46,6 +46,15 @@ export default function MealCard({
     return (
       <div className="flex items-center gap-3">
         <span className="eyebrow w-16 shrink-0">{SLOT_LABELS[meal.slot]}</span>
+        {meal.imageThumbUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={meal.imageThumbUrl}
+            alt=""
+            loading="lazy"
+            className="size-10 rounded-md object-cover shrink-0 hairline border"
+          />
+        ) : null}
         <div className="flex-1 min-w-0">
           <div className="text-sm truncate">{meal.title}</div>
           <div className="text-[11px] font-mono text-fg-faint">
@@ -69,77 +78,80 @@ export default function MealCard({
 
   return (
     <article className="surface-2 rounded-xl overflow-hidden">
-      {/* Unsplash hero image — rendered above the title when the
-          cache has a match. Click goes to the photographer's profile
-          (Unsplash ToS requirement). aspect-[16/6] is cinematic +
-          compact so the image accents the card without dominating
-          the macro info below it. */}
-      {meal.imageUrl ? (
-        <a
-          href={meal.imageAttributionUrl ?? "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="relative block aspect-[16/6] overflow-hidden group"
-          aria-label={
-            meal.imageAttributionName
-              ? `Foto af ${meal.imageAttributionName} på Unsplash`
-              : "Foto via Unsplash"
-          }
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={meal.imageUrl}
-            alt={meal.title}
-            loading="lazy"
-            className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-          />
-          {meal.imageAttributionName ? (
-            <span className="absolute bottom-2 right-2 text-[9px] font-mono uppercase tracking-[0.14em] text-white/85 bg-black/40 backdrop-blur-sm rounded px-1.5 py-0.5">
-              📷 {meal.imageAttributionName}
-            </span>
-          ) : null}
-        </a>
-      ) : null}
-      <div className="px-5 pt-4 pb-3 flex items-start justify-between gap-4">
-        <div className="min-w-0 flex-1">
-          <div className="eyebrow mb-1.5 flex items-center gap-2">
-            {SLOT_LABELS[meal.slot]}
-            <span className="text-fg-faint" aria-hidden>·</span>
-            <span>{CARB_DENSITY_LABELS[meal.carbDensity]}</span>
-            {meal.kind === "recipe" ? (
-              <>
-                <span className="text-fg-faint" aria-hidden>·</span>
-                <span className="numeric border hairline-strong rounded-full px-2 py-0.5 text-[10px]">
-                  Anker
-                </span>
-              </>
+      <div className="flex flex-col sm:flex-row-reverse">
+        {/* Unsplash thumbnail — side image on desktop, hero strip on
+            mobile. Compact aspect so the macro info dominates. Click
+            goes to the photographer's profile (Unsplash ToS). */}
+        {meal.imageUrl ? (
+          <a
+            href={meal.imageAttributionUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative block w-full sm:w-44 md:w-56 aspect-[16/9] sm:aspect-auto sm:self-stretch overflow-hidden group shrink-0"
+            aria-label={
+              meal.imageAttributionName
+                ? `Foto af ${meal.imageAttributionName} på Unsplash`
+                : "Foto via Unsplash"
+            }
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={meal.imageUrl}
+              alt={meal.title}
+              loading="lazy"
+              className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            />
+            {meal.imageAttributionName ? (
+              <span className="absolute bottom-2 right-2 text-[9px] font-mono uppercase tracking-[0.14em] text-white/85 bg-black/40 backdrop-blur-sm rounded px-1.5 py-0.5">
+                📷 {meal.imageAttributionName}
+              </span>
             ) : null}
+          </a>
+        ) : null}
+
+        <div className="flex-1 min-w-0">
+          <div className="px-5 pt-4 pb-3 flex items-start justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <div className="eyebrow mb-1.5 flex items-center gap-2">
+                {SLOT_LABELS[meal.slot]}
+                <span className="text-fg-faint" aria-hidden>·</span>
+                <span>{CARB_DENSITY_LABELS[meal.carbDensity]}</span>
+                {meal.kind === "recipe" ? (
+                  <>
+                    <span className="text-fg-faint" aria-hidden>·</span>
+                    <span className="numeric border hairline-strong rounded-full px-2 py-0.5 text-[10px]">
+                      Anker
+                    </span>
+                  </>
+                ) : null}
+              </div>
+              <h3 className="font-display text-2xl md:text-3xl leading-[1] mb-1.5">
+                {meal.title}
+              </h3>
+              {meal.description ? (
+                <p className="text-fg-dim text-sm leading-relaxed">{meal.description}</p>
+              ) : null}
+            </div>
+            <div className="text-right shrink-0">
+              <div className="numeric text-2xl">{meal.estKcal ?? "—"}</div>
+              <div className="eyebrow">kcal</div>
+            </div>
           </div>
-          <h3 className="font-display text-2xl md:text-3xl leading-[1] mb-1.5">
-            {meal.title}
-          </h3>
-          {meal.description ? (
-            <p className="text-fg-dim text-sm leading-relaxed">{meal.description}</p>
-          ) : null}
-        </div>
-        <div className="text-right shrink-0">
-          <div className="numeric text-2xl">{meal.estKcal ?? "—"}</div>
-          <div className="eyebrow">kcal</div>
+
+          {/* Macro pills */}
+          <div className="px-5 pb-3 flex flex-wrap items-center gap-2 text-[11px] font-mono">
+            <span className="text-fg-dim">{meal.estProteinG ?? "—"}g protein</span>
+            <span className="text-fg-faint" aria-hidden>·</span>
+            <span className="text-fg-dim">{meal.estCarbsG ?? "—"}g kulhydrat</span>
+            <span className="text-fg-faint" aria-hidden>·</span>
+            <span className="text-fg-dim">{meal.estFatG ?? "—"}g fedt</span>
+            <span className="text-fg-faint" aria-hidden>·</span>
+            <span className="text-fg-dim">{meal.prepMinutes ?? "—"} min prep</span>
+          </div>
         </div>
       </div>
 
-      {/* Macro pills */}
-      <div className="px-5 pb-3 flex flex-wrap items-center gap-2 text-[11px] font-mono">
-        <span className="text-fg-dim">{meal.estProteinG ?? "—"}g protein</span>
-        <span className="text-fg-faint" aria-hidden>·</span>
-        <span className="text-fg-dim">{meal.estCarbsG ?? "—"}g kulhydrat</span>
-        <span className="text-fg-faint" aria-hidden>·</span>
-        <span className="text-fg-dim">{meal.estFatG ?? "—"}g fedt</span>
-        <span className="text-fg-faint" aria-hidden>·</span>
-        <span className="text-fg-dim">{meal.prepMinutes ?? "—"} min prep</span>
-      </div>
-
-      {/* Expandable recipe */}
+      {/* Expandable recipe — full width below the flex container */}
       {open ? (
         <div className="border-t hairline px-5 py-4 space-y-4">
           <section>

@@ -140,6 +140,171 @@ async function writeCache(key: string, image: MealImage): Promise<void> {
     );
 }
 
+/**
+ * Danish → English food vocabulary so the simplified query has
+ * a fighting chance against Unsplash's English-tagged corpus.
+ * Unsplash search is overwhelmingly English; "ovnbagte kyllingelår"
+ * returns near-nothing while "baked chicken thighs" returns hundreds
+ * of clean food shots. Keys must be lowercase (matched against
+ * lowercased title tokens).
+ *
+ * Not exhaustive — focus on protein, primary carb, common veg, and
+ * cooking methods (baked/grilled/etc). Compound nouns like
+ * "kyllingelår" are mapped as a whole so we don't have to assemble
+ * from parts.
+ */
+const FOOD_VOCAB: Record<string, string> = {
+  // Cooking methods
+  ovnbagte: "baked",
+  ovnbagt: "baked",
+  bagt: "baked",
+  bagte: "baked",
+  grillede: "grilled",
+  grillet: "grilled",
+  stegt: "fried",
+  kogte: "boiled",
+  marineret: "marinated",
+  rørt: "stirred",
+
+  // Animal protein
+  kylling: "chicken",
+  kyllingebryst: "chicken breast",
+  kyllingelår: "chicken thighs",
+  kyllingelaar: "chicken thighs",
+  kalkun: "turkey",
+  okse: "beef",
+  oksekød: "beef",
+  oksekoed: "beef",
+  hakket: "ground meat",
+  oksekødsfars: "ground beef",
+  svinekød: "pork",
+  svinekoed: "pork",
+  lam: "lamb",
+  lammekød: "lamb",
+  lammekoed: "lamb",
+  æg: "eggs",
+  aeg: "eggs",
+  bacon: "bacon",
+  skinke: "ham",
+
+  // Fish
+  laks: "salmon",
+  torsk: "cod",
+  ørred: "trout",
+  oerred: "trout",
+  makrel: "mackerel",
+  tun: "tuna",
+  sild: "herring",
+  sardiner: "sardines",
+  rejer: "shrimp",
+  fisk: "fish",
+
+  // Plant protein
+  linser: "lentils",
+  bønner: "beans",
+  boenner: "beans",
+  kikærter: "chickpeas",
+  kikaerter: "chickpeas",
+  edamame: "edamame",
+  tofu: "tofu",
+  tempeh: "tempeh",
+
+  // Grains / carbs
+  ris: "rice",
+  brune: "brown",
+  havre: "oats",
+  havregryn: "oatmeal",
+  pasta: "pasta",
+  brød: "bread",
+  broed: "bread",
+  rugbrød: "rye bread",
+  rugbroed: "rye bread",
+  bulgur: "bulgur",
+  quinoa: "quinoa",
+  kartoffel: "potato",
+  kartofler: "potatoes",
+  søde: "sweet",
+  soede: "sweet",
+  "søde-kartofler": "sweet potatoes",
+
+  // Vegetables
+  broccoli: "broccoli",
+  spinat: "spinach",
+  rosenkål: "brussels sprouts",
+  rosenkaal: "brussels sprouts",
+  gulerod: "carrot",
+  gulerødder: "carrots",
+  guleroedder: "carrots",
+  agurk: "cucumber",
+  tomat: "tomato",
+  tomater: "tomatoes",
+  løg: "onion",
+  loeg: "onion",
+  hvidløg: "garlic",
+  hvidloeg: "garlic",
+  pastinak: "parsnip",
+  selleri: "celery",
+  blomkål: "cauliflower",
+  blomkaal: "cauliflower",
+  squash: "zucchini",
+  aubergine: "eggplant",
+  peberfrugt: "bell pepper",
+  rucola: "arugula",
+  salat: "salad",
+
+  // Dairy
+  skyr: "skyr yogurt",
+  yoghurt: "yogurt",
+  ost: "cheese",
+  hytteost: "cottage cheese",
+  feta: "feta",
+  parmesan: "parmesan",
+  smør: "butter",
+  smoer: "butter",
+
+  // Fruits / berries
+  æble: "apple",
+  aeble: "apple",
+  æbler: "apples",
+  aebler: "apples",
+  banan: "banana",
+  bær: "berries",
+  baer: "berries",
+  blåbær: "blueberries",
+  blaabaer: "blueberries",
+  jordbær: "strawberries",
+  jordbaer: "strawberries",
+  hindbær: "raspberries",
+  hindbaer: "raspberries",
+  citron: "lemon",
+
+  // Herbs / spices
+  timian: "thyme",
+  rosmarin: "rosemary",
+  persille: "parsley",
+  basilikum: "basil",
+  koriander: "cilantro",
+
+  // Bowl / dish types
+  bowl: "bowl",
+  suppe: "soup",
+  gryde: "stew",
+  wok: "stir fry",
+  omelet: "omelette",
+  smoothie: "smoothie",
+  pandekager: "pancakes",
+
+  // Fats
+  avocado: "avocado",
+  oliven: "olives",
+  nødder: "nuts",
+  noedder: "nuts",
+  valnødder: "walnuts",
+  valnoedder: "walnuts",
+  mandler: "almonds",
+  tahin: "tahini",
+};
+
 /* ---------------------------- search --------------------------- */
 
 type UnsplashResponse = {
@@ -154,14 +319,9 @@ type UnsplashResponse = {
 };
 
 /**
- * Three-stage query ladder so specific Danish meal titles still
- * find an image:
- *   1. Full title + "food meal"
- *   2. Simplified title (drop prepositions, take first 2-3 nouns)
- *      + "food"
- *   3. Generic carb-density fallback ("healthy meal bowl") — not
- *      ideal but better than typography-only for visual consistency
- * Each step costs a separate API call, so we stop at the first hit.
+ * Multi-stage query ladder. Stops at the first hit, so the more
+ * specific queries run first. Each step is a separate API call —
+ * worst case 3 calls per uncached meal.
  */
 async function searchUnsplash(title: string): Promise<MealImage | null> {
   const queries = buildQueryLadder(title);
@@ -175,32 +335,43 @@ async function searchUnsplash(title: string): Promise<MealImage | null> {
 function buildQueryLadder(title: string): string[] {
   const ladder: string[] = [];
 
-  // Step 1: full title with food bias.
-  ladder.push(`${title} food meal`);
-
-  // Step 2: simplified — drop common Danish prepositions/conjunctions
-  // and take the first two non-trivial words. "Brune ris-bowl med
-  // edamame, gulerod og tahin" → "brune ris-bowl food".
-  const stopwords = new Set([
-    "med", "og", "i", "på", "til", "uden", "for", "af", "fra", "som",
-    "en", "et", "der", "den", "det", "an", "the", "with", "and", "or",
-  ]);
-  const words = title
-    .toLowerCase()
-    .replace(/[,.;:!?]/g, " ")
-    .split(/\s+/)
-    .filter((w) => w && !stopwords.has(w));
-  const simplified = words.slice(0, 2).join(" ").trim();
-  if (simplified && simplified !== title.toLowerCase()) {
-    ladder.push(`${simplified} food`);
+  // Step 1: Translate Danish food keywords → English, build query
+  // from those. "Ovnbagte kyllingelår med pastinak og timian" →
+  // ["baked", "chicken thighs", "parsnip", "thyme"] → "baked
+  // chicken thighs food" (cap at 3 keywords so the query stays
+  // focused). This is the highest-quality match because Unsplash's
+  // corpus is English-dominant.
+  const tokens = tokenize(title);
+  const english: string[] = [];
+  for (const tok of tokens) {
+    const en = FOOD_VOCAB[tok];
+    if (en && !english.includes(en)) english.push(en);
+  }
+  if (english.length > 0) {
+    ladder.push(`${english.slice(0, 3).join(" ")} food`);
   }
 
-  // Step 3: generic fallback. Always queried last; ensures we at
-  // least surface a passable healthy-food image rather than nothing
-  // for highly specific titles Unsplash doesn't index.
+  // Step 2: Full Danish title with "food meal" — long shot for
+  // English-only meal names that slipped through the vocab, or
+  // for occasional Danish-tagged photos.
+  ladder.push(`${title} food meal`);
+
+  // Step 3: Generic fallback — never returns nothing. Ensures every
+  // meal card gets a visual rather than a checkerboard of "has
+  // image" / "doesn't have image."
   ladder.push("healthy meal bowl");
 
   return ladder;
+}
+
+function tokenize(title: string): string[] {
+  return title
+    .toLowerCase()
+    .normalize("NFC")
+    .replace(/[,.;:!?()]/g, " ")
+    .replace(/-/g, " ") // split "ris-bowl" into ris + bowl
+    .split(/\s+/)
+    .filter(Boolean);
 }
 
 async function queryOnce(rawQuery: string): Promise<MealImage | null> {
