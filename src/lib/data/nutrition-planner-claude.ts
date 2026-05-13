@@ -172,6 +172,17 @@ tilpasset dette medlem.`;
 export type GeneratePlanOpts = {
   profile: NutritionProfile;
   weekStart: string;
+  /** [Mon..Sun] training-day flags. Day with true gets a high-carb
+   *  meal slot in the generated plan. Optional — generator falls
+   *  back to standard density across the week when not supplied. */
+  trainingDays?: boolean[];
+  /** When true, generator should repeat 2-3 specific meals across
+   *  the week (e.g. same lunch Mon+Wed) to enable Sunday batch
+   *  cooking. Reduces decision-fatigue + grocery overhead. */
+  mealPrepMode?: boolean;
+  /** Day indices [0..6] flagged as "skip" (eat-out / travelling /
+   *  fasting). Generator omits meals for these days entirely. */
+  skipDayIndices?: number[];
 };
 
 export async function generatePlanWithClaude(
@@ -253,8 +264,20 @@ export async function generatePlanWithClaude(
  * ---------------------------------------------------------------- */
 
 function buildUserMessage(opts: GeneratePlanOpts): string {
-  const { profile, weekStart } = opts;
-  return [
+  const { profile, weekStart, trainingDays, mealPrepMode, skipDayIndices } = opts;
+
+  const dayNames = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
+  const trainingLine = trainingDays?.length
+    ? trainingDays
+        .map((flag, i) => (flag ? dayNames[i] : null))
+        .filter(Boolean)
+        .join(", ") || "ingen"
+    : "ikke angivet";
+  const skipLine = skipDayIndices?.length
+    ? skipDayIndices.map((i) => dayNames[i] ?? `?${i}`).join(", ")
+    : "ingen";
+
+  const lines = [
     `Plan-uge: ${weekStart} (mandag).`,
     "",
     "Medlem-profil:",
@@ -273,8 +296,21 @@ function buildUserMessage(opts: GeneratePlanOpts): string {
     `Dislikes: ${profile.dislikes.length ? profile.dislikes.join(", ") : "ingen"}`,
     `Foretrukne ingredienser: ${profile.preferences.length ? profile.preferences.join(", ") : "ingen specifikke"}`,
     "",
+    `Træningsdage denne uge: ${trainingLine}`,
+    `Skip-dage (spring måltider over): ${skipLine}`,
+    `Meal-prep mode: ${mealPrepMode ? "JA — genbrug 2-3 måltider strategisk på tværs af ugen så frokost mandag og onsdag fx er det samme. Aftensmad tirsdag/torsdag det samme. Færre unikke meals = mindre prep + indkøb." : "Nej — varieret hver dag"}`,
+    "",
+    "MACRO-BIAS PER DAG:",
+    "  Træningsdag: planlæg ÉT high-carb meal (typisk frokost eller aften post-træning, carbDensity='high'),",
+    "    og giv det dagens største carbs-portion. Andre meals 'standard'. Højere total kcal.",
+    "  Hviledag:    alle meals 'standard' eller 'low' carbDensity, lavere total carbs.",
+    "    Slet ikke fjern carbs — protein + grønt stiger lidt for samme mæthed.",
+    "  Skip-dag:    udlad alle slots for dagen. Generér 0 meals for skip-day-indekset.",
+    "",
     "Generér ugeplanen og returnér via submit_plan.",
-  ].join("\n");
+  ];
+
+  return lines.join("\n");
 }
 
 function scanDisallowed(plan: ParsedPlan): Array<{ meal: string; ingredient: string; match: string }> {

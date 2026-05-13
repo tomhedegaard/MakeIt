@@ -23,6 +23,7 @@ import { generatePlanWithClaude } from "@/lib/data/nutrition-planner-claude";
 import { logWeight } from "@/lib/data/weight";
 import { getMealImagesBatch } from "@/lib/nutrition/unsplash";
 import { checkLimit, recordAction } from "@/lib/data/rate-limits";
+import { getTrainingDaysForWeek } from "@/lib/data/training-week";
 import { randomUUID } from "crypto";
 
 /* ---------------------------------------------------------------- *
@@ -122,9 +123,17 @@ export async function generatePlanAction(): Promise<void> {
   const profile = await getOrCreateNutritionProfile(member.id);
   const weekStart = currentIsoMonday();
 
+  // Pull training-day flags so the planner can bias carbs toward
+  // workout days. Skip-day + meal-prep arrive in subsequent commits.
+  const trainingDays = await getTrainingDaysForWeek(member.id, weekStart);
+
   // Try Claude first; fall back to mock generator inside generatePlan
   // when the AI hook returns null (no key, error, or invalid output).
-  const aiShape = await generatePlanWithClaude({ profile, weekStart });
+  const aiShape = await generatePlanWithClaude({
+    profile,
+    weekStart,
+    trainingDays,
+  });
 
   // Persist with containment — if BOTH Claude rejection + mock fallback
   // throw (rare, usually DB-level: archive succeeded but insert hit a
