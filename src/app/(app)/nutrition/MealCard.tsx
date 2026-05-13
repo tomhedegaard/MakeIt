@@ -71,15 +71,15 @@ export default function MealCard({
     <article className="surface-2 rounded-xl overflow-hidden">
       {/* Unsplash hero image — rendered above the title when the
           cache has a match. Click goes to the photographer's profile
-          (Unsplash ToS requirement). aspect-[5/3] sits between
-          square and 16/9; matches food photography conventions
-          without dominating the card vertically. */}
+          (Unsplash ToS requirement). aspect-[16/6] is cinematic +
+          compact so the image accents the card without dominating
+          the macro info below it. */}
       {meal.imageUrl ? (
         <a
           href={meal.imageAttributionUrl ?? "#"}
           target="_blank"
           rel="noopener noreferrer"
-          className="relative block aspect-[5/3] overflow-hidden group"
+          className="relative block aspect-[16/6] overflow-hidden group"
           aria-label={
             meal.imageAttributionName
               ? `Foto af ${meal.imageAttributionName} på Unsplash`

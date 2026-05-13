@@ -153,15 +153,62 @@ type UnsplashResponse = {
   }>;
 };
 
+/**
+ * Three-stage query ladder so specific Danish meal titles still
+ * find an image:
+ *   1. Full title + "food meal"
+ *   2. Simplified title (drop prepositions, take first 2-3 nouns)
+ *      + "food"
+ *   3. Generic carb-density fallback ("healthy meal bowl") — not
+ *      ideal but better than typography-only for visual consistency
+ * Each step costs a separate API call, so we stop at the first hit.
+ */
 async function searchUnsplash(title: string): Promise<MealImage | null> {
+  const queries = buildQueryLadder(title);
+  for (const q of queries) {
+    const hit = await queryOnce(q);
+    if (hit) return hit;
+  }
+  return null;
+}
+
+function buildQueryLadder(title: string): string[] {
+  const ladder: string[] = [];
+
+  // Step 1: full title with food bias.
+  ladder.push(`${title} food meal`);
+
+  // Step 2: simplified — drop common Danish prepositions/conjunctions
+  // and take the first two non-trivial words. "Brune ris-bowl med
+  // edamame, gulerod og tahin" → "brune ris-bowl food".
+  const stopwords = new Set([
+    "med", "og", "i", "på", "til", "uden", "for", "af", "fra", "som",
+    "en", "et", "der", "den", "det", "an", "the", "with", "and", "or",
+  ]);
+  const words = title
+    .toLowerCase()
+    .replace(/[,.;:!?]/g, " ")
+    .split(/\s+/)
+    .filter((w) => w && !stopwords.has(w));
+  const simplified = words.slice(0, 2).join(" ").trim();
+  if (simplified && simplified !== title.toLowerCase()) {
+    ladder.push(`${simplified} food`);
+  }
+
+  // Step 3: generic fallback. Always queried last; ensures we at
+  // least surface a passable healthy-food image rather than nothing
+  // for highly specific titles Unsplash doesn't index.
+  ladder.push("healthy meal bowl");
+
+  return ladder;
+}
+
+async function queryOnce(rawQuery: string): Promise<MealImage | null> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
 
   try {
-    // Bias the query toward food photography. "food" alone often
-    // returns busy plate / restaurant scenes; pairing the meal name
-    // with "food meal" lands cleaner results in practice.
-    const q = encodeURIComponent(`${title} food meal`);
+    const q = encodeURIComponent(rawQuery);
     const url = `https://api.unsplash.com/search/photos?query=${q}&per_page=1&orientation=landscape&content_filter=high`;
 
     const response = await fetch(url, {
