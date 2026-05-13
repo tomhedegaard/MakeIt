@@ -114,10 +114,20 @@ export async function generatePlanAction(): Promise<void> {
   // when the AI hook returns null (no key, error, or invalid output).
   const aiShape = await generatePlanWithClaude({ profile, weekStart });
 
-  if (aiShape) {
-    await persistAiPlan(member.id, weekStart, aiShape);
-  } else {
-    await generatePlan(member.id, weekStart, profile);
+  // Persist with containment — if BOTH Claude rejection + mock fallback
+  // throw (rare, usually DB-level: archive succeeded but insert hit a
+  // constraint, RLS edge case, etc.), we still revalidate so the user
+  // gets back to /nutrition. The empty state there has a retry CTA.
+  // 500-ing the whole server action leaves the user stuck on a Next
+  // error page instead.
+  try {
+    if (aiShape) {
+      await persistAiPlan(member.id, weekStart, aiShape);
+    } else {
+      await generatePlan(member.id, weekStart, profile);
+    }
+  } catch (err) {
+    console.warn("[nutrition] plan persist failed:", err);
   }
   revalidatePath("/nutrition");
 }

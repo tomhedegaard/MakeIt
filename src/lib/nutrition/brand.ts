@@ -156,8 +156,15 @@ på hviledage. Maden skal smage af noget. Kogetider er korte. Ingredienser få.`
 /* ---------------------------------------------------------------- *
  * Validator — quick check whether an ingredient string looks
  * disallowed. Used post-generation as a guardrail in case the model
- * slips. Substring match is intentionally lenient — false positives
- * are better than UPF on a clean-eating plan.
+ * slips. Word-boundary regex match: "cola" matches "cola" or
+ * "coca-cola" but NOT "rucola" / "broccoli" (the substring approach
+ * we had before would happily flag those as soft-drinks). False
+ * positives like that were rejecting otherwise perfectly clean
+ * Claude-generated plans and forcing fallback to the mock generator.
+ *
+ * Word boundaries in JS regex treat hyphens, spaces, and punctuation
+ * as breaks — so multi-word terms ("high fructose corn syrup") still
+ * match correctly when present as a phrase in the ingredient name.
  * ---------------------------------------------------------------- */
 
 export function flagDisallowed(ingredient: string): {
@@ -170,7 +177,11 @@ export function flagDisallowed(ingredient: string): {
     [keyof typeof DISALLOWLIST, string[]]
   >) {
     for (const term of list) {
-      if (needle.includes(term.toLowerCase())) {
+      const escaped = term
+        .toLowerCase()
+        .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const re = new RegExp(`\\b${escaped}\\b`, "i");
+      if (re.test(needle)) {
         return { flagged: true, category, match: term };
       }
     }
