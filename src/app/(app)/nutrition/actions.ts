@@ -103,6 +103,7 @@ export async function savePreferencesAction(formData: FormData): Promise<void> {
     allergies: parseStringList(formData.get("allergies")),
     dislikes: parseStringList(formData.get("dislikes")),
     preferences: parseStringList(formData.get("preferences")),
+    mealPrepMode: formData.get("mealPrepMode") === "1",
   });
 
   revalidatePath("/nutrition");
@@ -142,6 +143,7 @@ export async function generatePlanAction(): Promise<void> {
     weekStart,
     trainingDays,
     skipDayIndices,
+    mealPrepMode: profile.mealPrepMode,
   });
 
   // Persist with containment — if BOTH Claude rejection + mock fallback

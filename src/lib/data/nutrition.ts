@@ -38,6 +38,9 @@ export type NutritionProfile = {
   preferences: string[];
   cookDays: string[];
   fishPerWeek: number;
+  /** When true, planner repeats 2-3 meals strategically across the
+   *  week so the user can batch-cook Sunday. Default false. */
+  mealPrepMode: boolean;
   updatedAt: string;
 };
 
@@ -119,6 +122,7 @@ export const DEFAULT_PROFILE: Omit<NutritionProfile, "memberId" | "updatedAt"> =
   preferences: [],
   cookDays: [],
   fishPerWeek: 2,
+  mealPrepMode: false,
 };
 
 /* ---------------------------------------------------------------- *
@@ -190,6 +194,7 @@ export async function saveNutritionProfile(
     preferences: patch.preferences,
     cook_days: patch.cookDays,
     fish_per_week: patch.fishPerWeek,
+    meal_prep_mode: patch.mealPrepMode,
   };
 
   // Drop undefined keys so partial updates don't NULL out columns.
@@ -543,6 +548,7 @@ type ProfileRow = {
   preferences: string[] | null;
   cook_days: string[] | null;
   fish_per_week: number;
+  meal_prep_mode: boolean | null;
   updated_at: string;
 };
 
@@ -562,6 +568,7 @@ function rowToProfile(row: ProfileRow): NutritionProfile {
     preferences: row.preferences ?? [],
     cookDays: row.cook_days ?? [],
     fishPerWeek: row.fish_per_week,
+    mealPrepMode: row.meal_prep_mode ?? false,
     updatedAt: row.updated_at,
   };
 }

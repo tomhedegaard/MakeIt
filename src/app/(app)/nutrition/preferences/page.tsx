@@ -162,6 +162,24 @@ export default async function PreferencesPage() {
               ))}
             </div>
           </Field>
+
+          <Field
+            label="Meal-prep mode"
+            hint="Genbrug 2-3 måltider strategisk på tværs af ugen (samme frokost mandag + onsdag, samme aftensmad tirsdag + torsdag). Færre unikke meals = mindre prep + indkøb."
+          >
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                name="mealPrepMode"
+                value="1"
+                defaultChecked={profile.mealPrepMode}
+                className="size-5 accent-fg"
+              />
+              <span className="text-sm">
+                Genbrug måltider for Sunday batch-cook
+              </span>
+            </label>
+          </Field>
         </section>
 
         {/* Free-text lists */}
