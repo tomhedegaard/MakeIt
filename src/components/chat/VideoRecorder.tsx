@@ -95,10 +95,30 @@ export default function VideoRecorder({
   async function start() {
     setError(null);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: true,
-      });
+      // Two-step constraint resolution: prefer a 720p user-facing
+      // camera (matters on mobile, harmless on desktop), but fall
+      // back to "any camera" if the strict constraint fails. Some
+      // browser/OS combos — notably Safari on macOS with the built-
+      // in FaceTime camera — surface `facingMode: "user"` as a hard
+      // requirement and throw NotFoundError because the desktop
+      // camera doesn't report facingMode metadata. The relaxed
+      // fallback picks whatever camera is available.
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: "user" },
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
+          audio: true,
+        });
+      } catch {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+      }
       streamRef.current = stream;
 
       // Attach live preview before flipping state so the <video>
