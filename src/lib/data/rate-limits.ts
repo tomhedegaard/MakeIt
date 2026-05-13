@@ -24,7 +24,8 @@ export type RateLimitedAction =
   | "plan_regen"
   | "meal_swap"
   | "weight_log"
-  | "pref_update";
+  | "pref_update"
+  | "kcal_adjustment";
 
 type Limit = { daily: number; weekly: number };
 
@@ -37,6 +38,10 @@ export const LIMITS: Record<RateLimitedAction, Limit> = {
   meal_swap: { daily: 5, weekly: 15 },
   weight_log: { daily: 1, weekly: 7 },
   pref_update: { daily: 20, weekly: 100 },
+  // kcal_adjustment is an internal audit type — system-driven, not
+  // user-driven. Limit prevents accidental double-fire within one
+  // week but isn't surfaced in UI rate counters.
+  kcal_adjustment: { daily: 2, weekly: 2 },
 };
 
 export type RateLimitStatus = {

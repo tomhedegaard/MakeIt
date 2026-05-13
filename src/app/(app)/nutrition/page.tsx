@@ -15,8 +15,10 @@ import { suggestSupplements } from "@/lib/nutrition/brand";
 import {
   checkLimit,
   describeNextAvailable,
+  recordAction,
   type RateLimitStatus,
 } from "@/lib/data/rate-limits";
+import { maybeApplyKcalAdjustment } from "@/lib/data/kcal-adjustment";
 import { getSkipDayIndices } from "@/lib/data/skip-days";
 import MealCard from "./MealCard";
 import GeneratePlanButton from "./GeneratePlanButton";
@@ -49,6 +51,7 @@ export default async function NutritionPage({
     planLimit,
     swapLimit,
     skipDayIndices,
+    kcalAdjustGate,
   ] = await Promise.all([
     getOrCreateNutritionProfile(member.id),
     getCurrentPlan(member.id),
@@ -58,7 +61,29 @@ export default async function NutritionPage({
     checkLimit(member.id, "plan_regen"),
     checkLimit(member.id, "meal_swap"),
     getSkipDayIndices(member.id, weekStart),
+    checkLimit(member.id, "kcal_adjustment"),
   ]);
+
+  // Adaptive kcal adjustment — lazy evaluation on first /nutrition
+  // visit of the new ISO week. The kcalAdjustGate check above
+  // looks at member_action_logs for "kcal_adjustment" within the
+  // last 7 days; if allowed=true, we haven't run this week yet.
+  let kcalAdjust: { delta: number; reason: string | null } | null = null;
+  if (kcalAdjustGate.allowed && profile.dailyKcalTarget) {
+    const result = await maybeApplyKcalAdjustment(
+      member.id,
+      profile.goal,
+      profile.dailyKcalTarget,
+    );
+    if (result.applied) {
+      await recordAction(member.id, "kcal_adjustment", {
+        delta: result.delta,
+        new_target: result.newTarget,
+        reason: result.reason,
+      });
+      kcalAdjust = { delta: result.delta, reason: result.reason };
+    }
+  }
 
   // First-time guard: only redirect when the profile is genuinely
   // untouched. The earlier `plan === null && latestWeight === null`
@@ -116,6 +141,8 @@ export default async function NutritionPage({
         />
       ) : null}
 
+      {kcalAdjust ? <KcalAdjustBanner delta={kcalAdjust.delta} reason={kcalAdjust.reason} /> : null}
+
       <DailyCheckInCard checkin={checkin} />
 
       <LogWeightCard
@@ -143,6 +170,31 @@ export default async function NutritionPage({
         />
       )}
     </Container>
+  );
+}
+
+/* ---------------------------------------------------------------- *
+ * Adaptive kcal adjustment banner — shown when this Monday's lazy
+ * check fired. Surfaces what changed + why so the user sees the
+ * system actively responding to their data rather than feeling like
+ * a static plan.
+ * ---------------------------------------------------------------- */
+
+function KcalAdjustBanner({
+  delta,
+  reason,
+}: {
+  delta: number;
+  reason: string | null;
+}) {
+  const sign = delta > 0 ? "+" : "";
+  return (
+    <div className="surface-2 rounded-xl border border-blue-400/40 px-5 py-3 text-sm">
+      <span className="eyebrow text-blue-400 mr-2">Auto-justering</span>
+      Vi har justeret dit daglige kalorie-mål <strong className="text-fg">{sign}{delta} kcal</strong>
+      {reason ? <> — {reason}</> : null}. Trækker på din vægt-trend over de
+      seneste 14 dage.
+    </div>
   );
 }
 
