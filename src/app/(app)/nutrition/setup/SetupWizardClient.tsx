@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/utils";
 import { completeSetupAction } from "../actions";
+import PlanGenerationOverlay from "@/components/nutrition/PlanGenerationOverlay";
 
 /**
  * Setup-wizard form, controlled. Selection is React state so the
@@ -155,20 +156,23 @@ export default function SetupWizardClient() {
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="btn btn-primary btn-xl flex-1 md:flex-none disabled:opacity-60"
-    >
-      {pending ? (
-        <>
-          <span className="inline-block size-2 rounded-full bg-current animate-pulse mr-2" />
-          Genererer plan…
-        </>
-      ) : (
-        <>Generér min plan →</>
-      )}
-    </button>
+    <>
+      <button
+        type="submit"
+        disabled={pending}
+        className="btn btn-primary btn-xl flex-1 md:flex-none disabled:opacity-60"
+      >
+        {pending ? (
+          <>
+            <span className="inline-block size-2 rounded-full bg-current animate-pulse mr-2" />
+            Genererer plan…
+          </>
+        ) : (
+          <>Generér min plan →</>
+        )}
+      </button>
+      <PlanGenerationOverlay pending={pending} />
+    </>
   );
 }
 
