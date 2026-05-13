@@ -12,6 +12,11 @@ import {
 } from "@/lib/data/nutrition";
 import { getLatestWeight, getWeightTrend } from "@/lib/data/weight";
 import { suggestSupplements } from "@/lib/nutrition/brand";
+import {
+  checkLimit,
+  describeNextAvailable,
+  type RateLimitStatus,
+} from "@/lib/data/rate-limits";
 import MealCard from "./MealCard";
 import GeneratePlanButton from "./GeneratePlanButton";
 import LogMealButton from "./LogMealButton";
@@ -25,15 +30,23 @@ export const metadata = {
 
 const DAY_LABELS = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
 
-export default async function NutritionPage() {
+export default async function NutritionPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ err?: string }>;
+}) {
+  const { err } = await searchParams;
   const member = (await getSession())!;
-  const [profile, plan, checkin, latestWeight, weightTrend] = await Promise.all([
-    getOrCreateNutritionProfile(member.id),
-    getCurrentPlan(member.id),
-    getDailyCheckIn(member.id),
-    getLatestWeight(member.id),
-    getWeightTrend(member.id),
-  ]);
+  const [profile, plan, checkin, latestWeight, weightTrend, planLimit, swapLimit] =
+    await Promise.all([
+      getOrCreateNutritionProfile(member.id),
+      getCurrentPlan(member.id),
+      getDailyCheckIn(member.id),
+      getLatestWeight(member.id),
+      getWeightTrend(member.id),
+      checkLimit(member.id, "plan_regen"),
+      checkLimit(member.id, "meal_swap"),
+    ]);
 
   // First-time guard: only redirect when the profile is genuinely
   // untouched. The earlier `plan === null && latestWeight === null`
@@ -84,6 +97,13 @@ export default async function NutritionPage() {
         </div>
       </header>
 
+      {err === "quota_plan" || err === "quota_swap" ? (
+        <QuotaBanner
+          kind={err === "quota_plan" ? "plan" : "swap"}
+          limit={err === "quota_plan" ? planLimit : swapLimit}
+        />
+      ) : null}
+
       <DailyCheckInCard checkin={checkin} />
 
       <LogWeightCard
@@ -93,13 +113,19 @@ export default async function NutritionPage() {
       />
 
       {plan === null ? (
-        <EmptyState weekStart={currentIsoMonday()} hasProfile={Boolean(profile)} />
+        <EmptyState
+          weekStart={currentIsoMonday()}
+          hasProfile={Boolean(profile)}
+          planLimit={planLimit}
+        />
       ) : (
         <PlanView
           plan={plan}
           todayIndex={todayIndex}
           fishPerWeek={profile.fishPerWeek}
           diet={profile.diet}
+          planLimit={planLimit}
+          swapLimit={swapLimit}
         />
       )}
     </Container>
@@ -107,10 +133,54 @@ export default async function NutritionPage() {
 }
 
 /* ---------------------------------------------------------------- *
+ * Quota error banner
+ * ---------------------------------------------------------------- */
+
+function QuotaBanner({
+  kind,
+  limit,
+}: {
+  kind: "plan" | "swap";
+  limit: RateLimitStatus;
+}) {
+  const reset = describeNextAvailable(limit.nextAvailableAt);
+  const label = kind === "plan" ? "regeneration" : "byt";
+  return (
+    <div className="surface-2 rounded-xl border border-yellow-400/40 px-5 py-3 text-sm">
+      <span className="eyebrow text-yellow-400 mr-2">Grænse nået</span>
+      Du har brugt din kvota for {label}-handlinger ({limit.daily.used}/
+      {limit.daily.max} i dag, {limit.weekly.used}/{limit.weekly.max} denne uge).
+      {reset ? (
+        <>
+          {" "}
+          Næste tilgængelig <strong className="text-fg">{reset}</strong>.
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------- *
  * Empty state — pre-generation
  * ---------------------------------------------------------------- */
 
-function EmptyState({ weekStart, hasProfile }: { weekStart: string; hasProfile: boolean }) {
+function EmptyState({
+  weekStart,
+  hasProfile,
+  planLimit,
+}: {
+  weekStart: string;
+  hasProfile: boolean;
+  planLimit: RateLimitStatus;
+}) {
+  const remaining = Math.max(
+    0,
+    Math.min(
+      planLimit.daily.max - planLimit.daily.used,
+      planLimit.weekly.max - planLimit.weekly.used,
+    ),
+  );
+  const resetLabel = describeNextAvailable(planLimit.nextAvailableAt);
   return (
     <section className="surface-2 rounded-2xl p-6 lg:p-10 text-center max-w-2xl mx-auto">
       <div className="eyebrow mb-3">Ingen plan for uge {weekStartLabel(weekStart)}</div>
@@ -123,12 +193,20 @@ function EmptyState({ weekStart, hasProfile }: { weekStart: string; hasProfile: 
       </p>
       <div className="flex flex-wrap items-center justify-center gap-2">
         {hasProfile ? (
-          <GeneratePlanButton label="Generér ugeplan" />
+          <GeneratePlanButton
+            label="Generér ugeplan"
+            quotaRemaining={remaining}
+            quotaResetLabel={resetLabel}
+          />
         ) : null}
         <Link href="/nutrition/preferences" className="btn">
           Sæt indstillinger →
         </Link>
       </div>
+      <p className="mt-4 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+        {planLimit.daily.used}/{planLimit.daily.max} i dag · {planLimit.weekly.used}/
+        {planLimit.weekly.max} denne uge
+      </p>
     </section>
   );
 }
@@ -142,12 +220,31 @@ function PlanView({
   todayIndex,
   fishPerWeek,
   diet,
+  planLimit,
+  swapLimit,
 }: {
   plan: Plan;
   todayIndex: number;
   fishPerWeek: number;
   diet: "omnivore" | "pescatarian" | "vegetarian" | "vegan";
+  planLimit: RateLimitStatus;
+  swapLimit: RateLimitStatus;
 }) {
+  const remaining = Math.max(
+    0,
+    Math.min(
+      planLimit.daily.max - planLimit.daily.used,
+      planLimit.weekly.max - planLimit.weekly.used,
+    ),
+  );
+  const resetLabel = describeNextAvailable(planLimit.nextAvailableAt);
+  const swapRemaining = Math.max(
+    0,
+    Math.min(
+      swapLimit.daily.max - swapLimit.daily.used,
+      swapLimit.weekly.max - swapLimit.weekly.used,
+    ),
+  );
   const byDay: Meal[][] = Array.from({ length: 7 }, () => []);
   for (const m of plan.meals) {
     if (m.dayIndex >= 0 && m.dayIndex < 7) byDay[m.dayIndex].push(m);
@@ -228,7 +325,7 @@ function PlanView({
         <ul className="space-y-3">
           {today.map((m) => (
             <li key={m.id}>
-              <MealCard meal={m} loggable />
+              <MealCard meal={m} loggable swapQuotaRemaining={swapRemaining} />
             </li>
           ))}
         </ul>
@@ -262,7 +359,12 @@ function PlanView({
               <ul className="border-t hairline divide-y hairline">
                 {meals.map((m) => (
                   <li key={m.id} className="px-5 py-4">
-                    <MealCard meal={m} loggable={false} compact />
+                    <MealCard
+                      meal={m}
+                      loggable={false}
+                      compact
+                      swapQuotaRemaining={swapRemaining}
+                    />
                   </li>
                 ))}
               </ul>
@@ -297,7 +399,12 @@ function PlanView({
 
       {/* Footer actions */}
       <section className="flex flex-wrap items-center gap-2 pt-2">
-        <GeneratePlanButton label="Regenerér ugeplan" variant="ghost" />
+        <GeneratePlanButton
+          label="Regenerér ugeplan"
+          variant="ghost"
+          quotaRemaining={remaining}
+          quotaResetLabel={resetLabel}
+        />
         <LogMealButton dateIso={isoToday()} />
         <span className="text-[11px] font-mono text-fg-faint ml-auto">
           {plan.generator === "claude" ? `Genereret af ${plan.generatorModel ?? "claude"}` : "Genereret lokalt (mock)"}

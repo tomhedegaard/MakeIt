@@ -22,6 +22,7 @@ import { gradeMealPhoto } from "@/lib/data/nutrition-photo-claude";
 import { generatePlanWithClaude } from "@/lib/data/nutrition-planner-claude";
 import { logWeight } from "@/lib/data/weight";
 import { getMealImagesBatch } from "@/lib/nutrition/unsplash";
+import { checkLimit, recordAction } from "@/lib/data/rate-limits";
 import { randomUUID } from "crypto";
 
 /* ---------------------------------------------------------------- *
@@ -108,6 +109,16 @@ export async function savePreferencesAction(formData: FormData): Promise<void> {
 
 export async function generatePlanAction(): Promise<void> {
   const member = await requireMember();
+
+  // Rate-limit check BEFORE doing any expensive work. Limit is
+  // 1/day, 3/week — enforced so users commit to a plan instead
+  // of regenerate-spamming until they hit a "perfect" plan and
+  // never follow it (the real cost the limit protects against).
+  const limit = await checkLimit(member.id, "plan_regen");
+  if (!limit.allowed) {
+    redirect("/nutrition?err=quota_plan");
+  }
+
   const profile = await getOrCreateNutritionProfile(member.id);
   const weekStart = currentIsoMonday();
 
@@ -121,15 +132,27 @@ export async function generatePlanAction(): Promise<void> {
   // gets back to /nutrition. The empty state there has a retry CTA.
   // 500-ing the whole server action leaves the user stuck on a Next
   // error page instead.
+  let succeeded = false;
   try {
     if (aiShape) {
       await persistAiPlan(member.id, weekStart, aiShape);
     } else {
       await generatePlan(member.id, weekStart, profile);
     }
+    succeeded = true;
   } catch (err) {
     console.warn("[nutrition] plan persist failed:", err);
   }
+
+  // Only burn quota when generation actually persisted a plan —
+  // failed attempts shouldn't count against the user's budget.
+  if (succeeded) {
+    await recordAction(member.id, "plan_regen", {
+      generator: aiShape ? "claude" : "mock",
+      week_start: weekStart,
+    });
+  }
+
   revalidatePath("/nutrition");
 }
 
@@ -213,8 +236,21 @@ export async function swapMealAction(formData: FormData): Promise<void> {
   const mealId = String(formData.get("mealId") ?? "");
   if (!mealId) return;
 
+  const limit = await checkLimit(member.id, "meal_swap");
+  if (!limit.allowed) {
+    redirect("/nutrition?err=quota_swap");
+  }
+
   const profile = await getOrCreateNutritionProfile(member.id);
-  await swapMeal(member.id, mealId, profile);
+  const result = await swapMeal(member.id, mealId, profile);
+
+  // Quota only burns on successful swap. swapMeal returns null
+  // when the meal can't be replaced (RLS / not found) — those
+  // don't count against the user.
+  if (result) {
+    await recordAction(member.id, "meal_swap", { meal_id: mealId });
+  }
+
   revalidatePath("/nutrition");
 }
 
@@ -347,9 +383,12 @@ export async function quickLogAction(formData: FormData): Promise<void> {
 }
 
 /* ---------------------------------------------------------------- *
- * Weigh-in log — minimal append. The meal planner reads
- * getLatestWeight() at plan-generation time + the ugentlige
- * adjust-engine reads getWeightTrend() for cut/bulk drift signal.
+ * Weigh-in log — idempotent per UTC day. The trend-engine reads
+ * getLatestWeight() at plan-generation time + getWeightTrend() in
+ * the Sunday adjust-engine, both of which only need one value per
+ * day. Letting the user log twice in one day overwrites the older
+ * entry rather than rejecting — common case is "oops I typed it
+ * wrong" or "I weighed myself again post-bathroom."
  * ---------------------------------------------------------------- */
 export async function logWeightAction(formData: FormData): Promise<void> {
   const member = await getSession();
@@ -367,7 +406,37 @@ export async function logWeightAction(formData: FormData): Promise<void> {
     return;
   }
 
-  await logWeight({ memberId: member.id, kg, notes });
+  // Idempotent same-day overwrite. If a log exists for today
+  // (UTC), update it in place. Otherwise insert a fresh row.
+  // Day boundary in UTC is "good enough" for this — trend math
+  // doesn't care about timezone slack of ±2h.
+  const supabase = await createClient();
+  if (supabase) {
+    const todayStart = new Date();
+    todayStart.setUTCHours(0, 0, 0, 0);
+
+    const { data: existing } = await supabase
+      .from("weight_logs")
+      .select("id")
+      .eq("member_id", member.id)
+      .gte("logged_at", todayStart.toISOString())
+      .order("logged_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (existing?.id) {
+      await supabase
+        .from("weight_logs")
+        .update({ kg, notes, logged_at: new Date().toISOString() })
+        .eq("id", existing.id);
+    } else {
+      await logWeight({ memberId: member.id, kg, notes });
+    }
+  } else {
+    await logWeight({ memberId: member.id, kg, notes });
+  }
+
+  await recordAction(member.id, "weight_log", { kg });
   revalidatePath("/nutrition");
   revalidatePath("/nutrition/setup");
   revalidatePath("/coach/members");

@@ -24,16 +24,22 @@ export default function MealCard({
   meal,
   loggable,
   compact = false,
+  swapQuotaRemaining,
 }: {
   meal: Meal;
   loggable: boolean;
   compact?: boolean;
+  /** Number of meal swaps left this period. Undefined = unlimited / unknown. */
+  swapQuotaRemaining?: number;
 }) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
+  const swapExhausted =
+    swapQuotaRemaining !== undefined && swapQuotaRemaining <= 0;
+  const swapDisabled = pending || swapExhausted;
 
   function handleSwap() {
-    if (pending) return;
+    if (swapDisabled) return;
     if (!confirm(`Bytte "${meal.title}" til en anden ${SLOT_LABELS[meal.slot].toLowerCase()}?`)) return;
     const formData = new FormData();
     formData.set("mealId", meal.id);
@@ -65,7 +71,8 @@ export default function MealCard({
           <button
             type="button"
             onClick={handleSwap}
-            disabled={pending}
+            disabled={swapDisabled}
+            title={swapExhausted ? "Bytte-grænse nået denne uge" : undefined}
             className="btn btn-ghost btn-sm shrink-0"
             aria-label={`Byt ${meal.title}`}
           >
@@ -197,7 +204,8 @@ export default function MealCard({
           <button
             type="button"
             onClick={handleSwap}
-            disabled={pending}
+            disabled={swapDisabled}
+            title={swapExhausted ? "Bytte-grænse nået denne uge" : undefined}
             className="btn btn-ghost btn-sm"
           >
             {pending ? "Bytter…" : "Byt"}
