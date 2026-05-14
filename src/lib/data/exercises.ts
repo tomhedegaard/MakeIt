@@ -175,17 +175,6 @@ export async function getExerciseBySlug(slug: string): Promise<Exercise | null> 
   return data ? asExercise(data as unknown as ExerciseRow) : null;
 }
 
-export async function listPublishedExerciseSlugs(): Promise<string[]> {
-  const supabase = await createClient();
-  if (!supabase) return MOCK_EXERCISES.map((e) => e.slug);
-
-  const { data } = await supabase
-    .from("exercises")
-    .select("slug")
-    .eq("is_published", true);
-  return (data ?? []).map((r) => r.slug as string);
-}
-
 /**
  * The dominant view to show on the figure when previewing an
  * exercise. Counts primary+secondary muscles per side, ties go to
