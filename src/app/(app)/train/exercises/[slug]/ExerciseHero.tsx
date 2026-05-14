@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
+import ExerciseDemo from "@/components/exercise/ExerciseDemo";
 import { MUSCLE_LABELS, type MuscleGroup, type AnatomyView } from "@/lib/data/muscle-groups";
 import type { AnatomyGender } from "@/lib/data/anatomy/paths";
+import type { ExercisePhase } from "@/lib/data/exercises";
 
 type Props = {
   primary: MuscleGroup[];
   secondary: MuscleGroup[];
   tertiary: MuscleGroup[];
+  phases: ExercisePhase[];
+  demoAssetUrl: string | null;
   defaultView: AnatomyView;
   cues: string[];
 };
@@ -20,18 +23,17 @@ const TIER_COLOR = {
 } as const;
 
 /**
- * Hero block on the exercise detail page. Pairs the anatomy figure
- * with the ordered coaching cues — together they communicate "what
- * happens" and "how to do it" without the user scrolling.
- *
- * View + gender toggles are local UI state. Default view is whatever
- * the exercise's dominant muscle direction implies (see
- * dominantView() in src/lib/data/exercises.ts).
+ * Hero block on the exercise detail page. Pairs the demo (video,
+ * phase-animated figure, or static figure — picked by ExerciseDemo)
+ * with the ordered coaching cues. View + gender toggles are local
+ * UI state on the figure modes; the video mode ignores them.
  */
 export default function ExerciseHero({
   primary,
   secondary,
   tertiary,
+  phases,
+  demoAssetUrl,
   defaultView,
   cues,
 }: Props) {
@@ -40,40 +42,43 @@ export default function ExerciseHero({
 
   return (
     <div className="grid gap-8 md:grid-cols-[auto_1fr] md:gap-12 items-start">
-      {/* Figure column */}
+      {/* Demo column */}
       <div className="flex flex-col items-center gap-4">
         <div className="surface-2 rounded-2xl p-6 lg:p-8">
-          <AnatomyFigure
-            view={view}
-            gender={gender}
+          <ExerciseDemo
+            demoAssetUrl={demoAssetUrl}
+            phases={phases}
             primary={primary}
             secondary={secondary}
             tertiary={tertiary}
-            style={{ width: 220, height: 440 }}
+            view={view}
+            gender={gender}
           />
         </div>
 
-        {/* Toggles */}
-        <div className="flex flex-col gap-2 w-full max-w-[260px]">
-          <ToggleRow
-            options={[
-              { v: "front", label: "Forfra" },
-              { v: "back", label: "Bagfra" },
-            ]}
-            value={view}
-            onChange={(v) => setView(v as AnatomyView)}
-          />
-          <ToggleRow
-            options={[
-              { v: "male", label: "Mand" },
-              { v: "female", label: "Kvinde" },
-            ]}
-            value={gender}
-            onChange={(v) => setGender(v as AnatomyGender)}
-          />
-        </div>
+        {/* Toggles — hidden when a real video plays since orientation
+            is baked into the asset. */}
+        {!demoAssetUrl ? (
+          <div className="flex flex-col gap-2 w-full max-w-[260px]">
+            <ToggleRow
+              options={[
+                { v: "front", label: "Forfra" },
+                { v: "back", label: "Bagfra" },
+              ]}
+              value={view}
+              onChange={(v) => setView(v as AnatomyView)}
+            />
+            <ToggleRow
+              options={[
+                { v: "male", label: "Mand" },
+                { v: "female", label: "Kvinde" },
+              ]}
+              value={gender}
+              onChange={(v) => setGender(v as AnatomyGender)}
+            />
+          </div>
+        ) : null}
 
-        {/* Tier legend */}
         <div className="flex items-center gap-4 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
           <Dot color={TIER_COLOR.primary} label="Primær" />
           <Dot color={TIER_COLOR.secondary} label="Sekundær" />

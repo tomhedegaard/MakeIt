@@ -106,6 +106,8 @@ export default async function ExerciseDetailPage({
           primary={ex.primaryMuscles}
           secondary={ex.secondaryMuscles}
           tertiary={ex.tertiaryMuscles}
+          phases={ex.phases}
+          demoAssetUrl={ex.demoAssetUrl}
           defaultView={view}
           cues={ex.cues}
         />
