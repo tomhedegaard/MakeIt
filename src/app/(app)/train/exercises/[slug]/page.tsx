@@ -5,16 +5,15 @@ import { COMPANY } from "@/lib/company";
 import {
   dominantView,
   getExerciseBySlug,
-  listPublishedExerciseSlugs,
 } from "@/lib/data/exercises";
 import ExerciseHero from "./ExerciseHero";
 
 type Params = Promise<{ slug: string }>;
 
-export async function generateStaticParams() {
-  const slugs = await listPublishedExerciseSlugs();
-  return slugs.map((slug) => ({ slug }));
-}
+// Rendered on demand. We can't pre-render via generateStaticParams
+// because the Supabase server client reads cookies, which isn't
+// allowed at build time. Per-page caching can be added later via
+// an ISR `revalidate` export if traffic warrants it.
 
 export async function generateMetadata({ params }: { params: Params }) {
   const { slug } = await params;
