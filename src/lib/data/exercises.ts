@@ -14,6 +14,20 @@ export type ExerciseDifficulty = "beginner" | "intermediate" | "advanced";
 
 export type ExerciseMistake = { title: string; body: string };
 
+/**
+ * A single phase of a rep — what muscles dominate, and for how long.
+ * Animation cycles through these to show how recruitment shifts as
+ * the movement progresses (e.g. quads on the way down, glutes on
+ * the way up in a squat).
+ */
+export type ExercisePhase = {
+  name: string;
+  duration_ms: number;
+  primary: MuscleGroup[];
+  secondary: MuscleGroup[];
+  tertiary: MuscleGroup[];
+};
+
 export type Exercise = {
   slug: string;
   name: string;
@@ -34,6 +48,7 @@ export type Exercise = {
   videoUrl: string | null;
   thumbnailUrl: string | null;
   displayOrder: number;
+  phases: ExercisePhase[];
 };
 
 /* ---------------------------------------------------------------- *
@@ -60,13 +75,26 @@ type ExerciseRow = {
   video_url: string | null;
   thumbnail_url: string | null;
   display_order: number | null;
+  phases: unknown;
 };
 
 const SELECT_COLS =
   "slug, name, category, pattern, equipment, difficulty, " +
   "primary_muscles, secondary_muscles, tertiary_muscles, " +
   "cues, mistakes, why_matters, setup, progression, regression, " +
-  "demo_asset_url, video_url, thumbnail_url, display_order";
+  "demo_asset_url, video_url, thumbnail_url, display_order, phases";
+
+function isExercisePhase(p: unknown): p is ExercisePhase {
+  if (!p || typeof p !== "object") return false;
+  const o = p as Record<string, unknown>;
+  return (
+    typeof o.name === "string" &&
+    typeof o.duration_ms === "number" &&
+    Array.isArray(o.primary) &&
+    Array.isArray(o.secondary) &&
+    Array.isArray(o.tertiary)
+  );
+}
 
 function asExercise(r: ExerciseRow): Exercise {
   return {
@@ -92,6 +120,7 @@ function asExercise(r: ExerciseRow): Exercise {
     videoUrl: r.video_url,
     thumbnailUrl: r.thumbnail_url,
     displayOrder: r.display_order ?? 0,
+    phases: Array.isArray(r.phases) ? (r.phases as unknown[]).filter(isExercisePhase) : [],
   };
 }
 
@@ -230,6 +259,29 @@ const MOCK_EXERCISES: Exercise[] = [
     videoUrl: null,
     thumbnailUrl: null,
     displayOrder: 10,
+    phases: [
+      {
+        name: "Descent",
+        duration_ms: 1500,
+        primary: ["quads"],
+        secondary: ["glutes", "hamstrings"],
+        tertiary: ["adductors", "abs", "lower_back"],
+      },
+      {
+        name: "Bund",
+        duration_ms: 400,
+        primary: ["quads", "glutes"],
+        secondary: ["adductors", "hamstrings"],
+        tertiary: ["lower_back", "abs"],
+      },
+      {
+        name: "Drive",
+        duration_ms: 1100,
+        primary: ["glutes", "quads"],
+        secondary: ["hamstrings", "lower_back"],
+        tertiary: ["abs", "adductors", "calves_back"],
+      },
+    ],
   },
   {
     slug: "deadlift",
@@ -268,6 +320,29 @@ const MOCK_EXERCISES: Exercise[] = [
     videoUrl: null,
     thumbnailUrl: null,
     displayOrder: 30,
+    phases: [
+      {
+        name: "Setup",
+        duration_ms: 600,
+        primary: ["lats"],
+        secondary: ["hamstrings", "traps"],
+        tertiary: ["forearms", "abs", "glutes"],
+      },
+      {
+        name: "Floor break",
+        duration_ms: 1300,
+        primary: ["hamstrings", "glutes", "quads"],
+        secondary: ["lower_back", "lats"],
+        tertiary: ["forearms", "traps", "abs"],
+      },
+      {
+        name: "Lockout",
+        duration_ms: 1000,
+        primary: ["glutes", "lower_back"],
+        secondary: ["hamstrings", "traps"],
+        tertiary: ["lats", "abs", "forearms"],
+      },
+    ],
   },
   {
     slug: "bench",
@@ -306,6 +381,29 @@ const MOCK_EXERCISES: Exercise[] = [
     videoUrl: null,
     thumbnailUrl: null,
     displayOrder: 50,
+    phases: [
+      {
+        name: "Descent",
+        duration_ms: 1400,
+        primary: ["chest"],
+        secondary: ["front_delts", "triceps"],
+        tertiary: ["lats", "forearms"],
+      },
+      {
+        name: "Touch",
+        duration_ms: 300,
+        primary: ["chest", "front_delts"],
+        secondary: ["triceps"],
+        tertiary: ["lats", "forearms", "abs"],
+      },
+      {
+        name: "Drive",
+        duration_ms: 1000,
+        primary: ["chest", "triceps"],
+        secondary: ["front_delts"],
+        tertiary: ["forearms", "lats"],
+      },
+    ],
   },
   {
     slug: "ohp",
@@ -343,5 +441,28 @@ const MOCK_EXERCISES: Exercise[] = [
     videoUrl: null,
     thumbnailUrl: null,
     displayOrder: 70,
+    phases: [
+      {
+        name: "Pres start",
+        duration_ms: 900,
+        primary: ["front_delts"],
+        secondary: ["triceps", "chest"],
+        tertiary: ["abs", "traps"],
+      },
+      {
+        name: "Mid-range",
+        duration_ms: 900,
+        primary: ["front_delts", "triceps"],
+        secondary: ["traps"],
+        tertiary: ["abs", "chest", "forearms"],
+      },
+      {
+        name: "Lockout",
+        duration_ms: 700,
+        primary: ["triceps", "traps"],
+        secondary: ["front_delts"],
+        tertiary: ["abs", "forearms"],
+      },
+    ],
   },
 ];
