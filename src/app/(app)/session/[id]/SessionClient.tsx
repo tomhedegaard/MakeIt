@@ -3,7 +3,9 @@
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { Session } from "@/lib/workout";
+import type { Exercise, Session } from "@/lib/workout";
+import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
+import { MUSCLE_LABELS } from "@/lib/data/muscle-groups";
 import Stepper from "@/components/ui/Stepper";
 import RpeSelect from "@/components/ui/RpeSelect";
 import RestTimer from "@/components/ui/RestTimer";
@@ -189,49 +191,13 @@ export default function SessionClient({ session }: { session: Session }) {
       {/* Main column */}
       <Container size="narrow" className="flex-1 py-6 pb-32 lg:pb-12 space-y-6">
         {/* Exercise card */}
-        <section className="surface-2 rounded-2xl p-5 lg:p-7">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <div className="eyebrow mb-1">
-                Øvelse {exIdx + 1} / {session.exercises.length}
-              </div>
-              <h1 className="font-display text-3xl lg:text-4xl leading-[1]">
-                {ex.name}
-              </h1>
-            </div>
-            <div className="text-right">
-              <div className="numeric text-3xl lg:text-4xl">
-                {setIdx + 1}
-                <span className="text-fg-dim text-base">/{ex.sets.length}</span>
-              </div>
-              <div className="eyebrow">sæt</div>
-            </div>
-          </div>
-
-          {ex.cue ? (
-            <p className="text-sm text-fg-dim leading-relaxed border-t hairline pt-4">
-              {ex.cue}
-            </p>
-          ) : null}
-
-          <button
-            type="button"
-            onClick={() => setFormCheckOpen(true)}
-            className="mt-4 w-full text-left flex items-center justify-between gap-3 surface rounded-xl px-4 py-3 lift touch-app"
-          >
-            <span className="flex items-center gap-3">
-              <svg viewBox="0 0 24 24" className="size-4 text-fg-dim" fill="none" aria-hidden>
-                <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
-                <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-                <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
-              </svg>
-              <span className="text-sm">Form-check med AI</span>
-            </span>
-            <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-              ~6 sek →
-            </span>
-          </button>
-        </section>
+        <ExerciseSection
+          ex={ex}
+          exIdx={exIdx}
+          setIdx={setIdx}
+          totalExercises={session.exercises.length}
+          onOpenFormCheck={() => setFormCheckOpen(true)}
+        />
 
         {/* Targets row */}
         <section className="grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
@@ -421,4 +387,159 @@ export default function SessionClient({ session }: { session: Session }) {
       />
     </div>
   );
+}
+
+/**
+ * Exercise header for the current set in a session. When the exercise
+ * is linked to the library (`ex.library` populated via the
+ * exercise_id FK on session_exercises), we render:
+ *   - mini AnatomyFigure (static, shows recruited muscles)
+ *   - top 3 cues from the structured array
+ *   - "Se hele øvelsen →" deep-link to /train/exercises/[slug]
+ *
+ * When library is null (coach typed a free-text exercise), we fall
+ * back to the legacy single-cue display so nothing breaks.
+ */
+function ExerciseSection({
+  ex,
+  exIdx,
+  setIdx,
+  totalExercises,
+  onOpenFormCheck,
+}: {
+  ex: Exercise;
+  exIdx: number;
+  setIdx: number;
+  totalExercises: number;
+  onOpenFormCheck: () => void;
+}) {
+  const lib = ex.library;
+  const figureView = lib ? dominantView(lib) : "front";
+  // Show 3 cues inline — keep the page focused on the active set,
+  // not on reading. The full list lives on the detail page.
+  const inlineCues = lib?.cues.slice(0, 3) ?? [];
+  const overflowCues = lib ? lib.cues.length - inlineCues.length : 0;
+
+  return (
+    <section className="surface-2 rounded-2xl p-5 lg:p-7">
+      <div className="flex items-start justify-between gap-4 mb-4">
+        <div className="min-w-0 flex-1">
+          <div className="eyebrow mb-1">
+            Øvelse {exIdx + 1} / {totalExercises}
+          </div>
+          <h1 className="font-display text-3xl lg:text-4xl leading-[1]">
+            {ex.name}
+          </h1>
+        </div>
+        <div className="text-right shrink-0">
+          <div className="numeric text-3xl lg:text-4xl">
+            {setIdx + 1}
+            <span className="text-fg-dim text-base">/{ex.sets.length}</span>
+          </div>
+          <div className="eyebrow">sæt</div>
+        </div>
+      </div>
+
+      {lib ? (
+        <div className="flex gap-4 border-t hairline pt-4">
+          <Link
+            href={`/train/exercises/${lib.slug}`}
+            className="shrink-0 lift rounded-md surface p-1.5"
+            aria-label="Åbn øvelsens detaljer"
+          >
+            <AnatomyFigure
+              view={figureView}
+              primary={lib.primaryMuscles}
+              secondary={lib.secondaryMuscles}
+              tertiary={lib.tertiaryMuscles}
+              style={{ width: 56, height: 112 }}
+            />
+          </Link>
+
+          <div className="min-w-0 flex-1 space-y-3">
+            {inlineCues.length > 0 ? (
+              <ol className="space-y-1.5">
+                {inlineCues.map((cue, i) => (
+                  <li key={i} className="flex gap-2 text-sm leading-snug">
+                    <span className="font-mono text-fg-faint shrink-0 text-[11px] mt-0.5">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span>{cue}</span>
+                  </li>
+                ))}
+              </ol>
+            ) : null}
+
+            <div className="flex items-center gap-2 flex-wrap">
+              <PrimaryMuscleTags muscles={lib.primaryMuscles} />
+              <Link
+                href={`/train/exercises/${lib.slug}`}
+                className="ml-auto text-[10px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg transition-colors"
+              >
+                Se hele øvelsen →
+              </Link>
+            </div>
+          </div>
+        </div>
+      ) : ex.cue ? (
+        // Legacy fallback — single cue line for free-text exercises
+        <p className="text-sm text-fg-dim leading-relaxed border-t hairline pt-4">
+          {ex.cue}
+        </p>
+      ) : null}
+
+      <button
+        type="button"
+        onClick={onOpenFormCheck}
+        className="mt-4 w-full text-left flex items-center justify-between gap-3 surface rounded-xl px-4 py-3 lift touch-app"
+      >
+        <span className="flex items-center gap-3">
+          <svg viewBox="0 0 24 24" className="size-4 text-fg-dim" fill="none" aria-hidden>
+            <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
+            <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+            <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
+          </svg>
+          <span className="text-sm">
+            Form-check med AI
+            {overflowCues > 0 ? (
+              <span className="text-fg-faint"> · {overflowCues} cues mere</span>
+            ) : null}
+          </span>
+        </span>
+        <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+          ~6 sek →
+        </span>
+      </button>
+    </section>
+  );
+}
+
+function PrimaryMuscleTags({ muscles }: { muscles: import("@/lib/data/muscle-groups").MuscleGroup[] }) {
+  if (muscles.length === 0) return null;
+  return (
+    <div className="flex gap-1 flex-wrap">
+      {muscles.map((m) => (
+        <span
+          key={m}
+          className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-[0.14em] bg-bg-3 text-fg-dim"
+        >
+          {MUSCLE_LABELS[m]}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function dominantView(
+  lib: NonNullable<Exercise["library"]>,
+): "front" | "back" {
+  const FRONT = new Set([
+    "neck", "chest", "front_delts", "biceps", "forearms", "abs",
+    "obliques", "adductors", "quads", "calves_front",
+  ]);
+  const all = [...lib.primaryMuscles, ...lib.secondaryMuscles];
+  let front = 0;
+  let back = 0;
+  for (const m of all) (FRONT.has(m) ? front++ : back++);
+  return back >= front ? "back" : "front";
 }
