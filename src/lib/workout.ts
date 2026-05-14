@@ -2,6 +2,22 @@
  * Workout / session — types + mock data for the closed beta.
  * Replace with database fetch once schema is in place.
  */
+import type { MuscleGroup } from "@/lib/data/muscle-groups";
+
+/**
+ * When a session_exercises row has its exercise_id populated, we
+ * hydrate this slice of the structured exercise library so the
+ * session page can render the mini anatomy figure, structured cues,
+ * and a deep-link to the full /train/exercises/[slug] detail page.
+ * Null for free-text exercises that don't match a library entry.
+ */
+export type ExerciseLibrary = {
+  slug: string;
+  cues: string[];
+  primaryMuscles: MuscleGroup[];
+  secondaryMuscles: MuscleGroup[];
+  tertiaryMuscles: MuscleGroup[];
+};
 
 export type ExerciseSet = {
   id: string;
@@ -22,6 +38,7 @@ export type Exercise = {
   cue?: string;
   videoCue?: string;
   sets: ExerciseSet[];
+  library?: ExerciseLibrary | null;
 };
 
 export type Session = {
