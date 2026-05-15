@@ -352,8 +352,9 @@ Extends `src/lib/data/program-generator-claude.ts` (existing) to read HRV trends
 
 `/coach/queue` gets a new HRV-anomalies section alongside form-check queue.
 
-**Alert trigger — ALL 3 conditions must hit simultaneously:**
+**Alert trigger — ALL 4 conditions must hit simultaneously:**
 
+0. Member's `warm_up_state = 'active'` (baseline matures, ≥ 14 days). Members in Discovery or Provisional are excluded from alerts to prevent false positives on half-formed baselines.
 1. 7-day mean below baseline − SWC for ≥ 3 consecutive days.
 2. Mean RHR ≥ 10 % above member's 60-day RHR baseline.
 3. At least one of: member tagged "syg" / "stresset" / last logged sleep < 6h / 3+ alcohol events in last week.
@@ -404,6 +405,8 @@ Extend existing event-driven earn mechanism (migrations 0007/0008/0009) with new
 ## 9. Data model & RLS
 
 Migration: **`0031_hrv_module.sql`** (next free number, idempotent, same style as existing migrations).
+
+**Table-creation order in the SQL file:** the spec presents tables in reading order, but actual `CREATE TABLE` statements must be ordered by FK dependency. Required order: `hrv_settings` → `hrv_session_modifiers` → `hrv_alerts` → `hrv_readings` → `hrv_lifestyle_logs` → `hrv_weekly_insights` → `hrv_streak_events`. `hrv_alerts` has a FK to `hrv_session_modifiers`, which must exist first.
 
 ### Tables
 
@@ -718,7 +721,7 @@ If any answer is "no", we either (a) restrict v1 to Android only — accept the 
 7. `src/app/(app)/hrv/page.tsx` — 3 states: Discovery / Provisional / Active.
 8. `src/app/(app)/hrv/actions.ts` — `submitHrvReading(rrIntervals, source)`.
 9. `src/app/api/cron/hrv-streak-check/route.ts` — first cron handler, sets the codebase pattern.
-10. `vercel.json` (new file) with the 3 cron entries (only streak-check has a handler in P1; the other two paths return 200 until their phases ship).
+10. `vercel.json` (new file) with the 3 cron entries (only streak-check has a real handler in P1; the other two paths return 200 until their phases ship — but stub handlers MUST still verify `CRON_SECRET` to keep the auth pattern uniform from day one).
 11. `CRON_SECRET` added to `.env.example` with setup instructions.
 12. Base settings under `/settings`: `preferred_source`, `cycle_tracking_enabled`, `share_to_coach`, "Log menstrual start" entry point.
 
