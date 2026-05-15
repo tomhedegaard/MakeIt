@@ -78,20 +78,32 @@ function pickVerdict(exerciseName?: string): AIVerdict {
   return VERDICTS[key] ?? VERDICTS.default;
 }
 
+export type FormCheckExerciseContext = {
+  exerciseId?: string;
+  cues?: string[];
+  mistakes?: { title: string; body: string }[];
+};
+
 export default function FormCheckSheet({
   open,
   onOpenChange,
   exerciseName,
+  context,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   exerciseName?: string;
+  context?: FormCheckExerciseContext;
 }) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       {/* Body mounts only while open — state is fresh each session. */}
       {open ? (
-        <FormCheckBody exerciseName={exerciseName} onClose={() => onOpenChange(false)} />
+        <FormCheckBody
+          exerciseName={exerciseName}
+          context={context}
+          onClose={() => onOpenChange(false)}
+        />
       ) : null}
     </Sheet>
   );
@@ -99,9 +111,11 @@ export default function FormCheckSheet({
 
 function FormCheckBody({
   exerciseName,
+  context,
   onClose,
 }: {
   exerciseName?: string;
+  context?: FormCheckExerciseContext;
   onClose: () => void;
 }) {
   const [step, setStep] = useState<Step>("choose");
@@ -164,7 +178,15 @@ function FormCheckBody({
     // 2. Server action: Claude vision (or null if not configured)
     let formCheckId: string | null = null;
     try {
-      const res = await analyzeFormCheckAction({ frames, exerciseName });
+      const res = await analyzeFormCheckAction({
+        frames,
+        exerciseName,
+        exerciseId: context?.exerciseId,
+        context:
+          context?.cues || context?.mistakes
+            ? { cues: context.cues, mistakes: context.mistakes }
+            : undefined,
+      });
       if (res.ok && res.verdict) {
         setIsMockResult(false);
         setVerdict({

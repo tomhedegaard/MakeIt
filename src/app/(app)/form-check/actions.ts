@@ -3,7 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
-import type { AIVerdict } from "@/lib/data/form-check-claude";
+import type {
+  AIVerdict,
+  ExerciseCoachingContext,
+} from "@/lib/data/form-check-claude";
 
 /**
  * Analyse a form-check video by running Claude vision over the
@@ -19,6 +22,8 @@ import type { AIVerdict } from "@/lib/data/form-check-claude";
 export async function analyzeFormCheckAction(input: {
   frames: string[];
   exerciseName?: string;
+  exerciseId?: string;
+  context?: ExerciseCoachingContext;
 }): Promise<{ ok: boolean; verdict: AIVerdict | null; formCheckId: string | null }> {
   if (!input.frames || input.frames.length === 0) {
     return { ok: false, verdict: null, formCheckId: null };
@@ -34,7 +39,11 @@ export async function analyzeFormCheckAction(input: {
       const { analyzeWithClaude } = await import(
         "@/lib/data/form-check-claude"
       );
-      verdict = await analyzeWithClaude(frames, input.exerciseName);
+      verdict = await analyzeWithClaude(
+        frames,
+        input.exerciseName,
+        input.context,
+      );
     } catch (err) {
       console.warn("[form-check-action] Claude path failed:", err);
     }
@@ -61,6 +70,7 @@ export async function analyzeFormCheckAction(input: {
             .from("form_checks")
             .insert({
               member_id: user.id,
+              exercise_id: input.exerciseId ?? null,
               exercise_name: input.exerciseName ?? verdict.detectedExercise,
               video_url: null, // attached separately once upload completes
               ai_score: verdict.score,

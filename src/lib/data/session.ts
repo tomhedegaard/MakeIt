@@ -29,7 +29,8 @@ export async function getFullSession(
       exercises:session_exercises(
         id, exercise_name, cue, position,
         library:exercises(
-          slug, primary_muscles, secondary_muscles, tertiary_muscles, cues
+          id, slug, primary_muscles, secondary_muscles, tertiary_muscles,
+          cues, mistakes
         ),
         sets:session_sets(
           id, position, target_reps, target_weight, target_rpe, rest_sec,
@@ -81,21 +82,27 @@ export async function getFullSession(
 }
 
 type LibraryRow = {
+  id: string | null;
   slug: string | null;
   primary_muscles: string[] | null;
   secondary_muscles: string[] | null;
   tertiary_muscles: string[] | null;
   cues: unknown;
+  mistakes: unknown;
 };
 
 function shapeLibrary(
   raw: LibraryRow | LibraryRow[] | null | undefined,
 ): ExerciseLibrary | null {
   const row = Array.isArray(raw) ? raw[0] : raw;
-  if (!row || !row.slug) return null;
+  if (!row || !row.slug || !row.id) return null;
   return {
+    exerciseId: row.id,
     slug: row.slug,
     cues: Array.isArray(row.cues) ? (row.cues as string[]) : [],
+    mistakes: Array.isArray(row.mistakes)
+      ? (row.mistakes as { title: string; body: string }[])
+      : [],
     primaryMuscles: (row.primary_muscles ?? []) as MuscleGroup[],
     secondaryMuscles: (row.secondary_muscles ?? []) as MuscleGroup[],
     tertiaryMuscles: (row.tertiary_muscles ?? []) as MuscleGroup[],

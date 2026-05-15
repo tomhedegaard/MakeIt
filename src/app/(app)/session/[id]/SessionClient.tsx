@@ -384,6 +384,15 @@ export default function SessionClient({ session }: { session: Session }) {
         open={formCheckOpen}
         onOpenChange={setFormCheckOpen}
         exerciseName={ex.name}
+        context={
+          ex.library
+            ? {
+                exerciseId: ex.library.exerciseId,
+                cues: ex.library.cues,
+                mistakes: ex.library.mistakes,
+              }
+            : undefined
+        }
       />
     </div>
   );

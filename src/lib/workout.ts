@@ -12,8 +12,10 @@ import type { MuscleGroup } from "@/lib/data/muscle-groups";
  * Null for free-text exercises that don't match a library entry.
  */
 export type ExerciseLibrary = {
+  exerciseId: string;
   slug: string;
   cues: string[];
+  mistakes: { title: string; body: string }[];
   primaryMuscles: MuscleGroup[];
   secondaryMuscles: MuscleGroup[];
   tertiaryMuscles: MuscleGroup[];
