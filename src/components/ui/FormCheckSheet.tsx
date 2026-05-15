@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import { cn } from "@/lib/utils";
 import {
@@ -8,6 +9,7 @@ import {
   attachFormCheckVideoAction,
 } from "@/app/(app)/form-check/actions";
 import { createClient as createBrowserSupabase } from "@/lib/supabase/client";
+import { describeReset, type FormCheckQuota } from "@/lib/data/form-check-quota";
 
 const FORM_CHECK_BUCKET = "form-check-videos";
 
@@ -89,11 +91,13 @@ export default function FormCheckSheet({
   onOpenChange,
   exerciseName,
   context,
+  quota,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   exerciseName?: string;
   context?: FormCheckExerciseContext;
+  quota?: FormCheckQuota;
 }) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -102,6 +106,7 @@ export default function FormCheckSheet({
         <FormCheckBody
           exerciseName={exerciseName}
           context={context}
+          quota={quota}
           onClose={() => onOpenChange(false)}
         />
       ) : null}
@@ -112,10 +117,12 @@ export default function FormCheckSheet({
 function FormCheckBody({
   exerciseName,
   context,
+  quota,
   onClose,
 }: {
   exerciseName?: string;
   context?: FormCheckExerciseContext;
+  quota?: FormCheckQuota;
   onClose: () => void;
 }) {
   const [step, setStep] = useState<Step>("choose");
@@ -123,6 +130,11 @@ function FormCheckBody({
   const [fileName, setFileName] = useState<string | null>(null);
   const [verdict, setVerdict] = useState<AIVerdict | null>(null);
   const [isMockResult, setIsMockResult] = useState(false);
+  // Locked into the upgrade-CTA path. Set from the quota prop on mount,
+  // or from a server-side rejection mid-flow (race condition).
+  const [quotaBlocked, setQuotaBlocked] = useState(
+    quota ? !quota.hasRemaining : false,
+  );
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   // Indeterminate-style progress for the upload + analyzing phases.
@@ -198,6 +210,11 @@ function FormCheckBody({
         });
         setStep("result");
         formCheckId = res.formCheckId;
+      } else if (res.quotaExceeded) {
+        // Race: client thought quota was OK, server says no. Bounce
+        // back to choose-step with the upgrade CTA visible.
+        setQuotaBlocked(true);
+        setStep("choose");
       } else {
         setIsMockResult(true);
         setVerdict(pickVerdict(exerciseName));
@@ -243,75 +260,87 @@ function FormCheckBody({
           <div>
             <div className="eyebrow mb-2">Form-check</div>
             <h2 className="font-display text-3xl mb-1">
-              Optag eller upload din video.
+              {quotaBlocked ? "Du er løbet tør for form-checks." : "Optag eller upload din video."}
             </h2>
-            <p className="text-fg-dim text-sm mb-6">
-              {exerciseName
+            <p className="text-fg-dim text-sm mb-4">
+              {quotaBlocked
+                ? "AI form-check er en Athlete-tier perk og opefter. Upgradér for at få flere."
+                : exerciseName
                 ? `Vores AI tjekker dybde, bar-path og bevægelseskvalitet på ${exerciseName.toLowerCase()} — og en head coach gennemgår alt ugentligt.`
                 : "Vores AI tjekker dybde, bar-path og bevægelseskvalitet på din øvelse."}
             </p>
 
-            <input
-              ref={fileRef}
-              type="file"
-              accept="video/*"
-              capture="environment"
-              className="sr-only"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) pickFile(f);
-              }}
-            />
+            {quota ? (
+              <QuotaLine quota={quota} blocked={quotaBlocked} />
+            ) : null}
 
-            <div className="grid gap-3">
-              <button
-                type="button"
-                className="surface-2 rounded-2xl p-5 text-left lift touch-app"
-                onClick={() => {
-                  if (fileRef.current) {
-                    fileRef.current.setAttribute("capture", "environment");
-                    fileRef.current.click();
-                  }
-                }}
-              >
-                <div className="flex items-center gap-3 mb-1">
-                  <CameraIcon />
-                  <div className="font-display text-lg">Optag nu</div>
-                </div>
-                <div className="text-fg-dim text-sm">Brug kameraet til at filme dit næste sæt.</div>
-              </button>
+            {quotaBlocked ? (
+              <UpgradeCta />
+            ) : (
+              <>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="video/*"
+                  capture="environment"
+                  className="sr-only"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) pickFile(f);
+                  }}
+                />
 
-              <button
-                type="button"
-                className="surface-2 rounded-2xl p-5 text-left lift touch-app"
-                onClick={() => {
-                  if (fileRef.current) {
-                    fileRef.current.removeAttribute("capture");
-                    fileRef.current.click();
-                  }
-                }}
-              >
-                <div className="flex items-center gap-3 mb-1">
-                  <UploadIcon />
-                  <div className="font-display text-lg">Upload fra galleri</div>
-                </div>
-                <div className="text-fg-dim text-sm">Vælg en eksisterende klip fra din telefon.</div>
-              </button>
+                <div className="grid gap-3">
+                  <button
+                    type="button"
+                    className="surface-2 rounded-2xl p-5 text-left lift touch-app"
+                    onClick={() => {
+                      if (fileRef.current) {
+                        fileRef.current.setAttribute("capture", "environment");
+                        fileRef.current.click();
+                      }
+                    }}
+                  >
+                    <div className="flex items-center gap-3 mb-1">
+                      <CameraIcon />
+                      <div className="font-display text-lg">Optag nu</div>
+                    </div>
+                    <div className="text-fg-dim text-sm">Brug kameraet til at filme dit næste sæt.</div>
+                  </button>
 
-              <button
-                type="button"
-                className="surface-2 rounded-2xl p-5 text-left lift touch-app"
-                onClick={runDemo}
-              >
-                <div className="flex items-center gap-3 mb-1">
-                  <SparkIcon />
-                  <div className="font-display text-lg">Demo med eksempelvideo</div>
+                  <button
+                    type="button"
+                    className="surface-2 rounded-2xl p-5 text-left lift touch-app"
+                    onClick={() => {
+                      if (fileRef.current) {
+                        fileRef.current.removeAttribute("capture");
+                        fileRef.current.click();
+                      }
+                    }}
+                  >
+                    <div className="flex items-center gap-3 mb-1">
+                      <UploadIcon />
+                      <div className="font-display text-lg">Upload fra galleri</div>
+                    </div>
+                    <div className="text-fg-dim text-sm">Vælg en eksisterende klip fra din telefon.</div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="surface-2 rounded-2xl p-5 text-left lift touch-app"
+                    onClick={runDemo}
+                  >
+                    <div className="flex items-center gap-3 mb-1">
+                      <SparkIcon />
+                      <div className="font-display text-lg">Demo med eksempelvideo</div>
+                    </div>
+                    <div className="text-fg-dim text-sm">
+                      Spring upload over og se AI-svaret med det samme.
+                    </div>
+                  </button>
                 </div>
-                <div className="text-fg-dim text-sm">
-                  Spring upload over og se AI-svaret med det samme.
-                </div>
-              </button>
-            </div>
+              </>
+            )}
           </div>
         ) : null}
 
@@ -404,6 +433,48 @@ function FormCheckBody({
 }
 
 /* --- internal bits --- */
+
+function QuotaLine({ quota, blocked }: { quota: FormCheckQuota; blocked: boolean }) {
+  // Legend / unlimited tiers hide the counter — no anxiety needed.
+  if (quota.limit >= 999) return null;
+  return (
+    <div
+      className={cn(
+        "mb-6 px-3 py-2 rounded-lg surface text-xs font-mono uppercase tracking-[0.14em] flex items-center justify-between gap-3",
+        blocked ? "text-fg" : "text-fg-dim",
+      )}
+    >
+      <span>
+        {quota.used} / {quota.limit} brugt denne måned
+      </span>
+      <span className="text-fg-faint normal-case tracking-normal">
+        {describeReset(quota.resetsAt)}
+      </span>
+    </div>
+  );
+}
+
+function UpgradeCta() {
+  return (
+    <div className="space-y-3">
+      <Link
+        href="/reps"
+        className="surface-2 rounded-2xl p-5 block lift touch-app"
+      >
+        <div className="flex items-center gap-3 mb-1">
+          <SparkIcon />
+          <div className="font-display text-lg">Upgrade til Athlete eller højere</div>
+        </div>
+        <div className="text-fg-dim text-sm">
+          Athlete: 1 form-check/md · Beast: 5 · Legend: ubegrænset. Se tier-perks →
+        </div>
+      </Link>
+      <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint text-center">
+        Eller vent på månedlig reset
+      </div>
+    </div>
+  );
+}
 
 function ProgressLine({ value }: { value: number }) {
   return (

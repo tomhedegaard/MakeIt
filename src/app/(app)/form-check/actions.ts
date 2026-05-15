@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
+import { getSession } from "@/lib/auth";
+import { getFormCheckQuota } from "@/lib/data/form-check-quota-server";
 import type {
   AIVerdict,
   ExerciseCoachingContext,
@@ -19,14 +21,43 @@ import type {
  * client extracts ~3 keyframes from the uploaded video using a
  * canvas-based seek+draw — no server-side ffmpeg required.
  */
+export type AnalyzeFormCheckResult = {
+  ok: boolean;
+  verdict: AIVerdict | null;
+  formCheckId: string | null;
+  /** Set when the member has used their full monthly quota. */
+  quotaExceeded?: boolean;
+  /** Tier-based limit, returned so the UI can render the upgrade CTA. */
+  quotaLimit?: number;
+};
+
 export async function analyzeFormCheckAction(input: {
   frames: string[];
   exerciseName?: string;
   exerciseId?: string;
   context?: ExerciseCoachingContext;
-}): Promise<{ ok: boolean; verdict: AIVerdict | null; formCheckId: string | null }> {
+}): Promise<AnalyzeFormCheckResult> {
   if (!input.frames || input.frames.length === 0) {
     return { ok: false, verdict: null, formCheckId: null };
+  }
+
+  // Tier quota — enforced server-side as defense-in-depth even though
+  // the UI also gates the upload button. Skipped in demo mode (no
+  // session, no DB) so local dev keeps working.
+  if (SUPABASE_ENABLED) {
+    const member = await getSession();
+    if (member) {
+      const quota = await getFormCheckQuota(member.id, member.tier);
+      if (!quota.hasRemaining) {
+        return {
+          ok: false,
+          verdict: null,
+          formCheckId: null,
+          quotaExceeded: true,
+          quotaLimit: quota.limit,
+        };
+      }
+    }
   }
 
   // Cap at 4 frames — payload safety + cost cap.
