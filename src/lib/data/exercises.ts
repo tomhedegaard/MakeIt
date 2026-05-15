@@ -29,6 +29,7 @@ export type ExercisePhase = {
 };
 
 export type Exercise = {
+  id: string;
   slug: string;
   name: string;
   category: string | null;
@@ -56,6 +57,7 @@ export type Exercise = {
  * ---------------------------------------------------------------- */
 
 type ExerciseRow = {
+  id: string;
   slug: string;
   name: string;
   category: string | null;
@@ -79,7 +81,7 @@ type ExerciseRow = {
 };
 
 const SELECT_COLS =
-  "slug, name, category, pattern, equipment, difficulty, " +
+  "id, slug, name, category, pattern, equipment, difficulty, " +
   "primary_muscles, secondary_muscles, tertiary_muscles, " +
   "cues, mistakes, why_matters, setup, progression, regression, " +
   "demo_asset_url, video_url, thumbnail_url, display_order, phases";
@@ -98,6 +100,7 @@ function isExercisePhase(p: unknown): p is ExercisePhase {
 
 function asExercise(r: ExerciseRow): Exercise {
   return {
+    id: r.id,
     slug: r.slug,
     name: r.name,
     category: r.category,
@@ -207,6 +210,7 @@ function matches(e: Exercise, f: ExerciseFilters): boolean {
 
 const MOCK_EXERCISES: Exercise[] = [
   {
+    id: "mock-back-squat",
     slug: "back-squat",
     name: "Back Squat",
     category: "lower-body",
@@ -273,6 +277,7 @@ const MOCK_EXERCISES: Exercise[] = [
     ],
   },
   {
+    id: "mock-deadlift",
     slug: "deadlift",
     name: "Conventional Deadlift",
     category: "full-body",
@@ -334,6 +339,7 @@ const MOCK_EXERCISES: Exercise[] = [
     ],
   },
   {
+    id: "mock-bench",
     slug: "bench",
     name: "Bench Press",
     category: "upper-body-push",
@@ -395,6 +401,7 @@ const MOCK_EXERCISES: Exercise[] = [
     ],
   },
   {
+    id: "mock-ohp",
     slug: "ohp",
     name: "Overhead Press",
     category: "shoulders",

@@ -114,9 +114,15 @@ Returnér KUN via submit_verdict.`;
  * Public API
  * ---------------------------------------------------------------- */
 
+export type ExerciseCoachingContext = {
+  cues?: string[];
+  mistakes?: { title: string; body: string }[];
+};
+
 export async function analyzeWithClaude(
   frames: string[],
-  exerciseName?: string
+  exerciseName?: string,
+  context?: ExerciseCoachingContext,
 ): Promise<AIVerdict | null> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return null;
@@ -145,6 +151,13 @@ export async function analyzeWithClaude(
     ? `Medlemmet siger øvelsen er: ${exerciseName}. Verificér at videoen viser denne øvelse.`
     : "Medlemmet har ikke angivet øvelse — identificér den selv hvis du kan.";
 
+  // Per-exercise coaching context — turns the generic system prompt
+  // into a specific checklist. When the exercise comes from the
+  // /train/exercises library, we have the canonical cues + mistakes
+  // for that lift; feed them so Claude evaluates against THESE
+  // specifically, not just generic squat/bench/deadlift principles.
+  const coachingContext = buildCoachingContext(context);
+
   try {
     const response = await client.messages.parse({
       model: "claude-sonnet-4-6",
@@ -163,7 +176,7 @@ export async function analyzeWithClaude(
           content: [
             {
               type: "text",
-              text: `${exerciseHint}\n\n${frames.length} keyframes følger i kronologisk rækkefølge:`,
+              text: `${exerciseHint}${coachingContext}\n\n${frames.length} keyframes følger i kronologisk rækkefølge:`,
             },
             ...imageBlocks,
             {
@@ -189,4 +202,35 @@ export async function analyzeWithClaude(
     }
     return null;
   }
+}
+
+function buildCoachingContext(ctx: ExerciseCoachingContext | undefined): string {
+  if (!ctx) return "";
+  const cues = ctx.cues?.filter(Boolean) ?? [];
+  const mistakes = ctx.mistakes?.filter((m) => m?.title) ?? [];
+  if (cues.length === 0 && mistakes.length === 0) return "";
+
+  const parts: string[] = ["\n\n# Coaching-checkliste for denne øvelse"];
+
+  if (cues.length > 0) {
+    parts.push(
+      "\nCues at vurdere imod (rammer medlemmet disse?):",
+      ...cues.map((c, i) => `${i + 1}. ${c}`),
+    );
+  }
+
+  if (mistakes.length > 0) {
+    parts.push(
+      "\nAlmindelige fejl at lede aktivt efter:",
+      ...mistakes.map((m) => `- ${m.title}: ${m.body}`),
+    );
+  }
+
+  parts.push(
+    "\nBrug denne checkliste som primær referenceramme. " +
+      "Hvis du ser cues blive ramt, anerkend det specifikt i pos[]. " +
+      "Hvis du ser de listede fejl, kald dem ud specifikt i neg[].",
+  );
+
+  return parts.join("\n");
 }

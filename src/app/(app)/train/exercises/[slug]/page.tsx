@@ -6,6 +6,7 @@ import {
   dominantView,
   getExerciseBySlug,
 } from "@/lib/data/exercises";
+import FormCheckTrigger from "@/components/exercise/FormCheckTrigger";
 import ExerciseHero from "./ExerciseHero";
 
 type Params = Promise<{ slug: string }>;
@@ -110,6 +111,18 @@ export default async function ExerciseDetailPage({
           defaultView={view}
           cues={ex.cues}
         />
+
+        {/* AI form-check — opens FormCheckSheet pre-loaded with this
+            exercise's cues + mistakes so Claude evaluates against the
+            specific checklist rather than generic squat/bench principles. */}
+        <section>
+          <FormCheckTrigger
+            exerciseId={ex.id}
+            exerciseName={ex.name}
+            cues={ex.cues}
+            mistakes={ex.mistakes}
+          />
+        </section>
 
         {/* Mistakes */}
         {ex.mistakes.length > 0 ? (
