@@ -39,7 +39,9 @@
 | `src/app/(app)/hrv/page.tsx` | `/hrv` morning destination — 3 states |
 | `src/app/(app)/hrv/actions.ts` | `submitHrvReading` server action |
 | `src/app/api/cron/hrv-streak-check/route.ts` | Nightly streak cron handler |
-| `vercel.json` | Cron schedule registration |
+| `src/app/api/cron/hrv-alert-detect/route.ts` | Alert-detect cron — verified stub until P7 |
+| `src/app/api/cron/hrv-weekly-insights/route.ts` | Weekly-insights cron — verified stub until P4 |
+| `vercel.json` | Cron schedule registration (3 crons) |
 
 **Modified files:**
 
@@ -247,7 +249,7 @@ git commit -m "feat(hrv): shared HRV types"
 
 - [ ] **Step 1: Write the migration file**
 
-Write the full file using the DDL from spec §9, in the FK-safe order above. Header comment block:
+Write the full file using the DDL from spec §9, in the FK-safe order above. Include **every** column shown in the §9 DDL for each of the 7 tables — including nullable ones like `hrv_readings.cycle_phase`, `quality_warnings`, `is_sick` — plus the two `hrv_readings` indexes (`(member_id, measured_at desc)` and the partial `(member_id, is_sick) where is_sick = false`), the `hrv_alerts` partial index, the `hrv_lifestyle_logs` index, and the `hrv_session_modifiers` index. Do not abbreviate — "verbatim" means all columns, all CHECK constraints, all indexes. Header comment block:
 ```sql
 -- =================================================================
 -- MakeIt // HQ — HRV module (Phase 1)
@@ -540,14 +542,167 @@ Expected: FAIL — module/exports not defined.
 
 - [ ] **Step 3: Implement `src/lib/hrv/ppg.ts`**
 
-Implement per spec §4. Functions:
-- `detrend(samples: number[]): number[]` — subtract a 2nd-order polynomial least-squares fit.
-- `bandpass(samples: number[], sampleRate: number): number[]` — Butterworth-style bandpass 0.5-3 Hz (a simple biquad cascade or a difference-of-moving-averages approximation is acceptable for 30 Hz input; document the choice in a comment).
-- `detectPeaks(samples: number[], sampleRate: number): number[]` — adaptive threshold: sliding 5s window, peak = local maximum exceeding `mean + 0.3 × (max − mean)` of the window; enforce a 300 ms refractory period. Returns sample indices.
-- `computeSnrDb(samples: number[], sampleRate: number): number` — ratio of in-band (0.5-3 Hz) energy to out-of-band energy, in dB.
-- `ppgToRrIntervals(samples: number[], sampleRate: number): { rrIntervals: number[]; snrDb: number }` — the full pipeline: detrend → bandpass → detectPeaks → diff peak timestamps to R-R intervals in ms.
+Per spec §4. If the P0 spike (Task 0) returned GO-WITH-CHANGES, apply the noted algorithm changes as a diff against this baseline implementation:
 
-Keep each function pure and individually testable. Write complete implementations — no placeholders.
+```ts
+/**
+ * PPG signal processing — converts a stream of camera red-channel
+ * intensity samples into R-R intervals. See spec §4.
+ *
+ * Filter choice: a difference-of-moving-averages bandpass is used
+ * instead of a Butterworth biquad. For a 30 Hz input and the wide
+ * 0.5-3 Hz passband this is numerically stable, dependency-free,
+ * and accurate enough — a moving average of window W is a lowpass
+ * with cutoff ~sampleRate/(2W). Bandpass = shortMA - longMA.
+ */
+
+const LOW_HZ = 0.5;
+const HIGH_HZ = 3;
+const REFRACTORY_MS = 300;
+const THRESHOLD_FRACTION = 0.3; // peak must exceed mean + 0.3*(max-mean)
+const WINDOW_SECONDS = 5;
+
+/** Subtract a degree-2 polynomial least-squares fit (removes drift). */
+export function detrend(samples: number[]): number[] {
+  const n = samples.length;
+  if (n < 3) return [...samples];
+  // Normal equations for y = a0 + a1*x + a2*x^2.
+  let s0 = n, s1 = 0, s2 = 0, s3 = 0, s4 = 0;
+  let b0 = 0, b1 = 0, b2 = 0;
+  for (let i = 0; i < n; i++) {
+    const x = i, x2 = x * x, y = samples[i];
+    s1 += x; s2 += x2; s3 += x2 * x; s4 += x2 * x2;
+    b0 += y; b1 += x * y; b2 += x2 * y;
+  }
+  // Solve the 3x3 system [s0 s1 s2; s1 s2 s3; s2 s3 s4] * a = [b0 b1 b2].
+  const m = [
+    [s0, s1, s2, b0],
+    [s1, s2, s3, b1],
+    [s2, s3, s4, b2],
+  ];
+  for (let col = 0; col < 3; col++) {
+    let pivot = col;
+    for (let r = col + 1; r < 3; r++) {
+      if (Math.abs(m[r][col]) > Math.abs(m[pivot][col])) pivot = r;
+    }
+    [m[col], m[pivot]] = [m[pivot], m[col]];
+    if (Math.abs(m[col][col]) < 1e-12) return [...samples]; // singular
+    for (let r = 0; r < 3; r++) {
+      if (r === col) continue;
+      const f = m[r][col] / m[col][col];
+      for (let c = col; c < 4; c++) m[r][c] -= f * m[col][c];
+    }
+  }
+  const a0 = m[0][3] / m[0][0];
+  const a1 = m[1][3] / m[1][1];
+  const a2 = m[2][3] / m[2][2];
+  return samples.map((y, i) => y - (a0 + a1 * i + a2 * i * i));
+}
+
+/** Centered moving average with the given odd-ish window length. */
+function movingAverage(samples: number[], window: number): number[] {
+  const n = samples.length;
+  const w = Math.max(1, Math.round(window));
+  const half = Math.floor(w / 2);
+  const out = new Array<number>(n);
+  // Prefix sums for O(n).
+  const prefix = new Array<number>(n + 1).fill(0);
+  for (let i = 0; i < n; i++) prefix[i + 1] = prefix[i] + samples[i];
+  for (let i = 0; i < n; i++) {
+    const lo = Math.max(0, i - half);
+    const hi = Math.min(n - 1, i + half);
+    out[i] = (prefix[hi + 1] - prefix[lo]) / (hi - lo + 1);
+  }
+  return out;
+}
+
+/** Difference-of-moving-averages bandpass, 0.5-3 Hz. */
+export function bandpass(samples: number[], sampleRate: number): number[] {
+  const shortWin = sampleRate / (2 * HIGH_HZ); // lowpass at 3 Hz
+  const longWin = sampleRate / (2 * LOW_HZ); // lowpass at 0.5 Hz
+  const lowpassed = movingAverage(samples, shortWin);
+  const lowfreq = movingAverage(samples, longWin);
+  return lowpassed.map((v, i) => v - lowfreq[i]);
+}
+
+/**
+ * Adaptive-threshold peak detection. Sliding WINDOW_SECONDS window,
+ * peak = local maximum exceeding mean + THRESHOLD_FRACTION*(max-mean)
+ * of the window. Enforces a REFRACTORY_MS minimum gap. Returns sample
+ * indices of detected peaks.
+ */
+export function detectPeaks(samples: number[], sampleRate: number): number[] {
+  const n = samples.length;
+  const win = Math.round(WINDOW_SECONDS * sampleRate);
+  const refractory = Math.round((REFRACTORY_MS / 1000) * sampleRate);
+  const peaks: number[] = [];
+  for (let i = 1; i < n - 1; i++) {
+    const lo = Math.max(0, i - Math.floor(win / 2));
+    const hi = Math.min(n - 1, i + Math.floor(win / 2));
+    let mean = 0, max = -Infinity;
+    for (let j = lo; j <= hi; j++) {
+      mean += samples[j];
+      if (samples[j] > max) max = samples[j];
+    }
+    mean /= hi - lo + 1;
+    const threshold = mean + THRESHOLD_FRACTION * (max - mean);
+    const isLocalMax = samples[i] >= samples[i - 1] && samples[i] > samples[i + 1];
+    if (isLocalMax && samples[i] >= threshold) {
+      if (peaks.length === 0 || i - peaks[peaks.length - 1] >= refractory) {
+        peaks.push(i);
+      } else if (samples[i] > samples[peaks[peaks.length - 1]]) {
+        // Within refractory: keep the taller peak.
+        peaks[peaks.length - 1] = i;
+      }
+    }
+  }
+  return peaks;
+}
+
+/** Variance of a series. */
+function variance(samples: number[]): number {
+  if (samples.length === 0) return 0;
+  const mean = samples.reduce((a, b) => a + b, 0) / samples.length;
+  return (
+    samples.reduce((a, b) => a + (b - mean) * (b - mean), 0) / samples.length
+  );
+}
+
+/**
+ * SNR in dB — ratio of in-band (0.5-3 Hz) energy to out-of-band
+ * energy. In-band energy is the variance of the bandpassed signal;
+ * out-of-band is the residual.
+ */
+export function computeSnrDb(samples: number[], sampleRate: number): number {
+  const detrended = detrend(samples);
+  const inBand = bandpass(detrended, sampleRate);
+  const inBandPower = variance(inBand);
+  const totalPower = variance(detrended);
+  const outOfBandPower = Math.max(totalPower - inBandPower, 1e-9);
+  return 10 * Math.log10(Math.max(inBandPower, 1e-12) / outOfBandPower);
+}
+
+/**
+ * Full pipeline: detrend → bandpass → detectPeaks → R-R intervals.
+ * Returns R-R intervals in ms plus the SNR of the input.
+ */
+export function ppgToRrIntervals(
+  samples: number[],
+  sampleRate: number,
+): { rrIntervals: number[]; snrDb: number } {
+  const snrDb = computeSnrDb(samples, sampleRate);
+  const detrended = detrend(samples);
+  const filtered = bandpass(detrended, sampleRate);
+  const peaks = detectPeaks(filtered, sampleRate);
+  const rrIntervals: number[] = [];
+  for (let i = 1; i < peaks.length; i++) {
+    rrIntervals.push(((peaks[i] - peaks[i - 1]) / sampleRate) * 1000);
+  }
+  return { rrIntervals, snrDb };
+}
+```
+
+Each function is pure and individually testable. If the Task 6 tests fail against this implementation (e.g., peak count outside 9-11), tune `THRESHOLD_FRACTION` or the moving-average windows — do not weaken the tests.
 
 - [ ] **Step 4: Run tests to verify they pass**
 
@@ -625,6 +780,20 @@ describe("classifyReadiness", () => {
 });
 
 describe("computeBaseline", () => {
+  it("returns all five keys Task 9 depends on", () => {
+    // This assertion is the TDD contract for the submitHrvReading consumer.
+    const lnSeries = Array.from({ length: 20 }, () => 4.0);
+    const result = computeBaseline(lnSeries);
+    expect(result).toHaveProperty("rolling7dMean");
+    expect(result).toHaveProperty("baseline60dMean");
+    expect(result).toHaveProperty("swc");
+    expect(result).toHaveProperty("warmUpState");
+    expect(result).toHaveProperty("readinessBucket");
+    expect(typeof result.rolling7dMean).toBe("number");
+    expect(typeof result.baseline60dMean).toBe("number");
+    expect(typeof result.swc).toBe("number");
+  });
+
   it("returns no readiness bucket while in discovery", () => {
     const lnSeries = [4.0, 4.1, 3.9]; // 3 readings
     const result = computeBaseline(lnSeries);
@@ -1041,23 +1210,29 @@ git commit -m "feat(hrv): register /hrv in desktop + mobile navigation"
 
 ---
 
-### Task 14: `vercel.json` + streak-check cron handler
+### Task 14: `vercel.json` + cron handlers (streak-check real, two stubs)
 
 **Files:**
 - Create: `vercel.json`
 - Create: `src/app/api/cron/hrv-streak-check/route.ts`
+- Create: `src/app/api/cron/hrv-alert-detect/route.ts` (stub)
+- Create: `src/app/api/cron/hrv-weekly-insights/route.ts` (stub)
 - Modify: `.env.example`
+
+**Rationale:** Spec §9/§11 register all 3 crons in `vercel.json` from P1, with stub handlers that still verify `CRON_SECRET` — registering a cron path with no route handler would 404 on every nightly invocation. P1 ships all 3 paths; only `hrv-streak-check` gets non-trivial logic (and even that is a verified stub until P8).
 
 - [ ] **Step 1: Create `vercel.json`**
 
 ```json
 {
   "crons": [
-    { "path": "/api/cron/hrv-streak-check", "schedule": "0 23 * * *" }
+    { "path": "/api/cron/hrv-streak-check",    "schedule": "0 23 * * *" },
+    { "path": "/api/cron/hrv-alert-detect",    "schedule": "0 5 * * *" },
+    { "path": "/api/cron/hrv-weekly-insights", "schedule": "0 18 * * 0" }
   ]
 }
 ```
-(Only the streak-check cron — `hrv-alert-detect` and `hrv-weekly-insights` belong to later phases and are added with their handlers.)
+Schedules are UTC (spec §9): 23:00 UTC ≈ 00:00 Europe/Copenhagen, 05:00 UTC ≈ 06:00-07:00 local (DST), Sunday 18:00 UTC ≈ 19:00-20:00 local.
 
 - [ ] **Step 2: Add `CRON_SECRET` to `.env.example`**
 
@@ -1073,9 +1248,9 @@ Append:
 CRON_SECRET=
 ```
 
-- [ ] **Step 3: Implement the cron handler**
+- [ ] **Step 3: Implement the three cron handlers**
 
-`src/app/api/cron/hrv-streak-check/route.ts`:
+All three share the same `CRON_SECRET` auth gate. `src/app/api/cron/hrv-streak-check/route.ts`:
 ```ts
 import { NextResponse } from "next/server";
 
@@ -1088,8 +1263,36 @@ export async function GET(request: Request) {
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return new NextResponse("unauthorized", { status: 401 });
   }
-  // P1: handler is a verified stub. Streak logic ships in P8.
-  return NextResponse.json({ ok: true, phase: "p1-stub" });
+  // P1: verified stub. Streak logic ships in P8.
+  return NextResponse.json({ ok: true, phase: "p1-stub", job: "streak-check" });
+}
+```
+
+`src/app/api/cron/hrv-alert-detect/route.ts` — identical shape, stub body, `job: "alert-detect"` (real logic ships in P7):
+```ts
+import { NextResponse } from "next/server";
+
+/** HRV red-flag alert detection. Stub until P7. */
+export async function GET(request: Request) {
+  const auth = request.headers.get("authorization");
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new NextResponse("unauthorized", { status: 401 });
+  }
+  return NextResponse.json({ ok: true, phase: "p1-stub", job: "alert-detect" });
+}
+```
+
+`src/app/api/cron/hrv-weekly-insights/route.ts` — identical shape, `job: "weekly-insights"` (real logic ships in P4):
+```ts
+import { NextResponse } from "next/server";
+
+/** Claude weekly-insights generation. Stub until P4. */
+export async function GET(request: Request) {
+  const auth = request.headers.get("authorization");
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new NextResponse("unauthorized", { status: 401 });
+  }
+  return NextResponse.json({ ok: true, phase: "p1-stub", job: "weekly-insights" });
 }
 ```
 
@@ -1100,19 +1303,20 @@ Expected: no errors.
 
 - [ ] **Step 5: Manual smoke test**
 
-Run `npm run dev`. Test the handler:
+Run `npm run dev` with `CRON_SECRET=test` in `.env.local`. Test each handler:
 ```bash
 curl -i localhost:3002/api/cron/hrv-streak-check
 # Expected: 401 unauthorized
 curl -i -H "Authorization: Bearer test" localhost:3002/api/cron/hrv-streak-check
-# With CRON_SECRET=test in .env.local: expected 200 {"ok":true,...}
+# Expected: 200 {"ok":true,"phase":"p1-stub","job":"streak-check"}
 ```
+Repeat for `hrv-alert-detect` and `hrv-weekly-insights`.
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add vercel.json src/app/api/cron/hrv-streak-check/route.ts .env.example
-git commit -m "feat(hrv): vercel.json + streak-check cron handler (P1 stub)"
+git add vercel.json src/app/api/cron/ .env.example
+git commit -m "feat(hrv): vercel.json + 3 cron handlers (streak real, 2 stubs)"
 ```
 
 ---
