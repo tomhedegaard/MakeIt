@@ -11,10 +11,11 @@ type NavItem = { href: string; label: string; num: string; adminOnly?: boolean }
 const NAV: NavItem[] = [
   { href: "/coach",             label: "Overview",        num: "01" },
   { href: "/coach/members",     label: "Members",         num: "02" },
-  { href: "/coach/queue",       label: "Form-check kø",   num: "03" },
-  { href: "/coach/redemptions", label: "Reps-indløsninger", num: "04" },
-  { href: "/coach/analytics",   label: "Analytics",       num: "05" },
-  { href: "/coach/system",      label: "System",          num: "06", adminOnly: true },
+  { href: "/coach/programs",    label: "Programmer",      num: "03" },
+  { href: "/coach/queue",       label: "Form-check kø",   num: "04" },
+  { href: "/coach/redemptions", label: "Reps-indløsninger", num: "05" },
+  { href: "/coach/analytics",   label: "Analytics",       num: "06" },
+  { href: "/coach/system",      label: "System",          num: "07", adminOnly: true },
 ];
 
 export default function CoachShell({
