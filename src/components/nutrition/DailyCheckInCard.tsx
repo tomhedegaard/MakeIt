@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import type { DailyCheckIn } from "@/lib/data/nutrition-checkin";
 import type { MealSlot } from "@/lib/data/nutrition";
 import { quickLogAction } from "@/app/(app)/nutrition/actions";
 import LogMealButton from "@/app/(app)/nutrition/LogMealButton";
+import StreakCelebration from "@/components/nutrition/StreakCelebration";
 
 const SLOT_LABELS: Record<MealSlot, string> = {
   morgen: "Morgen",
@@ -35,6 +36,7 @@ export default function DailyCheckInCard({
   variant?: "full" | "compact";
 }) {
   const [pending, startTransition] = useTransition();
+  const [celebration, setCelebration] = useState<number | null>(null);
 
   if (checkin.state === "no-plan" || !checkin.slot) return null;
 
@@ -51,8 +53,9 @@ export default function DailyCheckInCard({
     fd.set("loggedForDate", checkin.dateIso);
     fd.set("loggedForSlot", checkin.slot);
     fd.set("status", status);
-    startTransition(() => {
-      quickLogAction(fd);
+    startTransition(async () => {
+      const res = await quickLogAction(fd);
+      if (res?.streakMilestone) setCelebration(res.streakMilestone);
     });
   }
 
@@ -60,6 +63,7 @@ export default function DailyCheckInCard({
   const headline = headlineFor(checkin);
 
   return (
+    <>
     <article
       className="surface-2 rounded-2xl overflow-hidden"
       style={{
@@ -190,6 +194,11 @@ export default function DailyCheckInCard({
         )}
       </div>
     </article>
+    <StreakCelebration
+      milestone={celebration}
+      onClose={() => setCelebration(null)}
+    />
+    </>
   );
 }
 

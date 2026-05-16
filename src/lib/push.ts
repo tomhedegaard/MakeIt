@@ -1,5 +1,6 @@
 import "server-only";
 import webpush from "web-push";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 
 /* ================================================================ *
@@ -58,10 +59,31 @@ export async function sendPushToMember(
   memberId: string,
   payload: PushPayload
 ): Promise<number> {
-  if (!ensureVapid()) return 0;
-
   const supabase = await createClient();
   if (!supabase) return 0;
+  return dispatchPush(supabase, memberId, payload);
+}
+
+/**
+ * Same as sendPushToMember but takes an explicit Supabase client.
+ * Cron jobs run without a user session, so they must pass a
+ * service-role client — the cookie-aware createClient() would be
+ * an anon client and RLS would hide every push_subscriptions row.
+ */
+export async function sendPushToMemberWithClient(
+  supabase: SupabaseClient,
+  memberId: string,
+  payload: PushPayload
+): Promise<number> {
+  return dispatchPush(supabase, memberId, payload);
+}
+
+async function dispatchPush(
+  supabase: SupabaseClient,
+  memberId: string,
+  payload: PushPayload
+): Promise<number> {
+  if (!ensureVapid()) return 0;
 
   const { data: subs } = await supabase
     .from("push_subscriptions")
