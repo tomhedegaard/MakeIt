@@ -2,20 +2,25 @@ import Link from "next/link";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import Sparkline from "@/components/ui/Sparkline";
+import FormCheckProgressionCard from "@/components/profile/FormCheckProgressionCard";
 import { getSession } from "@/lib/auth";
-import { getMyFormChecks } from "@/lib/data/me";
+import { getMyFormChecks, type MyFormCheck } from "@/lib/data/me";
 import { getMyLifts, type LiftPr, type LiftStats } from "@/lib/data/lifts";
 import { COMPANY } from "@/lib/company";
 
 export default async function ProfilePage() {
   const m = (await getSession())!;
   const [formChecks, lifts] = await Promise.all([
-    getMyFormChecks(m.id, 8),
+    // Pull a deeper history (was 8) so members can see real progression
+    // over months. Volume is naturally low (Athlete = 1/month) so 50
+    // is comfortable headroom even for power users.
+    getMyFormChecks(m.id, 50),
     getMyLifts(m.id),
   ]);
   const reviewed = formChecks.filter((f) => f.reviewedAt);
   const pending = formChecks.filter((f) => !f.reviewedAt);
   const recentPRs = collectRecentPRs(lifts);
+  const progression = computeFormCheckProgression(formChecks);
 
   return (
     <>
@@ -197,7 +202,9 @@ export default async function ProfilePage() {
               + Del i Crew for at få din første vurdering.
             </p>
           ) : (
-            <ul className="space-y-4">
+            <>
+              <FormCheckProgressionCard progression={progression} />
+              <ul className="space-y-4">
               {formChecks.map((f) => (
                 <li key={f.id} className="surface rounded-xl overflow-hidden">
                   <header className="px-5 pt-5 pb-3 flex items-start justify-between gap-4">
@@ -305,7 +312,8 @@ export default async function ProfilePage() {
                   )}
                 </li>
               ))}
-            </ul>
+              </ul>
+            </>
           )}
 
           <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-5">
@@ -327,4 +335,59 @@ function collectRecentPRs(lifts: LiftStats[], limit = 8): LiftPr[] {
   for (const l of lifts) all.push(...l.prs);
   all.sort((a, b) => (a.date < b.date ? 1 : -1));
   return all.slice(0, limit);
+}
+
+export type FormCheckProgression = {
+  count: number;
+  averageScore: number | null;
+  latestScore: number | null;
+  firstScore: number | null;
+  deltaSinceFirst: number | null;
+  /** Scores in chronological order (oldest → newest). Used for sparkline. */
+  scoreSeries: number[];
+};
+
+/**
+ * Reduce a list of form-checks (newest-first) to progression stats.
+ * Filters out entries without an AI score — coaches sometimes write
+ * pure-notes reviews, and those shouldn't pollute the trend.
+ */
+function computeFormCheckProgression(
+  checks: MyFormCheck[],
+): FormCheckProgression {
+  const scored = checks
+    .filter((c): c is MyFormCheck & { aiScore: number } => c.aiScore != null)
+    .slice()
+    // Chronological for the chart — getMyFormChecks returns newest-first.
+    .sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    );
+
+  if (scored.length === 0) {
+    return {
+      count: 0,
+      averageScore: null,
+      latestScore: null,
+      firstScore: null,
+      deltaSinceFirst: null,
+      scoreSeries: [],
+    };
+  }
+
+  const scoreSeries = scored.map((c) => c.aiScore);
+  const firstScore = scoreSeries[0];
+  const latestScore = scoreSeries[scoreSeries.length - 1];
+  const averageScore = Math.round(
+    scoreSeries.reduce((sum, s) => sum + s, 0) / scoreSeries.length,
+  );
+
+  return {
+    count: scored.length,
+    averageScore,
+    latestScore,
+    firstScore,
+    deltaSinceFirst: scored.length >= 2 ? latestScore - firstScore : null,
+    scoreSeries,
+  };
 }
