@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { detrend, bandpass, detectPeaks, computeSnrDb, ppgToRrIntervals } from "./ppg";
+import { detrend, detectPeaks, computeSnrDb, ppgToRrIntervals } from "./ppg";
 
 /** Synthesize a clean PPG signal: sine at `hz`, `sampleRate` Hz, `seconds` long. */
 function synthPpg(hz: number, sampleRate: number, seconds: number): number[] {

@@ -20,7 +20,8 @@ export function detrend(samples: number[]): number[] {
   const n = samples.length;
   if (n < 3) return [...samples];
   // Normal equations for y = a0 + a1*x + a2*x^2.
-  let s0 = n, s1 = 0, s2 = 0, s3 = 0, s4 = 0;
+  const s0 = n;
+  let s1 = 0, s2 = 0, s3 = 0, s4 = 0;
   let b0 = 0, b1 = 0, b2 = 0;
   for (let i = 0; i < n; i++) {
     const x = i, x2 = x * x, y = samples[i];
