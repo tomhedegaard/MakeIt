@@ -95,12 +95,21 @@ Replaces the "Demo-asset URL" text input in the editor's Metadata section.
 > **not** match when a query follows. `ExerciseDemo` must strip the query
 > before resolving siblings — see "Changes to ExerciseDemo".
 
+### Sibling resolution helper
+
+Both `ExerciseDemo` and `DemoAssetUploader`'s preview need to turn a
+possibly-`?v=`-suffixed `demo_asset_url` into the webm/mp4/poster trio.
+Add one shared helper — `resolveDemoAssets(demoAssetUrl)` in
+`src/lib/data/exercises.ts` — returning `{ webm, mp4, poster }`, each
+with the `?v=` query re-attached. Both consumers call it; no duplicated
+parsing.
+
 ### Changes to `ExerciseDemo`
 
-- Accept the `demoAssetUrl` possibly carrying a `?v=` query. Split off the
-  query, strip the extension from the path, re-resolve `${base}.webm`,
-  `${base}.mp4`, `${base}-poster.jpg`, and re-attach the query to each so
-  the cache-bust applies to all three.
+- Accept the `demoAssetUrl` possibly carrying a `?v=` query. Resolve the
+  trio via `resolveDemoAssets` (the regex `replace(/\.(webm|mp4)$/, "")`
+  is end-anchored and fails when a query follows — the helper splits the
+  query off first).
 - Use the derived poster as the `<video poster>`.
 
 ### Changes to `ExerciseHero`
@@ -116,7 +125,10 @@ Replaces the "Demo-asset URL" text input in the editor's Metadata section.
   it; renders `<DemoAssetUploader slug={exercise.slug} initialDemoAssetUrl={exercise.demoAssetUrl} />`.
 - `demo_asset_url` is no longer part of the `saveExerciseAction` payload —
   it is owned entirely by `uploadDemoAssetAction`. This decouples the
-  3-file upload from the metadata "Gem øvelse" save.
+  3-file upload from the metadata "Gem øvelse" save. The `demo_asset_url`
+  key must be **removed from the `update({...})` object** in
+  `saveExerciseAction` (and from `ExerciseSavePayload`) — leaving it would
+  write `undefined` and null out a freshly-uploaded URL on a metadata save.
 
 ## Data flow
 
