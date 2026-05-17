@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>HRV PPG Probe — MakeIt HQ P0 spike</title>
+<title>HRV PPG Probe v2 — MakeIt HQ P0 spike</title>
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -48,6 +48,8 @@
   .check.bad::before { content: "\2717  "; color: #D9776B; }
   video { display: none; }
   .hint { font-size: 12px; opacity: 0.5; margin-top: 8px; }
+  .upload { font-size: 12px; text-align: center; margin-top: 10px; opacity: 0.7;
+    min-height: 16px; }
   .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
   .mode-btn {
     padding: 12px 10px; border-radius: 10px; border: 1px solid #2A2A2C;
@@ -57,7 +59,6 @@
   .mode-btn.active { background: #F5F2EC; color: #0A0A0B; }
   .mode-btn small { display: block; font-weight: 400; font-size: 11px;
     opacity: 0.7; margin-top: 2px; }
-  /* Front-camera screen-flash overlay: the white screen IS the light source. */
   #flash {
     position: fixed; inset: 0; background: #FFFFFF; z-index: 9999;
     display: none; flex-direction: column; align-items: center;
@@ -72,19 +73,18 @@
 </head>
 <body>
 
-<h1>HRV PPG Probe</h1>
-<p class="sub">MakeIt HQ — P0 feasibility spike. Validerer kamera-PPG på denne enhed.</p>
+<h1>HRV PPG Probe v2</h1>
+<p class="sub">MakeIt HQ — P0 feasibility spike. 60 fps · sub-sample peak-interpolation · 3-kanals analyse · auto-upload.</p>
 
 <div class="card">
   <h2>Sådan måler du</h2>
   <ol>
     <li>Sid stille. Helst lige efter du er vågnet, men til en test går det an når som helst.</li>
-    <li>Tryk <b>Start måling</b> og giv kamera-adgang.</li>
-    <li>Læg en finger blødt men helt dækkende over <b>bagkameraet</b> (og blitzen ved siden af).</li>
-    <li>Hold stille i 60 sekunder. Træk vejret normalt — det er ikke en vejrtrækningsøvelse.</li>
-    <li>Aflæs resultatet og tryk <b>Download data</b>.</li>
+    <li>Vælg kamera-tilstand, tryk <b>Start måling</b>, giv kamera-adgang.</li>
+    <li>Læg en finger blødt men helt dækkende over kameraet — hold helt stille i 60 sek.</li>
+    <li>Resultatet uploades automatisk. <b>Download data</b> er backup.</li>
   </ol>
-  <p class="hint">Android Chrome tænder blitzen automatisk. iPhone Safari har ingen blitz-styring — dæk kameraet helt med fingeren, så omgivelseslyset gennem fingeren er nok.</p>
+  <p class="hint">Bagkamera: Android tænder blitz, iPhone bruger omgivelseslys. Frontkamera: skærmen lyser hvid som lyskilde — skru lysstyrken helt op.</p>
 </div>
 
 <div class="card">
@@ -109,15 +109,16 @@
   <div class="metrics">
     <div class="metric"><div class="label">RMSSD</div><div class="value" id="rRmssd">–</div></div>
     <div class="metric"><div class="label">Middelpuls</div><div class="value" id="rHr">–</div></div>
-    <div class="metric"><div class="label">SNR</div><div class="value" id="rSnr">–</div></div>
+    <div class="metric"><div class="label">SNR (bedste kanal)</div><div class="value" id="rSnr">–</div></div>
+    <div class="metric"><div class="label">Bedste kanal</div><div class="value" id="rChan">–</div></div>
     <div class="metric"><div class="label">Pulsslag fundet</div><div class="value" id="rPeaks">–</div></div>
     <div class="metric"><div class="label">Effektiv framerate</div><div class="value" id="rFps">–</div></div>
-    <div class="metric"><div class="label">Varighed</div><div class="value" id="rDur">–</div></div>
   </div>
   <div id="verdict"></div>
+  <div class="upload" id="uploadStatus"></div>
   <button id="downloadBtn">Download data (JSON)</button>
   <button id="againBtn" class="ghost">Mål igen</button>
-  <p class="hint">Send JSON-filen + en note om enhed/browser til repoet. Hvis du har en Polar H10: mål samtidig med en HRV-app og notér dens RMSSD til sammenligning.</p>
+  <p class="hint">Resultatet uploades automatisk når auto-upload er aktiveret. Hvis ikke: send JSON-filen fra Download data.</p>
 </div>
 
 <div class="card">
@@ -137,9 +138,9 @@
 "use strict";
 
 // ===================================================================
-// PPG ALGORITHM — JS port of src/lib/hrv/ppg.ts + rmssd.ts.
-// Kept in sync with the module the app uses, so on-device numbers
-// match what the server will compute.
+// PPG ALGORITHM — JS port of src/lib/hrv/ppg.ts + rmssd.ts, plus
+// sub-sample parabolic peak interpolation (probe v2). Kept in sync
+// with the module the app uses.
 // ===================================================================
 var LOW_HZ = 0.5, HIGH_HZ = 3, REFRACTORY_MS = 300;
 var THRESHOLD_FRACTION = 0.3, WINDOW_SECONDS = 5;
@@ -210,6 +211,25 @@ function detectPeaks(samples, sampleRate) {
   return peaks;
 }
 
+/**
+ * Sub-sample peak time via parabolic interpolation through the three
+ * points around a detected peak. This is the key v2 accuracy fix:
+ * at 30-60 fps an integer peak index quantises each R-R interval to
+ * 16-33 ms steps, which dominates RMSSD (a successive-difference
+ * metric). Fitting a parabola recovers the true peak between samples.
+ */
+function refinePeakTime(values, times, i) {
+  if (i <= 0 || i >= values.length - 1) return times[i];
+  var y0 = values[i-1], y1 = values[i], y2 = values[i+1];
+  var denom = y0 - 2*y1 + y2;
+  if (denom === 0) return times[i];
+  var delta = 0.5 * (y0 - y2) / denom; // fractional sample offset
+  if (delta > 1) delta = 1;
+  if (delta < -1) delta = -1;
+  if (delta >= 0) return times[i] + delta * (times[i+1] - times[i]);
+  return times[i] + delta * (times[i] - times[i-1]);
+}
+
 function variance(samples) {
   if (samples.length === 0) return 0;
   var mean = samples.reduce(function (a,b){return a+b;}, 0) / samples.length;
@@ -247,6 +267,28 @@ function computeRmssd(rr) {
   return Math.sqrt(sq / (rr.length - 1));
 }
 
+/** Full per-channel analysis: detrend -> bandpass -> peaks -> refined R-R. */
+function analyzeChannel(samples, times, sampleRate) {
+  var snr = computeSnrDb(samples, sampleRate);
+  var filtered = bandpass(detrend(samples), sampleRate);
+  var peaks = detectPeaks(filtered, sampleRate);
+  var rr = [];
+  for (var i = 1; i < peaks.length; i++) {
+    var t1 = refinePeakTime(filtered, times, peaks[i-1]);
+    var t2 = refinePeakTime(filtered, times, peaks[i]);
+    rr.push(t2 - t1);
+  }
+  var ect = filterEctopic(rr);
+  var rmssd = computeRmssd(ect.clean);
+  var meanRr = ect.clean.length
+    ? ect.clean.reduce(function(a,b){return a+b;},0) / ect.clean.length : 0;
+  return {
+    snrDb: snr, peakCount: peaks.length, rrIntervals: rr,
+    cleanRrIntervals: ect.clean, ectopicPct: ect.ectopicPct,
+    rmssdMs: rmssd, meanHrBpm: meanRr ? 60000 / meanRr : 0
+  };
+}
+
 // ===================================================================
 // CAPTURE
 // ===================================================================
@@ -258,7 +300,7 @@ sampleCanvas.width = 100; sampleCanvas.height = 100;
 var sampleCtx = sampleCanvas.getContext("2d", { willReadFrequently: true });
 
 var stream = null, capturing = false, raf = null;
-var times = [], values = [], startTime = 0;
+var times = [], samplesR = [], samplesG = [], samplesB = [], startTime = 0;
 var DURATION_MS = 60000;
 var cameraMode = "rear"; // "rear" | "front"
 
@@ -275,7 +317,8 @@ async function start() {
   var facing = cameraMode === "front" ? "user" : { ideal: "environment" };
   try {
     stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: facing, width: 640, height: 480 },
+      video: { facingMode: facing, width: 640, height: 480,
+               frameRate: { ideal: 60 } },
       audio: false
     });
   } catch (e) {
@@ -292,14 +335,15 @@ async function start() {
       await track.applyConstraints({ advanced: [{ torch: true }] });
       setStatus("Blitz tændt. Læg finger over bagkameraet.");
     } catch (e) {
-      setStatus("Ingen blitz-styring (normalt på iPhone). Dæk bagkameraet helt — eller prøv Frontkamera-tilstanden.");
+      setStatus("Ingen blitz-styring (normalt på iPhone). Dæk bagkameraet helt — eller prøv Frontkamera.");
     }
   } else {
     setStatus("Frontkamera. Skærmen lyser hvid som lyskilde.");
     document.getElementById("flash").classList.add("on");
   }
 
-  times = []; values = []; capturing = true;
+  times = []; samplesR = []; samplesG = []; samplesB = [];
+  capturing = true;
   startTime = performance.now();
   document.getElementById("stopBtn").disabled = false;
   loop();
@@ -311,10 +355,15 @@ function loop() {
 
   sampleCtx.drawImage(video, 0, 0, 100, 100);
   var data = sampleCtx.getImageData(0, 0, 100, 100).data;
-  var rSum = 0;
-  for (var i = 0; i < data.length; i += 4) rSum += data[i];
+  var rSum = 0, gSum = 0, bSum = 0;
+  for (var i = 0; i < data.length; i += 4) {
+    rSum += data[i]; gSum += data[i+1]; bSum += data[i+2];
+  }
+  var px = data.length / 4;
   times.push(elapsed);
-  values.push(rSum / (data.length / 4));
+  samplesR.push(rSum / px);
+  samplesG.push(gSum / px);
+  samplesB.push(bSum / px);
 
   var remain = String(Math.max(0, Math.ceil((DURATION_MS - elapsed) / 1000)));
   setText("countdown", remain);
@@ -329,8 +378,8 @@ function loop() {
 function drawWave() {
   var w = waveCanvas.width, h = waveCanvas.height;
   waveCtx.fillStyle = "#111113"; waveCtx.fillRect(0, 0, w, h);
-  var n = values.length; if (n < 2) return;
-  var slice = values.slice(-Math.min(n, 300));
+  var n = samplesG.length; if (n < 2) return;
+  var slice = samplesG.slice(-Math.min(n, 300));
   var min = Math.min.apply(null, slice), max = Math.max.apply(null, slice);
   var range = max - min || 1;
   waveCtx.strokeStyle = "#F5F2EC"; waveCtx.lineWidth = 2; waveCtx.beginPath();
@@ -344,10 +393,10 @@ function drawWave() {
 
 function updateLive(elapsed) {
   var secs = elapsed / 1000;
-  if (secs > 0) setText("liveFps", Math.round(values.length / secs) + " fps");
+  if (secs > 0) setText("liveFps", Math.round(samplesG.length / secs) + " fps");
   if (elapsed > 8000) {
-    var sr = values.length / secs;
-    var peaks = detectPeaks(bandpass(detrend(values), sr), sr);
+    var sr = samplesG.length / secs;
+    var peaks = detectPeaks(bandpass(detrend(samplesG), sr), sr);
     if (peaks.length > 1)
       setText("liveBpm", Math.round((peaks.length - 1) / secs * 60) + " bpm");
   }
@@ -365,45 +414,47 @@ function stop() {
 function finish() {
   var durationS = (times[times.length - 1] - times[0]) / 1000;
   stop();
-  setStatus("Færdig. Analyserer…");
+  setStatus("Færdig. Analyserer 3 kanaler…");
 
-  var sampleRate = values.length / durationS;
-  var snr = computeSnrDb(values, sampleRate);
-  var peakIdx = detectPeaks(bandpass(detrend(values), sampleRate), sampleRate);
+  var sampleRate = times.length / durationS;
+  var chans = {
+    R: analyzeChannel(samplesR, times, sampleRate),
+    G: analyzeChannel(samplesG, times, sampleRate),
+    B: analyzeChannel(samplesB, times, sampleRate)
+  };
+  var bestKey = "G";
+  ["R", "G", "B"].forEach(function (k) {
+    if (chans[k].snrDb > chans[bestKey].snrDb) bestKey = k;
+  });
+  var best = chans[bestKey];
 
-  // R-R from ACTUAL recorded timestamps (jitter-robust).
-  var rr = [];
-  for (var i = 1; i < peakIdx.length; i++)
-    rr.push(times[peakIdx[i]] - times[peakIdx[i-1]]);
-
-  var ect = filterEctopic(rr);
-  var rmssd = computeRmssd(ect.clean);
-  var meanRr = ect.clean.length
-    ? ect.clean.reduce(function(a,b){return a+b;},0) / ect.clean.length : 0;
-  var hr = meanRr ? 60000 / meanRr : 0;
-
-  setText("rRmssd", rmssd ? rmssd.toFixed(1) + " ms" : "–");
-  setText("rHr", hr ? Math.round(hr) + " bpm" : "–");
-  setText("rSnr", snr.toFixed(1) + " dB");
-  setText("rPeaks", String(peakIdx.length));
+  setText("rRmssd", best.rmssdMs ? best.rmssdMs.toFixed(1) + " ms" : "–");
+  setText("rHr", best.meanHrBpm ? Math.round(best.meanHrBpm) + " bpm" : "–");
+  setText("rSnr", best.snrDb.toFixed(1) + " dB");
+  setText("rChan", bestKey + " (" +
+    { R: "rød", G: "grøn", B: "blå" }[bestKey] + ")");
+  setText("rPeaks", String(best.peakCount));
   setText("rFps", sampleRate.toFixed(1) + " fps");
-  setText("rDur", durationS.toFixed(1) + " s");
 
-  renderVerdict(sampleRate, snr, peakIdx.length, hr, ect.ectopicPct, durationS);
+  renderVerdict(sampleRate, best.snrDb, best.peakCount,
+    best.meanHrBpm, best.ectopicPct, durationS);
 
-  window.__hrvProbeData = {
+  var payload = {
+    probeVersion: "v2",
     capturedAt: new Date().toISOString(),
     userAgent: navigator.userAgent,
+    cameraMode: cameraMode,
     durationSeconds: durationS, sampleRate: sampleRate,
-    sampleCount: values.length, times: times, redChannel: values,
-    peakIndices: peakIdx, rrIntervals: rr,
-    cleanRrIntervals: ect.clean, ectopicPct: ect.ectopicPct,
-    snrDb: snr, rmssdMs: rmssd, meanHrBpm: hr
+    sampleCount: times.length,
+    times: times, samplesR: samplesR, samplesG: samplesG, samplesB: samplesB,
+    bestChannel: bestKey, channels: chans
   };
+  window.__hrvProbeData = payload;
 
   document.getElementById("resultCard").style.display = "block";
   document.getElementById("startBtn").disabled = false;
   setStatus("Færdig.");
+  uploadResult(payload);
 }
 
 function renderVerdict(fps, snr, peaks, hr, ectopicPct, dur) {
@@ -421,8 +472,8 @@ function renderVerdict(fps, snr, peaks, hr, ectopicPct, dur) {
   var passed = checks.filter(function (c) { return c[0]; }).length;
   var cls, headline;
   if (passed === 5) { cls = "go"; headline = "GO — signalet ser brugbart ud på denne enhed."; }
-  else if (passed >= 3) { cls = "warn"; headline = "GO-WITH-CHANGES — delvist brugbart. Prøv igen med bedre fingerdækning; notér hvilke tjek der fejler."; }
-  else { cls = "nogo"; headline = "NO-GO på denne måling — signalet er for dårligt. Prøv igen; gentager det sig på flere forsøg, er kamera-PPG ikke pålideligt her."; }
+  else if (passed >= 3) { cls = "warn"; headline = "GO-WITH-CHANGES — delvist brugbart. Prøv igen med bedre fingerdækning/lys."; }
+  else { cls = "nogo"; headline = "NO-GO på denne måling — signalet er for dårligt. Prøv igen; gentager det sig, er kamera-PPG ikke pålideligt her."; }
 
   var box = document.getElementById("verdict");
   box.textContent = "";
@@ -439,6 +490,21 @@ function renderVerdict(fps, snr, peaks, hr, ectopicPct, dur) {
     wrap.appendChild(row);
   });
   box.appendChild(wrap);
+}
+
+function uploadResult(payload) {
+  setText("uploadStatus", "Uploader resultat…");
+  fetch("/api/save", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).then(function (r) { return r.json(); }).then(function (j) {
+    if (j && j.stored) setText("uploadStatus", "Resultat uploadet automatisk ✓");
+    else setText("uploadStatus",
+      "Auto-upload ikke aktiv endnu — brug Download data og send filen.");
+  }).catch(function () {
+    setText("uploadStatus", "Upload fejlede — brug Download data og send filen.");
+  });
 }
 
 function download() {
