@@ -68,7 +68,10 @@ Members connect a **wearable** (WHOOP, Oura, or Polar) once; HRV then **syncs au
 
 ## 3. Information architecture
 
-**Top-level route:** `/hrv` (sidebar position 4 of 6: Today / Træn / Crew / **HRV** / Reps / Mig; mobile tab-bar adds HRV as an 8th entry — see plan deviation note).
+**Top-level route:** `/hrv`.
+
+- **Desktop sidebar:** HRV added as a nav item (position 4: Today / Træn / Crew / **HRV** / Reps / Mig).
+- **Mobile:** the mobile tab-bar already carries 7 tabs (Today / Træn / Mad / Crew / Chat / Reps / Mig) — adding an 8th would crowd it below the 44px touch-target floor. HRV on mobile is therefore reached via **(a)** the `/dashboard` HRV readiness chip (tap-through) and **(b)** the mobile nav drawer/overflow — **not** a new tab-bar slot. (Re-balancing the already-overloaded 7-tab bar is a pre-existing nav concern, explicitly out of scope for this module.)
 
 **Pages under `/hrv`:**
 
@@ -122,7 +125,7 @@ Webhooks (WHOOP and Oura both offer them) are a **later optimization**; v1 uses 
 
 - Each member's baseline is built **only** from one provider's stream.
 - If a member connects multiple wearables, one is designated **primary** (it feeds the baseline + readiness). Others are stored as secondary observations (`is_primary = false`) for the member's own reference, never merged into the baseline.
-- Switching the primary wearable **resets the baseline** (UI: "Ny baseline genopbygges over 14 dage"). Same rule as a source switch in revision 3.
+- Switching the primary wearable **resets the baseline** (UI: "Ny baseline genopbygges over 14 dage"). The reset is mechanical, not a manual purge — see §5 "Which readings feed the baseline": the baseline reads only the current primary connection's readings, so a switch resets it automatically.
 
 ### What is NOT a data source in v1
 
@@ -158,15 +161,24 @@ Unchanged from revision 3 — the algorithm core is source-agnostic and already 
 
 ### Warm-up state
 
-Derived from the count of synced daily readings: `discovery` (< 7), `provisional` (7-13), `active` (≥ 14). `readiness_bucket` is null unless `active`. A newly connected wearable starts in `discovery`; an OAuth backfill (most providers return recent history) can jump-start this — backfilled readings count toward the warm-up, but the spec treats backfill as best-effort (not all providers return enough history).
+Derived from the count of synced daily readings on the current primary connection: `discovery` (< 7), `provisional` (7-13), `active` (≥ 14). `readiness_bucket` is null unless `active`. A newly connected wearable starts in `discovery`; an OAuth backfill (most providers return recent history) can jump-start this — **if the backfill yields ≥ 14 days of readings the member lands directly in `active` on connection day one** and the §6 state-B copy ("N dage tilbage") is skipped. Backfill is best-effort: not all providers return enough history, and a member who backfills, say, 9 days starts in `provisional`.
 
 ### Female cycle-phase adjustment
 
 Opt-in, unchanged from revision 3. Member taps "Log menstrual start"; the algorithm learns per-cycle phase offsets; baseline comparison becomes phase-aware. Ships with W1.
 
+### Which readings feed the baseline (baseline-reset mechanism)
+
+Every `hrv_readings` row carries `connection_id` (the `hrv_wearable_connections` row that produced it — added in migration 0032). **The baseline for a member is computed only from readings whose `connection_id` equals the member's current primary connection.** This makes wearable-switching self-resetting:
+
+- Member connected to WHOOP → readings have `connection_id = <whoop connection>` → baseline reads them.
+- Member switches primary to a newly connected Oura → the Oura connection is a different row → its readings carry the new `connection_id` → the baseline naturally reads only Oura readings, and the member re-enters `discovery` warm-up. Old WHOOP readings stay in the table (history, never deleted) but are excluded from the baseline.
+
+No reading is ever deleted on a switch; the filter does the reset. The warm-up day-count (§ below) likewise counts only current-primary-connection readings.
+
 ### Compute timing
 
-- **On sync:** the sync cron recomputes 7-d mean, baseline, SWC, warm-up state, readiness bucket → persisted on the new `hrv_readings` row.
+- **On sync:** the sync cron recomputes 7-d mean, baseline, SWC, warm-up state, readiness bucket — over the current primary connection's readings — → persisted on the new `hrv_readings` row.
 - Baseline is incremental — rolling state, no full replay.
 
 ## 6. UI & visualization
@@ -266,24 +278,9 @@ Never reward the HRV value itself (high/low/improved) — outside the member's d
 
 ### Migration `0032_hrv_wearables.sql`
 
-**1. Alter `hrv_readings`:**
+Created in FK-dependency order: `hrv_wearable_connections` first (it is referenced by a new `hrv_readings` column), then the `hrv_readings` / `hrv_settings` alterations. Idempotent — `create ... if not exists`, `add column if not exists`, `drop ... if exists`.
 
-```sql
--- rr_intervals: wearables deliver a computed RMSSD, not raw R-R intervals.
-alter table public.hrv_readings alter column rr_intervals drop not null;
-
--- source: replace the camera-era enum with wearable sources.
-alter table public.hrv_readings drop constraint if exists hrv_readings_source_check;
-alter table public.hrv_readings add constraint hrv_readings_source_check
-  check (source in ('whoop', 'oura', 'polar', 'apple_health', 'camera_ppg'));
-
--- provider_recorded_at: the wearable's own timestamp for the measurement.
-alter table public.hrv_readings add column if not exists provider_recorded_at timestamptz;
-```
-
-(`apple_health` and `camera_ppg` are reserved in the enum for W4 / the future native fallback; no v1 code writes them.)
-
-**2. New table `hrv_wearable_connections`:**
+**1. New table `hrv_wearable_connections`:**
 
 ```sql
 create table if not exists public.hrv_wearable_connections (
@@ -294,7 +291,7 @@ create table if not exists public.hrv_wearable_connections (
   access_token text not null,
   refresh_token text,
   token_expires_at timestamptz,
-  is_primary boolean not null default true,
+  is_primary boolean not null default false,
   status text not null default 'active'
     check (status in ('active', 'needs_reauth', 'revoked')),
   connected_at timestamptz default now(),
@@ -305,9 +302,51 @@ create index if not exists idx_hrv_wearable_conn_member
   on public.hrv_wearable_connections (member_id);
 create index if not exists idx_hrv_wearable_conn_sync
   on public.hrv_wearable_connections (status) where status = 'active';
+
+-- At most one primary connection per member, enforced at the DB level.
+create unique index if not exists idx_hrv_wearable_conn_one_primary
+  on public.hrv_wearable_connections (member_id) where is_primary = true;
 ```
 
-**3. RLS for `hrv_wearable_connections`:**
+`is_primary` defaults to **false**. The connect server action sets `is_primary = true` only when it is the member's first connection; the "make primary" action flips the existing primary to false and the chosen row to true **inside one transaction** (so the partial unique index above is never transiently violated).
+
+**2. Alter `hrv_readings`:**
+
+```sql
+-- rr_intervals: wearables deliver a computed RMSSD, not raw R-R intervals.
+alter table public.hrv_readings alter column rr_intervals drop not null;
+
+-- timezone: camera-era field for travel detection; wearable sync has no
+-- live device timezone. Made nullable; populated only when available.
+alter table public.hrv_readings alter column timezone drop not null;
+
+-- source: replace the camera-era enum with wearable sources.
+alter table public.hrv_readings drop constraint if exists hrv_readings_source_check;
+alter table public.hrv_readings add constraint hrv_readings_source_check
+  check (source in ('whoop', 'oura', 'polar', 'apple_health', 'camera_ppg'));
+
+-- provider_recorded_at: the wearable's own timestamp for the measurement.
+alter table public.hrv_readings add column if not exists provider_recorded_at timestamptz;
+
+-- connection_id: ties each reading to the connection that produced it.
+-- This is the baseline-reset mechanism (see §5).
+alter table public.hrv_readings add column if not exists connection_id uuid
+  references public.hrv_wearable_connections(id) on delete set null;
+create index if not exists idx_hrv_readings_connection
+  on public.hrv_readings (connection_id);
+```
+
+`apple_health` and `camera_ppg` stay reserved in the enum for W4 / the future native fallback; no v1 code writes them. **`confidence` stays `NOT NULL`** — the sync cron writes the constant `confidence = 'high'` (WHOOP/Oura/Polar are device-validated; there is no camera-style quality grade to assign), so no migration change is needed for that column.
+
+**3. Retire `hrv_settings.preferred_source`:**
+
+Migration 0031 created `hrv_settings.preferred_source` with a `check (... in ('camera_ppg','polar_h10'))` constraint — both the default and the enum are camera-era and the constraint would reject wearable values. Primary-wearable selection now lives in `hrv_wearable_connections.is_primary`, so the column is superseded:
+
+```sql
+alter table public.hrv_settings drop column if exists preferred_source;
+```
+
+**4. RLS for `hrv_wearable_connections`:**
 
 ```sql
 alter table public.hrv_wearable_connections enable row level security;
@@ -318,7 +357,9 @@ create policy "members_read_own_connections" on public.hrv_wearable_connections
   for select using (member_id = auth.uid());
 ```
 
-**Token security:** access/refresh tokens are sensitive. They are written and read **only** by server-side code (OAuth callback + sync cron) using the Supabase **service-role** key, which bypasses RLS. The member-facing RLS policy is `select`-only and the application layer must **never** select the token columns into any client-reachable payload — the UI reads only `provider`, `status`, `is_primary`, `last_synced_at`. Hardening note: consider Postgres column encryption (`pgcrypto`) or Supabase Vault for the token columns; v1 may ship plain with the strict RLS + service-role discipline above, but this is flagged as a known hardening item.
+Coaches deliberately get **no** policy on this table — it holds OAuth tokens; there is no coach use case for it.
+
+**Token security:** access/refresh tokens are sensitive. They are written and read **only** by server-side code (OAuth callback + sync cron) using the Supabase **service-role** key, which bypasses RLS. The member-facing RLS policy is `select`-only, and the application layer must **never** select the token columns into any client-reachable payload — the UI reads only `provider`, `status`, `is_primary`, `last_synced_at`. **W1 requirement (not deferred):** the `access_token` / `refresh_token` columns are encrypted at rest with `pgcrypto` (or Supabase Vault) — storing third-party OAuth refresh tokens in plaintext is an unacceptable liability for a premium product. The sync cron / callback encrypt on write and decrypt on read with a key held in a server-only env var.
 
 ### `vercel.json` — created in W1
 
@@ -332,7 +373,7 @@ create policy "members_read_own_connections" on public.hrv_wearable_connections
 }
 ```
 
-UTC schedules. Only `hrv-wearable-sync` has a real handler in W1; the other two are verified stubs (verify `CRON_SECRET`) until their phases ship. Vercel Cron sends `Authorization: Bearer <CRON_SECRET>`; every handler verifies it. `CRON_SECRET` added to `.env.example` + Vercel project env.
+UTC schedules — `0 5 * * *` is 06:00 in Copenhagen winter time (CET) and 07:00 in summer time (CEST). The ±1h DST drift is immaterial for a once-daily morning sync. Only `hrv-wearable-sync` has a real handler in W1; `hrv-alert-detect` and `hrv-weekly-insights` are verified stub handlers (they still verify `CRON_SECRET`) until their phases ship. Vercel Cron sends `Authorization: Bearer <CRON_SECRET>`; every handler verifies it. `CRON_SECRET` added to `.env.example` + Vercel project env.
 
 ## 10. Guardrails — what we refuse to do
 
@@ -364,14 +405,14 @@ Phase 1 algorithm core (original P1: Vitest, types, migration 0031, `rmssd`/`bas
 
 ### W1 concretely (plan-revision target)
 
-1. Migration `0032_hrv_wearables.sql` — alter `hrv_readings`, new `hrv_wearable_connections` + RLS.
-2. Regenerate `database.types.ts`.
+1. Migration `0032_hrv_wearables.sql` — new `hrv_wearable_connections` table (+ partial unique index on primary) + RLS, alter `hrv_readings` (`rr_intervals`/`timezone` nullable, `source` enum, `provider_recorded_at` + `connection_id` columns), drop `hrv_settings.preferred_source`.
+2. Regenerate `database.types.ts` (after 0032 is applied).
 3. `src/lib/hrv/wearables/types.ts` — the `WearableProvider` interface.
 4. `src/lib/hrv/wearables/whoop.ts` — WHOOP OAuth + `fetchLatestHrv`, unit-tested with mocked API responses.
 5. `src/lib/hrv/wearables/sync.ts` — provider-agnostic sync logic (refresh token → fetch → map → run baseline → write reading), unit-tested.
 6. `src/app/api/wearables/[provider]/callback/route.ts` — OAuth callback.
 7. `src/app/(app)/hrv/connect-actions.ts` — server actions to start an OAuth flow + disconnect.
-8. `src/app/api/cron/hrv-wearable-sync/route.ts` + two stub cron handlers + `vercel.json` + `CRON_SECRET`.
+8. `src/app/api/cron/hrv-wearable-sync/route.ts` (real handler) + `src/app/api/cron/hrv-alert-detect/route.ts` and `src/app/api/cron/hrv-weekly-insights/route.ts` (verified stubs — `CRON_SECRET`-checked, return ok) + `vercel.json` + `CRON_SECRET` in `.env.example`.
 9. `src/app/(app)/hrv/page.tsx` — 3 states (no-connection / warming-up / active).
 10. `src/components/hrv/WearableConnectSheet.tsx` + `ConnectionStatus.tsx`.
 11. `/settings` HRV section — connections list, connect/disconnect, primary selection, cycle-tracking toggle.
