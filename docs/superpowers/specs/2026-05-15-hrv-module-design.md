@@ -406,17 +406,18 @@ Phase 1 algorithm core (original P1: Vitest, types, migration 0031, `rmssd`/`bas
 ### W1 concretely (plan-revision target)
 
 1. Migration `0032_hrv_wearables.sql` — new `hrv_wearable_connections` table (+ partial unique index on primary) + RLS, alter `hrv_readings` (`rr_intervals`/`timezone` nullable, `source` enum, `provider_recorded_at` + `connection_id` columns), drop `hrv_settings.preferred_source`.
-2. Regenerate `database.types.ts` (after 0032 is applied).
-3. `src/lib/hrv/wearables/types.ts` — the `WearableProvider` interface.
-4. `src/lib/hrv/wearables/whoop.ts` — WHOOP OAuth + `fetchLatestHrv`, unit-tested with mocked API responses.
-5. `src/lib/hrv/wearables/sync.ts` — provider-agnostic sync logic (refresh token → fetch → map → run baseline → write reading), unit-tested.
-6. `src/app/api/wearables/[provider]/callback/route.ts` — OAuth callback.
-7. `src/app/(app)/hrv/connect-actions.ts` — server actions to start an OAuth flow + disconnect.
-8. `src/app/api/cron/hrv-wearable-sync/route.ts` (real handler) + `src/app/api/cron/hrv-alert-detect/route.ts` and `src/app/api/cron/hrv-weekly-insights/route.ts` (verified stubs — `CRON_SECRET`-checked, return ok) + `vercel.json` + `CRON_SECRET` in `.env.example`.
-9. `src/app/(app)/hrv/page.tsx` — 3 states (no-connection / warming-up / active).
-10. `src/components/hrv/WearableConnectSheet.tsx` + `ConnectionStatus.tsx`.
-11. `/settings` HRV section — connections list, connect/disconnect, primary selection, cycle-tracking toggle.
-12. Nav registration (`AppShell.tsx` + `MobileTabBar.tsx`).
+2. **Token encryption** — enable `pgcrypto`; the OAuth callback / sync code encrypt `access_token` + `refresh_token` on write and decrypt on read, keyed by a server-only `HRV_TOKEN_ENC_KEY` env var. Decide the column type during planning (`pgp_sym_encrypt` returns `bytea` — keep `text` via armored output, or switch the column to `bytea`). This is a W1 requirement, not deferred.
+3. Regenerate `database.types.ts` (after 0032 is applied).
+4. `src/lib/hrv/wearables/types.ts` — the `WearableProvider` interface.
+5. `src/lib/hrv/wearables/whoop.ts` — WHOOP OAuth + `fetchLatestHrv`, unit-tested with mocked API responses.
+6. `src/lib/hrv/wearables/sync.ts` — provider-agnostic sync logic (refresh token → fetch → map → run baseline → write reading), unit-tested.
+7. `src/app/api/wearables/[provider]/callback/route.ts` — OAuth callback.
+8. `src/app/(app)/hrv/connect-actions.ts` — server actions to start an OAuth flow + disconnect.
+9. `src/app/api/cron/hrv-wearable-sync/route.ts` (real handler) + `src/app/api/cron/hrv-alert-detect/route.ts` and `src/app/api/cron/hrv-weekly-insights/route.ts` (verified stubs — `CRON_SECRET`-checked, return ok) + `vercel.json` + `CRON_SECRET` in `.env.example`.
+10. `src/app/(app)/hrv/page.tsx` — 3 states (no-connection / warming-up / active).
+11. `src/components/hrv/WearableConnectSheet.tsx` + `ConnectionStatus.tsx`.
+12. `/settings` HRV section — connections list, connect/disconnect, primary selection, cycle-tracking toggle.
+13. Nav registration (`AppShell.tsx` + `MobileTabBar.tsx`).
 
 ## 12. Open questions / future work
 
