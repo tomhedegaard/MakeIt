@@ -513,6 +513,7 @@ export type Database = {
           baseline_60d_mean_lnrmssd: number | null
           baseline_60d_swc: number | null
           confidence: string
+          connection_id: string | null
           cycle_phase: string | null
           id: string
           inserted_at: string | null
@@ -521,19 +522,22 @@ export type Database = {
           mean_hr_bpm: number | null
           measured_at: string
           member_id: string
+          provider_recorded_at: string | null
           quality_warnings: Json | null
           readiness_bucket: string | null
+          resting_hr_bpm: number | null
           rmssd_ms: number
           rolling_7d_mean_lnrmssd: number | null
-          rr_intervals: Json
+          rr_intervals: Json | null
           source: string
-          timezone: string
+          timezone: string | null
           warm_up_state: string
         }
         Insert: {
           baseline_60d_mean_lnrmssd?: number | null
           baseline_60d_swc?: number | null
           confidence: string
+          connection_id?: string | null
           cycle_phase?: string | null
           id?: string
           inserted_at?: string | null
@@ -542,19 +546,22 @@ export type Database = {
           mean_hr_bpm?: number | null
           measured_at: string
           member_id: string
+          provider_recorded_at?: string | null
           quality_warnings?: Json | null
           readiness_bucket?: string | null
+          resting_hr_bpm?: number | null
           rmssd_ms: number
           rolling_7d_mean_lnrmssd?: number | null
-          rr_intervals: Json
+          rr_intervals?: Json | null
           source: string
-          timezone: string
+          timezone?: string | null
           warm_up_state: string
         }
         Update: {
           baseline_60d_mean_lnrmssd?: number | null
           baseline_60d_swc?: number | null
           confidence?: string
+          connection_id?: string | null
           cycle_phase?: string | null
           id?: string
           inserted_at?: string | null
@@ -563,16 +570,25 @@ export type Database = {
           mean_hr_bpm?: number | null
           measured_at?: string
           member_id?: string
+          provider_recorded_at?: string | null
           quality_warnings?: Json | null
           readiness_bucket?: string | null
+          resting_hr_bpm?: number | null
           rmssd_ms?: number
           rolling_7d_mean_lnrmssd?: number | null
-          rr_intervals?: Json
+          rr_intervals?: Json | null
           source?: string
-          timezone?: string
+          timezone?: string | null
           warm_up_state?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "hrv_readings_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "hrv_wearable_connections"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "hrv_readings_member_id_fkey"
             columns: ["member_id"]
@@ -659,7 +675,6 @@ export type Database = {
           cycle_tracking_enabled: boolean | null
           inserted_at: string | null
           member_id: string
-          preferred_source: string | null
           session_suggestion_enabled: boolean | null
           share_to_coach: boolean | null
           updated_at: string | null
@@ -668,7 +683,6 @@ export type Database = {
           cycle_tracking_enabled?: boolean | null
           inserted_at?: string | null
           member_id: string
-          preferred_source?: string | null
           session_suggestion_enabled?: boolean | null
           share_to_coach?: boolean | null
           updated_at?: string | null
@@ -677,7 +691,6 @@ export type Database = {
           cycle_tracking_enabled?: boolean | null
           inserted_at?: string | null
           member_id?: string
-          preferred_source?: string | null
           session_suggestion_enabled?: boolean | null
           share_to_coach?: boolean | null
           updated_at?: string | null
@@ -731,6 +744,63 @@ export type Database = {
           },
           {
             foreignKeyName: "hrv_streak_events_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hrv_wearable_connections: {
+        Row: {
+          access_token: string
+          connected_at: string | null
+          id: string
+          is_primary: boolean
+          last_synced_at: string | null
+          member_id: string
+          provider: string
+          provider_user_id: string | null
+          refresh_token: string | null
+          status: string
+          token_expires_at: string | null
+        }
+        Insert: {
+          access_token: string
+          connected_at?: string | null
+          id?: string
+          is_primary?: boolean
+          last_synced_at?: string | null
+          member_id: string
+          provider: string
+          provider_user_id?: string | null
+          refresh_token?: string | null
+          status?: string
+          token_expires_at?: string | null
+        }
+        Update: {
+          access_token?: string
+          connected_at?: string | null
+          id?: string
+          is_primary?: boolean
+          last_synced_at?: string | null
+          member_id?: string
+          provider?: string
+          provider_user_id?: string | null
+          refresh_token?: string | null
+          status?: string
+          token_expires_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hrv_wearable_connections_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "hrv_wearable_connections_member_id_fkey"
             columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "members"
