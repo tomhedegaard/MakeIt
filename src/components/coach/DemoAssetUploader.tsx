@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { resolveDemoAssets } from "@/lib/data/exercises";
+import { resolveDemoAssets } from "@/lib/data/demo-assets";
 import { uploadDemoAssetAction } from "@/app/coach/exercises/actions";
 
 const BUCKET = "exercise-demos";

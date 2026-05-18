@@ -231,26 +231,10 @@ export function dominantView(ex: Exercise): "front" | "back" {
   return back >= front ? "back" : "front";
 }
 
-export type DemoAssets = { webm: string; mp4: string; poster: string };
-
-/**
- * Resolves a demo_asset_url into its webm / mp4 / poster siblings.
- * The stored URL points at one file and may carry a `?v=` cache-bust
- * query; the brief names the trio {slug}.webm / {slug}.mp4 /
- * {slug}-poster.jpg, so the other two are derived. The query is split
- * off before the extension is stripped (the strip regex is
- * end-anchored) and re-attached to all three so the cache-bust holds.
- */
-export function resolveDemoAssets(demoAssetUrl: string): DemoAssets {
-  const [path, query] = demoAssetUrl.split("?");
-  const q = query ? `?${query}` : "";
-  const base = path.replace(/\.(webm|mp4)$/, "");
-  return {
-    webm: `${base}.webm${q}`,
-    mp4: `${base}.mp4${q}`,
-    poster: `${base}-poster.jpg${q}`,
-  };
-}
+// Demo-asset resolution lives in its own dependency-free module so
+// client components can use it without pulling this server-tainted
+// file (it imports @/lib/supabase/server) into the browser bundle.
+export { resolveDemoAssets, type DemoAssets } from "@/lib/data/demo-assets";
 
 function matches(e: Exercise, f: ExerciseFilters): boolean {
   if (f.category && e.category !== f.category) return false;

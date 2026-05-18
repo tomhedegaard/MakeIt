@@ -4,7 +4,7 @@ import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
 import type { MuscleGroup, AnatomyView } from "@/lib/data/muscle-groups";
 import type { AnatomyGender } from "@/lib/data/anatomy/paths";
 import type { ExercisePhase } from "@/lib/data/exercises";
-import { resolveDemoAssets } from "@/lib/data/exercises";
+import { resolveDemoAssets } from "@/lib/data/demo-assets";
 import PhaseAnimator from "./PhaseAnimator";
 
 /**
