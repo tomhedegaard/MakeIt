@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
-import { whoopProvider } from "@/lib/hrv/wearables/whoop";
+import { getProvider } from "@/lib/hrv/wearables/registry";
 import { encryptToken, decryptToken } from "@/lib/hrv/wearables/crypto";
 import { syncConnection } from "@/lib/hrv/wearables/sync";
 
@@ -23,11 +23,11 @@ function redirectTo(request: NextRequest, path: string): NextResponse {
 }
 
 /**
- * Wearable OAuth callback (W1 — WHOOP only).
+ * Wearable OAuth callback (provider-agnostic via the provider registry).
  *
- * WHOOP redirects the member's browser here with an authorization `code`.
- * We validate the single-use CSRF `state` cookie, exchange the code for
- * tokens, encrypt and store them in `hrv_wearable_connections`, then run
+ * The provider redirects the member's browser here with an authorization
+ * `code`. We validate the single-use CSRF `state` cookie, exchange the code
+ * for tokens, encrypt and store them in `hrv_wearable_connections`, then run
  * a best-effort initial sync. Any failure redirects back to `/hrv` with
  * an `error` query param the page can surface.
  */
@@ -69,8 +69,9 @@ export async function GET(
     return redirectTo(request, "/hrv?error=state_mismatch");
   }
 
-  // --- Step 3: W1 only supports WHOOP. ---
-  if (provider !== "whoop") {
+  // --- Step 3: resolve the provider via the registry. ---
+  const providerImpl = getProvider(provider);
+  if (!providerImpl) {
     return redirectTo(request, "/hrv?error=unsupported_provider");
   }
 
@@ -99,10 +100,10 @@ export async function GET(
     // --- Step 5 + 6: exchange the code for tokens. ---
     // The redirect URI must match the one used to start the OAuth flow.
     const redirectUri = new URL(
-      "/api/wearables/whoop/callback",
+      `/api/wearables/${provider}/callback`,
       request.url,
     ).toString();
-    const tokens = await whoopProvider.exchangeCode(code, redirectUri);
+    const tokens = await providerImpl.exchangeCode(code, redirectUri);
 
     // --- Step 7: encrypt tokens at rest. ---
     const encryptedAccess = encryptToken(tokens.accessToken, encKey);
@@ -169,7 +170,7 @@ export async function GET(
         connection: {
           id: connRow.id,
           memberId: connRow.member_id,
-          provider: "whoop",
+          provider: providerImpl.id,
           accessToken: decryptToken(connRow.access_token, encKey),
           refreshToken:
             connRow.refresh_token !== null
@@ -177,7 +178,7 @@ export async function GET(
               : null,
           tokenExpiresAt: connRow.token_expires_at,
         },
-        provider: whoopProvider,
+        provider: providerImpl,
         priorLnRmssd: [],
         // Freshly-connected connection has no readings yet — never deduped.
         lastReadingProviderRecordedAt: null,
