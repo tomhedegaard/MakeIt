@@ -8,6 +8,7 @@ import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
 import MuscleTierPicker, {
   type MuscleTiers,
 } from "@/components/coach/MuscleTierPicker";
+import DemoAssetUploader from "@/components/coach/DemoAssetUploader";
 import { saveExerciseAction } from "@/app/coach/exercises/actions";
 
 const CATEGORIES = [
@@ -50,7 +51,6 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
     exercise.difficulty ?? "",
   );
   const [displayOrder, setDisplayOrder] = useState(exercise.displayOrder);
-  const [demoAssetUrl, setDemoAssetUrl] = useState(exercise.demoAssetUrl ?? "");
   const [isPublished, setIsPublished] = useState(exercise.isPublished);
 
   const [tiers, setTiers] = useState<MuscleTiers>({
@@ -99,7 +99,6 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
         setup: setup.trim() || null,
         progression: progression.trim() || null,
         regression: regression.trim() || null,
-        demoAssetUrl: demoAssetUrl.trim() || null,
         displayOrder,
         isPublished,
         phases: phases.map(
@@ -182,14 +181,6 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
               className="input w-full"
             />
           </Field>
-          <Field label="Demo-asset URL (valgfri)">
-            <input
-              value={demoAssetUrl}
-              onChange={(e) => setDemoAssetUrl(e.target.value)}
-              placeholder="…/exercise-demos/slug.webm"
-              className="input w-full"
-            />
-          </Field>
         </div>
         <label className="flex items-center gap-2 text-sm">
           <input
@@ -200,6 +191,12 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           <span>Publiceret — synlig på /train/exercises</span>
         </label>
       </section>
+
+      <DemoAssetUploader
+        exerciseId={exercise.id}
+        slug={exercise.slug}
+        initialDemoAssetUrl={exercise.demoAssetUrl}
+      />
 
       {/* Muscle tiers + figure */}
       <section className="surface-2 rounded-xl p-5 md:p-6">
