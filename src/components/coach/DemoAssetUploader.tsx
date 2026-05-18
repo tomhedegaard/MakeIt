@@ -42,7 +42,7 @@ export default function DemoAssetUploader({
   const [errors, setErrors] = useState<Partial<Record<SlotKey, string>>>({});
   const [, startPersist] = useTransition();
 
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
 
   async function handleFile(slotKey: SlotKey, ext: string, mime: string, file: File) {
     setErrors((e) => ({ ...e, [slotKey]: undefined }));
@@ -82,6 +82,7 @@ export default function DemoAssetUploader({
         if (res.ok && res.demoAssetUrl) {
           setDemoAssetUrl(res.demoAssetUrl);
         } else {
+          setState((s) => ({ ...s, webm: "error" }));
           setErrors((e) => ({ ...e, webm: res.error ?? "Kunne ikke gemme" }));
         }
       });

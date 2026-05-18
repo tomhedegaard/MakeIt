@@ -19,7 +19,8 @@ on conflict (id) do update set
   file_size_limit    = excluded.file_size_limit,
   allowed_mime_types = excluded.allowed_mime_types;
 
--- Public read — bucket is public; this lists objects via public path.
+-- Public read on object rows. (Public file serving on a public bucket
+-- does not consult this — this only governs storage.objects row visibility.)
 drop policy if exists "exercise-demos public read" on storage.objects;
 create policy "exercise-demos public read"
   on storage.objects for select

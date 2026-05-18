@@ -141,6 +141,8 @@ export async function uploadDemoAssetAction(input: {
   exerciseId: string;
   slug: string;
 }): Promise<{ ok: boolean; demoAssetUrl?: string; error?: string }> {
+  // The exerciseId/slug pair is assumed consistent — the editor always
+  // passes a matched pair — and RLS gates who can call this action.
   if (!SUPABASE_ENABLED) return { ok: false, error: "Supabase ikke konfigureret" };
 
   const supabase = await createClient();
