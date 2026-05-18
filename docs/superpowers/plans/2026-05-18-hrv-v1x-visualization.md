@@ -63,6 +63,7 @@ function reading(day: number, lnRmssd: number, extra: Partial<ChartReading> = {}
     rolling7dMeanLnRmssd: lnRmssd,
     baseline60dMeanLnRmssd: lnRmssd,
     baseline60dSwc: 0.1,
+    readinessBucket: null,
     isSick: false,
     ...extra,
   };
@@ -121,8 +122,8 @@ describe("buildTrendChartModel", () => {
 
 - [ ] **Step 3: Implement `trend-chart.ts`**
 
-Export:
-- `interface ChartReading { measuredAt: string; lnRmssd: number; rolling7dMeanLnRmssd: number | null; baseline60dMeanLnRmssd: number | null; baseline60dSwc: number | null; isSick: boolean }`
+Export (`ChartReading` imports `ReadinessBucket` from `@/lib/hrv/types`):
+- `interface ChartReading { measuredAt: string; lnRmssd: number; rolling7dMeanLnRmssd: number | null; baseline60dMeanLnRmssd: number | null; baseline60dSwc: number | null; readinessBucket: ReadinessBucket | null; isSick: boolean }` — `readinessBucket` is carried for the trends page's bucket-distribution row; `buildTrendChartModel` itself ignores it.
 - `interface ChartViewport { width: number; height: number }`
 - `interface TrendChartModel { isEmpty: boolean; points: { x: number; y: number; isSick: boolean }[]; meanLinePath: string; baselineBand: { topY: number; bottomY: number; path: string } | null; yTicks: { y: number; label: string }[]; xTicks: { x: number; label: string }[] }`
 - `function buildTrendChartModel(readings: ChartReading[], viewport: ChartViewport): TrendChartModel`
@@ -155,10 +156,12 @@ Behavior: compute a y-domain from the lnRMSSD range across readings + the baseli
 
 **Files:** Create `src/lib/data/hrv.ts`
 
-- [ ] **Step 1: Implement** a server-side data module. Read `src/lib/data/settings.ts` for the existing data-module pattern (dual-mode: real Supabase vs demo/mock). Export:
-  - `getHrvReadingSeries(memberId, opts?: { rangeDays?: number }): Promise<ChartReading[]>` — the member's `hrv_readings` for their **current primary connection**, ordered by `measured_at` ascending, mapped to the `ChartReading` shape (`@/lib/hrv/trend-chart`). Connected mode queries Supabase (join/filter on the primary `hrv_wearable_connections` row); demo mode returns `[]` (demo has no connection) or the mock store if convenient.
-  - `getLatestHrvReading(memberId): Promise<HrvReading | null>` — latest reading (reuse what `/hrv/page.tsx` already does inline; this is the extraction the W1 nav task flagged).
-  - `getHrvConnections(memberId)` — the member's non-revoked connections (used by `/hrv` and settings).
+- [ ] **Step 1: Implement** a server-side data module. Read `src/lib/data/settings.ts` for the existing data-module pattern (dual-mode: real Supabase vs demo/mock) — note it already has `getMemberHrvSettings` which lists connections, so **do not** add a connection-list function here (no V1.x task needs one). Export exactly two functions:
+  - `getHrvReadingSeries(memberId, opts?: { rangeDays?: number }): Promise<ChartReading[]>` — the member's `hrv_readings` for their **current primary connection only** (spec §5: the baseline/chart reads only the primary connection's readings). Concrete two-step query in connected mode:
+    1. `select id from hrv_wearable_connections where member_id = <memberId> and is_primary = true` via `.maybeSingle()`. If there is no primary connection → return `[]`.
+    2. `select measured_at, ln_rmssd, rolling_7d_mean_lnrmssd, baseline_60d_mean_lnrmssd, baseline_60d_swc, readiness_bucket, is_sick from hrv_readings where connection_id = <that id> order by measured_at asc` (apply `rangeDays` as a `measured_at >=` cutoff if given).
+    Map each snake_case row → camelCase `ChartReading` (`measured_at`→`measuredAt`, `ln_rmssd`→`lnRmssd`, `rolling_7d_mean_lnrmssd`→`rolling7dMeanLnRmssd`, `baseline_60d_mean_lnrmssd`→`baseline60dMeanLnRmssd`, `baseline_60d_swc`→`baseline60dSwc`, `readiness_bucket`→`readinessBucket`, `is_sick`→`isSick`). **Demo mode (`!SUPABASE_ENABLED` / no client) → return `[]`** (flatly — deterministic empty state, no mock store).
+  - `getLatestHrvReading(memberId): Promise<HrvReading | null>` — latest reading (extraction of what `/hrv/page.tsx` already does inline; the W1 nav task flagged this). Connected mode only; demo → `null`.
   Keep it focused; do not refactor the existing `/hrv` page in this task (Task 7 does the page touch-ups).
 
 - [ ] **Step 2:** `npx tsc --noEmit` clean. Commit `feat(hrv): shared HRV data module`.
@@ -170,7 +173,7 @@ Behavior: compute a y-domain from the lnRMSSD range across readings + the baseli
 - [ ] **Step 1: Implement** a server component. Resolve the member, call `getHrvReadingSeries`. Render state-aware (spec §6):
   - **Empty (0 readings):** faint chart-axis scaffold + copy "Vi viser dit forløb her, så snart vi har data. Dine målinger ligger trygt gemt."
   - **Provisional (1–13 readings):** render `<TrendChart>` with the points + mean line but **no baseline band** (baseline not mature) + copy "Vi bygger din baseline. Når den er klar, kommer båndet."
-  - **Active (≥14 readings):** full `<TrendChart>` incl. baseline band; below it a **bucket-distribution** row — 5 horizontal bars sized by the share of the last 30 days in each `readiness_bucket`, with a caption like "Dine sidste 30 dage: 65% normal, 18% under, ...".
+  - **Active (≥14 readings):** full `<TrendChart>` incl. baseline band; below it a **bucket-distribution** row — 5 horizontal bars sized by the share of the last 30 days in each readiness bucket. Compute it in the page from the `ChartReading[]` the data module returns: take the last-30-days slice, tally each reading's `readinessBucket` (skip `null`), and size the 5 bars by share. Caption like "Dine sidste 30 dage: 65% normal, 18% under, ...".
   Use `PageHeader` + `HrvSubNav` (Task 6/8). Demo mode → empty state. Monochrome.
 
 - [ ] **Step 2:** `npx tsc --noEmit && npm run lint` clean. Manual: `npm run dev`, visit `/hrv/trends`. Commit `feat(hrv): /hrv/trends page`.
@@ -195,7 +198,7 @@ Behavior: compute a y-domain from the lnRMSSD range across readings + the baseli
 
 - [ ] **Step 1: Implement `HrvSubNav`** — a small client component (`"use client"`, uses `usePathname`) rendering links: I dag (`/hrv`) · Forløb (`/hrv/trends`) · Lær (`/hrv/learn`), with the active one marked. Monochrome, matches the app's nav styling.
 
-- [ ] **Step 2: Modify `/hrv/page.tsx`** — (a) render `<HrvSubNav>` near the top; (b) in the **active** state, replace the plain bucket-text display with `<ReadinessLadder bucket={...} />` alongside the RMSSD value + bucket text (the ladder complements, not replaces, the text). Leave the no-connection / warming-up states as they are (warming-up may show the neutral ladder if it fits cleanly — optional). Do not regress the W1 behavior.
+- [ ] **Step 2: Modify `/hrv/page.tsx`** — (a) render `<HrvSubNav>` near the top, shared across all states; (b) **only inside the `StateActive` branch**, add `<ReadinessLadder bucket={latest.readinessBucket} />` alongside the existing RMSSD value + readiness text — the ladder *complements*, does not replace, the text and the `READINESS_LABEL` mapping stay. **Do not touch** the no-connection, warming-up, needs-reauth, or pending-first-sync branches (warming-up may optionally show the neutral ladder only if trivially clean — otherwise leave it). The four non-active W1 states must render exactly as before.
 
 - [ ] **Step 3:** `npx tsc --noEmit && npm run lint` clean. Manual: `/hrv`, `/hrv/trends`, `/hrv/learn` all reachable via the sub-nav; active state shows the ladder. Commit `feat(hrv): HRV sub-nav + readiness ladder on /hrv`.
 
