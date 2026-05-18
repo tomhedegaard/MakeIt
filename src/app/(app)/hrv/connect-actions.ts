@@ -5,13 +5,13 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
-import { whoopProvider } from "@/lib/hrv/wearables/whoop";
+import { getProvider } from "@/lib/hrv/wearables/registry";
 
 /**
  * HRV wearable connect/disconnect server actions.
  *
  * Called by the `/hrv` and `/settings` pages to manage a member's
- * wearable OAuth connections (W1: WHOOP only).
+ * wearable OAuth connections (provider-agnostic via the registry).
  *
  * Ownership model: `hrv_wearable_connections`' member RLS policy is
  * select-only, so mutations go through `createServiceClient()` (which
@@ -73,7 +73,8 @@ export async function startWearableConnect(
 ): Promise<StartConnectResult> {
   if (!SUPABASE_ENABLED) return { ok: false, error: "demo_mode" };
 
-  if (provider !== "whoop") {
+  const providerImpl = getProvider(provider);
+  if (!providerImpl) {
     return { ok: false, error: "unsupported_provider" };
   }
 
@@ -88,7 +89,7 @@ export async function startWearableConnect(
   const cookieStore = await cookies();
   cookieStore.set(
     OAUTH_STATE_COOKIE,
-    JSON.stringify({ state, provider: "whoop" }),
+    JSON.stringify({ state, provider: providerImpl.id }),
     {
       httpOnly: true,
       secure: true,
@@ -98,9 +99,9 @@ export async function startWearableConnect(
     },
   );
 
-  const redirectUri = `${origin}/api/wearables/whoop/callback`;
+  const redirectUri = `${origin}/api/wearables/${provider}/callback`;
 
-  return { ok: true, authUrl: whoopProvider.getAuthUrl(state, redirectUri) };
+  return { ok: true, authUrl: providerImpl.getAuthUrl(state, redirectUri) };
 }
 
 /**
