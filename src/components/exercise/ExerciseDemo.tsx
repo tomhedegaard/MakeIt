@@ -4,13 +4,16 @@ import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
 import type { MuscleGroup, AnatomyView } from "@/lib/data/muscle-groups";
 import type { AnatomyGender } from "@/lib/data/anatomy/paths";
 import type { ExercisePhase } from "@/lib/data/exercises";
+import { resolveDemoAssets } from "@/lib/data/exercises";
 import PhaseAnimator from "./PhaseAnimator";
 
 /**
  * Demo column for the exercise detail page. Resolution order:
  *
  *  1. `demoAssetUrl` set → looping <video> (real production loop —
- *     see docs/EXERCISE_VISUAL_BRIEF.md for spec).
+ *     see docs/EXERCISE_VISUAL_BRIEF.md for spec). The webm/mp4/poster
+ *     trio is resolved from the single stored URL via
+ *     `resolveDemoAssets`; the poster still-frame is always derived.
  *  2. `phases[]` populated → PhaseAnimator cycles the AnatomyFigure
  *     so recruitment shifts visually across the rep.
  *  3. Otherwise → static AnatomyFigure with the exercise's overall
@@ -27,7 +30,6 @@ export default function ExerciseDemo({
   tertiary,
   view,
   gender,
-  posterUrl,
 }: {
   demoAssetUrl: string | null;
   phases: ExercisePhase[];
@@ -36,23 +38,20 @@ export default function ExerciseDemo({
   tertiary: MuscleGroup[];
   view: AnatomyView;
   gender: AnatomyGender;
-  posterUrl?: string | null;
 }) {
   if (demoAssetUrl) {
-    // Strip extension and resolve sibling formats. We expect WebM as
-    // the primary asset and MP4 as the fallback — see brief.
-    const base = demoAssetUrl.replace(/\.(webm|mp4)$/, "");
+    const { webm, mp4, poster } = resolveDemoAssets(demoAssetUrl);
     return (
       <video
         autoPlay
         loop
         muted
         playsInline
-        poster={posterUrl ?? undefined}
+        poster={poster}
         className="rounded-lg w-full max-w-[240px]"
       >
-        <source src={`${base}.webm`} type="video/webm" />
-        <source src={`${base}.mp4`} type="video/mp4" />
+        <source src={webm} type="video/webm" />
+        <source src={mp4} type="video/mp4" />
       </video>
     );
   }
