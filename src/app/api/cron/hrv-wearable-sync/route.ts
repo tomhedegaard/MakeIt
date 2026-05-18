@@ -1,19 +1,20 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
-import { whoopProvider } from "@/lib/hrv/wearables/whoop";
+import { getProvider } from "@/lib/hrv/wearables/registry";
 import { encryptToken, decryptToken } from "@/lib/hrv/wearables/crypto";
 import { syncConnection } from "@/lib/hrv/wearables/sync";
-import type { WearableProvider } from "@/lib/hrv/wearables/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Daily wearable-sync cron (W1 — WHOOP only).
+ * Daily wearable-sync cron.
  *
  * Triggered by Vercel Cron once a day. For every `active`
- * `hrv_wearable_connections` row it pulls the member's latest HRV reading
- * from the wearable provider and writes a `hrv_readings` row. Each
+ * `hrv_wearable_connections` row it resolves the provider via the wearable
+ * registry, pulls the member's latest HRV reading, and writes a
+ * `hrv_readings` row. Connections whose provider is not registered are
+ * skipped. Each
  * connection is processed in its own try/catch so one failure cannot abort
  * the whole batch. Refreshed OAuth tokens are re-encrypted before being
  * persisted; auth failures flip the connection to `needs_reauth`.
@@ -49,19 +50,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return new NextResponse("query failed", { status: 500 });
   }
 
-  /** W1 only ships the WHOOP provider; others are skipped until later phases. */
-  const providers: Record<string, WearableProvider> = {
-    whoop: whoopProvider,
-  };
-
   let readings = 0;
   const rows = connections ?? [];
 
   // --- Step 4: process each connection in isolation. ---
   for (const conn of rows) {
     try {
-      // Step 4c: resolve the provider (skip unknown providers).
-      const provider = providers[conn.provider];
+      // Step 4c: resolve the provider via the registry (skip unknown providers).
+      const provider = getProvider(conn.provider);
       if (!provider) {
         console.warn(
           `[cron/hrv-wearable-sync] no handler for provider "${conn.provider}" ` +
@@ -109,7 +105,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         connection: {
           id: conn.id,
           memberId: conn.member_id,
-          provider: "whoop",
+          // Use the resolved provider's typed id — it equals the DB row's
+          // `conn.provider`, but is narrowed to the WearableProvider union.
+          provider: provider.id,
           accessToken,
           refreshToken,
           tokenExpiresAt: conn.token_expires_at,
