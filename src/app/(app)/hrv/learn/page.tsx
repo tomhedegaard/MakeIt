@@ -1,6 +1,6 @@
-import Link from "next/link";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
+import HrvSubNav from "@/components/hrv/HrvSubNav";
 
 /**
  * `/hrv/learn` — a short, static editorial page explaining HRV to members.
@@ -8,8 +8,7 @@ import PageHeader from "@/components/app/PageHeader";
  * Purely editorial: no data fetching, no member resolution. Five plain-language
  * sections in a narrow text column, monochrome, no illustrations.
  *
- * The back-link to `/hrv` at the top is a placeholder — Task 7 swaps in the
- * shared `HrvSubNav`.
+ * The shared `HrvSubNav` at the top links between the three `/hrv` pages.
  */
 
 /** The five editorial sections, in render order. */
@@ -45,12 +44,7 @@ export default function HrvLearnPage() {
         subtitle="Hvad HRV er, hvorfor vi viser den, som vi gør — og hvad tallet betyder for dig."
       />
       <Container className="py-8 lg:py-12 space-y-10">
-        <Link
-          href="/hrv"
-          className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg transition-colors"
-        >
-          <span aria-hidden>&larr;</span> Tilbage til HRV
-        </Link>
+        <HrvSubNav />
 
         <article className="max-w-prose space-y-12">
           {SECTIONS.map((section) => (

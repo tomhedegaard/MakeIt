@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
+import HrvSubNav from "@/components/hrv/HrvSubNav";
 import TrendChart from "@/components/hrv/TrendChart";
 import { getSession } from "@/lib/auth";
 import { getHrvReadingSeries } from "@/lib/data/hrv";
@@ -20,8 +20,7 @@ import type { ReadinessBucket } from "@/lib/hrv/types";
  *
  * Demo mode (`getHrvReadingSeries` returns `[]`) falls into the empty state.
  *
- * The back-link to `/hrv` at the top is a placeholder — Task 7 swaps in the
- * shared `HrvSubNav`.
+ * The shared `HrvSubNav` at the top links between the three `/hrv` pages.
  */
 
 /** Ordered readiness buckets for the distribution row. */
@@ -66,12 +65,7 @@ export default async function HrvTrendsPage() {
         subtitle="Dit HRV-forløb over tid — den daglige måling, dit 7-dages snit og dit normalområde."
       />
       <Container className="py-8 lg:py-12 space-y-8">
-        <Link
-          href="/hrv"
-          className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg transition-colors"
-        >
-          <span aria-hidden>&larr;</span> Tilbage til HRV
-        </Link>
+        <HrvSubNav />
 
         {state === "empty" ? (
           <StateEmpty />

@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { mockListReadings } from "@/lib/hrv/mock";
 import type { ReadinessBucket, WarmUpState } from "@/lib/hrv/types";
+import HrvSubNav from "@/components/hrv/HrvSubNav";
+import ReadinessLadder from "@/components/hrv/ReadinessLadder";
 import ConnectButton from "./ConnectButton";
 
 /**
@@ -155,6 +157,8 @@ export default async function HrvPage() {
         subtitle="Din hjerterytmevariabilitet — et dagligt mål for, hvor klar din krop er til at træne."
       />
       <Container className="py-8 lg:py-12 space-y-8">
+        <HrvSubNav />
+
         {state.needsReauth ? (
           <div
             role="alert"
@@ -338,6 +342,10 @@ function StateActive({
             {readinessLabel}
           </p>
         ) : null}
+
+        <div className="mt-7 max-w-[220px]">
+          <ReadinessLadder bucket={latest.readinessBucket} />
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-px bg-line border-t hairline">
