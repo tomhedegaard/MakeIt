@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { startWearableConnect } from "@/app/(app)/hrv/connect-actions";
 
 /**
- * Bottom sheet for connecting a wearable to the HRV module (W1: WHOOP only).
+ * Bottom sheet for connecting a wearable to the HRV module (W2: WHOOP + Oura).
  *
  * Presentational client island — the actual OAuth state generation and
  * redirect-URL construction happen server-side in `startWearableConnect`.
@@ -14,15 +14,20 @@ import { startWearableConnect } from "@/app/(app)/hrv/connect-actions";
  * screen; on failure it surfaces an inline message.
  */
 
+type ProviderId = "whoop" | "oura" | "polar";
+
+/** Providers with a live OAuth connect flow (Polar is still "Kommer snart"). */
+type ConnectableProviderId = Exclude<ProviderId, "polar">;
+
 type Provider = {
-  id: "whoop" | "oura" | "polar";
+  id: ProviderId;
   name: string;
   active: boolean;
 };
 
 const PROVIDERS: Provider[] = [
   { id: "whoop", name: "WHOOP", active: true },
-  { id: "oura", name: "Oura", active: false },
+  { id: "oura", name: "Oura", active: true },
   { id: "polar", name: "Polar", active: false },
 ];
 
@@ -41,25 +46,25 @@ export default function WearableConnectSheet({
 }
 
 function WearableConnectBody() {
-  const [pending, setPending] = useState(false);
+  const [pending, setPending] = useState<ProviderId | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function connectWhoop() {
+  async function connect(provider: ConnectableProviderId) {
     if (pending) return;
     setError(null);
-    setPending(true);
+    setPending(provider);
     try {
-      const res = await startWearableConnect("whoop");
+      const res = await startWearableConnect(provider);
       if (res.ok && res.authUrl) {
-        // Full redirect to the WHOOP OAuth consent screen.
-        window.location.href = res.authUrl;
+        // Full redirect to the provider's OAuth consent screen.
+        window.location.assign(res.authUrl);
         return; // keep pending state through the navigation
       }
       setError(messageFor(res.ok ? undefined : res.error));
-      setPending(false);
+      setPending(null);
     } catch {
       setError("Noget gik galt. Prøv igen.");
-      setPending(false);
+      setPending(null);
     }
   }
 
@@ -74,16 +79,16 @@ function WearableConnectBody() {
 
       <div className="grid gap-3">
         {PROVIDERS.map((provider) =>
-          provider.id === "whoop" ? (
+          provider.active && provider.id !== "polar" ? (
             <button
               key={provider.id}
               type="button"
-              onClick={connectWhoop}
-              disabled={pending}
-              aria-busy={pending}
+              onClick={() => connect(provider.id as ConnectableProviderId)}
+              disabled={pending !== null}
+              aria-busy={pending === provider.id}
               className={cn(
                 "surface-2 rounded-2xl p-5 text-left flex items-center justify-between gap-4 touch-app",
-                pending ? "opacity-70" : "lift",
+                pending !== null ? "opacity-70" : "lift",
               )}
             >
               <span>
@@ -91,11 +96,13 @@ function WearableConnectBody() {
                   {provider.name}
                 </span>
                 <span className="block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-0.5">
-                  {pending ? "Åbner WHOOP…" : "HRV · søvn · recovery"}
+                  {pending === provider.id
+                    ? `Åbner ${provider.name}…`
+                    : "HRV · søvn · recovery"}
                 </span>
               </span>
               <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint shrink-0">
-                {pending ? "···" : "Forbind →"}
+                {pending === provider.id ? "···" : "Forbind →"}
               </span>
             </button>
           ) : (
