@@ -88,6 +88,21 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       }
       const priorLnRmssd = (priorRows ?? []).map((r) => r.ln_rmssd);
 
+      // Step 4b': most recent stored provider_recorded_at for dedup.
+      const { data: lastReadingRows, error: lastReadingError } = await supabase
+        .from("hrv_readings")
+        .select("provider_recorded_at")
+        .eq("connection_id", conn.id)
+        .order("provider_recorded_at", { ascending: false, nullsFirst: false })
+        .limit(1);
+      if (lastReadingError) {
+        throw new Error(
+          `last reading query failed: ${lastReadingError.message}`,
+        );
+      }
+      const lastReadingProviderRecordedAt =
+        lastReadingRows?.[0]?.provider_recorded_at ?? null;
+
       // Step 4d: run the pure sync orchestration.
       const now = new Date();
       const result = await syncConnection({
@@ -101,6 +116,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         },
         provider,
         priorLnRmssd,
+        lastReadingProviderRecordedAt,
         now,
       });
 

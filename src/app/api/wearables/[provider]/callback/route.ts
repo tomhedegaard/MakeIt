@@ -179,6 +179,8 @@ export async function GET(
         },
         provider: whoopProvider,
         priorLnRmssd: [],
+        // Freshly-connected connection has no readings yet — never deduped.
+        lastReadingProviderRecordedAt: null,
         now: new Date(),
       });
 

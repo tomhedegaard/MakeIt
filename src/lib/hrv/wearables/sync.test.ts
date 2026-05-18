@@ -64,6 +64,7 @@ describe("syncConnection", () => {
       }),
       provider,
       priorLnRmssd: [],
+      lastReadingProviderRecordedAt: null,
       now: NOW,
     });
 
@@ -82,6 +83,7 @@ describe("syncConnection", () => {
       connection: makeConnection(),
       provider,
       priorLnRmssd: [],
+      lastReadingProviderRecordedAt: null,
       now: NOW,
     });
 
@@ -100,6 +102,7 @@ describe("syncConnection", () => {
       connection: makeConnection(),
       provider,
       priorLnRmssd: [],
+      lastReadingProviderRecordedAt: null,
       now: NOW,
     });
 
@@ -117,6 +120,7 @@ describe("syncConnection", () => {
       connection: makeConnection(),
       provider,
       priorLnRmssd: [],
+      lastReadingProviderRecordedAt: null,
       now: NOW,
     });
 
@@ -137,6 +141,7 @@ describe("syncConnection", () => {
       connection: makeConnection(),
       provider,
       priorLnRmssd,
+      lastReadingProviderRecordedAt: null,
       now: NOW,
     });
 
@@ -171,6 +176,7 @@ describe("syncConnection", () => {
       }),
       provider,
       priorLnRmssd: [],
+      lastReadingProviderRecordedAt: null,
       now: NOW,
     });
 
@@ -178,5 +184,62 @@ describe("syncConnection", () => {
     if (result.status !== "error") throw new Error("expected error");
     expect(result.reason).toBe("no_refresh_token");
     expect(provider.refreshTokens).not.toHaveBeenCalled();
+  });
+
+  it("(g) skips a good reading whose recordedAt matches lastReadingProviderRecordedAt", async () => {
+    const provider = makeProvider();
+    (provider.fetchLatestHrv as ReturnType<typeof vi.fn>).mockResolvedValue(
+      GOOD_READING,
+    );
+
+    const result = await syncConnection({
+      connection: makeConnection(),
+      provider,
+      priorLnRmssd: [],
+      lastReadingProviderRecordedAt: GOOD_READING.recordedAt,
+      now: NOW,
+    });
+
+    expect(result.status).toBe("skipped");
+  });
+
+  it("(h) still produces a reading when recordedAt differs from lastReadingProviderRecordedAt", async () => {
+    const provider = makeProvider();
+    (provider.fetchLatestHrv as ReturnType<typeof vi.fn>).mockResolvedValue(
+      GOOD_READING,
+    );
+
+    const result = await syncConnection({
+      connection: makeConnection(),
+      provider,
+      priorLnRmssd: [],
+      lastReadingProviderRecordedAt: "2026-05-17T06:30:00.000Z",
+      now: NOW,
+    });
+
+    expect(result.status).toBe("reading");
+  });
+
+  it("(i) returns refreshed tokens even when the reading is skipped as a duplicate", async () => {
+    const provider = makeProvider();
+    (provider.refreshTokens as ReturnType<typeof vi.fn>).mockResolvedValue(
+      REFRESHED_TOKENS,
+    );
+    (provider.fetchLatestHrv as ReturnType<typeof vi.fn>).mockResolvedValue(
+      GOOD_READING,
+    );
+
+    const result = await syncConnection({
+      connection: makeConnection({
+        tokenExpiresAt: "2026-05-18T11:00:00.000Z", // expired
+      }),
+      provider,
+      priorLnRmssd: [],
+      lastReadingProviderRecordedAt: GOOD_READING.recordedAt,
+      now: NOW,
+    });
+
+    expect(result.status).toBe("skipped");
+    expect(result.tokens).toEqual(REFRESHED_TOKENS);
   });
 });

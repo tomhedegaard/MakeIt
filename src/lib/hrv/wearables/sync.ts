@@ -30,6 +30,12 @@ export interface SyncConnectionInput {
   provider: WearableProvider;
   /** Member's prior lnRMSSD values for THIS connection, chronological. */
   priorLnRmssd: number[];
+  /**
+   * ISO timestamp of the connection's most recent existing
+   * `hrv_readings.provider_recorded_at`, or `null` if it has no readings yet.
+   * Used to skip re-inserting a reading the provider has already given us.
+   */
+  lastReadingProviderRecordedAt: string | null;
   /** Injected current time for testability. */
   now: Date;
 }
@@ -58,7 +64,11 @@ export interface HrvReadingPayload {
 
 export type SyncResult =
   | { status: "reading"; tokens?: WearableTokens; reading: HrvReadingPayload }
-  | { status: "skipped"; tokens?: WearableTokens }
+  | {
+      status: "skipped";
+      tokens?: WearableTokens;
+      reason?: "no_reading" | "calibrating" | "already_synced";
+    }
   | { status: "error"; tokens?: WearableTokens; reason: "no_refresh_token" };
 
 /** True when `tokenExpiresAt` is null or within the skew window of `now`. */
@@ -74,12 +84,15 @@ function isExpired(tokenExpiresAt: string | null, now: Date): boolean {
  * 1. Refresh tokens if expired (error if no refresh token available).
  * 2. Fetch the latest HRV reading.
  * 3. Skip if there is no reading, or the provider is still calibrating.
- * 4. Otherwise compute lnRMSSD + baseline and return the mapped payload.
+ * 4. Skip if the reading was already synced (its `recordedAt` matches the
+ *    connection's most recent stored `provider_recorded_at`).
+ * 5. Otherwise compute lnRMSSD + baseline and return the mapped payload.
  */
 export async function syncConnection(
   input: SyncConnectionInput,
 ): Promise<SyncResult> {
-  const { connection, provider, priorLnRmssd, now } = input;
+  const { connection, provider, priorLnRmssd, lastReadingProviderRecordedAt, now } =
+    input;
 
   let accessToken = connection.accessToken;
   let tokens: WearableTokens | undefined;
@@ -94,8 +107,22 @@ export async function syncConnection(
 
   const reading = await provider.fetchLatestHrv(accessToken);
 
-  if (reading === null || reading.providerCalibrating) {
-    return { status: "skipped", tokens };
+  if (reading === null) {
+    return { status: "skipped", tokens, reason: "no_reading" };
+  }
+  if (reading.providerCalibrating) {
+    return { status: "skipped", tokens, reason: "calibrating" };
+  }
+
+  // Dedup: the provider yields ~one recovery per sleep cycle. If the fetched
+  // reading carries the same `recordedAt` as the connection's most recent
+  // stored row, it is the same reading — skip without inserting a duplicate.
+  if (
+    lastReadingProviderRecordedAt !== null &&
+    new Date(reading.recordedAt).getTime() ===
+      new Date(lastReadingProviderRecordedAt).getTime()
+  ) {
+    return { status: "skipped", tokens, reason: "already_synced" };
   }
 
   const lnRmssd = computeLnRmssd(reading.rmssdMs);
