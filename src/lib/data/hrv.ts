@@ -1,0 +1,123 @@
+import "server-only";
+
+import { createClient } from "@/lib/supabase/server";
+import type { ChartReading } from "@/lib/hrv/trend-chart";
+import type {
+  HrvConfidence,
+  HrvReading,
+  HrvSource,
+  ReadinessBucket,
+  WarmUpState,
+} from "@/lib/hrv/types";
+
+/**
+ * Server-side HRV reading-history data module.
+ *
+ * One place for HRV pages (the daily `/hrv` view and the `/hrv/trends`
+ * chart) to query a member's reading history. Per spec §5, the chart and
+ * baseline only ever read the member's *primary* connection's readings.
+ *
+ * Demo mode (`!SUPABASE_ENABLED`, i.e. `createClient()` returns null) has
+ * no HRV tables — every query degrades to an empty result.
+ */
+
+/**
+ * The member's HRV readings for their current primary connection, in
+ * chronological order, shaped for the trend chart.
+ *
+ * Two-step query: resolve the primary connection, then read its readings.
+ * Demo mode, or no primary connection → `[]`.
+ *
+ * @param opts.rangeDays — if given, only readings measured within the last
+ *   `rangeDays` days are returned.
+ */
+export async function getHrvReadingSeries(
+  memberId: string,
+  opts?: { rangeDays?: number },
+): Promise<ChartReading[]> {
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  const { data: connection } = await supabase
+    .from("hrv_wearable_connections")
+    .select("id")
+    .eq("member_id", memberId)
+    .eq("is_primary", true)
+    .maybeSingle();
+
+  if (!connection) return [];
+
+  let query = supabase
+    .from("hrv_readings")
+    .select(
+      "measured_at, ln_rmssd, rolling_7d_mean_lnrmssd, baseline_60d_mean_lnrmssd, baseline_60d_swc, readiness_bucket, is_sick",
+    )
+    .eq("connection_id", connection.id as string)
+    .order("measured_at", { ascending: true });
+
+  if (opts?.rangeDays != null) {
+    const cutoff = new Date(
+      Date.now() - opts.rangeDays * 24 * 60 * 60 * 1000,
+    ).toISOString();
+    query = query.gte("measured_at", cutoff);
+  }
+
+  const { data: rows } = await query;
+
+  return (rows ?? []).map((row) => ({
+    measuredAt: row.measured_at as string,
+    lnRmssd: row.ln_rmssd as number,
+    rolling7dMeanLnRmssd:
+      (row.rolling_7d_mean_lnrmssd as number | null) ?? null,
+    baseline60dMeanLnRmssd:
+      (row.baseline_60d_mean_lnrmssd as number | null) ?? null,
+    baseline60dSwc: (row.baseline_60d_swc as number | null) ?? null,
+    readinessBucket: (row.readiness_bucket as ReadinessBucket | null) ?? null,
+    isSick: !!row.is_sick,
+  }));
+}
+
+/**
+ * The member's most recent HRV reading, or `null` if they have none.
+ *
+ * Extraction of the latest-reading lookup the `/hrv` page previously did
+ * inline. Demo mode → `null`.
+ */
+export async function getLatestHrvReading(
+  memberId: string,
+): Promise<HrvReading | null> {
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const { data: row } = await supabase
+    .from("hrv_readings")
+    .select(
+      "id, member_id, measured_at, source, confidence, rmssd_ms, ln_rmssd, mean_hr_bpm, rolling_7d_mean_lnrmssd, baseline_60d_mean_lnrmssd, baseline_60d_swc, warm_up_state, readiness_bucket, timezone, is_sick",
+    )
+    .eq("member_id", memberId)
+    .order("measured_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!row) return null;
+
+  return {
+    id: row.id as string,
+    memberId: row.member_id as string,
+    measuredAt: row.measured_at as string,
+    source: row.source as HrvSource,
+    confidence: row.confidence as HrvConfidence,
+    rmssdMs: row.rmssd_ms as number,
+    lnRmssd: row.ln_rmssd as number,
+    meanHrBpm: (row.mean_hr_bpm as number | null) ?? null,
+    rolling7dMeanLnRmssd:
+      (row.rolling_7d_mean_lnrmssd as number | null) ?? null,
+    baseline60dMeanLnRmssd:
+      (row.baseline_60d_mean_lnrmssd as number | null) ?? null,
+    baseline60dSwc: (row.baseline_60d_swc as number | null) ?? null,
+    warmUpState: row.warm_up_state as WarmUpState,
+    readinessBucket: (row.readiness_bucket as ReadinessBucket | null) ?? null,
+    timezone: row.timezone as string,
+    isSick: !!row.is_sick,
+  };
+}
