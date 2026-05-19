@@ -121,3 +121,32 @@ export async function getLatestHrvReading(
     isSick: !!row.is_sick,
   };
 }
+
+/**
+ * The member's lifestyle logs for today (server date, UTC), keyed by
+ * `event_type`.
+ *
+ * Returns an `event_type` → `value` (jsonb) map so a caller can pre-fill the
+ * `/hrv` lifestyle controls with whatever the member already logged today.
+ * Demo mode, or no client → `{}`.
+ */
+export async function getTodayLifestyleLogs(
+  memberId: string,
+): Promise<Record<string, unknown>> {
+  const supabase = await createClient();
+  if (!supabase) return {};
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  const { data: rows } = await supabase
+    .from("hrv_lifestyle_logs")
+    .select("event_type, value")
+    .eq("member_id", memberId)
+    .eq("logged_for_date", today);
+
+  const map: Record<string, unknown> = {};
+  for (const row of rows ?? []) {
+    map[row.event_type as string] = row.value;
+  }
+  return map;
+}
