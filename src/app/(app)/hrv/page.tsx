@@ -5,9 +5,11 @@ import { getSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { mockListReadings } from "@/lib/hrv/mock";
+import { getTodayLifestyleLogs } from "@/lib/data/hrv";
 import type { ReadinessBucket, WarmUpState } from "@/lib/hrv/types";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
 import ReadinessLadder from "@/components/hrv/ReadinessLadder";
+import LifestyleLogCard from "@/components/hrv/LifestyleLogCard";
 import ConnectButton from "./ConnectButton";
 
 /**
@@ -117,6 +119,28 @@ async function resolveConnectedState(memberId: string): Promise<HrvState> {
   };
 }
 
+/**
+ * Whether the member has cycle tracking enabled in their `hrv_settings`.
+ *
+ * A member may have NO `hrv_settings` row (it is created lazily the first
+ * time they open HRV settings) — `.maybeSingle()` returns `null` in that
+ * case, which we treat as `false`. Demo mode (no client) → `false`.
+ */
+async function resolveCycleTrackingEnabled(
+  memberId: string,
+): Promise<boolean> {
+  const supabase = await createClient();
+  if (!supabase) return false;
+
+  const { data: settings } = await supabase
+    .from("hrv_settings")
+    .select("cycle_tracking_enabled")
+    .eq("member_id", memberId)
+    .maybeSingle();
+
+  return settings?.cycle_tracking_enabled === true;
+}
+
 /** Days remaining in the baseline warm-up, clamped to >= 0. */
 function daysRemaining(warmUpState: WarmUpState, count: number): number {
   const target = warmUpState === "discovery" ? 7 : 14;
@@ -148,6 +172,15 @@ export default async function HrvPage() {
       } satisfies HrvState);
 
   const provider = providerName(state.provider);
+
+  // Connected states (warming-up, active, pending-first-sync) also render the
+  // daily lifestyle quick-log card. The no-connection state never reaches it.
+  const lifestyleCard = state.connected ? (
+    <LifestyleLogCard
+      initialLogs={await getTodayLifestyleLogs(member.id)}
+      cycleTrackingEnabled={await resolveCycleTrackingEnabled(member.id)}
+    />
+  ) : null;
 
   return (
     <>
@@ -193,6 +226,8 @@ export default async function HrvPage() {
           // Connected, but no readings synced yet — first sync pending.
           <StatePendingFirstSync provider={provider} />
         )}
+
+        {lifestyleCard}
       </Container>
     </>
   );
