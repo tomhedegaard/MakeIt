@@ -150,6 +150,15 @@ export async function GET(
       throw new Error(`Failed to store connection: ${upsertError.message}`);
     }
 
+    // --- Optional provider-side registration (e.g. Polar AccessLink). ---
+    // Best-effort: the connection row already persisted, so a failure here
+    // is logged but never fatal. No-ops for providers without `registerUser`.
+    try {
+      await providerImpl.registerUser?.(tokens.accessToken, user.id);
+    } catch (e) {
+      console.error("wearable registerUser failed", e);
+    }
+
     // --- Step 9: best-effort initial sync. Must NOT fail the callback. ---
     try {
       const { data: connRow, error: connError } = await service
