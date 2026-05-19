@@ -112,9 +112,13 @@ RLS: `members_own_lifestyle_logs` (`for all using member_id = auth.uid()`) — m
 - [ ] **Step 1: `logLifestyleEvent`** — a `"use server"` action `logLifestyleEvent(eventType: string, value: unknown)`:
   - Demo mode (`!SUPABASE_ENABLED`) → no-op `{ ok: true }`.
   - Resolve the member via the SSR session client (`@/lib/supabase/server`); no user → `{ ok: false, error: "no_session" }`.
-  - `validateLifestyleValue(eventType, value)` (Task 3) — invalid → `{ ok: false, error: "invalid_value" }`.
+  - `validateLifestyleValue(eventType, value)` (Task 3) — wrap in try/catch; an unknown `eventType` or invalid `value` throws → the action returns `{ ok: false, error: "invalid_value" }` (never let the throw 500).
   - **Upsert** a `hrv_lifestyle_logs` row keyed on `(member_id, logged_for_date, event_type)` with `logged_for_date` = today (the member's local date — accept the server date for V2.1; timezone refinement is later polish), `value` = the validated object. Use the session client — RLS `members_own_lifestyle_logs` permits it. Upsert via `.upsert(..., { onConflict: "member_id,logged_for_date,event_type" })` (the 0033 unique index backs it).
-  - **Special case `sick`:** when `eventType === "sick"`, also update today's `hrv_readings` row for this member — set `is_sick` = the logged boolean (so the baseline engine excludes/includes the day per spec §4/§5). If there is no reading row for today yet, that's fine — skip silently (a later sync writes the reading; V2.1 does not retro-flag it — note this as a known limitation).
+  - **Special case `sick`:** when `eventType === "sick"`, after the lifestyle-log upsert, also flag today's `hrv_readings` row so the baseline engine excludes/includes the day (spec §4/§5). Because the baseline reads **only the member's primary connection's** readings (spec §5), the flag must land on that connection's reading. Concretely, still using the **session client** (`members_own_readings` is `for all using (member_id = auth.uid())` — a member-scoped UPDATE is permitted under RLS):
+    1. Find the primary connection: `hrv_wearable_connections` where `member_id` + `is_primary = true`, `.maybeSingle()`. No primary → skip the propagation silently.
+    2. Find today's reading for it: `hrv_readings` where `connection_id` = that id AND `measured_at >= <UTC start of the current server date>` AND `measured_at < <UTC start of the next day>`, ordered `measured_at desc`, `.limit(1).maybeSingle()`. No row → skip silently (a later sync writes the reading; V2.1 does not retro-flag a not-yet-synced day — **known limitation**).
+    3. `UPDATE` that row's `is_sick` to the logged boolean.
+    Use the same server-date UTC day boundary as `logged_for_date` for consistency.
   - `revalidatePath("/hrv")`. Return `{ ok: true }`.
 
 - [ ] **Step 2: `getTodayLifestyleLogs`** — add to `src/lib/data/hrv.ts`: `getTodayLifestyleLogs(memberId: string): Promise<Record<string, unknown>>` — returns a map of `event_type` → `value` for today's logs (so the card can pre-fill). Demo mode → `{}`.
@@ -140,7 +144,10 @@ RLS: `members_own_lifestyle_logs` (`for all using member_id = auth.uid()`) — m
 
 **Files:** Modify `src/app/(app)/hrv/page.tsx`
 
-- [ ] **Step 1:** In the `/hrv` page, in the **connected** states (warming-up and active — NOT the no-connection state, and skippable in `discovery` if it crowds the page — render it in warming-up `provisional`+ and `active`), fetch `getTodayLifestyleLogs(memberId)` + the member's `cycle_tracking_enabled` from `hrv_settings`, and render `<LifestyleLogCard initialLogs={...} cycleTrackingEnabled={...} />` below the readiness section. Do not regress the existing W1/V1.x `/hrv` states or the `HrvSubNav`.
+- [ ] **Step 1:** In the `/hrv` page, render `<LifestyleLogCard>` below the readiness section in **all connected states** — warming-up (`discovery` + `provisional`), `active`, AND `StatePendingFirstSync` (connected but no readings yet — a member can have a sick day before their first sync, so the card belongs there too). NOT in the no-connection state. Demo mode hard-codes `connected: false` → only `StateNotConnected` renders → the card is naturally never reached (no extra guard needed).
+  - Fetch `getTodayLifestyleLogs(memberId)` (Task 4).
+  - Fetch `cycle_tracking_enabled`: query `hrv_settings` for the member with **`.maybeSingle()`** — a member who never opened HRV settings has **no `hrv_settings` row** (it is created lazily by `setCycleTracking`), so treat a missing row as `cycle_tracking_enabled: false`. Do NOT use `.single()` (it throws on no row).
+  - Render `<LifestyleLogCard initialLogs={...} cycleTrackingEnabled={...} />`. Do not regress the existing W1/V1.x `/hrv` states or the `HrvSubNav`.
 
 - [ ] **Step 2:** `npx tsc --noEmit && npm run lint` clean. Manual smoke: `npm run dev`, `/hrv` shows the log card; logging a value persists (re-load shows it pre-filled).
 
