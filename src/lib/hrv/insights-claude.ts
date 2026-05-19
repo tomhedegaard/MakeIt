@@ -23,7 +23,10 @@ export const INSIGHT_MODEL_ID = "claude-sonnet-4-6";
  * ---------------------------------------------------------------- */
 
 const ObservationSchema = z.object({
-  observation: z.string().min(40).max(900),
+  // Upper bound sized for the system prompt's "~150 ord" instruction —
+  // ~150 Danish words is roughly 1000–1100 chars, so 1400 gives headroom
+  // while still rejecting a runaway response. Revisit if the word count changes.
+  observation: z.string().min(40).max(1400),
 });
 
 type ObservationOutput = z.infer<typeof ObservationSchema>;
