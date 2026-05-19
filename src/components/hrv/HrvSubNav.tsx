@@ -5,19 +5,21 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 /**
- * `HrvSubNav` — compact sub-navigation shared across the three `/hrv` pages.
+ * `HrvSubNav` — compact sub-navigation shared across the four `/hrv` pages.
  *
- * A horizontal row of three links: I dag (`/hrv`) · Forløb (`/hrv/trends`) ·
- * Lær (`/hrv/learn`). The active link is emphasised via weight + opacity only
- * — monochrome, no colour accents (MakeIt design language).
+ * A horizontal row of four links: I dag (`/hrv`) · Forløb (`/hrv/trends`) ·
+ * Indsigt (`/hrv/insights`) · Lær (`/hrv/learn`). The active link is emphasised
+ * via weight + opacity only — monochrome, no colour accents (MakeIt design
+ * language).
  *
  * Client component: reads `usePathname` to resolve the active link. `/hrv` is
- * matched exactly so it doesn't light up on `/hrv/trends` or `/hrv/learn`.
+ * matched exactly so it doesn't light up on a sub-route.
  */
 
 const LINKS = [
   { href: "/hrv", label: "I dag" },
   { href: "/hrv/trends", label: "Forløb" },
+  { href: "/hrv/insights", label: "Indsigt" },
   { href: "/hrv/learn", label: "Lær" },
 ];
 
