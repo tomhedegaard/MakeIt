@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
+import type { CorrelationCard } from "@/lib/hrv/insights";
 import type { ChartReading } from "@/lib/hrv/trend-chart";
 import type {
   HrvConfidence,
@@ -149,4 +150,47 @@ export async function getTodayLifestyleLogs(
     map[row.event_type as string] = row.value;
   }
   return map;
+}
+
+/** A member's stored weekly HRV insight, shaped for the `/hrv` UI. */
+export interface WeeklyInsight {
+  weekStart: string;
+  summaryText: string;
+  correlationCards: CorrelationCard[];
+  claudeModelId: string;
+  generatedAt: string;
+}
+
+/**
+ * The member's most recent weekly insight, or `null` if they have none.
+ *
+ * The Sunday-evening cron is the only writer of `hrv_weekly_insights`, so
+ * `correlation_cards` (jsonb) always holds the engine's exact `CorrelationCard`
+ * shape — an `as` cast on read is safe. Demo mode → `null`.
+ */
+export async function getLatestWeeklyInsight(
+  memberId: string,
+): Promise<WeeklyInsight | null> {
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const { data: row } = await supabase
+    .from("hrv_weekly_insights")
+    .select(
+      "week_start, summary_text, correlation_cards, claude_model_id, generated_at",
+    )
+    .eq("member_id", memberId)
+    .order("week_start", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!row) return null;
+
+  return {
+    weekStart: row.week_start as string,
+    summaryText: row.summary_text as string,
+    correlationCards: row.correlation_cards as unknown as CorrelationCard[],
+    claudeModelId: row.claude_model_id as string,
+    generatedAt: row.generated_at as string,
+  };
 }
