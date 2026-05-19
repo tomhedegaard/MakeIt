@@ -25,4 +25,7 @@ export interface WearableProvider {
   refreshTokens(refreshToken: string): Promise<WearableTokens>;
   /** Fetch the member's most recent HRV reading, or null if none. */
   fetchLatestHrv(accessToken: string): Promise<WearableHrvReading | null>;
+  /** Some providers (Polar) require a one-time user registration after
+   *  the OAuth token exchange before data can be pulled. Optional. */
+  registerUser?(accessToken: string, memberId: string): Promise<void>;
 }
