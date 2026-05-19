@@ -66,6 +66,14 @@ function StatePopulated({ insight }: { insight: WeeklyInsight }) {
       ? "Skrevet automatisk."
       : "Skrevet af MakeIt-coachen.";
 
+  // `weekStart` is a date-only string; the "T00:00:00" suffix forces
+  // local-midnight parsing so the date doesn't slip a day in negative-offset
+  // timezones. Same guard as src/lib/email/templates/weekly-digest.ts.
+  const weekLabel = new Date(insight.weekStart + "T00:00:00").toLocaleDateString(
+    "da-DK",
+    { day: "numeric", month: "long" },
+  );
+
   return (
     <div className="space-y-8">
       <article className="max-w-prose">
@@ -81,7 +89,7 @@ function StatePopulated({ insight }: { insight: WeeklyInsight }) {
       </div>
 
       <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-        {provenance} Uge fra {insight.weekStart}.
+        {provenance} Uge fra {weekLabel}.
       </p>
     </div>
   );
