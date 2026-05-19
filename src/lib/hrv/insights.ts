@@ -55,7 +55,7 @@ export interface InsightData {
 }
 
 /** Minimum days in each group before a card is statistically reportable. */
-const MIN_GROUP_N = 4;
+export const MIN_GROUP_N = 4;
 
 /** Milliseconds in one day. */
 const MS_PER_DAY = 86_400_000;

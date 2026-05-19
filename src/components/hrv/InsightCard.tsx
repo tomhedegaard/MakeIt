@@ -1,4 +1,8 @@
-import type { CorrelationCard, InsightFactor } from "@/lib/hrv/insights";
+import {
+  MIN_GROUP_N,
+  type CorrelationCard,
+  type InsightFactor,
+} from "@/lib/hrv/insights";
 
 /**
  * Presentational correlation card — renders one V2.2 lifestyle/HRV comparison.
@@ -22,9 +26,6 @@ const FACTOR_FRAMING: Record<InsightFactor, string> = {
   sleep: "Nætter under 7 t vs. 7 t+",
 };
 
-/** Minimum days per group before a card is reportable (mirrors the engine). */
-const MIN_GROUP_N = 4;
-
 /** Format a percentage delta with an explicit sign — e.g. `−12%`, `+5%`, `±0%`. */
 function formatDelta(deltaPct: number): string {
   if (deltaPct > 0) return `+${deltaPct}%`;
@@ -35,12 +36,6 @@ function formatDelta(deltaPct: number): string {
 export default function InsightCard({ card }: { card: CorrelationCard }) {
   const label = FACTOR_LABEL[card.factor];
 
-  const isSufficient =
-    card.status === "ok" &&
-    card.exposedMeanRmssd !== null &&
-    card.baselineMeanRmssd !== null &&
-    card.deltaPct !== null;
-
   return (
     <div className="surface-2 rounded-2xl p-5">
       <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
@@ -50,10 +45,14 @@ export default function InsightCard({ card }: { card: CorrelationCard }) {
         {label}
       </div>
 
-      {isSufficient ? (
+      {card.status === "ok" &&
+      card.deltaPct !== null &&
+      card.exposedMeanRmssd !== null &&
+      card.baselineMeanRmssd !== null ? (
         <div className="mt-4 flex flex-col gap-3">
           <div className="font-display text-2xl leading-tight text-fg">
-            {formatDelta(card.deltaPct as number)}
+            <span className="sr-only">HRV-forskel: </span>
+            {formatDelta(card.deltaPct)}
           </div>
           <div className="flex flex-col gap-1 text-sm text-fg-dim">
             <span>
