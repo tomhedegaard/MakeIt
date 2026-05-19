@@ -25,11 +25,11 @@ const FACTOR_FRAMING: Record<InsightFactor, string> = {
 /** Minimum days per group before a card is reportable (mirrors the engine). */
 const MIN_GROUP_N = 4;
 
-/** Format a percentage delta with an explicit sign — e.g. `−12 %`, `+5 %`, `±0 %`. */
+/** Format a percentage delta with an explicit sign — e.g. `−12%`, `+5%`, `±0%`. */
 function formatDelta(deltaPct: number): string {
-  if (deltaPct > 0) return `+${deltaPct} %`;
-  if (deltaPct < 0) return `−${Math.abs(deltaPct)} %`;
-  return "±0 %";
+  if (deltaPct > 0) return `+${deltaPct}%`;
+  if (deltaPct < 0) return `−${Math.abs(deltaPct)}%`;
+  return "±0%";
 }
 
 export default function InsightCard({ card }: { card: CorrelationCard }) {
