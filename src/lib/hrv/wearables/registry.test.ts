@@ -14,8 +14,10 @@ describe("getProvider", () => {
     expect(provider?.id).toBe("oura");
   });
 
-  it("returns null for \"polar\" (not yet registered)", () => {
-    expect(getProvider("polar")).toBeNull();
+  it("returns the Polar provider for id \"polar\"", () => {
+    const provider = getProvider("polar");
+    expect(provider).not.toBeNull();
+    expect(provider?.id).toBe("polar");
   });
 
   it("returns null for an unknown provider id", () => {
