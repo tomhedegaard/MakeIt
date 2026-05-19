@@ -6,7 +6,8 @@ import { cn } from "@/lib/utils";
 import { startWearableConnect } from "@/app/(app)/hrv/connect-actions";
 
 /**
- * Bottom sheet for connecting a wearable to the HRV module (W2: WHOOP + Oura).
+ * Bottom sheet for connecting a wearable to the HRV module
+ * (W3: WHOOP + Oura + Polar).
  *
  * Presentational client island — the actual OAuth state generation and
  * redirect-URL construction happen server-side in `startWearableConnect`.
@@ -15,9 +16,6 @@ import { startWearableConnect } from "@/app/(app)/hrv/connect-actions";
  */
 
 type ProviderId = "whoop" | "oura" | "polar";
-
-/** Providers with a live OAuth connect flow (Polar is still "Kommer snart"). */
-type ConnectableProviderId = Exclude<ProviderId, "polar">;
 
 type Provider = {
   id: ProviderId;
@@ -28,7 +26,7 @@ type Provider = {
 const PROVIDERS: Provider[] = [
   { id: "whoop", name: "WHOOP", active: true },
   { id: "oura", name: "Oura", active: true },
-  { id: "polar", name: "Polar", active: false },
+  { id: "polar", name: "Polar", active: true },
 ];
 
 export default function WearableConnectSheet({
@@ -49,7 +47,7 @@ function WearableConnectBody() {
   const [pending, setPending] = useState<ProviderId | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function connect(provider: ConnectableProviderId) {
+  async function connect(provider: ProviderId) {
     if (pending) return;
     setError(null);
     setPending(provider);
@@ -79,11 +77,11 @@ function WearableConnectBody() {
 
       <div className="grid gap-3">
         {PROVIDERS.map((provider) =>
-          provider.active && provider.id !== "polar" ? (
+          provider.active ? (
             <button
               key={provider.id}
               type="button"
-              onClick={() => connect(provider.id as ConnectableProviderId)}
+              onClick={() => connect(provider.id)}
               disabled={pending !== null}
               aria-busy={pending === provider.id}
               className={cn(
