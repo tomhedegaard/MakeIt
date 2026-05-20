@@ -7,7 +7,7 @@ export default function OriginSection() {
       <Container>
         <div className="grid gap-16 md:grid-cols-12 items-start">
           <div className="md:col-span-5" data-reveal>
-            <div className="eyebrow mb-4">05 — Origin</div>
+            <div className="eyebrow mb-4">06 — Origin</div>
             <h2 className="font-display text-[clamp(2.6rem,7vw,6rem)] leading-[0.92]">
               Syet i
               <br /> København.

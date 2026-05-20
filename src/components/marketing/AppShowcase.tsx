@@ -11,7 +11,7 @@ export default function AppShowcase() {
     <section id="app" className="relative border-t hairline py-24 md:py-40">
       <Container>
         <div className="max-w-2xl mb-16" data-reveal>
-          <div className="eyebrow mb-4">06 — Appen</div>
+          <div className="eyebrow mb-4">07 — Appen</div>
           <h2 className="font-display text-[clamp(2.4rem,7vw,5.5rem)] leading-[0.92] mb-5">
             Sådan ser det ud.
           </h2>
@@ -21,14 +21,17 @@ export default function AppShowcase() {
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <Phone label="Today" detail="Dagens session, ét tap til start" delay={0}>
             <TodayScreen />
           </Phone>
           <Phone label="Aktiv session" detail="Sæt-for-sæt med RPE og rest-timer" delay={120}>
             <SessionScreen />
           </Phone>
-          <Phone label="Form-check" detail="Claude vurderer på 6 sek." delay={240}>
+          <Phone label="Readiness" detail="WHOOP · Oura · Polar — auto-sync" delay={240}>
+            <ReadinessScreen />
+          </Phone>
+          <Phone label="Form-check" detail="Claude vurderer på 6 sek." delay={360}>
             <FormCheckScreen />
           </Phone>
         </div>
@@ -192,6 +195,75 @@ function SessionScreen() {
         style={{ background: "var(--fg)", color: "var(--bg)" }}
       >
         Log sæt →
+      </div>
+    </div>
+  );
+}
+
+function ReadinessScreen() {
+  // 5-bucket vertical ladder; the member's current bucket ("normal") is filled.
+  const BUCKETS: { id: string; label: string; filled: boolean }[] = [
+    { id: "very_high", label: "Langt over", filled: false },
+    { id: "high", label: "Over", filled: false },
+    { id: "normal", label: "Normal", filled: true },
+    { id: "low", label: "Under", filled: false },
+    { id: "very_low", label: "Langt under", filled: false },
+  ];
+  return (
+    <div className="flex flex-col h-full text-[10px]">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <div className="text-[8px] tracking-[0.18em] uppercase text-fg-dim font-mono">I dag · HRV</div>
+          <div className="font-display text-lg leading-none mt-0.5">@anton</div>
+        </div>
+        <div className="text-right">
+          <div className="text-[8px] tracking-[0.18em] uppercase text-fg-faint font-mono">7-d snit</div>
+          <div className="numeric text-base">58 <span className="text-fg-dim text-[8px]">ms</span></div>
+        </div>
+      </div>
+
+      <div className="surface-2 rounded-xl p-3 flex-1 flex flex-col">
+        <div className="flex items-baseline gap-2 mb-1">
+          <span className="numeric text-3xl leading-none">62</span>
+          <span className="text-[9px] text-fg-dim font-mono">ms RMSSD</span>
+        </div>
+        <div className="text-[8px] text-fg-faint font-mono uppercase tracking-[0.14em] mb-3">
+          synced fra WHOOP · 06:12
+        </div>
+
+        <ul className="space-y-1 mb-3">
+          {BUCKETS.map((b) => (
+            <li key={b.id} className="flex items-center gap-2">
+              <span
+                aria-hidden
+                className="h-1.5 w-6 rounded-full border hairline-strong"
+                style={b.filled ? { background: "var(--fg)", borderColor: "var(--fg)" } : {}}
+              />
+              <span
+                className={
+                  "text-[8.5px] " + (b.filled ? "text-fg" : "text-fg-faint")
+                }
+              >
+                {b.label}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="surface-2 rounded-lg p-2 mb-2">
+          <div className="text-[7px] font-mono uppercase tracking-[0.16em] text-fg-dim mb-1">
+            Ugens observation
+          </div>
+          <p className="text-[8.5px] text-fg/85 leading-snug">
+            Din søvn under 7 t i tre nætter ser ud til at trække RMSSD ned med ~8%.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-3 gap-px bg-line border hairline rounded mt-auto">
+          <Mini v="62" k="ms" />
+          <Mini v="58" k="7-d" />
+          <Mini v="55" k="60-d" />
+        </div>
       </div>
     </div>
   );

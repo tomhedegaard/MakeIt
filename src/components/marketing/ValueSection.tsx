@@ -29,6 +29,15 @@ const PILLARS = [
       "Resten af tiden holder fællesskabet dig ansvarlig.",
     foot: "Crew-feed · 1:1 ved milepæle",
   },
+  {
+    n: "04",
+    eyebrow: "Restitution der måler sig selv",
+    title: "Wearable + HRV i programmet",
+    body:
+      "Forbind WHOOP, Oura eller Polar. Din morgen-RMSSD og 60-dages baseline justerer ugens " +
+      "belastning, og coachen får besked når dit nervesystem råber tre dage i træk.",
+    foot: "Auto-sync · ærlige tal, ingen 0-100 score",
+  },
 ];
 
 export default function ValueSection() {
@@ -78,7 +87,7 @@ export default function ValueSection() {
           {positioning.sub}
         </p>
 
-        <div className="grid gap-px bg-line border hairline md:grid-cols-3">
+        <div className="grid gap-px bg-line border hairline md:grid-cols-2 lg:grid-cols-4">
           {PILLARS.map((p, i) => (
             <article
               key={p.n}
