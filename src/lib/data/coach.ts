@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import type { AlertConditionsMet } from "@/lib/hrv/alert";
 
 /* ---------------------------------------------------------------- *
  * Types
@@ -63,6 +64,14 @@ export type FormCheckRow = {
   videoUrl: string | null;       // Time-limited signed playback URL (1h)
   createdAt: string;
 };
+
+export interface HrvAlertRow {
+  id: string;
+  memberId: string;
+  memberHandle: string;
+  triggeredAt: string;
+  conditionsMet: AlertConditionsMet;
+}
 
 const FORM_CHECK_BUCKET = "form-check-videos";
 
@@ -443,6 +452,30 @@ export async function getPendingFormChecks(limit = 30): Promise<FormCheckRow[]> 
       coachNotes: f.coach_notes,
       videoUrl: f.video_url ? signedByPath.get(f.video_url) ?? null : null,
       createdAt: f.created_at,
+    };
+  });
+}
+
+export async function getOpenHrvAlerts(limit = 30): Promise<HrvAlertRow[]> {
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  const { data } = await supabase
+    .from("hrv_alerts")
+    .select("id, triggered_at, conditions_met, member:members!inner(id, handle)")
+    .eq("status", "open")
+    .order("triggered_at", { ascending: false })
+    .limit(limit);
+
+  if (!data) return [];
+  return data.map((a) => {
+    const m = Array.isArray(a.member) ? a.member[0] : a.member;
+    return {
+      id: a.id as string,
+      memberId: m?.id ?? "",
+      memberHandle: m?.handle ?? "—",
+      triggeredAt: a.triggered_at as string,
+      conditionsMet: a.conditions_met as unknown as AlertConditionsMet,
     };
   });
 }
