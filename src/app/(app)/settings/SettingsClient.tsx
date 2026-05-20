@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import {
   updateProfileAction,
   updateNotifPrefsAction,
@@ -9,14 +10,9 @@ import {
 } from "./actions";
 import type { MemberSettings } from "@/lib/data/settings";
 import PushToggle from "@/components/push/PushToggle";
+import LanguageSelector from "@/components/LanguageSelector";
 
-const ERROR_LABELS: Record<string, string> = {
-  handle_invalid: "Handle skal starte med et bogstav (a-z) og være 2-31 tegn (a-z, 0-9, _, ., -).",
-  handle_taken: "Handle er allerede taget — prøv et andet.",
-  auth: "Du er ikke logget ind.",
-  unknown: "Noget gik galt — prøv igen.",
-  service_key_missing: "Konto-sletning kræver server-konfiguration der ikke er sat op.",
-};
+type Status = { ok: boolean; text: string } | null;
 
 export default function SettingsClient({
   settings,
@@ -26,13 +22,22 @@ export default function SettingsClient({
   vapidPublicKey: string;
 }) {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("Settings");
+  const tc = useTranslations("Common");
+  const tl = useTranslations("Language");
+
+  function errorText(code: string | undefined) {
+    const key = `errors.${code ?? "unknown"}`;
+    return t.has(key) ? t(key) : t("errors.unknown");
+  }
 
   /* Profile */
   const [handle, setHandle] = useState(settings.handle);
   const [displayName, setDisplayName] = useState(settings.displayName ?? "");
   const [bio, setBio] = useState(settings.bio ?? "");
   const [profilePending, startProfile] = useTransition();
-  const [profileMsg, setProfileMsg] = useState<string | null>(null);
+  const [profileMsg, setProfileMsg] = useState<Status>(null);
 
   /* Notif prefs */
   const [prefs, setPrefs] = useState({
@@ -42,7 +47,7 @@ export default function SettingsClient({
     notifTierUp: settings.notifTierUp,
   });
   const [prefsPending, startPrefs] = useTransition();
-  const [prefsMsg, setPrefsMsg] = useState<string | null>(null);
+  const [prefsMsg, setPrefsMsg] = useState<Status>(null);
 
   /* Delete */
   const [deletePending, startDelete] = useTransition();
@@ -53,11 +58,11 @@ export default function SettingsClient({
     startProfile(async () => {
       const res = await updateProfileAction({ handle, displayName, bio });
       if (res.ok) {
-        setProfileMsg("✓ Gemt");
+        setProfileMsg({ ok: true, text: tc("saved") });
         router.refresh();
         window.setTimeout(() => setProfileMsg(null), 2200);
       } else {
-        setProfileMsg(ERROR_LABELS[res.error ?? "unknown"]);
+        setProfileMsg({ ok: false, text: errorText(res.error) });
       }
     });
   }
@@ -67,39 +72,47 @@ export default function SettingsClient({
     startPrefs(async () => {
       const res = await updateNotifPrefsAction(prefs);
       if (res.ok) {
-        setPrefsMsg("✓ Gemt");
+        setPrefsMsg({ ok: true, text: tc("saved") });
         window.setTimeout(() => setPrefsMsg(null), 2200);
       } else {
-        setPrefsMsg("Kunne ikke gemme — prøv igen.");
+        setPrefsMsg({ ok: false, text: t("errors.prefs_save") });
       }
     });
   }
 
   function confirmDelete() {
-    const phrase = "SLET MIN KONTO";
-    const typed = window.prompt(
-      `Dette kan ikke fortrydes. Alle dine sessioner, posts, Reps og form-checks slettes permanent.\n\nSkriv "${phrase}" for at bekræfte:`
-    );
+    const phrase = t("danger.confirmPhrase");
+    const typed = window.prompt(t("danger.confirmPrompt", { phrase }));
     if (typed !== phrase) return;
     setDeleteMsg(null);
     startDelete(async () => {
       const res = await deleteAccountAction();
       if (!res.ok) {
-        setDeleteMsg(ERROR_LABELS[res.error ?? "unknown"]);
+        setDeleteMsg(errorText(res.error));
       }
     });
   }
 
   return (
     <div className="space-y-6">
+      {/* Language */}
+      <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-4">
+        <div>
+          <div className="eyebrow mb-1">{tl("eyebrow")}</div>
+          <h2 className="font-display text-2xl">{tl("title")}</h2>
+        </div>
+        <p className="text-fg-dim text-sm max-w-md">{tl("description")}</p>
+        <LanguageSelector />
+      </section>
+
       {/* Profile */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-4">
         <div>
-          <div className="eyebrow mb-1">Profil</div>
-          <h2 className="font-display text-2xl">Hvordan crewet ser dig</h2>
+          <div className="eyebrow mb-1">{t("profile.eyebrow")}</div>
+          <h2 className="font-display text-2xl">{t("profile.title")}</h2>
         </div>
         <div className="grid gap-3 md:grid-cols-2">
-          <Field label="Handle">
+          <Field label={t("profile.handleLabel")}>
             <div className="flex items-center gap-2">
               <span className="text-fg-dim font-mono">@</span>
               <input
@@ -111,23 +124,23 @@ export default function SettingsClient({
               />
             </div>
           </Field>
-          <Field label="Display navn">
+          <Field label={t("profile.displayNameLabel")}>
             <input
               className="field"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              placeholder="Mikael Munk"
+              placeholder={t("profile.displayNamePlaceholder")}
               maxLength={100}
             />
           </Field>
         </div>
-        <Field label="Bio">
+        <Field label={t("profile.bioLabel")}>
           <textarea
             className="field min-h-[80px] py-3 resize-none"
             rows={3}
             value={bio}
             onChange={(e) => setBio(e.target.value)}
-            placeholder="Hvad løfter du for? Hvor er du på rejsen?"
+            placeholder={t("profile.bioPlaceholder")}
             maxLength={500}
           />
         </Field>
@@ -138,57 +151,51 @@ export default function SettingsClient({
             onClick={saveProfile}
             disabled={profilePending}
           >
-            {profilePending ? "Gemmer…" : "Gem profil"}
+            {profilePending ? tc("saving") : t("profile.save")}
           </button>
-          {profileMsg ? (
-            <span
-              className="text-[10px] font-mono uppercase tracking-[0.16em]"
-              style={{ color: profileMsg.startsWith("✓") ? "var(--fg)" : "var(--fg-dim)" }}
-            >
-              {profileMsg}
-            </span>
-          ) : null}
+          <StatusLabel status={profileMsg} />
         </div>
       </section>
 
       {/* Notifications */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-4">
         <div>
-          <div className="eyebrow mb-1">Notifikationer</div>
-          <h2 className="font-display text-2xl">Hvornår vi må skrive til dig</h2>
+          <div className="eyebrow mb-1">{t("notifications.eyebrow")}</div>
+          <h2 className="font-display text-2xl">{t("notifications.title")}</h2>
         </div>
         <div className="rounded-xl border hairline px-4 py-3 flex items-start gap-4">
           <div className="flex-1">
-            <div className="text-sm font-medium mb-1">Push-påmindelser</div>
+            <div className="text-sm font-medium mb-1">
+              {t("notifications.pushTitle")}
+            </div>
             <div className="text-xs text-fg-dim leading-relaxed">
-              Notifikation på telefonen når det er tid til at logge mad eller
-              starte session. Kræver at du tillader notifikationer i browseren.
+              {t("notifications.pushDescription")}
             </div>
           </div>
           <PushToggle vapidPublicKey={vapidPublicKey} />
         </div>
         <ul className="divide-y hairline">
           <Toggle
-            label="Coach-noter på dine form-checks"
-            sub="Mail når Mikael har gennemgået og skrevet en note."
+            label={t("notifications.formCheckLabel")}
+            sub={t("notifications.formCheckSub")}
             checked={prefs.notifFormCheckReview}
             onChange={(v) => setPrefs((p) => ({ ...p, notifFormCheckReview: v }))}
           />
           <Toggle
-            label="@mentions"
-            sub="Mail når et crew-medlem nævner dig i en kommentar."
+            label={t("notifications.mentionLabel")}
+            sub={t("notifications.mentionSub")}
             checked={prefs.notifMention}
             onChange={(v) => setPrefs((p) => ({ ...p, notifMention: v }))}
           />
           <Toggle
-            label="Ugentlig digest"
-            sub="Mandag morgen — top PR'er, nye medlemmer, månedens challenge."
+            label={t("notifications.digestLabel")}
+            sub={t("notifications.digestSub")}
             checked={prefs.notifDigest}
             onChange={(v) => setPrefs((p) => ({ ...p, notifDigest: v }))}
           />
           <Toggle
-            label="Tier-up notifikationer"
-            sub="Når du krydser fra Lifter → Athlete → Beast → Legend."
+            label={t("notifications.tierUpLabel")}
+            sub={t("notifications.tierUpSub")}
             checked={prefs.notifTierUp}
             onChange={(v) => setPrefs((p) => ({ ...p, notifTierUp: v }))}
           />
@@ -200,35 +207,27 @@ export default function SettingsClient({
             onClick={savePrefs}
             disabled={prefsPending}
           >
-            {prefsPending ? "Gemmer…" : "Gem præferencer"}
+            {prefsPending ? tc("saving") : t("notifications.save")}
           </button>
-          {prefsMsg ? (
-            <span
-              className="text-[10px] font-mono uppercase tracking-[0.16em]"
-              style={{ color: prefsMsg.startsWith("✓") ? "var(--fg)" : "var(--fg-dim)" }}
-            >
-              {prefsMsg}
-            </span>
-          ) : null}
+          <StatusLabel status={prefsMsg} />
         </div>
       </section>
 
       {/* Account info — read-only */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7">
         <div className="mb-4">
-          <div className="eyebrow mb-1">Konto</div>
-          <h2 className="font-display text-2xl">Bagved kulissen</h2>
+          <div className="eyebrow mb-1">{t("account.eyebrow")}</div>
+          <h2 className="font-display text-2xl">{t("account.title")}</h2>
         </div>
         <ul className="space-y-3 text-sm">
-          <Row k="Email" v={settings.email ?? "—"} />
-          <Row k="Tier" v={settings.tier} />
+          <Row k={t("account.email")} v={settings.email ?? "—"} />
+          <Row k={t("account.tier")} v={settings.tier} />
           <Row
-            k="Medlem siden"
-            v={new Date(settings.joinedAt).toLocaleDateString("da-DK", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
+            k={t("account.memberSince")}
+            v={new Date(settings.joinedAt).toLocaleDateString(
+              locale === "da" ? "da-DK" : "en-GB",
+              { day: "numeric", month: "long", year: "numeric" }
+            )}
           />
         </ul>
       </section>
@@ -236,19 +235,18 @@ export default function SettingsClient({
       {/* Data export */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7">
         <div className="mb-4">
-          <div className="eyebrow mb-1">Data</div>
-          <h2 className="font-display text-2xl">Eksportér alt vi har om dig</h2>
+          <div className="eyebrow mb-1">{t("data.eyebrow")}</div>
+          <h2 className="font-display text-2xl">{t("data.title")}</h2>
         </div>
         <p className="text-fg-dim text-sm mb-4 max-w-md">
-          Download en JSON-fil med din profil, dine sessioner og logs, dine posts
-          og kommentarer, dine Reps-transaktioner og form-checks. GDPR Art. 20.
+          {t("data.description")}
         </p>
         <a
           href="/api/settings/export"
           className="btn btn-sm"
           download="makeit-hq-export.json"
         >
-          Eksportér mine data ↓
+          {t("data.export")}
         </a>
       </section>
 
@@ -258,13 +256,11 @@ export default function SettingsClient({
         style={{ borderColor: "var(--line-bright)" }}
       >
         <div className="mb-4">
-          <div className="eyebrow mb-1">Danger zone</div>
-          <h2 className="font-display text-2xl">Slet din konto</h2>
+          <div className="eyebrow mb-1">{t("danger.eyebrow")}</div>
+          <h2 className="font-display text-2xl">{t("danger.title")}</h2>
         </div>
         <p className="text-fg-dim text-sm mb-4 max-w-md">
-          Permanent og uigenkaldelig. Alle sessioner, posts, Reps og form-checks
-          slettes. Eventuelt aktivt Stripe-abonnement skal opsiges separat fra
-          billing-siden inden.
+          {t("danger.description")}
         </p>
         <div className="flex items-center gap-3">
           <button
@@ -273,7 +269,7 @@ export default function SettingsClient({
             onClick={confirmDelete}
             disabled={deletePending}
           >
-            {deletePending ? "Sletter…" : "Slet min konto"}
+            {deletePending ? t("danger.deleting") : t("danger.delete")}
           </button>
           {deleteMsg ? (
             <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-dim">
@@ -283,6 +279,18 @@ export default function SettingsClient({
         </div>
       </section>
     </div>
+  );
+}
+
+function StatusLabel({ status }: { status: Status }) {
+  if (!status) return null;
+  return (
+    <span
+      className="text-[10px] font-mono uppercase tracking-[0.16em]"
+      style={{ color: status.ok ? "var(--fg)" : "var(--fg-dim)" }}
+    >
+      {status.text}
+    </span>
   );
 }
 

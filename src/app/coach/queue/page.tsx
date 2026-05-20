@@ -1,30 +1,32 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { getPendingFormChecks } from "@/lib/data/coach";
 import CoachReviewButton from "@/components/coach/CoachReview";
 
 export default async function CoachQueuePage() {
+  const t = await getTranslations("Coach.queue");
   const pending = await getPendingFormChecks(50);
 
   return (
     <Container className="py-6 lg:py-12 space-y-6">
       <header className="pt-2 flex items-end justify-between gap-4">
         <div>
-          <div className="eyebrow mb-2">Coach console</div>
+          <div className="eyebrow mb-2">{t("eyebrow")}</div>
           <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-            Form-check kø
+            {t("title")}
           </h1>
           <p className="mt-2 text-fg-dim text-sm">
-            {pending.length} venter på review.
+            {t("waiting", { count: pending.length })}
           </p>
         </div>
       </header>
 
       {pending.length === 0 ? (
         <div className="surface-2 rounded-2xl p-8 text-center">
-          <div className="font-display text-2xl mb-2">Køen er tom.</div>
+          <div className="font-display text-2xl mb-2">{t("emptyTitle")}</div>
           <p className="text-fg-dim text-sm">
-            Alle form-checks er gennemgået. Godt arbejde.
+            {t("emptyBody")}
           </p>
         </div>
       ) : (
@@ -42,7 +44,7 @@ export default async function CoachQueuePage() {
                     </Link>
                   </div>
                   <div className="text-[11px] font-mono text-fg-faint">
-                    {f.exerciseName ?? "Form-check"} ·{" "}
+                    {f.exerciseName ?? t("formCheckFallback")} ·{" "}
                     {new Date(f.createdAt).toLocaleString("da-DK", {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -65,7 +67,7 @@ export default async function CoachQueuePage() {
 
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-                  Afventer review
+                  {t("awaitingReview")}
                 </span>
                 <CoachReviewButton formCheck={f} />
               </div>

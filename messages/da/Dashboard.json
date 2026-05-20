@@ -1,0 +1,69 @@
+{
+  "metadata": {
+    "title": "Today"
+  },
+  "greeting": {
+    "eyebrow": "God morgen",
+    "streakLabel": "Streak",
+    "streakUnit": "dage"
+  },
+  "formChecks": {
+    "answeredBefore": "Mikael Munk har besvaret",
+    "answeredCount": "{count, plural, one {# form-check} other {# form-checks}}",
+    "readNotes": "Læs noter på din profil"
+  },
+  "todaySession": {
+    "ariaLabel": "Dagens session",
+    "eyebrow": "Dagens session · {programCode} · uge {week}",
+    "deload": "Deload",
+    "exercises": "Øvelser",
+    "sets": "Sæt",
+    "estTime": "Est. tid",
+    "setCountSuffix": "× sæt",
+    "start": "Start session →"
+  },
+  "stats": {
+    "volume": "Volumen",
+    "volumeMeta": "kg · 4 uger",
+    "prs": "PR'er",
+    "prsMeta": "4 uger",
+    "reps": "Reps"
+  },
+  "upcoming": {
+    "title": "Kommende sessioner",
+    "seeWeek": "Se uge →",
+    "empty": "Ingen sessioner planlagt. Din coach lægger nye sessioner snart.",
+    "soon": "Snart",
+    "today": "I dag",
+    "tomorrow": "I morgen",
+    "mock": {
+      "tomorrowLabel": "I morgen",
+      "tomorrowTitle": "Pause-bench, ringe-row, push-press",
+      "thuLabel": "Tor",
+      "thuTitle": "Deadlift — opbygning til 90% af 1RM",
+      "friLabel": "Fre",
+      "friTitle": "Hypertrofi: kvadriceps + skulder"
+    }
+  },
+  "crew": {
+    "title": "Crew lige nu",
+    "seeFeed": "Se feed →",
+    "empty": "Crewet er stille lige nu — vær den første til at dele.",
+    "share": "+ Del",
+    "mock": {
+      "ninaWhat": "+2.5kg PR · Deadlift 175 kg",
+      "ninaWhen": "lige nu",
+      "kasperWhat": "afsluttet uge 8 af PR-Block",
+      "kasperWhen": "12m",
+      "mariaWhat": "delt formcheck-video",
+      "mariaWhen": "32m"
+    }
+  },
+  "trend": {
+    "newActivity": "Ny aktivitet",
+    "new": "↑ ny",
+    "stable": "Stabil",
+    "up": "Op {pct} procent",
+    "down": "Ned {pct} procent"
+  }
+}

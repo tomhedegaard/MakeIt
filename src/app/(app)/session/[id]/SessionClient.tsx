@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import type { Exercise, Session } from "@/lib/workout";
 import type { FormCheckQuota } from "@/lib/data/form-check-quota";
 import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
@@ -67,6 +68,7 @@ export default function SessionClient({
   formCheckQuota: FormCheckQuota;
 }) {
   const router = useRouter();
+  const t = useTranslations("Session");
 
   const initialLogged = useMemo(() => buildInitialLogged(session), [session]);
   const initialPoint = useMemo(() => findResumePoint(session), [session]);
@@ -167,7 +169,7 @@ export default function SessionClient({
           <button
             type="button"
             onClick={() => setExitOpen(true)}
-            aria-label="Afslut session"
+            aria-label={t("topBar.exit")}
             className="size-10 rounded-full surface-2 flex items-center justify-center"
           >
             <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
@@ -177,10 +179,14 @@ export default function SessionClient({
 
           <div className="flex-1 min-w-0 text-center">
             <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint">
-              {session.programCode} · uge {session.week} · {session.dayLabel}
+              {t("topBar.programLine", {
+                programCode: session.programCode,
+                week: session.week,
+                dayLabel: session.dayLabel,
+              })}
             </div>
             <div className="numeric text-xs text-fg-dim">
-              {completedSets} / {totalSets} sæt
+              {t("topBar.setsCount", { completed: completedSets, total: totalSets })}
             </div>
           </div>
 
@@ -209,18 +215,18 @@ export default function SessionClient({
         {/* Targets row */}
         <section className="grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
           <div className="bg-bg-2 p-4 text-center">
-            <div className="eyebrow mb-1">Mål</div>
+            <div className="eyebrow mb-1">{t("targets.goal")}</div>
             <div className="numeric text-xl">
               {set.targetWeight}
               <span className="text-fg-dim text-sm">kg</span>
             </div>
           </div>
           <div className="bg-bg-2 p-4 text-center">
-            <div className="eyebrow mb-1">Reps</div>
+            <div className="eyebrow mb-1">{t("targets.reps")}</div>
             <div className="numeric text-xl">{set.targetReps}</div>
           </div>
           <div className="bg-bg-2 p-4 text-center">
-            <div className="eyebrow mb-1">RPE</div>
+            <div className="eyebrow mb-1">{t("targets.rpe")}</div>
             <div className="numeric text-xl">{set.targetRpe ? set.targetRpe : "—"}</div>
           </div>
         </section>
@@ -232,7 +238,7 @@ export default function SessionClient({
             step={2.5}
             min={0}
             unit="kg"
-            label="Vægt"
+            label={t("steppers.weight")}
             onChange={(weight) => patch({ weight })}
           />
           <Stepper
@@ -240,20 +246,20 @@ export default function SessionClient({
             step={1}
             min={0}
             unit="reps"
-            label="Reps"
+            label={t("steppers.reps")}
             onChange={(reps) => patch({ reps })}
           />
         </section>
 
         {/* RPE */}
         <section>
-          <div className="eyebrow mb-3">RPE — hvor tungt føltes det?</div>
+          <div className="eyebrow mb-3">{t("rpe.label")}</div>
           <RpeSelect value={current.rpe} onChange={(rpe) => patch({ rpe })} />
         </section>
 
         {/* Sets list for this exercise */}
         <section>
-          <div className="eyebrow mb-3">Sæt i dette øvelse</div>
+          <div className="eyebrow mb-3">{t("sets.title")}</div>
           <ol className="surface-2 rounded-lg divide-y hairline overflow-hidden">
             {ex.sets.map((s, i) => {
               const sk = setKey(ex.id, s.id);
@@ -275,9 +281,9 @@ export default function SessionClient({
                       : `${s.targetWeight}kg × ${s.targetReps}${s.targetRpe ? ` @ ${s.targetRpe}` : ""}`}
                   </span>
                   {lg?.done ? (
-                    <span className="text-fg" aria-label="Færdig">✓</span>
+                    <span className="text-fg" aria-label={t("sets.done")}>✓</span>
                   ) : isCurrent ? (
-                    <span className="eyebrow text-fg">Nu</span>
+                    <span className="eyebrow text-fg">{t("sets.now")}</span>
                   ) : (
                     <span className="text-fg-faint" aria-hidden>·</span>
                   )}
@@ -299,14 +305,14 @@ export default function SessionClient({
             className="btn btn-sm"
             onClick={() => setResting({ secs: 90 })}
           >
-            Hvil
+            {t("cta.rest")}
           </button>
           <button
             type="button"
             className="btn btn-primary btn-xl flex-1"
             onClick={logSet}
           >
-            Log sæt →
+            {t("cta.logSet")}
           </button>
         </div>
       </div>
@@ -331,27 +337,26 @@ export default function SessionClient({
       <Sheet open={doneOpen} onOpenChange={setDoneOpen}>
         <SheetContent>
           <div className="text-center pb-4">
-            <div className="eyebrow mb-3">Session done</div>
-            <h2 className="font-display text-4xl mb-2">Godt arbejde.</h2>
+            <div className="eyebrow mb-3">{t("done.eyebrow")}</div>
+            <h2 className="font-display text-4xl mb-2">{t("done.title")}</h2>
             <p className="text-fg-dim text-sm mb-6 px-2">
-              Du loggede {completedSets} sæt og holdt dig på programmet.
-              Vi sender dataene videre til din coach for ugentlig review.
+              {t("done.body", { sets: completedSets })}
             </p>
 
             <div className="grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden mb-6">
               <div className="bg-bg-2 p-3 text-center">
-                <div className="eyebrow mb-1">Sæt</div>
+                <div className="eyebrow mb-1">{t("done.sets")}</div>
                 <div className="numeric text-2xl">{completedSets}</div>
               </div>
               <div className="bg-bg-2 p-3 text-center">
-                <div className="eyebrow mb-1">Volumen</div>
+                <div className="eyebrow mb-1">{t("done.volume")}</div>
                 <div className="numeric text-2xl">
                   {sessionVolume}
                   <span className="text-fg-dim text-sm">kg</span>
                 </div>
               </div>
               <div className="bg-bg-2 p-3 text-center">
-                <div className="eyebrow mb-1">Reps</div>
+                <div className="eyebrow mb-1">{t("done.reps")}</div>
                 <div className="numeric text-2xl">
                   + {repsAwarded}
                 </div>
@@ -359,8 +364,10 @@ export default function SessionClient({
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <Link href="/community" className="btn">Del til crew</Link>
-              <Link href="/dashboard" className="btn btn-primary">Til Today</Link>
+              <Link href="/community" className="btn">{t("done.share")}</Link>
+              <Link href="/dashboard" className="btn btn-primary">
+                {t("done.toToday")}
+              </Link>
             </div>
           </div>
         </SheetContent>
@@ -369,19 +376,19 @@ export default function SessionClient({
       {/* Exit confirm */}
       <Sheet open={exitOpen} onOpenChange={setExitOpen}>
         <SheetContent
-          title="Afslut session?"
-          description="Dine loggede sæt er allerede gemt — du kan fortsætte senere."
+          title={t("exit.title")}
+          description={t("exit.description")}
         >
           <div className="grid grid-cols-2 gap-3 mt-4">
             <button type="button" className="btn" onClick={() => setExitOpen(false)}>
-              Bliv
+              {t("exit.stay")}
             </button>
             <button
               type="button"
               className="btn btn-primary"
               onClick={() => router.push("/dashboard")}
             >
-              Afslut
+              {t("exit.confirm")}
             </button>
           </div>
         </SheetContent>
@@ -430,6 +437,7 @@ function ExerciseSection({
   totalExercises: number;
   onOpenFormCheck: () => void;
 }) {
+  const t = useTranslations("Session.exercise");
   const lib = ex.library;
   const figureView = lib ? dominantView(lib) : "front";
   // Show 3 cues inline — keep the page focused on the active set,
@@ -442,7 +450,7 @@ function ExerciseSection({
       <div className="flex items-start justify-between gap-4 mb-4">
         <div className="min-w-0 flex-1">
           <div className="eyebrow mb-1">
-            Øvelse {exIdx + 1} / {totalExercises}
+            {t("position", { current: exIdx + 1, total: totalExercises })}
           </div>
           <h1 className="font-display text-3xl lg:text-4xl leading-[1]">
             {ex.name}
@@ -453,7 +461,7 @@ function ExerciseSection({
             {setIdx + 1}
             <span className="text-fg-dim text-base">/{ex.sets.length}</span>
           </div>
-          <div className="eyebrow">sæt</div>
+          <div className="eyebrow">{t("sets")}</div>
         </div>
       </div>
 
@@ -462,7 +470,7 @@ function ExerciseSection({
           <Link
             href={`/train/exercises/${lib.slug}`}
             className="shrink-0 lift rounded-md surface p-1.5"
-            aria-label="Åbn øvelsens detaljer"
+            aria-label={t("openDetails")}
           >
             <AnatomyFigure
               view={figureView}
@@ -493,7 +501,7 @@ function ExerciseSection({
                 href={`/train/exercises/${lib.slug}`}
                 className="ml-auto text-[10px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg transition-colors"
               >
-                Se hele øvelsen →
+                {t("seeFull")}
               </Link>
             </div>
           </div>
@@ -517,14 +525,14 @@ function ExerciseSection({
             <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
           </svg>
           <span className="text-sm">
-            Form-check med AI
+            {t("formCheck")}
             {overflowCues > 0 ? (
-              <span className="text-fg-faint"> · {overflowCues} cues mere</span>
+              <span className="text-fg-faint">{t("moreCues", { count: overflowCues })}</span>
             ) : null}
           </span>
         </span>
         <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-          ~6 sek →
+          {t("duration")}
         </span>
       </button>
     </section>

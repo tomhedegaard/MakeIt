@@ -2,20 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
-import { redeemRewardAction, type RedeemResult } from "./actions";
+import { redeemRewardAction } from "./actions";
 import type { Reward } from "@/lib/data/rewards";
-
-const ERROR_LABEL: Record<
-  Exclude<RedeemResult, { ok: true }>["reason"],
-  string
-> = {
-  auth: "Du skal være logget ind.",
-  sold_out: "Den her er udsolgt — det går stærkt!",
-  insufficient_reps: "Du har ikke nok Reps endnu.",
-  unavailable: "Belønningen er ikke tilgængelig lige nu.",
-  unknown: "Noget gik galt — prøv igen om lidt.",
-};
 
 type Stage = "confirm" | "success" | "error";
 
@@ -26,11 +16,17 @@ export default function RedeemButton({
   reward: Reward;
   balance: number;
 }) {
+  const t = useTranslations("Reps.redeem");
   const [open, setOpen] = useState(false);
   const [stage, setStage] = useState<Stage>("confirm");
   const [errorReason, setErrorReason] = useState<string>("");
   const [pending, startTransition] = useTransition();
   const router = useRouter();
+
+  function errorLabel(reason: string | undefined): string {
+    const key = `errors.${reason ?? "unknown"}`;
+    return t.has(key) ? t(key) : t("errors.unknown");
+  }
 
   const canAfford = balance >= reward.costReps;
   const disabled = !reward.isAvailable || !canAfford;
@@ -53,7 +49,7 @@ export default function RedeemButton({
         setStage("success");
       } else {
         setStage("error");
-        setErrorReason(ERROR_LABEL[res.reason] ?? ERROR_LABEL.unknown);
+        setErrorReason(errorLabel(res.reason));
       }
     });
   }
@@ -67,17 +63,19 @@ export default function RedeemButton({
         disabled={disabled}
       >
         {!reward.isAvailable
-          ? "Udsolgt"
+          ? t("soldOut")
           : !canAfford
-            ? `Mangler ${(reward.costReps - balance).toLocaleString("da-DK")} Reps`
-            : "Indløs"}
+            ? t("missingReps", {
+                amount: (reward.costReps - balance).toLocaleString("da-DK"),
+              })
+            : t("redeem")}
       </button>
 
       <Sheet open={open} onOpenChange={(v) => (v ? setOpen(true) : close_())}>
         <SheetContent>
           {stage === "confirm" ? (
             <>
-              <div className="eyebrow mb-2">Bekræft indløsning</div>
+              <div className="eyebrow mb-2">{t("confirmEyebrow")}</div>
               <h2 className="font-display text-2xl mb-2">{reward.name}</h2>
               {reward.description ? (
                 <p className="text-fg-dim text-sm mb-5">{reward.description}</p>
@@ -85,20 +83,20 @@ export default function RedeemButton({
 
               <div className="surface-2 rounded-lg p-4 mb-5">
                 <div className="flex items-baseline justify-between mb-3">
-                  <span className="text-fg-dim text-sm">Pris</span>
+                  <span className="text-fg-dim text-sm">{t("price")}</span>
                   <span className="numeric text-lg">
                     {reward.costReps.toLocaleString("da-DK")}{" "}
                     <span className="text-fg-dim text-xs">Reps</span>
                   </span>
                 </div>
                 <div className="flex items-baseline justify-between mb-3 border-t hairline pt-3">
-                  <span className="text-fg-dim text-sm">Din balance</span>
+                  <span className="text-fg-dim text-sm">{t("yourBalance")}</span>
                   <span className="numeric text-lg">
                     {balance.toLocaleString("da-DK")}
                   </span>
                 </div>
                 <div className="flex items-baseline justify-between border-t hairline-strong pt-3">
-                  <span className="text-fg text-sm">Efter indløsning</span>
+                  <span className="text-fg text-sm">{t("afterRedemption")}</span>
                   <span className="numeric text-lg">
                     {(balance - reward.costReps).toLocaleString("da-DK")}{" "}
                     <span className="text-fg-dim text-xs">Reps</span>
@@ -108,10 +106,10 @@ export default function RedeemButton({
 
               <p className="text-xs font-mono text-fg-faint mb-5">
                 {reward.kind === "physical" || reward.kind === "drop"
-                  ? "Vi sender med GLS når Mikael har bekræftet."
+                  ? t("fulfilmentPhysical")
                   : reward.kind === "experience"
-                    ? "Mikael kontakter dig direkte for at booke."
-                    : "Aktiveres automatisk på din konto."}
+                    ? t("fulfilmentExperience")
+                    : t("fulfilmentDigital")}
               </p>
 
               <div className="grid grid-cols-2 gap-3">
@@ -121,7 +119,7 @@ export default function RedeemButton({
                   onClick={close_}
                   disabled={pending}
                 >
-                  Annullér
+                  {t("cancel")}
                 </button>
                 <button
                   type="button"
@@ -129,7 +127,7 @@ export default function RedeemButton({
                   onClick={confirm}
                   disabled={pending}
                 >
-                  {pending ? "Indløser…" : "Bekræft →"}
+                  {pending ? t("redeeming") : t("confirm")}
                 </button>
               </div>
             </>
@@ -137,18 +135,18 @@ export default function RedeemButton({
 
           {stage === "success" ? (
             <div className="text-center py-2">
-              <div className="eyebrow mb-3">Indløsning bekræftet</div>
-              <h2 className="font-display text-3xl mb-2">Sådan.</h2>
+              <div className="eyebrow mb-3">{t("successEyebrow")}</div>
+              <h2 className="font-display text-3xl mb-2">{t("successTitle")}</h2>
               <p className="text-fg-dim text-sm mb-6 px-2">
-                Din indløsning er registreret og venter på Mikaels bekræftelse.
-                Du kan følge status under &ldquo;Mine indløsninger&rdquo; nedenfor.
+                {t("successBody")}
               </p>
 
               <div className="surface-2 rounded-lg p-4 text-left mb-6">
                 <div className="font-display text-lg">{reward.name}</div>
                 <div className="text-xs font-mono text-fg-faint mt-1">
-                  − {reward.costReps.toLocaleString("da-DK")} Reps · status:
-                  afventer
+                  {t("successMeta", {
+                    amount: reward.costReps.toLocaleString("da-DK"),
+                  })}
                 </div>
               </div>
 
@@ -157,29 +155,28 @@ export default function RedeemButton({
                 className="btn btn-primary w-full"
                 onClick={close_}
               >
-                Færdig
+                {t("done")}
               </button>
             </div>
           ) : null}
 
           {stage === "error" ? (
             <div className="text-center py-2">
-              <div className="eyebrow mb-3">Kunne ikke indløse</div>
+              <div className="eyebrow mb-3">{t("errorEyebrow")}</div>
               <h2 className="font-display text-2xl mb-2">{errorReason}</h2>
               <p className="text-fg-dim text-sm mb-6">
-                Ingen Reps er trukket. Prøv igen, eller kontakt support hvis
-                problemet fortsætter.
+                {t("errorBody")}
               </p>
               <div className="grid grid-cols-2 gap-3">
                 <button type="button" className="btn" onClick={close_}>
-                  Luk
+                  {t("close")}
                 </button>
                 <button
                   type="button"
                   className="btn btn-primary"
                   onClick={() => setStage("confirm")}
                 >
-                  Prøv igen
+                  {t("retry")}
                 </button>
               </div>
             </div>

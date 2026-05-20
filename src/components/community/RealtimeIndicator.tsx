@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 
 /**
@@ -13,6 +14,7 @@ import { createClient } from "@/lib/supabase/client";
  */
 export default function RealtimeIndicator() {
   const router = useRouter();
+  const t = useTranslations("Community.realtime");
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -47,7 +49,9 @@ export default function RealtimeIndicator() {
     >
       <span className="pulse-dot" aria-hidden />
       <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg">
-        {count} nyt{count === 1 ? "" : "e"} post{count === 1 ? "" : "s"} — opdatér
+        {count === 1
+          ? t("newPostsOne", { count })
+          : t("newPostsOther", { count })}
       </span>
     </button>
   );

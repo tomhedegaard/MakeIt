@@ -17,6 +17,7 @@ import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { SUPABASE_URL } from "@/lib/supabase/env";
 import { getCrewAdherenceDigest } from "@/lib/data/coach-adherence-digest";
 import { sendCoachAdherenceDigestEmail } from "@/lib/email/templates/coach-adherence-digest";
+import { isLocale, type Locale } from "@/i18n/config";
 
 // Coach digest aggregation hits ~3 queries per member. Bump the
 // function timeout so 50+ members don't trip the 10s default.
@@ -27,6 +28,7 @@ type CoachRow = {
   handle: string;
   email: string | null;
   notif_digest: boolean | null;
+  locale: string | null;
 };
 
 export async function GET(request: Request) {
@@ -55,7 +57,7 @@ export async function GET(request: Request) {
   // 1. Coaches who should receive the digest.
   const { data: coachRows, error: coachErr } = await admin
     .from("members")
-    .select("id, handle, email, notif_digest")
+    .select("id, handle, email, notif_digest, locale")
     .eq("is_coach", true)
     .not("email", "is", null);
 
@@ -99,11 +101,13 @@ export async function GET(request: Request) {
       continue;
     }
     try {
+      const locale: Locale = isLocale(coach.locale) ? coach.locale : "da";
       const res = await sendCoachAdherenceDigestEmail({
         to: coach.email,
         recipientHandle: coach.handle,
         digest,
         baseUrl,
+        locale,
       });
       if (res.ok) sent++;
       else if (res.skipped) skipped++;

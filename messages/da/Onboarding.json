@@ -1,0 +1,93 @@
+{
+  "metaTitle": "Velkommen — MakeIt // HQ",
+  "goals": {
+    "strength": {
+      "title": "Strength",
+      "sub": "Squat, bench, DL — bygge til nye PR'er"
+    },
+    "hypertrophy": {
+      "title": "Hypertrofi",
+      "sub": "Volumen og masse — flere reps, mere arbejde"
+    },
+    "hybrid": {
+      "title": "Powerbuilding",
+      "sub": "Begge dele — tunge top sets + accessory"
+    },
+    "deadlift_spec": {
+      "title": "Deadlift spec.",
+      "sub": "6 uger fokus på en ny PR i dødløftet"
+    }
+  },
+  "levels": {
+    "beginner": {
+      "title": "Begynder",
+      "sub": "< 1 år struktureret strength-træning"
+    },
+    "intermediate": {
+      "title": "Mellem",
+      "sub": "1-3 år — kender RPE og periodisering"
+    },
+    "advanced": {
+      "title": "Avanceret",
+      "sub": "3+ år — kender din krops respons godt"
+    }
+  },
+  "equipment": {
+    "full": {
+      "title": "Fuldt center",
+      "sub": "Adgang til alt — kabler, maskiner, plads"
+    },
+    "home_rack": {
+      "title": "Hjemme + rack",
+      "sub": "Squat-rack, vægtstang, bænk og plader"
+    },
+    "minimal": {
+      "title": "Minimum",
+      "sub": "Håndvægte, måske en bænk og en stang"
+    }
+  },
+  "freqOption": "{days} dage / uge",
+  "step1": {
+    "introEyebrow": "Hej @{handle}",
+    "introTitle": "Lad os bygge dit program.",
+    "introSub": "Vi spørger ind til dit mål, dit niveau og dit udstyr — så genererer AI'en et personligt program på 30 sekunder.",
+    "errorBanner": "Vælg en option i hver gruppe.",
+    "goalEyebrow": "Mål",
+    "goalTitle": "Hvad sigter du efter?",
+    "levelEyebrow": "Niveau",
+    "levelTitle": "Hvor er du henne?",
+    "freqEyebrow": "Frekvens",
+    "freqTitle": "Hvor ofte træner du?",
+    "equipEyebrow": "Udstyr",
+    "equipTitle": "Hvad har du adgang til?"
+  },
+  "step2": {
+    "introEyebrow": "Maxes",
+    "introTitle": "Hvor stærk er du i dag?",
+    "introSub": "Indtast dit ~1RM for hver løft hvis du kender det. Spring over hvis ikke — vi bruger gennemsnit til dit niveau som start.",
+    "squat": "Squat",
+    "bench": "Bench",
+    "deadlift": "Deadlift",
+    "ohp": "OHP",
+    "footnote": "Alle felter i kg · Du kan altid opdatere dem senere på din profil."
+  },
+  "step3": {
+    "introEyebrow": "Sidste",
+    "introTitle": "Noget vi skal vide?",
+    "introSub": "Skader, mobilitetsproblemer eller ting du gerne vil arbejde rundt om. Helt valgfrit.",
+    "injuriesLabel": "Skader / noter",
+    "injuriesPlaceholder": "F.eks. Lidt anstrengt højre skulder — undgå behind-the-neck press.",
+    "footnote": "Når du trykker Færdig, genererer vi dit program og lægger første session ind på din Today-skærm."
+  },
+  "summary": {
+    "goal": "Mål",
+    "level": "Niveau",
+    "freq": "Frekvens",
+    "equip": "Udstyr"
+  },
+  "nav": {
+    "back": "Tilbage",
+    "next": "Næste →",
+    "submit": "Generér mit program →"
+  }
+}

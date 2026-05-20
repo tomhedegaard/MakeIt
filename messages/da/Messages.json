@@ -1,0 +1,72 @@
+{
+  "page": {
+    "eyebrow": "07 — Beskeder",
+    "titleWithCoach": "Chat med @{handle}",
+    "titleFallback": "Din coach",
+    "subtitle": "Direkte linje til din coach. Send tekst, billeder eller en lydbesked — videoer modtager du."
+  },
+  "thread": {
+    "ariaLabel": "Beskeder",
+    "loading": "Henter…",
+    "empty": "Ingen beskeder endnu. Skriv en besked til at starte.",
+    "initializing": "Initialiserer samtale…"
+  },
+  "bubble": {
+    "photoAlt": "Foto",
+    "mediaError": "Kunne ikke hente medie · prøv at refreshe",
+    "seen": "Set",
+    "sent": "Sendt"
+  },
+  "composer": {
+    "placeholder": "Skriv en besked…",
+    "sending": "…",
+    "send": "Send",
+    "imageAria": "Vedhæft billede",
+    "imageTitle": "Billede",
+    "audioAria": "Optag lydbesked",
+    "audioTitle": "Lyd",
+    "videoAria": "Optag live video",
+    "videoTitle": "Live video",
+    "errors": {
+      "pickImage": "Vælg et billede",
+      "fileTooLarge": "Filen er for stor (max 100 MB)",
+      "storageUnavailableDemo": "Storage er ikke tilgængelig i demo-mode",
+      "storageUnavailable": "Storage er ikke tilgængelig",
+      "uploadFailedWithMessage": "Upload fejlede: {message}",
+      "uploadFailed": "Upload fejlede",
+      "video_not_allowed": "Du kan ikke sende video",
+      "auth": "Du er ikke logget ind",
+      "no_coach": "Ingen coach tilgængelig endnu",
+      "empty": "Skriv noget først",
+      "no_media": "Vedhæft en fil først",
+      "unknown": "Kunne ikke sende — prøv igen"
+    }
+  },
+  "audioRecorder": {
+    "record": "● Optag",
+    "cancel": "Annullér",
+    "max": "max 5:00",
+    "stop": "◼ Stop",
+    "discard": "Slet",
+    "sending": "Sender…",
+    "send": "Send",
+    "startFailed": "Kunne ikke starte optagelse: {message}",
+    "unknownError": "ukendt fejl",
+    "sendFailed": "Kunne ikke sende — prøv igen."
+  },
+  "videoRecorder": {
+    "record": "● Optag video",
+    "cancel": "Annullér",
+    "max": "max 5:00",
+    "stop": "◼ Stop",
+    "discard": "Slet",
+    "sending": "Sender…",
+    "send": "Send",
+    "permissionDenied": "Tilgang nægtet — tillad kamera + mikrofon i browseren.",
+    "noCamera": "Intet kamera fundet på enheden.",
+    "cameraBusy": "Kamera er optaget af et andet program.",
+    "startFailed": "Kunne ikke starte optagelse: {message}",
+    "unknownError": "ukendt fejl",
+    "sendFailed": "Kunne ikke sende — prøv igen."
+  }
+}

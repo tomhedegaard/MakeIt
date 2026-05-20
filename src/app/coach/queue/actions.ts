@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { sendCoachReviewEmail } from "@/lib/email/templates/coach-review";
+import { isLocale, type Locale } from "@/i18n/config";
 
 /**
  * Coach reviews a form-check: stamps reviewed_by/at and saves notes,
@@ -47,7 +48,7 @@ export async function reviewFormCheckAction(
         .select(
           `
           exercise_name, ai_score, ai_headline, member_id,
-          member:members(email, handle, notif_form_check_review)
+          member:members(email, handle, notif_form_check_review, locale)
         `
         )
         .eq("id", formCheckId)
@@ -63,6 +64,7 @@ export async function reviewFormCheckAction(
         const h = await headers();
         const proto = h.get("x-forwarded-proto") ?? "http";
         const host = h.get("host") ?? "localhost:3002";
+        const locale: Locale = isLocale(m.locale) ? m.locale : "da";
         await sendCoachReviewEmail({
           to: m.email,
           memberHandle: m.handle,
@@ -71,6 +73,7 @@ export async function reviewFormCheckAction(
           aiScore: fc?.ai_score ?? null,
           aiHeadline: fc?.ai_headline ?? null,
           baseUrl: `${proto}://${host}`,
+          locale,
         });
       }
     } catch (err) {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { completeSetupAction } from "../actions";
 import PlanGenerationOverlay from "@/components/nutrition/PlanGenerationOverlay";
@@ -21,6 +22,7 @@ type Diet = "omnivore" | "pescatarian" | "vegetarian" | "vegan";
 type Cooking = "basic" | "intermediate" | "advanced";
 
 export default function SetupWizardClient() {
+  const t = useTranslations("Nutrition.setup");
   const [goal, setGoal] = useState<Goal>("maintain");
   const [diet, setDiet] = useState<Diet>("omnivore");
   const [cooking, setCooking] = useState<Cooking>("basic");
@@ -34,16 +36,16 @@ export default function SetupWizardClient() {
 
       <Section
         num="01"
-        title="Hvad er målet?"
-        sub="Vi tilpasser kalorier og protein efter retningen."
+        title={t("goalTitle")}
+        sub={t("goalSub")}
       >
         <Grid>
           {(
             [
-              { id: "cut",      title: "Cut",      sub: "Tabe fedt mens du beholder muskelmasse." },
-              { id: "recomp",   title: "Recomp",   sub: "Bytte fedt for muskel — samme vægt, anden krop." },
-              { id: "maintain", title: "Maintain", sub: "Performance og restitution i centrum." },
-              { id: "mass",     title: "Mass",     sub: "Tage på i kontrollerede skridt." },
+              { id: "cut",      title: t("goalCutTitle"),      sub: t("goalCutSub") },
+              { id: "recomp",   title: t("goalRecompTitle"),   sub: t("goalRecompSub") },
+              { id: "maintain", title: t("goalMaintainTitle"), sub: t("goalMaintainSub") },
+              { id: "mass",     title: t("goalMassTitle"),     sub: t("goalMassSub") },
             ] as { id: Goal; title: string; sub: string }[]
           ).map((o) => (
             <Choice
@@ -59,16 +61,16 @@ export default function SetupWizardClient() {
 
       <Section
         num="02"
-        title="Hvilken diæt?"
-        sub="Vi vælger kun proteiner og opskrifter der matcher."
+        title={t("dietTitle")}
+        sub={t("dietSub")}
       >
         <Grid>
           {(
             [
-              { id: "omnivore",    title: "Omnivore",    sub: "Alt på bordet — kød, fisk, æg, planter." },
-              { id: "pescatarian", title: "Pescatarian", sub: "Fisk og planter, ingen landdyr." },
-              { id: "vegetarian",  title: "Vegetarian",  sub: "Mejeri, æg og planter — ingen kød." },
-              { id: "vegan",       title: "Vegan",       sub: "100% planter." },
+              { id: "omnivore",    title: t("dietOmnivoreTitle"),    sub: t("dietOmnivoreSub") },
+              { id: "pescatarian", title: t("dietPescatarianTitle"), sub: t("dietPescatarianSub") },
+              { id: "vegetarian",  title: t("dietVegetarianTitle"),  sub: t("dietVegetarianSub") },
+              { id: "vegan",       title: t("dietVeganTitle"),       sub: t("dietVeganSub") },
             ] as { id: Diet; title: string; sub: string }[]
           ).map((o) => (
             <Choice
@@ -84,15 +86,15 @@ export default function SetupWizardClient() {
 
       <Section
         num="03"
-        title="Hvor meget vil du lave mad?"
-        sub="Styrer hvor avancerede opskrifter vi vælger."
+        title={t("cookingTitle")}
+        sub={t("cookingSub")}
       >
         <Grid>
           {(
             [
-              { id: "basic",        title: "Minimal",  sub: "20 min eller mindre per måltid, ingen specialudstyr." },
-              { id: "intermediate", title: "Moderate", sub: "OK med 30-45 min og lidt prep i weekenden." },
-              { id: "advanced",     title: "Love it",  sub: "Gerne mere tid + teknik — sous vide, low-roast, alt." },
+              { id: "basic",        title: t("cookingBasicTitle"),        sub: t("cookingBasicSub") },
+              { id: "intermediate", title: t("cookingIntermediateTitle"), sub: t("cookingIntermediateSub") },
+              { id: "advanced",     title: t("cookingAdvancedTitle"),     sub: t("cookingAdvancedSub") },
             ] as { id: Cooking; title: string; sub: string }[]
           ).map((o) => (
             <Choice
@@ -108,11 +110,11 @@ export default function SetupWizardClient() {
 
       <Section
         num="04"
-        title="Hvad vejer du nu?"
-        sub="Vi bruger det til at sigte rigtigt på kalorier + protein. Du kan opdatere ugentligt på dashboardet."
+        title={t("weightTitle")}
+        sub={t("weightSub")}
       >
         <label className="block max-w-xs">
-          <span className="eyebrow block mb-2">Bodyweight</span>
+          <span className="eyebrow block mb-2">{t("weightFieldLabel")}</span>
           <div className="relative">
             <input
               type="number"
@@ -132,14 +134,14 @@ export default function SetupWizardClient() {
           </div>
         </label>
         <p className="mt-3 text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
-          Bedste timing: morgen, fastet, efter toilet
+          {t("weightTiming")}
         </p>
       </Section>
 
       <div className="border-t hairline pt-6 flex flex-wrap items-center gap-4">
         <SubmitButton />
         <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
-          Tager 5-10 sek · Claude bygger ugen
+          {t("submitTiming")}
         </p>
       </div>
     </form>
@@ -154,6 +156,7 @@ export default function SetupWizardClient() {
  * the click registered.
  */
 function SubmitButton() {
+  const t = useTranslations("Nutrition.setup");
   const { pending } = useFormStatus();
   return (
     <>
@@ -165,10 +168,10 @@ function SubmitButton() {
         {pending ? (
           <>
             <span className="inline-block size-2 rounded-full bg-current animate-pulse mr-2" />
-            Genererer plan…
+            {t("submitting")}
           </>
         ) : (
-          <>Generér min plan →</>
+          <>{t("submit")}</>
         )}
       </button>
       <PlanGenerationOverlay pending={pending} />

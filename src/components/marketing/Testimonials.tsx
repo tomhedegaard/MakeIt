@@ -1,46 +1,45 @@
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 
-const QUOTES: {
-  who: string;
-  tier: string;
-  cred: string;
-  quote: string;
-}[] = [
-  {
-    who: "@kasper_s",
-    tier: "Athlete",
-    cred: "Powerbuilding · 162.5 kg squat single",
-    quote:
-      "Det første program jeg faktisk har kørt fra ende til anden. Mikaels form-checks fanger ting AI&apos;en misser, og mængden af noter han skriver pr. video er sygt.",
-  },
-  {
-    who: "@nina_dl",
-    tier: "Beast",
-    cred: "DL-specialization · 175 kg @ 68 kg BW",
-    quote:
-      "+15 kg på dødløftet på 8 uger uden skader. Det at Reps-shoppen findes er en farlig god motivation — jeg sparer op til den brodérede strap.",
-  },
-  {
-    who: "@maria.lift",
-    tier: "Beast",
-    cred: "Hypertrofi · skifter mellem blokke",
-    quote:
-      "Crewet er der jeg poster, ikke Instagram. Stille, præcist, og på dansk. Ingen ads, ingen krav. Bare folk der løfter.",
-  },
-];
+export default async function Testimonials() {
+  const t = await getTranslations("Marketing.testimonials");
 
-export default function Testimonials() {
+  const QUOTES: {
+    who: string;
+    tier: string;
+    cred: string;
+    quote: string;
+  }[] = [
+    {
+      who: "@kasper_s",
+      tier: "Athlete",
+      cred: t("kasper.cred"),
+      quote: t("kasper.quote"),
+    },
+    {
+      who: "@nina_dl",
+      tier: "Beast",
+      cred: t("nina.cred"),
+      quote: t("nina.quote"),
+    },
+    {
+      who: "@maria.lift",
+      tier: "Beast",
+      cred: t("maria.cred"),
+      quote: t("maria.quote"),
+    },
+  ];
+
   return (
     <section id="crew-says" className="relative border-t hairline py-24 md:py-40">
       <Container>
         <div className="max-w-2xl mb-12 md:mb-16" data-reveal>
-          <div className="eyebrow mb-4">07 — Crewet</div>
+          <div className="eyebrow mb-4">{t("eyebrow")}</div>
           <h2 className="font-display text-[clamp(2.4rem,7vw,5.5rem)] leading-[0.92] mb-5">
-            Hvad de siger.
+            {t("heading")}
           </h2>
           <p className="text-lg md:text-xl text-fg-dim leading-relaxed max-w-xl">
-            Tre fra crewet om hvordan det føles at træne her. Ingen ambassadør-deals,
-            ingen rabat-koder. Bare medlemmer der har sat tid på.
+            {t("intro")}
           </p>
         </div>
 

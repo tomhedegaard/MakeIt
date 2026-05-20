@@ -1,0 +1,60 @@
+{
+  "topBar": {
+    "exit": "Afslut session",
+    "setsCount": "{completed} / {total} sæt",
+    "programLine": "{programCode} · uge {week} · {dayLabel}"
+  },
+  "targets": {
+    "goal": "Mål",
+    "reps": "Reps",
+    "rpe": "RPE"
+  },
+  "steppers": {
+    "weight": "Vægt",
+    "reps": "Reps"
+  },
+  "sets": {
+    "title": "Sæt i dette øvelse",
+    "done": "Færdig",
+    "now": "Nu"
+  },
+  "cta": {
+    "rest": "Hvil",
+    "logSet": "Log sæt →"
+  },
+  "done": {
+    "eyebrow": "Session done",
+    "title": "Godt arbejde.",
+    "body": "Du loggede {sets} sæt og holdt dig på programmet. Vi sender dataene videre til din coach for ugentlig review.",
+    "sets": "Sæt",
+    "volume": "Volumen",
+    "reps": "Reps",
+    "share": "Del til crew",
+    "toToday": "Til Today"
+  },
+  "exit": {
+    "title": "Afslut session?",
+    "description": "Dine loggede sæt er allerede gemt — du kan fortsætte senere.",
+    "stay": "Bliv",
+    "confirm": "Afslut"
+  },
+  "exercise": {
+    "position": "Øvelse {current} / {total}",
+    "sets": "sæt",
+    "openDetails": "Åbn øvelsens detaljer",
+    "seeFull": "Se hele øvelsen →",
+    "formCheck": "Form-check med AI",
+    "moreCues": " · {count} cues mere",
+    "duration": "~6 sek →"
+  },
+  "restTimer": {
+    "ariaLabel": "Hvile",
+    "title": "Hvile",
+    "description": "Næste sæt om {time} — tag en slurk vand.",
+    "skip": "Skip"
+  },
+  "rpe": {
+    "label": "RPE — hvor tungt føltes det?",
+    "ariaLabel": "RPE"
+  }
+}

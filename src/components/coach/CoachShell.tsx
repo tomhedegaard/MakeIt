@@ -2,21 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Logo from "@/components/Logo";
 import { cn } from "@/lib/utils";
 import type { Member } from "@/lib/auth";
 
-type NavItem = { href: string; label: string; num: string; adminOnly?: boolean };
+type NavItem = { href: string; labelKey: string; num: string; adminOnly?: boolean };
 
 const NAV: NavItem[] = [
-  { href: "/coach",             label: "Overview",        num: "01" },
-  { href: "/coach/members",     label: "Members",         num: "02" },
-  { href: "/coach/programs",    label: "Programmer",      num: "03" },
-  { href: "/coach/exercises",   label: "Øvelser",         num: "04" },
-  { href: "/coach/queue",       label: "Form-check kø",   num: "05" },
-  { href: "/coach/redemptions", label: "Reps-indløsninger", num: "06" },
-  { href: "/coach/analytics",   label: "Analytics",       num: "07" },
-  { href: "/coach/system",      label: "System",          num: "08", adminOnly: true },
+  { href: "/coach",             labelKey: "navOverview",    num: "01" },
+  { href: "/coach/members",     labelKey: "navMembers",     num: "02" },
+  { href: "/coach/programs",    labelKey: "navPrograms",    num: "03" },
+  { href: "/coach/exercises",   labelKey: "navExercises",   num: "04" },
+  { href: "/coach/queue",       labelKey: "navQueue",       num: "05" },
+  { href: "/coach/redemptions", labelKey: "navRedemptions", num: "06" },
+  { href: "/coach/analytics",   labelKey: "navAnalytics",   num: "07" },
+  { href: "/coach/system",      labelKey: "navSystem",      num: "08", adminOnly: true },
 ];
 
 export default function CoachShell({
@@ -27,6 +28,7 @@ export default function CoachShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const t = useTranslations("Coach.shell");
   const nav = NAV.filter((item) => !item.adminOnly || member.isAdmin);
 
   return (
@@ -36,7 +38,7 @@ export default function CoachShell({
           <Logo />
           <div className="mt-4 flex items-center gap-2">
             <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
-              Coach
+              {t("badge")}
             </span>
             <span className="eyebrow">@{member.handle}</span>
           </div>
@@ -63,7 +65,7 @@ export default function CoachShell({
                     <span className="numeric text-[11px] text-fg-faint group-hover:text-fg-dim w-6">
                       {item.num}
                     </span>
-                    <span className="tracking-tight">{item.label}</span>
+                    <span className="tracking-tight">{t(item.labelKey)}</span>
                   </Link>
                 </li>
               );
@@ -73,7 +75,7 @@ export default function CoachShell({
 
         <div className="px-3 py-4 border-t hairline">
           <Link href="/dashboard" className="btn btn-ghost btn-sm w-full">
-            ← Tilbage til medlem-app
+            {t("backToMemberApp")}
           </Link>
         </div>
       </aside>
@@ -85,17 +87,17 @@ export default function CoachShell({
             <div className="flex items-center gap-2">
               <Logo />
               <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
-                Coach
+                {t("badge")}
               </span>
             </div>
             <Link
               href="/dashboard"
               className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim"
             >
-              Medlem ↗
+              {t("memberApp")}
             </Link>
           </div>
-          <nav aria-label="Coach-navigation" className="overflow-x-auto">
+          <nav aria-label={t("navAriaLabel")} className="overflow-x-auto">
             <ul className="flex gap-1 px-3 py-2 min-w-max">
               {nav.map((item) => {
                 const active =
@@ -111,7 +113,7 @@ export default function CoachShell({
                         active ? "bg-bg-3 text-fg" : "text-fg-dim"
                       )}
                     >
-                      {item.label}
+                      {t(item.labelKey)}
                     </Link>
                   </li>
                 );

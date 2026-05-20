@@ -1,0 +1,69 @@
+{
+  "metadata": {
+    "title": "Today"
+  },
+  "greeting": {
+    "eyebrow": "Good morning",
+    "streakLabel": "Streak",
+    "streakUnit": "days"
+  },
+  "formChecks": {
+    "answeredBefore": "Mikael Munk has answered",
+    "answeredCount": "{count, plural, one {# form check} other {# form checks}}",
+    "readNotes": "Read the notes on your profile"
+  },
+  "todaySession": {
+    "ariaLabel": "Today's session",
+    "eyebrow": "Today's session · {programCode} · week {week}",
+    "deload": "Deload",
+    "exercises": "Exercises",
+    "sets": "Sets",
+    "estTime": "Est. time",
+    "setCountSuffix": "× sets",
+    "start": "Start session →"
+  },
+  "stats": {
+    "volume": "Volume",
+    "volumeMeta": "kg · 4 weeks",
+    "prs": "PRs",
+    "prsMeta": "4 weeks",
+    "reps": "Reps"
+  },
+  "upcoming": {
+    "title": "Upcoming sessions",
+    "seeWeek": "See week →",
+    "empty": "No sessions scheduled. Your coach drops new sessions soon.",
+    "soon": "Soon",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "mock": {
+      "tomorrowLabel": "Tomorrow",
+      "tomorrowTitle": "Pause bench, ring row, push press",
+      "thuLabel": "Thu",
+      "thuTitle": "Deadlift — building to 90% of 1RM",
+      "friLabel": "Fri",
+      "friTitle": "Hypertrophy: quads + shoulders"
+    }
+  },
+  "crew": {
+    "title": "Crew right now",
+    "seeFeed": "See feed →",
+    "empty": "The crew is quiet right now — be the first to share.",
+    "share": "+ Share",
+    "mock": {
+      "ninaWhat": "+2.5kg PR · Deadlift 175 kg",
+      "ninaWhen": "just now",
+      "kasperWhat": "finished week 8 of PR-Block",
+      "kasperWhen": "12m",
+      "mariaWhat": "shared a form check video",
+      "mariaWhen": "32m"
+    }
+  },
+  "trend": {
+    "newActivity": "New activity",
+    "new": "↑ new",
+    "stable": "Stable",
+    "up": "Up {pct} percent",
+    "down": "Down {pct} percent"
+  }
+}

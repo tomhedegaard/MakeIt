@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { getSession } from "@/lib/auth";
 import { TODAY_SESSION, totalSets } from "@/lib/workout";
@@ -21,17 +22,23 @@ import FirstTimeTour from "@/components/app/FirstTimeTour";
 import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
 
-const MOCK_UPCOMING = [
-  { d: "I morgen", t: "Pause-bench, ringe-row, push-press", m: "55m" },
-  { d: "Tor",      t: "Deadlift — opbygning til 90% af 1RM", m: "70m" },
-  { d: "Fre",      t: "Hypertrofi: kvadriceps + skulder",     m: "45m" },
-];
+type Translator = Awaited<ReturnType<typeof getTranslations<"Dashboard">>>;
 
-const MOCK_FEED = [
-  { who: "@nina_dl",    what: "+2.5kg PR · Deadlift 175 kg", when: "lige nu", pr: true,  tier: "Beast" },
-  { who: "@kasper_s",   what: "afsluttet uge 8 af PR-Block",  when: "12m",      pr: false, tier: "Athlete" },
-  { who: "@maria.lift", what: "delt formcheck-video",         when: "32m",      pr: false, tier: "Beast" },
-];
+function mockUpcoming(t: Translator) {
+  return [
+    { d: t("upcoming.mock.tomorrowLabel"), t: t("upcoming.mock.tomorrowTitle"), m: "55m" },
+    { d: t("upcoming.mock.thuLabel"),      t: t("upcoming.mock.thuTitle"),      m: "70m" },
+    { d: t("upcoming.mock.friLabel"),      t: t("upcoming.mock.friTitle"),      m: "45m" },
+  ];
+}
+
+function mockFeed(t: Translator) {
+  return [
+    { who: "@nina_dl",    what: t("crew.mock.ninaWhat"),   when: t("crew.mock.ninaWhen"),   pr: true,  tier: "Beast" },
+    { who: "@kasper_s",   what: t("crew.mock.kasperWhat"), when: t("crew.mock.kasperWhen"), pr: false, tier: "Athlete" },
+    { who: "@maria.lift", what: t("crew.mock.mariaWhat"),  when: t("crew.mock.mariaWhen"),  pr: false, tier: "Beast" },
+  ];
+}
 
 function todayCardFromMock(): TodayCard {
   return {
@@ -52,20 +59,21 @@ function todayCardFromMock(): TodayCard {
   };
 }
 
-function fmtUpcomingDate(iso: string | null): string {
-  if (!iso) return "Snart";
+function fmtUpcomingDate(iso: string | null, t: Translator): string {
+  if (!iso) return t("upcoming.soon");
   const d = new Date(iso + "T00:00:00");
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
-  if (d.getTime() === today.getTime()) return "I dag";
-  if (d.getTime() === tomorrow.getTime()) return "I morgen";
+  if (d.getTime() === today.getTime()) return t("upcoming.today");
+  if (d.getTime() === tomorrow.getTime()) return t("upcoming.tomorrow");
   return d.toLocaleDateString("da-DK", { weekday: "short" }).replace(".", "");
 }
 
 export default async function TodayPage() {
   const member = (await getSession())!;
+  const t = await getTranslations("Dashboard");
 
   let today: TodayCard;
   let upcoming: UpcomingSession[] | null = null;
@@ -109,15 +117,15 @@ export default async function TodayPage() {
       {/* Greeting */}
       <header className="flex items-end justify-between gap-4 pt-2">
         <div>
-          <div className="eyebrow mb-2">God morgen</div>
+          <div className="eyebrow mb-2">{t("greeting.eyebrow")}</div>
           <h1 className="font-display text-[clamp(2rem,7vw,3.5rem)] leading-[0.95]">
             @{member.handle}
           </h1>
         </div>
         <div className="text-right shrink-0">
-          <div className="eyebrow mb-1">Streak</div>
+          <div className="eyebrow mb-1">{t("greeting.streakLabel")}</div>
           <div className="numeric text-3xl">{stats?.streakDays ?? 12}</div>
-          <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">dage</div>
+          <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">{t("greeting.streakUnit")}</div>
         </div>
       </header>
 
@@ -141,13 +149,13 @@ export default async function TodayPage() {
             <span className="pulse-dot" />
             <div className="flex-1 min-w-0">
               <div className="text-sm">
-                Mikael Munk har besvaret{" "}
+                {t("formChecks.answeredBefore")}{" "}
                 <span className="text-fg">
-                  {reviewedCount} form-check{reviewedCount === 1 ? "" : "s"}
+                  {t("formChecks.answeredCount", { count: reviewedCount })}
                 </span>
               </div>
               <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-0.5">
-                Læs noter på din profil
+                {t("formChecks.readNotes")}
               </div>
             </div>
             <span className="text-fg-dim shrink-0" aria-hidden>
@@ -159,16 +167,16 @@ export default async function TodayPage() {
 
       {/* Today's session */}
       <section
-        aria-label="Dagens session"
+        aria-label={t("todaySession.ariaLabel")}
         className="surface-2 rounded-2xl overflow-hidden"
       >
         <div className="px-5 pt-5 pb-4 border-b hairline">
           <div className="flex items-center gap-2 mb-3 flex-wrap">
             <span className="pulse-dot" />
-            <span className="eyebrow">Dagens session · {today.programCode} · uge {today.week}</span>
+            <span className="eyebrow">{t("todaySession.eyebrow", { programCode: today.programCode, week: today.week })}</span>
             {today.isDeload ? (
               <span className="ml-auto numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
-                Deload
+                {t("todaySession.deload")}
               </span>
             ) : null}
           </div>
@@ -180,15 +188,15 @@ export default async function TodayPage() {
 
         <div className="grid grid-cols-3 gap-px bg-line border-b hairline">
           <div className="bg-bg-2 px-4 py-3">
-            <div className="eyebrow mb-1">Øvelser</div>
+            <div className="eyebrow mb-1">{t("todaySession.exercises")}</div>
             <div className="numeric text-2xl">{today.exerciseCount}</div>
           </div>
           <div className="bg-bg-2 px-4 py-3">
-            <div className="eyebrow mb-1">Sæt</div>
+            <div className="eyebrow mb-1">{t("todaySession.sets")}</div>
             <div className="numeric text-2xl">{today.setCount}</div>
           </div>
           <div className="bg-bg-2 px-4 py-3">
-            <div className="eyebrow mb-1">Est. tid</div>
+            <div className="eyebrow mb-1">{t("todaySession.estTime")}</div>
             <div className="numeric text-2xl">
               {today.estimatedMinutes}
               <span className="text-fg-dim text-sm">m</span>
@@ -203,14 +211,14 @@ export default async function TodayPage() {
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="flex-1 text-fg/90 text-sm md:text-base truncate">{ex.name}</span>
-              <span className="numeric text-fg-faint text-xs">{ex.setCount}× sæt</span>
+              <span className="numeric text-fg-faint text-xs">{ex.setCount}{t("todaySession.setCountSuffix")}</span>
             </li>
           ))}
         </ul>
 
         <div className="p-4 lg:p-5">
           <Link href={`/session/${today.id}`} className="btn btn-primary btn-xl">
-            Start session →
+            {t("todaySession.start")}
           </Link>
         </div>
       </section>
@@ -218,31 +226,31 @@ export default async function TodayPage() {
       {/* Quick stats */}
       <section className="grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
         <div className="bg-bg p-4 lg:p-5">
-          <div className="eyebrow mb-2">Volumen</div>
+          <div className="eyebrow mb-2">{t("stats.volume")}</div>
           <div className="numeric text-2xl lg:text-3xl">
             {stats ? formatVolume(stats.volumeKg) : "84.2K"}
           </div>
           <div className="text-[10px] font-mono text-fg-faint mt-1 flex items-center gap-1">
-            <span>kg · 4 uger</span>
+            <span>{t("stats.volumeMeta")}</span>
             {stats ? (
-              <TrendArrow current={stats.volumeKg} previous={stats.volumeKgPrev} />
+              <TrendArrow current={stats.volumeKg} previous={stats.volumeKgPrev} t={t} />
             ) : null}
           </div>
         </div>
         <div className="bg-bg p-4 lg:p-5">
-          <div className="eyebrow mb-2">PR&apos;er</div>
+          <div className="eyebrow mb-2">{t("stats.prs")}</div>
           <div className="numeric text-2xl lg:text-3xl">
             {stats ? String(stats.prs4w).padStart(2, "0") : "03"}
           </div>
           <div className="text-[10px] font-mono text-fg-faint mt-1 flex items-center gap-1">
-            <span>4 uger</span>
+            <span>{t("stats.prsMeta")}</span>
             {stats ? (
-              <TrendArrow current={stats.prs4w} previous={stats.prsPrev} />
+              <TrendArrow current={stats.prs4w} previous={stats.prsPrev} t={t} />
             ) : null}
           </div>
         </div>
         <div className="bg-bg p-4 lg:p-5">
-          <div className="eyebrow mb-2">Reps</div>
+          <div className="eyebrow mb-2">{t("stats.reps")}</div>
           <div className="numeric text-2xl lg:text-3xl">
             {stats ? formatReps(stats.repsBalance) : "1.420"}
           </div>
@@ -253,16 +261,16 @@ export default async function TodayPage() {
       {/* Upcoming */}
       <section>
         <div className="flex items-end justify-between mb-3">
-          <div className="eyebrow">Kommende sessioner</div>
+          <div className="eyebrow">{t("upcoming.title")}</div>
           <Link href="/coaching" className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg">
-            Se uge →
+            {t("upcoming.seeWeek")}
           </Link>
         </div>
         {upcoming && upcoming.length > 0 ? (
           <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">
             {upcoming.map((row) => (
               <li key={row.id} className="px-4 py-3 flex items-center gap-4">
-                <span className="eyebrow w-16 shrink-0">{fmtUpcomingDate(row.scheduledFor)}</span>
+                <span className="eyebrow w-16 shrink-0">{fmtUpcomingDate(row.scheduledFor, t)}</span>
                 <span className="flex-1 text-sm text-fg/90 truncate">{row.title}</span>
                 <span className="numeric text-fg-faint text-xs shrink-0">{row.estimatedMinutes}m</span>
               </li>
@@ -270,7 +278,7 @@ export default async function TodayPage() {
           </ul>
         ) : upcoming === null ? (
           <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">
-            {MOCK_UPCOMING.map((row) => (
+            {mockUpcoming(t).map((row) => (
               <li key={row.d} className="px-4 py-3 flex items-center gap-4">
                 <span className="eyebrow w-16 shrink-0">{row.d}</span>
                 <span className="flex-1 text-sm text-fg/90 truncate">{row.t}</span>
@@ -280,7 +288,7 @@ export default async function TodayPage() {
           </ul>
         ) : (
           <div className="surface-2 rounded-lg p-6 text-center text-sm text-fg-dim">
-            Ingen sessioner planlagt. Din coach lægger nye sessioner snart.
+            {t("upcoming.empty")}
           </div>
         )}
       </section>
@@ -288,9 +296,9 @@ export default async function TodayPage() {
       {/* Crew */}
       <section>
         <div className="flex items-end justify-between mb-3">
-          <div className="eyebrow">Crew lige nu</div>
+          <div className="eyebrow">{t("crew.title")}</div>
           <Link href="/community" className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg">
-            Se feed →
+            {t("crew.seeFeed")}
           </Link>
         </div>
         {feed && feed.length > 0 ? (
@@ -301,15 +309,15 @@ export default async function TodayPage() {
           </ul>
         ) : feed === null ? (
           <ul className="space-y-2.5">
-            {MOCK_FEED.map((row, i) => (
+            {mockFeed(t).map((row, i) => (
               <CrewRow key={i} id={String(i)} {...row} />
             ))}
           </ul>
         ) : (
           <div className="surface-2 rounded-lg p-6 text-center text-sm text-fg-dim">
-            Crewet er stille lige nu — vær den første til at dele.
+            {t("crew.empty")}
             <div className="mt-3">
-              <Link href="/community" className="btn btn-sm btn-primary">+ Del</Link>
+              <Link href="/community" className="btn btn-sm btn-primary">{t("crew.share")}</Link>
             </div>
           </div>
         )}
@@ -360,22 +368,24 @@ function formatReps(n: number): string {
 function TrendArrow({
   current,
   previous,
+  t,
 }: {
   current: number;
   previous: number;
+  t: Translator;
 }) {
   if (previous === 0 && current === 0) return null;
   if (previous === 0) {
     return (
-      <span className="text-fg-dim" aria-label="Ny aktivitet">
-        ↑ ny
+      <span className="text-fg-dim" aria-label={t("trend.newActivity")}>
+        {t("trend.new")}
       </span>
     );
   }
   const pct = Math.round(((current - previous) / previous) * 100);
   if (Math.abs(pct) < 3) {
     return (
-      <span className="text-fg-faint" aria-label="Stabil">
+      <span className="text-fg-faint" aria-label={t("trend.stable")}>
         ·
       </span>
     );
@@ -383,7 +393,11 @@ function TrendArrow({
   return (
     <span
       className={pct > 0 ? "text-fg" : "text-fg-dim"}
-      aria-label={pct > 0 ? `Op ${pct} procent` : `Ned ${Math.abs(pct)} procent`}
+      aria-label={
+        pct > 0
+          ? t("trend.up", { pct })
+          : t("trend.down", { pct: Math.abs(pct) })
+      }
     >
       {pct > 0 ? "↑" : "↓"} {Math.abs(pct)}%
     </span>

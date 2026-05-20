@@ -1,0 +1,280 @@
+{
+  "nav": {
+    "crew": "Crew",
+    "coaching": "Coaching",
+    "tiers": "Tiers",
+    "app": "Appen",
+    "price": "Pris",
+    "faq": "FAQ",
+    "closedBeta": "Closed Beta",
+    "login": "Log ind"
+  },
+  "hero": {
+    "eyebrow": "Closed Beta · Invite only · est. 2026",
+    "stats": {
+      "straps": "Solgte straps",
+      "strapsSuffix": "+ stigende",
+      "members": "Aktive medlemmer",
+      "membersSuffix": "Closed beta",
+      "programs": "Coaching-programmer",
+      "programsSuffix": "Tilgængelige nu",
+      "madeIn": "Made in",
+      "madeInSuffix": "København"
+    },
+    "subline": "MakeIt er ikke bare straps og cuffs.",
+    "subline2": "Det er det interne univers for crewet bag — coaching, community og loyalitet samlet ét sted. Bygget i København. Lavet til atleter der løfter tungt.",
+    "ctaPrimary": "Få adgang",
+    "ctaSecondary": "Læs mere"
+  },
+  "crew": {
+    "eyebrow": "01 — Crewet",
+    "heading": {
+      "line1": "Et lukket",
+      "line2": "rum for",
+      "line3": "dem der",
+      "line4": "løfter."
+    },
+    "intro": "MakeIt Crew er ikke for alle. Det er for atleter, coaches og samarbejdspartnere der allerede bygger sammen med os — og som vil have adgang til programmer, fællesskab og fordele før alle andre.",
+    "items": {
+      "invite": {
+        "k": "Inviteret adgang",
+        "v": "Kun via personlig kode fra Mikael Munk eller en eksisterende crew-medlem."
+      },
+      "internal": {
+        "k": "Bygget internt",
+        "v": "Vi udvikler platformen sammen med jer. Jeres feedback er featurerne."
+      },
+      "noNoise": {
+        "k": "Ingen støj",
+        "v": "Ingen ads, ingen krav om at performe på Instagram. Bare træning og fællesskab."
+      },
+      "freeOfShop": {
+        "k": "Fri af shoppen",
+        "v": "Webshoppen kører videre uberørt — det her er noget for sig."
+      }
+    }
+  },
+  "pillars": {
+    "coaching": {
+      "label": "02 — Coaching",
+      "title": "Programmer der virker. Coaches der løfter selv.",
+      "body": "1:1 sessioner, 12-ugers strength- og hypertrofi-blokke, formchecks via video. Kurateret af Mikael Munk og crewets head coaches. Ikke generisk app-content.",
+      "bullet1": "Strength · Hypertrophy · Powerbuilding",
+      "bullet2": "Video form-check inden for 24 timer",
+      "bullet3": "Personlige PR-tracks og deload-uger",
+      "statLabel": "Programmer live"
+    },
+    "community": {
+      "label": "03 — Community",
+      "title": "Et feed bygget til løft — ikke til scroll.",
+      "body": "Del PR'er, optagelser og tanker med folk der faktisk forstår forskellen mellem en RPE 8 og en 9. Ugentlige challenges, leaderboards pr. gym, og IRL-meets på Amagerbro.",
+      "bullet1": "PR-feed med video og kommentarer",
+      "bullet2": "Månedlige challenges & leaderboards",
+      "bullet3": "IRL-meets, åbent hus & co-labs",
+      "statLabel": "Aktive medlemmer"
+    },
+    "reps": {
+      "label": "04 — Reps Program",
+      "title": "Dit arbejde belønner sig.",
+      "body": "Tjen Reps for køb, programmer du gennemfører, PR'er du poster, og folk du inviterer ind. Bytt dem til limited drops, custom-strap-farver, early access og 1:1 tid med Mikael Munk.",
+      "bullet1": "Tier: Lifter → Athlete → Beast → Legend",
+      "bullet2": "Limited drops kun for medlemmer",
+      "bullet3": "Reps konverteres aldrig til kontanter — kun til ægte ting",
+      "statLabel": "Tiers"
+    }
+  },
+  "tiers": {
+    "eyebrow": "Reps Program",
+    "heading": {
+      "line1": "Fra Lifter",
+      "line2": "til Legend."
+    },
+    "intro": "Hver gennemført session, form-check og PR fylder Reps-balancen. Tiers er ikke titler — det er bevis på arbejdet bag. Hvert niveau låser nye perks op: form-check-prioritet, IRL-meets, eksklusivt udstyr, 1:1-coaching.",
+    "cta": "Start din journey →",
+    "ctaNote": "Closed beta · invite kræves",
+    "locked": "Locked",
+    "lifter": {
+      "description": "Indgangen. Du har samlet dine første reps og er i gang med at lære systemet — første session ligger i appen, programmet er tilpasset dit niveau.",
+      "quote": "Første 30 dage. Programmet ramte præcis mit niveau, og jeg har aldrig følt mig så på sporet i mit liv."
+    },
+    "athlete": {
+      "description": "Konsistens. Du logger sæt og form-checks ugentligt. PR'er begynder at falde på big lifts, og du har lavet de første lifestyle-skift der ikke vender tilbage.",
+      "quote": "Tre måneder ind og jeg har slået PR på alle tre big lifts. Reps-systemet holder mig accountable hver eneste dag."
+    },
+    "beast": {
+      "description": "Volumen-blokken. Du kender din krops respons under tung belastning, og du arbejder bevidst med restitution. Coach-feedback bliver finere og mere kirurgisk.",
+      "quote": "Volumen-blokken var den sværeste fysisk og mentalt — men det er der jeg lærte hvad jeg virkelig kan klare."
+    },
+    "legend": {
+      "description": "Få når hertil. Et flerårigt commitment til kropsbygning som disciplin, ikke trend. Du er den crewet kigger op til, og dine sessioner inspirerer Lifter-tieren.",
+      "quote": "Tre år. 200+ sessioner. To rygskader bagved mig. Reps-balancen viser hvorfor — det er ikke held, det er bygget kilo for kilo."
+    }
+  },
+  "app": {
+    "eyebrow": "06 — Appen",
+    "heading": "Sådan ser det ud.",
+    "intro": "Tre skærme der definerer din uge — fra du tager telefonen op om morgenen til AI'en har vurderet dit tunge sæt.",
+    "phone": {
+      "todayLabel": "Today",
+      "todayDetail": "Dagens session, ét tap til start",
+      "sessionLabel": "Aktiv session",
+      "sessionDetail": "Sæt-for-sæt med RPE og rest-timer",
+      "formCheckLabel": "Form-check",
+      "formCheckDetail": "Claude vurderer på 6 sek."
+    },
+    "today": {
+      "greeting": "God morgen",
+      "streak": "Streak",
+      "week": "STR-12 · uge 4",
+      "day": "Dag A — Squat",
+      "topSet": "Top set @ RPE 8, 3×3 backoff",
+      "miniExercises": "øvelser",
+      "miniSets": "sæt",
+      "miniTime": "tid",
+      "startSession": "Start session →"
+    },
+    "session": {
+      "week": "STR-12 · uge 4",
+      "exercise": "Øvelse 1/4",
+      "setsLabel": "sæt",
+      "cue": "Bryst op, knæ ud, sid lavt og driv hårdt op.",
+      "miniKg": "kg",
+      "miniReps": "reps",
+      "miniRpe": "rpe",
+      "weightLabel": "Vægt",
+      "logSet": "Log sæt →"
+    },
+    "formCheck": {
+      "eyebrow": "AI form-check",
+      "verdict": "Solid sæt — let knæ-valgus",
+      "reviewed": "Reviewed · Mikael Munk",
+      "goodLabel": "✓ Godt",
+      "good1": "· Dybde ramt",
+      "good2": "· Konsistent bar-path",
+      "good3": "· God spinal kontrol",
+      "tightenLabel": "△ Stram op",
+      "tighten1": "· Højre knæ kollapser i bunden",
+      "coachTipLabel": "Coach-tip",
+      "coachTip": "Driv knæene udad — “spread the floor”."
+    }
+  },
+  "value": {
+    "priceLabel": "Pris",
+    "priceLockNote": "Endelig pris låses inden launch",
+    "positioningEyebrow": "Sådan holder vi coaching tilgængelig",
+    "positioningHeadline": "AI gør det generiske. Mennesker gør det vigtige.",
+    "positioningSub": "Vi automatiserer det der kan automatiseres — programopbygning, form-tjek, progression — og bruger mennesker dér hvor det faktisk batter: 1:1, milepæle og fællesskab. Resultatet er coaching der koster en brøkdel af markedet, uden at føles billigt.",
+    "marketLabel": "markedssnit for personlig coaching",
+    "pillar1": {
+      "eyebrow": "Automatiseret",
+      "title": "AI bygger programmet",
+      "body": "Personlige strength- og hypertrofi-programmer genereres ud fra dine maks, din historik og dit mål — og opdateres uge for uge baseret på hvordan du faktisk løfter.",
+      "foot": "Ingen ventetid · ingen template-pdf'er"
+    },
+    "pillar2": {
+      "eyebrow": "Instant feedback",
+      "title": "AI tjekker din form",
+      "body": "Upload en video og få teknik-feedback inden for sekunder. En af crewets head coaches verificerer ugentligt, så du aldrig kører på autopilot.",
+      "foot": "Sek. respons · ugentlig human review"
+    },
+    "pillar3": {
+      "eyebrow": "Mennesker til milepæle",
+      "title": "Crew + coach når det tæller",
+      "body": "PR-fejringer, deload-snak, og 1:1 tid med Mikael Munk når du er på vej mod et nyt loft. Resten af tiden holder fællesskabet dig ansvarlig.",
+      "foot": "Crew-feed · 1:1 ved milepæle"
+    }
+  },
+  "testimonials": {
+    "eyebrow": "07 — Crewet",
+    "heading": "Hvad de siger.",
+    "intro": "Tre fra crewet om hvordan det føles at træne her. Ingen ambassadør-deals, ingen rabat-koder. Bare medlemmer der har sat tid på.",
+    "kasper": {
+      "cred": "Powerbuilding · 162.5 kg squat single",
+      "quote": "Det første program jeg faktisk har kørt fra ende til anden. Mikaels form-checks fanger ting AI&apos;en misser, og mængden af noter han skriver pr. video er sygt."
+    },
+    "nina": {
+      "cred": "DL-specialization · 175 kg @ 68 kg BW",
+      "quote": "+15 kg på dødløftet på 8 uger uden skader. Det at Reps-shoppen findes er en farlig god motivation — jeg sparer op til den brodérede strap."
+    },
+    "maria": {
+      "cred": "Hypertrofi · skifter mellem blokke",
+      "quote": "Crewet er der jeg poster, ikke Instagram. Stille, præcist, og på dansk. Ingen ads, ingen krav. Bare folk der løfter."
+    }
+  },
+  "origin": {
+    "eyebrow": "05 — Origin",
+    "heading": {
+      "line1": "Syet i",
+      "line2": "København.",
+      "line3": "Brugt overalt."
+    },
+    "body": "StrapIt blev født af én simpel idé: hvis du tager træning seriøst, fortjener dit udstyr at gøre det samme. Vi syr stadig hver eneste strap selv, på Amagerbro, med dansk produceret nylon og kontrolsøm der holder i årtier.",
+    "facts": {
+      "establishedLabel": "Etableret",
+      "establishedValue": "2018",
+      "locationLabel": "Sted",
+      "locationFallback": "København, Danmark",
+      "madeInLabel": "Made in",
+      "madeInValue": "Denmark",
+      "soldAtLabel": "Sælges hos",
+      "soldAtValue": "PureGym, SDU, Fitness Engros m.fl.",
+      "warrantyLabel": "Garanti",
+      "warrantyValue": "100 dages retur"
+    }
+  },
+  "faq": {
+    "eyebrow": "08 — FAQ",
+    "heading": "Spørgsmål?",
+    "intro": "Det vi typisk bliver spurgt om. Mangler dit svar?",
+    "introLink": "Skriv direkte til Mikael",
+    "items": {
+      "advanced": {
+        "q": "Skal jeg være avanceret for at være med?",
+        "a": "Nej. Onboardingen tilpasser intensitet og volumen til dit niveau. Som begynder bliver top-sets capped på RPE 7, og programmet bygger forsigtigt op. Mellem og avancerede får skarpere belastninger fra dag 1."
+      },
+      "oneRm": {
+        "q": "Hvad hvis jeg ikke kender mit 1RM?",
+        "a": "Spring felterne over i onboardingen. Vi bruger sensible defaults baseret på dit niveau, og din allerførste session producerer data der bliver brugt til at fine-tune næste uge. Du behøver ikke kende dit 1RM på forhånd."
+      },
+      "cancel": {
+        "q": "Kan jeg opsige når som helst?",
+        "a": "Ja. Crew-medlemskabet kan opsiges direkte fra Stripe Customer Portal — det træder i kraft ved næste faktureringsdato, og du beholder adgangen indtil da. Ingen binding, ingen klausuler."
+      },
+      "vacation": {
+        "q": "Hvad sker når Mikael er på ferie?",
+        "a": "AI'en kører videre uafbrudt — programmer genereres, form-checks får øjeblikkeligt svar, sæt logges og crewet er aktivt. Mikaels personlige reviews kan være forsinket op til en uge i ferieperioder, og vi skriver det altid i feedet på forhånd."
+      },
+      "responseTime": {
+        "q": "Hvor hurtigt får jeg svar på en form-check?",
+        "a": "AI svarer typisk inden for 6-15 sekunder. Mikaels personlige verifikation lander inden for 24 timer på hverdage, og du får både in-app notifikation og email når den er klar."
+      },
+      "pause": {
+        "q": "Kan jeg pause på grund af rejse, sygdom eller skade?",
+        "a": "Ja. Du kan pause dit aktive program direkte i appen — sessioner og uge-progression fryser. Når du genoptager, regenereres næste uge automatisk så du ikke skal kæmpe med stale targets. For abonnementet skal du pause via Stripe Customer Portal."
+      },
+      "irl": {
+        "q": "Er det her erstatning for personlig træning IRL?",
+        "a": "For 95% af lifters: ja. AI form-check + ugentlig coach review fanger det meste. For dem der vil have noget mere — 1:1 add-on'en giver dig direkte Signal-adgang til Mikael og en ugentlig 30-min videosession. Begrænset til 8 pladser ad gangen."
+      },
+      "cheaper": {
+        "q": "Hvorfor er det billigere end traditionel coaching?",
+        "a": "Fordi AI håndterer det generiske — programgenerering, progression, øjeblikkelig form-feedback. Mikael og crewet bruger så tiden på det der faktisk batter: 1:1, milepæle, og at holde dig ansvarlig. Du betaler for det der tæller."
+      }
+    }
+  },
+  "footer": {
+    "blurbBefore": "{product} er det interne univers for vores crew, atleter og coaches. Webshoppen",
+    "blurbAfter": "kører som altid — det her er noget for sig.",
+    "universeLabel": "Univers",
+    "universeCrew": "Crew",
+    "universeCoaching": "Coaching",
+    "universeCommunity": "Community",
+    "universeReps": "Reps Program",
+    "contactLabel": "Kontakt",
+    "instagram": "Instagram @{handle}",
+    "getAccess": "Få adgang →",
+    "privacy": "Privacy",
+    "terms": "Vilkår",
+    "madeIn": "Made in DK · Closed Beta · v0.1"
+  }
+}

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import type { Exercise, ExercisePhase } from "@/lib/data/exercises";
 import type { MuscleGroup, AnatomyView } from "@/lib/data/muscle-groups";
 import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
@@ -42,6 +43,7 @@ type DraftPhase = {
 };
 
 export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
+  const t = useTranslations("CoachStudio.exerciseEditor");
   const [name, setName] = useState(exercise.name);
   const [category, setCategory] = useState(exercise.category ?? "");
   const [pattern, setPattern] = useState(exercise.pattern ?? "");
@@ -113,7 +115,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
         ),
       });
       if (res.ok) setSavedAt(new Date().toLocaleTimeString("da-DK"));
-      else setError(res.error ?? "Kunne ikke gemme");
+      else setError(res.error ?? t("saveError"));
     });
   }
 
@@ -124,7 +126,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
   function addPhase() {
     setPhases((prev) => [
       ...prev,
-      { name: "Fase", duration_ms: 1000, primary: [], secondary: [], tertiary: [] },
+      { name: t("newPhaseName"), duration_ms: 1000, primary: [], secondary: [], tertiary: [] },
     ]);
   }
 
@@ -134,21 +136,21 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
       <header className="pt-2">
         <div className="eyebrow mb-2 flex items-center gap-2">
           <Link href="/coach/exercises" className="hover:text-fg">
-            Øvelser
+            {t("breadcrumb")}
           </Link>
           <span aria-hidden>·</span>
           <span className="numeric">{exercise.slug}</span>
         </div>
         <h1 className="font-display text-[clamp(2rem,5vw,3rem)] leading-[0.95]">
-          {name || "Uden navn"}.
+          {name || t("untitled")}.
         </h1>
       </header>
 
       {/* Meta */}
       <section className="surface-2 rounded-xl p-5 md:p-6 space-y-4">
-        <div className="eyebrow">Metadata</div>
+        <div className="eyebrow">{t("metadata")}</div>
         <div className="grid gap-3 sm:grid-cols-2">
-          <Field label="Navn">
+          <Field label={t("nameLabel")}>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -156,23 +158,23 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
               maxLength={80}
             />
           </Field>
-          <Field label="Kategori">
+          <Field label={t("categoryLabel")}>
             <Select value={category} onChange={setCategory} options={CATEGORIES} />
           </Field>
-          <Field label="Bevægelsesmønster">
+          <Field label={t("patternLabel")}>
             <Select value={pattern} onChange={setPattern} options={PATTERNS} />
           </Field>
-          <Field label="Udstyr">
+          <Field label={t("equipmentLabel")}>
             <Select value={equipment} onChange={setEquipment} options={EQUIPMENT} />
           </Field>
-          <Field label="Sværhedsgrad">
+          <Field label={t("difficultyLabel")}>
             <Select
               value={difficulty}
               onChange={setDifficulty}
               options={[...DIFFICULTIES]}
             />
           </Field>
-          <Field label="Rækkefølge (display_order)">
+          <Field label={t("displayOrderLabel")}>
             <input
               type="number"
               value={displayOrder}
@@ -182,7 +184,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
               className="input w-full"
             />
           </Field>
-          <Field label="Demo-asset URL (valgfri)">
+          <Field label={t("demoUrlLabel")}>
             <input
               value={demoAssetUrl}
               onChange={(e) => setDemoAssetUrl(e.target.value)}
@@ -197,13 +199,13 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
             checked={isPublished}
             onChange={(e) => setIsPublished(e.target.checked)}
           />
-          <span>Publiceret — synlig på /train/exercises</span>
+          <span>{t("publishedToggle")}</span>
         </label>
       </section>
 
       {/* Muscle tiers + figure */}
       <section className="surface-2 rounded-xl p-5 md:p-6">
-        <div className="eyebrow mb-4">Muskelgrupper</div>
+        <div className="eyebrow mb-4">{t("muscleGroups")}</div>
         <div className="grid gap-6 md:grid-cols-[1fr_auto]">
           <MuscleTierPicker value={tiers} onChange={setTiers} />
           <div className="flex flex-col items-center gap-3 shrink-0">
@@ -226,7 +228,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
                     view === v ? "bg-bg-3 text-fg" : "text-fg-dim"
                   }`}
                 >
-                  {v === "front" ? "Forfra" : "Bagfra"}
+                  {v === "front" ? t("viewFront") : t("viewBack")}
                 </button>
               ))}
             </div>
@@ -236,7 +238,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
 
       {/* Cues */}
       <section className="surface-2 rounded-xl p-5 md:p-6 space-y-3">
-        <div className="eyebrow">Cues</div>
+        <div className="eyebrow">{t("cues")}</div>
         {cues.map((c, i) => (
           <div key={i} className="flex gap-2 items-center">
             <span className="numeric text-xs text-fg-faint w-6">
@@ -263,19 +265,19 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           onClick={() => setCues((prev) => [...prev, ""])}
           className="btn btn-ghost btn-sm"
         >
-          + Cue
+          {t("addCue")}
         </button>
       </section>
 
       {/* Mistakes */}
       <section className="surface-2 rounded-xl p-5 md:p-6 space-y-3">
-        <div className="eyebrow">Typiske fejl</div>
+        <div className="eyebrow">{t("mistakes")}</div>
         {mistakes.map((m, i) => (
           <div key={i} className="surface rounded-lg p-3 space-y-2">
             <div className="flex gap-2 items-center">
               <input
                 value={m.title}
-                placeholder="Fejl-titel"
+                placeholder={t("mistakeTitlePlaceholder")}
                 onChange={(e) =>
                   setMistakes((prev) =>
                     prev.map((x, j) =>
@@ -293,7 +295,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
             </div>
             <textarea
               value={m.body}
-              placeholder="Hvad sker der + hvordan retter man det"
+              placeholder={t("mistakeBodyPlaceholder")}
               rows={2}
               onChange={(e) =>
                 setMistakes((prev) =>
@@ -313,13 +315,13 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           }
           className="btn btn-ghost btn-sm"
         >
-          + Fejl
+          {t("addMistake")}
         </button>
       </section>
 
       {/* Text fields */}
       <section className="surface-2 rounded-xl p-5 md:p-6 grid gap-4 sm:grid-cols-2">
-        <Field label="Hvorfor (why_matters)">
+        <Field label={t("whyLabel")}>
           <textarea
             value={whyMatters}
             onChange={(e) => setWhyMatters(e.target.value)}
@@ -327,7 +329,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
             className="input w-full"
           />
         </Field>
-        <Field label="Setup">
+        <Field label={t("setupLabel")}>
           <textarea
             value={setup}
             onChange={(e) => setSetup(e.target.value)}
@@ -335,7 +337,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
             className="input w-full"
           />
         </Field>
-        <Field label="Progression">
+        <Field label={t("progressionLabel")}>
           <textarea
             value={progression}
             onChange={(e) => setProgression(e.target.value)}
@@ -343,7 +345,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
             className="input w-full"
           />
         </Field>
-        <Field label="Regression">
+        <Field label={t("regressionLabel")}>
           <textarea
             value={regression}
             onChange={(e) => setRegression(e.target.value)}
@@ -356,27 +358,27 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
       {/* Phases */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="eyebrow">Bevægelsesfaser</div>
+          <div className="eyebrow">{t("phases")}</div>
           <button type="button" onClick={addPhase} className="btn btn-sm">
-            + Tilføj fase
+            {t("addPhase")}
           </button>
         </div>
         {phases.length === 0 ? (
           <p className="text-fg-dim text-sm">
-            Ingen faser — figuren viser de statiske muskelgrupper i stedet.
+            {t("phasesEmpty")}
           </p>
         ) : (
           phases.map((phase, pi) => (
             <article key={pi} className="surface-2 rounded-xl p-5 space-y-4">
               <div className="grid gap-3 sm:grid-cols-[1fr_140px_auto] sm:items-end">
-                <Field label="Fase-navn">
+                <Field label={t("phaseNameLabel")}>
                   <input
                     value={phase.name}
                     onChange={(e) => patchPhase(pi, { name: e.target.value })}
                     className="input w-full"
                   />
                 </Field>
-                <Field label="Varighed (ms)">
+                <Field label={t("phaseDurationLabel")}>
                   <input
                     type="number"
                     min={100}
@@ -397,7 +399,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
                   }
                   className="btn btn-ghost btn-sm"
                 >
-                  Slet fase
+                  {t("deletePhase")}
                 </button>
               </div>
               <div className="grid gap-6 md:grid-cols-[1fr_auto] border-t hairline pt-4">
@@ -432,11 +434,11 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           disabled={saving}
           className="btn btn-primary"
         >
-          {saving ? "Gemmer…" : "Gem øvelse"}
+          {saving ? t("saving") : t("save")}
         </button>
         {savedAt ? (
           <span className="text-[11px] font-mono text-fg-faint">
-            Gemt {savedAt}
+            {t("savedAt", { time: savedAt })}
           </span>
         ) : null}
         {error ? (
@@ -448,7 +450,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           href={`/train/exercises/${exercise.slug}`}
           className="btn btn-ghost btn-sm ml-auto"
         >
-          Se på /train →
+          {t("viewOnTrain")}
         </Link>
       </section>
     </div>
@@ -500,12 +502,13 @@ function Select({
 }
 
 function RemoveBtn({ onClick }: { onClick: () => void }) {
+  const t = useTranslations("CoachStudio.exerciseEditor");
   return (
     <button
       type="button"
       onClick={onClick}
       className="text-fg-dim hover:text-fg text-lg leading-none px-1.5 shrink-0"
-      aria-label="Fjern"
+      aria-label={t("removeAria")}
     >
       ×
     </button>

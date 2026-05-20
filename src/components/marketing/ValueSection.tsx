@@ -1,46 +1,43 @@
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
-import { pricing, positioning } from "@/lib/pricing";
+import { pricing } from "@/lib/pricing";
 
-const PILLARS = [
-  {
-    n: "01",
-    eyebrow: "Automatiseret",
-    title: "AI bygger programmet",
-    body:
-      "Personlige strength- og hypertrofi-programmer genereres ud fra dine maks, " +
-      "din historik og dit mål — og opdateres uge for uge baseret på hvordan du faktisk løfter.",
-    foot: "Ingen ventetid · ingen template-pdf'er",
-  },
-  {
-    n: "02",
-    eyebrow: "Instant feedback",
-    title: "AI tjekker din form",
-    body:
-      "Upload en video og få teknik-feedback inden for sekunder. " +
-      "En af crewets head coaches verificerer ugentligt, så du aldrig kører på autopilot.",
-    foot: "Sek. respons · ugentlig human review",
-  },
-  {
-    n: "03",
-    eyebrow: "Mennesker til milepæle",
-    title: "Crew + coach når det tæller",
-    body:
-      "PR-fejringer, deload-snak, og 1:1 tid med Mikael Munk når du er på vej mod et nyt loft. " +
-      "Resten af tiden holder fællesskabet dig ansvarlig.",
-    foot: "Crew-feed · 1:1 ved milepæle",
-  },
-];
+export default async function ValueSection() {
+  const t = await getTranslations("Marketing.value");
 
-export default function ValueSection() {
+  const PILLARS = [
+    {
+      n: "01",
+      eyebrow: t("pillar1.eyebrow"),
+      title: t("pillar1.title"),
+      body: t("pillar1.body"),
+      foot: t("pillar1.foot"),
+    },
+    {
+      n: "02",
+      eyebrow: t("pillar2.eyebrow"),
+      title: t("pillar2.title"),
+      body: t("pillar2.body"),
+      foot: t("pillar2.foot"),
+    },
+    {
+      n: "03",
+      eyebrow: t("pillar3.eyebrow"),
+      title: t("pillar3.title"),
+      body: t("pillar3.body"),
+      foot: t("pillar3.foot"),
+    },
+  ];
+
   return (
     <section id="how" className="relative border-t hairline py-24 md:py-40">
       <Container>
         {/* Hook + price */}
         <div className="grid gap-12 md:grid-cols-12 items-end mb-16 md:mb-24">
           <div className="md:col-span-7" data-reveal>
-            <div className="eyebrow mb-5">{positioning.eyebrow}</div>
+            <div className="eyebrow mb-5">{t("positioningEyebrow")}</div>
             <h2 className="font-display text-[clamp(2.4rem,7vw,5.5rem)] leading-[0.92]">
-              {positioning.headline}
+              {t("positioningHeadline")}
             </h2>
           </div>
 
@@ -49,7 +46,7 @@ export default function ValueSection() {
             data-reveal
             style={{ transitionDelay: "120ms" }}
           >
-            <div className="eyebrow mb-3">Pris</div>
+            <div className="eyebrow mb-3">{t("priceLabel")}</div>
             <div className="flex items-baseline gap-2">
               <span className="numeric text-5xl md:text-6xl">{pricing.member.amount}</span>
               <span className="numeric text-fg-dim text-lg">
@@ -58,13 +55,13 @@ export default function ValueSection() {
             </div>
             <div className="mt-4 pt-4 border-t hairline space-y-1.5">
               <div className="flex items-baseline justify-between gap-3 text-sm">
-                <span className="text-fg-dim">{pricing.market.label}</span>
+                <span className="text-fg-dim">{t("marketLabel")}</span>
                 <span className="numeric text-fg-faint line-through">
                   ~{pricing.market.amount} {pricing.market.currency}/{pricing.market.period}
                 </span>
               </div>
               <p className="text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
-                Endelig pris låses inden launch
+                {t("priceLockNote")}
               </p>
             </div>
           </div>
@@ -75,7 +72,7 @@ export default function ValueSection() {
           data-reveal
           style={{ transitionDelay: "200ms" }}
         >
-          {positioning.sub}
+          {t("positioningSub")}
         </p>
 
         <div className="grid gap-px bg-line border hairline md:grid-cols-3">

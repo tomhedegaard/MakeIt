@@ -2,45 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const STORAGE_KEY = "mi_tour_done_v1";
 
-const STEPS: { eyebrow: string; title: string; body: string }[] = [
-  {
-    eyebrow: "Velkommen",
-    title: "Du er inde i crewet.",
-    body:
-      "Hurtig rundtur — så ved du hvor alt ligger. 4 skærme, 30 sekunder.",
-  },
-  {
-    eyebrow: "01 · Today",
-    title: "Dagens session ligger her.",
-    body:
-      "Hver morgen åbner du Today. Tap det store \"Start session →\"-kort og du er i gang. AI'en har allerede valgt vægte ud fra dine 1RM'er.",
-  },
-  {
-    eyebrow: "02 · Træn / Crew / Reps / Mig",
-    title: "Bottom tab-bar = hele appen.",
-    body:
-      "Træn = dine programmer. Crew = feed med PR'er + form-checks. Reps = optjen og indløs. Mig = profil, lifts-historik og coach-noter fra Mikael.",
-  },
-  {
-    eyebrow: "03 · Form-check",
-    title: "AI vurderer din teknik.",
-    body:
-      "Tap \"Form-check med AI\" inde i en session. Optag eller upload — du får svar inden for sekunder. Mikael godkender personligt inden 24 timer.",
-  },
-  {
-    eyebrow: "04 · Reps",
-    title: "Du får for det du laver.",
-    body:
-      "+250 Reps pr. fuldført session. +100 pr. uge i program. Bytt dem til limited drops, custom-broderede straps, og 1:1 tid med Mikael.",
-  },
-];
+const STEP_KEYS = ["welcome", "today", "tabs", "formCheck", "reps"] as const;
 
 export default function FirstTimeTour() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
+  const t = useTranslations("Nav.tour");
 
   // One-shot client-only check for the localStorage flag. The lint
   // rule about setState-in-effect doesn't apply here — this is the
@@ -69,7 +40,7 @@ export default function FirstTimeTour() {
   }
 
   function next() {
-    if (step >= STEPS.length - 1) {
+    if (step >= STEP_KEYS.length - 1) {
       dismiss();
       return;
     }
@@ -78,8 +49,8 @@ export default function FirstTimeTour() {
 
   if (!open) return null;
 
-  const current = STEPS[step];
-  const isLast = step === STEPS.length - 1;
+  const currentKey = STEP_KEYS[step];
+  const isLast = step === STEP_KEYS.length - 1;
 
   return (
     <div
@@ -105,23 +76,23 @@ export default function FirstTimeTour() {
           onClick={dismiss}
           className="absolute top-3 right-3 text-fg-dim hover:text-fg text-xs font-mono uppercase tracking-[0.14em]"
         >
-          Spring over
+          {t("skip")}
         </button>
 
-        <div className="eyebrow mb-3">{current.eyebrow}</div>
+        <div className="eyebrow mb-3">{t(`steps.${currentKey}.eyebrow`)}</div>
         <h2
           id="tour-title"
           className="font-display text-2xl md:text-3xl leading-[1.05] mb-3"
         >
-          {current.title}
+          {t(`steps.${currentKey}.title`)}
         </h2>
         <p className="text-fg-dim text-sm md:text-base leading-relaxed mb-6">
-          {current.body}
+          {t(`steps.${currentKey}.body`)}
         </p>
 
         {/* Progress dots */}
         <div className="flex gap-1.5 mb-6">
-          {STEPS.map((_, i) => (
+          {STEP_KEYS.map((_, i) => (
             <span
               key={i}
               aria-hidden
@@ -141,7 +112,7 @@ export default function FirstTimeTour() {
               className="btn btn-ghost btn-sm"
               onClick={() => setStep((s) => s - 1)}
             >
-              Tilbage
+              {t("back")}
             </button>
           ) : null}
           {isLast ? (
@@ -150,7 +121,7 @@ export default function FirstTimeTour() {
               onClick={dismiss}
               className="btn btn-primary ml-auto"
             >
-              Begynd →
+              {t("begin")}
             </Link>
           ) : (
             <button
@@ -158,7 +129,7 @@ export default function FirstTimeTour() {
               className="btn btn-primary ml-auto"
               onClick={next}
             >
-              Næste →
+              {t("next")}
             </button>
           )}
         </div>

@@ -1,10 +1,14 @@
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { getProgramBuilder, getAssignableMembers } from "@/lib/data/coach-programs";
 import { listPublishedExercises } from "@/lib/data/exercises";
 import ProgramBuilder from "./ProgramBuilder";
 
-export const metadata = { title: "Program builder · Coach" };
+export async function generateMetadata() {
+  const t = await getTranslations("CoachStudio.programBuilder");
+  return { title: t("metaTitle") };
+}
 
 export default async function ProgramBuilderPage({
   params,

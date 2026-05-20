@@ -1,23 +1,15 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import type { Meal, MealSlot } from "@/lib/data/nutrition";
+import { useTranslations } from "next-intl";
+import type { Meal } from "@/lib/data/nutrition";
 import { swapMealAction } from "./actions";
 import LogMealButton from "./LogMealButton";
 
-const SLOT_LABELS: Record<MealSlot, string> = {
-  morgen: "Morgen",
-  frokost: "Frokost",
-  aften: "Aften",
-  snack: "Snack",
-  pre: "Pre",
-  post: "Post",
-};
-
-const CARB_DENSITY_LABELS: Record<Meal["carbDensity"], string> = {
-  low: "Lav-kulhydrat",
-  standard: "Standard",
-  high: "Tung træningsdag",
+const CARB_DENSITY_KEYS: Record<Meal["carbDensity"], string> = {
+  low: "carbLow",
+  standard: "carbStandard",
+  high: "carbHigh",
 };
 
 export default function MealCard({
@@ -32,6 +24,8 @@ export default function MealCard({
   /** Number of meal swaps left this period. Undefined = unlimited / unknown. */
   swapQuotaRemaining?: number;
 }) {
+  const t = useTranslations("Nutrition.mealCard");
+  const ts = useTranslations("Nutrition.slotLabels");
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const swapExhausted =
@@ -40,7 +34,7 @@ export default function MealCard({
 
   function handleSwap() {
     if (swapDisabled) return;
-    if (!confirm(`Bytte "${meal.title}" til en anden ${SLOT_LABELS[meal.slot].toLowerCase()}?`)) return;
+    if (!confirm(t("swapConfirm", { title: meal.title, slot: ts(meal.slot).toLowerCase() }))) return;
     const formData = new FormData();
     formData.set("mealId", meal.id);
     startTransition(() => {
@@ -51,7 +45,7 @@ export default function MealCard({
   if (compact) {
     return (
       <div className="flex items-center gap-3">
-        <span className="eyebrow w-16 shrink-0">{SLOT_LABELS[meal.slot]}</span>
+        <span className="eyebrow w-16 shrink-0">{ts(meal.slot)}</span>
         {meal.imageThumbUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -72,11 +66,11 @@ export default function MealCard({
             type="button"
             onClick={handleSwap}
             disabled={swapDisabled}
-            title={swapExhausted ? "Bytte-grænse nået denne uge" : undefined}
+            title={swapExhausted ? t("swapExhaustedTitle") : undefined}
             className="btn btn-ghost btn-sm shrink-0"
-            aria-label={`Byt ${meal.title}`}
+            aria-label={t("swapAria", { title: meal.title })}
           >
-            {pending ? "…" : "Byt"}
+            {pending ? "…" : t("swapShort")}
           </button>
         ) : null}
       </div>
@@ -97,8 +91,8 @@ export default function MealCard({
             className="relative block w-full sm:w-44 md:w-56 aspect-[16/9] sm:aspect-auto sm:self-stretch overflow-hidden group shrink-0"
             aria-label={
               meal.imageAttributionName
-                ? `Foto af ${meal.imageAttributionName} på Unsplash`
-                : "Foto via Unsplash"
+                ? t("photoBy", { name: meal.imageAttributionName })
+                : t("photoVia")
             }
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -120,14 +114,14 @@ export default function MealCard({
           <div className="px-5 pt-4 pb-3 flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
               <div className="eyebrow mb-1.5 flex items-center gap-2">
-                {SLOT_LABELS[meal.slot]}
+                {ts(meal.slot)}
                 <span className="text-fg-faint" aria-hidden>·</span>
-                <span>{CARB_DENSITY_LABELS[meal.carbDensity]}</span>
+                <span>{t(CARB_DENSITY_KEYS[meal.carbDensity])}</span>
                 {meal.kind === "recipe" ? (
                   <>
                     <span className="text-fg-faint" aria-hidden>·</span>
                     <span className="numeric border hairline-strong rounded-full px-2 py-0.5 text-[10px]">
-                      Anker
+                      {t("anchor")}
                     </span>
                   </>
                 ) : null}
@@ -141,19 +135,19 @@ export default function MealCard({
             </div>
             <div className="text-right shrink-0">
               <div className="numeric text-2xl">{meal.estKcal ?? "—"}</div>
-              <div className="eyebrow">kcal</div>
+              <div className="eyebrow">{t("kcal")}</div>
             </div>
           </div>
 
           {/* Macro pills */}
           <div className="px-5 pb-3 flex flex-wrap items-center gap-2 text-[11px] font-mono">
-            <span className="text-fg-dim">{meal.estProteinG ?? "—"}g protein</span>
+            <span className="text-fg-dim">{t("macroProtein", { value: meal.estProteinG ?? "—" })}</span>
             <span className="text-fg-faint" aria-hidden>·</span>
-            <span className="text-fg-dim">{meal.estCarbsG ?? "—"}g kulhydrat</span>
+            <span className="text-fg-dim">{t("macroCarbs", { value: meal.estCarbsG ?? "—" })}</span>
             <span className="text-fg-faint" aria-hidden>·</span>
-            <span className="text-fg-dim">{meal.estFatG ?? "—"}g fedt</span>
+            <span className="text-fg-dim">{t("macroFat", { value: meal.estFatG ?? "—" })}</span>
             <span className="text-fg-faint" aria-hidden>·</span>
-            <span className="text-fg-dim">{meal.prepMinutes ?? "—"} min prep</span>
+            <span className="text-fg-dim">{t("macroPrep", { value: meal.prepMinutes ?? "—" })}</span>
           </div>
         </div>
       </div>
@@ -162,7 +156,7 @@ export default function MealCard({
       {open ? (
         <div className="border-t hairline px-5 py-4 space-y-4">
           <section>
-            <div className="eyebrow mb-2">Ingredienser</div>
+            <div className="eyebrow mb-2">{t("ingredients")}</div>
             <ul className="space-y-1 text-sm">
               {meal.ingredients.map((ing, i) => (
                 <li key={i} className="flex items-baseline gap-3">
@@ -176,7 +170,7 @@ export default function MealCard({
           </section>
           {meal.steps.length > 0 ? (
             <section>
-              <div className="eyebrow mb-2">Sådan</div>
+              <div className="eyebrow mb-2">{t("steps")}</div>
               <ol className="space-y-2 text-sm">
                 {meal.steps.map((s, i) => (
                   <li key={i} className="flex gap-3">
@@ -198,17 +192,17 @@ export default function MealCard({
           className="btn btn-ghost btn-sm"
           aria-expanded={open}
         >
-          {open ? "Skjul opskrift" : "Vis opskrift"}
+          {open ? t("hideRecipe") : t("showRecipe")}
         </button>
         {meal.swappable ? (
           <button
             type="button"
             onClick={handleSwap}
             disabled={swapDisabled}
-            title={swapExhausted ? "Bytte-grænse nået denne uge" : undefined}
+            title={swapExhausted ? t("swapExhaustedTitle") : undefined}
             className="btn btn-ghost btn-sm"
           >
-            {pending ? "Bytter…" : "Byt"}
+            {pending ? t("swapping") : t("swapShort")}
           </button>
         ) : null}
         {loggable ? (

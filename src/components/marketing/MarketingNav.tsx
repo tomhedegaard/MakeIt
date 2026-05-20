@@ -1,10 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
 
 export default function MarketingNav() {
+  const t = useTranslations("Marketing.nav");
+
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b hairline backdrop-blur-md bg-[rgba(10,10,11,0.6)]">
       <Container>
@@ -13,18 +16,18 @@ export default function MarketingNav() {
             <Logo />
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-[12px] tracking-[0.18em] uppercase text-fg-dim font-mono">
-            <a href="#crew"     className="hover:text-fg transition-colors">Crew</a>
-            <a href="#coaching" className="hover:text-fg transition-colors">Coaching</a>
-            <a href="#tiers"    className="hover:text-fg transition-colors">Tiers</a>
-            <a href="#app"      className="hover:text-fg transition-colors">Appen</a>
-            <a href="#how"      className="hover:text-fg transition-colors">Pris</a>
-            <a href="#faq"      className="hover:text-fg transition-colors">FAQ</a>
+            <a href="#crew"     className="hover:text-fg transition-colors">{t("crew")}</a>
+            <a href="#coaching" className="hover:text-fg transition-colors">{t("coaching")}</a>
+            <a href="#tiers"    className="hover:text-fg transition-colors">{t("tiers")}</a>
+            <a href="#app"      className="hover:text-fg transition-colors">{t("app")}</a>
+            <a href="#how"      className="hover:text-fg transition-colors">{t("price")}</a>
+            <a href="#faq"      className="hover:text-fg transition-colors">{t("faq")}</a>
           </nav>
           <div className="flex items-center gap-2">
             <span className="hidden sm:flex items-center gap-2 text-[10px] tracking-[0.18em] uppercase font-mono text-fg-dim">
-              <span className="pulse-dot" /> Closed Beta
+              <span className="pulse-dot" /> {t("closedBeta")}
             </span>
-            <Link href="/login" className="btn btn-sm btn-primary">Log ind</Link>
+            <Link href="/login" className="btn btn-sm btn-primary">{t("login")}</Link>
           </div>
         </div>
       </Container>

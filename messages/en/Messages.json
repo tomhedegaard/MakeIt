@@ -1,0 +1,72 @@
+{
+  "page": {
+    "eyebrow": "07 — Messages",
+    "titleWithCoach": "Chat with @{handle}",
+    "titleFallback": "Your coach",
+    "subtitle": "A direct line to your coach. Send text, images or a voice message — videos you receive."
+  },
+  "thread": {
+    "ariaLabel": "Messages",
+    "loading": "Loading…",
+    "empty": "No messages yet. Write a message to get started.",
+    "initializing": "Initializing conversation…"
+  },
+  "bubble": {
+    "photoAlt": "Photo",
+    "mediaError": "Could not load media · try refreshing",
+    "seen": "Seen",
+    "sent": "Sent"
+  },
+  "composer": {
+    "placeholder": "Write a message…",
+    "sending": "…",
+    "send": "Send",
+    "imageAria": "Attach image",
+    "imageTitle": "Image",
+    "audioAria": "Record voice message",
+    "audioTitle": "Audio",
+    "videoAria": "Record live video",
+    "videoTitle": "Live video",
+    "errors": {
+      "pickImage": "Pick an image",
+      "fileTooLarge": "File is too large (max 100 MB)",
+      "storageUnavailableDemo": "Storage is not available in demo mode",
+      "storageUnavailable": "Storage is not available",
+      "uploadFailedWithMessage": "Upload failed: {message}",
+      "uploadFailed": "Upload failed",
+      "video_not_allowed": "You can't send video",
+      "auth": "You are not signed in",
+      "no_coach": "No coach available yet",
+      "empty": "Write something first",
+      "no_media": "Attach a file first",
+      "unknown": "Could not send — try again"
+    }
+  },
+  "audioRecorder": {
+    "record": "● Record",
+    "cancel": "Cancel",
+    "max": "max 5:00",
+    "stop": "◼ Stop",
+    "discard": "Delete",
+    "sending": "Sending…",
+    "send": "Send",
+    "startFailed": "Could not start recording: {message}",
+    "unknownError": "unknown error",
+    "sendFailed": "Could not send — try again."
+  },
+  "videoRecorder": {
+    "record": "● Record video",
+    "cancel": "Cancel",
+    "max": "max 5:00",
+    "stop": "◼ Stop",
+    "discard": "Delete",
+    "sending": "Sending…",
+    "send": "Send",
+    "permissionDenied": "Access denied — allow camera + microphone in the browser.",
+    "noCamera": "No camera found on the device.",
+    "cameraBusy": "Camera is in use by another app.",
+    "startFailed": "Could not start recording: {message}",
+    "unknownError": "unknown error",
+    "sendFailed": "Could not send — try again."
+  }
+}

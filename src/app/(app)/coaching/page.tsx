@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { pricing } from "@/lib/pricing";
 import { TODAY_SESSION, totalSets } from "@/lib/workout";
@@ -24,6 +25,7 @@ import StartProgramButton from "./StartProgramButton";
 export default async function TrainPage() {
   const member = await getSession();
   const memberId = member?.id ?? null;
+  const t = await getTranslations("Coaching");
 
   const [todayCardDb, weekDb, activeDb, libraryDb, statsDb, streakDb] =
     SUPABASE_ENABLED && memberId
@@ -53,18 +55,18 @@ export default async function TrainPage() {
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2 pb-1">
-        <div className="eyebrow mb-2">02 — Træn</div>
+        <div className="eyebrow mb-2">{t("header.eyebrow")}</div>
         <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
-          Din uge.
+          {t("header.title")}
         </h1>
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-          Alt automatisk planlagt af AI&apos;en, justeret af din coach, og tilpasset dig.
+          {t("header.subtitle")}
         </p>
       </header>
 
       {/* Week strip — horizontal scroll on mobile */}
       <section
-        aria-label="Ugeoversigt"
+        aria-label={t("week.ariaLabel")}
         className="-mx-6 md:mx-0 px-6 md:px-0 overflow-x-auto"
       >
         <ol className="flex gap-2 md:grid md:grid-cols-7 min-w-max md:min-w-0">
@@ -93,10 +95,10 @@ export default async function TrainPage() {
                   {day.done ? (
                     <span
                       className="size-2 rounded-full bg-fg"
-                      aria-label="Gennemført"
+                      aria-label={t("week.done")}
                     />
                   ) : day.today ? (
-                    <span className="pulse-dot" aria-label="I dag" />
+                    <span className="pulse-dot" aria-label={t("week.today")} />
                   ) : day.rest ? (
                     <span
                       className="size-2 rounded-full bg-fg-faint"
@@ -130,7 +132,10 @@ export default async function TrainPage() {
           <div className="flex items-center gap-2 mb-3">
             <span className="pulse-dot" />
             <span className="eyebrow">
-              I dag · {today.programCode} · uge {today.week}
+              {t("today.label", {
+                programCode: today.programCode,
+                week: today.week,
+              })}
             </span>
           </div>
           <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
@@ -140,14 +145,18 @@ export default async function TrainPage() {
         </div>
 
         <div className="grid grid-cols-3 gap-px bg-line border-b hairline">
-          <Mini label="Øvelser" value={today.exerciseCount} />
-          <Mini label="Sæt" value={sets} />
-          <Mini label="Est. tid" value={today.estimatedMinutes} suffix="m" />
+          <Mini label={t("today.exercises")} value={today.exerciseCount} />
+          <Mini label={t("today.sets")} value={sets} />
+          <Mini
+            label={t("today.estTime")}
+            value={today.estimatedMinutes}
+            suffix="m"
+          />
         </div>
 
         <div className="p-4 lg:p-5">
           <Link href={`/session/${today.id}`} className="btn btn-primary btn-xl">
-            Start session →
+            {t("today.start")}
           </Link>
         </div>
       </section>
@@ -157,7 +166,7 @@ export default async function TrainPage() {
         <section className="surface-2 rounded-2xl p-5 lg:p-6">
           <div className="flex items-end justify-between mb-3">
             <div>
-              <div className="eyebrow mb-1">Aktivt program</div>
+              <div className="eyebrow mb-1">{t("active.eyebrow")}</div>
               <div className="font-display text-2xl md:text-3xl">{active.name}</div>
             </div>
             <div className="text-right">
@@ -165,7 +174,7 @@ export default async function TrainPage() {
                 {String(active.currentWeek).padStart(2, "0")}{" "}
                 <span className="text-fg-dim text-base">/ {active.weeks}</span>
               </div>
-              <div className="eyebrow">uger</div>
+              <div className="eyebrow">{t("active.weeks")}</div>
             </div>
           </div>
           <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
@@ -178,19 +187,19 @@ export default async function TrainPage() {
           </div>
           <div className="mt-4 grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
             <MiniWithTrend
-              label="Volumen · 4u"
+              label={t("active.volume")}
               value={formatVolume(volumeKg)}
               suffix={volumeKg >= 1000 ? "" : "kg"}
               current={volumeKg}
               previous={volumeKgPrev}
             />
             <MiniWithTrend
-              label="PR'er · 4u"
+              label={t("active.prs")}
               value={String(prs4w).padStart(2, "0")}
               current={prs4w}
               previous={prsPrev}
             />
-            <Mini label="Streak" value={streakDays} suffix="d" small />
+            <Mini label={t("active.streak")} value={streakDays} suffix="d" small />
           </div>
         </section>
       ) : null}
@@ -198,7 +207,7 @@ export default async function TrainPage() {
       {/* Programs library */}
       <section>
         <div className="flex items-end justify-between mb-3">
-          <div className="eyebrow">Programmer</div>
+          <div className="eyebrow">{t("library.eyebrow")}</div>
           <span className="text-xs font-mono text-fg-faint">{library.length}</span>
         </div>
 
@@ -212,8 +221,8 @@ export default async function TrainPage() {
                       {p.code} · {p.type}
                       {p.active && p.currentWeek ? (
                         <span className="ml-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border hairline-strong">
-                          <span className="size-1.5 rounded-full bg-fg" /> Aktiv
-                          · uge {p.currentWeek}
+                          <span className="size-1.5 rounded-full bg-fg" />{" "}
+                          {t("library.activeBadge", { week: p.currentWeek })}
                         </span>
                       ) : null}
                     </div>
@@ -223,7 +232,7 @@ export default async function TrainPage() {
                   </div>
                   <div className="text-right shrink-0">
                     <div className="numeric text-2xl">{p.weeks}</div>
-                    <div className="eyebrow">uger</div>
+                    <div className="eyebrow">{t("active.weeks")}</div>
                   </div>
                 </div>
 
@@ -235,12 +244,16 @@ export default async function TrainPage() {
 
                 <div className="grid grid-cols-2 gap-px bg-line border hairline rounded-lg overflow-hidden mb-4">
                   <div className="bg-bg-2 px-3 py-2.5">
-                    <div className="eyebrow mb-0.5">Coach</div>
-                    <div className="text-sm">{p.coachName ?? "AI + team"}</div>
+                    <div className="eyebrow mb-0.5">{t("library.coach")}</div>
+                    <div className="text-sm">
+                      {p.coachName ?? t("library.coachFallback")}
+                    </div>
                   </div>
                   <div className="bg-bg-2 px-3 py-2.5">
-                    <div className="eyebrow mb-0.5">Niveau</div>
-                    <div className="text-sm">{p.level ?? "—"}</div>
+                    <div className="eyebrow mb-0.5">{t("library.level")}</div>
+                    <div className="text-sm">
+                      {p.level ?? t("library.levelFallback")}
+                    </div>
                   </div>
                 </div>
 
@@ -250,7 +263,7 @@ export default async function TrainPage() {
                       href={`/session/${today.id}`}
                       className="btn btn-primary btn-sm flex-1"
                     >
-                      Fortsæt →
+                      {t("library.continue")}
                     </Link>
                   ) : (
                     <StartProgramButton
@@ -260,7 +273,7 @@ export default async function TrainPage() {
                     />
                   )}
                   <button type="button" className="btn btn-sm" disabled>
-                    Detaljer
+                    {t("library.details")}
                   </button>
                 </div>
               </article>
@@ -271,29 +284,29 @@ export default async function TrainPage() {
 
       {/* 1:1 — only fully human */}
       <section className="surface-2 rounded-2xl p-6 lg:p-10">
-        <div className="eyebrow mb-3">
-          1:1 Coaching · Den eneste 100% menneskelige del
-        </div>
+        <div className="eyebrow mb-3">{t("oneOnOne.eyebrow")}</div>
         <h3 className="font-display text-2xl md:text-4xl leading-[1] mb-3">
-          Vil du have Mikael Munk i dit øre direkte?
+          {t("oneOnOne.title")}
         </h3>
         <p className="text-fg-dim text-sm md:text-base max-w-xl mb-5">
-          Personligt program, ugentlige form-checks via video, og direkte adgang
-          over Signal. {pricing.oneOnOne.spots} ind ad gangen.
+          {t("oneOnOne.body", { spots: pricing.oneOnOne.spots })}
         </p>
 
         <div className="flex items-baseline gap-2 mb-5">
           <span className="numeric text-3xl">{pricing.oneOnOne.amount}</span>
           <span className="numeric text-fg-dim text-sm">
-            {pricing.oneOnOne.currency}/{pricing.oneOnOne.period} oven i medlemskabet
+            {t("oneOnOne.priceSuffix", {
+              currency: pricing.oneOnOne.currency,
+              period: pricing.oneOnOne.period,
+            })}
           </span>
         </div>
 
         <div className="flex flex-wrap gap-2">
           <Link href="/billing" className="btn btn-primary">
-            Søg om plads →
+            {t("oneOnOne.apply")}
           </Link>
-          <button type="button" className="btn">Læs mere</button>
+          <button type="button" className="btn">{t("oneOnOne.readMore")}</button>
         </div>
       </section>
     </Container>

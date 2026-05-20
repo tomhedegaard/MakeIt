@@ -1,0 +1,280 @@
+{
+  "nav": {
+    "crew": "Crew",
+    "coaching": "Coaching",
+    "tiers": "Tiers",
+    "app": "The App",
+    "price": "Pricing",
+    "faq": "FAQ",
+    "closedBeta": "Closed Beta",
+    "login": "Log in"
+  },
+  "hero": {
+    "eyebrow": "Closed Beta · Invite only · est. 2026",
+    "stats": {
+      "straps": "Straps sold",
+      "strapsSuffix": "+ climbing",
+      "members": "Active members",
+      "membersSuffix": "Closed beta",
+      "programs": "Coaching programs",
+      "programsSuffix": "Available now",
+      "madeIn": "Made in",
+      "madeInSuffix": "Copenhagen"
+    },
+    "subline": "MakeIt isn't just straps and cuffs.",
+    "subline2": "It's the inner universe for the crew behind it — coaching, community and loyalty in one place. Built in Copenhagen. Made for athletes who lift heavy.",
+    "ctaPrimary": "Get access",
+    "ctaSecondary": "Learn more"
+  },
+  "crew": {
+    "eyebrow": "01 — The Crew",
+    "heading": {
+      "line1": "A closed",
+      "line2": "room for",
+      "line3": "those who",
+      "line4": "lift."
+    },
+    "intro": "MakeIt Crew isn't for everyone. It's for athletes, coaches and partners already building alongside us — and who want access to programs, community and perks before anyone else.",
+    "items": {
+      "invite": {
+        "k": "Invite-only access",
+        "v": "Only via a personal code from Mikael Munk or an existing crew member."
+      },
+      "internal": {
+        "k": "Built from the inside",
+        "v": "We build the platform together with you. Your feedback is the feature set."
+      },
+      "noNoise": {
+        "k": "No noise",
+        "v": "No ads, no pressure to perform on Instagram. Just training and community."
+      },
+      "freeOfShop": {
+        "k": "Separate from the shop",
+        "v": "The webshop keeps running untouched — this is its own thing."
+      }
+    }
+  },
+  "pillars": {
+    "coaching": {
+      "label": "02 — Coaching",
+      "title": "Programs that work. Coaches who lift themselves.",
+      "body": "1:1 sessions, 12-week strength and hypertrophy blocks, video form checks. Curated by Mikael Munk and the crew's head coaches. Not generic app content.",
+      "bullet1": "Strength · Hypertrophy · Powerbuilding",
+      "bullet2": "Video form check within 24 hours",
+      "bullet3": "Personal PR tracks and deload weeks",
+      "statLabel": "Programs live"
+    },
+    "community": {
+      "label": "03 — Community",
+      "title": "A feed built for lifting — not for scrolling.",
+      "body": "Share PRs, footage and thoughts with people who actually get the difference between an RPE 8 and a 9. Weekly challenges, per-gym leaderboards, and IRL meets in Amagerbro.",
+      "bullet1": "PR feed with video and comments",
+      "bullet2": "Monthly challenges & leaderboards",
+      "bullet3": "IRL meets, open house & collabs",
+      "statLabel": "Active members"
+    },
+    "reps": {
+      "label": "04 — Reps Program",
+      "title": "Your work pays off.",
+      "body": "Earn Reps for purchases, programs you finish, PRs you post, and people you invite in. Trade them for limited drops, custom strap colors, early access and 1:1 time with Mikael Munk.",
+      "bullet1": "Tier: Lifter → Athlete → Beast → Legend",
+      "bullet2": "Limited drops, members only",
+      "bullet3": "Reps never convert to cash — only to real gear",
+      "statLabel": "Tiers"
+    }
+  },
+  "tiers": {
+    "eyebrow": "Reps Program",
+    "heading": {
+      "line1": "From Lifter",
+      "line2": "to Legend."
+    },
+    "intro": "Every completed session, form check and PR fills the Reps balance. Tiers aren't titles — they're proof of the work behind them. Each level unlocks new perks: form-check priority, IRL meets, exclusive gear, 1:1 coaching.",
+    "cta": "Start your journey →",
+    "ctaNote": "Closed beta · invite required",
+    "locked": "Locked",
+    "lifter": {
+      "description": "The way in. You've banked your first reps and you're learning the system — your first session is in the app, the program is dialed to your level.",
+      "quote": "First 30 days. The program hit my level exactly, and I've never felt this on track in my life."
+    },
+    "athlete": {
+      "description": "Consistency. You log sets and form checks weekly. PRs start dropping on the big lifts, and you've made the first lifestyle shifts that won't reverse.",
+      "quote": "Three months in and I've hit PRs on all three big lifts. The Reps system keeps me accountable every single day."
+    },
+    "beast": {
+      "description": "The volume block. You know how your body responds under heavy load, and you work recovery deliberately. Coach feedback gets finer and more surgical.",
+      "quote": "The volume block was the hardest, physically and mentally — but that's where I learned what I can really handle."
+    },
+    "legend": {
+      "description": "Few make it here. A multi-year commitment to building the body as a discipline, not a trend. You're the one the crew looks up to, and your sessions inspire the Lifter tier.",
+      "quote": "Three years. 200+ sessions. Two back injuries behind me. The Reps balance shows why — it's not luck, it's built kilo by kilo."
+    }
+  },
+  "app": {
+    "eyebrow": "06 — The App",
+    "heading": "Here's how it looks.",
+    "intro": "Three screens that define your week — from the moment you pick up your phone in the morning to the AI grading your heavy set.",
+    "phone": {
+      "todayLabel": "Today",
+      "todayDetail": "Today's session, one tap to start",
+      "sessionLabel": "Active session",
+      "sessionDetail": "Set-by-set with RPE and rest timer",
+      "formCheckLabel": "Form check",
+      "formCheckDetail": "Claude grades it in 6 sec."
+    },
+    "today": {
+      "greeting": "Good morning",
+      "streak": "Streak",
+      "week": "STR-12 · week 4",
+      "day": "Day A — Squat",
+      "topSet": "Top set @ RPE 8, 3×3 backoff",
+      "miniExercises": "exercises",
+      "miniSets": "sets",
+      "miniTime": "time",
+      "startSession": "Start session →"
+    },
+    "session": {
+      "week": "STR-12 · week 4",
+      "exercise": "Exercise 1/4",
+      "setsLabel": "sets",
+      "cue": "Chest up, knees out, sit low and drive hard up.",
+      "miniKg": "kg",
+      "miniReps": "reps",
+      "miniRpe": "rpe",
+      "weightLabel": "Weight",
+      "logSet": "Log set →"
+    },
+    "formCheck": {
+      "eyebrow": "AI form check",
+      "verdict": "Solid set — slight knee valgus",
+      "reviewed": "Reviewed · Mikael Munk",
+      "goodLabel": "✓ Good",
+      "good1": "· Depth hit",
+      "good2": "· Consistent bar path",
+      "good3": "· Good spinal control",
+      "tightenLabel": "△ Tighten up",
+      "tighten1": "· Right knee collapses at the bottom",
+      "coachTipLabel": "Coach tip",
+      "coachTip": "Drive the knees out — “spread the floor”."
+    }
+  },
+  "value": {
+    "priceLabel": "Pricing",
+    "priceLockNote": "Final price locked before launch",
+    "positioningEyebrow": "How we keep coaching accessible",
+    "positioningHeadline": "AI does the generic. People do what matters.",
+    "positioningSub": "We automate what can be automated — program building, form checks, progression — and use people where it actually counts: 1:1, milestones and community. The result is coaching that costs a fraction of the market, without feeling cheap.",
+    "marketLabel": "market average for personal coaching",
+    "pillar1": {
+      "eyebrow": "Automated",
+      "title": "AI builds the program",
+      "body": "Personal strength and hypertrophy programs are generated from your maxes, your history and your goal — and updated week by week based on how you actually lift.",
+      "foot": "No waiting · no template PDFs"
+    },
+    "pillar2": {
+      "eyebrow": "Instant feedback",
+      "title": "AI checks your form",
+      "body": "Upload a video and get technique feedback within seconds. One of the crew's head coaches verifies it weekly, so you never run on autopilot.",
+      "foot": "Seconds to respond · weekly human review"
+    },
+    "pillar3": {
+      "eyebrow": "People for the milestones",
+      "title": "Crew + coach when it counts",
+      "body": "PR celebrations, deload talk, and 1:1 time with Mikael Munk when you're closing in on a new ceiling. The rest of the time, the community keeps you accountable.",
+      "foot": "Crew feed · 1:1 at milestones"
+    }
+  },
+  "testimonials": {
+    "eyebrow": "07 — The Crew",
+    "heading": "What they say.",
+    "intro": "Three from the crew on how it feels to train here. No ambassador deals, no discount codes. Just members who've put in the time.",
+    "kasper": {
+      "cred": "Powerbuilding · 162.5 kg squat single",
+      "quote": "The first program I've actually run from start to finish. Mikael's form checks catch things the AI misses, and the volume of notes he writes per video is insane."
+    },
+    "nina": {
+      "cred": "DL specialization · 175 kg @ 68 kg BW",
+      "quote": "+15 kg on the deadlift in 8 weeks, no injuries. The fact the Reps shop exists is dangerously good motivation — I'm saving up for the embroidered strap."
+    },
+    "maria": {
+      "cred": "Hypertrophy · switching between blocks",
+      "quote": "The crew is where I post, not Instagram. Quiet, precise, and in Danish. No ads, no demands. Just people who lift."
+    }
+  },
+  "origin": {
+    "eyebrow": "05 — Origin",
+    "heading": {
+      "line1": "Sewn in",
+      "line2": "Copenhagen.",
+      "line3": "Used everywhere."
+    },
+    "body": "StrapIt was born from one simple idea: if you take training seriously, your gear deserves to do the same. We still sew every single strap ourselves, in Amagerbro, with Danish-made nylon and control stitching that holds for decades.",
+    "facts": {
+      "establishedLabel": "Established",
+      "establishedValue": "2018",
+      "locationLabel": "Location",
+      "locationFallback": "Copenhagen, Denmark",
+      "madeInLabel": "Made in",
+      "madeInValue": "Denmark",
+      "soldAtLabel": "Sold at",
+      "soldAtValue": "PureGym, SDU, Fitness Engros and more",
+      "warrantyLabel": "Warranty",
+      "warrantyValue": "100-day returns"
+    }
+  },
+  "faq": {
+    "eyebrow": "08 — FAQ",
+    "heading": "Questions?",
+    "intro": "The things we usually get asked. Missing your answer?",
+    "introLink": "Write Mikael directly",
+    "items": {
+      "advanced": {
+        "q": "Do I need to be advanced to join?",
+        "a": "No. Onboarding adapts intensity and volume to your level. As a beginner, top sets get capped at RPE 7 and the program builds up carefully. Intermediate and advanced lifters get sharper loads from day 1."
+      },
+      "oneRm": {
+        "q": "What if I don't know my 1RM?",
+        "a": "Skip the fields in onboarding. We use sensible defaults based on your level, and your very first session produces data that's used to fine-tune the next week. You don't need to know your 1RM upfront."
+      },
+      "cancel": {
+        "q": "Can I cancel anytime?",
+        "a": "Yes. Crew membership can be cancelled directly from the Stripe Customer Portal — it takes effect on your next billing date, and you keep access until then. No lock-in, no clauses."
+      },
+      "vacation": {
+        "q": "What happens when Mikael is on vacation?",
+        "a": "The AI runs uninterrupted — programs are generated, form checks get instant answers, sets get logged and the crew stays active. Mikael's personal reviews can be delayed up to a week during vacation periods, and we always post it in the feed ahead of time."
+      },
+      "responseTime": {
+        "q": "How fast do I get a form check back?",
+        "a": "The AI typically responds within 6-15 seconds. Mikael's personal verification lands within 24 hours on weekdays, and you get both an in-app notification and an email when it's ready."
+      },
+      "pause": {
+        "q": "Can I pause for travel, illness or injury?",
+        "a": "Yes. You can pause your active program right in the app — sessions and weekly progression freeze. When you resume, the next week regenerates automatically so you're not fighting stale targets. To pause the subscription, use the Stripe Customer Portal."
+      },
+      "irl": {
+        "q": "Is this a replacement for in-person training IRL?",
+        "a": "For 95% of lifters: yes. AI form check + weekly coach review catches most of it. For those who want more — the 1:1 add-on gives you direct Signal access to Mikael and a weekly 30-min video session. Limited to 8 spots at a time."
+      },
+      "cheaper": {
+        "q": "Why is it cheaper than traditional coaching?",
+        "a": "Because AI handles the generic stuff — program generation, progression, instant form feedback. Mikael and the crew then spend their time on what actually moves the needle: 1:1, milestones, and keeping you accountable. You pay for what counts."
+      }
+    }
+  },
+  "footer": {
+    "blurbBefore": "{product} is the inner universe for our crew, athletes and coaches. The webshop",
+    "blurbAfter": "runs as always — this is its own thing.",
+    "universeLabel": "Universe",
+    "universeCrew": "Crew",
+    "universeCoaching": "Coaching",
+    "universeCommunity": "Community",
+    "universeReps": "Reps Program",
+    "contactLabel": "Contact",
+    "instagram": "Instagram @{handle}",
+    "getAccess": "Get access →",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "madeIn": "Made in DK · Closed Beta · v0.1"
+  }
+}

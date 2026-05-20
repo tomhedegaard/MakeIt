@@ -16,7 +16,10 @@
  * calves are visible from both front and back), so highlighting one
  * group lights it up regardless of view.
  */
+"use client";
+
 import type { CSSProperties } from "react";
+import { useTranslations } from "next-intl";
 import { slugToMuscle, type MuscleGroup } from "@/lib/data/muscle-groups";
 import {
   OUTLINES,
@@ -53,6 +56,7 @@ export default function AnatomyFigure({
   className?: string;
   style?: CSSProperties;
 }) {
+  const t = useTranslations("Train.anatomy");
   const primarySet = new Set(primary);
   const secondarySet = new Set(secondary);
   const tertiarySet = new Set(tertiary);
@@ -77,8 +81,12 @@ export default function AnatomyFigure({
       role="img"
       aria-label={
         view === "front"
-          ? `Anatomi-figur forfra (${gender === "male" ? "mand" : "kvinde"})`
-          : `Anatomi-figur bagfra (${gender === "male" ? "mand" : "kvinde"})`
+          ? t("figureFront", {
+              gender: gender === "male" ? t("genderMale") : t("genderFemale"),
+            })
+          : t("figureBack", {
+              gender: gender === "male" ? t("genderMale") : t("genderFemale"),
+            })
       }
     >
       {/* Body silhouette — single closed outline path */}

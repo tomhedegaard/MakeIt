@@ -7,6 +7,7 @@ import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { extractMentions } from "@/lib/text/mentions";
 import { sendMentionEmail } from "@/lib/email/templates/mention";
 import { getComments, type Comment } from "@/lib/data/community";
+import { isLocale, type Locale } from "@/i18n/config";
 
 const ALLOWED_TAGS = ["PR", "Note", "Form-check"] as const;
 
@@ -129,7 +130,7 @@ export async function addCommentAction(input: {
         supabase.from("members").select("handle, tier").eq("id", user.id).maybeSingle(),
         supabase
           .from("members")
-          .select("id, handle, email, notif_mention")
+          .select("id, handle, email, notif_mention, locale")
           .filter("handle", "in", `(${handles.map((h) => `"${h}"`).join(",")})`)
           .or(lower.map((h) => `handle.ilike.${h}`).join(",")),
         supabase
@@ -152,6 +153,7 @@ export async function addCommentAction(input: {
       for (const target of mentioned) {
         if (!target.email || target.id === user.id) continue;
         if (target.notif_mention === false) continue;
+        const locale: Locale = isLocale(target.locale) ? target.locale : "da";
         await sendMentionEmail({
           to: target.email,
           recipientHandle: target.handle,
@@ -160,6 +162,7 @@ export async function addCommentAction(input: {
           commentContent: content,
           postContext: postCtx,
           baseUrl,
+          locale,
         });
       }
     }

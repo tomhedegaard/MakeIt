@@ -1,12 +1,15 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { getMemberHealth, type ActivityBucket } from "@/lib/data/coach-analytics";
 
-export const metadata = {
-  title: "Coach · Analytics",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Coach.analytics");
+  return { title: t("metaTitle") };
+}
 
 export default async function CoachAnalyticsPage() {
+  const t = await getTranslations("Coach.analytics");
   const snap = await getMemberHealth();
   const { buckets, atRisk, tiers, signups, onboarding, noProgramCount } = snap;
   const activePct = buckets.total > 0 ? Math.round((buckets.active / buckets.total) * 100) : 0;
@@ -16,42 +19,42 @@ export default async function CoachAnalyticsPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="eyebrow mb-2">Coach console · Member health</div>
+          <div className="eyebrow mb-2">{t("eyebrow")}</div>
           <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">
-            Hvor er crewet?
+            {t("title")}
           </h1>
           <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-            Hvem træner. Hvem er på vej væk. Hvem skal have et kald inden weekenden.
+            {t("intro")}
           </p>
         </div>
-        <Link href="/coach/members" className="btn btn-sm">Alle members →</Link>
+        <Link href="/coach/members" className="btn btn-sm">{t("allMembers")}</Link>
       </header>
 
       {/* Activity buckets */}
       <section
-        aria-label="Aktivitet"
+        aria-label={t("activityAriaLabel")}
         className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline rounded-lg overflow-hidden"
       >
         <BucketKPI
-          label="Aktive · ≤7d"
+          label={t("bucketActive")}
           value={buckets.active}
           total={buckets.total}
           tone="active"
         />
         <BucketKPI
-          label="Sløver · 8–14d"
+          label={t("bucketSlowing")}
           value={buckets.slowing}
           total={buckets.total}
           tone="slowing"
         />
         <BucketKPI
-          label="At-risk · 15–28d"
+          label={t("bucketAtRisk")}
           value={buckets.atRisk}
           total={buckets.total}
           tone="atRisk"
         />
         <BucketKPI
-          label="Inaktive · 29d+"
+          label={t("bucketInactive")}
           value={buckets.inactive}
           total={buckets.total}
           tone="inactive"
@@ -63,21 +66,21 @@ export default async function CoachAnalyticsPage() {
         <div className="flex items-baseline gap-2">
           <span className="numeric text-3xl">{activePct}%</span>
           <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
-            af crewet trænede sidste uge
+            {t("trainedLastWeek")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
           <span className="numeric text-2xl">{noProgramCount}</span>
           <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
-            uden aktivt program
+            {t("noActiveProgram")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
           <span className="numeric text-2xl">{onboarding.pct}%</span>
           <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
-            har gennemført onboarding
+            {t("completedOnboarding")}
           </span>
         </div>
       </section>
@@ -88,8 +91,8 @@ export default async function CoachAnalyticsPage() {
         <section className="md:col-span-2 surface-2 rounded-2xl overflow-hidden">
           <div className="px-5 py-4 border-b hairline flex items-center justify-between">
             <div>
-              <div className="eyebrow mb-1">Skal kontaktes</div>
-              <h2 className="font-display text-2xl">At-risk</h2>
+              <div className="eyebrow mb-1">{t("atRiskEyebrow")}</div>
+              <h2 className="font-display text-2xl">{t("atRiskTitle")}</h2>
             </div>
             <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
               {atRisk.length}
@@ -97,7 +100,7 @@ export default async function CoachAnalyticsPage() {
           </div>
           {atRisk.length === 0 ? (
             <div className="p-6 text-sm text-fg-dim text-center">
-              Ingen er på vej væk. Crewet trækker.
+              {t("atRiskEmpty")}
             </div>
           ) : (
             <ul className="divide-y hairline">
@@ -114,7 +117,7 @@ export default async function CoachAnalyticsPage() {
                     <div className="flex-1 min-w-0">
                       <div className="text-sm">@{m.handle}</div>
                       <div className="text-[11px] font-mono text-fg-faint">
-                        {m.tier} · {m.programCode ?? "Intet program"}
+                        {m.tier} · {m.programCode ?? t("noProgram")}
                       </div>
                     </div>
                     <div className="text-right shrink-0">
@@ -122,7 +125,7 @@ export default async function CoachAnalyticsPage() {
                         {m.daysSinceLastSession === null ? "—" : `${m.daysSinceLastSession}d`}
                       </div>
                       <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-                        {m.daysSinceLastSession === null ? "Aldrig trænet" : "siden"}
+                        {m.daysSinceLastSession === null ? t("neverTrained") : t("since")}
                       </div>
                     </div>
                     <span className="text-fg-dim ml-2" aria-hidden>→</span>
@@ -136,8 +139,8 @@ export default async function CoachAnalyticsPage() {
         {/* Tier distribution */}
         <aside className="surface-2 rounded-2xl p-5 lg:p-6 space-y-4">
           <div>
-            <div className="eyebrow mb-1">Fordeling</div>
-            <h2 className="font-display text-2xl">Tiers</h2>
+            <div className="eyebrow mb-1">{t("tiersEyebrow")}</div>
+            <h2 className="font-display text-2xl">{t("tiersTitle")}</h2>
           </div>
           <ul className="space-y-3">
             {tiers.map((t) => (
@@ -160,10 +163,10 @@ export default async function CoachAnalyticsPage() {
           </ul>
           <div className="pt-3 border-t hairline">
             <div className="text-[11px] font-mono text-fg-faint uppercase tracking-[0.14em]">
-              Tier-tærskler
+              {t("tierThresholdsLabel")}
             </div>
             <div className="text-[11px] font-mono text-fg-dim mt-1.5 leading-relaxed">
-              Lifter 0+ · Athlete 1.000 · Beast 5.000 · Legend 15.000 Reps
+              {t("tierThresholds")}
             </div>
           </div>
         </aside>
@@ -173,19 +176,19 @@ export default async function CoachAnalyticsPage() {
       <section className="surface-2 rounded-2xl p-5 lg:p-6">
         <div className="flex items-end justify-between mb-4">
           <div>
-            <div className="eyebrow mb-1">Tilgang</div>
-            <h2 className="font-display text-2xl">Nye medlemmer · 8 uger</h2>
+            <div className="eyebrow mb-1">{t("signupEyebrow")}</div>
+            <h2 className="font-display text-2xl">{t("signupTitle")}</h2>
           </div>
           <div className="text-right">
             <div className="numeric text-3xl">
               {signups.reduce((sum, s) => sum + s.count, 0)}
             </div>
-            <div className="eyebrow">i alt</div>
+            <div className="eyebrow">{t("signupTotal")}</div>
           </div>
         </div>
 
         <ol
-          aria-label="Tilgang pr. uge"
+          aria-label={t("signupAriaLabel")}
           className="grid grid-cols-8 gap-1.5 items-end h-32"
         >
           {signups.map((w) => {

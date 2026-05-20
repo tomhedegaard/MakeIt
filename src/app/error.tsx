@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 /**
  * Root error boundary. Renders for any uncaught error in the route
@@ -16,6 +17,8 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations("Misc.error");
+
   useEffect(() => {
     // Log to console in dev; in prod this is where Sentry would capture.
     console.error("[error.tsx]", error);
@@ -24,25 +27,24 @@ export default function GlobalError({
   return (
     <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-24">
       <div className="max-w-md text-center">
-        <div className="eyebrow mb-3">Fejl · 500</div>
+        <div className="eyebrow mb-3">{t("eyebrow")}</div>
         <h1 className="font-display text-4xl md:text-5xl mb-4 leading-[0.95]">
-          Noget gik galt.
+          {t("title")}
         </h1>
         <p className="text-fg-dim text-base leading-relaxed mb-8">
-          Vi kunne ikke loade denne side. Det er ikke dig — det er os.
-          Prøv igen, eller gå tilbage til start.
+          {t("body")}
         </p>
         {error.digest && (
           <p className="text-xs font-mono text-fg-faint mb-8">
-            ref: {error.digest}
+            {t("ref", { digest: error.digest })}
           </p>
         )}
         <div className="flex items-center justify-center gap-3">
           <button onClick={reset} type="button" className="btn btn-primary">
-            Prøv igen
+            {t("retry")}
           </button>
           <Link href="/" className="btn">
-            Til forsiden
+            {t("home")}
           </Link>
         </div>
       </div>

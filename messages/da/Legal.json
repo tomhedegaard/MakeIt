@@ -1,0 +1,213 @@
+{
+  "privacy": {
+    "metaTitle": "Privacy Policy — {product}",
+    "eyebrow": "Privacy Policy",
+    "title": "Hvad vi gemmer.",
+    "introUpdated": "Senest opdateret: maj 2026 · Dataansvarlig: ",
+    "introCvrFallback": "CVR — kontakt",
+    "s01": {
+      "eyebrow": "01",
+      "title": "Hvad vi indsamler",
+      "intro": "Som medlem af {product} behandler vi følgende:",
+      "items": {
+        "account": {
+          "k": "Konto",
+          "v": "Email, valgt handle, display navn, bio, tier, joined-date."
+        },
+        "training": {
+          "k": "Træningsdata",
+          "v": "Loggede sæt (vægt, reps, RPE, tidspunkt), program-tilknytning, uge-progression, gennemførte sessioner."
+        },
+        "formChecks": {
+          "k": "Form-checks",
+          "v": "Video-uploads (privat bucket), AI-genererede vurderinger, coach-noter."
+        },
+        "social": {
+          "k": "Social",
+          "v": "Posts, kommentarer, reaktioner, @mentions."
+        },
+        "reps": {
+          "k": "Reps & køb",
+          "v": "Reps-balance, transaktioner, indløsninger. Stripe håndterer betalingsdata — vi gemmer kun et customer-ID."
+        },
+        "technical": {
+          "k": "Tekniske data",
+          "v": "Session-cookie, IP-adresse til log-formål, request-tidspunkter."
+        }
+      }
+    },
+    "s02": {
+      "eyebrow": "02",
+      "title": "Hvorfor",
+      "intro": "Vi behandler dine data for at:",
+      "items": {
+        "deliver": {
+          "k": "Levere tjenesten",
+          "v": "Personligt program, form-check feedback, fællesskabs-feed, Reps-loyalty."
+        },
+        "notify": {
+          "k": "Sende notifikationer",
+          "v": "Coach-noter, @mentions, ugentlig digest, tier-up. Du kan slå hver type fra under Indstillinger."
+        },
+        "improve": {
+          "k": "Forbedre platformen",
+          "v": "Aggregeret brug — ingen individuelle tracking-profiler."
+        },
+        "legal": {
+          "k": "Opfylde lovkrav",
+          "v": "Bogføring, GDPR-rettigheder, sikkerhed."
+        }
+      }
+    },
+    "s03": {
+      "eyebrow": "03",
+      "title": "Hvem vi deler med",
+      "intro": "Vi deler kun data når det er strengt nødvendigt for tjenesten:",
+      "items": {
+        "supabase": {
+          "k": "Supabase",
+          "v": "Database og auth — EU-region (Frankfurt). Databehandler under DPA."
+        },
+        "resend": {
+          "k": "Resend",
+          "v": "Transaktionel email — sender på vores vegne. EU/USA, Standard Contractual Clauses."
+        },
+        "stripe": {
+          "k": "Stripe",
+          "v": "Betalingsbehandling — du indtaster kortinfo direkte hos Stripe; vi ser den aldrig."
+        },
+        "anthropic": {
+          "k": "Anthropic (Claude)",
+          "v": "AI-program-generation og form-check-vurdering. Anthropic gemmer ikke prompts/output udover request-livscyklus i deres business-tier."
+        }
+      },
+      "outro": "Vi sælger aldrig dine data. Vi deler dem ikke til markedsføring uden eksplicit samtykke."
+    },
+    "s04": {
+      "eyebrow": "04",
+      "title": "Dine rettigheder (GDPR)",
+      "items": {
+        "access": {
+          "k": "Indsigt + portabilitet",
+          "v": "Eksportér alle dine data som JSON fra Indstillinger → Data."
+        },
+        "rectify": {
+          "k": "Berigtigelse",
+          "v": "Opdatér din profil under Indstillinger eller skriv til os."
+        },
+        "delete": {
+          "k": "Sletning",
+          "v": "Slet din konto permanent under Indstillinger → Danger zone."
+        },
+        "restrict": {
+          "k": "Begrænsning + indsigelse",
+          "v": "Skriv til {email} — vi svarer inden 30 dage."
+        },
+        "complain": {
+          "k": "Klage",
+          "v": "Du kan klage til Datatilsynet hvis du mener vi behandler din data forkert."
+        }
+      }
+    },
+    "s05": {
+      "eyebrow": "05",
+      "title": "Cookies",
+      "bodyBefore": "Vi bruger én strengt nødvendig cookie (",
+      "cookieName": "mi_session",
+      "bodyMid": " / Supabase auth-cookie) til at holde dig logget ind. Den lagres så længe din session er aktiv, eller maks 30 dage. Vi bruger ",
+      "bodyEmphasis": "ikke",
+      "bodyAfter": " analytics-cookies, tracking-pixels, eller third-party annoncerings-cookies."
+    },
+    "s06": {
+      "eyebrow": "06",
+      "title": "Opbevaring",
+      "body": "Aktive medlemskabs-data gemmes så længe din konto eksisterer. Når du sletter din konto fjernes alt permanent inden for 30 dage (op til 90 dage hvis backup-rotation kræver det). Bogføringsdata fra Stripe gemmes 5 år iht. dansk regnskabslov."
+    },
+    "s07": {
+      "eyebrow": "07",
+      "title": "Ændringer",
+      "body": "Vi opdaterer denne politik når funktionalitet ændrer sig. Materielle ændringer varsles på email til registrerede medlemmer mindst 14 dage før de træder i kraft."
+    }
+  },
+  "terms": {
+    "metaTitle": "Vilkår — {product}",
+    "eyebrow": "Vilkår",
+    "title": "Spillereglerne.",
+    "introBefore": "Senest opdateret: maj 2026 · Ved at bruge {product} accepterer du disse vilkår. Spørgsmål? ",
+    "s01": {
+      "eyebrow": "01",
+      "title": "Tjenesten",
+      "bodyBefore": "{product} er en lukket coaching-platform leveret af {entity}",
+      "cvr": " (CVR {cvr})",
+      "cvrFallback": " (CVR — kontakt)",
+      "bodyAfter": ". Vi giver adgang til AI-genererede styrketrænings-programmer, video-baseret form-feedback, et community af crew-medlemmer, og et Reps-loyalty program. Adgang kræver invite-kode og aktivt medlemskab."
+    },
+    "s02": {
+      "eyebrow": "02",
+      "title": "Medlemskab og betaling",
+      "items": {
+        "billed": {
+          "k": "Faktureres",
+          "v": "Månedligt forud via Stripe. Pris vises tydeligt før checkout."
+        },
+        "cancel": {
+          "k": "Opsigelse",
+          "v": "Når som helst fra Billing-siden. Træder i kraft ved næste fakturering — ingen tilbagebetaling for igangværende periode."
+        },
+        "addon": {
+          "k": "1:1 add-on",
+          "v": "Begrænsede pladser, separate vilkår — vi annullerer manuelt hvis ingen plads er ledig."
+        },
+        "priceChanges": {
+          "k": "Pris-ændringer",
+          "v": "Varsles 30 dage forud. Du kan opsige inden ændringen træder i kraft."
+        }
+      }
+    },
+    "s03": {
+      "eyebrow": "03",
+      "title": "Sundheds-disclaimer",
+      "p1Emphasis": "Du træner på eget ansvar.",
+      "p1": " Vores coaching og AI-feedback erstatter ikke medicinsk eller fysioterapeutisk rådgivning. Du bør konsultere en læge før start af et nyt træningsprogram, særligt hvis du har eksisterende skader, hjertesygdomme, eller andre helbredsmæssige forhold.",
+      "p2": "AI form-checks er en teknisk vurdering, ikke en endelig kvalitetssikring. Mikael Munk gennemgår personligt inden for 24 timer, men ansvaret for at løfte sikkert ligger hos dig."
+    },
+    "s04": {
+      "eyebrow": "04",
+      "title": "Acceptabel brug",
+      "items": {
+        "personal": {
+          "k": "Personligt",
+          "v": "Din konto er personlig. Del ikke login eller invite-koder."
+        },
+        "respect": {
+          "k": "Respekt",
+          "v": "I crew-feedet: konstruktiv feedback, ingen hate, ingen ads, ingen spam."
+        },
+        "content": {
+          "k": "Indhold",
+          "v": "Du beholder ophavsret til dine posts og videos. Vi har en evig licens til at vise dem inden for platformen."
+        },
+        "suspension": {
+          "k": "Suspension",
+          "v": "Vi kan suspendere konti der bryder reglerne. Vi giver besked og chance for at rette hvis muligt."
+        }
+      }
+    },
+    "s05": {
+      "eyebrow": "05",
+      "title": "Reps og indløsninger",
+      "p1": "Reps har ingen kontant-værdi og kan ikke konverteres til penge eller overføres mellem medlemmer. De udløber ikke — men hvis du sletter din konto eller opsiger dit medlemskab, mister du adgangen til både balance og indløsninger.",
+      "p2": "Limited drops sendes med GLS når Mikael har bekræftet — typisk inden for 5 hverdage. Custom-broderede produkter har 2-3 ugers leveringstid."
+    },
+    "s06": {
+      "eyebrow": "06",
+      "title": "Ansvarsbegrænsning",
+      "body": "Vores samlede ansvar over for dig er begrænset til det beløb du har betalt i medlemsskab de seneste 12 måneder. Vi er ikke ansvarlige for indirekte tab, tabt fortjeneste eller skader som følge af tjenestens utilgængelighed. Dette begrænser ikke ansvar der ikke kan fraskrives efter dansk lov."
+    },
+    "s07": {
+      "eyebrow": "07",
+      "title": "Lovvalg + tvister",
+      "body": "Disse vilkår er underlagt dansk ret. Tvister der ikke kan løses i mindelighed, afgøres ved Københavns Byret som første instans."
+    }
+  }
+}

@@ -1,10 +1,17 @@
 /**
  * Email — sent when a member is @mentioned in a post comment.
  * Same dark-on-brand style as coach-review template.
+ *
+ * Localized per recipient via `members.locale`.
  */
 import "server-only";
 import { sendEmail, type SendResult } from "@/lib/email/resend";
-import { emailFooterHtml } from "@/lib/email/footer";
+import {
+  emailFooterHtml,
+  emailTranslator,
+  type EmailT,
+} from "@/lib/email/footer";
+import type { Locale } from "@/i18n/config";
 
 export type MentionEmailArgs = {
   to: string;
@@ -14,6 +21,7 @@ export type MentionEmailArgs = {
   commentContent: string;
   postContext: string | null;  // first ~120 chars of the post body
   baseUrl: string;
+  locale: Locale;
 };
 
 function esc(s: string): string {
@@ -25,7 +33,8 @@ function esc(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
-function renderHtml(args: MentionEmailArgs): string {
+function renderHtml(args: MentionEmailArgs & { t: EmailT; tFooter: EmailT }): string {
+  const { t, tFooter } = args;
   const author = esc(args.authorHandle);
   const recipient = esc(args.recipientHandle);
   const comment = esc(args.commentContent).replace(/\n/g, "<br>");
@@ -40,7 +49,7 @@ function renderHtml(args: MentionEmailArgs): string {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="dark light">
-  <title>Du blev nævnt — MakeIt // HQ</title>
+  <title>${esc(t("title"))}</title>
 </head>
 <body style="margin:0;padding:0;background:#0A0A0B;color:#F5F2EC;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0A0A0B;">
@@ -53,17 +62,17 @@ function renderHtml(args: MentionEmailArgs): string {
         </td></tr>
         <tr><td style="padding-bottom:8px;">
           <span style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#A8A6A0;">
-            Du blev nævnt
+            ${esc(t("eyebrow"))}
           </span>
         </td></tr>
         <tr><td style="padding-bottom:20px;">
           <h1 style="margin:0;font-weight:900;font-size:26px;line-height:1.1;letter-spacing:-0.02em;color:#F5F2EC;">
-            @${author} nævnte dig i en kommentar.
+            ${esc(t("headline", { author }))}
           </h1>
         </td></tr>
         <tr><td style="padding-bottom:8px;">
           <p style="margin:0;font-size:15px;line-height:1.6;color:#A8A6A0;">
-            Hej @${recipient} — her er hvad de skrev:
+            ${esc(t("greeting", { recipient }))}
           </p>
         </td></tr>
         <tr><td>
@@ -79,13 +88,12 @@ function renderHtml(args: MentionEmailArgs): string {
         </td></tr>
         <tr><td style="padding-top:16px;padding-bottom:32px;">
           <a href="${ctaUrl}" style="display:inline-block;background:#F5F2EC;color:#0A0A0B;padding:14px 28px;border-radius:999px;font-weight:500;text-decoration:none;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;font-family:'SF Mono',Menlo,Consolas,monospace;">
-            Svar i feedet →
+            ${esc(t("cta"))}
           </a>
         </td></tr>
         <tr><td style="border-top:1px solid rgba(245,242,236,0.08);padding-top:20px;">
           <p style="margin:0 0 6px;color:#56554F;font-size:11px;line-height:1.7;">
-            Du modtager kun denne mail når et crew-medlem har skrevet @${recipient}.
-            Slå mention-mails fra i indstillinger på din profil hvis det bliver for meget.
+            ${esc(tFooter("mentionNote", { handle: recipient }))}
           </p>
           <p style="margin:12px 0 0;color:#56554F;font-size:11px;line-height:1.7;">
             ${emailFooterHtml()}
@@ -98,27 +106,30 @@ function renderHtml(args: MentionEmailArgs): string {
 </html>`;
 }
 
-function renderText(args: MentionEmailArgs): string {
+function renderText(args: MentionEmailArgs & { t: EmailT }): string {
+  const { t } = args;
   return [
-    `@${args.authorHandle} nævnte dig i en kommentar.`,
+    t("text.headline", { author: args.authorHandle }),
     "",
-    args.postContext ? `Posten:\n${args.postContext}` : "",
+    args.postContext ? t("text.postHeader", { context: args.postContext }) : "",
     "",
-    `Kommentar:\n${args.commentContent}`,
+    t("text.commentHeader", { content: args.commentContent }),
     "",
-    `Åbn: ${args.baseUrl}/community`,
+    t("text.open", { url: `${args.baseUrl}/community` }),
     "",
-    "— MakeIt // HQ",
+    t("text.signoff"),
   ]
     .filter(Boolean)
     .join("\n");
 }
 
 export async function sendMentionEmail(args: MentionEmailArgs): Promise<SendResult> {
+  const t = emailTranslator(args.locale, "Email.mention");
+  const tFooter = emailTranslator(args.locale, "Email.footer");
   return sendEmail({
     to: args.to,
-    subject: `@${args.authorHandle} nævnte dig i en kommentar`,
-    html: renderHtml(args),
-    text: renderText(args),
+    subject: t("subject", { author: args.authorHandle }),
+    html: renderHtml({ ...args, t, tFooter }),
+    text: renderText({ ...args, t }),
   });
 }

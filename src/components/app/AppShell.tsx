@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Logo from "@/components/Logo";
 import { cn } from "@/lib/utils";
 import type { Member } from "@/lib/auth";
@@ -9,14 +10,14 @@ import { logoutAction } from "@/app/(app)/actions";
 import MobileTabBar from "@/components/app/MobileTabBar";
 
 const NAV = [
-  { href: "/dashboard", label: "Today",     num: "01" },
-  { href: "/coaching",  label: "Træn",      num: "02" },
-  { href: "/nutrition", label: "Mad",       num: "03" },
-  { href: "/community", label: "Crew",      num: "04" },
-  { href: "/reps",      label: "Reps",      num: "05" },
-  { href: "/profile",   label: "Mig",       num: "06" },
-  { href: "/messages",  label: "Beskeder",  num: "07" },
-];
+  { href: "/dashboard", labelKey: "today",    num: "01" },
+  { href: "/coaching",  labelKey: "train",    num: "02" },
+  { href: "/nutrition", labelKey: "food",     num: "03" },
+  { href: "/community", labelKey: "crew",     num: "04" },
+  { href: "/reps",      labelKey: "reps",     num: "05" },
+  { href: "/profile",   labelKey: "me",       num: "06" },
+  { href: "/messages",  labelKey: "messages", num: "07" },
+] as const;
 
 export default function AppShell({
   member,
@@ -28,6 +29,7 @@ export default function AppShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const t = useTranslations("Nav");
   // Immersive mode for the active workout — hide chrome.
   const immersive = pathname?.startsWith("/session");
 
@@ -64,11 +66,11 @@ export default function AppShell({
                     <span className="numeric text-[11px] text-fg-faint group-hover:text-fg-dim w-6">
                       {item.num}
                     </span>
-                    <span className="tracking-tight">{item.label}</span>
+                    <span className="tracking-tight">{t(`links.${item.labelKey}`)}</span>
                     {item.href === "/messages" && unreadMessages > 0 ? (
                       <span
                         className="ml-auto numeric text-[10px] tabular-nums px-1.5 py-0.5 rounded-full bg-fg text-bg"
-                        aria-label={`${unreadMessages} ulæste`}
+                        aria-label={t("shell.unread", { count: unreadMessages })}
                       >
                         {unreadMessages > 99 ? "99+" : unreadMessages}
                       </span>
@@ -89,9 +91,9 @@ export default function AppShell({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
-                    Coach
+                    {t("shell.coachBadge")}
                   </span>
-                  <span className="text-sm">Konsol</span>
+                  <span className="text-sm">{t("shell.coachConsole")}</span>
                 </div>
                 <span className="text-fg-dim group-hover:text-fg" aria-hidden>→</span>
               </div>
@@ -100,7 +102,7 @@ export default function AppShell({
           <div className="surface-2 p-4 rounded-lg">
             <div className="flex items-center justify-between">
               <div>
-                <div className="eyebrow mb-1.5">Tier</div>
+                <div className="eyebrow mb-1.5">{t("shell.tier")}</div>
                 <div className="font-display text-2xl">{member.tier}</div>
               </div>
               <div className="numeric text-fg-faint text-xs">
@@ -110,7 +112,7 @@ export default function AppShell({
           </div>
           <form action={logoutAction} className="mt-3">
             <button type="submit" className="btn btn-ghost btn-sm w-full">
-              Log ud
+              {t("shell.logout")}
             </button>
           </form>
         </div>
@@ -123,7 +125,7 @@ export default function AppShell({
           <Link
             href="/profile"
             className="size-9 rounded-full surface-2 flex items-center justify-center text-xs font-mono uppercase"
-            aria-label="Min profil"
+            aria-label={t("shell.myProfile")}
           >
             {member.handle.slice(0, 2)}
           </Link>
