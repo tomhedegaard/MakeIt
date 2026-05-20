@@ -49,6 +49,7 @@ export type Exercise = {
   videoUrl: string | null;
   thumbnailUrl: string | null;
   displayOrder: number;
+  isPublished: boolean;
   phases: ExercisePhase[];
 };
 
@@ -77,6 +78,7 @@ type ExerciseRow = {
   video_url: string | null;
   thumbnail_url: string | null;
   display_order: number | null;
+  is_published: boolean | null;
   phases: unknown;
 };
 
@@ -84,7 +86,7 @@ const SELECT_COLS =
   "id, slug, name, category, pattern, equipment, difficulty, " +
   "primary_muscles, secondary_muscles, tertiary_muscles, " +
   "cues, mistakes, why_matters, setup, progression, regression, " +
-  "demo_asset_url, video_url, thumbnail_url, display_order, phases";
+  "demo_asset_url, video_url, thumbnail_url, display_order, is_published, phases";
 
 function isExercisePhase(p: unknown): p is ExercisePhase {
   if (!p || typeof p !== "object") return false;
@@ -123,6 +125,7 @@ function asExercise(r: ExerciseRow): Exercise {
     videoUrl: r.video_url,
     thumbnailUrl: r.thumbnail_url,
     displayOrder: r.display_order ?? 0,
+    isPublished: r.is_published ?? false,
     phases: Array.isArray(r.phases) ? (r.phases as unknown[]).filter(isExercisePhase) : [],
   };
 }
@@ -173,6 +176,39 @@ export async function getExerciseBySlug(slug: string): Promise<Exercise | null> 
     .select(SELECT_COLS)
     .eq("slug", slug)
     .eq("is_published", true)
+    .maybeSingle();
+
+  return data ? asExercise(data as unknown as ExerciseRow) : null;
+}
+
+/* ---------------------------------------------------------------- *
+ * Coach editor — reads include unpublished drafts
+ * ---------------------------------------------------------------- */
+
+/** Every exercise, published + draft, for the /coach/exercises list. */
+export async function listAllExercisesForCoach(): Promise<Exercise[]> {
+  const supabase = await createClient();
+  if (!supabase) return MOCK_EXERCISES;
+
+  const { data } = await supabase
+    .from("exercises")
+    .select(SELECT_COLS)
+    .order("display_order", { ascending: true });
+
+  return (data ?? []).map((r) => asExercise(r as unknown as ExerciseRow));
+}
+
+/** A single exercise for the editor — resolves drafts too. */
+export async function getExerciseForEdit(
+  slug: string,
+): Promise<Exercise | null> {
+  const supabase = await createClient();
+  if (!supabase) return MOCK_EXERCISES.find((e) => e.slug === slug) ?? null;
+
+  const { data } = await supabase
+    .from("exercises")
+    .select(SELECT_COLS)
+    .eq("slug", slug)
     .maybeSingle();
 
   return data ? asExercise(data as unknown as ExerciseRow) : null;
@@ -252,6 +288,7 @@ const MOCK_EXERCISES: Exercise[] = [
     videoUrl: null,
     thumbnailUrl: null,
     displayOrder: 10,
+    isPublished: true,
     phases: [
       {
         name: "Descent",
@@ -314,6 +351,7 @@ const MOCK_EXERCISES: Exercise[] = [
     videoUrl: null,
     thumbnailUrl: null,
     displayOrder: 30,
+    isPublished: true,
     phases: [
       {
         name: "Setup",
@@ -376,6 +414,7 @@ const MOCK_EXERCISES: Exercise[] = [
     videoUrl: null,
     thumbnailUrl: null,
     displayOrder: 50,
+    isPublished: true,
     phases: [
       {
         name: "Descent",
@@ -437,6 +476,7 @@ const MOCK_EXERCISES: Exercise[] = [
     videoUrl: null,
     thumbnailUrl: null,
     displayOrder: 70,
+    isPublished: true,
     phases: [
       {
         name: "Pres start",

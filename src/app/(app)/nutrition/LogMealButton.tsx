@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import type { MealSlot } from "@/lib/data/nutrition";
 import { logMealAction } from "./actions";
+import StreakCelebration from "@/components/nutrition/StreakCelebration";
 
 const SLOT_LABELS: Record<MealSlot, string> = {
   morgen: "Morgen",
@@ -28,6 +29,7 @@ export default function LogMealButton({
   const [pending, startTransition] = useTransition();
   const [rating, setRating] = useState<number>(4);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [celebration, setCelebration] = useState<number | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
@@ -47,11 +49,12 @@ export default function LogMealButton({
     const formData = new FormData(e.currentTarget);
     formData.set("rating", String(rating));
     startTransition(() => {
-      logMealAction(formData).then(() => {
+      logMealAction(formData).then((res) => {
         setOpen(false);
         setPhotoPreview(null);
         setRating(4);
         formRef.current?.reset();
+        if (res?.streakMilestone) setCelebration(res.streakMilestone);
       });
     });
   }
@@ -196,6 +199,11 @@ export default function LogMealButton({
           </form>
         </div>
       ) : null}
+
+      <StreakCelebration
+        milestone={celebration}
+        onClose={() => setCelebration(null)}
+      />
     </>
   );
 }

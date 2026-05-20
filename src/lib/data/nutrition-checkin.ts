@@ -269,7 +269,18 @@ export async function getDailyCheckIn(memberId: string): Promise<DailyCheckIn> {
   };
 }
 
-const COOKING_MILESTONES = [3, 7, 14, 30] as const;
+/**
+ * Cooking-streak milestones. Mirrors the Reps payout tiers in the
+ * 0015 migration trigger — keep these in sync so the celebration,
+ * the "+50 om N dage" hint, and the actual award all agree.
+ */
+export const COOKING_MILESTONES = [3, 7, 14, 30] as const;
+
+export type CookingMilestone = (typeof COOKING_MILESTONES)[number];
+
+export function isCookingMilestone(n: number): n is CookingMilestone {
+  return (COOKING_MILESTONES as readonly number[]).includes(n);
+}
 
 function nextMilestoneFor(streakDays: number): { days: number; daysAway: number } | null {
   const next = COOKING_MILESTONES.find((m) => m > streakDays);
@@ -288,7 +299,7 @@ function nextMilestoneFor(streakDays: number): { days: number; daysAway: number 
  * the card and the milestone payout (+50 at 3/7/14/30) are the same
  * number. Capped at 365 to bound the walk; walks backwards from today.
  */
-async function computeStreak(
+export async function computeStreak(
   memberId: string,
   todayIso: string,
   supabase: NonNullable<Awaited<ReturnType<typeof createClient>>>

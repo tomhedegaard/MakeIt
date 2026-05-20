@@ -6,6 +6,13 @@ import {
   dominantView,
   getExerciseBySlug,
 } from "@/lib/data/exercises";
+import {
+  FORM_CHECK_LIMIT,
+  type FormCheckQuota,
+} from "@/lib/data/form-check-quota";
+import { getFormCheckQuota } from "@/lib/data/form-check-quota-server";
+import { getSession } from "@/lib/auth";
+import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import FormCheckTrigger from "@/components/exercise/FormCheckTrigger";
 import ExerciseHero from "./ExerciseHero";
 
@@ -50,6 +57,30 @@ export default async function ExerciseDetailPage({
   if (!ex) notFound();
 
   const view = dominantView(ex);
+
+  // Form-check quota for the current member — drives the upgrade CTA
+  // when they've used their tier allowance. Demo-mode = Legend (unlimited).
+  let quota: FormCheckQuota;
+  if (SUPABASE_ENABLED) {
+    const member = await getSession();
+    quota = member
+      ? await getFormCheckQuota(member.id, member.tier)
+      : {
+          used: 0,
+          limit: 0,
+          remaining: 0,
+          resetsAt: new Date().toISOString(),
+          hasRemaining: false,
+        };
+  } else {
+    quota = {
+      used: 0,
+      limit: FORM_CHECK_LIMIT.Legend,
+      remaining: FORM_CHECK_LIMIT.Legend,
+      resetsAt: new Date().toISOString(),
+      hasRemaining: true,
+    };
+  }
 
   return (
     <>
@@ -121,6 +152,7 @@ export default async function ExerciseDetailPage({
             exerciseName={ex.name}
             cues={ex.cues}
             mistakes={ex.mistakes}
+            quota={quota}
           />
         </section>
 

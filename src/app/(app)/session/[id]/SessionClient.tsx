@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Exercise, Session } from "@/lib/workout";
+import type { FormCheckQuota } from "@/lib/data/form-check-quota";
 import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
 import { MUSCLE_LABELS } from "@/lib/data/muscle-groups";
 import Stepper from "@/components/ui/Stepper";
@@ -58,7 +59,13 @@ function findResumePoint(session: Session): { exIdx: number; setIdx: number } {
   return { exIdx: last, setIdx: session.exercises[last].sets.length - 1 };
 }
 
-export default function SessionClient({ session }: { session: Session }) {
+export default function SessionClient({
+  session,
+  formCheckQuota,
+}: {
+  session: Session;
+  formCheckQuota: FormCheckQuota;
+}) {
   const router = useRouter();
 
   const initialLogged = useMemo(() => buildInitialLogged(session), [session]);
@@ -393,6 +400,7 @@ export default function SessionClient({ session }: { session: Session }) {
               }
             : undefined
         }
+        quota={formCheckQuota}
       />
     </div>
   );
