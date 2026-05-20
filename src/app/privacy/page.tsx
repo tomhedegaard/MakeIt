@@ -43,6 +43,7 @@ export default async function PrivacyPage() {
               [t("s01.items.account.k"), t("s01.items.account.v")],
               [t("s01.items.training.k"), t("s01.items.training.v")],
               [t("s01.items.formChecks.k"), t("s01.items.formChecks.v")],
+              [t("s01.items.wearable.k"), t("s01.items.wearable.v")],
               [t("s01.items.social.k"), t("s01.items.social.v")],
               [t("s01.items.reps.k"), t("s01.items.reps.v")],
               [t("s01.items.technical.k"), t("s01.items.technical.v")],
@@ -105,6 +106,40 @@ export default async function PrivacyPage() {
         <Section eyebrow={t("s07.eyebrow")} title={t("s07.title")}>
           <p>
             {t("s07.body")}
+          </p>
+        </Section>
+
+        <Section eyebrow="08" title="Wearable-integrationer">
+          <p>
+            {COMPANY.product} kan forbindes med din wearable, så din træning kan
+            tilpasses din restitution. Integrationen er <strong>frivillig</strong> og
+            sker først efter du udtrykkeligt giver samtykke i et OAuth-flow hos
+            udbyderen.
+          </p>
+          <p className="mt-4">
+            <strong>Whoop:</strong> Når du forbinder din Whoop-konto, henter vi via
+            Whoops API følgende på dine vegne:
+          </p>
+          <List
+            items={[
+              ["Recovery", "Daglig recovery-score, hvilepuls, HRV."],
+              ["Søvn", "Søvnvarighed, søvnfaser, søvn-performance."],
+              ["Strain & workouts", "Dagligt strain samt registrerede træningspas."],
+              ["Cyklus", "Whoops fysiologiske døgncyklus-data."],
+              ["Profil", "Navn og basale profildata fra din Whoop-konto."],
+            ]}
+          />
+          <p className="mt-4">
+            Disse data bruges udelukkende til at personalisere dit program og din
+            form-feedback inde i {COMPANY.product}. De gemmes i EU (Supabase,
+            Frankfurt), deles ikke videre, og sælges aldrig.
+          </p>
+          <p className="mt-4">
+            Du kan til enhver tid afbryde forbindelsen under Indstillinger. Når du
+            gør det, tilbagekaldes vores adgangstoken hos Whoop, og de hentede
+            wearable-data slettes inden for 30 dage. Det samme sker hvis du sletter
+            din {COMPANY.product}-konto. Du kan også tilbagekalde adgangen direkte i
+            din Whoop-konto.
           </p>
         </Section>
 

@@ -22,6 +22,10 @@
           "k": "Form-checks",
           "v": "Video-uploads (privat bucket), AI-genererede vurderinger, coach-noter."
         },
+        "wearable": {
+          "k": "Wearable-data",
+          "v": "Hvis du forbinder en wearable (fx Whoop): recovery, søvn, strain/workout, cyklus og basale profildata — kun efter dit samtykke. Se sektion 08."
+        },
         "social": {
           "k": "Social",
           "v": "Posts, kommentarer, reaktioner, @mentions."

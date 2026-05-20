@@ -22,6 +22,10 @@
           "k": "Form checks",
           "v": "Video uploads (private bucket), AI-generated assessments, coach notes."
         },
+        "wearable": {
+          "k": "Wearable data",
+          "v": "If you connect a wearable (e.g. Whoop): recovery, sleep, strain/workout, cycle and basic profile data — only with your explicit consent. See section 08."
+        },
         "social": {
           "k": "Social",
           "v": "Posts, comments, reactions, @mentions."

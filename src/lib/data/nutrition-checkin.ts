@@ -86,7 +86,7 @@ function copenhagenHour(): number {
   return Math.min(23, Math.max(0, n));
 }
 
-function copenhagenIsoDate(): string {
+export function copenhagenIsoDate(): string {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Europe/Copenhagen",
     year: "numeric",
