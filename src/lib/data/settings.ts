@@ -57,6 +57,61 @@ export async function getMemberSettings(memberId: string): Promise<MemberSetting
   };
 }
 
+export type HrvConnection = {
+  id: string;
+  provider: string;
+  status: string;
+  lastSyncedAt: string | null;
+  isPrimary: boolean;
+};
+
+export type HrvSettings = {
+  connections: HrvConnection[];
+  cycleTrackingEnabled: boolean;
+};
+
+/**
+ * Resolves the member's HRV section data for the settings page:
+ * their non-revoked wearable connections plus the cycle-tracking flag.
+ *
+ * Demo mode (`!SUPABASE_ENABLED`, i.e. no Supabase client) has no
+ * connection/settings tables — returns an empty, tracking-off state.
+ */
+export async function getMemberHrvSettings(
+  memberId: string
+): Promise<HrvSettings> {
+  const supabase = await createClient();
+  if (!supabase) return { connections: [], cycleTrackingEnabled: false };
+
+  const [{ data: connRows }, { data: settingsRow }] = await Promise.all([
+    supabase
+      .from("hrv_wearable_connections")
+      .select("id, provider, status, last_synced_at, is_primary")
+      .eq("member_id", memberId)
+      .neq("status", "revoked")
+      .order("is_primary", { ascending: false })
+      .order("last_synced_at", { ascending: false }),
+    supabase
+      .from("hrv_settings")
+      .select("cycle_tracking_enabled")
+      .eq("member_id", memberId)
+      .maybeSingle(),
+  ]);
+
+  const connections: HrvConnection[] = (connRows ?? []).map((row) => ({
+    id: row.id as string,
+    provider: row.provider as string,
+    status: row.status as string,
+    lastSyncedAt: (row.last_synced_at as string | null) ?? null,
+    isPrimary: !!row.is_primary,
+  }));
+
+  return {
+    connections,
+    cycleTrackingEnabled: !!settingsRow?.cycle_tracking_enabled,
+  };
+}
+
 export type NotifPrefKey =
   | "notifFormCheckReview"
   | "notifMention"

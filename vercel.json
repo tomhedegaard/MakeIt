@@ -1,13 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "crons": [
-    {
-      "path": "/api/cron/coach-digest",
-      "schedule": "0 6 * * 1"
-    },
-    {
-      "path": "/api/cron/streak-milestone-nudge",
-      "schedule": "0 15 * * *"
-    }
+    { "path": "/api/cron/coach-digest", "schedule": "0 6 * * 1" },
+    { "path": "/api/cron/streak-milestone-nudge", "schedule": "0 15 * * *" },
+    { "path": "/api/cron/hrv-wearable-sync", "schedule": "0 5 * * *" },
+    { "path": "/api/cron/hrv-alert-detect", "schedule": "0 6 * * *" },
+    { "path": "/api/cron/hrv-weekly-insights", "schedule": "0 18 * * 0" }
   ]
 }

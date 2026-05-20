@@ -27,6 +27,13 @@ export default async function ValueSection() {
       body: t("pillar3.body"),
       foot: t("pillar3.foot"),
     },
+    {
+      n: "04",
+      eyebrow: t("pillar4.eyebrow"),
+      title: t("pillar4.title"),
+      body: t("pillar4.body"),
+      foot: t("pillar4.foot"),
+    },
   ];
 
   return (
@@ -75,7 +82,7 @@ export default async function ValueSection() {
           {t("positioningSub")}
         </p>
 
-        <div className="grid gap-px bg-line border hairline md:grid-cols-3">
+        <div className="grid gap-px bg-line border hairline md:grid-cols-2 lg:grid-cols-4">
           {PILLARS.map((p, i) => (
             <article
               key={p.n}

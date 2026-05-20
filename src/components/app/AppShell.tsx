@@ -14,9 +14,10 @@ const NAV = [
   { href: "/coaching",  labelKey: "train",    num: "02" },
   { href: "/nutrition", labelKey: "food",     num: "03" },
   { href: "/community", labelKey: "crew",     num: "04" },
-  { href: "/reps",      labelKey: "reps",     num: "05" },
-  { href: "/profile",   labelKey: "me",       num: "06" },
-  { href: "/messages",  labelKey: "messages", num: "07" },
+  { href: "/hrv",       labelKey: "hrv",      num: "05" },
+  { href: "/reps",      labelKey: "reps",     num: "06" },
+  { href: "/profile",   labelKey: "me",       num: "07" },
+  { href: "/messages",  labelKey: "messages", num: "08" },
 ] as const;
 
 export default function AppShell({

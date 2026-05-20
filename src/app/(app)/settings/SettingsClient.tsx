@@ -8,17 +8,20 @@ import {
   updateNotifPrefsAction,
   deleteAccountAction,
 } from "./actions";
-import type { MemberSettings } from "@/lib/data/settings";
+import type { MemberSettings, HrvSettings } from "@/lib/data/settings";
 import PushToggle from "@/components/push/PushToggle";
 import LanguageSelector from "@/components/LanguageSelector";
+import HrvSettingsSection from "@/components/hrv/HrvSettingsSection";
 
 type Status = { ok: boolean; text: string } | null;
 
 export default function SettingsClient({
   settings,
+  hrv,
   vapidPublicKey,
 }: {
   settings: MemberSettings;
+  hrv: HrvSettings;
   vapidPublicKey: string;
 }) {
   const router = useRouter();
@@ -212,6 +215,9 @@ export default function SettingsClient({
           <StatusLabel status={prefsMsg} />
         </div>
       </section>
+
+      {/* HRV */}
+      <HrvSettingsSection hrv={hrv} />
 
       {/* Account info — read-only */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7">

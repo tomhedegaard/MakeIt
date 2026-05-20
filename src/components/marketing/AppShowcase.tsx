@@ -23,14 +23,17 @@ export default async function AppShowcase() {
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <Phone label={t("phone.todayLabel")} detail={t("phone.todayDetail")} delay={0}>
             <TodayScreen />
           </Phone>
           <Phone label={t("phone.sessionLabel")} detail={t("phone.sessionDetail")} delay={120}>
             <SessionScreen />
           </Phone>
-          <Phone label={t("phone.formCheckLabel")} detail={t("phone.formCheckDetail")} delay={240}>
+          <Phone label={t("phone.readinessLabel")} detail={t("phone.readinessDetail")} delay={240}>
+            <ReadinessScreen />
+          </Phone>
+          <Phone label={t("phone.formCheckLabel")} detail={t("phone.formCheckDetail")} delay={360}>
             <FormCheckScreen />
           </Phone>
         </div>
@@ -196,6 +199,76 @@ async function SessionScreen() {
         style={{ background: "var(--fg)", color: "var(--bg)" }}
       >
         {t("logSet")}
+      </div>
+    </div>
+  );
+}
+
+async function ReadinessScreen() {
+  const t = await getTranslations("Marketing.app.readiness");
+  // 5-bucket vertical ladder; the member's current bucket ("normal") is filled.
+  const BUCKETS: { id: string; label: string; filled: boolean }[] = [
+    { id: "very_high", label: t("buckets.veryHigh"), filled: false },
+    { id: "high", label: t("buckets.high"), filled: false },
+    { id: "normal", label: t("buckets.normal"), filled: true },
+    { id: "low", label: t("buckets.low"), filled: false },
+    { id: "very_low", label: t("buckets.veryLow"), filled: false },
+  ];
+  return (
+    <div className="flex flex-col h-full text-[10px]">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <div className="text-[8px] tracking-[0.18em] uppercase text-fg-dim font-mono">{t("todayLabel")}</div>
+          <div className="font-display text-lg leading-none mt-0.5">@anton</div>
+        </div>
+        <div className="text-right">
+          <div className="text-[8px] tracking-[0.18em] uppercase text-fg-faint font-mono">{t("sevenDayLabel")}</div>
+          <div className="numeric text-base">58 <span className="text-fg-dim text-[8px]">{t("sevenDayUnit")}</span></div>
+        </div>
+      </div>
+
+      <div className="surface-2 rounded-xl p-3 flex-1 flex flex-col">
+        <div className="flex items-baseline gap-2 mb-1">
+          <span className="numeric text-3xl leading-none">62</span>
+          <span className="text-[9px] text-fg-dim font-mono">{t("rmssdUnit")}</span>
+        </div>
+        <div className="text-[8px] text-fg-faint font-mono uppercase tracking-[0.14em] mb-3">
+          {t("syncSource")}
+        </div>
+
+        <ul className="space-y-1 mb-3">
+          {BUCKETS.map((b) => (
+            <li key={b.id} className="flex items-center gap-2">
+              <span
+                aria-hidden
+                className="h-1.5 w-6 rounded-full border hairline-strong"
+                style={b.filled ? { background: "var(--fg)", borderColor: "var(--fg)" } : {}}
+              />
+              <span
+                className={
+                  "text-[8.5px] " + (b.filled ? "text-fg" : "text-fg-faint")
+                }
+              >
+                {b.label}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="surface-2 rounded-lg p-2 mb-2">
+          <div className="text-[7px] font-mono uppercase tracking-[0.16em] text-fg-dim mb-1">
+            {t("weeklyObservationLabel")}
+          </div>
+          <p className="text-[8.5px] text-fg/85 leading-snug">
+            {t("weeklyObservation")}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-3 gap-px bg-line border hairline rounded mt-auto">
+          <Mini v="62" k={t("miniMs")} />
+          <Mini v="58" k={t("mini7d")} />
+          <Mini v="55" k={t("mini60d")} />
+        </div>
       </div>
     </div>
   );

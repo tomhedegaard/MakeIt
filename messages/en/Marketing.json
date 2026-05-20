@@ -81,6 +81,15 @@
       "bullet2": "Limited drops, members only",
       "bullet3": "Reps never convert to cash — only to real gear",
       "statLabel": "Tiers"
+    },
+    "restitution": {
+      "label": "05 — Recovery",
+      "title": "Your body sets the week's load.",
+      "body": "Connect WHOOP, Oura or Polar. Every morning your RMSSD lands alongside your 60-day baseline, and the program knows when to push — and when a deload week gives you more than a heavy set. Sunday night the coach writes a short observation on your week; never diagnoses, never made-up numbers.",
+      "bullet1": "Wearable-first — WHOOP · Oura · Polar (Apple Watch ships with the iPhone app)",
+      "bullet2": "5-bucket readiness ladder · no fake 0-100 score",
+      "bullet3": "Weekly insight in Danish · honest correlations (alcohol, sleep)",
+      "statLabel": "Wearables"
     }
   },
   "tiers": {
@@ -119,6 +128,8 @@
       "todayDetail": "Today's session, one tap to start",
       "sessionLabel": "Active session",
       "sessionDetail": "Set-by-set with RPE and rest timer",
+      "readinessLabel": "Readiness",
+      "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
       "formCheckLabel": "Form check",
       "formCheckDetail": "Claude grades it in 6 sec."
     },
@@ -143,6 +154,25 @@
       "miniRpe": "rpe",
       "weightLabel": "Weight",
       "logSet": "Log set →"
+    },
+    "readiness": {
+      "todayLabel": "Today · HRV",
+      "sevenDayLabel": "7-d avg",
+      "sevenDayUnit": "ms",
+      "rmssdUnit": "ms RMSSD",
+      "syncSource": "synced from WHOOP · 06:12",
+      "buckets": {
+        "veryHigh": "Way above",
+        "high": "Above",
+        "normal": "Normal",
+        "low": "Below",
+        "veryLow": "Way below"
+      },
+      "weeklyObservationLabel": "This week's observation",
+      "weeklyObservation": "Sleep under 7 h on three nights looks like it's pulling RMSSD down by ~8%.",
+      "miniMs": "ms",
+      "mini7d": "7-d",
+      "mini60d": "60-d"
     },
     "formCheck": {
       "eyebrow": "AI form check",
@@ -182,6 +212,12 @@
       "title": "Crew + coach when it counts",
       "body": "PR celebrations, deload talk, and 1:1 time with Mikael Munk when you're closing in on a new ceiling. The rest of the time, the community keeps you accountable.",
       "foot": "Crew feed · 1:1 at milestones"
+    },
+    "pillar4": {
+      "eyebrow": "Recovery that measures itself",
+      "title": "Wearable + HRV in the program",
+      "body": "Connect WHOOP, Oura or Polar. Your morning RMSSD and 60-day baseline dial in the week's load, and the coach gets a heads-up when your nervous system is shouting three days running.",
+      "foot": "Auto-sync · honest numbers, no 0-100 score"
     }
   },
   "testimonials": {
@@ -259,6 +295,18 @@
       "cheaper": {
         "q": "Why is it cheaper than traditional coaching?",
         "a": "Because AI handles the generic stuff — program generation, progression, instant form feedback. Mikael and the crew then spend their time on what actually moves the needle: 1:1, milestones, and keeping you accountable. You pay for what counts."
+      },
+      "wearables": {
+        "q": "Which wearables does the HRV module support?",
+        "a": "WHOOP, Oura and Polar (H10 and the O20 series) are live. You connect via OAuth from settings — we never store your login details, only tokens encrypted at rest. Apple Watch support ships with the MakeIt iPhone app. Garmin is on the roadmap, but not in v1."
+      },
+      "hrvScore": {
+        "q": "Why don't I get an HRV score from 0 to 100?",
+        "a": "Because a number from 0 to 100 promises a precision that doesn't exist. We show your actual RMSSD in milliseconds, your own 60-day baseline band and a 5-bucket readiness ladder — so you see where you sit relative to your own normal, not a made-up scale. You also can't compare your HRV with other people's; healthy RMSSD ranges from roughly 10 to 200 ms depending on age, sex and shape."
+      },
+      "hrvPrivacy": {
+        "q": "Who sees my HRV data and lifestyle logs?",
+        "a": "You by default. Coach sharing is a toggle in the HRV settings — flip it on and Mikael can see your readings, lifestyle tags and weekly insights, and his red-flag queue only triggers on opted-in members. Flip it off and the HRV module runs quietly for you alone. We never pass your wearable data on."
       }
     }
   },

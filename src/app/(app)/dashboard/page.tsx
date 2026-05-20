@@ -4,6 +4,8 @@ import Container from "@/components/Container";
 import { getSession } from "@/lib/auth";
 import { TODAY_SESSION, totalSets } from "@/lib/workout";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
+import { createClient } from "@/lib/supabase/server";
+import type { ReadinessBucket } from "@/lib/hrv/types";
 import {
   getTodayCard,
   getUpcomingSessions,
@@ -71,6 +73,47 @@ function fmtUpcomingDate(iso: string | null, t: Translator): string {
   return d.toLocaleDateString("da-DK", { weekday: "short" }).replace(".", "");
 }
 
+/** One-word Danish readiness labels for the compact dashboard chip. */
+const HRV_CHIP_LABEL: Record<ReadinessBucket, string> = {
+  very_low: "Lav",
+  low: "Lav",
+  normal: "Normal",
+  high: "Høj",
+  very_high: "Høj",
+};
+
+type HrvChipData = {
+  rmssdMs: number;
+  readiness: string | null;
+};
+
+/**
+ * Latest HRV reading for the dashboard chip. Returns null in demo mode
+ * or when the member has no synced readings (no wearable connection /
+ * first sync pending) — the chip then shows a "Forbind wearable" CTA.
+ */
+async function getHrvChipData(memberId: string): Promise<HrvChipData | null> {
+  if (!SUPABASE_ENABLED) return null;
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const { data } = await supabase
+    .from("hrv_readings")
+    .select("rmssd_ms, readiness_bucket")
+    .eq("member_id", memberId)
+    .order("measured_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!data) return null;
+
+  const bucket = (data.readiness_bucket as ReadinessBucket | null) ?? null;
+  return {
+    rmssdMs: data.rmssd_ms as number,
+    readiness: bucket ? HRV_CHIP_LABEL[bucket] : null,
+  };
+}
+
 export default async function TodayPage() {
   const member = (await getSession())!;
   const t = await getTranslations("Dashboard");
@@ -111,6 +154,9 @@ export default async function TodayPage() {
   // Tier promotion banner: surface latest unseen tier-up.
   const promotion = await getLatestUnseenPromotion(member.id);
 
+  // HRV readiness chip: latest synced reading, or a connect CTA.
+  const hrv = await getHrvChipData(member.id);
+
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       <FirstTimeTour />
@@ -138,6 +184,8 @@ export default async function TodayPage() {
       ) : null}
 
       <DailyCheckInCard checkin={checkin} variant="compact" />
+
+      <HrvChip hrv={hrv} />
 
       {reviewedCount > 0 ? (
         <Link
@@ -347,6 +395,42 @@ function CrewRow({
         </span>
       ) : null}
     </li>
+  );
+}
+
+/**
+ * Compact HRV readiness chip. Links to `/hrv`. With a synced reading
+ * it shows the latest RMSSD + a one-word readiness label; otherwise it
+ * surfaces a "Forbind wearable" CTA (demo mode / no connection).
+ */
+function HrvChip({ hrv }: { hrv: HrvChipData | null }) {
+  return (
+    <Link
+      href="/hrv"
+      className="block surface-2 rounded-lg px-5 py-4 lift group"
+    >
+      <div className="flex items-center gap-4">
+        <div className="flex-1 min-w-0">
+          <div className="eyebrow mb-1.5">HRV readiness</div>
+          {hrv ? (
+            <div className="flex items-baseline gap-2">
+              <span className="numeric text-2xl lg:text-3xl">
+                {Math.round(hrv.rmssdMs)}
+                <span className="text-fg-dim text-sm ml-1">ms</span>
+              </span>
+              {hrv.readiness ? (
+                <span className="text-sm text-fg-dim">· {hrv.readiness}</span>
+              ) : null}
+            </div>
+          ) : (
+            <div className="text-sm text-fg/90">Forbind wearable</div>
+          )}
+        </div>
+        <span className="text-fg-dim group-hover:text-fg shrink-0" aria-hidden>
+          →
+        </span>
+      </div>
+    </Link>
   );
 }
 

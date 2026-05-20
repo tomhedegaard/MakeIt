@@ -41,6 +41,18 @@ export default async function PillarsSection() {
       ],
       stat: { v: "4", k: t("reps.statLabel") },
     },
+    {
+      id: "restitution",
+      label: t("restitution.label"),
+      title: t("restitution.title"),
+      body: t("restitution.body"),
+      bullets: [
+        t("restitution.bullet1"),
+        t("restitution.bullet2"),
+        t("restitution.bullet3"),
+      ],
+      stat: { v: "3", k: t("restitution.statLabel") },
+    },
   ];
 
   return (

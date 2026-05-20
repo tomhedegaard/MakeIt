@@ -14,6 +14,9 @@ export default async function FAQ() {
     { q: t("items.pause.q"),        a: t("items.pause.a") },
     { q: t("items.irl.q"),          a: t("items.irl.a") },
     { q: t("items.cheaper.q"),      a: t("items.cheaper.a") },
+    { q: t("items.wearables.q"),    a: t("items.wearables.a") },
+    { q: t("items.hrvScore.q"),     a: t("items.hrvScore.a") },
+    { q: t("items.hrvPrivacy.q"),   a: t("items.hrvPrivacy.a") },
   ];
 
   return (

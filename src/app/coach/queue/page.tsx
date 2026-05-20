@@ -1,12 +1,16 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
-import { getPendingFormChecks } from "@/lib/data/coach";
+import { getOpenHrvAlerts, getPendingFormChecks } from "@/lib/data/coach";
 import CoachReviewButton from "@/components/coach/CoachReview";
+import HrvAlertCard from "@/components/coach/HrvAlertCard";
 
 export default async function CoachQueuePage() {
   const t = await getTranslations("Coach.queue");
-  const pending = await getPendingFormChecks(50);
+  const [hrvAlerts, pending] = await Promise.all([
+    getOpenHrvAlerts(50),
+    getPendingFormChecks(50),
+  ]);
 
   return (
     <Container className="py-6 lg:py-12 space-y-6">
@@ -17,10 +21,40 @@ export default async function CoachQueuePage() {
             {t("title")}
           </h1>
           <p className="mt-2 text-fg-dim text-sm">
-            {t("waiting", { count: pending.length })}
+            {t("waiting", { formChecks: pending.length, hrvAlerts: hrvAlerts.length })}
           </p>
         </div>
       </header>
+
+      <section className="space-y-3">
+        <div>
+          <div className="eyebrow mb-2">{t("hrvSectionEyebrow")}</div>
+          <h2 className="font-display text-2xl">
+            {t("hrvSectionHeading", { count: hrvAlerts.length })}
+          </h2>
+        </div>
+
+        {hrvAlerts.length === 0 ? (
+          <p className="text-fg-faint text-sm">
+            {t("hrvSectionEmpty")}
+          </p>
+        ) : (
+          <ul className="space-y-3">
+            {hrvAlerts.map((a) => (
+              <li key={a.id}>
+                <HrvAlertCard alert={a} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <div>
+        <div className="eyebrow mb-2">{t("formChecksSectionEyebrow")}</div>
+        <h2 className="font-display text-2xl">
+          {t("formChecksSectionHeading", { count: pending.length })}
+        </h2>
+      </div>
 
       {pending.length === 0 ? (
         <div className="surface-2 rounded-2xl p-8 text-center">

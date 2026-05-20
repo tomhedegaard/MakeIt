@@ -81,6 +81,15 @@
       "bullet2": "Limited drops kun for medlemmer",
       "bullet3": "Reps konverteres aldrig til kontanter — kun til ægte ting",
       "statLabel": "Tiers"
+    },
+    "restitution": {
+      "label": "05 — Restitution",
+      "title": "Din krop bestemmer ugens belastning.",
+      "body": "Forbind WHOOP, Oura eller Polar. Hver morgen synker dit RMSSD ind sammen med din 60-dages baseline, og programmet ved hvornår du skal presse — og hvornår en deload-uge giver dig mere end et tungt sæt. Søndag aften skriver coachen en kort observation om din uge; aldrig diagnoser, aldrig opfundne tal.",
+      "bullet1": "Wearable-first — WHOOP · Oura · Polar (Apple Watch følger med iPhone-appen)",
+      "bullet2": "5-bucket readiness ladder · ingen falsk 0-100 score",
+      "bullet3": "Ugentlig indsigt på dansk · ærlige korrelationer (alkohol, søvn)",
+      "statLabel": "Wearables"
     }
   },
   "tiers": {
@@ -119,6 +128,8 @@
       "todayDetail": "Dagens session, ét tap til start",
       "sessionLabel": "Aktiv session",
       "sessionDetail": "Sæt-for-sæt med RPE og rest-timer",
+      "readinessLabel": "Readiness",
+      "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
       "formCheckLabel": "Form-check",
       "formCheckDetail": "Claude vurderer på 6 sek."
     },
@@ -143,6 +154,25 @@
       "miniRpe": "rpe",
       "weightLabel": "Vægt",
       "logSet": "Log sæt →"
+    },
+    "readiness": {
+      "todayLabel": "I dag · HRV",
+      "sevenDayLabel": "7-d snit",
+      "sevenDayUnit": "ms",
+      "rmssdUnit": "ms RMSSD",
+      "syncSource": "synced fra WHOOP · 06:12",
+      "buckets": {
+        "veryHigh": "Langt over",
+        "high": "Over",
+        "normal": "Normal",
+        "low": "Under",
+        "veryLow": "Langt under"
+      },
+      "weeklyObservationLabel": "Ugens observation",
+      "weeklyObservation": "Din søvn under 7 t i tre nætter ser ud til at trække RMSSD ned med ~8%.",
+      "miniMs": "ms",
+      "mini7d": "7-d",
+      "mini60d": "60-d"
     },
     "formCheck": {
       "eyebrow": "AI form-check",
@@ -182,6 +212,12 @@
       "title": "Crew + coach når det tæller",
       "body": "PR-fejringer, deload-snak, og 1:1 tid med Mikael Munk når du er på vej mod et nyt loft. Resten af tiden holder fællesskabet dig ansvarlig.",
       "foot": "Crew-feed · 1:1 ved milepæle"
+    },
+    "pillar4": {
+      "eyebrow": "Restitution der måler sig selv",
+      "title": "Wearable + HRV i programmet",
+      "body": "Forbind WHOOP, Oura eller Polar. Din morgen-RMSSD og 60-dages baseline justerer ugens belastning, og coachen får besked når dit nervesystem råber tre dage i træk.",
+      "foot": "Auto-sync · ærlige tal, ingen 0-100 score"
     }
   },
   "testimonials": {
@@ -259,6 +295,18 @@
       "cheaper": {
         "q": "Hvorfor er det billigere end traditionel coaching?",
         "a": "Fordi AI håndterer det generiske — programgenerering, progression, øjeblikkelig form-feedback. Mikael og crewet bruger så tiden på det der faktisk batter: 1:1, milepæle, og at holde dig ansvarlig. Du betaler for det der tæller."
+      },
+      "wearables": {
+        "q": "Hvilke wearables understøtter HRV-modulet?",
+        "a": "WHOOP, Oura og Polar (H10 og O20-serien) er live. Du forbinder via OAuth fra indstillingerne — vi opbevarer aldrig dine login-detaljer, kun tokens som er krypteret i hvile. Apple Watch-support kommer med MakeIt-appen til iPhone. Garmin er på roadmap'en, men ikke i v1."
+      },
+      "hrvScore": {
+        "q": "Hvorfor får jeg ikke en HRV-score fra 0 til 100?",
+        "a": "Fordi et tal fra 0 til 100 lover en præcision, der ikke findes. Vi viser din faktiske RMSSD i millisekunder, dit eget 60-dages baseline-bånd og en 5-bucket readiness-ladder — så du ser hvor du ligger i forhold til din egen normal, ikke en opfundet skala. Du kan heller ikke sammenligne din HRV med andres; sundt RMSSD spænder fra ca. 10 til 200 ms afhængigt af alder, køn og form."
+      },
+      "hrvPrivacy": {
+        "q": "Hvem ser min HRV-data og mine livsstil-logs?",
+        "a": "Du som standard. Coach-deling er en toggle i HRV-indstillingerne — slår du den til, kan Mikael se dine readings, livsstil-tags og ugentlige indsigter, og hans red-flag-kø trigger kun på opted-in medlemmer. Slår du den fra, kører HRV-modulet stille for dig selv. Vi sender aldrig dine wearable-data videre."
       }
     }
   },
