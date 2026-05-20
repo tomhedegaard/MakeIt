@@ -31,6 +31,7 @@ import {
 } from "@/lib/data/skip-days";
 import {
   computeStreak,
+  copenhagenIsoDate,
   isCookingMilestone,
 } from "@/lib/data/nutrition-checkin";
 import { randomUUID } from "crypto";
@@ -454,6 +455,62 @@ export async function quickLogAction(formData: FormData): Promise<LogResult> {
     photoPath: null,
     rating: status === "eaten" ? 4 : null,
     notes: null,
+  });
+
+  const streakMilestone = await tracker.after();
+
+  revalidatePath("/nutrition");
+  revalidatePath("/dashboard");
+  return { streakMilestone };
+}
+
+/* ---------------------------------------------------------------- *
+ * Off-plan quick-log — the "Spiste noget andet" flow.
+ *
+ * Records an off-plan meal with just a calorie + protein estimate
+ * and an optional label. No slot, no planned meal — the row is
+ * meal_id=null, off_plan=true, status='eaten' so it counts toward
+ * the cooking streak (honesty > broken streaks). Logged against
+ * today (Europe/Copenhagen), computed server-side rather than
+ * trusting the client.
+ *
+ * Invalid macros are a silent no-op — the modal validates client-
+ * side, this is just the server backstop.
+ * ---------------------------------------------------------------- */
+
+export async function logOffPlanAction(formData: FormData): Promise<LogResult> {
+  const member = await requireMember();
+
+  const kcal = Number.parseInt(String(formData.get("kcal") ?? ""), 10);
+  const proteinG = Number.parseInt(String(formData.get("proteinG") ?? ""), 10);
+  const label = String(formData.get("label") ?? "").trim().slice(0, 200) || null;
+
+  // Sanity ranges mirror the migration 0033 CHECK constraints.
+  const kcalOk = Number.isFinite(kcal) && kcal > 0 && kcal <= 10000;
+  const proteinOk = Number.isFinite(proteinG) && proteinG >= 0 && proteinG <= 500;
+  if (!kcalOk || !proteinOk) return { streakMilestone: null };
+
+  const loggedForDate = copenhagenIsoDate();
+
+  const tracker = await streakMilestoneTracker(
+    member.id,
+    loggedForDate,
+    "eaten",
+    await createClient(),
+  );
+
+  await createLog({
+    memberId: member.id,
+    mealId: null,
+    loggedForDate,
+    loggedForSlot: null,
+    status: "eaten",
+    offPlan: true,
+    kcal,
+    proteinG,
+    photoPath: null,
+    rating: null,
+    notes: label,
   });
 
   const streakMilestone = await tracker.after();
