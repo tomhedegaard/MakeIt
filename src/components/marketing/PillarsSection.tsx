@@ -37,6 +37,18 @@ const pillars = [
     ],
     stat: { v: "4", k: "Tiers" },
   },
+  {
+    id: "restitution",
+    label: "05 — Restitution",
+    title: "Din krop bestemmer ugens belastning.",
+    body: "Forbind WHOOP, Oura eller Polar. Hver morgen synker dit RMSSD ind sammen med din 60-dages baseline, og programmet ved hvornår du skal presse — og hvornår en deload-uge giver dig mere end et tungt sæt. Søndag aften skriver coachen en kort observation om din uge; aldrig diagnoser, aldrig opfundne tal.",
+    bullets: [
+      "Wearable-first — WHOOP · Oura · Polar (Apple Watch følger med iPhone-appen)",
+      "5-bucket readiness ladder · ingen falsk 0-100 score",
+      "Ugentlig indsigt på dansk · ærlige korrelationer (alkohol, søvn)",
+    ],
+    stat: { v: "3", k: "Wearables" },
+  },
 ];
 
 export default function PillarsSection() {

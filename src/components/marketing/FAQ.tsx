@@ -34,6 +34,18 @@ const ITEMS: { q: string; a: string }[] = [
     q: "Hvorfor er det billigere end traditionel coaching?",
     a: "Fordi AI håndterer det generiske — programgenerering, progression, øjeblikkelig form-feedback. Mikael og crewet bruger så tiden på det der faktisk batter: 1:1, milepæle, og at holde dig ansvarlig. Du betaler for det der tæller.",
   },
+  {
+    q: "Hvilke wearables understøtter HRV-modulet?",
+    a: "WHOOP, Oura og Polar (H10 og O20-serien) er live. Du forbinder via OAuth fra indstillingerne — vi opbevarer aldrig dine login-detaljer, kun tokens som er krypteret i hvile. Apple Watch-support kommer med MakeIt-appen til iPhone. Garmin er på roadmap'en, men ikke i v1.",
+  },
+  {
+    q: "Hvorfor får jeg ikke en HRV-score fra 0 til 100?",
+    a: "Fordi et tal fra 0 til 100 lover en præcision, der ikke findes. Vi viser din faktiske RMSSD i millisekunder, dit eget 60-dages baseline-bånd og en 5-bucket readiness-ladder — så du ser hvor du ligger i forhold til din egen normal, ikke en opfundet skala. Du kan heller ikke sammenligne din HRV med andres; sundt RMSSD spænder fra ca. 10 til 200 ms afhængigt af alder, køn og form.",
+  },
+  {
+    q: "Hvem ser min HRV-data og mine livsstil-logs?",
+    a: "Du som standard. Coach-deling er en toggle i HRV-indstillingerne — slår du den til, kan Mikael se dine readings, livsstil-tags og ugentlige indsigter, og hans red-flag-kø trigger kun på opted-in medlemmer. Slår du den fra, kører HRV-modulet stille for dig selv. Vi sender aldrig dine wearable-data videre.",
+  },
 ];
 
 export default function FAQ() {
@@ -42,7 +54,7 @@ export default function FAQ() {
       <Container>
         <div className="grid gap-12 md:grid-cols-12 items-start">
           <div className="md:col-span-5" data-reveal>
-            <div className="eyebrow mb-4">08 — FAQ</div>
+            <div className="eyebrow mb-4">09 — FAQ</div>
             <h2 className="font-display text-[clamp(2.4rem,6vw,5rem)] leading-[0.92] mb-5">
               Spørgsmål?
             </h2>

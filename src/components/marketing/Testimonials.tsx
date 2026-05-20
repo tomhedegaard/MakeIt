@@ -34,7 +34,7 @@ export default function Testimonials() {
     <section id="crew-says" className="relative border-t hairline py-24 md:py-40">
       <Container>
         <div className="max-w-2xl mb-12 md:mb-16" data-reveal>
-          <div className="eyebrow mb-4">07 — Crewet</div>
+          <div className="eyebrow mb-4">08 — Crewet</div>
           <h2 className="font-display text-[clamp(2.4rem,7vw,5.5rem)] leading-[0.92] mb-5">
             Hvad de siger.
           </h2>
