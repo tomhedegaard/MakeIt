@@ -39,6 +39,7 @@ export default function PrivacyPage() {
               ["Konto", "Email, valgt handle, display navn, bio, tier, joined-date."],
               ["Træningsdata", "Loggede sæt (vægt, reps, RPE, tidspunkt), program-tilknytning, uge-progression, gennemførte sessioner."],
               ["Form-checks", "Video-uploads (privat bucket), AI-genererede vurderinger, coach-noter."],
+              ["Wearable-data", "Hvis du forbinder en wearable (fx Whoop): recovery, søvn, strain/workout, cyklus og basale profildata — kun efter dit samtykke. Se sektion 08."],
               ["Social", "Posts, kommentarer, reaktioner, @mentions."],
               ["Reps & køb", "Reps-balance, transaktioner, indløsninger. Stripe håndterer betalingsdata — vi gemmer kun et customer-ID."],
               ["Tekniske data", "Session-cookie, IP-adresse til log-formål, request-tidspunkter."],
@@ -106,6 +107,40 @@ export default function PrivacyPage() {
           <p>
             Vi opdaterer denne politik når funktionalitet ændrer sig. Materielle ændringer
             varsles på email til registrerede medlemmer mindst 14 dage før de træder i kraft.
+          </p>
+        </Section>
+
+        <Section eyebrow="08" title="Wearable-integrationer">
+          <p>
+            {COMPANY.product} kan forbindes med din wearable, så din træning kan
+            tilpasses din restitution. Integrationen er <strong>frivillig</strong> og
+            sker først efter du udtrykkeligt giver samtykke i et OAuth-flow hos
+            udbyderen.
+          </p>
+          <p className="mt-4">
+            <strong>Whoop:</strong> Når du forbinder din Whoop-konto, henter vi via
+            Whoops API følgende på dine vegne:
+          </p>
+          <List
+            items={[
+              ["Recovery", "Daglig recovery-score, hvilepuls, HRV."],
+              ["Søvn", "Søvnvarighed, søvnfaser, søvn-performance."],
+              ["Strain & workouts", "Dagligt strain samt registrerede træningspas."],
+              ["Cyklus", "Whoops fysiologiske døgncyklus-data."],
+              ["Profil", "Navn og basale profildata fra din Whoop-konto."],
+            ]}
+          />
+          <p className="mt-4">
+            Disse data bruges udelukkende til at personalisere dit program og din
+            form-feedback inde i {COMPANY.product}. De gemmes i EU (Supabase,
+            Frankfurt), deles ikke videre, og sælges aldrig.
+          </p>
+          <p className="mt-4">
+            Du kan til enhver tid afbryde forbindelsen under Indstillinger. Når du
+            gør det, tilbagekaldes vores adgangstoken hos Whoop, og de hentede
+            wearable-data slettes inden for 30 dage. Det samme sker hvis du sletter
+            din {COMPANY.product}-konto. Du kan også tilbagekalde adgangen direkte i
+            din Whoop-konto.
           </p>
         </Section>
 

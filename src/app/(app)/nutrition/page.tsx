@@ -26,7 +26,10 @@ import LogMealButton from "./LogMealButton";
 import LogWeightCard from "@/components/nutrition/LogWeightCard";
 import SkipDaysCard from "@/components/nutrition/SkipDaysCard";
 import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
+import DailyIntakeCard from "@/components/nutrition/DailyIntakeCard";
+import OffPlanLogButton from "./OffPlanLogButton";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
+import { getDailyIntake } from "@/lib/data/nutrition-intake";
 
 export const metadata = {
   title: "Mad — MakeIt",
@@ -46,6 +49,7 @@ export default async function NutritionPage({
     profile,
     plan,
     checkin,
+    intake,
     latestWeight,
     weightTrend,
     planLimit,
@@ -56,6 +60,7 @@ export default async function NutritionPage({
     getOrCreateNutritionProfile(member.id),
     getCurrentPlan(member.id),
     getDailyCheckIn(member.id),
+    getDailyIntake(member.id),
     getLatestWeight(member.id),
     getWeightTrend(member.id),
     checkLimit(member.id, "plan_regen"),
@@ -119,6 +124,7 @@ export default async function NutritionPage({
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <OffPlanLogButton />
           <Link
             href="/nutrition/shopping"
             className="btn btn-sm"
@@ -144,6 +150,8 @@ export default async function NutritionPage({
       {kcalAdjust ? <KcalAdjustBanner delta={kcalAdjust.delta} reason={kcalAdjust.reason} /> : null}
 
       <DailyCheckInCard checkin={checkin} />
+
+      <DailyIntakeCard intake={intake} />
 
       <LogWeightCard
         latestKg={latestWeight?.kg ?? null}
