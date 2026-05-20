@@ -7,8 +7,9 @@ import {
   updateNotifPrefsAction,
   deleteAccountAction,
 } from "./actions";
-import type { MemberSettings } from "@/lib/data/settings";
+import type { MemberSettings, HrvSettings } from "@/lib/data/settings";
 import PushToggle from "@/components/push/PushToggle";
+import HrvSettingsSection from "@/components/hrv/HrvSettingsSection";
 
 const ERROR_LABELS: Record<string, string> = {
   handle_invalid: "Handle skal starte med et bogstav (a-z) og være 2-31 tegn (a-z, 0-9, _, ., -).",
@@ -20,9 +21,11 @@ const ERROR_LABELS: Record<string, string> = {
 
 export default function SettingsClient({
   settings,
+  hrv,
   vapidPublicKey,
 }: {
   settings: MemberSettings;
+  hrv: HrvSettings;
   vapidPublicKey: string;
 }) {
   const router = useRouter();
@@ -212,6 +215,9 @@ export default function SettingsClient({
           ) : null}
         </div>
       </section>
+
+      {/* HRV */}
+      <HrvSettingsSection hrv={hrv} />
 
       {/* Account info — read-only */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7">

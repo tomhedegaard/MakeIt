@@ -13,9 +13,10 @@ const NAV = [
   { href: "/coaching",  label: "Træn",      num: "02" },
   { href: "/nutrition", label: "Mad",       num: "03" },
   { href: "/community", label: "Crew",      num: "04" },
-  { href: "/reps",      label: "Reps",      num: "05" },
-  { href: "/profile",   label: "Mig",       num: "06" },
-  { href: "/messages",  label: "Beskeder",  num: "07" },
+  { href: "/hrv",       label: "HRV",       num: "05" },
+  { href: "/reps",      label: "Reps",      num: "06" },
+  { href: "/profile",   label: "Mig",       num: "07" },
+  { href: "/messages",  label: "Beskeder",  num: "08" },
 ];
 
 export default function AppShell({
