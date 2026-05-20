@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
+import LanguageSelector from "@/components/LanguageSelector";
 
 export default function MarketingNav() {
   const t = useTranslations("Marketing.nav");
@@ -23,10 +24,11 @@ export default function MarketingNav() {
             <a href="#how"      className="hover:text-fg transition-colors">{t("price")}</a>
             <a href="#faq"      className="hover:text-fg transition-colors">{t("faq")}</a>
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <span className="hidden sm:flex items-center gap-2 text-[10px] tracking-[0.18em] uppercase font-mono text-fg-dim">
               <span className="pulse-dot" /> {t("closedBeta")}
             </span>
+            <LanguageSelector />
             <Link href="/login" className="btn btn-sm btn-primary">{t("login")}</Link>
           </div>
         </div>
