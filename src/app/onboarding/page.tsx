@@ -1,10 +1,12 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getSession, type Member } from "@/lib/auth";
 import OnboardingClient from "./OnboardingClient";
 
-export const metadata = {
-  title: "Velkommen — MakeIt // HQ",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Onboarding");
+  return { title: t("metaTitle") };
+}
 
 export default async function OnboardingPage({
   searchParams,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useOptimistic, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import {
   addCommentAction,
@@ -28,6 +29,7 @@ function MentionText({ text }: { text: string }) {
 }
 
 export default function PostCard({ post }: { post: FeedPost }) {
+  const t = useTranslations("Community.post");
   const [optimistic, setOptimistic] = useOptimistic<
     { reacted: boolean; count: number },
     "toggle"
@@ -79,10 +81,10 @@ export default function PostCard({ post }: { post: FeedPost }) {
     // Optimistic comment so the user sees immediate feedback.
     const optimistic: Comment = {
       id: `pending-${Date.now()}`,
-      who: "@dig",
+      who: t("optimisticWho"),
       tier: "Lifter",
       content,
-      whenLabel: "lige nu",
+      whenLabel: t("optimisticWhen"),
       createdAt: new Date().toISOString(),
     };
     setComments((prev) => [...(prev ?? []), optimistic]);
@@ -118,7 +120,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
         <div className="flex items-center gap-2 shrink-0">
           {post.isPr ? (
             <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
-              ★ PR
+              {t("prBadge")}
             </span>
           ) : null}
           {post.formcheck ? (
@@ -148,7 +150,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
         >
           <span>{optimistic.reacted ? "✓" : "+"}</span>
           <span className="numeric">{optimistic.count}</span>
-          <span>Reps</span>
+          <span>{t("reps")}</span>
         </button>
         <button
           type="button"
@@ -160,13 +162,15 @@ export default function PostCard({ post }: { post: FeedPost }) {
           )}
         >
           <span className="numeric">{commentsCount}</span>
-          <span>Kommentar{commentsCount === 1 ? "" : "er"}</span>
+          <span>
+            {commentsCount === 1 ? t("commentsOne") : t("commentsOther")}
+          </span>
         </button>
         <button
           type="button"
           className="ml-auto px-3 py-1.5 rounded-md hover:text-fg hover:bg-bg-3"
         >
-          Del
+          {t("share")}
         </button>
       </div>
 
@@ -174,7 +178,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
         <div className="mt-4 border-t hairline pt-4 space-y-4">
           {loadingComments ? (
             <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
-              Henter kommentarer…
+              {t("loadingComments")}
             </p>
           ) : comments && comments.length > 0 ? (
             <ul className="space-y-3">
@@ -199,7 +203,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
             </ul>
           ) : (
             <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
-              Ingen kommentarer endnu — vær den første.
+              {t("noComments")}
             </p>
           )}
 
@@ -208,7 +212,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               rows={1}
-              placeholder="Skriv en kommentar… brug @handle for at tagge"
+              placeholder={t("commentPlaceholder")}
               className="field py-2 min-h-[40px] resize-none flex-1 text-sm"
               disabled={posting}
             />
@@ -217,12 +221,12 @@ export default function PostCard({ post }: { post: FeedPost }) {
               className="btn btn-sm btn-primary"
               disabled={posting || !draft.trim()}
             >
-              {posting ? "…" : "Send"}
+              {posting ? t("sending") : t("send")}
             </button>
           </form>
 
           <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-            @-tags sender en mail-notifikation til den nævnte
+            {t("mentionHint")}
           </p>
         </div>
       ) : null}

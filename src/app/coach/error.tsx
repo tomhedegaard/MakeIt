@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import Container from "@/components/Container";
 
 /**
@@ -16,6 +17,8 @@ export default function CoachError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations("Coach.error");
+
   useEffect(() => {
     console.error("[coach/error.tsx]", error);
   }, [error]);
@@ -23,25 +26,24 @@ export default function CoachError({
   return (
     <Container className="py-16 md:py-24">
       <div className="max-w-md">
-        <div className="eyebrow mb-3">Coach · fejl</div>
+        <div className="eyebrow mb-3">{t("eyebrow")}</div>
         <h1 className="font-display text-3xl md:text-4xl mb-4 leading-[0.95]">
-          Kunne ikke loade.
+          {t("title")}
         </h1>
         <p className="text-fg-dim text-base leading-relaxed mb-8">
-          Et kald fejlede. Prøv igen — hvis det fortsætter, kan det være en RLS-policy
-          eller et netværksproblem. Tjek konsollen.
+          {t("description")}
         </p>
         {error.digest && (
           <p className="text-xs font-mono text-fg-faint mb-8">
-            ref: {error.digest}
+            {t("ref", { digest: error.digest })}
           </p>
         )}
         <div className="flex items-center gap-3">
           <button onClick={reset} type="button" className="btn btn-primary">
-            Prøv igen
+            {t("retry")}
           </button>
           <Link href="/coach" className="btn">
-            Coach overview
+            {t("overview")}
           </Link>
         </div>
       </div>

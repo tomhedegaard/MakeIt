@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import Logo from "@/components/Logo";
+import LanguageSelector from "@/components/LanguageSelector";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 import {
@@ -9,27 +11,12 @@ import {
   oauthAction,
 } from "./actions";
 
-export const metadata = {
-  title: `Log ind — ${COMPANY.product}`,
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Login");
+  return { title: t("metaTitle", { product: COMPANY.product }) };
+}
 
 type Tab = "magic" | "password" | "oauth";
-
-const ERR_LABELS: Record<string, string> = {
-  "1":         "Noget gik galt — prøv igen",
-  missing:     "Email og kode kræves",
-  invite:      "Ugyldig invite-kode",
-  otp:         "Kunne ikke sende mail — prøv igen",
-  pw_short:    "Passwordet skal være mindst 8 tegn",
-  exists:      "Email er allerede registreret — log ind i stedet",
-  signup:      "Kunne ikke oprette konto — prøv igen",
-  creds:       "Forkert email eller password",
-  signin:      "Kunne ikke logge ind — prøv igen",
-  oauth:       "OAuth-flow fejlede — prøv igen",
-  provider:    "Ukendt provider",
-  callback:    "Login-link udløbet eller ugyldigt",
-  disabled:    "Backend ikke tilkoblet",
-};
 
 export default async function LoginPage({
   searchParams,
@@ -43,6 +30,7 @@ export default async function LoginPage({
   }>;
 }) {
   const { err, sent, email, tab = "magic", mode = "signin" } = await searchParams;
+  const t = await getTranslations("Login");
 
   return (
     <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-24">
@@ -51,17 +39,20 @@ export default async function LoginPage({
       </div>
 
       <div className="relative z-10 w-full max-w-md">
-        <Link href="/" className="inline-block mb-12 text-fg">
-          <Logo />
-        </Link>
+        <div className="mb-12 flex items-center justify-between">
+          <Link href="/" className="inline-block text-fg">
+            <Logo />
+          </Link>
+          <LanguageSelector />
+        </div>
 
         <div className="eyebrow mb-3 flex items-center gap-2">
-          <span className="pulse-dot" /> Closed Beta · Invite only
+          <span className="pulse-dot" /> {t("beta")}
         </div>
 
         <h1 className="font-display text-5xl md:text-6xl mb-4">
-          Velkommen
-          <br /> til crewet.
+          {t("headline.line1")}
+          <br /> {t("headline.line2")}
         </h1>
 
         {sent ? (
@@ -75,11 +66,11 @@ export default async function LoginPage({
         <p className="mt-10 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
           {SUPABASE_ENABLED ? (
             <>
-              Connected ·{" "}
+              {t("statusConnected")}
               {process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/^https?:\/\//, "").split(".")[0]}
             </>
           ) : (
-            <>Demo mode · ingen backend tilkoblet</>
+            <>{t("statusDemo")}</>
           )}
         </p>
       </div>
@@ -91,12 +82,12 @@ export default async function LoginPage({
  * Mock (demo) form
  * ---------------------------------------------------------------- */
 
-function MockForm({ err }: { err?: string }) {
+async function MockForm({ err }: { err?: string }) {
+  const t = await getTranslations("Login.mock");
   return (
     <>
       <p className="text-fg-dim mb-10 leading-relaxed">
-        Indtast din invite-kode for at få adgang. Har du ikke en?
-        Skriv til{" "}
+        {t("intro")}
         <a className="underline hover:text-fg" href={SUPPORT_MAILTO}>
           {COMPANY.emails.support}
         </a>
@@ -105,7 +96,7 @@ function MockForm({ err }: { err?: string }) {
 
       <form action={mockLoginAction} className="space-y-4">
         <label className="block">
-          <span className="eyebrow block mb-2">Invite-kode</span>
+          <span className="eyebrow block mb-2">{t("inviteCodeLabel")}</span>
           <input
             name="code"
             required
@@ -119,17 +110,17 @@ function MockForm({ err }: { err?: string }) {
 
         {err ? (
           <p className="text-sm text-fg font-mono uppercase tracking-[0.14em]">
-            · Ugyldig kode — prøv igen
+            {t("invalidCode")}
           </p>
         ) : null}
 
         <button type="submit" className="btn btn-primary w-full mt-2">
-          Få adgang →
+          {t("submit")}
         </button>
       </form>
 
       <p className="mt-6 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
-        Test-koder: <span className="text-fg-dim">MUNK-01 · MAKEIT-CREW · STRAPIT-50K</span>
+        {t("testCodesLabel")}<span className="text-fg-dim">MUNK-01 · MAKEIT-CREW · STRAPIT-50K</span>
       </p>
     </>
   );
@@ -139,7 +130,7 @@ function MockForm({ err }: { err?: string }) {
  * Connected (Supabase) form — three tabs
  * ---------------------------------------------------------------- */
 
-function SupabaseForm({
+async function SupabaseForm({
   err,
   tab,
   mode,
@@ -148,7 +139,12 @@ function SupabaseForm({
   tab: Tab;
   mode: "signin" | "signup";
 }) {
-  const errLabel = err ? ERR_LABELS[err] ?? "Noget gik galt — prøv igen" : null;
+  const t = await getTranslations("Login.errors");
+  const errLabel = err
+    ? t.has(err)
+      ? t(err)
+      : t("fallback")
+    : null;
 
   return (
     <>
@@ -174,11 +170,12 @@ function SupabaseForm({
   );
 }
 
-function TabBar({ active }: { active: Tab }) {
+async function TabBar({ active }: { active: Tab }) {
+  const t = await getTranslations("Login.tabs");
   const tabs: { key: Tab; label: string }[] = [
-    { key: "magic", label: "Magic link" },
-    { key: "password", label: "Password" },
-    { key: "oauth", label: "Google / Apple" },
+    { key: "magic", label: t("magic") },
+    { key: "password", label: t("password") },
+    { key: "oauth", label: t("oauth") },
   ];
   return (
     <div className="flex gap-1 mb-6 surface-2 rounded-lg p-1 text-xs font-mono uppercase tracking-[0.14em]">
@@ -200,29 +197,30 @@ function TabBar({ active }: { active: Tab }) {
   );
 }
 
-function MagicLinkForm() {
+async function MagicLinkForm() {
+  const t = await getTranslations("Login.magic");
   return (
     <>
       <p className="text-fg-dim mb-6 leading-relaxed">
-        Indtast email + invite-kode. Vi sender et engangs-login-link.
+        {t("intro")}
       </p>
 
       <form action={magicLinkAction} className="space-y-4">
         <label className="block">
-          <span className="eyebrow block mb-2">Email</span>
+          <span className="eyebrow block mb-2">{t("emailLabel")}</span>
           <input
             name="email"
             type="email"
             required
             autoComplete="email"
             spellCheck={false}
-            placeholder="dig@email.com"
+            placeholder={t("emailPlaceholder")}
             className="field"
           />
         </label>
 
         <label className="block">
-          <span className="eyebrow block mb-2">Invite-kode</span>
+          <span className="eyebrow block mb-2">{t("inviteCodeLabel")}</span>
           <input
             name="code"
             required
@@ -234,55 +232,54 @@ function MagicLinkForm() {
         </label>
 
         <button type="submit" className="btn btn-primary w-full mt-2">
-          Send login-link →
+          {t("submit")}
         </button>
       </form>
     </>
   );
 }
 
-function PasswordForm({ mode }: { mode: "signin" | "signup" }) {
+async function PasswordForm({ mode }: { mode: "signin" | "signup" }) {
   const isSignup = mode === "signup";
+  const t = await getTranslations("Login.password");
   return (
     <>
       <p className="text-fg-dim mb-6 leading-relaxed">
-        {isSignup
-          ? "Opret en konto med email + password. Invite-kode kræves."
-          : "Log ind med email + password."}
+        {isSignup ? t("introSignup") : t("introSignin")}
       </p>
 
       <form action={passwordAction} className="space-y-4">
         <input type="hidden" name="mode" value={mode} />
 
         <label className="block">
-          <span className="eyebrow block mb-2">Email</span>
+          <span className="eyebrow block mb-2">{t("emailLabel")}</span>
           <input
             name="email"
             type="email"
             required
             autoComplete="email"
             spellCheck={false}
-            placeholder="dig@email.com"
+            placeholder={t("emailPlaceholder")}
             className="field"
           />
         </label>
 
         <label className="block">
-          <span className="eyebrow block mb-2">Password</span>
+          <span className="eyebrow block mb-2">{t("passwordLabel")}</span>
           <input
             name="password"
             type="password"
             required
             minLength={8}
             autoComplete={isSignup ? "new-password" : "current-password"}
-            placeholder="Mindst 8 tegn"
+            placeholder={t("passwordPlaceholder")}
             className="field"
           />
         </label>
 
         {isSignup ? (
           <label className="block">
-            <span className="eyebrow block mb-2">Invite-kode</span>
+            <span className="eyebrow block mb-2">{t("inviteCodeLabel")}</span>
             <input
               name="code"
               required
@@ -295,31 +292,31 @@ function PasswordForm({ mode }: { mode: "signin" | "signup" }) {
         ) : null}
 
         <button type="submit" className="btn btn-primary w-full mt-2">
-          {isSignup ? "Opret konto →" : "Log ind →"}
+          {isSignup ? t("submitSignup") : t("submitSignin")}
         </button>
       </form>
 
       <p className="mt-4 text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
         {isSignup ? (
           <>
-            Har du allerede en konto?{" "}
+            {t("hasAccount")}{" "}
             <Link
               href="/login?tab=password&mode=signin"
               className="underline hover:text-fg"
               scroll={false}
             >
-              Log ind
+              {t("signinLink")}
             </Link>
           </>
         ) : (
           <>
-            Ny her?{" "}
+            {t("newHere")}{" "}
             <Link
               href="/login?tab=password&mode=signup"
               className="underline hover:text-fg"
               scroll={false}
             >
-              Opret konto
+              {t("signupLink")}
             </Link>
           </>
         )}
@@ -328,17 +325,17 @@ function PasswordForm({ mode }: { mode: "signin" | "signup" }) {
   );
 }
 
-function OAuthForm() {
+async function OAuthForm() {
+  const t = await getTranslations("Login.oauth");
   return (
     <>
       <p className="text-fg-dim mb-6 leading-relaxed">
-        Log ind eller opret konto med Google eller Apple. Invite-kode
-        kræves uanset om du er ny eller eksisterende.
+        {t("intro")}
       </p>
 
       <form action={oauthAction} className="space-y-4">
         <label className="block">
-          <span className="eyebrow block mb-2">Invite-kode</span>
+          <span className="eyebrow block mb-2">{t("inviteCodeLabel")}</span>
           <input
             name="code"
             required
@@ -356,7 +353,7 @@ function OAuthForm() {
             value="google"
             className="btn btn-ghost w-full justify-center gap-3"
           >
-            <GoogleGlyph /> Fortsæt med Google
+            <GoogleGlyph /> {t("continueGoogle")}
           </button>
           <button
             type="submit"
@@ -364,7 +361,7 @@ function OAuthForm() {
             value="apple"
             className="btn btn-ghost w-full justify-center gap-3"
           >
-            <AppleGlyph /> Fortsæt med Apple
+            <AppleGlyph /> {t("continueApple")}
           </button>
         </div>
       </form>
@@ -407,17 +404,18 @@ function AppleGlyph() {
  * Sent confirmation (post-magic-link / post-signup)
  * ---------------------------------------------------------------- */
 
-function SentState({ email }: { email?: string }) {
+async function SentState({ email }: { email?: string }) {
+  const t = await getTranslations("Login.sent");
   return (
     <div className="surface-2 rounded-2xl p-6">
-      <div className="eyebrow mb-3">Mail sendt</div>
+      <div className="eyebrow mb-3">{t("eyebrow")}</div>
       <p className="text-fg-dim leading-relaxed mb-4">
-        Vi har sendt et login-link til{" "}
-        <span className="text-fg">{email ?? "din mail"}</span>. Åbn linket på samme
-        enhed, så er du inde.
+        {t("body")}
+        <span className="text-fg">{email ?? t("fallbackEmail")}</span>
+        {t("bodyTail")}
       </p>
       <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
-        Linket virker i 1 time.
+        {t("expiry")}
       </p>
     </div>
   );

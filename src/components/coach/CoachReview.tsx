@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import { reviewFormCheckAction } from "@/app/coach/queue/actions";
 import type { FormCheckRow } from "@/lib/data/coach";
@@ -10,6 +11,7 @@ export default function CoachReviewButton({
 }: {
   formCheck: FormCheckRow;
 }) {
+  const t = useTranslations("Coach.review");
   const [open, setOpen] = useState(false);
   const [notes, setNotes] = useState("");
   const [pending, startTransition] = useTransition();
@@ -31,13 +33,13 @@ export default function CoachReviewButton({
         className="btn btn-sm btn-primary"
         onClick={() => setOpen(true)}
       >
-        Review →
+        {t("open")}
       </button>
       <SheetContent>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="eyebrow mb-1">@{formCheck.memberHandle} · {formCheck.exerciseName ?? "Form-check"}</div>
-            <h2 className="font-display text-2xl">{formCheck.aiHeadline ?? "AI-svar"}</h2>
+            <div className="eyebrow mb-1">@{formCheck.memberHandle} · {formCheck.exerciseName ?? t("formCheckFallback")}</div>
+            <h2 className="font-display text-2xl">{formCheck.aiHeadline ?? t("aiHeadlineFallback")}</h2>
           </div>
           <div className="text-right shrink-0">
             <div className="numeric text-3xl">{formCheck.aiScore ?? "—"}</div>
@@ -55,21 +57,21 @@ export default function CoachReviewButton({
               className="w-full max-h-[420px] object-contain bg-black"
             />
             <div className="px-4 py-2 text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint border-t hairline">
-              Signeret afspillings-link · udløber om 1 time
+              {t("signedLink")}
             </div>
           </div>
         ) : null}
 
         <div className="space-y-3">
           {formCheck.aiPos.length > 0 ? (
-            <Card title="Positive observationer" items={formCheck.aiPos} />
+            <Card title={t("positives")} items={formCheck.aiPos} />
           ) : null}
           {formCheck.aiNeg.length > 0 ? (
-            <Card title="Områder at stramme op" items={formCheck.aiNeg} />
+            <Card title={t("negatives")} items={formCheck.aiNeg} />
           ) : null}
           {formCheck.aiFix ? (
             <div className="surface-2 rounded-lg p-4">
-              <div className="eyebrow mb-2">AI-tip</div>
+              <div className="eyebrow mb-2">{t("aiTip")}</div>
               <p className="text-sm text-fg/90 leading-relaxed">{formCheck.aiFix}</p>
             </div>
           ) : null}
@@ -77,10 +79,10 @@ export default function CoachReviewButton({
 
         <div className="mt-5">
           <label className="block">
-            <span className="eyebrow block mb-2">Coach-noter (sendes til @{formCheck.memberHandle})</span>
+            <span className="eyebrow block mb-2">{t("coachNotesLabel", { handle: formCheck.memberHandle })}</span>
             <textarea
               className="field min-h-[100px] py-3 resize-none w-full"
-              placeholder="Hvad mangler AI'en at fange? Specifikke instruktioner til næste session?"
+              placeholder={t("coachNotesPlaceholder")}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
             />
@@ -94,7 +96,7 @@ export default function CoachReviewButton({
             onClick={() => setOpen(false)}
             disabled={pending}
           >
-            Annullér
+            {t("cancel")}
           </button>
           <button
             type="button"
@@ -102,12 +104,12 @@ export default function CoachReviewButton({
             onClick={submit}
             disabled={pending}
           >
-            {pending ? "Sender…" : "Godkend & send"}
+            {pending ? t("sending") : t("submit")}
           </button>
         </div>
 
         <p className="mt-4 text-xs font-mono text-fg-faint text-center">
-          Markerer form-checken som reviewed og sender notes til medlemmet.
+          {t("footnote")}
         </p>
       </SheetContent>
     </Sheet>

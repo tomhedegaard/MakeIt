@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { getSession } from "@/lib/auth";
 import {
@@ -8,12 +9,14 @@ import {
 import { aggregateShopping } from "@/lib/nutrition/shopping";
 import ShoppingChecklist from "./ShoppingChecklist";
 
-export const metadata = {
-  title: "Mad · Indkøbsliste",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Nutrition.shopping");
+  return { title: t("metaTitle") };
+}
 
 export default async function ShoppingPage() {
   const member = (await getSession())!;
+  const t = await getTranslations("Nutrition.shopping");
   const [plan, profile] = await Promise.all([
     getCurrentPlan(member.id),
     getOrCreateNutritionProfile(member.id),
@@ -22,17 +25,17 @@ export default async function ShoppingPage() {
   if (!plan) {
     return (
       <Container className="py-6 lg:py-12 max-w-2xl space-y-6">
-        <Header />
+        <Header t={t} />
         <section className="surface-2 rounded-2xl p-6 lg:p-10 text-center">
-          <div className="eyebrow mb-3">Ingen plan endnu</div>
+          <div className="eyebrow mb-3">{t("noPlanEyebrow")}</div>
           <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-3">
-            Generér en ugeplan først.
+            {t("noPlanTitle")}
           </h2>
           <p className="text-fg-dim text-sm md:text-base max-w-md mx-auto mb-5">
-            Indkøbslisten bygger på ugens måltider — så start med at lægge planen.
+            {t("noPlanBody")}
           </p>
           <Link href="/nutrition" className="btn btn-primary">
-            Til Mad →
+            {t("noPlanCta")}
           </Link>
         </section>
       </Container>
@@ -51,31 +54,31 @@ export default async function ShoppingPage() {
 
   return (
     <Container className="py-6 lg:py-12 max-w-3xl space-y-6">
-      <Header />
+      <Header t={t} />
 
       <section className="surface-2 rounded-xl px-5 py-4 flex flex-wrap items-baseline gap-x-6 gap-y-2">
         <div className="flex items-baseline gap-2">
           <span className="numeric text-3xl">{headlineCount}</span>
           <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
-            varer i alt
+            {t("itemsTotal")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
           <span className="numeric text-2xl">{plan.meals.length}</span>
           <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
-            måltider
+            {t("mealsLabel")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
           <span className="numeric text-2xl">{list.servings}</span>
           <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
-            {list.servings === 1 ? "person" : "personer"}
+            {list.servings === 1 ? t("personOne") : t("personOther")}
           </span>
         </div>
         <span className="text-[11px] font-mono text-fg-faint ml-auto">
-          Mængder skaleret efter husstand
+          {t("scaledNote")}
         </span>
       </section>
 
@@ -85,14 +88,17 @@ export default async function ShoppingPage() {
       />
 
       <section className="text-[11px] font-mono text-fg-faint leading-relaxed">
-        Mængder er afrundet — ingen grund til præcision på 7g rødløg. Tjek
-        spisekammeret før du går ud; mange af krydderierne har du sikkert.
+        {t("footerNote")}
       </section>
     </Container>
   );
 }
 
-function Header() {
+function Header({
+  t,
+}: {
+  t: Awaited<ReturnType<typeof getTranslations<"Nutrition.shopping">>>;
+}) {
   return (
     <header className="pt-2">
       <div className="flex items-center gap-3 mb-3">
@@ -100,17 +106,16 @@ function Header() {
           href="/nutrition"
           className="text-fg-dim hover:text-fg text-sm"
         >
-          ← Mad
+          {t("back")}
         </Link>
         <span className="text-fg-faint" aria-hidden>·</span>
-        <span className="eyebrow">Indkøbsliste</span>
+        <span className="eyebrow">{t("eyebrow")}</span>
       </div>
       <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-        Hvad skal i kurven.
+        {t("title")}
       </h1>
       <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-        Hele ugens ingredienser, samlet og skaleret til din husstand.
-        Tryk for at krydse af mens du går rundt i butikken.
+        {t("intro")}
       </p>
     </header>
   );

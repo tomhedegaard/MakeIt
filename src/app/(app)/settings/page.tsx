@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -15,12 +16,14 @@ export default async function SettingsPage() {
   ]);
   if (!settings) redirect("/dashboard");
 
+  const t = await getTranslations("Settings.header");
+
   return (
     <>
       <PageHeader
-        eyebrow="Indstillinger"
-        title="Din konto"
-        subtitle="Profil, notifikationer, data og konto-sletning. Alt under dine egne fingre."
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        subtitle={t("subtitle")}
       />
       <Container className="py-8 lg:py-12">
         <SettingsClient

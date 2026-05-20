@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
 import { MUSCLE_LABELS } from "@/lib/data/muscle-groups";
 import { dominantView, type Exercise } from "@/lib/data/exercises";
@@ -10,13 +11,14 @@ import { dominantView, type Exercise } from "@/lib/data/exercises";
  * Compact variant is used inline in workouts and program sheets —
  * just figure + name + primary muscles, no cue line.
  */
-export default function ExerciseCard({
+export default async function ExerciseCard({
   exercise,
   compact = false,
 }: {
   exercise: Exercise;
   compact?: boolean;
 }) {
+  const t = await getTranslations("Train.card");
   const view = dominantView(exercise);
   const href = `/train/exercises/${exercise.slug}`;
   const primaryNames = exercise.primaryMuscles
@@ -41,7 +43,7 @@ export default function ExerciseCard({
         <div className="min-w-0 flex-1">
           <div className="font-display text-sm truncate">{exercise.name}</div>
           <div className="text-[11px] font-mono text-fg-faint truncate">
-            {primaryNames || "—"}
+            {primaryNames || t("metaEmpty")}
           </div>
         </div>
       </Link>
@@ -77,7 +79,7 @@ export default function ExerciseCard({
 
           {primaryNames ? (
             <div className="text-xs text-fg-dim truncate">
-              <span className="text-fg-faint">Primær: </span>
+              <span className="text-fg-faint">{t("primaryPrefix")}</span>
               {primaryNames}
             </div>
           ) : null}

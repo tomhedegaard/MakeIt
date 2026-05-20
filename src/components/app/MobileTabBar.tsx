@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
-type Tab = { href: string; label: string; icon: React.ReactNode };
+type Tab = { href: string; labelKey: string; icon: React.ReactNode };
 
 const Icon = {
   today: (
@@ -57,13 +58,13 @@ const Icon = {
 };
 
 const TABS: Tab[] = [
-  { href: "/dashboard", label: "Today", icon: Icon.today },
-  { href: "/coaching",  label: "Træn",  icon: Icon.train },
-  { href: "/nutrition", label: "Mad",   icon: Icon.food },
-  { href: "/community", label: "Crew",  icon: Icon.crew },
-  { href: "/messages",  label: "Chat",  icon: Icon.chat },
-  { href: "/reps",      label: "Reps",  icon: Icon.reps },
-  { href: "/profile",   label: "Mig",   icon: Icon.me },
+  { href: "/dashboard", labelKey: "today", icon: Icon.today },
+  { href: "/coaching",  labelKey: "train", icon: Icon.train },
+  { href: "/nutrition", labelKey: "food",  icon: Icon.food },
+  { href: "/community", labelKey: "crew",  icon: Icon.crew },
+  { href: "/messages",  labelKey: "chat",  icon: Icon.chat },
+  { href: "/reps",      labelKey: "reps",  icon: Icon.reps },
+  { href: "/profile",   labelKey: "me",    icon: Icon.me },
 ];
 
 export default function MobileTabBar({
@@ -72,31 +73,32 @@ export default function MobileTabBar({
   unreadMessages?: number;
 }) {
   const pathname = usePathname();
+  const t = useTranslations("Nav");
   return (
     <nav
       className="tabbar lg:hidden"
-      aria-label="Hovednavigation"
+      aria-label={t("shell.mainNav")}
     >
       <div className="tabbar-row">
-        {TABS.map((t) => {
+        {TABS.map((tab) => {
           const active =
-            t.href === "/dashboard"
+            tab.href === "/dashboard"
               ? pathname === "/dashboard"
-              : pathname?.startsWith(t.href);
-          const showBadge = t.href === "/messages" && unreadMessages > 0;
+              : pathname?.startsWith(tab.href);
+          const showBadge = tab.href === "/messages" && unreadMessages > 0;
           return (
             <Link
-              key={t.href}
-              href={t.href}
+              key={tab.href}
+              href={tab.href}
               className="tab relative"
               data-active={active || false}
             >
-              {t.icon}
-              <span>{t.label}</span>
+              {tab.icon}
+              <span>{t(`links.${tab.labelKey}`)}</span>
               {showBadge ? (
                 <span
                   className="absolute top-1 right-2 numeric text-[9px] tabular-nums px-1 py-0.5 rounded-full bg-fg text-bg leading-none min-w-[14px] text-center"
-                  aria-label={`${unreadMessages} ulæste`}
+                  aria-label={t("shell.unread", { count: unreadMessages })}
                 >
                   {unreadMessages > 9 ? "9+" : unreadMessages}
                 </span>

@@ -1,0 +1,217 @@
+{
+  "privacy": {
+    "metaTitle": "Privacy Policy — {product}",
+    "eyebrow": "Privacy Policy",
+    "title": "What we store.",
+    "introUpdated": "Last updated: May 2026 · Data controller: ",
+    "introCvrFallback": "CVR — contact",
+    "s01": {
+      "eyebrow": "01",
+      "title": "What we collect",
+      "intro": "As a member of {product} we process the following:",
+      "items": {
+        "account": {
+          "k": "Account",
+          "v": "Email, chosen handle, display name, bio, tier, joined date."
+        },
+        "training": {
+          "k": "Training data",
+          "v": "Logged sets (weight, reps, RPE, timestamp), program assignment, weekly progression, completed sessions."
+        },
+        "formChecks": {
+          "k": "Form checks",
+          "v": "Video uploads (private bucket), AI-generated assessments, coach notes."
+        },
+        "wearable": {
+          "k": "Wearable data",
+          "v": "If you connect a wearable (e.g. Whoop): recovery, sleep, strain/workout, cycle and basic profile data — only with your explicit consent. See section 08."
+        },
+        "social": {
+          "k": "Social",
+          "v": "Posts, comments, reactions, @mentions."
+        },
+        "reps": {
+          "k": "Reps & purchases",
+          "v": "Reps balance, transactions, redemptions. Stripe handles payment data — we only store a customer ID."
+        },
+        "technical": {
+          "k": "Technical data",
+          "v": "Session cookie, IP address for logging purposes, request timestamps."
+        }
+      }
+    },
+    "s02": {
+      "eyebrow": "02",
+      "title": "Why",
+      "intro": "We process your data to:",
+      "items": {
+        "deliver": {
+          "k": "Deliver the service",
+          "v": "Personalized program, form-check feedback, community feed, Reps loyalty."
+        },
+        "notify": {
+          "k": "Send notifications",
+          "v": "Coach notes, @mentions, weekly digest, tier-up. You can turn off each type under Settings."
+        },
+        "improve": {
+          "k": "Improve the platform",
+          "v": "Aggregated usage — no individual tracking profiles."
+        },
+        "legal": {
+          "k": "Meet legal requirements",
+          "v": "Accounting, GDPR rights, security."
+        }
+      }
+    },
+    "s03": {
+      "eyebrow": "03",
+      "title": "Who we share with",
+      "intro": "We only share data when it is strictly necessary for the service:",
+      "items": {
+        "supabase": {
+          "k": "Supabase",
+          "v": "Database and auth — EU region (Frankfurt). Data processor under a DPA."
+        },
+        "resend": {
+          "k": "Resend",
+          "v": "Transactional email — sends on our behalf. EU/USA, Standard Contractual Clauses."
+        },
+        "stripe": {
+          "k": "Stripe",
+          "v": "Payment processing — you enter card details directly with Stripe; we never see them."
+        },
+        "anthropic": {
+          "k": "Anthropic (Claude)",
+          "v": "AI program generation and form-check assessment. Anthropic does not store prompts/output beyond the request lifecycle on their business tier."
+        }
+      },
+      "outro": "We never sell your data. We don't share it for marketing without explicit consent."
+    },
+    "s04": {
+      "eyebrow": "04",
+      "title": "Your rights (GDPR)",
+      "items": {
+        "access": {
+          "k": "Access + portability",
+          "v": "Export all your data as JSON from Settings → Data."
+        },
+        "rectify": {
+          "k": "Rectification",
+          "v": "Update your profile under Settings or write to us."
+        },
+        "delete": {
+          "k": "Deletion",
+          "v": "Delete your account permanently under Settings → Danger zone."
+        },
+        "restrict": {
+          "k": "Restriction + objection",
+          "v": "Write to {email} — we respond within 30 days."
+        },
+        "complain": {
+          "k": "Complaint",
+          "v": "You can complain to the Danish Data Protection Agency if you believe we process your data incorrectly."
+        }
+      }
+    },
+    "s05": {
+      "eyebrow": "05",
+      "title": "Cookies",
+      "bodyBefore": "We use a single strictly necessary cookie (",
+      "cookieName": "mi_session",
+      "bodyMid": " / Supabase auth cookie) to keep you signed in. It is stored as long as your session is active, or 30 days max. We do ",
+      "bodyEmphasis": "not",
+      "bodyAfter": " use analytics cookies, tracking pixels, or third-party advertising cookies."
+    },
+    "s06": {
+      "eyebrow": "06",
+      "title": "Retention",
+      "body": "Active membership data is stored as long as your account exists. When you delete your account everything is permanently removed within 30 days (up to 90 days if backup rotation requires it). Accounting data from Stripe is kept for 5 years per Danish bookkeeping law."
+    },
+    "s07": {
+      "eyebrow": "07",
+      "title": "Changes",
+      "body": "We update this policy when functionality changes. Material changes are announced by email to registered members at least 14 days before they take effect."
+    }
+  },
+  "terms": {
+    "metaTitle": "Terms — {product}",
+    "eyebrow": "Terms",
+    "title": "The ground rules.",
+    "introBefore": "Last updated: May 2026 · By using {product} you accept these terms. Questions? ",
+    "s01": {
+      "eyebrow": "01",
+      "title": "The service",
+      "bodyBefore": "{product} is a closed coaching platform provided by {entity}",
+      "cvr": " (CVR {cvr})",
+      "cvrFallback": " (CVR — contact)",
+      "bodyAfter": ". We give access to AI-generated strength training programs, video-based form feedback, a community of crew members, and a Reps loyalty program. Access requires an invite code and active membership."
+    },
+    "s02": {
+      "eyebrow": "02",
+      "title": "Membership and payment",
+      "items": {
+        "billed": {
+          "k": "Billed",
+          "v": "Monthly in advance via Stripe. Price is shown clearly before checkout."
+        },
+        "cancel": {
+          "k": "Cancellation",
+          "v": "Anytime from the Billing page. Takes effect at the next billing cycle — no refund for the current period."
+        },
+        "addon": {
+          "k": "1:1 add-on",
+          "v": "Limited spots, separate terms — we cancel manually if no spot is available."
+        },
+        "priceChanges": {
+          "k": "Price changes",
+          "v": "Announced 30 days in advance. You can cancel before the change takes effect."
+        }
+      }
+    },
+    "s03": {
+      "eyebrow": "03",
+      "title": "Health disclaimer",
+      "p1Emphasis": "You train at your own risk.",
+      "p1": " Our coaching and AI feedback do not replace medical or physiotherapy advice. You should consult a doctor before starting a new training program, especially if you have existing injuries, heart conditions, or other health issues.",
+      "p2": "AI form checks are a technical assessment, not a final quality assurance. Mikael Munk reviews personally within 24 hours, but the responsibility to lift safely lies with you."
+    },
+    "s04": {
+      "eyebrow": "04",
+      "title": "Acceptable use",
+      "items": {
+        "personal": {
+          "k": "Personal",
+          "v": "Your account is personal. Don't share logins or invite codes."
+        },
+        "respect": {
+          "k": "Respect",
+          "v": "In the crew feed: constructive feedback, no hate, no ads, no spam."
+        },
+        "content": {
+          "k": "Content",
+          "v": "You keep copyright to your posts and videos. We have a perpetual license to display them within the platform."
+        },
+        "suspension": {
+          "k": "Suspension",
+          "v": "We can suspend accounts that break the rules. We give notice and a chance to fix it where possible."
+        }
+      }
+    },
+    "s05": {
+      "eyebrow": "05",
+      "title": "Reps and redemptions",
+      "p1": "Reps have no cash value and cannot be converted to money or transferred between members. They don't expire — but if you delete your account or cancel your membership, you lose access to both your balance and redemptions.",
+      "p2": "Limited drops are shipped with GLS once Mikael confirms — typically within 5 business days. Custom-embroidered products have a 2-3 week delivery time."
+    },
+    "s06": {
+      "eyebrow": "06",
+      "title": "Limitation of liability",
+      "body": "Our total liability toward you is limited to the amount you have paid in membership over the past 12 months. We are not liable for indirect losses, lost profits or damages resulting from the service being unavailable. This does not limit liability that cannot be waived under Danish law."
+    },
+    "s07": {
+      "eyebrow": "07",
+      "title": "Governing law + disputes",
+      "body": "These terms are governed by Danish law. Disputes that cannot be settled amicably are decided by the Copenhagen City Court as the court of first instance."
+    }
+  }
+}

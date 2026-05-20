@@ -1,23 +1,27 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { listCoachPrograms } from "@/lib/data/coach-programs";
 import NewProgramForm from "@/components/coach/NewProgramForm";
 
-export const metadata = { title: "Programmer · Coach" };
+export async function generateMetadata() {
+  const t = await getTranslations("CoachStudio.programs");
+  return { title: t("metaTitle") };
+}
 
 export default async function CoachProgramsPage() {
   const programs = await listCoachPrograms();
+  const t = await getTranslations("CoachStudio.programs");
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2">
-        <div className="eyebrow mb-2">Coach console · Programmer</div>
+        <div className="eyebrow mb-2">{t("eyebrow")}</div>
         <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">
-          Programmer.
+          {t("title")}
         </h1>
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-          Byg trænings-skabeloner fra øvelsesbiblioteket — dage, øvelser,
-          sæt — og publicér dem til medlemmer.
+          {t("intro")}
         </p>
       </header>
 
@@ -25,7 +29,7 @@ export default async function CoachProgramsPage() {
 
       {programs.length === 0 ? (
         <p className="text-fg-dim text-sm">
-          Ingen programmer endnu. Opret det første ovenfor.
+          {t("empty")}
         </p>
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -44,7 +48,7 @@ export default async function CoachProgramsPage() {
                       p.isPublished ? "text-fg" : "text-fg-faint"
                     }`}
                   >
-                    {p.isPublished ? "Publiceret" : "Kladde"}
+                    {p.isPublished ? t("published") : t("draft")}
                   </span>
                 </div>
                 <div className="font-display text-xl leading-tight">
@@ -54,13 +58,16 @@ export default async function CoachProgramsPage() {
                   {[p.type, p.level].filter(Boolean).join(" · ")}
                 </div>
                 <div className="mt-4 flex items-center gap-4 text-[11px] font-mono text-fg-dim">
-                  <span>{p.weeks} uger</span>
+                  <span>{t("weeks", { count: p.weeks })}</span>
                   <span>
-                    {p.dayCount} {p.dayCount === 1 ? "dag" : "dage"}
+                    {p.dayCount === 1
+                      ? t("daysOne", { count: p.dayCount })
+                      : t("daysOther", { count: p.dayCount })}
                   </span>
                   <span>
-                    {p.activeAssignments} aktiv
-                    {p.activeAssignments === 1 ? "" : "e"}
+                    {p.activeAssignments === 1
+                      ? t("activeOne", { count: p.activeAssignments })
+                      : t("activeOther", { count: p.activeAssignments })}
                   </span>
                 </div>
               </Link>

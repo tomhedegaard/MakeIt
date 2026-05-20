@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
 import {
   MUSCLE_LABELS,
@@ -88,6 +89,7 @@ const TIER_DOT: Record<MuscleTier, string> = {
 };
 
 export default function AnatomyPreview() {
+  const t = useTranslations("CoachStudio.anatomy");
   const [selected, setSelected] = useState<Exercise | null>(LIFTS[0]);
   const [view, setView] = useState<AnatomyView>(
     viewForMuscles([...LIFTS[0].primary, ...LIFTS[0].secondary]),
@@ -172,7 +174,7 @@ export default function AnatomyPreview() {
       {/* Left: exercise picker + gender/view */}
       <section className="space-y-5">
         <div>
-          <div className="eyebrow mb-2">Øvelse</div>
+          <div className="eyebrow mb-2">{t("exercise")}</div>
           <ul className="grid gap-1">
             {LIFTS.map((ex) => (
               <li key={ex.name}>
@@ -196,7 +198,7 @@ export default function AnatomyPreview() {
         </div>
 
         <div className="border-t hairline pt-4">
-          <div className="eyebrow mb-2">Køn</div>
+          <div className="eyebrow mb-2">{t("gender")}</div>
           <div className="flex gap-1">
             {(["male", "female"] as AnatomyGender[]).map((g) => (
               <button
@@ -207,14 +209,14 @@ export default function AnatomyPreview() {
                   gender === g ? "bg-bg-3 text-fg" : "text-fg-dim hover:text-fg"
                 }`}
               >
-                {g === "male" ? "Mand" : "Kvinde"}
+                {g === "male" ? t("genderMale") : t("genderFemale")}
               </button>
             ))}
           </div>
         </div>
 
         <div>
-          <div className="eyebrow mb-2">View</div>
+          <div className="eyebrow mb-2">{t("view")}</div>
           <div className="flex gap-1">
             {(["front", "back"] as AnatomyView[]).map((v) => (
               <button
@@ -225,7 +227,7 @@ export default function AnatomyPreview() {
                   view === v ? "bg-bg-3 text-fg" : "text-fg-dim hover:text-fg"
                 }`}
               >
-                {v === "front" ? "Forfra" : "Bagfra"}
+                {v === "front" ? t("viewFront") : t("viewBack")}
               </button>
             ))}
           </div>
@@ -250,21 +252,21 @@ export default function AnatomyPreview() {
               className="size-2 rounded-full"
               style={{ background: TIER_DOT.primary }}
             />{" "}
-            Primær
+            {t("tierPrimary")}
           </span>
           <span className="flex items-center gap-1.5">
             <span
               className="size-2 rounded-full"
               style={{ background: TIER_DOT.secondary }}
             />{" "}
-            Sekundær
+            {t("tierSecondary")}
           </span>
           <span className="flex items-center gap-1.5">
             <span
               className="size-2 rounded-full"
               style={{ background: TIER_DOT.tertiary }}
             />{" "}
-            Tertiær
+            {t("tierTertiary")}
           </span>
         </div>
       </div>
@@ -273,7 +275,9 @@ export default function AnatomyPreview() {
       <section className="space-y-4">
         <div>
           <div className="eyebrow mb-2">
-            Synlige muskler · {view === "front" ? "forfra" : "bagfra"}
+            {view === "front"
+              ? t("visibleMusclesFront")
+              : t("visibleMusclesBack")}
           </div>
           <ul className="grid gap-1.5">
             {visibleMuscles.map((m) => {
@@ -326,7 +330,7 @@ export default function AnatomyPreview() {
         </div>
 
         <div className="border-t hairline pt-3 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-          <div>Active selection</div>
+          <div>{t("activeSelection")}</div>
           <div className="mt-2 text-fg-dim font-mono normal-case tracking-normal text-xs">
             <code className="text-fg">primary</code>: [{tiered.primary.join(", ") || "—"}]
           </div>

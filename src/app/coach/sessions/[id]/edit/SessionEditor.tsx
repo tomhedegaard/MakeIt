@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   updateSessionAction,
   type ExerciseInput,
@@ -15,6 +16,7 @@ function tmpId() {
 }
 
 export default function SessionEditor({ session }: { session: EditableSession }) {
+  const t = useTranslations("CoachStudio.sessionEditor");
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
@@ -72,7 +74,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
         _key: tmpId(),
         id: null,
         position: prev.length + 1,
-        exerciseName: "Ny øvelse",
+        exerciseName: t("newExerciseName"),
         cue: "",
         sets: [
           {
@@ -89,7 +91,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
   }
 
   function removeExercise(idx: number) {
-    if (!confirm("Slet denne øvelse fra sessionen?")) return;
+    if (!confirm(t("removeExerciseConfirm"))) return;
     setExercises((prev) =>
       prev.filter((_, i) => i !== idx).map((e, i) => ({ ...e, position: i + 1 }))
     );
@@ -160,24 +162,24 @@ export default function SessionEditor({ session }: { session: EditableSession })
     <div className="space-y-6">
       {/* Top metadata */}
       <section className="surface-2 rounded-2xl p-5 lg:p-6">
-        <div className="eyebrow mb-4">Session</div>
+        <div className="eyebrow mb-4">{t("sessionHeading")}</div>
         <div className="grid gap-3 md:grid-cols-2">
-          <Field label="Title">
+          <Field label={t("titleLabel")}>
             <input
               className="field"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </Field>
-          <Field label="Dag-label">
+          <Field label={t("dayLabelLabel")}>
             <input
               className="field"
               value={dayLabel}
               onChange={(e) => setDayLabel(e.target.value)}
-              placeholder="Dag A — Squat"
+              placeholder={t("dayLabelPlaceholder")}
             />
           </Field>
-          <Field label="Planlagt dato">
+          <Field label={t("scheduledForLabel")}>
             <input
               type="date"
               className="field"
@@ -185,7 +187,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
               onChange={(e) => setScheduledFor(e.target.value)}
             />
           </Field>
-          <Field label="Est. minutter">
+          <Field label={t("estMinutesLabel")}>
             <input
               type="number"
               className="field"
@@ -207,10 +209,14 @@ export default function SessionEditor({ session }: { session: EditableSession })
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0 space-y-3">
               <div className="flex items-center gap-2 eyebrow">
-                <span>Øvelse {String(exIdx + 1).padStart(2, "0")}</span>
+                <span>
+                  {t("exerciseIndex", {
+                    index: String(exIdx + 1).padStart(2, "0"),
+                  })}
+                </span>
                 {ex.id ? null : (
                   <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
-                    Ny
+                    {t("newBadge")}
                   </span>
                 )}
               </div>
@@ -228,16 +234,16 @@ export default function SessionEditor({ session }: { session: EditableSession })
                 onChange={(e) =>
                   patchExercise(exIdx, { cue: e.target.value })
                 }
-                placeholder="Coach-cue (vises i appen)"
+                placeholder={t("cuePlaceholder")}
               />
             </div>
             <button
               type="button"
               onClick={() => removeExercise(exIdx)}
               className="btn btn-ghost btn-sm shrink-0"
-              aria-label="Slet øvelse"
+              aria-label={t("deleteExerciseAria")}
             >
-              Slet
+              {t("deleteExercise")}
             </button>
           </div>
 
@@ -246,11 +252,11 @@ export default function SessionEditor({ session }: { session: EditableSession })
             <table className="w-full text-sm min-w-[520px]">
               <thead>
                 <tr className="text-left">
-                  <th className="px-2 py-2 eyebrow">#</th>
-                  <th className="px-2 py-2 eyebrow">Reps</th>
-                  <th className="px-2 py-2 eyebrow">Vægt (kg)</th>
-                  <th className="px-2 py-2 eyebrow">RPE</th>
-                  <th className="px-2 py-2 eyebrow">Hvile (s)</th>
+                  <th className="px-2 py-2 eyebrow">{t("setsColIndex")}</th>
+                  <th className="px-2 py-2 eyebrow">{t("setsColReps")}</th>
+                  <th className="px-2 py-2 eyebrow">{t("setsColWeight")}</th>
+                  <th className="px-2 py-2 eyebrow">{t("setsColRpe")}</th>
+                  <th className="px-2 py-2 eyebrow">{t("setsColRest")}</th>
                   <th className="px-2 py-2"></th>
                 </tr>
               </thead>
@@ -325,7 +331,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
                         type="button"
                         onClick={() => removeSet(exIdx, setIdx)}
                         className="text-fg-dim hover:text-fg text-xs"
-                        aria-label="Slet sæt"
+                        aria-label={t("deleteSetAria")}
                       >
                         ×
                       </button>
@@ -341,14 +347,14 @@ export default function SessionEditor({ session }: { session: EditableSession })
             onClick={() => addSet(exIdx)}
             className="btn btn-sm"
           >
-            + Tilføj sæt
+            {t("addSet")}
           </button>
         </section>
       ))}
 
       <div>
         <button type="button" onClick={addExercise} className="btn">
-          + Tilføj øvelse
+          {t("addExercise")}
         </button>
       </div>
 
@@ -362,11 +368,11 @@ export default function SessionEditor({ session }: { session: EditableSession })
             href={`/coach/members/${session.memberId}`}
             className="btn btn-ghost btn-sm"
           >
-            Tilbage
+            {t("back")}
           </Link>
           {saved ? (
             <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-dim">
-              ✓ Gemt
+              {t("saved")}
             </span>
           ) : null}
           <button
@@ -375,7 +381,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
             disabled={pending}
             className="btn btn-primary ml-auto"
           >
-            {pending ? "Gemmer…" : "Gem ændringer"}
+            {pending ? t("saving") : t("save")}
           </button>
         </div>
       </div>

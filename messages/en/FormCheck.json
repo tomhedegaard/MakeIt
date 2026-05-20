@@ -1,0 +1,89 @@
+{
+  "eyebrow": "Form check",
+  "choose": {
+    "title": "Record or upload your video.",
+    "titleBlocked": "You're out of form checks.",
+    "descriptionDefault": "Our AI checks depth, bar path and movement quality on your exercise.",
+    "descriptionExercise": "Our AI checks depth, bar path and movement quality on {exercise} — and a head coach reviews everything weekly.",
+    "descriptionBlocked": "AI form check is an Athlete-tier perk and up. Upgrade to get more.",
+    "recordNow": "Record now",
+    "recordNowSub": "Use the camera to film your next set.",
+    "uploadGallery": "Upload from gallery",
+    "uploadGallerySub": "Pick an existing clip from your phone.",
+    "demo": "Demo with a sample video",
+    "demoSub": "Skip the upload and see the AI response right away."
+  },
+  "quota": {
+    "used": "{used} / {limit} used this month"
+  },
+  "upgrade": {
+    "title": "Upgrade to Athlete or higher",
+    "body": "Athlete: 1 form check/month · Beast: 5 · Legend: unlimited. See tier perks →",
+    "orWait": "Or wait for the monthly reset"
+  },
+  "progress": {
+    "uploadingEyebrow": "Uploading",
+    "analyzingEyebrow": "Analyzing",
+    "uploadingTitle": "Sending your video up.",
+    "analyzingTitle": "AI is checking your technique.",
+    "uploadingSub": "{fileName} · encrypted upload",
+    "analyzingSub": "Measuring depth, knee angle, hip shift and bar path. ~ 6 sec.",
+    "videoFallback": "Video",
+    "stepUpload": "Upload video",
+    "stepAnalyze": "AI analysis: depth · bar path · tempo",
+    "stepResult": "Result ready"
+  },
+  "result": {
+    "eyebrow": "AI form check",
+    "outOf": "/ 100",
+    "mockNote": "Demo response · real AI activates with ANTHROPIC_API_KEY",
+    "realNote": "AI assessment · approved by a head coach within 24h",
+    "cardPos": "What you did right",
+    "cardNeg": "Where you can tighten up",
+    "coachTip": "Coach tip",
+    "newRecording": "New recording",
+    "done": "Done",
+    "coachReviewNote": "Also sent to your coach for the weekly review."
+  },
+  "verdicts": {
+    "back squat": {
+      "headline": "Solid set — slight knee valgus in the hole",
+      "pos": [
+        "Bar depth hit — hip below knee on all 3 reps",
+        "Consistent bar path right over midfoot",
+        "Good spinal control through the whole set"
+      ],
+      "neg": [
+        "Right knee caves in slightly on reps 2 and 3",
+        "Tempo accelerates out of the hole — losing tension"
+      ],
+      "fix": "Actively drive the knees out at the bottom (\"spread the floor\"). Hold a 1 sec pause at the bottom next set to rebuild tension."
+    },
+    "deadlift": {
+      "headline": "Strong pull — hyperextension at the top",
+      "pos": [
+        "Bar stays in contact with the body all the way up",
+        "Glutes and lats engaged from setup",
+        "Good pace — no hesitation at the knees"
+      ],
+      "neg": [
+        "Hyperextension at lock-out (you lean back 5°)",
+        "Hips rise marginally before the shoulders"
+      ],
+      "fix": "Lock out by squeezing the glutes, not by leaning back. Think \"stand up\" rather than \"lean back\" at the top."
+    },
+    "default": {
+      "headline": "Technically solid — two minor adjustments",
+      "pos": [
+        "Good control over the whole movement",
+        "Consistent ROM (range of motion) on every rep",
+        "Tempo matches the program's prescription"
+      ],
+      "neg": [
+        "Slight asymmetry between left and right side",
+        "Bar path drifts a touch forward in the eccentric phase"
+      ],
+      "fix": "Film from the side next time to validate bar path. Consider a deload set on the weak side next session."
+    }
+  }
+}

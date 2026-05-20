@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import Container from "@/components/Container";
 import CountUp from "@/components/CountUp";
 import Spotlight from "@/components/Spotlight";
@@ -10,15 +11,8 @@ import Link from "next/link";
 const ease = [0.2, 0.7, 0.2, 1] as const;
 
 type Stat =
-  | { k: string; to: number; pad?: number; s: string }
-  | { k: string; literal: string; s: string };
-
-const STATS: Stat[] = [
-  { k: "Solgte straps", to: 50142, s: "+ stigende" },
-  { k: "Aktive medlemmer", to: 412, s: "Closed beta" },
-  { k: "Coaching-programmer", to: 7, pad: 2, s: "Tilgængelige nu" },
-  { k: "Made in", literal: "DK", s: "København" },
-];
+  | { id: string; k: string; to: number; pad?: number; s: string }
+  | { id: string; k: string; literal: string; s: string };
 
 /**
  * Pinned hero — the section is 260vh tall, its inner content is
@@ -53,6 +47,14 @@ const STATS: Stat[] = [
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  const t = useTranslations("Marketing.hero");
+
+  const STATS: Stat[] = [
+    { id: "straps", k: t("stats.straps"), to: 50142, s: t("stats.strapsSuffix") },
+    { id: "members", k: t("stats.members"), to: 412, s: t("stats.membersSuffix") },
+    { id: "programs", k: t("stats.programs"), to: 7, pad: 2, s: t("stats.programsSuffix") },
+    { id: "madeIn", k: t("stats.madeIn"), literal: "DK", s: t("stats.madeInSuffix") },
+  ];
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -101,6 +103,7 @@ export default function Hero() {
         <HeroContent
           // Static end-state — no motion values; just plain styles.
           staticMode
+          stats={STATS}
         />
       </section>
     );
@@ -140,7 +143,7 @@ export default function Hero() {
             >
               <span className="pulse-dot" />
               <span className="eyebrow">
-                MakeIt <span className="text-fg-faint">{"//"}</span> HQ &nbsp;·&nbsp; Closed Beta · Invite only · est. 2026
+                MakeIt <span className="text-fg-faint">{"//"}</span> HQ &nbsp;·&nbsp; {t("eyebrow")}
               </span>
             </motion.div>
 
@@ -180,10 +183,9 @@ export default function Hero() {
                 }}
                 className="md:col-span-6 text-fg-dim text-lg md:text-xl leading-relaxed max-w-xl"
               >
-                MakeIt er ikke bare straps og cuffs.
+                {t("subline")}
                 <br />
-                Det er det interne univers for crewet bag — coaching, community og loyalitet
-                samlet ét sted. Bygget i København. Lavet til atleter der løfter tungt.
+                {t("subline2")}
               </motion.p>
 
               <motion.div
@@ -191,10 +193,10 @@ export default function Hero() {
                 className="md:col-span-6 flex flex-wrap items-center gap-3 md:justify-end"
               >
                 <Link href="/login" className="btn btn-primary">
-                  Få adgang
+                  {t("ctaPrimary")}
                   <span aria-hidden>→</span>
                 </Link>
-                <a href="#crew" className="btn">Læs mere</a>
+                <a href="#crew" className="btn">{t("ctaSecondary")}</a>
               </motion.div>
             </div>
 
@@ -204,7 +206,7 @@ export default function Hero() {
             >
               {STATS.map((s, i) => (
                 <motion.div
-                  key={s.k}
+                  key={s.id}
                   style={{ opacity: statOpacities[i] }}
                   className="bg-bg p-6 md:p-8"
                 >
@@ -232,7 +234,14 @@ export default function Hero() {
  * version's final visual state without any animation wiring.
  * ---------------------------------------------------------------- */
 
-function HeroContent({ staticMode: _staticMode }: { staticMode: true }) {
+function HeroContent({
+  staticMode: _staticMode,
+  stats,
+}: {
+  staticMode: true;
+  stats: Stat[];
+}) {
+  const t = useTranslations("Marketing.hero");
   return (
     <>
       <div className="pointer-events-none absolute inset-0 z-0">
@@ -244,7 +253,7 @@ function HeroContent({ staticMode: _staticMode }: { staticMode: true }) {
         <div className="flex items-center gap-3 mb-10">
           <span className="pulse-dot" />
           <span className="eyebrow">
-            MakeIt <span className="text-fg-faint">{"//"}</span> HQ &nbsp;·&nbsp; Closed Beta · Invite only · est. 2026
+            MakeIt <span className="text-fg-faint">{"//"}</span> HQ &nbsp;·&nbsp; {t("eyebrow")}
           </span>
         </div>
 
@@ -254,23 +263,22 @@ function HeroContent({ staticMode: _staticMode }: { staticMode: true }) {
 
         <div className="mt-12 grid gap-10 md:grid-cols-12 items-end">
           <p className="md:col-span-6 text-fg-dim text-lg md:text-xl leading-relaxed max-w-xl">
-            MakeIt er ikke bare straps og cuffs.
+            {t("subline")}
             <br />
-            Det er det interne univers for crewet bag — coaching, community og loyalitet
-            samlet ét sted. Bygget i København. Lavet til atleter der løfter tungt.
+            {t("subline2")}
           </p>
           <div className="md:col-span-6 flex flex-wrap items-center gap-3 md:justify-end">
             <Link href="/login" className="btn btn-primary">
-              Få adgang
+              {t("ctaPrimary")}
               <span aria-hidden>→</span>
             </Link>
-            <a href="#crew" className="btn">Læs mere</a>
+            <a href="#crew" className="btn">{t("ctaSecondary")}</a>
           </div>
         </div>
 
         <div className="mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline">
-          {STATS.map((s) => (
-            <div key={s.k} className="bg-bg p-6 md:p-8">
+          {stats.map((s) => (
+            <div key={s.id} className="bg-bg p-6 md:p-8">
               <div className="eyebrow mb-3">{s.k}</div>
               <div className="numeric text-3xl md:text-5xl font-medium text-fg">
                 {"literal" in s ? s.literal : (

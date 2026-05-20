@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { getSession } from "@/lib/auth";
 import {
@@ -31,11 +32,14 @@ import OffPlanLogButton from "./OffPlanLogButton";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
 import { getDailyIntake } from "@/lib/data/nutrition-intake";
 
-export const metadata = {
-  title: "Mad — MakeIt",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Nutrition");
+  return { title: t("metaTitle") };
+}
 
-const DAY_LABELS = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
+type T = Awaited<ReturnType<typeof getTranslations<"Nutrition">>>;
+
+const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 
 export default async function NutritionPage({
   searchParams,
@@ -44,6 +48,7 @@ export default async function NutritionPage({
 }) {
   const { err } = await searchParams;
   const member = (await getSession())!;
+  const t = await getTranslations("Nutrition");
   const weekStart = currentIsoMonday();
   const [
     profile,
@@ -114,13 +119,12 @@ export default async function NutritionPage({
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="eyebrow mb-2">06 — Mad</div>
+          <div className="eyebrow mb-2">{t("page.eyebrow")}</div>
           <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
-            Brændstof.
+            {t("page.title")}
           </h1>
           <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-            AI-genereret ugeplan, holdt indenfor brand-rammen. Olivenolie og
-            smør, ikke rapsolie. Skyr og hytteost, ikke proteinbarer. Hele varer.
+            {t("page.intro")}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -129,13 +133,13 @@ export default async function NutritionPage({
             href="/nutrition/shopping"
             className="btn btn-sm"
           >
-            Indkøbsliste
+            {t("page.shoppingLink")}
           </Link>
           <Link
             href="/nutrition/preferences"
             className="btn btn-ghost btn-sm"
           >
-            Indstillinger
+            {t("page.preferencesLink")}
           </Link>
         </div>
       </header>
@@ -144,10 +148,11 @@ export default async function NutritionPage({
         <QuotaBanner
           kind={err === "quota_plan" ? "plan" : "swap"}
           limit={err === "quota_plan" ? planLimit : swapLimit}
+          t={t}
         />
       ) : null}
 
-      {kcalAdjust ? <KcalAdjustBanner delta={kcalAdjust.delta} reason={kcalAdjust.reason} /> : null}
+      {kcalAdjust ? <KcalAdjustBanner delta={kcalAdjust.delta} reason={kcalAdjust.reason} t={t} /> : null}
 
       <DailyCheckInCard checkin={checkin} />
 
@@ -166,6 +171,7 @@ export default async function NutritionPage({
           weekStart={weekStart}
           hasProfile={Boolean(profile)}
           planLimit={planLimit}
+          t={t}
         />
       ) : (
         <PlanView
@@ -175,6 +181,7 @@ export default async function NutritionPage({
           diet={profile.diet}
           planLimit={planLimit}
           swapLimit={swapLimit}
+          t={t}
         />
       )}
     </Container>
@@ -191,17 +198,22 @@ export default async function NutritionPage({
 function KcalAdjustBanner({
   delta,
   reason,
+  t,
 }: {
   delta: number;
   reason: string | null;
+  t: T;
 }) {
   const sign = delta > 0 ? "+" : "";
   return (
     <div className="surface-2 rounded-xl border border-blue-400/40 px-5 py-3 text-sm">
-      <span className="eyebrow text-blue-400 mr-2">Auto-justering</span>
-      Vi har justeret dit daglige kalorie-mål <strong className="text-fg">{sign}{delta} kcal</strong>
-      {reason ? <> — {reason}</> : null}. Trækker på din vægt-trend over de
-      seneste 14 dage.
+      <span className="eyebrow text-blue-400 mr-2">{t("page.kcalAdjustEyebrow")}</span>
+      {t.rich("page.kcalAdjustBody", {
+        sign,
+        delta,
+        reason: reason ? t("page.kcalAdjustReason", { reason }) : "",
+        strong: (chunks) => <strong className="text-fg">{chunks}</strong>,
+      })}
     </div>
   );
 }
@@ -213,21 +225,30 @@ function KcalAdjustBanner({
 function QuotaBanner({
   kind,
   limit,
+  t,
 }: {
   kind: "plan" | "swap";
   limit: RateLimitStatus;
+  t: T;
 }) {
   const reset = describeNextAvailable(limit.nextAvailableAt);
-  const label = kind === "plan" ? "regeneration" : "byt";
+  const label = kind === "plan" ? t("page.quotaLabelPlan") : t("page.quotaLabelSwap");
   return (
     <div className="surface-2 rounded-xl border border-yellow-400/40 px-5 py-3 text-sm">
-      <span className="eyebrow text-yellow-400 mr-2">Grænse nået</span>
-      Du har brugt din kvota for {label}-handlinger ({limit.daily.used}/
-      {limit.daily.max} i dag, {limit.weekly.used}/{limit.weekly.max} denne uge).
+      <span className="eyebrow text-yellow-400 mr-2">{t("page.quotaEyebrow")}</span>
+      {t("page.quotaBody", {
+        label,
+        dailyUsed: limit.daily.used,
+        dailyMax: limit.daily.max,
+        weeklyUsed: limit.weekly.used,
+        weeklyMax: limit.weekly.max,
+      })}
       {reset ? (
         <>
-          {" "}
-          Næste tilgængelig <strong className="text-fg">{reset}</strong>.
+          {t.rich("page.quotaNext", {
+            reset,
+            strong: (chunks) => <strong className="text-fg">{chunks}</strong>,
+          })}
         </>
       ) : null}
     </div>
@@ -242,10 +263,12 @@ function EmptyState({
   weekStart,
   hasProfile,
   planLimit,
+  t,
 }: {
   weekStart: string;
   hasProfile: boolean;
   planLimit: RateLimitStatus;
+  t: T;
 }) {
   const remaining = Math.max(
     0,
@@ -257,29 +280,32 @@ function EmptyState({
   const resetLabel = describeNextAvailable(planLimit.nextAvailableAt);
   return (
     <section className="surface-2 rounded-2xl p-6 lg:p-10 text-center max-w-2xl mx-auto">
-      <div className="eyebrow mb-3">Ingen plan for uge {weekStartLabel(weekStart)}</div>
+      <div className="eyebrow mb-3">{t("page.emptyEyebrow", { week: weekStartLabel(weekStart) })}</div>
       <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-3">
-        Sæt rammen, så bygger AI&apos;en.
+        {t("page.emptyTitle")}
       </h2>
       <p className="text-fg-dim text-sm md:text-base max-w-md mx-auto mb-5">
-        Når du har sat allergier, dislikes og foretrukne ingredienser, genererer
-        vi en uge-plan med 21 måltider, indkøbsliste og prep-skema.
+        {t("page.emptyBody")}
       </p>
       <div className="flex flex-wrap items-center justify-center gap-2">
         {hasProfile ? (
           <GeneratePlanButton
-            label="Generér ugeplan"
+            label={t("page.emptyGenerate")}
             quotaRemaining={remaining}
             quotaResetLabel={resetLabel}
           />
         ) : null}
         <Link href="/nutrition/preferences" className="btn">
-          Sæt indstillinger →
+          {t("page.emptyPreferences")}
         </Link>
       </div>
       <p className="mt-4 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-        {planLimit.daily.used}/{planLimit.daily.max} i dag · {planLimit.weekly.used}/
-        {planLimit.weekly.max} denne uge
+        {t("page.emptyQuota", {
+          dailyUsed: planLimit.daily.used,
+          dailyMax: planLimit.daily.max,
+          weeklyUsed: planLimit.weekly.used,
+          weeklyMax: planLimit.weekly.max,
+        })}
       </p>
     </section>
   );
@@ -296,6 +322,7 @@ function PlanView({
   diet,
   planLimit,
   swapLimit,
+  t,
 }: {
   plan: Plan;
   todayIndex: number;
@@ -303,6 +330,7 @@ function PlanView({
   diet: "omnivore" | "pescatarian" | "vegetarian" | "vegan";
   planLimit: RateLimitStatus;
   swapLimit: RateLimitStatus;
+  t: T;
 }) {
   const remaining = Math.max(
     0,
@@ -342,24 +370,24 @@ function PlanView({
     <>
       {/* Macro / meta strip */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline rounded-lg overflow-hidden">
-        <Stat label="Kcal / dag" value={plan.dailyKcal ?? "—"} />
-        <Stat label="Protein g" value={plan.dailyProteinG ?? "—"} />
-        <Stat label="Kulhydrat g" value={plan.dailyCarbsG ?? "—"} />
-        <Stat label="Fedt g" value={plan.dailyFatG ?? "—"} />
+        <Stat label={t("page.statKcal")} value={plan.dailyKcal ?? "—"} />
+        <Stat label={t("page.statProtein")} value={plan.dailyProteinG ?? "—"} />
+        <Stat label={t("page.statCarbs")} value={plan.dailyCarbsG ?? "—"} />
+        <Stat label={t("page.statFat")} value={plan.dailyFatG ?? "—"} />
       </section>
 
       {/* Week strip */}
       <section
-        aria-label="Ugeoversigt"
+        aria-label={t("page.weekOverviewLabel")}
         className="-mx-6 md:mx-0 px-6 md:px-0 overflow-x-auto"
       >
         <ol className="flex gap-2 md:grid md:grid-cols-7 min-w-max md:min-w-0">
-          {DAY_LABELS.map((label, i) => {
+          {DAY_KEYS.map((dayKey, i) => {
             const isToday = i === todayIndex;
             const meals = byDay[i] ?? [];
             const dayKcal = meals.reduce((sum, m) => sum + (m.estKcal ?? 0), 0);
             return (
-              <li key={label} className="shrink-0 md:shrink">
+              <li key={dayKey} className="shrink-0 md:shrink">
                 <a
                   href={`#day-${i}`}
                   className="block surface-2 rounded-xl p-3 md:p-4 w-[78px] md:w-auto text-center lift transition-colors"
@@ -368,10 +396,10 @@ function PlanView({
                     borderColor: isToday ? "var(--line-bright)" : undefined,
                   }}
                 >
-                  <div className="eyebrow mb-1.5">{label}</div>
+                  <div className="eyebrow mb-1.5">{t(`dayLabels.${dayKey}`)}</div>
                   <div className="numeric text-xl mb-1">{meals.length}</div>
                   <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-                    måltider
+                    {t("page.meals")}
                   </div>
                   <div className="numeric text-[11px] text-fg-dim mt-1.5">
                     {dayKcal > 0 ? `${dayKcal} kcal` : "—"}
@@ -387,13 +415,18 @@ function PlanView({
       <section id={`day-${todayIndex}`}>
         <div className="flex items-end justify-between mb-3">
           <div>
-            <div className="eyebrow mb-1">I dag · {DAY_LABELS[todayIndex]}</div>
+            <div className="eyebrow mb-1">{t("page.todayEyebrow", { day: t(`dayLabels.${DAY_KEYS[todayIndex]}`) })}</div>
             <h2 className="font-display text-3xl md:text-4xl leading-[1]">
-              {today.length} måltid{today.length === 1 ? "" : "er"}
+              {today.length === 1
+                ? t("page.todayMealsOne", { count: today.length })
+                : t("page.todayMealsOther", { count: today.length })}
             </h2>
           </div>
           <span className="text-xs font-mono text-fg-faint">
-            {today.reduce((s, m) => s + (m.estKcal ?? 0), 0)} kcal · {today.reduce((s, m) => s + (m.estProteinG ?? 0), 0)}g P
+            {t("page.todayMacros", {
+              kcal: today.reduce((s, m) => s + (m.estKcal ?? 0), 0),
+              protein: today.reduce((s, m) => s + (m.estProteinG ?? 0), 0),
+            })}
           </span>
         </div>
         <ul className="space-y-3">
@@ -407,7 +440,7 @@ function PlanView({
 
       {/* Rest of week — collapsed by day */}
       <section className="space-y-3">
-        <h2 className="eyebrow">Resten af ugen</h2>
+        <h2 className="eyebrow">{t("page.restOfWeek")}</h2>
         {byDay.map((meals, i) => {
           if (i === todayIndex) return null;
           const dayKcal = meals.reduce((sum, m) => sum + (m.estKcal ?? 0), 0);
@@ -419,7 +452,7 @@ function PlanView({
               open={i === todayIndex + 1}
             >
               <summary className="cursor-pointer flex items-center gap-4 px-5 py-4 list-none">
-                <div className="eyebrow w-12 shrink-0">{DAY_LABELS[i]}</div>
+                <div className="eyebrow w-12 shrink-0">{t(`dayLabels.${DAY_KEYS[i]}`)}</div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm truncate">
                     {meals.map((m) => m.title).join(" · ")}
@@ -450,10 +483,9 @@ function PlanView({
       {/* Supplements */}
       {supplements.length > 0 ? (
         <section className="surface-2 rounded-2xl p-5 lg:p-6">
-          <div className="eyebrow mb-3">Supplerings-nudge</div>
+          <div className="eyebrow mb-3">{t("page.supplementsEyebrow")}</div>
           <p className="text-fg-dim text-xs mb-4 max-w-prose">
-            Vi anbefaler altid at få det fra mad. Disse er undtagelser hvor det
-            er svært eller dyrt at hente nok fra tallerkenen alene.
+            {t("page.supplementsBody")}
           </p>
           <ul className="grid gap-3 md:grid-cols-2">
             {supplements.map((s) => (
@@ -461,7 +493,11 @@ function PlanView({
                 <div className="flex items-baseline justify-between gap-3 mb-1">
                   <div className="text-sm">{s.title}</div>
                   <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-                    {s.necessity === "high-value" ? "Stærk" : s.necessity === "useful" ? "Nyttig" : "Overvej"}
+                    {s.necessity === "high-value"
+                      ? t("page.supplementStrong")
+                      : s.necessity === "useful"
+                      ? t("page.supplementUseful")
+                      : t("page.supplementConsider")}
                   </span>
                 </div>
                 <div className="text-xs text-fg-dim leading-relaxed">{s.why}</div>
@@ -474,14 +510,16 @@ function PlanView({
       {/* Footer actions */}
       <section className="flex flex-wrap items-center gap-2 pt-2">
         <GeneratePlanButton
-          label="Regenerér ugeplan"
+          label={t("page.regenerate")}
           variant="ghost"
           quotaRemaining={remaining}
           quotaResetLabel={resetLabel}
         />
         <LogMealButton dateIso={isoToday()} />
         <span className="text-[11px] font-mono text-fg-faint ml-auto">
-          {plan.generator === "claude" ? `Genereret af ${plan.generatorModel ?? "claude"}` : "Genereret lokalt (mock)"}
+          {plan.generator === "claude"
+            ? t("page.generatedByClaude", { model: plan.generatorModel ?? "claude" })
+            : t("page.generatedLocally")}
         </span>
       </section>
     </>

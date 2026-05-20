@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import {
   groupBacklog,
   listBacklog,
@@ -19,6 +20,7 @@ import {
  * drop in as a section.
  */
 export default async function Backlog() {
+  const t = await getTranslations("Coach.backlog");
   const items = await listBacklog();
   const grouped = groupBacklog(items);
 
@@ -32,23 +34,22 @@ export default async function Backlog() {
     <section className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="eyebrow mb-1">Backlog</div>
-          <h2 className="font-display text-2xl md:text-3xl">Roadmap & issues</h2>
+          <div className="eyebrow mb-1">{t("eyebrow")}</div>
+          <h2 className="font-display text-2xl md:text-3xl">{t("title")}</h2>
           <p className="mt-1 text-sm text-fg-dim max-w-md">
-            Features, ændringer og fixes. Synlig kun for admins (RLS).
-            Markeret &ldquo;done&rdquo; bevares som changelog.
+            {t("sub")}
           </p>
         </div>
         <div className="flex gap-3 text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
-          <span>{totals.open} open</span>
+          <span>{t("open", { count: totals.open })}</span>
           <span>·</span>
-          <span>{totals.in_progress} active</span>
+          <span>{t("active", { count: totals.in_progress })}</span>
           <span>·</span>
-          <span>{totals.done} done</span>
+          <span>{t("done", { count: totals.done })}</span>
         </div>
       </div>
 
-      <QuickAdd />
+      <QuickAdd t={t} />
 
       <div className="space-y-6">
         {grouped.map((group) =>
@@ -62,7 +63,7 @@ export default async function Backlog() {
               </div>
               <ul className="surface-2 rounded-2xl divide-y hairline overflow-hidden">
                 {group.items.map((item) => (
-                  <BacklogRow key={item.id} item={item} />
+                  <BacklogRow key={item.id} item={item} t={t} />
                 ))}
               </ul>
             </div>
@@ -70,7 +71,7 @@ export default async function Backlog() {
         )}
         {items.length === 0 ? (
           <div className="surface-2 rounded-2xl px-5 py-8 text-center text-sm text-fg-dim">
-            Ingen items endnu — tilføj første ovenfor.
+            {t("empty")}
           </div>
         ) : null}
       </div>
@@ -80,50 +81,52 @@ export default async function Backlog() {
 
 /* ---------------------------- atoms ---------------------------- */
 
-function QuickAdd() {
+type Translator = Awaited<ReturnType<typeof getTranslations>>;
+
+function QuickAdd({ t }: { t: Translator }) {
   return (
     <form
       action={createBacklogItemAction}
       className="surface-2 rounded-2xl p-4 grid gap-3 md:grid-cols-[1fr_auto_auto_auto] md:items-end"
     >
       <label className="block md:col-span-1">
-        <span className="eyebrow block mb-1.5">Titel</span>
+        <span className="eyebrow block mb-1.5">{t("titleLabel")}</span>
         <input
           name="title"
           required
           minLength={3}
           maxLength={200}
-          placeholder="Kort beskrivelse — fx 'Tilføj password-recovery flow'"
+          placeholder={t("titlePlaceholder")}
           className="field h-10"
         />
       </label>
       <label className="block">
-        <span className="eyebrow block mb-1.5">Type</span>
+        <span className="eyebrow block mb-1.5">{t("typeLabel")}</span>
         <select name="kind" defaultValue="feature" className="field h-10">
-          <option value="feature">Feature</option>
-          <option value="change">Change</option>
-          <option value="fix">Fix</option>
+          <option value="feature">{t("typeFeature")}</option>
+          <option value="change">{t("typeChange")}</option>
+          <option value="fix">{t("typeFix")}</option>
         </select>
       </label>
       <label className="block">
-        <span className="eyebrow block mb-1.5">Priority</span>
+        <span className="eyebrow block mb-1.5">{t("priorityLabel")}</span>
         <select name="priority" defaultValue="medium" className="field h-10">
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-          <option value="critical">Critical</option>
+          <option value="low">{t("priorityLow")}</option>
+          <option value="medium">{t("priorityMedium")}</option>
+          <option value="high">{t("priorityHigh")}</option>
+          <option value="critical">{t("priorityCritical")}</option>
         </select>
       </label>
       <button type="submit" className="btn btn-primary h-10">
-        Tilføj →
+        {t("add")}
       </button>
       <label className="block md:col-span-4">
-        <span className="eyebrow block mb-1.5">Beskrivelse (valgfri)</span>
+        <span className="eyebrow block mb-1.5">{t("descriptionLabel")}</span>
         <textarea
           name="description"
           rows={2}
           maxLength={2000}
-          placeholder="Mere kontekst, links, acceptance criteria…"
+          placeholder={t("descriptionPlaceholder")}
           className="field py-2 min-h-[60px] resize-y w-full"
         />
       </label>
@@ -131,7 +134,7 @@ function QuickAdd() {
   );
 }
 
-function BacklogRow({ item }: { item: BacklogItem }) {
+function BacklogRow({ item, t }: { item: BacklogItem; t: Translator }) {
   const isTerminal = item.status === "done" || item.status === "wontfix";
   return (
     <li className="p-4">
@@ -165,51 +168,50 @@ function BacklogRow({ item }: { item: BacklogItem }) {
               day: "numeric",
             })}
             {item.completedAt ? (
-              <>
-                {" · shipped "}
-                {new Date(item.completedAt).toLocaleDateString("da-DK", {
+              t("shipped", {
+                date: new Date(item.completedAt).toLocaleDateString("da-DK", {
                   year: "numeric",
                   month: "short",
                   day: "numeric",
-                })}
-              </>
+                }),
+              })
             ) : null}
           </div>
         </div>
-        <StatusActions item={item} />
+        <StatusActions item={item} t={t} />
       </div>
     </li>
   );
 }
 
-function StatusActions({ item }: { item: BacklogItem }) {
+function StatusActions({ item, t }: { item: BacklogItem; t: Translator }) {
   // Build the set of allowed transitions per current state. Each is
   // a self-contained <form> so it works without client-side JS.
   const transitions: { status: BacklogStatus; label: string }[] = [];
   if (item.status === "open") {
-    transitions.push({ status: "in_progress", label: "Take" });
-    transitions.push({ status: "done", label: "Done" });
-    transitions.push({ status: "wontfix", label: "Won't fix" });
+    transitions.push({ status: "in_progress", label: t("transitionTake") });
+    transitions.push({ status: "done", label: t("transitionDone") });
+    transitions.push({ status: "wontfix", label: t("transitionWontfix") });
   } else if (item.status === "in_progress") {
-    transitions.push({ status: "done", label: "Done" });
-    transitions.push({ status: "open", label: "Pause" });
+    transitions.push({ status: "done", label: t("transitionDone") });
+    transitions.push({ status: "open", label: t("transitionPause") });
   } else if (item.status === "done") {
-    transitions.push({ status: "open", label: "Reopen" });
+    transitions.push({ status: "open", label: t("transitionReopen") });
   } else if (item.status === "wontfix") {
-    transitions.push({ status: "open", label: "Reopen" });
+    transitions.push({ status: "open", label: t("transitionReopen") });
   }
 
   return (
     <div className="flex flex-wrap items-center gap-1.5 shrink-0">
-      {transitions.map((t) => (
-        <form key={t.status} action={updateBacklogStatusAction}>
+      {transitions.map((tr) => (
+        <form key={tr.status} action={updateBacklogStatusAction}>
           <input type="hidden" name="id" value={item.id} />
-          <input type="hidden" name="status" value={t.status} />
+          <input type="hidden" name="status" value={tr.status} />
           <button
             type="submit"
             className="text-[10px] font-mono uppercase tracking-[0.14em] px-2 py-1 rounded border hairline-strong hover:bg-bg-3 transition-colors"
           >
-            {t.label}
+            {tr.label}
           </button>
         </form>
       ))}
@@ -218,7 +220,7 @@ function StatusActions({ item }: { item: BacklogItem }) {
         <button
           type="submit"
           className="text-[10px] font-mono uppercase tracking-[0.14em] px-2 py-1 rounded text-fg-faint hover:text-red-400 transition-colors"
-          aria-label="Slet"
+          aria-label={t("delete")}
         >
           ×
         </button>

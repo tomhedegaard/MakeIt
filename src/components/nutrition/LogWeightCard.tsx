@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { logWeightAction } from "@/app/(app)/nutrition/actions";
 
 /**
@@ -22,6 +23,7 @@ export default function LogWeightCard({
   latestLoggedAt: string | null;
   deltaKg: number | null;
 }) {
+  const t = useTranslations("Nutrition.logWeight");
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 
@@ -42,7 +44,7 @@ export default function LogWeightCard({
     <section className="surface-2 rounded-2xl p-5">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <div className="eyebrow mb-1">Bodyweight</div>
+          <div className="eyebrow mb-1">{t("eyebrow")}</div>
           {latestKg ? (
             <>
               <div className="font-display text-3xl numeric leading-none">
@@ -50,10 +52,10 @@ export default function LogWeightCard({
               </div>
               <div className="mt-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
                 {ageDays === 0
-                  ? "Logget i dag"
+                  ? t("loggedToday")
                   : ageDays === 1
-                  ? "Logget i går"
-                  : `Logget for ${ageDays} dage siden`}
+                  ? t("loggedYesterday")
+                  : t("loggedDaysAgo", { days: ageDays ?? 0 })}
                 {deltaKg !== null ? (
                   <>
                     {" · "}
@@ -66,8 +68,10 @@ export default function LogWeightCard({
                           : "text-yellow-400"
                       }
                     >
-                      {deltaKg > 0 ? "+" : ""}
-                      {deltaKg.toFixed(1)} kg seneste uge
+                      {t("deltaLastWeek", {
+                        sign: deltaKg > 0 ? "+" : "",
+                        delta: deltaKg.toFixed(1),
+                      })}
                     </span>
                   </>
                 ) : null}
@@ -75,7 +79,7 @@ export default function LogWeightCard({
             </>
           ) : (
             <p className="text-sm text-fg-dim mt-1">
-              Endnu ingen vejning. Log den første for at få personlige macros.
+              {t("noWeight")}
             </p>
           )}
         </div>
@@ -86,7 +90,7 @@ export default function LogWeightCard({
             onClick={() => setOpen(true)}
             className="btn btn-sm shrink-0"
           >
-            Log ny →
+            {t("logNew")}
           </button>
         ) : null}
       </div>
@@ -94,7 +98,7 @@ export default function LogWeightCard({
       {open ? (
         <form action={submit} className="mt-5 flex items-end gap-3">
           <label className="block flex-1">
-            <span className="eyebrow block mb-1.5">Vægt</span>
+            <span className="eyebrow block mb-1.5">{t("fieldLabel")}</span>
             <div className="relative">
               <input
                 type="number"
@@ -119,7 +123,7 @@ export default function LogWeightCard({
             disabled={pending}
             className="btn btn-primary"
           >
-            {pending ? "…" : "Gem"}
+            {pending ? "…" : t("save")}
           </button>
           <button
             type="button"
@@ -127,7 +131,7 @@ export default function LogWeightCard({
             onClick={() => setOpen(false)}
             className="btn btn-ghost"
           >
-            Annullér
+            {t("cancel")}
           </button>
         </form>
       ) : null}

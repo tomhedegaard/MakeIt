@@ -1,0 +1,62 @@
+{
+  "header": {
+    "eyebrow": "Settings",
+    "title": "Your account",
+    "subtitle": "Profile, notifications, data and account deletion. All under your own control."
+  },
+  "errors": {
+    "handle_invalid": "Handle must start with a letter (a-z) and be 2-31 characters (a-z, 0-9, _, ., -).",
+    "handle_taken": "That handle is already taken — try another.",
+    "auth": "You are not signed in.",
+    "unknown": "Something went wrong — please try again.",
+    "service_key_missing": "Account deletion requires server configuration that is not set up.",
+    "prefs_save": "Could not save — please try again."
+  },
+  "profile": {
+    "eyebrow": "Profile",
+    "title": "How the crew sees you",
+    "handleLabel": "Handle",
+    "displayNameLabel": "Display name",
+    "displayNamePlaceholder": "Mikael Munk",
+    "bioLabel": "Bio",
+    "bioPlaceholder": "What do you lift for? Where are you on your journey?",
+    "save": "Save profile"
+  },
+  "notifications": {
+    "eyebrow": "Notifications",
+    "title": "When we may reach out to you",
+    "pushTitle": "Push reminders",
+    "pushDescription": "A notification on your phone when it is time to log a meal or start a session. Requires you to allow notifications in the browser.",
+    "formCheckLabel": "Coach notes on your form checks",
+    "formCheckSub": "Email when Mikael has reviewed and written a note.",
+    "mentionLabel": "@mentions",
+    "mentionSub": "Email when a crew member mentions you in a comment.",
+    "digestLabel": "Weekly digest",
+    "digestSub": "Monday morning — top PRs, new members, the challenge of the month.",
+    "tierUpLabel": "Tier-up notifications",
+    "tierUpSub": "When you cross from Lifter → Athlete → Beast → Legend.",
+    "save": "Save preferences"
+  },
+  "account": {
+    "eyebrow": "Account",
+    "title": "Behind the scenes",
+    "email": "Email",
+    "tier": "Tier",
+    "memberSince": "Member since"
+  },
+  "data": {
+    "eyebrow": "Data",
+    "title": "Export everything we have on you",
+    "description": "Download a JSON file with your profile, your sessions and logs, your posts and comments, your Reps transactions and form checks. GDPR Art. 20.",
+    "export": "Export my data ↓"
+  },
+  "danger": {
+    "eyebrow": "Danger zone",
+    "title": "Delete your account",
+    "description": "Permanent and irreversible. All sessions, posts, Reps and form checks are deleted. Any active Stripe subscription must be cancelled separately from the billing page first.",
+    "delete": "Delete my account",
+    "deleting": "Deleting…",
+    "confirmPhrase": "DELETE MY ACCOUNT",
+    "confirmPrompt": "This cannot be undone. All your sessions, posts, Reps and form checks will be permanently deleted.\n\nType \"{phrase}\" to confirm:"
+  }
+}

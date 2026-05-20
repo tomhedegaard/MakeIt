@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -9,28 +10,9 @@ import {
 } from "@/lib/data/rewards";
 import RedeemButton from "./RedeemButton";
 
-const TIERS = [
-  { name: "Lifter",  range: "0 — 999",        perks: ["Adgang til crew-feed", "Månedlige challenges", "5% medlemsrabat"] },
-  { name: "Athlete", range: "1.000 — 4.999",  perks: ["Alt fra Lifter", "Early access til drops", "10% rabat", "1 form-check pr. md."] },
-  { name: "Beast",   range: "5.000 — 14.999", perks: ["Alt fra Athlete", "Custom strap-farve (1 stk/år)", "15% rabat", "VIP til IRL-meets"] },
-  { name: "Legend",  range: "15.000+",        perks: ["Alt fra Beast", "1:1 tid med Mikael Munk", "Limited drops i navnet dit", "20% rabat livstid"] },
-];
-
-const HOW = [
-  { v: "+50",   k: "Pr. køb i webshoppen",            sub: "Pr. 100 kr brugt" },
-  { v: "+100",  k: "Pr. fuldført uge i program",       sub: "Maks 4 uger pr. md." },
-  { v: "+250",  k: "Pr. PR du logger med video",       sub: "Verificeret af coach" },
-  { v: "+500",  k: "Pr. ven du inviterer ind",         sub: "Når de aktiverer" },
-  { v: "+1.000", k: "Pr. challenge du vinder",          sub: "Månedlige" },
-  { v: "−",     k: "Reps udløber aldrig",              sub: "De er dine. Punktum." },
-];
-
-const KIND_LABELS: Record<string, string> = {
-  drop: "Limited drop",
-  experience: "Experience",
-  physical: "Fysisk vare",
-  digital: "Digital",
-};
+const TIER_NAMES = ["Lifter", "Athlete", "Beast", "Legend"] as const;
+const HOW_KEYS = ["buy", "week", "pr", "invite", "challenge", "expiry"] as const;
+const KIND_KEYS = ["drop", "experience", "physical", "digital"] as const;
 
 const TIER_THRESHOLDS = [
   { name: "Lifter",  min: 0 },
@@ -65,20 +47,36 @@ export default async function RepsPage() {
   ]);
   const progress = tierProgress(balance);
 
+  const t = await getTranslations("Reps");
+
+  const tiers = TIER_NAMES.map((name) => ({
+    name,
+    range: t(`tiers.list.${name}.range`),
+    perks: t.raw(`tiers.list.${name}.perks`) as string[],
+  }));
+  const how = HOW_KEYS.map((key) => ({
+    v: t(`how.list.${key}.v`),
+    k: t(`how.list.${key}.k`),
+    sub: t(`how.list.${key}.sub`),
+  }));
+  const kindLabels: Record<string, string> = Object.fromEntries(
+    KIND_KEYS.map((key) => [key, t(`kindLabels.${key}`)]),
+  );
+
   return (
     <>
       <PageHeader
-        eyebrow="04 — Reps Program"
-        title="Du arbejder. Du får."
-        subtitle="Tjen Reps for hvad du allerede gør. Bruge dem på ting du faktisk vil have."
+        eyebrow={t("header.eyebrow")}
+        title={t("header.title")}
+        subtitle={t("header.subtitle")}
         right={
           <div className="surface-2 rounded-lg px-6 py-4 text-right min-w-[220px]">
-            <div className="eyebrow mb-1">Din balance</div>
+            <div className="eyebrow mb-1">{t("balance.label")}</div>
             <div className="numeric text-4xl">
               {balance.toLocaleString("da-DK")}
             </div>
             <div className="text-xs text-fg-faint font-mono mt-1">
-              Tier: {progress.current}
+              {t("balance.tier", { tier: progress.current })}
             </div>
             {progress.next ? (
               <>
@@ -89,12 +87,15 @@ export default async function RepsPage() {
                   />
                 </div>
                 <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-2">
-                  {progress.toNext?.toLocaleString("da-DK")} til {progress.next}
+                  {t("balance.toNext", {
+                    amount: progress.toNext?.toLocaleString("da-DK") ?? "",
+                    tier: progress.next,
+                  })}
                 </div>
               </>
             ) : (
               <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-3">
-                Topcap nået · ★
+                {t("balance.topCap")}
               </div>
             )}
           </div>
@@ -103,13 +104,13 @@ export default async function RepsPage() {
 
       <Container className="py-12 space-y-14">
         <section>
-          <div className="eyebrow mb-6">Tiers</div>
+          <div className="eyebrow mb-6">{t("tiers.eyebrow")}</div>
           <div className="grid gap-px bg-line border hairline md:grid-cols-4">
-            {TIERS.map((t) => {
-              const active = t.name === progress.current;
+            {tiers.map((tier) => {
+              const active = tier.name === progress.current;
               return (
                 <div
-                  key={t.name}
+                  key={tier.name}
                   className="p-6 transition-colors"
                   style={{
                     background: active ? "var(--bg-3)" : "var(--bg)",
@@ -117,17 +118,19 @@ export default async function RepsPage() {
                   }}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <div className="font-display text-2xl">{t.name}</div>
+                    <div className="font-display text-2xl">{tier.name}</div>
                     {active ? (
                       <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 inline-flex items-center gap-1.5">
                         <span className="size-1.5 rounded-full bg-fg" />
-                        Du
+                        {t("tiers.you")}
                       </span>
                     ) : null}
                   </div>
-                  <div className="numeric text-xs text-fg-dim mb-4">{t.range} Reps</div>
+                  <div className="numeric text-xs text-fg-dim mb-4">
+                    {t("tiers.range", { range: tier.range })}
+                  </div>
                   <ul className="space-y-2 text-sm text-fg/85">
-                    {t.perks.map((p) => (
+                    {tier.perks.map((p) => (
                       <li key={p} className="flex gap-2">
                         <span className="text-fg-faint">·</span>
                         <span>{p}</span>
@@ -141,9 +144,9 @@ export default async function RepsPage() {
         </section>
 
         <section>
-          <div className="eyebrow mb-6">Sådan tjener du</div>
+          <div className="eyebrow mb-6">{t("how.eyebrow")}</div>
           <div className="grid gap-px bg-line border hairline md:grid-cols-3">
-            {HOW.map((row) => (
+            {how.map((row) => (
               <div key={row.k} className="bg-bg p-6">
                 <div className="numeric text-3xl text-fg mb-2">{row.v}</div>
                 <div className="text-fg/90 text-sm">{row.k}</div>
@@ -155,14 +158,14 @@ export default async function RepsPage() {
 
         <section>
           <div className="flex items-end justify-between mb-6">
-            <div className="eyebrow">Reward shop</div>
+            <div className="eyebrow">{t("shop.eyebrow")}</div>
             <span className="numeric text-xs text-fg-dim">
-              Saldo: {balance.toLocaleString("da-DK")} Reps
+              {t("shop.balance", { balance: balance.toLocaleString("da-DK") })}
             </span>
           </div>
           {rewards.length === 0 ? (
             <div className="surface-2 rounded-lg p-6 text-sm text-fg-dim">
-              Ingen aktive belønninger lige nu. Mikael lægger nye drops ind løbende.
+              {t("shop.empty")}
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -171,7 +174,7 @@ export default async function RepsPage() {
                   <div className="numeric text-3xl mb-1">
                     {r.costReps.toLocaleString("da-DK")}
                   </div>
-                  <div className="eyebrow mb-3">Reps</div>
+                  <div className="eyebrow mb-3">{t("shop.repsLabel")}</div>
                   <div className="font-display text-lg mb-1">{r.name}</div>
                   {r.description ? (
                     <p className="text-xs text-fg-dim font-mono mb-3 flex-1">
@@ -179,11 +182,11 @@ export default async function RepsPage() {
                     </p>
                   ) : <div className="flex-1" />}
                   <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-                    <span>{KIND_LABELS[r.kind] ?? r.kind}</span>
+                    <span>{kindLabels[r.kind] ?? r.kind}</span>
                     {r.stock !== null ? (
-                      <span>{r.stock} tilbage</span>
+                      <span>{t("shop.stockLeft", { stock: r.stock })}</span>
                     ) : (
-                      <span>Ubegrænset</span>
+                      <span>{t("shop.unlimited")}</span>
                     )}
                   </div>
                   <RedeemButton reward={r} balance={balance} />
@@ -196,9 +199,9 @@ export default async function RepsPage() {
         {redemptions.length > 0 ? (
           <section>
             <div className="flex items-end justify-between mb-3">
-              <div className="eyebrow">Mine indløsninger</div>
+              <div className="eyebrow">{t("redemptions.eyebrow")}</div>
               <span className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
-                {redemptions.length} samlet
+                {t("redemptions.total", { count: redemptions.length })}
               </span>
             </div>
             <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">

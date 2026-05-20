@@ -1,18 +1,21 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { getDevStatus, type Severity } from "@/lib/dev-status";
 import { getSession } from "@/lib/auth";
 import { COMPANY } from "@/lib/company";
 import Backlog from "./Backlog";
 
-export const metadata = {
-  title: `System — Coach · ${COMPANY.product}`,
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Coach.system");
+  return { title: t("metaTitle", { product: COMPANY.product }) };
+}
 
 // Refetch on each load — this page is internal and called rarely.
 export const dynamic = "force-dynamic";
 
 export default async function CoachSystemPage() {
+  const t = await getTranslations("Coach.system");
   // Admin-only. The /coach layout has already gated on isCoach;
   // this is the second-tier check that keeps integration status,
   // credential reminders, and DB stats restricted to founders +
@@ -28,12 +31,12 @@ export default async function CoachSystemPage() {
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2">
-        <div className="eyebrow mb-2">Coach console · System</div>
+        <div className="eyebrow mb-2">{t("eyebrow")}</div>
         <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">
-          Integration status.
+          {t("title")}
         </h1>
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-          Eksterne services, credential-rotation og DB-helbred. Opdateret{" "}
+          {t("introPrefix")}
           <time
             dateTime={status.collectedAt}
             className="font-mono text-fg"
@@ -46,27 +49,27 @@ export default async function CoachSystemPage() {
               month: "short",
             })}
           </time>
-          .
+          {t("introSuffix")}
         </p>
       </header>
 
       {/* KPI row — match the /coach overview pattern */}
       <section className="grid grid-cols-2 md:grid-cols-5 gap-px bg-line border hairline rounded-lg overflow-hidden">
-        <KPI label="Services konfigureret" value={`${configured}/${total}`} />
+        <KPI label={t("kpiServicesConfigured")} value={`${configured}/${total}`} />
         <KPI
-          label="Medlemmer"
+          label={t("kpiMembers")}
           value={status.database.reachable ? status.database.members : "—"}
         />
         <KPI
-          label="Aktive abonnementer"
+          label={t("kpiActiveSubscriptions")}
           value={status.database.reachable ? status.database.activeSubscriptions : "—"}
         />
         <KPI
-          label="Sessioner / uge"
+          label={t("kpiSessionsPerWeek")}
           value={status.database.reachable ? status.database.sessionsThisWeek : "—"}
         />
         <KPI
-          label="Form-checks i kø"
+          label={t("kpiPendingFormChecks")}
           value={status.database.reachable ? status.database.pendingFormChecks : "—"}
           pulse={status.database.pendingFormChecks > 0}
         />
@@ -74,9 +77,9 @@ export default async function CoachSystemPage() {
 
       {/* Reminders */}
       <Section
-        eyebrow="Reminders"
-        title="Credential-rotation"
-        sub="Dato + dage tilbage for kendte expirations. Klik runbook for at se rotation-steps."
+        eyebrow={t("remindersEyebrow")}
+        title={t("remindersTitle")}
+        sub={t("remindersSub")}
       >
         <ul className="surface-2 rounded-2xl divide-y hairline overflow-hidden">
           {status.reminders.map((r) => (
@@ -99,13 +102,13 @@ export default async function CoachSystemPage() {
                     <>
                       <div className="font-display text-2xl numeric leading-none">
                         {r.daysUntilExpiry !== null && r.daysUntilExpiry < 0
-                          ? "udløbet"
+                          ? t("expired")
                           : `${r.daysUntilExpiry}`}
                       </div>
                       <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-1">
                         {r.daysUntilExpiry !== null && r.daysUntilExpiry >= 0
-                          ? "dage tilbage"
-                          : "since expiry"}
+                          ? t("daysLeft")
+                          : t("sinceExpiry")}
                       </div>
                       <div className="text-[10px] font-mono text-fg-faint mt-1">
                         {new Date(r.expiresAt).toLocaleDateString("da-DK", {
@@ -117,7 +120,7 @@ export default async function CoachSystemPage() {
                     </>
                   ) : (
                     <div className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
-                      {r.suggestedRotation ?? "ingen hard expiry"}
+                      {r.suggestedRotation ?? t("noHardExpiry")}
                     </div>
                   )}
                 </div>
@@ -129,9 +132,9 @@ export default async function CoachSystemPage() {
 
       {/* Services */}
       <Section
-        eyebrow="Integrations"
-        title="Eksterne services"
-        sub="Env-presence per service. Manglende keys = service kører i mock/fallback-mode."
+        eyebrow={t("servicesEyebrow")}
+        title={t("servicesTitle")}
+        sub={t("servicesSub")}
       >
         <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {status.services.map((s) => (
@@ -157,7 +160,7 @@ export default async function CoachSystemPage() {
                       s.configured ? "text-green-400" : "text-fg-faint"
                     }`}
                   >
-                    {s.configured ? "live" : "missing"}
+                    {s.configured ? t("serviceLive") : t("serviceMissing")}
                   </span>
                 </div>
                 {s.notes ? (
@@ -170,7 +173,7 @@ export default async function CoachSystemPage() {
                     rel="noopener noreferrer"
                     className="mt-2 inline-block text-xs font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg underline underline-offset-2"
                   >
-                    Open dashboard ↗
+                    {t("openDashboard")}
                   </a>
                 ) : null}
               </div>
@@ -181,7 +184,7 @@ export default async function CoachSystemPage() {
 
       {status.database.error ? (
         <section className="surface-2 rounded-2xl p-5 border border-red-400/40">
-          <div className="eyebrow text-red-400 mb-2">Database error</div>
+          <div className="eyebrow text-red-400 mb-2">{t("databaseError")}</div>
           <p className="font-mono text-xs text-fg-dim break-all">
             {status.database.error}
           </p>
@@ -190,30 +193,30 @@ export default async function CoachSystemPage() {
 
       <section className="space-y-4">
         <div>
-          <div className="eyebrow mb-1">Company config</div>
-          <h2 className="font-display text-2xl md:text-3xl">Virksomhedsoplysninger</h2>
+          <div className="eyebrow mb-1">{t("companyConfigEyebrow")}</div>
+          <h2 className="font-display text-2xl md:text-3xl">{t("companyConfigTitle")}</h2>
           <p className="mt-1 text-sm text-fg-dim max-w-md">
-            Single source of truth — vises alle steder i app'en. Rediger i{" "}
-            <code className="text-fg numeric text-xs">src/lib/company.ts</code> og
-            redeploy.
+            {t("companyConfigSubPrefix")}
+            <code className="text-fg numeric text-xs">src/lib/company.ts</code>
+            {t("companyConfigSubSuffix")}
           </p>
         </div>
         <dl className="surface-2 rounded-2xl divide-y hairline overflow-hidden text-sm">
-          <Row label="Name" value={COMPANY.name} />
-          <Row label="Product" value={COMPANY.product} />
-          <Row label="Tagline" value={COMPANY.tagline} />
-          <Row label="App URL" value={COMPANY.appUrl} />
-          <Row label="Marketing URL" value={COMPANY.marketingUrl} />
-          <Row label="Legal entity" value={COMPANY.legal.entity} />
-          <Row label="CVR" value={COMPANY.legal.cvr ?? "—"} dim={!COMPANY.legal.cvr} />
-          <Row label="Address" value={COMPANY.legal.address} />
-          <Row label="Founded" value={String(COMPANY.legal.foundedYear)} />
-          <Row label="Support email" value={COMPANY.emails.support} />
-          <Row label="Billing email" value={COMPANY.emails.billing} />
-          <Row label="Transactional FROM" value={COMPANY.emails.transactionalFrom} />
-          <Row label="Reply-to" value={COMPANY.emails.replyTo} />
+          <Row label={t("rowName")} value={COMPANY.name} />
+          <Row label={t("rowProduct")} value={COMPANY.product} />
+          <Row label={t("rowTagline")} value={COMPANY.tagline} />
+          <Row label={t("rowAppUrl")} value={COMPANY.appUrl} />
+          <Row label={t("rowMarketingUrl")} value={COMPANY.marketingUrl} />
+          <Row label={t("rowLegalEntity")} value={COMPANY.legal.entity} />
+          <Row label={t("rowCvr")} value={COMPANY.legal.cvr ?? "—"} dim={!COMPANY.legal.cvr} />
+          <Row label={t("rowAddress")} value={COMPANY.legal.address} />
+          <Row label={t("rowFounded")} value={String(COMPANY.legal.foundedYear)} />
+          <Row label={t("rowSupportEmail")} value={COMPANY.emails.support} />
+          <Row label={t("rowBillingEmail")} value={COMPANY.emails.billing} />
+          <Row label={t("rowTransactionalFrom")} value={COMPANY.emails.transactionalFrom} />
+          <Row label={t("rowReplyTo")} value={COMPANY.emails.replyTo} />
           <Row
-            label="Instagram"
+            label={t("rowInstagram")}
             value={COMPANY.social.instagramHandle ? `@${COMPANY.social.instagramHandle}` : "—"}
             dim={!COMPANY.social.instagramHandle}
           />

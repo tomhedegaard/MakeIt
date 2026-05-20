@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -6,17 +7,6 @@ import { STRIPE_ENABLED } from "@/lib/stripe";
 import { getActiveSubscriptions, type ActiveSubscription } from "@/lib/data/billing";
 import { startCheckoutAction, openPortalAction } from "./actions";
 import { BILLING_MAILTO, COMPANY } from "@/lib/company";
-
-const STATUS_LABEL: Record<string, string> = {
-  trialing:           "Prøveperiode",
-  active:             "Aktiv",
-  past_due:           "Betaling fejlede",
-  canceled:           "Opsagt",
-  incomplete:         "Afventer betaling",
-  incomplete_expired: "Udløbet",
-  unpaid:             "Ubetalt",
-  paused:             "Pauset",
-};
 
 export default async function BillingPage({
   searchParams,
@@ -30,29 +20,33 @@ export default async function BillingPage({
   const crew = subs?.crew ?? null;
   const oneOnOne = subs?.one_on_one ?? null;
 
+  const t = await getTranslations("Billing");
+
   return (
     <>
       <PageHeader
-        eyebrow="Billing"
-        title="Dit medlemskab"
-        subtitle="Administrér dit Crew-medlemskab og 1:1 add-on. Alle ændringer træder i kraft ved næste faktureringsdato."
+        eyebrow={t("header.eyebrow")}
+        title={t("header.title")}
+        subtitle={t("header.subtitle")}
       />
 
       <Container className="py-8 lg:py-12 space-y-6">
         {params.success ? (
-          <Banner kind="ok">Tak — din betaling gik igennem.</Banner>
+          <Banner kind="ok">{t("banners.success")}</Banner>
         ) : null}
         {params.canceled ? (
-          <Banner>Checkout afbrudt — intet er trukket.</Banner>
+          <Banner>{t("banners.canceled")}</Banner>
         ) : null}
         {params.demo ? (
           <Banner>
-            Demo mode — Stripe er ikke koblet på. Tilføj <code>STRIPE_SECRET_KEY</code> + price-ID&apos;er for at aktivere checkout.
+            {t.rich("banners.demo", {
+              code: (chunks) => <code>{chunks}</code>,
+            })}
           </Banner>
         ) : null}
         {params.err ? (
           <Banner kind="warn">
-            Noget gik galt under checkout ({params.err}). Prøv igen, eller skriv til os.
+            {t("banners.error", { err: params.err })}
           </Banner>
         ) : null}
 
@@ -60,18 +54,18 @@ export default async function BillingPage({
         <section className="surface-2 rounded-2xl overflow-hidden">
           <div className="px-5 py-5 border-b hairline flex items-center justify-between gap-4">
             <div>
-              <div className="eyebrow mb-1">Crew-medlemskab</div>
+              <div className="eyebrow mb-1">{t("crew.eyebrow")}</div>
               <h2 className="font-display text-2xl md:text-3xl">
-                Adgang til hele platformen
+                {t("crew.title")}
               </h2>
             </div>
-            <StatusPill sub={crew} />
+            <StatusPill sub={crew} t={t} />
           </div>
 
           <div className="grid md:grid-cols-2 gap-px bg-line">
-            <Cell label="Pris" value={`${pricing.member.amount} ${pricing.member.currency} / ${pricing.member.period}`} />
+            <Cell label={t("crew.price")} value={`${pricing.member.amount} ${pricing.member.currency} / ${pricing.member.period}`} />
             <Cell
-              label="Næste fakturering"
+              label={t("crew.nextBilling")}
               value={
                 crew?.currentPeriodEnd
                   ? new Date(crew.currentPeriodEnd).toLocaleDateString("da-DK")
@@ -83,18 +77,18 @@ export default async function BillingPage({
           <div className="p-5 flex flex-wrap gap-3">
             {crew && crew.status !== "canceled" ? (
               <form action={openPortalAction}>
-                <button type="submit" className="btn">Manage abonnement</button>
+                <button type="submit" className="btn">{t("crew.manage")}</button>
               </form>
             ) : (
               <form action={startCheckoutAction}>
                 <input type="hidden" name="kind" value="crew" />
                 <button type="submit" className="btn btn-primary">
-                  Aktivér Crew-medlemskab →
+                  {t("crew.activate")}
                 </button>
               </form>
             )}
             <p className="text-xs font-mono text-fg-faint self-center">
-              Sikker checkout via Stripe · ingen kort gemmes hos os
+              {t("crew.secureCheckout")}
             </p>
           </div>
         </section>
@@ -103,53 +97,56 @@ export default async function BillingPage({
         <section className="surface-2 rounded-2xl overflow-hidden">
           <div className="px-5 py-5 border-b hairline flex items-center justify-between gap-4">
             <div>
-              <div className="eyebrow mb-1">1:1 Coaching · add-on</div>
+              <div className="eyebrow mb-1">{t("oneOnOne.eyebrow")}</div>
               <h2 className="font-display text-2xl md:text-3xl">
-                Direkte adgang til Mikael Munk
+                {t("oneOnOne.title")}
               </h2>
             </div>
-            <StatusPill sub={oneOnOne} />
+            <StatusPill sub={oneOnOne} t={t} />
           </div>
 
           <div className="grid md:grid-cols-2 gap-px bg-line">
             <Cell
-              label="Pris"
+              label={t("oneOnOne.price")}
               value={`${pricing.oneOnOne.amount} ${pricing.oneOnOne.currency} / ${pricing.oneOnOne.period}`}
             />
             <Cell
-              label="Pladser"
-              value={`${pricing.oneOnOne.spots} ad gangen`}
+              label={t("oneOnOne.spots")}
+              value={t("oneOnOne.spotsValue", { count: pricing.oneOnOne.spots })}
             />
           </div>
 
           <div className="p-5 flex flex-wrap gap-3">
             {oneOnOne && oneOnOne.status !== "canceled" ? (
               <form action={openPortalAction}>
-                <button type="submit" className="btn">Manage 1:1</button>
+                <button type="submit" className="btn">{t("oneOnOne.manage")}</button>
               </form>
             ) : (
               <form action={startCheckoutAction}>
                 <input type="hidden" name="kind" value="one_on_one" />
                 <button type="submit" className="btn btn-primary">
-                  Søg om plads →
+                  {t("oneOnOne.apply")}
                 </button>
               </form>
             )}
             <p className="text-xs font-mono text-fg-faint self-center">
-              Kræver aktivt Crew-medlemskab
+              {t("oneOnOne.requiresCrew")}
             </p>
           </div>
         </section>
 
         {/* Help */}
         <section className="surface-2 rounded-2xl p-5">
-          <div className="eyebrow mb-2">Hjælp</div>
+          <div className="eyebrow mb-2">{t("help.eyebrow")}</div>
           <p className="text-sm text-fg-dim mb-3">
-            Spørgsmål om faktura, refund eller pause? Skriv til{" "}
-            <a className="underline hover:text-fg" href={BILLING_MAILTO}>
-              {COMPANY.emails.billing}
-            </a>
-            .
+            {t.rich("help.body", {
+              link: (chunks) => (
+                <a className="underline hover:text-fg" href={BILLING_MAILTO}>
+                  {chunks}
+                </a>
+              ),
+              email: COMPANY.emails.billing,
+            })}
           </p>
         </section>
       </Container>
@@ -157,15 +154,22 @@ export default async function BillingPage({
   );
 }
 
-function StatusPill({ sub }: { sub: ActiveSubscription | null }) {
+function StatusPill({
+  sub,
+  t,
+}: {
+  sub: ActiveSubscription | null;
+  t: Awaited<ReturnType<typeof getTranslations<"Billing">>>;
+}) {
   if (!sub) {
     return (
       <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 shrink-0 text-fg-dim">
-        Ikke aktiveret
+        {t("status.notActivated")}
       </span>
     );
   }
-  const label = STATUS_LABEL[sub.status] ?? sub.status;
+  const statusKey = `status.list.${sub.status}`;
+  const label = t.has(statusKey) ? t(statusKey) : sub.status;
   const isOk = sub.status === "active" || sub.status === "trialing";
   return (
     <span
@@ -174,7 +178,7 @@ function StatusPill({ sub }: { sub: ActiveSubscription | null }) {
     >
       {isOk ? <span className="size-1.5 rounded-full bg-fg" /> : null}
       {label}
-      {sub.cancelAtPeriodEnd ? " · stopper" : ""}
+      {sub.cancelAtPeriodEnd ? t("status.stopping") : ""}
     </span>
   );
 }

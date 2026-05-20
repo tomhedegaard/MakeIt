@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
 import { cn } from "@/lib/utils";
@@ -10,24 +11,9 @@ type Goal = "strength" | "hypertrophy" | "hybrid" | "deadlift_spec";
 type Level = "beginner" | "intermediate" | "advanced";
 type Equip = "full" | "home_rack" | "minimal";
 
-const GOAL_OPTS: { id: Goal; title: string; sub: string }[] = [
-  { id: "strength",      title: "Strength",       sub: "Squat, bench, DL — bygge til nye PR'er" },
-  { id: "hypertrophy",   title: "Hypertrofi",     sub: "Volumen og masse — flere reps, mere arbejde" },
-  { id: "hybrid",        title: "Powerbuilding",  sub: "Begge dele — tunge top sets + accessory" },
-  { id: "deadlift_spec", title: "Deadlift spec.", sub: "6 uger fokus på en ny PR i dødløftet" },
-];
-
-const LEVEL_OPTS: { id: Level; title: string; sub: string }[] = [
-  { id: "beginner",     title: "Begynder",     sub: "< 1 år struktureret strength-træning" },
-  { id: "intermediate", title: "Mellem",       sub: "1-3 år — kender RPE og periodisering" },
-  { id: "advanced",     title: "Avanceret",    sub: "3+ år — kender din krops respons godt" },
-];
-
-const EQUIP_OPTS: { id: Equip; title: string; sub: string }[] = [
-  { id: "full",      title: "Fuldt center",  sub: "Adgang til alt — kabler, maskiner, plads" },
-  { id: "home_rack", title: "Hjemme + rack", sub: "Squat-rack, vægtstang, bænk og plader" },
-  { id: "minimal",   title: "Minimum",       sub: "Håndvægte, måske en bænk og en stang" },
-];
+const GOAL_IDS: Goal[] = ["strength", "hypertrophy", "hybrid", "deadlift_spec"];
+const LEVEL_IDS: Level[] = ["beginner", "intermediate", "advanced"];
+const EQUIP_IDS: Equip[] = ["full", "home_rack", "minimal"];
 
 const FREQ_OPTS = [3, 4, 5] as const;
 
@@ -38,6 +24,7 @@ export default function OnboardingClient({
   memberHandle: string;
   err?: string;
 }) {
+  const t = useTranslations("Onboarding");
   const [step, setStep] = useState(1);
   const [goal, setGoal] = useState<Goal | null>(null);
   const [level, setLevel] = useState<Level | null>(null);
@@ -83,48 +70,48 @@ export default function OnboardingClient({
           {step === 1 ? (
             <>
               <Intro
-                eyebrow={`Hej @${memberHandle}`}
-                title="Lad os bygge dit program."
-                sub="Vi spørger ind til dit mål, dit niveau og dit udstyr — så genererer AI'en et personligt program på 30 sekunder."
+                eyebrow={t("step1.introEyebrow", { handle: memberHandle })}
+                title={t("step1.introTitle")}
+                sub={t("step1.introSub")}
               />
 
               {err === "goal" || err === "level" || err === "equip" ? (
-                <Banner>Vælg en option i hver gruppe.</Banner>
+                <Banner>{t("step1.errorBanner")}</Banner>
               ) : null}
 
-              <Section eyebrow="Mål" title="Hvad sigter du efter?">
+              <Section eyebrow={t("step1.goalEyebrow")} title={t("step1.goalTitle")}>
                 <Grid>
-                  {GOAL_OPTS.map((o) => (
+                  {GOAL_IDS.map((id) => (
                     <Choice
-                      key={o.id}
+                      key={id}
                       name="goal"
-                      value={o.id}
-                      checked={goal === o.id}
-                      onCheck={() => setGoal(o.id)}
-                      title={o.title}
-                      sub={o.sub}
+                      value={id}
+                      checked={goal === id}
+                      onCheck={() => setGoal(id)}
+                      title={t(`goals.${id}.title`)}
+                      sub={t(`goals.${id}.sub`)}
                     />
                   ))}
                 </Grid>
               </Section>
 
-              <Section eyebrow="Niveau" title="Hvor er du henne?">
+              <Section eyebrow={t("step1.levelEyebrow")} title={t("step1.levelTitle")}>
                 <Grid>
-                  {LEVEL_OPTS.map((o) => (
+                  {LEVEL_IDS.map((id) => (
                     <Choice
-                      key={o.id}
+                      key={id}
                       name="experience"
-                      value={o.id}
-                      checked={level === o.id}
-                      onCheck={() => setLevel(o.id)}
-                      title={o.title}
-                      sub={o.sub}
+                      value={id}
+                      checked={level === id}
+                      onCheck={() => setLevel(id)}
+                      title={t(`levels.${id}.title`)}
+                      sub={t(`levels.${id}.sub`)}
                     />
                   ))}
                 </Grid>
               </Section>
 
-              <Section eyebrow="Frekvens" title="Hvor ofte træner du?">
+              <Section eyebrow={t("step1.freqEyebrow")} title={t("step1.freqTitle")}>
                 <div className="grid grid-cols-3 gap-2">
                   {FREQ_OPTS.map((f) => (
                     <button
@@ -134,23 +121,23 @@ export default function OnboardingClient({
                       onClick={() => setFreq(f)}
                       className="pill touch-app h-12"
                     >
-                      {f} dage / uge
+                      {t("freqOption", { days: f })}
                     </button>
                   ))}
                 </div>
               </Section>
 
-              <Section eyebrow="Udstyr" title="Hvad har du adgang til?">
+              <Section eyebrow={t("step1.equipEyebrow")} title={t("step1.equipTitle")}>
                 <Grid>
-                  {EQUIP_OPTS.map((o) => (
+                  {EQUIP_IDS.map((id) => (
                     <Choice
-                      key={o.id}
+                      key={id}
                       name="equipment"
-                      value={o.id}
-                      checked={equip === o.id}
-                      onCheck={() => setEquip(o.id)}
-                      title={o.title}
-                      sub={o.sub}
+                      value={id}
+                      checked={equip === id}
+                      onCheck={() => setEquip(id)}
+                      title={t(`equipment.${id}.title`)}
+                      sub={t(`equipment.${id}.sub`)}
                     />
                   ))}
                 </Grid>
@@ -161,20 +148,20 @@ export default function OnboardingClient({
           {step === 2 ? (
             <>
               <Intro
-                eyebrow="Maxes"
-                title="Hvor stærk er du i dag?"
-                sub="Indtast dit ~1RM for hver løft hvis du kender det. Spring over hvis ikke — vi bruger gennemsnit til dit niveau som start."
+                eyebrow={t("step2.introEyebrow")}
+                title={t("step2.introTitle")}
+                sub={t("step2.introSub")}
               />
 
               <div className="grid grid-cols-2 gap-3">
-                <NumField name="maxSquat"    label="Squat"      placeholder="—" />
-                <NumField name="maxBench"    label="Bench"      placeholder="—" />
-                <NumField name="maxDeadlift" label="Deadlift"   placeholder="—" />
-                <NumField name="maxOhp"      label="OHP"        placeholder="—" />
+                <NumField name="maxSquat"    label={t("step2.squat")}    placeholder="—" />
+                <NumField name="maxBench"    label={t("step2.bench")}    placeholder="—" />
+                <NumField name="maxDeadlift" label={t("step2.deadlift")} placeholder="—" />
+                <NumField name="maxOhp"      label={t("step2.ohp")}      placeholder="—" />
               </div>
 
               <p className="text-xs font-mono text-fg-faint">
-                Alle felter i kg · Du kan altid opdatere dem senere på din profil.
+                {t("step2.footnote")}
               </p>
             </>
           ) : null}
@@ -182,18 +169,18 @@ export default function OnboardingClient({
           {step === 3 ? (
             <>
               <Intro
-                eyebrow="Sidste"
-                title="Noget vi skal vide?"
-                sub="Skader, mobilitetsproblemer eller ting du gerne vil arbejde rundt om. Helt valgfrit."
+                eyebrow={t("step3.introEyebrow")}
+                title={t("step3.introTitle")}
+                sub={t("step3.introSub")}
               />
 
               <label className="block">
-                <span className="eyebrow block mb-2">Skader / noter</span>
+                <span className="eyebrow block mb-2">{t("step3.injuriesLabel")}</span>
                 <textarea
                   name="injuries"
                   rows={4}
                   className="field py-3 min-h-[120px] resize-none w-full"
-                  placeholder="F.eks. Lidt anstrengt højre skulder — undgå behind-the-neck press."
+                  placeholder={t("step3.injuriesPlaceholder")}
                 />
               </label>
 
@@ -205,8 +192,7 @@ export default function OnboardingClient({
               />
 
               <p className="text-xs font-mono text-fg-faint">
-                Når du trykker Færdig, genererer vi dit program og lægger
-                første session ind på din Today-skærm.
+                {t("step3.footnote")}
               </p>
             </>
           ) : null}
@@ -224,7 +210,7 @@ export default function OnboardingClient({
                 className="btn"
                 onClick={() => setStep(step - 1)}
               >
-                Tilbage
+                {t("nav.back")}
               </button>
             ) : null}
             {step < totalSteps ? (
@@ -234,11 +220,11 @@ export default function OnboardingClient({
                 onClick={() => setStep(step + 1)}
                 disabled={(step === 1 && !canNext1) || (step === 2 && !canNext2)}
               >
-                Næste →
+                {t("nav.next")}
               </button>
             ) : (
               <button type="submit" className="btn btn-primary btn-xl flex-1">
-                Generér mit program →
+                {t("nav.submit")}
               </button>
             )}
           </Container>
@@ -360,11 +346,12 @@ function Summary({
   freq: number;
   equip: Equip | null;
 }) {
+  const t = useTranslations("Onboarding");
   const rows = [
-    { k: "Mål",      v: GOAL_OPTS.find((o) => o.id === goal)?.title ?? "—" },
-    { k: "Niveau",   v: LEVEL_OPTS.find((o) => o.id === level)?.title ?? "—" },
-    { k: "Frekvens", v: `${freq} dage / uge` },
-    { k: "Udstyr",   v: EQUIP_OPTS.find((o) => o.id === equip)?.title ?? "—" },
+    { k: t("summary.goal"),  v: goal ? t(`goals.${goal}.title`) : "—" },
+    { k: t("summary.level"), v: level ? t(`levels.${level}.title`) : "—" },
+    { k: t("summary.freq"),  v: t("freqOption", { days: freq }) },
+    { k: t("summary.equip"), v: equip ? t(`equipment.${equip}.title`) : "—" },
   ];
   return (
     <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">

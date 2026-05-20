@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
 import type { ExerciseMistake } from "@/lib/data/exercises";
 import type { FormCheckQuota } from "@/lib/data/form-check-quota";
@@ -27,6 +28,7 @@ export default function FormCheckTrigger({
   quota: FormCheckQuota;
 }) {
   const [open, setOpen] = useState(false);
+  const t = useTranslations("Train.formCheck");
   const showCounter = quota.limit > 0 && quota.limit < 999;
   const exhausted = !quota.hasRemaining;
 
@@ -50,18 +52,18 @@ export default function FormCheckTrigger({
           </svg>
           <span>
             <span className="block font-display text-base leading-tight">
-              {exhausted ? "AI form-check — månedlig grænse nået" : "Test din form med AI"}
+              {exhausted ? t("limitReached") : t("test")}
             </span>
             <span className="block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-0.5">
-              {cues.length} cues · {mistakes.length} typiske fejl
+              {t("stats", { cues: cues.length, mistakes: mistakes.length })}
               {showCounter
-                ? ` · ${quota.used}/${quota.limit} brugt`
+                ? t("used", { used: quota.used, limit: quota.limit })
                 : null}
             </span>
           </span>
         </span>
         <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint shrink-0">
-          {exhausted ? "Upgrade →" : "~6 sek →"}
+          {exhausted ? t("upgrade") : t("duration")}
         </span>
       </button>
 

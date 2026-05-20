@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type { Message } from "@/lib/data/messages";
 
 /**
@@ -19,6 +20,7 @@ export default function MessageBubble({
   message: Message;
   mine: boolean;
 }) {
+  const t = useTranslations("Messages.bubble");
   const align = mine ? "items-end" : "items-start";
   const bubbleStyle: React.CSSProperties = mine
     ? {
@@ -46,7 +48,7 @@ export default function MessageBubble({
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={message.mediaUrl}
-            alt={message.body ?? "Foto"}
+            alt={message.body ?? t("photoAlt")}
             className="block w-full h-auto max-h-96 object-cover"
             loading="lazy"
           />
@@ -88,7 +90,7 @@ export default function MessageBubble({
         {/* Fallback: media kind but no signed URL (storage hiccup) */}
         {message.kind !== "text" && !message.mediaUrl ? (
           <p className="px-4 py-3 text-xs font-mono text-fg-dim">
-            Kunne ikke hente medie · prøv at refreshe
+            {t("mediaError")}
           </p>
         ) : null}
       </div>
@@ -96,7 +98,10 @@ export default function MessageBubble({
       <div className="text-[10px] font-mono text-fg-faint mt-1 px-1 flex items-center gap-1.5">
         <time dateTime={message.createdAt}>{formatTime(message.createdAt)}</time>
         {mine ? (
-          <span aria-label={message.readAt ? "Set" : "Sendt"} title={message.readAt ? "Set" : "Sendt"}>
+          <span
+            aria-label={message.readAt ? t("seen") : t("sent")}
+            title={message.readAt ? t("seen") : t("sent")}
+          >
             {message.readAt ? "✓✓" : "✓"}
           </span>
         ) : null}

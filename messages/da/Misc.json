@@ -1,0 +1,22 @@
+{
+  "error": {
+    "eyebrow": "Fejl · 500",
+    "title": "Noget gik galt.",
+    "body": "Vi kunne ikke loade denne side. Det er ikke dig — det er os. Prøv igen, eller gå tilbage til start.",
+    "ref": "ref: {digest}",
+    "retry": "Prøv igen",
+    "home": "Til forsiden"
+  },
+  "loading": {
+    "label": "Loader"
+  },
+  "cookieBanner": {
+    "eyebrow": "Cookies",
+    "title": "Vi sætter en enkelt session-cookie.",
+    "bodyBefore": "Vi bruger en strengt nødvendig cookie for at holde dig logget ind. Ingen analytics-cookies, ingen tracking, ingen ad-pixels. Læs detaljerne i ",
+    "privacyLink": "privacy policy",
+    "bodyAfter": ".",
+    "accept": "OK",
+    "essential": "Kun nødvendige"
+  }
+}

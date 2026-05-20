@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getWeekDigest } from "@/lib/data/digest";
 import { sendWeeklyDigestEmail } from "@/lib/email/templates/weekly-digest";
+import { isLocale, type Locale } from "@/i18n/config";
 
 /**
  * Send the weekly digest email to every member with an email on file.
@@ -45,7 +46,7 @@ export async function sendWeeklyDigestAction(): Promise<{
 
   const { data: targets } = await supabase
     .from("members")
-    .select("email, handle, notif_digest")
+    .select("email, handle, notif_digest, locale")
     .not("email", "is", null)
     .neq("notif_digest", false);
 
@@ -64,11 +65,13 @@ export async function sendWeeklyDigestAction(): Promise<{
       continue;
     }
     try {
+      const locale: Locale = isLocale(t.locale) ? t.locale : "da";
       const res = await sendWeeklyDigestEmail({
         to: t.email,
         recipientHandle: t.handle,
         digest,
         baseUrl,
+        locale,
       });
       if (res.ok) sent += 1;
       else if (res.skipped) skipped += 1;

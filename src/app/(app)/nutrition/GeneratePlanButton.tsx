@@ -1,11 +1,12 @@
 "use client";
 
 import { useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { generatePlanAction } from "./actions";
 import PlanGenerationOverlay from "@/components/nutrition/PlanGenerationOverlay";
 
 export default function GeneratePlanButton({
-  label = "Generér ugeplan",
+  label,
   variant = "primary",
   quotaRemaining,
   quotaResetLabel,
@@ -17,6 +18,8 @@ export default function GeneratePlanButton({
   /** Human-friendly "available again i morgen" string when exhausted. */
   quotaResetLabel?: string | null;
 }) {
+  const t = useTranslations("Nutrition.generateButton");
+  const resolvedLabel = label ?? t("default");
   const [pending, startTransition] = useTransition();
   const exhausted = quotaRemaining !== undefined && quotaRemaining <= 0;
 
@@ -35,7 +38,11 @@ export default function GeneratePlanButton({
         disabled={pending || exhausted}
         title={
           exhausted
-            ? `Ugentlig grænse nået${quotaResetLabel ? ` — næste ${quotaResetLabel}` : ""}`
+            ? t("exhaustedTitle", {
+                resetSuffix: quotaResetLabel
+                  ? t("exhaustedTitleSuffix", { reset: quotaResetLabel })
+                  : "",
+              })
             : undefined
         }
         className={
@@ -45,12 +52,16 @@ export default function GeneratePlanButton({
         }
       >
         {pending
-          ? "Genererer…"
+          ? t("generating")
           : exhausted
-          ? `Grænse nået${quotaResetLabel ? ` · næste ${quotaResetLabel}` : ""}`
+          ? t("exhausted", {
+              resetSuffix: quotaResetLabel
+                ? t("exhaustedSuffix", { reset: quotaResetLabel })
+                : "",
+            })
           : quotaRemaining !== undefined
-          ? `${label} (${quotaRemaining} tilbage)`
-          : label}
+          ? t("withQuota", { label: resolvedLabel, remaining: quotaRemaining })
+          : resolvedLabel}
       </button>
       <PlanGenerationOverlay pending={pending} />
     </>

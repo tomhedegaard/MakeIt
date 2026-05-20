@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import type { ProgramBuilder as ProgramData } from "@/lib/data/coach-programs";
 import type { AssignableMember } from "@/lib/data/coach-programs";
 import {
@@ -46,6 +47,7 @@ export default function ProgramBuilder({
   library: LibraryExercise[];
   members: AssignableMember[];
 }) {
+  const t = useTranslations("CoachStudio.programBuilder");
   const [name, setName] = useState(program.name);
   const [type, setType] = useState(program.type);
   const [description, setDescription] = useState(program.description ?? "");
@@ -85,7 +87,9 @@ export default function ProgramBuilder({
       {
         id: null,
         key: nextKey(),
-        dayLabel: `Dag ${String.fromCharCode(65 + prev.length)}`,
+        dayLabel: t("newDayLabel", {
+          letter: String.fromCharCode(65 + prev.length),
+        }),
         title: "",
         estimatedMinutes: 60,
         exercises: [],
@@ -189,7 +193,7 @@ export default function ProgramBuilder({
         // New rows now have ids server-side; reload to re-key cleanly.
         window.location.reload();
       } else {
-        setSaveError(res.error ?? "Kunne ikke gemme");
+        setSaveError(res.error ?? t("saveError"));
       }
     });
   }
@@ -202,26 +206,28 @@ export default function ProgramBuilder({
       <header className="pt-2">
         <div className="eyebrow mb-2 flex items-center gap-2">
           <Link href="/coach/programs" className="hover:text-fg">
-            Programmer
+            {t("breadcrumb")}
           </Link>
           <span aria-hidden>·</span>
           <span className="numeric">{program.code}</span>
         </div>
         <h1 className="font-display text-[clamp(2rem,5vw,3rem)] leading-[0.95]">
-          {name || "Uden navn"}.
+          {name || t("untitled")}.
         </h1>
         <p className="mt-2 text-fg-dim text-sm">
-          {days.length} {days.length === 1 ? "dag" : "dage"} · {totalExercises}{" "}
-          øvelser · {weeks} uger ved publicering
+          {days.length === 1
+            ? t("summaryDaysOne", { count: days.length })
+            : t("summaryDaysOther", { count: days.length })}{" "}
+          · {t("summarySuffix", { exercises: totalExercises, weeks })}
         </p>
       </header>
 
       {/* Program meta */}
       <section className="surface-2 rounded-xl p-5 md:p-6 space-y-4">
-        <div className="eyebrow">Program</div>
+        <div className="eyebrow">{t("program")}</div>
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="space-y-1.5">
-            <span className="text-xs text-fg-dim">Navn</span>
+            <span className="text-xs text-fg-dim">{t("nameLabel")}</span>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -230,7 +236,7 @@ export default function ProgramBuilder({
             />
           </label>
           <label className="space-y-1.5">
-            <span className="text-xs text-fg-dim">Type</span>
+            <span className="text-xs text-fg-dim">{t("typeLabel")}</span>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
@@ -242,7 +248,7 @@ export default function ProgramBuilder({
             </select>
           </label>
           <label className="space-y-1.5">
-            <span className="text-xs text-fg-dim">Niveau</span>
+            <span className="text-xs text-fg-dim">{t("levelLabel")}</span>
             <select
               value={level}
               onChange={(e) => setLevel(e.target.value)}
@@ -254,7 +260,7 @@ export default function ProgramBuilder({
             </select>
           </label>
           <label className="space-y-1.5">
-            <span className="text-xs text-fg-dim">Uger</span>
+            <span className="text-xs text-fg-dim">{t("weeksLabel")}</span>
             <input
               type="number"
               min={1}
@@ -265,13 +271,13 @@ export default function ProgramBuilder({
             />
           </label>
           <label className="space-y-1.5 sm:col-span-2">
-            <span className="text-xs text-fg-dim">Beskrivelse</span>
+            <span className="text-xs text-fg-dim">{t("descriptionLabel")}</span>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
               className="input w-full"
-              placeholder="Kort om programmets formål"
+              placeholder={t("descriptionPlaceholder")}
             />
           </label>
         </div>
@@ -281,29 +287,29 @@ export default function ProgramBuilder({
             checked={isPublished}
             onChange={(e) => setIsPublished(e.target.checked)}
           />
-          <span>Publiceret — synlig + klar til at assigne</span>
+          <span>{t("publishedToggle")}</span>
         </label>
       </section>
 
       {/* Days */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="eyebrow">Dage</div>
+          <div className="eyebrow">{t("days")}</div>
           <button type="button" onClick={addDay} className="btn btn-sm">
-            + Tilføj dag
+            {t("addDay")}
           </button>
         </div>
 
         {days.length === 0 ? (
           <p className="text-fg-dim text-sm">
-            Ingen dage endnu. Tilføj en dag for at begynde.
+            {t("daysEmpty")}
           </p>
         ) : (
           days.map((day, di) => (
             <article key={day.key} className="surface-2 rounded-xl p-5 space-y-4">
               <div className="grid gap-3 sm:grid-cols-[120px_1fr_120px_auto] sm:items-end">
                 <label className="space-y-1.5">
-                  <span className="text-xs text-fg-dim">Dag-label</span>
+                  <span className="text-xs text-fg-dim">{t("dayLabelLabel")}</span>
                   <input
                     value={day.dayLabel}
                     onChange={(e) => patchDay(di, { dayLabel: e.target.value })}
@@ -311,16 +317,16 @@ export default function ProgramBuilder({
                   />
                 </label>
                 <label className="space-y-1.5">
-                  <span className="text-xs text-fg-dim">Titel</span>
+                  <span className="text-xs text-fg-dim">{t("dayTitleLabel")}</span>
                   <input
                     value={day.title}
                     onChange={(e) => patchDay(di, { title: e.target.value })}
-                    placeholder="fx Squat — tung"
+                    placeholder={t("dayTitlePlaceholder")}
                     className="input w-full"
                   />
                 </label>
                 <label className="space-y-1.5">
-                  <span className="text-xs text-fg-dim">Est. min</span>
+                  <span className="text-xs text-fg-dim">{t("dayEstLabel")}</span>
                   <input
                     type="number"
                     min={0}
@@ -340,7 +346,7 @@ export default function ProgramBuilder({
                   onClick={() => removeDay(di)}
                   className="btn btn-ghost btn-sm"
                 >
-                  Slet dag
+                  {t("deleteDay")}
                 </button>
               </div>
 
@@ -350,7 +356,7 @@ export default function ProgramBuilder({
                   <div key={ex.key} className="surface rounded-lg p-4 space-y-3">
                     <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
                       <label className="space-y-1.5">
-                        <span className="text-xs text-fg-dim">Øvelse</span>
+                        <span className="text-xs text-fg-dim">{t("exerciseLabel")}</span>
                         <select
                           value={ex.exerciseId ?? ""}
                           onChange={(e) => {
@@ -365,7 +371,7 @@ export default function ProgramBuilder({
                           className="input w-full"
                         >
                           {library.length === 0 ? (
-                            <option value="">Ingen øvelser i bibliotek</option>
+                            <option value="">{t("libraryEmpty")}</option>
                           ) : null}
                           {library.map((l) => (
                             <option key={l.id} value={l.id}>
@@ -375,7 +381,7 @@ export default function ProgramBuilder({
                         </select>
                       </label>
                       <label className="space-y-1.5">
-                        <span className="text-xs text-fg-dim">Cue (valgfri)</span>
+                        <span className="text-xs text-fg-dim">{t("cueLabel")}</span>
                         <input
                           value={ex.cue ?? ""}
                           onChange={(e) =>
@@ -391,18 +397,18 @@ export default function ProgramBuilder({
                         onClick={() => removeExercise(di, ei)}
                         className="btn btn-ghost btn-sm"
                       >
-                        Fjern
+                        {t("removeExercise")}
                       </button>
                     </div>
 
                     {/* Sets */}
                     <div className="space-y-1.5">
                       <div className="grid grid-cols-[1.2rem_1fr_1fr_1fr_1fr_auto] gap-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint px-1">
-                        <span>#</span>
-                        <span>Reps</span>
-                        <span>Kg</span>
-                        <span>RPE</span>
-                        <span>Hvile s</span>
+                        <span>{t("setsColIndex")}</span>
+                        <span>{t("setsColReps")}</span>
+                        <span>{t("setsColKg")}</span>
+                        <span>{t("setsColRpe")}</span>
+                        <span>{t("setsColRest")}</span>
                         <span />
                       </div>
                       {ex.sets.map((s, si) => (
@@ -461,7 +467,7 @@ export default function ProgramBuilder({
                             type="button"
                             onClick={() => removeSet(di, ei, si)}
                             className="text-fg-dim hover:text-fg text-lg leading-none px-1"
-                            aria-label="Fjern sæt"
+                            aria-label={t("removeSetAria")}
                           >
                             ×
                           </button>
@@ -472,7 +478,7 @@ export default function ProgramBuilder({
                         onClick={() => addSet(di, ei)}
                         className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg pt-1"
                       >
-                        + Sæt
+                        {t("addSet")}
                       </button>
                     </div>
                   </div>
@@ -484,7 +490,7 @@ export default function ProgramBuilder({
                   disabled={library.length === 0}
                   className="btn btn-ghost btn-sm"
                 >
-                  + Tilføj øvelse
+                  {t("addExercise")}
                 </button>
               </div>
             </article>
@@ -500,11 +506,11 @@ export default function ProgramBuilder({
           disabled={saving}
           className="btn btn-primary"
         >
-          {saving ? "Gemmer…" : "Gem program"}
+          {saving ? t("saving") : t("save")}
         </button>
         {savedAt ? (
           <span className="text-[11px] font-mono text-fg-faint">
-            Gemt {savedAt}
+            {t("savedAt", { time: savedAt })}
           </span>
         ) : null}
         {saveError ? (
@@ -536,6 +542,7 @@ function AssignPanel({
   members: AssignableMember[];
   canAssign: boolean;
 }) {
+  const t = useTranslations("CoachStudio.programBuilder");
   const [memberId, setMemberId] = useState(members[0]?.id ?? "");
   const [startWeek, setStartWeek] = useState(1);
   const [pending, startTransition] = useTransition();
@@ -549,9 +556,7 @@ function AssignPanel({
     if (!member) return;
     if (
       member.hasActiveProgram &&
-      !confirm(
-        `@${member.handle} har allerede et aktivt program. Det nuværende sættes til "afbrudt" og det nye overtager. Fortsæt?`,
-      )
+      !confirm(t("assignConfirm", { handle: member.handle }))
     ) {
       return;
     }
@@ -559,29 +564,31 @@ function AssignPanel({
       const res = await assignProgramAction({ programId, memberId, startWeek });
       if (res.ok) {
         setResult(
-          `${res.sessionsCreated ?? 0} sessioner genereret til @${member.handle}.`,
+          t("assignResult", {
+            count: res.sessionsCreated ?? 0,
+            handle: member.handle,
+          }),
         );
       } else {
-        setError(res.error ?? "Kunne ikke assigne");
+        setError(res.error ?? t("assignError"));
       }
     });
   }
 
   return (
     <section className="surface-2 rounded-xl p-5 md:p-6 space-y-4">
-      <div className="eyebrow">Publicér til medlem</div>
+      <div className="eyebrow">{t("assignHeading")}</div>
       {!canAssign ? (
         <p className="text-sm text-fg-dim">
-          Markér programmet som publiceret og tilføj mindst én dag for at kunne
-          assigne det.
+          {t("assignBlocked")}
         </p>
       ) : members.length === 0 ? (
-        <p className="text-sm text-fg-dim">Ingen medlemmer at assigne til.</p>
+        <p className="text-sm text-fg-dim">{t("assignNoMembers")}</p>
       ) : (
         <>
           <div className="grid gap-3 sm:grid-cols-[1fr_140px_auto] sm:items-end">
             <label className="space-y-1.5">
-              <span className="text-xs text-fg-dim">Medlem</span>
+              <span className="text-xs text-fg-dim">{t("memberLabel")}</span>
               <select
                 value={memberId}
                 onChange={(e) => setMemberId(e.target.value)}
@@ -589,14 +596,15 @@ function AssignPanel({
               >
                 {members.map((m) => (
                   <option key={m.id} value={m.id}>
-                    @{m.handle}
-                    {m.hasActiveProgram ? " · har aktivt program" : ""}
+                    {m.hasActiveProgram
+                      ? t("memberHasActive", { handle: m.handle })
+                      : `@${m.handle}`}
                   </option>
                 ))}
               </select>
             </label>
             <label className="space-y-1.5">
-              <span className="text-xs text-fg-dim">Start-uge</span>
+              <span className="text-xs text-fg-dim">{t("startWeekLabel")}</span>
               <input
                 type="number"
                 min={1}
@@ -614,12 +622,11 @@ function AssignPanel({
               disabled={pending}
               className="btn btn-primary"
             >
-              {pending ? "Genererer…" : "Assign + generér"}
+              {pending ? t("generating") : t("assignButton")}
             </button>
           </div>
           <p className="text-[11px] font-mono text-fg-faint">
-            Genererer sessioner for uge {startWeek}–{weeks}. Gem programmet
-            først, hvis du har lavet ændringer.
+            {t("assignNote", { start: startWeek, end: weeks })}
           </p>
           {result ? (
             <p className="text-sm text-fg">{result}</p>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import { cn } from "@/lib/utils";
 import {
@@ -23,61 +24,18 @@ type AIVerdict = {
   fix: string;
 };
 
-const VERDICTS: Record<string, AIVerdict> = {
-  "back squat": {
-    score: 84,
-    headline: "Solid sæt — let knæ-valgus i hullet",
-    pos: [
-      "Bardepth ramt — hofte under knæ på alle 3 reps",
-      "Konsistent bar-path lige over midtfod",
-      "God spinal kontrol gennem hele sættet",
-    ],
-    neg: [
-      "Højre knæ kollapser let indad på rep 2 og 3",
-      "Tempo accelererer ud af hullet — mister tension",
-    ],
-    fix:
-      "Driv knæene aktivt udad i bunden (\"spread the floor\"). " +
-      "Hold 1 sek pause i bunden næste sæt for at genopbygge tension.",
-  },
-  "deadlift": {
-    score: 79,
-    headline: "Stærkt løft — hyperekstension på toppen",
-    pos: [
-      "Bar holder kontakt med kroppen hele vejen op",
-      "Bagdel og lats engageret fra setup",
-      "God pace — ingen tøven ved knæene",
-    ],
-    neg: [
-      "Hyperextension i lock-out (læn dig 5° tilbage)",
-      "Hofte stiger marginalt før skuldrene",
-    ],
-    fix:
-      "Lås ud med squeeze i baller, ikke ved at læne tilbage. " +
-      "Tænk \"stå op\" frem for \"læn tilbage\" på toppen.",
-  },
-  default: {
-    score: 81,
-    headline: "Teknisk solidt — to mindre justeringer",
-    pos: [
-      "God kontrol over hele bevægelsen",
-      "Konsistent ROM (range of motion) på alle reps",
-      "Tempo matcher programmets foreskrevne",
-    ],
-    neg: [
-      "Let asymmetri mellem venstre og højre side",
-      "Bar-path drifter en smule fremad i excentrisk fase",
-    ],
-    fix:
-      "Filmoptag fra siden næste gang for at validere bar-path. " +
-      "Overvej en deload-sæt på den svage side næste session.",
-  },
+/** Numeric scores for the demo verdicts — locale-independent. */
+const VERDICT_SCORES: Record<string, number> = {
+  "back squat": 84,
+  deadlift: 79,
+  default: 81,
 };
 
-function pickVerdict(exerciseName?: string): AIVerdict {
-  if (!exerciseName) return VERDICTS.default;
+/** Resolve the demo-verdict key for an exercise name. */
+function pickVerdictKey(exerciseName?: string): string {
+  if (!exerciseName) return "default";
   const key = exerciseName.toLowerCase();
-  return VERDICTS[key] ?? VERDICTS.default;
+  return key in VERDICT_SCORES ? key : "default";
 }
 
 export type FormCheckExerciseContext = {
@@ -125,6 +83,7 @@ function FormCheckBody({
   quota?: FormCheckQuota;
   onClose: () => void;
 }) {
+  const t = useTranslations("FormCheck");
   const [step, setStep] = useState<Step>("choose");
   const [progress, setProgress] = useState(0);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -136,6 +95,18 @@ function FormCheckBody({
     quota ? !quota.hasRemaining : false,
   );
   const fileRef = useRef<HTMLInputElement | null>(null);
+
+  /** Build a localized demo verdict for the given exercise name. */
+  function pickVerdict(name?: string): AIVerdict {
+    const key = pickVerdictKey(name);
+    return {
+      score: VERDICT_SCORES[key],
+      headline: t(`verdicts.${key}.headline`),
+      pos: t.raw(`verdicts.${key}.pos`) as string[],
+      neg: t.raw(`verdicts.${key}.neg`) as string[],
+      fix: t(`verdicts.${key}.fix`),
+    };
+  }
 
   // Indeterminate-style progress for the upload + analyzing phases.
   // Real work (frame extraction + Claude call) is async and finishes
@@ -258,24 +229,26 @@ function FormCheckBody({
     <SheetContent>
         {step === "choose" ? (
           <div>
-            <div className="eyebrow mb-2">Form-check</div>
+            <div className="eyebrow mb-2">{t("eyebrow")}</div>
             <h2 className="font-display text-3xl mb-1">
-              {quotaBlocked ? "Du er løbet tør for form-checks." : "Optag eller upload din video."}
+              {quotaBlocked ? t("choose.titleBlocked") : t("choose.title")}
             </h2>
             <p className="text-fg-dim text-sm mb-4">
               {quotaBlocked
-                ? "AI form-check er en Athlete-tier perk og opefter. Upgradér for at få flere."
+                ? t("choose.descriptionBlocked")
                 : exerciseName
-                ? `Vores AI tjekker dybde, bar-path og bevægelseskvalitet på ${exerciseName.toLowerCase()} — og en head coach gennemgår alt ugentligt.`
-                : "Vores AI tjekker dybde, bar-path og bevægelseskvalitet på din øvelse."}
+                ? t("choose.descriptionExercise", {
+                    exercise: exerciseName.toLowerCase(),
+                  })
+                : t("choose.descriptionDefault")}
             </p>
 
             {quota ? (
-              <QuotaLine quota={quota} blocked={quotaBlocked} />
+              <QuotaLine quota={quota} blocked={quotaBlocked} t={t} />
             ) : null}
 
             {quotaBlocked ? (
-              <UpgradeCta />
+              <UpgradeCta t={t} />
             ) : (
               <>
                 <input
@@ -303,9 +276,9 @@ function FormCheckBody({
                   >
                     <div className="flex items-center gap-3 mb-1">
                       <CameraIcon />
-                      <div className="font-display text-lg">Optag nu</div>
+                      <div className="font-display text-lg">{t("choose.recordNow")}</div>
                     </div>
-                    <div className="text-fg-dim text-sm">Brug kameraet til at filme dit næste sæt.</div>
+                    <div className="text-fg-dim text-sm">{t("choose.recordNowSub")}</div>
                   </button>
 
                   <button
@@ -320,9 +293,9 @@ function FormCheckBody({
                   >
                     <div className="flex items-center gap-3 mb-1">
                       <UploadIcon />
-                      <div className="font-display text-lg">Upload fra galleri</div>
+                      <div className="font-display text-lg">{t("choose.uploadGallery")}</div>
                     </div>
-                    <div className="text-fg-dim text-sm">Vælg en eksisterende klip fra din telefon.</div>
+                    <div className="text-fg-dim text-sm">{t("choose.uploadGallerySub")}</div>
                   </button>
 
                   <button
@@ -332,10 +305,10 @@ function FormCheckBody({
                   >
                     <div className="flex items-center gap-3 mb-1">
                       <SparkIcon />
-                      <div className="font-display text-lg">Demo med eksempelvideo</div>
+                      <div className="font-display text-lg">{t("choose.demo")}</div>
                     </div>
                     <div className="text-fg-dim text-sm">
-                      Spring upload over og se AI-svaret med det samme.
+                      {t("choose.demoSub")}
                     </div>
                   </button>
                 </div>
@@ -347,28 +320,34 @@ function FormCheckBody({
         {step === "uploading" || step === "analyzing" ? (
           <div className="py-2">
             <div className="eyebrow mb-2">
-              {step === "uploading" ? "Uploader" : "Analyserer"}
+              {step === "uploading"
+                ? t("progress.uploadingEyebrow")
+                : t("progress.analyzingEyebrow")}
             </div>
             <h2 className="font-display text-3xl mb-1">
-              {step === "uploading" ? "Sender video op." : "AI kigger på din teknik."}
+              {step === "uploading"
+                ? t("progress.uploadingTitle")
+                : t("progress.analyzingTitle")}
             </h2>
             <p className="text-fg-dim text-sm mb-6">
               {step === "uploading"
-                ? `${fileName ?? "Video"} · krypteret upload`
-                : "Måler dybde, knæ-vinkel, hofte-shift og bar-path. ~ 6 sek."}
+                ? t("progress.uploadingSub", {
+                    fileName: fileName ?? t("progress.videoFallback"),
+                  })
+                : t("progress.analyzingSub")}
             </p>
 
             <ProgressLine value={progress} />
 
             <ul className="mt-6 space-y-2 text-sm">
               <Step active={step === "uploading"} done={step === "analyzing"}>
-                Upload video
+                {t("progress.stepUpload")}
               </Step>
               <Step active={step === "analyzing"} done={false}>
-                AI-analyse: dybde · bar-path · tempo
+                {t("progress.stepAnalyze")}
               </Step>
               <Step active={false} done={false}>
-                Resultat klar
+                {t("progress.stepResult")}
               </Step>
             </ul>
           </div>
@@ -378,28 +357,28 @@ function FormCheckBody({
           <div>
             <div className="flex items-end justify-between mb-3">
               <div>
-                <div className="eyebrow mb-1">AI form-check</div>
+                <div className="eyebrow mb-1">{t("result.eyebrow")}</div>
                 <h2 className="font-display text-3xl leading-[1]">
                   {verdict.headline}
                 </h2>
               </div>
               <div className="text-right shrink-0">
                 <div className="numeric text-5xl">{verdict.score}</div>
-                <div className="eyebrow">/ 100</div>
+                <div className="eyebrow">{t("result.outOf")}</div>
               </div>
             </div>
 
             <p className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint mb-5">
               {isMockResult
-                ? "Demo-svar · ægte AI aktiveres med ANTHROPIC_API_KEY"
-                : "AI-vurdering · godkendes af head coach inden for 24t"}
+                ? t("result.mockNote")
+                : t("result.realNote")}
             </p>
 
             <div className="space-y-3">
-              <Card title="Hvad du gjorde rigtigt" items={verdict.pos} kind="pos" />
-              <Card title="Hvor du kan stramme op" items={verdict.neg} kind="neg" />
+              <Card title={t("result.cardPos")} items={verdict.pos} kind="pos" />
+              <Card title={t("result.cardNeg")} items={verdict.neg} kind="neg" />
               <div className="surface-2 rounded-lg p-4">
-                <div className="eyebrow mb-2">Coach-tip</div>
+                <div className="eyebrow mb-2">{t("result.coachTip")}</div>
                 <p className="text-sm text-fg/90 leading-relaxed">{verdict.fix}</p>
               </div>
             </div>
@@ -412,19 +391,19 @@ function FormCheckBody({
                   setStep("choose");
                 }}
               >
-                Ny optagelse
+                {t("result.newRecording")}
               </button>
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={onClose}
               >
-                Færdig
+                {t("result.done")}
               </button>
             </div>
 
             <p className="mt-4 text-xs font-mono text-fg-faint text-center">
-              Sendes også til din coach for ugentlig review.
+              {t("result.coachReviewNote")}
             </p>
           </div>
         ) : null}
@@ -434,7 +413,15 @@ function FormCheckBody({
 
 /* --- internal bits --- */
 
-function QuotaLine({ quota, blocked }: { quota: FormCheckQuota; blocked: boolean }) {
+function QuotaLine({
+  quota,
+  blocked,
+  t,
+}: {
+  quota: FormCheckQuota;
+  blocked: boolean;
+  t: ReturnType<typeof useTranslations<"FormCheck">>;
+}) {
   // Legend / unlimited tiers hide the counter — no anxiety needed.
   if (quota.limit >= 999) return null;
   return (
@@ -445,7 +432,7 @@ function QuotaLine({ quota, blocked }: { quota: FormCheckQuota; blocked: boolean
       )}
     >
       <span>
-        {quota.used} / {quota.limit} brugt denne måned
+        {t("quota.used", { used: quota.used, limit: quota.limit })}
       </span>
       <span className="text-fg-faint normal-case tracking-normal">
         {describeReset(quota.resetsAt)}
@@ -454,7 +441,11 @@ function QuotaLine({ quota, blocked }: { quota: FormCheckQuota; blocked: boolean
   );
 }
 
-function UpgradeCta() {
+function UpgradeCta({
+  t,
+}: {
+  t: ReturnType<typeof useTranslations<"FormCheck">>;
+}) {
   return (
     <div className="space-y-3">
       <Link
@@ -463,14 +454,14 @@ function UpgradeCta() {
       >
         <div className="flex items-center gap-3 mb-1">
           <SparkIcon />
-          <div className="font-display text-lg">Upgrade til Athlete eller højere</div>
+          <div className="font-display text-lg">{t("upgrade.title")}</div>
         </div>
         <div className="text-fg-dim text-sm">
-          Athlete: 1 form-check/md · Beast: 5 · Legend: ubegrænset. Se tier-perks →
+          {t("upgrade.body")}
         </div>
       </Link>
       <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint text-center">
-        Eller vent på månedlig reset
+        {t("upgrade.orWait")}
       </div>
     </div>
   );

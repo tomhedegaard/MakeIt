@@ -1,0 +1,129 @@
+{
+  "footer": {
+    "weeklyDigestNote": "Sent Monday morning to every active member. Turn off in settings.",
+    "coachDigestNote": "Sent Monday morning to every coach. Turn off in /settings.",
+    "welcomeNote": "Let's lift heavy together.",
+    "coachReviewNote": "Coach notes usually land within 24 hours of you uploading a form-check. Reply directly to this email — it goes straight to Mikael.",
+    "mentionNote": "You only get this email when a crew member writes @{handle}. Turn off mention emails in your profile settings if it gets too much."
+  },
+  "weeklyDigest": {
+    "subject": "Crew week · {range}",
+    "title": "Crew week · {range}",
+    "eyebrow": "Crew week · {range}",
+    "greeting": "Hey @{handle}.",
+    "stats": {
+      "posts": "Posts",
+      "prs": "PRs",
+      "sessions": "Sessions",
+      "formChecks": "Form-checks",
+      "newMembers": "New members"
+    },
+    "topPosts": "Top posts",
+    "topPosters": "Most active",
+    "cta": "Open crew feed →",
+    "text": {
+      "header": "Crew week · {range}",
+      "posts": "Posts: {count}",
+      "prs": "PRs: {count}",
+      "sessions": "Sessions: {count}",
+      "formChecksReviewed": "Form-checks reviewed: {count}",
+      "newMembers": "New members: {count}",
+      "topPostsHeader": "Top posts:",
+      "open": "Open: {url}",
+      "signoff": "— MakeIt // HQ"
+    }
+  },
+  "welcome": {
+    "subject": "Welcome to the crew, @{handle}",
+    "title": "Welcome to the crew — MakeIt // HQ",
+    "eyebrow": "Welcome to the crew",
+    "greeting": "Hey @{handle}.",
+    "youAreIn": "You're in.",
+    "intro": "Thanks for joining MakeIt // HQ. I'm <strong>Mikael Munk</strong> — head coach in the crew, and I review every form-check personally. Write me directly on this email (or @Munk in the feed) if you have questions.",
+    "programLabel": "Your program",
+    "firstSession": "First session: {label}",
+    "getStarted": "How to get going:",
+    "steps": {
+      "step1Strong": "Tap \"Start session\"",
+      "step1Rest": "on the Today screen — your program is already loaded.",
+      "step2Strong": "Log your sets",
+      "step2Rest": "as you go — weight, reps, RPE.",
+      "step3Strong": "Record a form-check",
+      "step3Rest": "if you're unsure about technique. AI answers in seconds, I review personally within 24h.",
+      "step4Strong": "Earn Reps",
+      "step4Rest": "for every session — trade them for limited drops, custom-embroidered straps, and 1:1 time with me."
+    },
+    "cta": "Open Today →",
+    "text": {
+      "intro": "I'm Mikael Munk — head coach in the crew, and I review every form-check personally.",
+      "programWithFirst": "Your program: {program} (first session: {firstSession})",
+      "programOnly": "Your program: {program}",
+      "getStarted": "How to get going:",
+      "step1": "1. Tap \"Start session\" on the Today screen.",
+      "step2": "2. Log your sets as you go.",
+      "step3": "3. Record a form-check if you're unsure.",
+      "step4": "4. Earn Reps for every session.",
+      "open": "Open: {url}",
+      "signoff": "— Mikael"
+    }
+  },
+  "mention": {
+    "subject": "@{author} mentioned you in a comment",
+    "title": "You were mentioned — MakeIt // HQ",
+    "eyebrow": "You were mentioned",
+    "headline": "@{author} mentioned you in a comment.",
+    "greeting": "Hey @{recipient} — here's what they wrote:",
+    "cta": "Reply in the feed →",
+    "text": {
+      "headline": "@{author} mentioned you in a comment.",
+      "postHeader": "The post:\n{context}",
+      "commentHeader": "Comment:\n{content}",
+      "open": "Open: {url}",
+      "signoff": "— MakeIt // HQ"
+    }
+  },
+  "coachReview": {
+    "subject": "Mikael Munk replied to your {exercise}",
+    "fallbackExercise": "form-check",
+    "title": "Form-check answered — MakeIt // HQ",
+    "eyebrow": "Form-check answered",
+    "headline": "Mikael Munk reviewed your {exercise}.",
+    "greeting": "Hey @{handle} — here's his note:",
+    "coachByline": "Mikael Munk · @Munk",
+    "aiAssessment": "AI assessment · {score}/100",
+    "cta": "Open in MakeIt // HQ →",
+    "text": {
+      "headline": "Mikael Munk reviewed your {exercise}.",
+      "greeting": "Hey @{handle} — here's his note:",
+      "aiAssessment": "AI assessment · {score}/100",
+      "open": "Open: {url}",
+      "signoff": "— MakeIt // HQ"
+    }
+  },
+  "coachAdherenceDigest": {
+    "subject": "Crew adherence · {range}",
+    "title": "Crew adherence — MakeIt // HQ",
+    "eyebrow": "Crew adherence · {range}",
+    "greeting": "Hey @{handle}.",
+    "emptyCrew": "Crew is empty — no onboarded members yet.",
+    "intro": "Here's this week's snapshot of your crew. Check in on the ones who are struggling, recognise the ones who are crushing it.",
+    "stats": {
+      "crew": "Crew",
+      "active": "Active",
+      "avgPct": "Avg %",
+      "atRisk": "At-risk"
+    },
+    "atRiskHeader": "Check in with these",
+    "strongHeader": "Recognise these strong weeks",
+    "steadyLine": "{count} members in normal range — no action needed.",
+    "cta": "Open coach console →",
+    "text": {
+      "header": "Crew adherence · {range}",
+      "summary": "Crew: {total} · Active: {active} · Avg: {avg}% · At-risk: {atRisk}",
+      "atRiskHeader": "CHECK IN WITH THESE:",
+      "strongHeader": "RECOGNISE THESE STRONG WEEKS:",
+      "open": "Open: {url}",
+      "signoff": "— MakeIt // HQ"
+    }
+  }
+}
