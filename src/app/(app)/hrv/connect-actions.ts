@@ -210,3 +210,29 @@ export async function setCycleTracking(
   revalidatePath("/settings");
   return { ok: true };
 }
+
+/**
+ * Enables or disables the V2.4 session readiness nudge for the
+ * current member, upserting their `hrv_settings` row.
+ */
+export async function setSessionSuggestionEnabled(
+  enabled: boolean,
+): Promise<ActionResult> {
+  if (!SUPABASE_ENABLED) return { ok: true };
+
+  const memberId = await getCurrentMemberId();
+  if (!memberId) return { ok: false, error: "no_session" };
+
+  const service = createServiceClient();
+  const { error } = await service
+    .from("hrv_settings")
+    .upsert(
+      { member_id: memberId, session_suggestion_enabled: enabled },
+      { onConflict: "member_id" },
+    );
+
+  if (error) return { ok: false, error: "update_failed" };
+
+  revalidatePath("/settings");
+  return { ok: true };
+}
