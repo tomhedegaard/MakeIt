@@ -7,14 +7,7 @@
  * (spec §3) live in one well-tested place.
  */
 
-export type ReadinessBucket =
-  | "very_low"
-  | "low"
-  | "normal"
-  | "high"
-  | "very_high";
-
-export type WarmUpState = "discovery" | "provisional" | "active";
+import type { ReadinessBucket, WarmUpState } from "./types";
 
 export type EvaluateNudgeInput = {
   /**
