@@ -8,6 +8,7 @@ import WearableConnectSheet from "@/components/hrv/WearableConnectSheet";
 import {
   setPrimaryConnection,
   setCycleTracking,
+  setSessionSuggestionEnabled,
 } from "@/app/(app)/hrv/connect-actions";
 import type { HrvSettings } from "@/lib/data/settings";
 
@@ -42,6 +43,11 @@ export default function HrvSettingsSection({
   const [cyclePending, startCycle] = useTransition();
   const [cycleMsg, setCycleMsg] = useState<string | null>(null);
 
+  /* Session suggestion toggle */
+  const [nudgeEnabled, setNudgeEnabled] = useState(hrv.sessionSuggestionEnabled);
+  const [nudgePending, startNudge] = useTransition();
+  const [nudgeMsg, setNudgeMsg] = useState<string | null>(null);
+
   function makePrimary(connectionId: string) {
     if (primaryPending) return;
     setPrimaryError(null);
@@ -67,6 +73,22 @@ export default function HrvSettingsSection({
       } else {
         setCycleEnabled(prev);
         setCycleMsg("Kunne ikke gemme — prøv igen.");
+      }
+    });
+  }
+
+  function toggleNudge(next: boolean) {
+    const prev = nudgeEnabled;
+    setNudgeEnabled(next);
+    setNudgeMsg(null);
+    startNudge(async () => {
+      const res = await setSessionSuggestionEnabled(next);
+      if (res.ok) {
+        setNudgeMsg("✓ Gemt");
+        window.setTimeout(() => setNudgeMsg(null), 2200);
+      } else {
+        setNudgeEnabled(prev);
+        setNudgeMsg("Kunne ikke gemme — prøv igen.");
       }
     });
   }
@@ -159,6 +181,39 @@ export default function HrvSettingsSection({
             </span>
           </label>
         </li>
+        <li className="py-3 flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <div className="text-sm">Vis HRV-nudge på workouts</div>
+            <div className="text-xs text-fg-dim mt-0.5">
+              Når din readiness er lav i dag, ser du en kort note øverst på dagens
+              session. Slå fra, hvis du hellere vil have ro.
+            </div>
+          </div>
+          <label className="shrink-0 cursor-pointer touch-app">
+            <input
+              type="checkbox"
+              checked={nudgeEnabled}
+              onChange={(e) => toggleNudge(e.target.checked)}
+              disabled={nudgePending}
+              className="sr-only peer"
+            />
+            <span
+              aria-hidden
+              className="block relative w-12 h-7 rounded-full border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
+              style={{ background: nudgeEnabled ? "var(--fg)" : "var(--bg-3)" }}
+            >
+              <span
+                className="absolute top-0.5 left-0.5 size-6 rounded-full transition-transform"
+                style={{
+                  background: nudgeEnabled ? "var(--bg)" : "var(--fg-dim)",
+                  transform: nudgeEnabled
+                    ? "translateX(20px)"
+                    : "translateX(0)",
+                }}
+              />
+            </span>
+          </label>
+        </li>
       </ul>
       {cycleMsg ? (
         <span
@@ -166,6 +221,14 @@ export default function HrvSettingsSection({
           style={{ color: cycleMsg.startsWith("✓") ? "var(--fg)" : "var(--fg-dim)" }}
         >
           {cycleMsg}
+        </span>
+      ) : null}
+      {nudgeMsg ? (
+        <span
+          className="text-[10px] font-mono uppercase tracking-[0.16em]"
+          style={{ color: nudgeMsg.startsWith("✓") ? "var(--fg)" : "var(--fg-dim)" }}
+        >
+          {nudgeMsg}
         </span>
       ) : null}
 
