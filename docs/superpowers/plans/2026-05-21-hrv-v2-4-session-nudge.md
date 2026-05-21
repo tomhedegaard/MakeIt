@@ -20,10 +20,9 @@
 
 | Path | Responsibility |
 |---|---|
-| `src/lib/hrv/nudge.ts` | Pure evaluator — `evaluateNudge({...}) → { bucket } \| null`. Owns the 5 trigger-condition logic in one place. Easy-to-test, zero Supabase coupling. |
-| `src/lib/hrv/nudge.test.ts` | Unit tests for `evaluateNudge` — 9 fixtures from spec §6. |
-| `src/components/hrv/HrvReadinessNudge.tsx` | Server component (~30 lines) — the banner. Renders `null` when `nudge={null}`. Two copy variants by bucket. Link to `/hrv`. |
-| `src/components/hrv/HrvReadinessNudge.test.tsx` | Smoke tests via `renderToString` — null case, both bucket variants, `/hrv` href. |
+| `src/lib/hrv/nudge.ts` | Pure logic — `evaluateNudge({...}) → { bucket } \| null` (5 trigger conditions) **and** `nudgeCopy(bucket) → { eyebrow, body }` (the two Danish copy variants). Both are pure, zero Supabase, zero React coupling. |
+| `src/lib/hrv/nudge.test.ts` | Unit tests for `evaluateNudge` (9 fixtures from spec §6) **and** `nudgeCopy` (4 small assertions covering both buckets + the contractual `/hrv` route constant). |
+| `src/components/hrv/HrvReadinessNudge.tsx` | Server component (~25 lines) — the banner. Renders `null` when `nudge={null}`. Reads copy + route from `nudgeCopy` so the test contract is preserved without JSX rendering. |
 
 **Modified files:**
 
@@ -40,11 +39,11 @@
 
 ---
 
-## Chunk 1: Pure nudge evaluator
+## Chunk 1: Pure nudge logic
 
-This is a single pure function with 9 fixture tests. Zero I/O. Done first because everything else can stub against it.
+Two pure functions colocated in one module: `evaluateNudge` (the 5 trigger conditions) and `nudgeCopy` (the two Danish copy variants + the `/hrv` route constant). Both fully unit-tested in a Node environment — no JSX, no `next/link`, no `@vitejs/plugin-react`, no jsdom required. Done first because everything else (data wrapper, component) imports from here.
 
-### Task 1: Pure `evaluateNudge` + tests
+### Task 1: Pure `evaluateNudge` + `nudgeCopy` + tests
 
 **Files:**
 - Create: `src/lib/hrv/nudge.ts`
@@ -54,7 +53,12 @@ This is a single pure function with 9 fixture tests. Zero I/O. Done first becaus
 
   ```ts
   import { describe, it, expect } from "vitest";
-  import { evaluateNudge, type EvaluateNudgeInput } from "./nudge";
+  import {
+    evaluateNudge,
+    nudgeCopy,
+    NUDGE_HREF,
+    type EvaluateNudgeInput,
+  } from "./nudge";
 
   /** Build a fixture input — defaults are the "should nudge" state. */
   function input(over: Partial<EvaluateNudgeInput> = {}): EvaluateNudgeInput {
@@ -151,6 +155,28 @@ This is a single pure function with 9 fixture tests. Zero I/O. Done first becaus
       expect(evaluateNudge(input({ reading: null }))).toBeNull();
     });
   });
+
+  describe("nudgeCopy", () => {
+    it("uses the low eyebrow for bucket=low", () => {
+      expect(nudgeCopy("low").eyebrow).toBe("HRV LAV I DAG");
+    });
+
+    it("uses the very-low eyebrow for bucket=very_low", () => {
+      expect(nudgeCopy("very_low").eyebrow).toBe("HRV MEGET LAV I DAG");
+    });
+
+    it("emits non-empty Danish body copy for both buckets", () => {
+      expect(nudgeCopy("low").body).toContain("normalområde");
+      expect(nudgeCopy("very_low").body).toContain("normalområde");
+      expect(nudgeCopy("low").body).not.toBe(nudgeCopy("very_low").body);
+    });
+  });
+
+  describe("NUDGE_HREF", () => {
+    it("points at the HRV module (regression guard if the route moves)", () => {
+      expect(NUDGE_HREF).toBe("/hrv");
+    });
+  });
   ```
 
 - [ ] **Step 2:** Run the tests, verify they fail:
@@ -159,7 +185,7 @@ This is a single pure function with 9 fixture tests. Zero I/O. Done first becaus
   npx vitest run src/lib/hrv/nudge.test.ts
   ```
 
-  Expected: All 9 fail with `Cannot find module './nudge'` or similar.
+  Expected: All 13 tests fail with `Cannot find module './nudge'` or similar.
 
 - [ ] **Step 3:** Implement the pure evaluator. Create `src/lib/hrv/nudge.ts`:
 
@@ -234,6 +260,28 @@ This is a single pure function with 9 fixture tests. Zero I/O. Done first becaus
 
     return { bucket };
   }
+
+  /** Stable route constant — the component imports this rather than hard-
+   *  coding "/hrv" so the test in this file catches a route move. */
+  export const NUDGE_HREF = "/hrv";
+
+  /** Danish copy variants by bucket. Pure — testable without rendering. */
+  export function nudgeCopy(
+    bucket: "low" | "very_low",
+  ): { eyebrow: string; body: string } {
+    if (bucket === "very_low") {
+      return {
+        eyebrow: "HRV MEGET LAV I DAG",
+        body:
+          "Din readiness er klart under dit normalområde. Gå let i dag eller spring sessionen helt over.",
+      };
+    }
+    return {
+      eyebrow: "HRV LAV I DAG",
+      body:
+        "Din readiness er under dit normalområde. Overvej at gå let — drop top-sættene eller stop tidligt hvis kroppen siger fra.",
+    };
+  }
   ```
 
 - [ ] **Step 4:** Run the tests, verify they pass:
@@ -242,17 +290,19 @@ This is a single pure function with 9 fixture tests. Zero I/O. Done first becaus
   npx vitest run src/lib/hrv/nudge.test.ts
   ```
 
-  Expected: 9 passed.
+  Expected: 13 passed (9 evaluator + 3 copy + 1 href).
 
 - [ ] **Step 5:** Commit.
 
   ```bash
   git add src/lib/hrv/nudge.ts src/lib/hrv/nudge.test.ts
-  git commit -m "feat(hrv): nudge evaluator — 5-condition pure decision logic
+  git commit -m "feat(hrv): nudge pure logic — evaluator + copy variants
 
-  V2.4 B-prong (pure). Owns the trigger logic for the session readiness
-  banner in one well-tested place — 9 fixtures cover all combinations
-  of the spec §3 conditions.
+  V2.4 B-prong (pure). Two colocated pure functions: evaluateNudge
+  owns the 5 spec §3 trigger conditions; nudgeCopy owns the two
+  Danish copy variants and the /hrv route constant. All testable
+  in a node environment — no JSX, no next/link, so the component
+  test contract is honoured without changing vitest config.
 
   Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
   ```
@@ -498,61 +548,18 @@ Three small modifications to existing files. After this chunk, the data side is 
 
 The component, its render tests, the session-page wiring, and the settings toggle row. After this chunk the feature is fully usable.
 
-### Task 5: `HrvReadinessNudge` component + render tests
+### Task 5: `HrvReadinessNudge` component
 
 **Files:**
 - Create: `src/components/hrv/HrvReadinessNudge.tsx`
-- Create: `src/components/hrv/HrvReadinessNudge.test.tsx`
 
-- [ ] **Step 1:** Write the failing tests. Create `src/components/hrv/HrvReadinessNudge.test.tsx`:
+The copy contract is already tested in `nudge.test.ts` (Task 1). The component itself is presentation-only and reads its strings from the pure `nudgeCopy` + `NUDGE_HREF` exports, so there is no separate component test file — no JSX rendering happens in vitest (`environment: "node"`, no `@vitejs/plugin-react`, no jsdom). Visual correctness is verified manually in Task 6 Step 5.
 
-  ```tsx
-  import { describe, it, expect } from "vitest";
-  import { renderToString } from "react-dom/server";
-  import HrvReadinessNudge from "./HrvReadinessNudge";
-
-  describe("HrvReadinessNudge", () => {
-    it("renders nothing when nudge is null", () => {
-      const html = renderToString(<HrvReadinessNudge nudge={null} />);
-      expect(html).toBe("");
-    });
-
-    it("shows the low-readiness eyebrow for bucket=low", () => {
-      const html = renderToString(
-        <HrvReadinessNudge nudge={{ bucket: "low" }} />,
-      );
-      expect(html).toContain("HRV LAV I DAG");
-      expect(html).not.toContain("MEGET LAV");
-    });
-
-    it("shows the very-low eyebrow for bucket=very_low", () => {
-      const html = renderToString(
-        <HrvReadinessNudge nudge={{ bucket: "very_low" }} />,
-      );
-      expect(html).toContain("HRV MEGET LAV I DAG");
-    });
-
-    it("links to /hrv (regression guard if the route moves)", () => {
-      const html = renderToString(
-        <HrvReadinessNudge nudge={{ bucket: "low" }} />,
-      );
-      expect(html).toContain('href="/hrv"');
-    });
-  });
-  ```
-
-- [ ] **Step 2:** Run the tests, verify they fail:
-
-  ```bash
-  npx vitest run src/components/hrv/HrvReadinessNudge.test.tsx
-  ```
-
-  Expected: All 4 fail with `Cannot find module './HrvReadinessNudge'` or similar.
-
-- [ ] **Step 3:** Implement the component. Create `src/components/hrv/HrvReadinessNudge.tsx`:
+- [ ] **Step 1:** Create `src/components/hrv/HrvReadinessNudge.tsx`:
 
   ```tsx
   import Link from "next/link";
+  import { nudgeCopy, NUDGE_HREF } from "@/lib/hrv/nudge";
 
   type Props = {
     nudge: { bucket: "low" | "very_low" } | null;
@@ -564,32 +571,26 @@ The component, its render tests, the session-page wiring, and the settings toggl
    * very_low and all other trigger conditions hold (see spec §3 and
    * the `evaluateNudge` helper). Renders nothing for null so callers
    * can include it unconditionally.
+   *
+   * All Danish strings + the destination route live in `@/lib/hrv/nudge`
+   * and are unit-tested there — the component is presentation only.
    */
   export default function HrvReadinessNudge({ nudge }: Props) {
     if (!nudge) return null;
 
-    const isVeryLow = nudge.bucket === "very_low";
-    const eyebrow = isVeryLow ? "HRV MEGET LAV I DAG" : "HRV LAV I DAG";
-    const body = isVeryLow
-      ? "Din readiness er klart under dit normalområde. Gå let i dag eller spring sessionen helt over."
-      : "Din readiness er under dit normalområde. Overvej at gå let — drop top-sættene eller stop tidligt hvis kroppen siger fra.";
+    const { eyebrow, body } = nudgeCopy(nudge.bucket);
 
     return (
       <section
         aria-labelledby="hrv-nudge-heading"
         className="surface-2 rounded-2xl p-5 lg:p-6 space-y-3"
       >
-        <h2
-          id="hrv-nudge-heading"
-          className="eyebrow"
-        >
+        <h2 id="hrv-nudge-heading" className="eyebrow">
           {eyebrow}
         </h2>
-        <p className="text-sm leading-relaxed text-fg-dim">
-          {body}
-        </p>
+        <p className="text-sm leading-relaxed text-fg-dim">{body}</p>
         <Link
-          href="/hrv"
+          href={NUDGE_HREF}
           className="inline-block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim lift touch-app"
         >
           Se HRV →
@@ -599,24 +600,25 @@ The component, its render tests, the session-page wiring, and the settings toggl
   }
   ```
 
-- [ ] **Step 4:** Run the tests, verify they pass:
+- [ ] **Step 2:** Typecheck:
 
   ```bash
-  npx vitest run src/components/hrv/HrvReadinessNudge.test.tsx
+  npx tsc --noEmit
   ```
 
-  Expected: 4 passed.
+  Expected: no errors.
 
-- [ ] **Step 5:** Commit.
+- [ ] **Step 3:** Commit.
 
   ```bash
-  git add src/components/hrv/HrvReadinessNudge.tsx src/components/hrv/HrvReadinessNudge.test.tsx
+  git add src/components/hrv/HrvReadinessNudge.tsx
   git commit -m "feat(hrv): HrvReadinessNudge banner component
 
-  Two copy variants (low / very_low), monochrome, mirrors the
-  surface-2 + eyebrow pattern from HrvSettingsSection. Renders null
-  for null so callers include it unconditionally. /hrv link asserted
-  in tests so a route move triggers a failure.
+  Presentation-only server component. Reads copy + route from the
+  pure nudgeCopy / NUDGE_HREF exports in @/lib/hrv/nudge — the
+  contract is already tested in nudge.test.ts so this file has no
+  separate test. Monochrome, mirrors the surface-2 + eyebrow pattern
+  from HrvSettingsSection.
 
   Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
   ```
@@ -704,13 +706,13 @@ The component, its render tests, the session-page wiring, and the settings toggl
     formCheckQuota,
     readinessNudge = null,
   }: {
-    session: FullSession;
+    session: Session;
     formCheckQuota: FormCheckQuota;
     readinessNudge?: { bucket: "low" | "very_low" } | null;
   }) {
   ```
 
-  (Keep the existing prop names and types — adapt to whatever they already are. The default of `null` keeps backward compatibility if anything else mounts this component.)
+  (The existing `session: Session` type from `@/lib/workout` stays unchanged. The `readinessNudge` default of `null` keeps backward compatibility if anything else mounts this component.)
 
 - [ ] **Step 3:** Mount the banner. Locate the existing `<ExerciseSection>` mount inside the main `<Container size="narrow">` (around line 207). Insert the banner immediately above it:
 
@@ -895,7 +897,7 @@ Final sanity sweep and shipping commit.
   npx vitest run
   ```
 
-  Expected: all green, including the 9 new evaluator tests and the 4 new component tests.
+  Expected: all green, including the 13 new tests in `nudge.test.ts` (9 evaluator + 3 copy + 1 href).
 
 - [ ] **Step 2:** Typecheck + lint:
 
@@ -930,8 +932,7 @@ Final sanity sweep and shipping commit.
   Spec: docs/superpowers/specs/2026-05-21-hrv-v2-4-session-nudge-design.md
 
   Verified:
-  - 9 evaluator unit tests pass (all 5 trigger conditions covered)
-  - 4 component render tests pass (null case, both buckets, /hrv href)
+  - 13 nudge unit tests pass (9 evaluator + 3 copy + 1 href)
   - tsc + lint + build clean
   - Manual dogfood: toggle visible & persisting; banner appears for
     low/very_low buckets and is silenced by the toggle.
