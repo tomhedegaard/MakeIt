@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
+import { evaluateNudge, type NudgeResult } from "@/lib/hrv/nudge";
 import type { CorrelationCard } from "@/lib/hrv/insights";
 import type { ChartReading } from "@/lib/hrv/trend-chart";
 import type {
@@ -10,6 +11,8 @@ import type {
   ReadinessBucket,
   WarmUpState,
 } from "@/lib/hrv/types";
+
+export type ReadinessNudge = Exclude<NudgeResult, null>;
 
 /**
  * Server-side HRV reading-history data module.
@@ -121,6 +124,53 @@ export async function getLatestHrvReading(
     timezone: row.timezone as string,
     isSick: !!row.is_sick,
   };
+}
+
+/**
+ * Returns a nudge spec for today if the member should see the V2.4
+ * session readiness banner, otherwise null. Encapsulates spec §3's
+ * 5 trigger conditions via the pure `evaluateNudge` helper.
+ *
+ * Demo / no-supabase → null.
+ */
+export async function getTodaysReadinessNudge(
+  memberId: string,
+): Promise<ReadinessNudge | null> {
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  // Three reads. Run in parallel — they are independent.
+  const [
+    { data: settingsRow },
+    latestReading,
+    { count: activeConnCount },
+  ] = await Promise.all([
+    supabase
+      .from("hrv_settings")
+      .select("session_suggestion_enabled")
+      .eq("member_id", memberId)
+      .maybeSingle(),
+    getLatestHrvReading(memberId),
+    supabase
+      .from("hrv_wearable_connections")
+      .select("id", { head: true, count: "exact" })
+      .eq("member_id", memberId)
+      .eq("status", "active"),
+  ]);
+
+  return evaluateNudge({
+    sessionSuggestionEnabled:
+      (settingsRow?.session_suggestion_enabled as boolean | undefined) ?? null,
+    hasActiveConnection: (activeConnCount ?? 0) > 0,
+    reading: latestReading
+      ? {
+          warmUpState: latestReading.warmUpState,
+          readinessBucket: latestReading.readinessBucket,
+          measuredAt: latestReading.measuredAt,
+        }
+      : null,
+    now: new Date(),
+  });
 }
 
 /**
