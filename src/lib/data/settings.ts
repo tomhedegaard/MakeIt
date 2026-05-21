@@ -68,6 +68,7 @@ export type HrvConnection = {
 export type HrvSettings = {
   connections: HrvConnection[];
   cycleTrackingEnabled: boolean;
+  sessionSuggestionEnabled: boolean;
 };
 
 /**
@@ -81,7 +82,12 @@ export async function getMemberHrvSettings(
   memberId: string
 ): Promise<HrvSettings> {
   const supabase = await createClient();
-  if (!supabase) return { connections: [], cycleTrackingEnabled: false };
+  if (!supabase)
+    return {
+      connections: [],
+      cycleTrackingEnabled: false,
+      sessionSuggestionEnabled: true,
+    };
 
   const [{ data: connRows }, { data: settingsRow }] = await Promise.all([
     supabase
@@ -93,7 +99,7 @@ export async function getMemberHrvSettings(
       .order("last_synced_at", { ascending: false }),
     supabase
       .from("hrv_settings")
-      .select("cycle_tracking_enabled")
+      .select("cycle_tracking_enabled, session_suggestion_enabled")
       .eq("member_id", memberId)
       .maybeSingle(),
   ]);
@@ -109,6 +115,7 @@ export async function getMemberHrvSettings(
   return {
     connections,
     cycleTrackingEnabled: !!settingsRow?.cycle_tracking_enabled,
+    sessionSuggestionEnabled: settingsRow?.session_suggestion_enabled ?? true,
   };
 }
 
