@@ -14,6 +14,7 @@ import RestTimer from "@/components/ui/RestTimer";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
 import Container from "@/components/Container";
+import HrvReadinessNudge from "@/components/hrv/HrvReadinessNudge";
 import { logSetAction, completeSessionAction } from "./actions";
 
 type Logged = Record<
@@ -63,9 +64,11 @@ function findResumePoint(session: Session): { exIdx: number; setIdx: number } {
 export default function SessionClient({
   session,
   formCheckQuota,
+  readinessNudge = null,
 }: {
   session: Session;
   formCheckQuota: FormCheckQuota;
+  readinessNudge?: { bucket: "low" | "very_low" } | null;
 }) {
   const router = useRouter();
   const t = useTranslations("Session");
@@ -203,6 +206,9 @@ export default function SessionClient({
 
       {/* Main column */}
       <Container size="narrow" className="flex-1 py-6 pb-32 lg:pb-12 space-y-6">
+        {/* HRV readiness nudge (V2.4) — renders null when conditions don't hold */}
+        <HrvReadinessNudge nudge={readinessNudge} />
+
         {/* Exercise card */}
         <ExerciseSection
           ex={ex}
