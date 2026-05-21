@@ -201,6 +201,7 @@ The toggle's state lives next to `cycleEnabled` in the same `useState` pair-patt
 
 - `active` + `low` + today + connection-active + setting-true → `{ bucket: 'low' }`
 - `active` + `very_low` + today + connection-active + setting-true → `{ bucket: 'very_low' }`
+- `active` + `low` + today + connection-active + **no `hrv_settings` row at all** → `{ bucket: 'low' }` (locks in default-on at the data-fn boundary, not just the reader)
 - `active` + `low` + today + setting-false → `null`
 - `active` + `low` + 48h ago (stale) → `null`
 - `active` + `normal` + today → `null`
@@ -212,7 +213,7 @@ Mocks the Supabase client the same way `insights.test.ts` already does.
 
 ### Component (smoke)
 
-A trivial render-test for `HrvReadinessNudge`: renders nothing for `null`; renders the right eyebrow for each bucket. No visual-regression apparatus.
+A trivial render-test for `HrvReadinessNudge`: renders nothing for `null`; renders the right eyebrow for each bucket; the "Se HRV →" link's `href` equals `/hrv` (locks in the route so a future move triggers a test failure rather than a silent regression). No visual-regression apparatus.
 
 ### Manual
 
@@ -258,4 +259,5 @@ V2.4 is intentionally the smallest of the three remaining sub-phases (no migrati
 
 - **Analytics.** If we later want to measure whether the banner changes behaviour, the cheapest move is post-hoc SQL: for each member, group sessions by the bucket of that day's HRV reading, compare distribution of `logged_weight / target_weight` on top sets. No schema change needed. Add this only if a question forces it.
 - **Cross-day stickiness.** Today's design re-evaluates on every session open. If a member runs two sessions in a day (rare), they see the banner twice. Probably fine; revisit if dogfooding shows otherwise.
+- **Toggle latency.** The banner is server-rendered on session open, so flipping the settings toggle off does not remove an already-rendered banner from an already-open session — the change takes effect on the next session open / navigation. Documented here so the dogfood loop does not file it as a bug.
 - **Wearable-not-connected gentle prompt.** Out of scope for V2.4. If we want to nudge wearable adoption from `/session`, that is a separate experiment (acquisition surface, not recovery surface) and belongs in its own brainstorm.
