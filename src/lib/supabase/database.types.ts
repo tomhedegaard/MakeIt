@@ -718,6 +718,7 @@ export type Database = {
           member_id: string
           milestone: number
           reps_awarded: number
+          seen_at: string | null
           triggered_at: string | null
         }
         Insert: {
@@ -725,6 +726,7 @@ export type Database = {
           member_id: string
           milestone: number
           reps_awarded: number
+          seen_at?: string | null
           triggered_at?: string | null
         }
         Update: {
@@ -732,6 +734,7 @@ export type Database = {
           member_id?: string
           milestone?: number
           reps_awarded?: number
+          seen_at?: string | null
           triggered_at?: string | null
         }
         Relationships: [
@@ -1005,6 +1008,7 @@ export type Database = {
           is_admin: boolean
           is_coach: boolean
           joined_at: string
+          locale: string
           max_bench_kg: number | null
           max_deadlift_kg: number | null
           max_ohp_kg: number | null
@@ -1034,6 +1038,7 @@ export type Database = {
           is_admin?: boolean
           is_coach?: boolean
           joined_at?: string
+          locale?: string
           max_bench_kg?: number | null
           max_deadlift_kg?: number | null
           max_ohp_kg?: number | null
@@ -1063,6 +1068,7 @@ export type Database = {
           is_admin?: boolean
           is_coach?: boolean
           joined_at?: string
+          locale?: string
           max_bench_kg?: number | null
           max_deadlift_kg?: number | null
           max_ohp_kg?: number | null
@@ -1148,14 +1154,17 @@ export type Database = {
           created_at: string
           graded_at: string | null
           id: string
+          kcal: number | null
           logged_for_date: string
           logged_for_slot: string | null
           match_score: number | null
           meal_id: string | null
           member_id: string
           notes: string | null
+          off_plan: boolean
           photo_path: string | null
           protein_estimate: string | null
+          protein_g: number | null
           rating: number | null
           status: string
         }
@@ -1165,14 +1174,17 @@ export type Database = {
           created_at?: string
           graded_at?: string | null
           id?: string
+          kcal?: number | null
           logged_for_date: string
           logged_for_slot?: string | null
           match_score?: number | null
           meal_id?: string | null
           member_id: string
           notes?: string | null
+          off_plan?: boolean
           photo_path?: string | null
           protein_estimate?: string | null
+          protein_g?: number | null
           rating?: number | null
           status?: string
         }
@@ -1182,14 +1194,17 @@ export type Database = {
           created_at?: string
           graded_at?: string | null
           id?: string
+          kcal?: number | null
           logged_for_date?: string
           logged_for_slot?: string | null
           match_score?: number | null
           meal_id?: string | null
           member_id?: string
           notes?: string | null
+          off_plan?: boolean
           photo_path?: string | null
           protein_estimate?: string | null
+          protein_g?: number | null
           rating?: number | null
           status?: string
         }
@@ -1653,6 +1668,92 @@ export type Database = {
           },
           {
             foreignKeyName: "program_assignments_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      program_day_exercises: {
+        Row: {
+          created_at: string
+          cue: string | null
+          exercise_id: string | null
+          exercise_name: string
+          id: string
+          position: number
+          program_day_id: string
+          sets: Json
+        }
+        Insert: {
+          created_at?: string
+          cue?: string | null
+          exercise_id?: string | null
+          exercise_name: string
+          id?: string
+          position: number
+          program_day_id: string
+          sets?: Json
+        }
+        Update: {
+          created_at?: string
+          cue?: string | null
+          exercise_id?: string | null
+          exercise_name?: string
+          id?: string
+          position?: number
+          program_day_id?: string
+          sets?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "program_day_exercises_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "program_day_exercises_program_day_id_fkey"
+            columns: ["program_day_id"]
+            isOneToOne: false
+            referencedRelation: "program_days"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      program_days: {
+        Row: {
+          created_at: string
+          day_label: string
+          estimated_minutes: number | null
+          id: string
+          position: number
+          program_id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          day_label: string
+          estimated_minutes?: number | null
+          id?: string
+          position: number
+          program_id: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          day_label?: string
+          estimated_minutes?: number | null
+          id?: string
+          position?: number
+          program_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "program_days_program_id_fkey"
             columns: ["program_id"]
             isOneToOne: false
             referencedRelation: "programs"
@@ -2284,6 +2385,10 @@ export type Database = {
     }
     Functions: {
       award_session_reps: { Args: { p_session_id: string }; Returns: number }
+      get_hrv_distinct_day_count: {
+        Args: { p_member_id: string }
+        Returns: number
+      }
       is_current_user_admin: { Args: never; Returns: boolean }
       is_current_user_coach: { Args: never; Returns: boolean }
       is_invite_valid: { Args: { p_code: string }; Returns: boolean }
