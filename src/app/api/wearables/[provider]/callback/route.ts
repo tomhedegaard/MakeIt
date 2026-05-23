@@ -91,6 +91,12 @@ export async function GET(
     return redirectTo(request, "/hrv?error=connect_failed");
   }
 
+  // V2.5: tracks whether the first-wearable-connection +100 Reps
+  // bonus fired during this callback. Read at line 234's redirect
+  // to thread ?welcome_bonus=1 into the success URL. Declared at
+  // the top scope so it survives the outer try/catch.
+  let awardedFirstConnectionBonus = false;
+
   try {
     const encKey = process.env.HRV_TOKEN_ENC_KEY;
     if (!encKey) {
@@ -148,6 +154,54 @@ export async function GET(
       );
     if (upsertError) {
       throw new Error(`Failed to store connection: ${upsertError.message}`);
+    }
+
+    // First-wearable-connection bonus (+100 Reps), engangs per
+    // member, lifetime. Idempotent via where-not-exists on
+    // (member_id, reference_type='hrv_first_connection'). Best-
+    // effort: a failure here is logged but never aborts the
+    // callback — the connection has already persisted.
+    try {
+      const { data: existingBonus } = await service
+        .from("reps_transactions")
+        .select("id")
+        .eq("member_id", user.id)
+        .eq("reference_type", "hrv_first_connection")
+        .maybeSingle();
+
+      if (!existingBonus) {
+        // Resolve the connection_id we just upserted, for forensics.
+        const { data: bonusConn } = await service
+          .from("hrv_wearable_connections")
+          .select("id")
+          .eq("member_id", user.id)
+          .eq("provider", provider)
+          .maybeSingle();
+
+        const { error: insertError } = await service
+          .from("reps_transactions")
+          .insert({
+            member_id: user.id,
+            delta: 100,
+            reason: "Første wearable forbundet",
+            reference_type: "hrv_first_connection",
+            reference_id: bonusConn?.id ?? null,
+          });
+
+        if (insertError) {
+          console.error(
+            "[wearables/callback] first-connection bonus insert failed:",
+            insertError,
+          );
+        } else {
+          awardedFirstConnectionBonus = true;
+        }
+      }
+    } catch (bonusError) {
+      console.error(
+        "[wearables/callback] first-connection bonus path failed:",
+        bonusError,
+      );
     }
 
     // --- Optional provider-side registration (e.g. Polar AccessLink). ---
@@ -231,5 +285,8 @@ export async function GET(
   }
 
   // --- Step 10: success. ---
-  return redirectTo(request, "/hrv");
+  return redirectTo(
+    request,
+    awardedFirstConnectionBonus ? "/hrv?welcome_bonus=1" : "/hrv",
+  );
 }
