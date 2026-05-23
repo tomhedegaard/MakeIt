@@ -1,0 +1,129 @@
+{
+  "footer": {
+    "weeklyDigestNote": "Sendt mandag morgen til alle aktive medlemmer. Slå fra i indstillinger.",
+    "coachDigestNote": "Sendt mandag morgen til alle coaches. Slå fra på /settings.",
+    "welcomeNote": "Lad os løfte tungt sammen.",
+    "coachReviewNote": "Coach-noter sendes typisk inden for 24 timer efter du uploader en form-check. Svar gerne direkte på denne mail — den lander hos Mikael.",
+    "mentionNote": "Du modtager kun denne mail når et crew-medlem har skrevet @{handle}. Slå mention-mails fra i indstillinger på din profil hvis det bliver for meget."
+  },
+  "weeklyDigest": {
+    "subject": "Ugen i crewet · {range}",
+    "title": "Ugen i crewet · {range}",
+    "eyebrow": "Ugen i crewet · {range}",
+    "greeting": "Hej @{handle}.",
+    "stats": {
+      "posts": "Posts",
+      "prs": "PR'er",
+      "sessions": "Sessioner",
+      "formChecks": "Form-checks",
+      "newMembers": "Nye medlemmer"
+    },
+    "topPosts": "Top posts",
+    "topPosters": "Mest aktive",
+    "cta": "Åbn crew-feed →",
+    "text": {
+      "header": "Ugen i crewet · {range}",
+      "posts": "Posts: {count}",
+      "prs": "PR'er: {count}",
+      "sessions": "Sessioner: {count}",
+      "formChecksReviewed": "Form-checks reviewed: {count}",
+      "newMembers": "Nye medlemmer: {count}",
+      "topPostsHeader": "Top posts:",
+      "open": "Åbn: {url}",
+      "signoff": "— MakeIt // HQ"
+    }
+  },
+  "welcome": {
+    "subject": "Velkommen til crewet, @{handle}",
+    "title": "Velkommen til crewet — MakeIt // HQ",
+    "eyebrow": "Velkommen til crewet",
+    "greeting": "Hej @{handle}.",
+    "youAreIn": "Du er inde.",
+    "intro": "Tak fordi du valgte at være en del af MakeIt // HQ. Mit navn er <strong>Mikael Munk</strong> — head coach i crewet, og jeg gennemgår alle dine form-checks personligt. Skriv direkte til mig på denne mail (eller @Munk i feedet) hvis du har spørgsmål.",
+    "programLabel": "Dit program",
+    "firstSession": "Første session: {label}",
+    "getStarted": "Sådan kommer du i gang:",
+    "steps": {
+      "step1Strong": "Tap \"Start session\"",
+      "step1Rest": "på Today-skærmen — programmet er allerede klar.",
+      "step2Strong": "Log dine sæt",
+      "step2Rest": "som du går — vægt, reps, RPE.",
+      "step3Strong": "Optag form-check",
+      "step3Rest": "hvis du er i tvivl om teknik. AI svarer på sekunder, jeg gennemgår selv inden for 24t.",
+      "step4Strong": "Tjen Reps",
+      "step4Rest": "for hver session — byt dem til limited drops, custom-broderet straps, og 1:1 tid med mig."
+    },
+    "cta": "Åbn Today →",
+    "text": {
+      "intro": "Mit navn er Mikael Munk — head coach i crewet, og jeg gennemgår alle dine form-checks personligt.",
+      "programWithFirst": "Dit program: {program} (første session: {firstSession})",
+      "programOnly": "Dit program: {program}",
+      "getStarted": "Sådan kommer du i gang:",
+      "step1": "1. Tap \"Start session\" på Today-skærmen.",
+      "step2": "2. Log dine sæt som du går.",
+      "step3": "3. Optag form-check hvis du er i tvivl.",
+      "step4": "4. Tjen Reps for hver session.",
+      "open": "Åbn: {url}",
+      "signoff": "— Mikael"
+    }
+  },
+  "mention": {
+    "subject": "@{author} nævnte dig i en kommentar",
+    "title": "Du blev nævnt — MakeIt // HQ",
+    "eyebrow": "Du blev nævnt",
+    "headline": "@{author} nævnte dig i en kommentar.",
+    "greeting": "Hej @{recipient} — her er hvad de skrev:",
+    "cta": "Svar i feedet →",
+    "text": {
+      "headline": "@{author} nævnte dig i en kommentar.",
+      "postHeader": "Posten:\n{context}",
+      "commentHeader": "Kommentar:\n{content}",
+      "open": "Åbn: {url}",
+      "signoff": "— MakeIt // HQ"
+    }
+  },
+  "coachReview": {
+    "subject": "Mikael Munk har besvaret din {exercise}",
+    "fallbackExercise": "form-check",
+    "title": "Form-check besvaret — MakeIt // HQ",
+    "eyebrow": "Form-check besvaret",
+    "headline": "Mikael Munk har gennemgået din {exercise}.",
+    "greeting": "Hej @{handle} — her er hans note:",
+    "coachByline": "Mikael Munk · @Munk",
+    "aiAssessment": "AI-vurdering · {score}/100",
+    "cta": "Åbn på MakeIt // HQ →",
+    "text": {
+      "headline": "Mikael Munk har gennemgået din {exercise}.",
+      "greeting": "Hej @{handle} — her er hans note:",
+      "aiAssessment": "AI-vurdering · {score}/100",
+      "open": "Åbn: {url}",
+      "signoff": "— MakeIt // HQ"
+    }
+  },
+  "coachAdherenceDigest": {
+    "subject": "Crew adherence · {range}",
+    "title": "Crew adherence — MakeIt // HQ",
+    "eyebrow": "Crew adherence · {range}",
+    "greeting": "Hej @{handle}.",
+    "emptyCrew": "Crewet er tomt — ingen onboarded medlemmer endnu.",
+    "intro": "Her er ugens overblik på dit crew. Tjek ind med dem der har det svært, anerkend dem der knækker det.",
+    "stats": {
+      "crew": "Crew",
+      "active": "Aktive",
+      "avgPct": "Snit %",
+      "atRisk": "At-risk"
+    },
+    "atRiskHeader": "Tjek ind med disse",
+    "strongHeader": "Anerkend disse stærke uger",
+    "steadyLine": "{count} medlemmer i normalt range — ingen action påkrævet.",
+    "cta": "Åbn coach-konsol →",
+    "text": {
+      "header": "Crew adherence · {range}",
+      "summary": "Crew: {total} · Aktive: {active} · Snit: {avg}% · At-risk: {atRisk}",
+      "atRiskHeader": "TJEK IND MED DISSE:",
+      "strongHeader": "ANERKEND DISSE STÆRKE UGER:",
+      "open": "Åbn: {url}",
+      "signoff": "— MakeIt // HQ"
+    }
+  }
+}

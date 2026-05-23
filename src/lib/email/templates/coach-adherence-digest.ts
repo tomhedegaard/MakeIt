@@ -2,14 +2,23 @@
  * Email — weekly coach digest of crew nutrition adherence. Sent
  * Monday morning so the coach can scan who needs outreach + who
  * deserves a "stærk uge"-shoutout before the week's check-ins.
+ *
+ * Localized per recipient via `members.locale`. Fires from cron,
+ * so we never read cookies — locale is passed in by the caller.
  */
 import "server-only";
 import { sendEmail, type SendResult } from "@/lib/email/resend";
-import { emailFooterHtml } from "@/lib/email/footer";
+import {
+  dateLocaleTag,
+  emailFooterHtml,
+  emailTranslator,
+  type EmailT,
+} from "@/lib/email/footer";
 import type {
   CrewAdherenceDigest,
   CrewMemberDigest,
 } from "@/lib/data/coach-adherence-digest";
+import type { Locale } from "@/i18n/config";
 
 function esc(s: string): string {
   return s
@@ -20,12 +29,13 @@ function esc(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
-function fmtRange(from: string, to: string): string {
-  const f = new Date(from + "T00:00:00").toLocaleDateString("da-DK", {
+function fmtRange(from: string, to: string, locale: Locale): string {
+  const tag = dateLocaleTag(locale);
+  const f = new Date(from + "T00:00:00").toLocaleDateString(tag, {
     day: "numeric",
     month: "short",
   });
-  const t = new Date(to + "T00:00:00").toLocaleDateString("da-DK", {
+  const t = new Date(to + "T00:00:00").toLocaleDateString(tag, {
     day: "numeric",
     month: "short",
   });
@@ -61,15 +71,18 @@ function renderHtml(args: {
   recipientHandle: string;
   digest: CrewAdherenceDigest;
   baseUrl: string;
+  locale: Locale;
+  t: EmailT;
+  tFooter: EmailT;
 }): string {
-  const { digest } = args;
-  const range = fmtRange(digest.rangeFrom, digest.rangeTo);
+  const { digest, t, tFooter, locale } = args;
+  const range = fmtRange(digest.rangeFrom, digest.rangeTo, locale);
 
   const stats = [
-    { label: "Crew", value: digest.totalMembers },
-    { label: "Aktive", value: digest.totalActive },
-    { label: "Snit %", value: digest.averageAdherence },
-    { label: "At-risk", value: digest.atRisk.length },
+    { label: t("stats.crew"), value: digest.totalMembers },
+    { label: t("stats.active"), value: digest.totalActive },
+    { label: t("stats.avgPct"), value: digest.averageAdherence },
+    { label: t("stats.atRisk"), value: digest.atRisk.length },
   ];
 
   const statsCells = stats
@@ -96,7 +109,7 @@ function renderHtml(args: {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="dark light">
-  <title>Crew adherence — MakeIt // HQ</title>
+  <title>${esc(t("title"))}</title>
 </head>
 <body style="margin:0;padding:0;background:#0A0A0B;color:#F5F2EC;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0A0A0B;">
@@ -109,17 +122,17 @@ function renderHtml(args: {
         </td></tr>
         <tr><td style="padding-bottom:8px;">
           <span style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#A8A6A0;">
-            Crew adherence · ${esc(range)}
+            ${esc(t("eyebrow", { range }))}
           </span>
         </td></tr>
         <tr><td style="padding-bottom:24px;">
           <h1 style="margin:0;font-weight:900;font-size:30px;line-height:1.05;letter-spacing:-0.02em;color:#F5F2EC;">
-            Hej @${esc(args.recipientHandle)}.
+            ${esc(t("greeting", { handle: args.recipientHandle }))}
           </h1>
           ${
             digest.totalMembers === 0
-              ? `<p style="color:#A8A6A0;font-size:14px;line-height:1.6;margin:16px 0 0;">Crewet er tomt — ingen onboarded medlemmer endnu.</p>`
-              : `<p style="color:#A8A6A0;font-size:14px;line-height:1.6;margin:16px 0 0;">Her er ugens overblik på dit crew. Tjek ind med dem der har det svært, anerkend dem der knækker det.</p>`
+              ? `<p style="color:#A8A6A0;font-size:14px;line-height:1.6;margin:16px 0 0;">${esc(t("emptyCrew"))}</p>`
+              : `<p style="color:#A8A6A0;font-size:14px;line-height:1.6;margin:16px 0 0;">${esc(t("intro"))}</p>`
           }
         </td></tr>
 
@@ -136,7 +149,7 @@ function renderHtml(args: {
         ${
           atRiskRows
             ? `<tr><td style="padding-bottom:24px;">
-                 <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#C97B3E;margin-bottom:8px;">Tjek ind med disse</div>
+                 <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#C97B3E;margin-bottom:8px;">${esc(t("atRiskHeader"))}</div>
                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${atRiskRows}</table>
                </td></tr>`
             : ""
@@ -145,7 +158,7 @@ function renderHtml(args: {
         ${
           strongRows
             ? `<tr><td style="padding-bottom:24px;">
-                 <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#A8A6A0;margin-bottom:8px;">Anerkend disse stærke uger</div>
+                 <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#A8A6A0;margin-bottom:8px;">${esc(t("strongHeader"))}</div>
                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${strongRows}</table>
                </td></tr>`
             : ""
@@ -155,7 +168,7 @@ function renderHtml(args: {
           digest.steadyCount > 0
             ? `<tr><td style="padding-bottom:20px;">
                  <p style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#56554F;margin:0;">
-                   ${digest.steadyCount} medlemmer i normalt range — ingen action påkrævet.
+                   ${esc(t("steadyLine", { count: digest.steadyCount }))}
                  </p>
                </td></tr>`
             : ""
@@ -163,12 +176,12 @@ function renderHtml(args: {
 
         <tr><td style="padding-top:8px;padding-bottom:32px;">
           <a href="${args.baseUrl}/coach" style="display:inline-block;background:#F5F2EC;color:#0A0A0B;padding:14px 28px;border-radius:999px;font-weight:500;text-decoration:none;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;font-family:'SF Mono',Menlo,Consolas,monospace;">
-            Åbn coach-konsol →
+            ${esc(t("cta"))}
           </a>
         </td></tr>
         <tr><td style="border-top:1px solid rgba(245,242,236,0.08);padding-top:20px;">
           <p style="margin:0 0 6px;color:#56554F;font-size:11px;line-height:1.7;">
-            Sendt mandag morgen til alle coaches. Slå fra på /settings.
+            ${esc(tFooter("coachDigestNote"))}
           </p>
           <p style="margin:12px 0 0;color:#56554F;font-size:11px;line-height:1.7;">
             ${emailFooterHtml()}
@@ -185,26 +198,33 @@ function renderText(args: {
   recipientHandle: string;
   digest: CrewAdherenceDigest;
   baseUrl: string;
+  locale: Locale;
+  t: EmailT;
 }): string {
-  const { digest } = args;
-  const range = fmtRange(digest.rangeFrom, digest.rangeTo);
+  const { digest, t, locale } = args;
+  const range = fmtRange(digest.rangeFrom, digest.rangeTo, locale);
   const lines = [
-    `Crew adherence · ${range}`,
+    t("text.header", { range }),
     "",
-    `Hej @${args.recipientHandle}.`,
+    t("greeting", { handle: args.recipientHandle }),
     "",
   ];
 
   if (digest.totalMembers === 0) {
-    lines.push("Crewet er tomt — ingen onboarded medlemmer endnu.");
+    lines.push(t("emptyCrew"));
   } else {
     lines.push(
-      `Crew: ${digest.totalMembers} · Aktive: ${digest.totalActive} · Snit: ${digest.averageAdherence}% · At-risk: ${digest.atRisk.length}`,
+      t("text.summary", {
+        total: digest.totalMembers,
+        active: digest.totalActive,
+        avg: digest.averageAdherence,
+        atRisk: digest.atRisk.length,
+      }),
       "",
     );
 
     if (digest.atRisk.length > 0) {
-      lines.push("TJEK IND MED DISSE:");
+      lines.push(t("text.atRiskHeader"));
       digest.atRisk.forEach((m) => {
         const weight =
           m.weightDeltaKg !== null
@@ -217,7 +237,7 @@ function renderText(args: {
     }
 
     if (digest.strong.length > 0) {
-      lines.push("ANERKEND DISSE STÆRKE UGER:");
+      lines.push(t("text.strongHeader"));
       digest.strong.forEach((m) => {
         lines.push(`  · @${m.handle} — ${m.adherencePct}%`);
       });
@@ -225,14 +245,16 @@ function renderText(args: {
     }
 
     if (digest.steadyCount > 0) {
-      lines.push(
-        `${digest.steadyCount} medlemmer i normalt range — ingen action påkrævet.`,
-      );
+      lines.push(t("steadyLine", { count: digest.steadyCount }));
       lines.push("");
     }
   }
 
-  lines.push(`Åbn: ${args.baseUrl}/coach`, "", "— MakeIt // HQ");
+  lines.push(
+    t("text.open", { url: `${args.baseUrl}/coach` }),
+    "",
+    t("text.signoff"),
+  );
   return lines.join("\n");
 }
 
@@ -241,19 +263,28 @@ export async function sendCoachAdherenceDigestEmail(args: {
   recipientHandle: string;
   digest: CrewAdherenceDigest;
   baseUrl: string;
+  locale: Locale;
 }): Promise<SendResult> {
+  const t = emailTranslator(args.locale, "Email.coachAdherenceDigest");
+  const tFooter = emailTranslator(args.locale, "Email.footer");
+  const range = fmtRange(args.digest.rangeFrom, args.digest.rangeTo, args.locale);
   return sendEmail({
     to: args.to,
-    subject: `Crew adherence · ${fmtRange(args.digest.rangeFrom, args.digest.rangeTo)}`,
+    subject: t("subject", { range }),
     html: renderHtml({
       recipientHandle: args.recipientHandle,
       digest: args.digest,
       baseUrl: args.baseUrl,
+      locale: args.locale,
+      t,
+      tFooter,
     }),
     text: renderText({
       recipientHandle: args.recipientHandle,
       digest: args.digest,
       baseUrl: args.baseUrl,
+      locale: args.locale,
+      t,
     }),
   });
 }

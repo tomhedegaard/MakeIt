@@ -1,0 +1,96 @@
+{
+  "header": {
+    "eyebrow": "04 — Reps Program",
+    "title": "Du arbejder. Du får.",
+    "subtitle": "Tjen Reps for hvad du allerede gør. Bruge dem på ting du faktisk vil have."
+  },
+  "balance": {
+    "label": "Din balance",
+    "tier": "Tier: {tier}",
+    "toNext": "{amount} til {tier}",
+    "topCap": "Topcap nået · ★"
+  },
+  "tiers": {
+    "eyebrow": "Tiers",
+    "you": "Du",
+    "range": "{range} Reps",
+    "list": {
+      "Lifter": {
+        "range": "0 — 999",
+        "perks": ["Adgang til crew-feed", "Månedlige challenges", "5% medlemsrabat"]
+      },
+      "Athlete": {
+        "range": "1.000 — 4.999",
+        "perks": ["Alt fra Lifter", "Early access til drops", "10% rabat", "1 form-check pr. md."]
+      },
+      "Beast": {
+        "range": "5.000 — 14.999",
+        "perks": ["Alt fra Athlete", "Custom strap-farve (1 stk/år)", "15% rabat", "VIP til IRL-meets"]
+      },
+      "Legend": {
+        "range": "15.000+",
+        "perks": ["Alt fra Beast", "1:1 tid med Mikael Munk", "Limited drops i navnet dit", "20% rabat livstid"]
+      }
+    }
+  },
+  "how": {
+    "eyebrow": "Sådan tjener du",
+    "list": {
+      "buy": { "v": "+50", "k": "Pr. køb i webshoppen", "sub": "Pr. 100 kr brugt" },
+      "week": { "v": "+100", "k": "Pr. fuldført uge i program", "sub": "Maks 4 uger pr. md." },
+      "pr": { "v": "+250", "k": "Pr. PR du logger med video", "sub": "Verificeret af coach" },
+      "invite": { "v": "+500", "k": "Pr. ven du inviterer ind", "sub": "Når de aktiverer" },
+      "challenge": { "v": "+1.000", "k": "Pr. challenge du vinder", "sub": "Månedlige" },
+      "expiry": { "v": "−", "k": "Reps udløber aldrig", "sub": "De er dine. Punktum." }
+    }
+  },
+  "kindLabels": {
+    "drop": "Limited drop",
+    "experience": "Experience",
+    "physical": "Fysisk vare",
+    "digital": "Digital"
+  },
+  "shop": {
+    "eyebrow": "Reward shop",
+    "balance": "Saldo: {balance} Reps",
+    "empty": "Ingen aktive belønninger lige nu. Mikael lægger nye drops ind løbende.",
+    "repsLabel": "Reps",
+    "stockLeft": "{stock} tilbage",
+    "unlimited": "Ubegrænset"
+  },
+  "redemptions": {
+    "eyebrow": "Mine indløsninger",
+    "total": "{count} samlet"
+  },
+  "redeem": {
+    "errors": {
+      "auth": "Du skal være logget ind.",
+      "sold_out": "Den her er udsolgt — det går stærkt!",
+      "insufficient_reps": "Du har ikke nok Reps endnu.",
+      "unavailable": "Belønningen er ikke tilgængelig lige nu.",
+      "unknown": "Noget gik galt — prøv igen om lidt."
+    },
+    "soldOut": "Udsolgt",
+    "missingReps": "Mangler {amount} Reps",
+    "redeem": "Indløs",
+    "confirmEyebrow": "Bekræft indløsning",
+    "price": "Pris",
+    "yourBalance": "Din balance",
+    "afterRedemption": "Efter indløsning",
+    "fulfilmentPhysical": "Vi sender med GLS når Mikael har bekræftet.",
+    "fulfilmentExperience": "Mikael kontakter dig direkte for at booke.",
+    "fulfilmentDigital": "Aktiveres automatisk på din konto.",
+    "cancel": "Annullér",
+    "redeeming": "Indløser…",
+    "confirm": "Bekræft →",
+    "successEyebrow": "Indløsning bekræftet",
+    "successTitle": "Sådan.",
+    "successBody": "Din indløsning er registreret og venter på Mikaels bekræftelse. Du kan følge status under “Mine indløsninger” nedenfor.",
+    "successMeta": "− {amount} Reps · status: afventer",
+    "done": "Færdig",
+    "errorEyebrow": "Kunne ikke indløse",
+    "errorBody": "Ingen Reps er trukket. Prøv igen, eller kontakt support hvis problemet fortsætter.",
+    "close": "Luk",
+    "retry": "Prøv igen"
+  }
+}

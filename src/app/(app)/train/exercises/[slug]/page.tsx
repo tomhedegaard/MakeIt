@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { COMPANY } from "@/lib/company";
 import {
@@ -26,26 +27,11 @@ type Params = Promise<{ slug: string }>;
 export async function generateMetadata({ params }: { params: Params }) {
   const { slug } = await params;
   const ex = await getExerciseBySlug(slug);
+  const t = await getTranslations("Train.detail");
   return {
-    title: ex ? `${ex.name} · Train · ${COMPANY.product}` : "Øvelse",
+    title: ex ? `${ex.name} · Train · ${COMPANY.product}` : t("metaFallback"),
   };
 }
-
-const CATEGORY_LABELS: Record<string, string> = {
-  "lower-body": "Ben",
-  "upper-body-push": "Push",
-  "upper-body-pull": "Pull",
-  "full-body": "Helkrop",
-  shoulders: "Skuldre",
-  arms: "Arme",
-  core: "Core",
-};
-
-const DIFFICULTY_LABELS: Record<string, string> = {
-  beginner: "Begynder",
-  intermediate: "Mellem",
-  advanced: "Avanceret",
-};
 
 export default async function ExerciseDetailPage({
   params,
@@ -55,6 +41,8 @@ export default async function ExerciseDetailPage({
   const { slug } = await params;
   const ex = await getExerciseBySlug(slug);
   if (!ex) notFound();
+
+  const t = await getTranslations("Train");
 
   const view = dominantView(ex);
 
@@ -92,7 +80,7 @@ export default async function ExerciseDetailPage({
             <div className="min-w-0">
               <div className="eyebrow mb-3 flex flex-wrap items-center gap-2">
                 <Link href="/train/exercises" className="hover:text-fg">
-                  Øvelser
+                  {t("detail.breadcrumb")}
                 </Link>
                 {ex.category ? (
                   <>
@@ -101,7 +89,9 @@ export default async function ExerciseDetailPage({
                       href={`/train/exercises?category=${ex.category}`}
                       className="hover:text-fg"
                     >
-                      {CATEGORY_LABELS[ex.category] ?? ex.category}
+                      {t.has(`categories.${ex.category}`)
+                        ? t(`categories.${ex.category}`)
+                        : ex.category}
                     </Link>
                   </>
                 ) : null}
@@ -114,7 +104,11 @@ export default async function ExerciseDetailPage({
                 {ex.difficulty ? (
                   <>
                     <span aria-hidden>·</span>
-                    <span>{DIFFICULTY_LABELS[ex.difficulty] ?? ex.difficulty}</span>
+                    <span>
+                      {t.has(`difficulty.${ex.difficulty}`)
+                        ? t(`difficulty.${ex.difficulty}`)
+                        : ex.difficulty}
+                    </span>
                   </>
                 ) : null}
               </div>
@@ -159,7 +153,7 @@ export default async function ExerciseDetailPage({
         {/* Mistakes */}
         {ex.mistakes.length > 0 ? (
           <section className="space-y-5">
-            <div className="eyebrow">Typiske fejl</div>
+            <div className="eyebrow">{t("detail.mistakes")}</div>
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
               {ex.mistakes.map((m, i) => (
                 <article
@@ -179,13 +173,13 @@ export default async function ExerciseDetailPage({
         {/* Setup + Progression/Regression */}
         <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {ex.setup ? (
-            <InfoBlock eyebrow="Setup" body={ex.setup} />
+            <InfoBlock eyebrow={t("detail.setup")} body={ex.setup} />
           ) : null}
           {ex.progression ? (
-            <InfoBlock eyebrow="Progression" body={ex.progression} />
+            <InfoBlock eyebrow={t("detail.progression")} body={ex.progression} />
           ) : null}
           {ex.regression ? (
-            <InfoBlock eyebrow="Regression" body={ex.regression} />
+            <InfoBlock eyebrow={t("detail.regression")} body={ex.regression} />
           ) : null}
         </section>
       </Container>

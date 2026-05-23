@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { createProgramAction } from "@/app/coach/programs/actions";
 
 const TYPES = ["Strength", "Hypertrophy", "Hybrid", "Specialization"];
@@ -12,6 +13,7 @@ const LEVELS = ["Beginner", "Intermediate", "Advanced", "All levels"];
  * `programs` row (unpublished) and routes straight into the builder.
  */
 export default function NewProgramForm() {
+  const t = useTranslations("CoachStudio.newProgramForm");
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -30,7 +32,7 @@ export default function NewProgramForm() {
       if (res.ok && res.code) {
         router.push(`/coach/programs/${encodeURIComponent(res.code)}`);
       } else {
-        setError(res.error ?? "Kunne ikke oprette programmet");
+        setError(res.error ?? t("createError"));
       }
     });
   }
@@ -42,38 +44,38 @@ export default function NewProgramForm() {
         onClick={() => setOpen(true)}
         className="btn btn-primary"
       >
-        + Nyt program
+        {t("openButton")}
       </button>
     );
   }
 
   return (
     <div className="surface-2 rounded-xl p-5 md:p-6 space-y-4">
-      <div className="eyebrow">Nyt program</div>
+      <div className="eyebrow">{t("heading")}</div>
 
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">Kode (unik)</span>
+          <span className="text-xs text-fg-dim">{t("codeLabel")}</span>
           <input
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            placeholder="fx STR-12"
+            placeholder={t("codePlaceholder")}
             className="input w-full"
             maxLength={24}
           />
         </label>
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">Navn</span>
+          <span className="text-xs text-fg-dim">{t("nameLabel")}</span>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="fx PR-Block"
+            placeholder={t("namePlaceholder")}
             className="input w-full"
             maxLength={80}
           />
         </label>
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">Type</span>
+          <span className="text-xs text-fg-dim">{t("typeLabel")}</span>
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
@@ -87,7 +89,7 @@ export default function NewProgramForm() {
           </select>
         </label>
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">Niveau</span>
+          <span className="text-xs text-fg-dim">{t("levelLabel")}</span>
           <select
             value={level}
             onChange={(e) => setLevel(e.target.value)}
@@ -101,7 +103,7 @@ export default function NewProgramForm() {
           </select>
         </label>
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">Uger</span>
+          <span className="text-xs text-fg-dim">{t("weeksLabel")}</span>
           <input
             type="number"
             min={1}
@@ -126,14 +128,14 @@ export default function NewProgramForm() {
           disabled={pending || !code.trim() || !name.trim()}
           className="btn btn-primary"
         >
-          {pending ? "Opretter…" : "Opret + byg"}
+          {pending ? t("creating") : t("submit")}
         </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
           className="btn btn-ghost"
         >
-          Annullér
+          {t("cancel")}
         </button>
       </div>
     </div>

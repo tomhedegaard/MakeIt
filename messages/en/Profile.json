@@ -1,0 +1,68 @@
+{
+  "header": {
+    "eyebrow": "05 — Profile",
+    "subtitle": "Tier: {tier} · Member since {date}",
+    "settings": "Settings",
+    "openCoachConsole": "Open coach console →"
+  },
+  "lifts": {
+    "ariaLabel": "Lifts",
+    "title": "Lifts on record",
+    "delta": "{sign}{value} kg / 4w",
+    "e1rmUnit": "kg e1RM",
+    "weeksOne": "{count} week of data",
+    "weeksOther": "{count} weeks of data",
+    "noData": "Log a set to get started",
+    "formula": "e1RM calculated with Epley · weight × (1 + reps / 30) · top reps ≤ 10"
+  },
+  "prs": {
+    "ariaLabel": "Recent PRs",
+    "title": "Recent PRs",
+    "autoDetected": "Detected automatically",
+    "e1rm": "e1RM"
+  },
+  "settings": {
+    "eyebrow": "Settings",
+    "email": "Email",
+    "notifications": "Notifications",
+    "notificationsValue": "Crew + PRs",
+    "language": "Language",
+    "languageValue": "Danish",
+    "theme": "Theme",
+    "themeValue": "Dark (only)"
+  },
+  "billing": {
+    "eyebrow": "Billing",
+    "title": "Subscription & payment",
+    "description": "Manage your Crew membership and 1:1 add-on. Secure checkout via Stripe.",
+    "open": "Open billing →"
+  },
+  "formChecks": {
+    "ariaLabel": "My form checks",
+    "eyebrow": "Form checks",
+    "titleEmpty": "No form checks yet",
+    "titleWithData": "Your latest recordings",
+    "description": "AI assessment first, then a personal note from Mikael Munk within 24 hours.",
+    "coachRepliesOne": "{count} reply from coach",
+    "coachRepliesOther": "{count} replies from coach",
+    "emptyHint": "Tap “Form check with AI” in an active session or via + Share in Crew to get your first assessment.",
+    "exerciseFallback": "Form check",
+    "aiHeadlineFallback": "AI response",
+    "outOf": "/ 100",
+    "good": "Good",
+    "tightenUp": "Tighten up",
+    "coachTip": "Coach tip",
+    "awaitingReview": "Awaiting coach review · typically within 24 hours",
+    "footerPending": "{pending} awaiting review · {reviewed} answered",
+    "footerAllAnswered": "All {reviewed} answered"
+  },
+  "progression": {
+    "eyebrow": "Progression",
+    "latest": "/ 100 latest",
+    "formCheckOne": "{count} form check",
+    "formCheckOther": "{count} form checks",
+    "average": "Avg {value}",
+    "sinceFirst": "{sign}{value} since first",
+    "sparklineAria": "Score development over time"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "metaTitle": "Log ind — {product}",
+  "errors": {
+    "1": "Noget gik galt — prøv igen",
+    "missing": "Email og kode kræves",
+    "invite": "Ugyldig invite-kode",
+    "otp": "Kunne ikke sende mail — prøv igen",
+    "pw_short": "Passwordet skal være mindst 8 tegn",
+    "exists": "Email er allerede registreret — log ind i stedet",
+    "signup": "Kunne ikke oprette konto — prøv igen",
+    "creds": "Forkert email eller password",
+    "signin": "Kunne ikke logge ind — prøv igen",
+    "oauth": "OAuth-flow fejlede — prøv igen",
+    "provider": "Ukendt provider",
+    "callback": "Login-link udløbet eller ugyldigt",
+    "disabled": "Backend ikke tilkoblet",
+    "fallback": "Noget gik galt — prøv igen"
+  },
+  "beta": "Closed Beta · Invite only",
+  "headline": {
+    "line1": "Velkommen",
+    "line2": "til crewet."
+  },
+  "statusConnected": "Connected · ",
+  "statusDemo": "Demo mode · ingen backend tilkoblet",
+  "mock": {
+    "intro": "Indtast din invite-kode for at få adgang. Har du ikke en? Skriv til ",
+    "inviteCodeLabel": "Invite-kode",
+    "invalidCode": "· Ugyldig kode — prøv igen",
+    "submit": "Få adgang →",
+    "testCodesLabel": "Test-koder: "
+  },
+  "tabs": {
+    "magic": "Magic link",
+    "password": "Password",
+    "oauth": "Google / Apple"
+  },
+  "magic": {
+    "intro": "Indtast email + invite-kode. Vi sender et engangs-login-link.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "dig@email.com",
+    "inviteCodeLabel": "Invite-kode",
+    "submit": "Send login-link →"
+  },
+  "password": {
+    "introSignup": "Opret en konto med email + password. Invite-kode kræves.",
+    "introSignin": "Log ind med email + password.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "dig@email.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Mindst 8 tegn",
+    "inviteCodeLabel": "Invite-kode",
+    "submitSignup": "Opret konto →",
+    "submitSignin": "Log ind →",
+    "hasAccount": "Har du allerede en konto?",
+    "signinLink": "Log ind",
+    "newHere": "Ny her?",
+    "signupLink": "Opret konto"
+  },
+  "oauth": {
+    "intro": "Log ind eller opret konto med Google eller Apple. Invite-kode kræves uanset om du er ny eller eksisterende.",
+    "inviteCodeLabel": "Invite-kode",
+    "continueGoogle": "Fortsæt med Google",
+    "continueApple": "Fortsæt med Apple"
+  },
+  "sent": {
+    "eyebrow": "Mail sendt",
+    "body": "Vi har sendt et login-link til ",
+    "fallbackEmail": "din mail",
+    "bodyTail": ". Åbn linket på samme enhed, så er du inde.",
+    "expiry": "Linket virker i 1 time."
+  }
+}

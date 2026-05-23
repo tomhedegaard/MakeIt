@@ -1,0 +1,50 @@
+{
+  "header": {
+    "eyebrow": "02 — Træn",
+    "title": "Din uge.",
+    "subtitle": "Alt automatisk planlagt af AI'en, justeret af din coach, og tilpasset dig."
+  },
+  "week": {
+    "ariaLabel": "Ugeoversigt",
+    "done": "Gennemført",
+    "today": "I dag"
+  },
+  "today": {
+    "label": "I dag · {programCode} · uge {week}",
+    "exercises": "Øvelser",
+    "sets": "Sæt",
+    "estTime": "Est. tid",
+    "start": "Start session →"
+  },
+  "active": {
+    "eyebrow": "Aktivt program",
+    "weeks": "uger",
+    "volume": "Volumen · 4u",
+    "prs": "PR'er · 4u",
+    "streak": "Streak"
+  },
+  "library": {
+    "eyebrow": "Programmer",
+    "activeBadge": "Aktiv · uge {week}",
+    "coach": "Coach",
+    "coachFallback": "AI + team",
+    "level": "Niveau",
+    "levelFallback": "—",
+    "continue": "Fortsæt →",
+    "details": "Detaljer"
+  },
+  "oneOnOne": {
+    "eyebrow": "1:1 Coaching · Den eneste 100% menneskelige del",
+    "title": "Vil du have Mikael Munk i dit øre direkte?",
+    "body": "Personligt program, ugentlige form-checks via video, og direkte adgang over Signal. {spots} ind ad gangen.",
+    "priceSuffix": "{currency}/{period} oven i medlemskabet",
+    "apply": "Søg om plads →",
+    "readMore": "Læs mere"
+  },
+  "startButton": {
+    "switchConfirm": "Skifte til \"{name}\"? Dit nuværende program pauses (kan genoptages senere).",
+    "startConfirm": "Start \"{name}\"?",
+    "starting": "Starter…",
+    "start": "Start program"
+  }
+}

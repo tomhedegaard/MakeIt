@@ -9,6 +9,7 @@ import {
   type FormCheckQuota,
 } from "@/lib/data/form-check-quota";
 import { getFormCheckQuota } from "@/lib/data/form-check-quota-server";
+import { getTodaysReadinessNudge } from "@/lib/data/hrv";
 
 export default async function SessionPage({
   params,
@@ -20,10 +21,19 @@ export default async function SessionPage({
   if (SUPABASE_ENABLED) {
     const member = await getSession();
     if (!member) notFound();
-    const session = await getFullSession(id, member.id);
+    const [session, quota, readinessNudge] = await Promise.all([
+      getFullSession(id, member.id),
+      getFormCheckQuota(member.id, member.tier),
+      getTodaysReadinessNudge(member.id),
+    ]);
     if (!session) notFound();
-    const quota = await getFormCheckQuota(member.id, member.tier);
-    return <SessionClient session={session} formCheckQuota={quota} />;
+    return (
+      <SessionClient
+        session={session}
+        formCheckQuota={quota}
+        readinessNudge={readinessNudge}
+      />
+    );
   }
 
   // Demo mode — only the static TODAY_SESSION resolves
@@ -36,5 +46,11 @@ export default async function SessionPage({
     resetsAt: new Date().toISOString(),
     hasRemaining: true,
   };
-  return <SessionClient session={session} formCheckQuota={quota} />;
+  return (
+    <SessionClient
+      session={session}
+      formCheckQuota={quota}
+      readinessNudge={null}
+    />
+  );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import {
   savePushSubscriptionAction,
   deletePushSubscriptionAction,
@@ -30,6 +31,7 @@ export default function PushToggle({
 }: {
   vapidPublicKey: string;
 }) {
+  const t = useTranslations("Push");
   const [state, setState] = useState<State>("loading");
   const [pending, startTransition] = useTransition();
   const [testSentAt, setTestSentAt] = useState<number | null>(null);
@@ -145,7 +147,7 @@ export default function PushToggle({
     <div className="flex flex-wrap items-center gap-2">
       {state === "denied" ? (
         <button type="button" disabled className="btn btn-sm">
-          Blokeret i browser
+          {t("blocked")}
         </button>
       ) : state === "on" ? (
         <>
@@ -155,21 +157,21 @@ export default function PushToggle({
             disabled={pending}
             className="btn btn-sm"
           >
-            {pending ? "…" : "Slå fra"}
+            {pending ? t("ellipsis") : t("turnOff")}
           </button>
           <button
             type="button"
             onClick={handleTest}
             disabled={pending || noKey}
             className="btn btn-sm btn-ghost"
-            title={noKey ? "VAPID keys mangler" : "Send testbesked"}
+            title={noKey ? t("vapidMissing") : t("sendTestTitle")}
           >
-            Test
+            {t("test")}
           </button>
           <span className="text-[10px] font-mono text-fg-faint">
             {testSentAt
-              ? `Sendt ${secondsAgo(testSentAt)}s siden`
-              : "Daglig påmindelse · 08:00"}
+              ? t("testSent", { seconds: secondsAgo(testSentAt) })
+              : t("dailyReminder")}
           </span>
         </>
       ) : (
@@ -179,17 +181,17 @@ export default function PushToggle({
             onClick={handleSubscribe}
             disabled={pending || noKey || state === "loading"}
             className="btn btn-primary btn-sm"
-            title={noKey ? "VAPID keys mangler — kontakt admin" : undefined}
+            title={noKey ? t("vapidMissingAdmin") : undefined}
           >
             {pending
-              ? "Tilmelder…"
+              ? t("subscribing")
               : state === "loading"
-              ? "…"
-              : "Slå påmindelser til"}
+              ? t("ellipsis")
+              : t("turnOn")}
           </button>
           {noKey ? (
             <span className="text-[10px] font-mono text-fg-faint">
-              VAPID ikke konfigureret
+              {t("vapidNotConfigured")}
             </span>
           ) : null}
         </>

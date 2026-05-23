@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { createExerciseAction } from "@/app/coach/exercises/actions";
 
 /**
@@ -9,6 +10,7 @@ import { createExerciseAction } from "@/app/coach/exercises/actions";
  * draft (slug + name, unpublished) and routes into the editor.
  */
 export default function NewExerciseForm() {
+  const t = useTranslations("CoachStudio.newExerciseForm");
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -23,7 +25,7 @@ export default function NewExerciseForm() {
       if (res.ok && res.slug) {
         router.push(`/coach/exercises/${encodeURIComponent(res.slug)}`);
       } else {
-        setError(res.error ?? "Kunne ikke oprette øvelsen");
+        setError(res.error ?? t("createError"));
       }
     });
   }
@@ -35,28 +37,28 @@ export default function NewExerciseForm() {
         onClick={() => setOpen(true)}
         className="btn btn-primary"
       >
-        + Ny øvelse
+        {t("openButton")}
       </button>
     );
   }
 
   return (
     <div className="surface-2 rounded-xl p-5 md:p-6 space-y-4">
-      <div className="eyebrow">Ny øvelse</div>
+      <div className="eyebrow">{t("heading")}</div>
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">Navn</span>
+          <span className="text-xs text-fg-dim">{t("nameLabel")}</span>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="fx Bulgarian Split Squat"
+            placeholder={t("namePlaceholder")}
             className="input w-full"
             maxLength={80}
           />
         </label>
         <label className="space-y-1.5">
           <span className="text-xs text-fg-dim">
-            Slug (valgfri — dannes fra navn)
+            {t("slugLabel")}
           </span>
           <input
             value={slug}
@@ -81,14 +83,14 @@ export default function NewExerciseForm() {
           disabled={pending || !name.trim()}
           className="btn btn-primary"
         >
-          {pending ? "Opretter…" : "Opret + rediger"}
+          {pending ? t("creating") : t("submit")}
         </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
           className="btn btn-ghost"
         >
-          Annullér
+          {t("cancel")}
         </button>
       </div>
     </div>

@@ -1,17 +1,20 @@
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 
-export default function CrewSection() {
+export default async function CrewSection() {
+  const t = await getTranslations("Marketing.crew");
+
   return (
     <section id="crew" className="relative py-24 md:py-40">
       <Container>
         <div className="grid gap-16 md:grid-cols-12">
           <div className="md:col-span-4" data-reveal>
-            <div className="eyebrow mb-4">01 — Crewet</div>
+            <div className="eyebrow mb-4">{t("eyebrow")}</div>
             <h2 className="font-display text-[clamp(2.4rem,6vw,5rem)]">
-              Et lukket
-              <br /> rum for
-              <br /> dem der
-              <br /> løfter.
+              {t("heading.line1")}
+              <br /> {t("heading.line2")}
+              <br /> {t("heading.line3")}
+              <br /> {t("heading.line4")}
             </h2>
           </div>
 
@@ -21,28 +24,26 @@ export default function CrewSection() {
               data-reveal
               style={{ transitionDelay: "120ms" }}
             >
-              MakeIt Crew er ikke for alle. Det er for atleter, coaches og samarbejdspartnere
-              der allerede bygger sammen med os — og som vil have adgang til programmer,
-              fællesskab og fordele før alle andre.
+              {t("intro")}
             </p>
 
             <ul className="grid sm:grid-cols-2 gap-6">
               {[
                 {
-                  k: "Inviteret adgang",
-                  v: "Kun via personlig kode fra Mikael Munk eller en eksisterende crew-medlem.",
+                  k: t("items.invite.k"),
+                  v: t("items.invite.v"),
                 },
                 {
-                  k: "Bygget internt",
-                  v: "Vi udvikler platformen sammen med jer. Jeres feedback er featurerne.",
+                  k: t("items.internal.k"),
+                  v: t("items.internal.v"),
                 },
                 {
-                  k: "Ingen støj",
-                  v: "Ingen ads, ingen krav om at performe på Instagram. Bare træning og fællesskab.",
+                  k: t("items.noNoise.k"),
+                  v: t("items.noNoise.v"),
                 },
                 {
-                  k: "Fri af shoppen",
-                  v: "Webshoppen kører videre uberørt — det her er noget for sig.",
+                  k: t("items.freeOfShop.k"),
+                  v: t("items.freeOfShop.v"),
                 },
               ].map((it, i) => (
                 <li

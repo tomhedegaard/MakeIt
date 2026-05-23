@@ -1,0 +1,96 @@
+{
+  "header": {
+    "eyebrow": "04 — Reps Program",
+    "title": "You put in work. You get paid.",
+    "subtitle": "Earn Reps for what you already do. Spend them on stuff you actually want."
+  },
+  "balance": {
+    "label": "Your balance",
+    "tier": "Tier: {tier}",
+    "toNext": "{amount} to {tier}",
+    "topCap": "Top cap reached · ★"
+  },
+  "tiers": {
+    "eyebrow": "Tiers",
+    "you": "You",
+    "range": "{range} Reps",
+    "list": {
+      "Lifter": {
+        "range": "0 — 999",
+        "perks": ["Access to the crew feed", "Monthly challenges", "5% member discount"]
+      },
+      "Athlete": {
+        "range": "1,000 — 4,999",
+        "perks": ["Everything from Lifter", "Early access to drops", "10% discount", "1 form check per month"]
+      },
+      "Beast": {
+        "range": "5,000 — 14,999",
+        "perks": ["Everything from Athlete", "Custom strap colour (1 per year)", "15% discount", "VIP at IRL meets"]
+      },
+      "Legend": {
+        "range": "15,000+",
+        "perks": ["Everything from Beast", "1:1 time with Mikael Munk", "Limited drops in your name", "20% discount for life"]
+      }
+    }
+  },
+  "how": {
+    "eyebrow": "How you earn",
+    "list": {
+      "buy": { "v": "+50", "k": "Per purchase in the webshop", "sub": "Per 100 kr spent" },
+      "week": { "v": "+100", "k": "Per completed week in a program", "sub": "Max 4 weeks per month" },
+      "pr": { "v": "+250", "k": "Per PR you log with video", "sub": "Verified by a coach" },
+      "invite": { "v": "+500", "k": "Per friend you bring in", "sub": "When they activate" },
+      "challenge": { "v": "+1,000", "k": "Per challenge you win", "sub": "Monthly" },
+      "expiry": { "v": "−", "k": "Reps never expire", "sub": "They're yours. Full stop." }
+    }
+  },
+  "kindLabels": {
+    "drop": "Limited drop",
+    "experience": "Experience",
+    "physical": "Physical item",
+    "digital": "Digital"
+  },
+  "shop": {
+    "eyebrow": "Reward shop",
+    "balance": "Balance: {balance} Reps",
+    "empty": "No active rewards right now. Mikael adds new drops on a rolling basis.",
+    "repsLabel": "Reps",
+    "stockLeft": "{stock} left",
+    "unlimited": "Unlimited"
+  },
+  "redemptions": {
+    "eyebrow": "My redemptions",
+    "total": "{count} total"
+  },
+  "redeem": {
+    "errors": {
+      "auth": "You need to be signed in.",
+      "sold_out": "This one's sold out — it's going fast!",
+      "insufficient_reps": "You don't have enough Reps yet.",
+      "unavailable": "This reward isn't available right now.",
+      "unknown": "Something went wrong — try again in a moment."
+    },
+    "soldOut": "Sold out",
+    "missingReps": "Short {amount} Reps",
+    "redeem": "Redeem",
+    "confirmEyebrow": "Confirm redemption",
+    "price": "Price",
+    "yourBalance": "Your balance",
+    "afterRedemption": "After redemption",
+    "fulfilmentPhysical": "We'll ship with GLS once Mikael confirms.",
+    "fulfilmentExperience": "Mikael will reach out directly to book it.",
+    "fulfilmentDigital": "Activated automatically on your account.",
+    "cancel": "Cancel",
+    "redeeming": "Redeeming…",
+    "confirm": "Confirm →",
+    "successEyebrow": "Redemption confirmed",
+    "successTitle": "Nailed it.",
+    "successBody": "Your redemption is logged and waiting on Mikael's confirmation. You can track the status under “My redemptions” below.",
+    "successMeta": "− {amount} Reps · status: pending",
+    "done": "Done",
+    "errorEyebrow": "Couldn't redeem",
+    "errorBody": "No Reps were deducted. Try again, or contact support if the problem continues.",
+    "close": "Close",
+    "retry": "Try again"
+  }
+}

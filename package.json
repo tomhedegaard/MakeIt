@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "vapid:generate": "node scripts/generate-vapid.mjs",
     "apple:jwt": "node scripts/generate-apple-jwt.mjs",
     "db:start": "supabase start",
@@ -28,6 +30,7 @@
     "lenis": "^1.3.23",
     "lucide-react": "^1.14.0",
     "next": "16.2.4",
+    "next-intl": "^4.12.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "resend": "^6.12.3",
@@ -41,9 +44,12 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/coverage-v8": "^3.2.4",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "jsdom": "^25.0.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   }
 }

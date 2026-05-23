@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useSyncExternalStore } from "react";
+import { useTranslations } from "next-intl";
 import type { ShoppingGroup } from "@/lib/nutrition/shopping";
 
 /**
@@ -27,6 +28,7 @@ export default function ShoppingChecklist({
   planId: string;
   groups: ShoppingGroup[];
 }) {
+  const t = useTranslations("Nutrition.shoppingChecklist");
   const storageKey = `${STORAGE_PREFIX}${planId}`;
   const checkedJson = useSyncExternalStore(
     subscribeToStorage,
@@ -66,7 +68,7 @@ export default function ShoppingChecklist({
   }
 
   function reset() {
-    if (!confirm("Nulstil alle afkrydsninger?")) return;
+    if (!confirm(t("resetConfirm"))) return;
     persist(storageKey, new Set());
   }
 
@@ -75,7 +77,7 @@ export default function ShoppingChecklist({
       {/* Progress */}
       <section className="surface-2 rounded-xl px-5 py-4">
         <div className="flex items-baseline justify-between mb-2">
-          <div className="eyebrow">Fremdrift</div>
+          <div className="eyebrow">{t("progress")}</div>
           <span className="numeric text-sm">
             {totals.done} <span className="text-fg-dim">/ {totals.total}</span>
           </span>
@@ -95,7 +97,7 @@ export default function ShoppingChecklist({
             onClick={reset}
             className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg-dim mt-3"
           >
-            Nulstil
+            {t("reset")}
           </button>
         ) : null}
       </section>
@@ -145,7 +147,7 @@ export default function ShoppingChecklist({
                         </div>
                         {item.mealCount > 1 ? (
                           <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em] mt-0.5">
-                            til {item.mealCount} måltider
+                            {t("itemMealCount", { count: item.mealCount })}
                           </div>
                         ) : null}
                       </div>
@@ -163,7 +165,7 @@ export default function ShoppingChecklist({
 
       {groups.length === 0 ? (
         <section className="surface-2 rounded-2xl p-8 text-center text-sm text-fg-dim">
-          Ingen ingredienser i ugens plan.
+          {t("empty")}
         </section>
       ) : null}
     </div>

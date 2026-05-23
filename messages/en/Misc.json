@@ -1,0 +1,22 @@
+{
+  "error": {
+    "eyebrow": "Error · 500",
+    "title": "Something went wrong.",
+    "body": "We couldn't load this page. It's not you — it's us. Try again, or head back to the start.",
+    "ref": "ref: {digest}",
+    "retry": "Try again",
+    "home": "Back to home"
+  },
+  "loading": {
+    "label": "Loading"
+  },
+  "cookieBanner": {
+    "eyebrow": "Cookies",
+    "title": "We set a single session cookie.",
+    "bodyBefore": "We use one strictly necessary cookie to keep you signed in. No analytics cookies, no tracking, no ad pixels. Read the details in our ",
+    "privacyLink": "privacy policy",
+    "bodyAfter": ".",
+    "accept": "OK",
+    "essential": "Essential only"
+  }
+}

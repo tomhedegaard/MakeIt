@@ -49,15 +49,19 @@ create index if not exists idx_program_day_exercises_day
 alter table public.program_days enable row level security;
 alter table public.program_day_exercises enable row level security;
 
+drop policy if exists "program_days readable to authed" on public.program_days;
 create policy "program_days readable to authed"
   on public.program_days for select to authenticated using (true);
+drop policy if exists "coach manage program_days" on public.program_days;
 create policy "coach manage program_days"
   on public.program_days for all to authenticated
   using (public.is_current_user_coach())
   with check (public.is_current_user_coach());
 
+drop policy if exists "program_day_exercises readable to authed" on public.program_day_exercises;
 create policy "program_day_exercises readable to authed"
   on public.program_day_exercises for select to authenticated using (true);
+drop policy if exists "coach manage program_day_exercises" on public.program_day_exercises;
 create policy "coach manage program_day_exercises"
   on public.program_day_exercises for all to authenticated
   using (public.is_current_user_coach())
@@ -66,12 +70,15 @@ create policy "coach manage program_day_exercises"
 -- ---------- RLS: coach write on programs ----------
 -- 0001 only allowed authed SELECT of *published* programs. Coaches
 -- need to see their own drafts + create + edit templates.
+drop policy if exists "coach read all programs" on public.programs;
 create policy "coach read all programs"
   on public.programs for select to authenticated
   using (public.is_current_user_coach());
+drop policy if exists "coach insert programs" on public.programs;
 create policy "coach insert programs"
   on public.programs for insert to authenticated
   with check (public.is_current_user_coach());
+drop policy if exists "coach update programs" on public.programs;
 create policy "coach update programs"
   on public.programs for update to authenticated
   using (public.is_current_user_coach())
@@ -80,9 +87,11 @@ create policy "coach update programs"
 -- ---------- RLS: coach write on program_assignments ----------
 -- 0001 gave members "own" rows; 0004 gave coaches SELECT. Assigning a
 -- program to a member needs coach INSERT + UPDATE on any member's row.
+drop policy if exists "coach insert program_assignments" on public.program_assignments;
 create policy "coach insert program_assignments"
   on public.program_assignments for insert to authenticated
   with check (public.is_current_user_coach());
+drop policy if exists "coach update program_assignments" on public.program_assignments;
 create policy "coach update program_assignments"
   on public.program_assignments for update to authenticated
   using (public.is_current_user_coach())

@@ -93,6 +93,12 @@ export type NutritionLog = {
   loggedForDate: string;
   loggedForSlot: MealSlot | null;
   status: LogStatus;
+  /** True for "Spiste noget andet" off-plan logs (see migration 0033). */
+  offPlan: boolean;
+  /** Member's calorie estimate — only set on off-plan logs. */
+  kcal: number | null;
+  /** Member's protein estimate (grams) — only set on off-plan logs. */
+  proteinG: number | null;
   photoPath: string | null;
   matchScore: number | null;
   proteinEstimate: "low" | "on_target" | "high" | null;
@@ -440,6 +446,9 @@ export async function createLog(input: {
   loggedForDate: string;
   loggedForSlot: MealSlot | null;
   status?: LogStatus;
+  offPlan?: boolean;
+  kcal?: number | null;
+  proteinG?: number | null;
   photoPath: string | null;
   rating: number | null;
   notes: string | null;
@@ -454,6 +463,9 @@ export async function createLog(input: {
       logged_for_date: input.loggedForDate,
       logged_for_slot: input.loggedForSlot,
       status: input.status ?? "eaten",
+      off_plan: input.offPlan ?? false,
+      kcal: input.kcal ?? null,
+      protein_g: input.proteinG ?? null,
       photo_path: input.photoPath,
       rating: input.rating,
       notes: input.notes,
@@ -661,6 +673,9 @@ type LogRow = {
   logged_for_date: string;
   logged_for_slot: MealSlot | null;
   status: LogStatus | null;
+  off_plan: boolean | null;
+  kcal: number | null;
+  protein_g: number | null;
   photo_path: string | null;
   match_score: number | null;
   protein_estimate: "low" | "on_target" | "high" | null;
@@ -680,6 +695,9 @@ function rowToLog(row: LogRow): NutritionLog {
     loggedForDate: row.logged_for_date,
     loggedForSlot: row.logged_for_slot,
     status: row.status ?? "eaten",
+    offPlan: row.off_plan ?? false,
+    kcal: row.kcal,
+    proteinG: row.protein_g,
     photoPath: row.photo_path,
     matchScore: row.match_score,
     proteinEstimate: row.protein_estimate,

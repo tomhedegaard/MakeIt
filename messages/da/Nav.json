@@ -1,0 +1,70 @@
+{
+  "links": {
+    "today": "Today",
+    "train": "Træn",
+    "food": "Mad",
+    "crew": "Crew",
+    "hrv": "HRV",
+    "reps": "Reps",
+    "me": "Mig",
+    "messages": "Beskeder",
+    "chat": "Chat"
+  },
+  "shell": {
+    "coachBadge": "Coach",
+    "coachConsole": "Konsol",
+    "tier": "Tier",
+    "logout": "Log ud",
+    "myProfile": "Min profil",
+    "unread": "{count} ulæste",
+    "mainNav": "Hovednavigation"
+  },
+  "tierBanner": {
+    "eyebrow": "Tier-up",
+    "title": "Du er rykket fra {fromTier} til {toTier}.",
+    "subtitle": "Nye perks låst op — se Reps-siden.",
+    "cta": "Se perks →",
+    "close": "Luk"
+  },
+  "tour": {
+    "skip": "Spring over",
+    "back": "Tilbage",
+    "next": "Næste →",
+    "begin": "Begynd →",
+    "steps": {
+      "welcome": {
+        "eyebrow": "Velkommen",
+        "title": "Du er inde i crewet.",
+        "body": "Hurtig rundtur — så ved du hvor alt ligger. 4 skærme, 30 sekunder."
+      },
+      "today": {
+        "eyebrow": "01 · Today",
+        "title": "Dagens session ligger her.",
+        "body": "Hver morgen åbner du Today. Tap det store \"Start session →\"-kort og du er i gang. AI'en har allerede valgt vægte ud fra dine 1RM'er."
+      },
+      "tabs": {
+        "eyebrow": "02 · Træn / Crew / Reps / Mig",
+        "title": "Bottom tab-bar = hele appen.",
+        "body": "Træn = dine programmer. Crew = feed med PR'er + form-checks. Reps = optjen og indløs. Mig = profil, lifts-historik og coach-noter fra Mikael."
+      },
+      "formCheck": {
+        "eyebrow": "03 · Form-check",
+        "title": "AI vurderer din teknik.",
+        "body": "Tap \"Form-check med AI\" inde i en session. Optag eller upload — du får svar inden for sekunder. Mikael godkender personligt inden 24 timer."
+      },
+      "reps": {
+        "eyebrow": "04 · Reps",
+        "title": "Du får for det du laver.",
+        "body": "+250 Reps pr. fuldført session. +100 pr. uge i program. Bytt dem til limited drops, custom-broderede straps, og 1:1 tid med Mikael."
+      }
+    }
+  },
+  "error": {
+    "eyebrow": "Fejl",
+    "title": "Den side kunne vi ikke loade.",
+    "descriptionBefore": "Tjek din forbindelse og prøv igen. Hvis det fortsætter, skriv til",
+    "ref": "ref: {digest}",
+    "retry": "Prøv igen",
+    "toDashboard": "Til dashboard"
+  }
+}

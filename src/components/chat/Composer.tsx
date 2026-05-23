@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { createClient as createBrowserSupabase } from "@/lib/supabase/client";
 import { sendMessageAction } from "@/app/(app)/messages/actions";
 import AudioRecorder from "./AudioRecorder";
@@ -32,6 +33,7 @@ export default function Composer({
   conversationId: string;
   canSendVideo: boolean;
 }) {
+  const t = useTranslations("Messages.composer");
   const [text, setText] = useState("");
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +44,12 @@ export default function Composer({
   function flashError(msg: string) {
     setError(msg);
     setTimeout(() => setError(null), 4000);
+  }
+
+  /** Map a server-action reject reason to a localized error label. */
+  function reasonToLabel(reason: string | undefined): string {
+    const key = `errors.${reason ?? "unknown"}`;
+    return t.has(key) ? t(key) : t("errors.unknown");
   }
 
   /* -------------------------------------------------- *
@@ -73,17 +81,17 @@ export default function Composer({
     if (pending) return;
 
     if (!file.type.startsWith("image/")) {
-      flashError("Vælg et billede");
+      flashError(t("errors.pickImage"));
       return;
     }
     if (file.size > 100 * 1024 * 1024) {
-      flashError("Filen er for stor (max 100 MB)");
+      flashError(t("errors.fileTooLarge"));
       return;
     }
 
     const supabase = createBrowserSupabase();
     if (!supabase) {
-      flashError("Storage er ikke tilgængelig i demo-mode");
+      flashError(t("errors.storageUnavailableDemo"));
       return;
     }
 
@@ -105,7 +113,7 @@ export default function Composer({
           upsert: false,
         });
       if (upErr) {
-        flashError("Upload fejlede: " + upErr.message);
+        flashError(t("errors.uploadFailedWithMessage", { message: upErr.message }));
         return;
       }
 
@@ -132,7 +140,7 @@ export default function Composer({
   async function handleAudioSubmit(blob: Blob, durationSec: number, mime: string) {
     const supabase = createBrowserSupabase();
     if (!supabase) {
-      flashError("Storage er ikke tilgængelig");
+      flashError(t("errors.storageUnavailable"));
       throw new Error("no_storage");
     }
     const ext = mime.includes("mp4") ? "m4a" : mime.includes("webm") ? "webm" : "ogg";
@@ -148,7 +156,7 @@ export default function Composer({
         upsert: false,
       });
     if (upErr) {
-      flashError("Upload fejlede");
+      flashError(t("errors.uploadFailed"));
       throw upErr;
     }
 
@@ -174,7 +182,7 @@ export default function Composer({
   async function handleVideoSubmit(blob: Blob, durationSec: number, mime: string) {
     const supabase = createBrowserSupabase();
     if (!supabase) {
-      flashError("Storage er ikke tilgængelig");
+      flashError(t("errors.storageUnavailable"));
       throw new Error("no_storage");
     }
     const ext = mime.includes("mp4")
@@ -194,7 +202,7 @@ export default function Composer({
         upsert: false,
       });
     if (upErr) {
-      flashError("Upload fejlede");
+      flashError(t("errors.uploadFailed"));
       throw upErr;
     }
 
@@ -267,8 +275,8 @@ export default function Composer({
           onClick={() => imageInputRef.current?.click()}
           disabled={pending}
           className="btn btn-sm btn-ghost"
-          aria-label="Vedhæft billede"
-          title="Billede"
+          aria-label={t("imageAria")}
+          title={t("imageTitle")}
         >
           📷
         </button>
@@ -277,8 +285,8 @@ export default function Composer({
           onClick={() => setRecording(true)}
           disabled={pending}
           className="btn btn-sm btn-ghost"
-          aria-label="Optag lydbesked"
-          title="Lyd"
+          aria-label={t("audioAria")}
+          title={t("audioTitle")}
         >
           🎙️
         </button>
@@ -288,8 +296,8 @@ export default function Composer({
             onClick={() => setRecordingVideo(true)}
             disabled={pending}
             className="btn btn-sm btn-ghost"
-            aria-label="Optag live video"
-            title="Live video"
+            aria-label={t("videoAria")}
+            title={t("videoTitle")}
           >
             🎥
           </button>
@@ -305,7 +313,7 @@ export default function Composer({
             handleSendText();
           }
         }}
-        placeholder="Skriv en besked…"
+        placeholder={t("placeholder")}
         rows={2}
         className="flex-1 min-w-0 resize-none rounded-lg border hairline px-3 py-2 text-sm bg-bg leading-relaxed focus:outline-none focus:border-line-bright"
         disabled={pending}
@@ -317,7 +325,7 @@ export default function Composer({
         disabled={pending || !text.trim()}
         className="btn btn-primary btn-sm self-end"
       >
-        {pending ? "…" : "Send"}
+        {pending ? t("sending") : t("send")}
       </button>
 
       {error ? (
@@ -325,21 +333,4 @@ export default function Composer({
       ) : null}
     </div>
   );
-}
-
-function reasonToLabel(reason: string | undefined): string {
-  switch (reason) {
-    case "video_not_allowed":
-      return "Du kan ikke sende video";
-    case "auth":
-      return "Du er ikke logget ind";
-    case "no_coach":
-      return "Ingen coach tilgængelig endnu";
-    case "empty":
-      return "Skriv noget først";
-    case "no_media":
-      return "Vedhæft en fil først";
-    default:
-      return "Kunne ikke sende — prøv igen";
-  }
 }

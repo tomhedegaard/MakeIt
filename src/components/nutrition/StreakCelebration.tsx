@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 /**
  * Full-screen celebration moment fired when a cooking-streak crosses
@@ -12,11 +13,11 @@ import { AnimatePresence, motion } from "framer-motion";
  * hide. AnimatePresence plays the exit animation on dismiss.
  */
 
-const COPY: Record<number, string> = {
-  3: "Tre dage i træk. Vanen er ved at sætte sig.",
-  7: "En hel uge. Det er ikke tilfældigt længere.",
-  14: "Fjorten dage. De fleste falder fra her — ikke dig.",
-  30: "Tredive dage. Det er en livsstil nu, ikke et forsøg.",
+const COPY_KEYS: Record<number, string> = {
+  3: "copy3",
+  7: "copy7",
+  14: "copy14",
+  30: "copy30",
 };
 
 export default function StreakCelebration({
@@ -26,6 +27,7 @@ export default function StreakCelebration({
   milestone: number | null;
   onClose: () => void;
 }) {
+  const t = useTranslations("Nutrition.streak");
   return (
     <AnimatePresence>
       {milestone != null ? (
@@ -38,7 +40,7 @@ export default function StreakCelebration({
           transition={{ duration: 0.25 }}
           onClick={onClose}
           role="dialog"
-          aria-label={`Streak-milepæl: ${milestone} dage`}
+          aria-label={t("dialogLabel", { days: milestone })}
         >
           <motion.div
             className="w-full max-w-sm text-center"
@@ -49,7 +51,7 @@ export default function StreakCelebration({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="eyebrow text-fg-faint mb-6">
-              MakeIt <span className="mx-1">//</span> Streak
+              MakeIt <span className="mx-1">//</span> {t("brand")}
             </div>
 
             {/* Typographic stamp */}
@@ -61,17 +63,19 @@ export default function StreakCelebration({
               <div className="font-display leading-[0.85] text-[clamp(5rem,28vw,9rem)]">
                 {String(milestone).padStart(2, "0")}
               </div>
-              <div className="eyebrow text-fg mt-1">Dage i træk</div>
+              <div className="eyebrow text-fg mt-1">{t("stamp")}</div>
             </div>
 
             <p className="mt-7 text-fg-dim text-base leading-relaxed">
-              {COPY[milestone] ?? `${milestone} dage i træk. Stærkt.`}
+              {COPY_KEYS[milestone]
+                ? t(COPY_KEYS[milestone])
+                : t("copyDefault", { days: milestone })}
             </p>
 
             <div className="mt-5 inline-flex items-center gap-2 border hairline-strong rounded-full px-3 py-1.5">
               <span className="size-1.5 rounded-full bg-fg" aria-hidden />
               <span className="numeric text-[11px] tracking-[0.16em] uppercase">
-                +50 Reps tildelt
+                {t("reward")}
               </span>
             </div>
 
@@ -81,7 +85,7 @@ export default function StreakCelebration({
                 onClick={onClose}
                 className="btn btn-primary"
               >
-                Fortsæt
+                {t("continue")}
               </button>
             </div>
           </motion.div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import Sparkline from "@/components/ui/Sparkline";
@@ -22,20 +23,25 @@ export default async function ProfilePage() {
   const recentPRs = collectRecentPRs(lifts);
   const progression = computeFormCheckProgression(formChecks);
 
+  const t = await getTranslations("Profile");
+
   return (
     <>
       <PageHeader
-        eyebrow="05 — Profil"
+        eyebrow={t("header.eyebrow")}
         title={`@${m.handle}`}
-        subtitle={`Tier: ${m.tier} · Medlem siden ${new Date(m.joinedAt).toLocaleDateString("da-DK")}`}
+        subtitle={t("header.subtitle", {
+          tier: m.tier,
+          date: new Date(m.joinedAt).toLocaleDateString("da-DK"),
+        })}
         right={
           <div className="flex flex-wrap items-center gap-2">
             <Link href="/settings" className="btn btn-sm">
-              Indstillinger
+              {t("header.settings")}
             </Link>
             {m.isCoach ? (
               <Link href="/coach" className="btn btn-primary btn-sm">
-                Åbn coach-konsol →
+                {t("header.openCoachConsole")}
               </Link>
             ) : null}
           </div>
@@ -44,8 +50,8 @@ export default async function ProfilePage() {
 
       <Container className="py-12 space-y-8">
         {/* Lifts — sparkline cards */}
-        <section aria-label="Lifts">
-          <div className="eyebrow mb-3">Lifts på record</div>
+        <section aria-label={t("lifts.ariaLabel")}>
+          <div className="eyebrow mb-3">{t("lifts.title")}</div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {lifts.map((l) => (
               <article
@@ -61,8 +67,10 @@ export default async function ProfilePage() {
                         color: l.delta4w > 0 ? "var(--fg)" : "var(--fg-faint)",
                       }}
                     >
-                      {l.delta4w > 0 ? "+" : ""}
-                      {l.delta4w} kg / 4u
+                      {t("lifts.delta", {
+                        sign: l.delta4w > 0 ? "+" : "",
+                        value: l.delta4w,
+                      })}
                     </span>
                   ) : null}
                 </div>
@@ -70,31 +78,33 @@ export default async function ProfilePage() {
                   <span className="numeric text-4xl">
                     {l.currentE1rm != null ? l.currentE1rm : "—"}
                   </span>
-                  <span className="text-fg-dim text-xs">kg e1RM</span>
+                  <span className="text-fg-dim text-xs">{t("lifts.e1rmUnit")}</span>
                 </div>
                 <div className="text-fg/70">
                   <Sparkline data={l.history.map((h) => h.e1rm)} />
                 </div>
                 <div className="mt-3 text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
                   {l.history.length > 0
-                    ? `${l.history.length} ${l.history.length === 1 ? "uge" : "uger"} data`
-                    : "Log et sæt for at starte"}
+                    ? l.history.length === 1
+                      ? t("lifts.weeksOne", { count: l.history.length })
+                      : t("lifts.weeksOther", { count: l.history.length })
+                    : t("lifts.noData")}
                 </div>
               </article>
             ))}
           </div>
           <p className="mt-3 text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
-            e1RM beregnet med Epley · weight × (1 + reps / 30) · top reps ≤ 10
+            {t("lifts.formula")}
           </p>
         </section>
 
         {/* Recent PRs */}
         {recentPRs.length > 0 ? (
-          <section aria-label="Seneste PRs">
+          <section aria-label={t("prs.ariaLabel")}>
             <div className="flex items-end justify-between mb-3">
-              <div className="eyebrow">Seneste PR&apos;er</div>
+              <div className="eyebrow">{t("prs.title")}</div>
               <span className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
-                Detekteret automatisk
+                {t("prs.autoDetected")}
               </span>
             </div>
             <ul className="surface-2 rounded-2xl divide-y hairline overflow-hidden">
@@ -115,7 +125,7 @@ export default async function ProfilePage() {
                   </span>
                   <span className="numeric shrink-0">
                     {pr.e1rm}
-                    <span className="text-fg-dim text-xs ml-1">e1RM</span>
+                    <span className="text-fg-dim text-xs ml-1">{t("prs.e1rm")}</span>
                   </span>
                   <span
                     className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 shrink-0"
@@ -132,23 +142,23 @@ export default async function ProfilePage() {
         {/* Settings + Billing */}
         <div className="grid gap-6 md:grid-cols-2">
           <section className="surface-2 rounded-lg p-8">
-            <div className="eyebrow mb-4">Indstillinger</div>
+            <div className="eyebrow mb-4">{t("settings.eyebrow")}</div>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center justify-between border-b hairline pb-3">
-                <span className="text-fg-dim">Email</span>
+                <span className="text-fg-dim">{t("settings.email")}</span>
                 <span>{m.email ?? `${m.handle}@${COMPANY.marketingDomain}`}</span>
               </li>
               <li className="flex items-center justify-between border-b hairline pb-3">
-                <span className="text-fg-dim">Notifikationer</span>
-                <span>Crew + PR&apos;er</span>
+                <span className="text-fg-dim">{t("settings.notifications")}</span>
+                <span>{t("settings.notificationsValue")}</span>
               </li>
               <li className="flex items-center justify-between border-b hairline pb-3">
-                <span className="text-fg-dim">Sprog</span>
-                <span>Dansk</span>
+                <span className="text-fg-dim">{t("settings.language")}</span>
+                <span>{t("settings.languageValue")}</span>
               </li>
               <li className="flex items-center justify-between">
-                <span className="text-fg-dim">Tema</span>
-                <span>Mørk (kun)</span>
+                <span className="text-fg-dim">{t("settings.theme")}</span>
+                <span>{t("settings.themeValue")}</span>
               </li>
             </ul>
           </section>
@@ -156,14 +166,14 @@ export default async function ProfilePage() {
           <section className="surface-2 rounded-lg p-8">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <div className="eyebrow mb-2">Billing</div>
-                <div className="font-display text-xl">Abonnement &amp; betaling</div>
+                <div className="eyebrow mb-2">{t("billing.eyebrow")}</div>
+                <div className="font-display text-xl">{t("billing.title")}</div>
                 <p className="text-sm text-fg-dim mt-1 max-w-md">
-                  Administrér dit Crew-medlemskab og 1:1 add-on. Sikker checkout via Stripe.
+                  {t("billing.description")}
                 </p>
               </div>
               <Link href="/billing" className="btn btn-sm btn-primary">
-                Åbn billing →
+                {t("billing.open")}
               </Link>
             </div>
           </section>
@@ -173,33 +183,33 @@ export default async function ProfilePage() {
         <section
           id="form-checks"
           className="surface-2 rounded-lg p-6 md:p-8"
-          aria-label="Mine form-checks"
+          aria-label={t("formChecks.ariaLabel")}
         >
           <div className="flex items-end justify-between gap-4 mb-5">
             <div>
-              <div className="eyebrow mb-2">Form-checks</div>
+              <div className="eyebrow mb-2">{t("formChecks.eyebrow")}</div>
               <div className="font-display text-xl">
                 {formChecks.length === 0
-                  ? "Ingen form-checks endnu"
-                  : "Dine seneste optagelser"}
+                  ? t("formChecks.titleEmpty")
+                  : t("formChecks.titleWithData")}
               </div>
               <p className="text-sm text-fg-dim mt-1 max-w-md">
-                AI-vurdering først, derefter en personlig note fra Mikael Munk
-                inden for 24 timer.
+                {t("formChecks.description")}
               </p>
             </div>
             {reviewed.length > 0 ? (
               <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-1 inline-flex items-center gap-2 shrink-0">
                 <span className="size-1.5 rounded-full bg-fg" />
-                {reviewed.length} {reviewed.length === 1 ? "svar" : "svar"} fra coach
+                {reviewed.length === 1
+                  ? t("formChecks.coachRepliesOne", { count: reviewed.length })
+                  : t("formChecks.coachRepliesOther", { count: reviewed.length })}
               </span>
             ) : null}
           </div>
 
           {formChecks.length === 0 ? (
             <p className="text-sm text-fg-dim">
-              Tap &ldquo;Form-check med AI&rdquo; i en aktiv session eller via
-              + Del i Crew for at få din første vurdering.
+              {t("formChecks.emptyHint")}
             </p>
           ) : (
             <>
@@ -210,10 +220,10 @@ export default async function ProfilePage() {
                   <header className="px-5 pt-5 pb-3 flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <div className="eyebrow mb-1">
-                        {f.exerciseName ?? "Form-check"}
+                        {f.exerciseName ?? t("formChecks.exerciseFallback")}
                       </div>
                       <h3 className="font-display text-lg leading-snug">
-                        {f.aiHeadline ?? "AI-svar"}
+                        {f.aiHeadline ?? t("formChecks.aiHeadlineFallback")}
                       </h3>
                       <div className="mt-1 text-[11px] font-mono text-fg-faint">
                         {new Date(f.createdAt).toLocaleString("da-DK", {
@@ -227,7 +237,7 @@ export default async function ProfilePage() {
                     </div>
                     <div className="text-right shrink-0">
                       <div className="numeric text-3xl">{f.aiScore ?? "—"}</div>
-                      <div className="eyebrow">/ 100</div>
+                      <div className="eyebrow">{t("formChecks.outOf")}</div>
                     </div>
                   </header>
 
@@ -247,7 +257,7 @@ export default async function ProfilePage() {
                     <div className="px-5 py-4 border-t hairline grid gap-3 sm:grid-cols-2">
                       {f.aiPos.length > 0 ? (
                         <div>
-                          <div className="eyebrow mb-1.5">Godt</div>
+                          <div className="eyebrow mb-1.5">{t("formChecks.good")}</div>
                           <ul className="space-y-1 text-sm text-fg/90">
                             {f.aiPos.map((p) => (
                               <li key={p} className="flex gap-2">
@@ -260,7 +270,7 @@ export default async function ProfilePage() {
                       ) : null}
                       {f.aiNeg.length > 0 ? (
                         <div>
-                          <div className="eyebrow mb-1.5">Stram op</div>
+                          <div className="eyebrow mb-1.5">{t("formChecks.tightenUp")}</div>
                           <ul className="space-y-1 text-sm text-fg/90">
                             {f.aiNeg.map((n) => (
                               <li key={n} className="flex gap-2">
@@ -273,7 +283,7 @@ export default async function ProfilePage() {
                       ) : null}
                       {f.aiFix ? (
                         <div className="sm:col-span-2 rounded-lg surface-2 p-3">
-                          <div className="eyebrow mb-1.5">Coach-tip</div>
+                          <div className="eyebrow mb-1.5">{t("formChecks.coachTip")}</div>
                           <p className="text-sm text-fg/90">{f.aiFix}</p>
                         </div>
                       ) : null}
@@ -306,7 +316,7 @@ export default async function ProfilePage() {
                   ) : (
                     <div className="px-5 py-3 border-t hairline">
                       <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-                        Afventer coach-review · typisk inden for 24 timer
+                        {t("formChecks.awaitingReview")}
                       </span>
                     </div>
                   )}
@@ -318,9 +328,12 @@ export default async function ProfilePage() {
 
           <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-5">
             {pending.length > 0
-              ? `${pending.length} afventer review · ${reviewed.length} besvaret`
+              ? t("formChecks.footerPending", {
+                  pending: pending.length,
+                  reviewed: reviewed.length,
+                })
               : reviewed.length > 0
-                ? `Alle ${reviewed.length} besvaret`
+                ? t("formChecks.footerAllAnswered", { reviewed: reviewed.length })
                 : ""}
           </p>
         </section>

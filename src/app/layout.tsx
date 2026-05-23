@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Archivo_Black, JetBrains_Mono } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import RevealObserver from "@/components/RevealObserver";
@@ -46,21 +48,25 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
+
   return (
     <html
-      lang="da"
+      lang={locale}
       className={`${sans.variable} ${display.variable} ${mono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col grain vignette">
-        <SmoothScroll />
-        <RevealObserver />
-        <CustomCursor />
-        {children}
-        <CookieBanner />
+        <NextIntlClientProvider>
+          <SmoothScroll />
+          <RevealObserver />
+          <CustomCursor />
+          {children}
+          <CookieBanner />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

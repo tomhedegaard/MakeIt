@@ -1,0 +1,14 @@
+{
+  "blocked": "Blokeret i browser",
+  "turnOff": "Slå fra",
+  "turnOn": "Slå påmindelser til",
+  "subscribing": "Tilmelder…",
+  "test": "Test",
+  "sendTestTitle": "Send testbesked",
+  "testSent": "Sendt {seconds}s siden",
+  "dailyReminder": "Daglig påmindelse · 08:00",
+  "vapidMissing": "VAPID keys mangler",
+  "vapidMissingAdmin": "VAPID keys mangler — kontakt admin",
+  "vapidNotConfigured": "VAPID ikke konfigureret",
+  "ellipsis": "…"
+}

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
 import { createPostAction } from "@/app/(app)/community/actions";
@@ -11,12 +12,19 @@ export default function PostComposer({
 }: {
   trigger: React.ReactNode;
 }) {
+  const t = useTranslations("Community.composer");
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
   const [tag, setTag] = useState<"PR" | "Note" | "Form-check" | null>(null);
   const [formCheckOpen, setFormCheckOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
+  const tagLabels: Record<"PR" | "Note" | "Form-check", string> = {
+    PR: t("tagPr"),
+    Note: t("tagNote"),
+    "Form-check": t("tagFormCheck"),
+  };
 
   function reset() {
     setText("");
@@ -44,21 +52,21 @@ export default function PostComposer({
         <SheetContent>
           <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="eyebrow mb-1">Del med crewet</div>
-              <h2 className="font-display text-2xl">Hvad har du på i dag?</h2>
+              <div className="eyebrow mb-1">{t("eyebrow")}</div>
+              <h2 className="font-display text-2xl">{t("title")}</h2>
             </div>
           </div>
 
           <div className="pillgroup mb-4">
-            {(["PR", "Note", "Form-check"] as const).map((t) => (
+            {(["PR", "Note", "Form-check"] as const).map((tagOption) => (
               <button
-                key={t}
+                key={tagOption}
                 type="button"
-                data-active={tag === t}
+                data-active={tag === tagOption}
                 className="pill touch-app"
-                onClick={() => setTag(tag === t ? null : t)}
+                onClick={() => setTag(tag === tagOption ? null : tagOption)}
               >
-                {t}
+                {tagLabels[tagOption]}
               </button>
             ))}
           </div>
@@ -67,10 +75,10 @@ export default function PostComposer({
             className="field min-h-[120px] py-3 resize-none w-full"
             placeholder={
               tag === "PR"
-                ? "Hvad PR'ede du? Hvor mange kg, hvor mange reps?"
+                ? t("placeholderPr")
                 : tag === "Form-check"
-                  ? "Beskriv hvad du gerne vil have feedback på..."
-                  : "Skriv noget til crewet..."
+                  ? t("placeholderFormCheck")
+                  : t("placeholderDefault")
             }
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -89,8 +97,8 @@ export default function PostComposer({
                 </svg>
               </div>
               <div>
-                <div className="text-sm">Tilføj video</div>
-                <div className="text-xs text-fg-dim">Optag eller upload — AI form-check inkluderet</div>
+                <div className="text-sm">{t("addVideo")}</div>
+                <div className="text-xs text-fg-dim">{t("addVideoSub")}</div>
               </div>
             </div>
             <span className="text-fg-faint text-sm">→</span>
@@ -103,7 +111,7 @@ export default function PostComposer({
               onClick={() => setOpen(false)}
               disabled={isPending}
             >
-              Annullér
+              {t("cancel")}
             </button>
             <button
               type="button"
@@ -111,7 +119,7 @@ export default function PostComposer({
               disabled={!text.trim() || isPending}
               onClick={submit}
             >
-              {isPending ? "Sender…" : "Del →"}
+              {isPending ? t("sending") : t("submit")}
             </button>
           </div>
         </SheetContent>

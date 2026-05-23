@@ -14,11 +14,13 @@
 -- using(true), so coaches can see unpublished drafts without a new
 -- policy.
 
+drop policy if exists "coach insert exercises" on public.exercises;
 create policy "coach insert exercises"
   on public.exercises for insert
   to authenticated
   with check (public.is_current_user_coach());
 
+drop policy if exists "coach update exercises" on public.exercises;
 create policy "coach update exercises"
   on public.exercises for update
   to authenticated

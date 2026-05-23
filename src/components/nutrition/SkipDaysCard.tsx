@@ -1,7 +1,10 @@
 "use client";
 
 import { useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { toggleSkipDayAction } from "@/app/(app)/nutrition/actions";
+
+const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 
 /**
  * Per-week skip-day toggler. Renders 7 day-cells (Mon..Sun); cells
@@ -21,6 +24,8 @@ export default function SkipDaysCard({
   /** Day indices currently flagged as skip (Mon=0). */
   skipDayIndices: number[];
 }) {
+  const t = useTranslations("Nutrition.skipDays");
+  const td = useTranslations("Nutrition.dayLabels");
   const [pending, startTransition] = useTransition();
 
   const days = Array.from({ length: 7 }, (_, i) => {
@@ -29,7 +34,7 @@ export default function SkipDaysCard({
     return {
       index: i,
       dateIso: d.toISOString().slice(0, 10),
-      label: ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"][i],
+      label: td(DAY_KEYS[i]),
       day: d.getUTCDate(),
       skipped: skipDayIndices.includes(i),
     };
@@ -49,11 +54,9 @@ export default function SkipDaysCard({
     <section className="surface-2 rounded-2xl p-5">
       <div className="flex items-start justify-between gap-3 mb-3">
         <div>
-          <div className="eyebrow mb-1">Skip-dage</div>
+          <div className="eyebrow mb-1">{t("eyebrow")}</div>
           <p className="text-sm text-fg-dim max-w-md">
-            Markér dage hvor du spiser ud, rejser eller faster. Planneren
-            springer dem over på næste generation — adherence-stats
-            tæller dem ikke imod dig.
+            {t("body")}
           </p>
         </div>
       </div>
@@ -71,14 +74,16 @@ export default function SkipDaysCard({
             } disabled:opacity-50`}
             aria-pressed={d.skipped}
             aria-label={
-              d.skipped ? `Fjern skip for ${d.label}` : `Markér ${d.label} som skip`
+              d.skipped
+                ? t("removeAria", { day: d.label })
+                : t("markAria", { day: d.label })
             }
           >
             <div className="eyebrow text-[10px] mb-0.5">{d.label}</div>
             <div className="numeric text-base">{d.day}</div>
             {d.skipped ? (
               <div className="text-[9px] font-mono uppercase tracking-[0.14em] mt-1">
-                Skip
+                {t("skip")}
               </div>
             ) : null}
           </button>
@@ -86,7 +91,7 @@ export default function SkipDaysCard({
       </div>
       {skipDayIndices.length > 0 ? (
         <p className="mt-3 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-          Regenerér ugeplan for at fjerne meals fra markerede dage
+          {t("regenHint")}
         </p>
       ) : null}
     </section>

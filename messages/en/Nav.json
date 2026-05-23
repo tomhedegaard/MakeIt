@@ -1,0 +1,70 @@
+{
+  "links": {
+    "today": "Today",
+    "train": "Train",
+    "food": "Food",
+    "crew": "Crew",
+    "hrv": "HRV",
+    "reps": "Reps",
+    "me": "Me",
+    "messages": "Messages",
+    "chat": "Chat"
+  },
+  "shell": {
+    "coachBadge": "Coach",
+    "coachConsole": "Console",
+    "tier": "Tier",
+    "logout": "Log out",
+    "myProfile": "My profile",
+    "unread": "{count} unread",
+    "mainNav": "Main navigation"
+  },
+  "tierBanner": {
+    "eyebrow": "Tier-up",
+    "title": "You moved up from {fromTier} to {toTier}.",
+    "subtitle": "New perks unlocked — check the Reps page.",
+    "cta": "See perks →",
+    "close": "Close"
+  },
+  "tour": {
+    "skip": "Skip",
+    "back": "Back",
+    "next": "Next →",
+    "begin": "Let's go →",
+    "steps": {
+      "welcome": {
+        "eyebrow": "Welcome",
+        "title": "You're in the crew.",
+        "body": "Quick tour — so you know where everything lives. 4 screens, 30 seconds."
+      },
+      "today": {
+        "eyebrow": "01 · Today",
+        "title": "Today's session lives here.",
+        "body": "Every morning you open Today. Tap the big \"Start session →\" card and you're off. The AI has already picked weights based on your 1RMs."
+      },
+      "tabs": {
+        "eyebrow": "02 · Train / Crew / Reps / Me",
+        "title": "Bottom tab bar = the whole app.",
+        "body": "Train = your programs. Crew = feed with PRs + form checks. Reps = earn and redeem. Me = profile, lift history and coach notes from Mikael."
+      },
+      "formCheck": {
+        "eyebrow": "03 · Form check",
+        "title": "AI rates your technique.",
+        "body": "Tap \"Form check with AI\" inside a session. Record or upload — you get an answer within seconds. Mikael personally signs off within 24 hours."
+      },
+      "reps": {
+        "eyebrow": "04 · Reps",
+        "title": "You get rewarded for showing up.",
+        "body": "+250 Reps per completed session. +100 per week in a program. Trade them for limited drops, custom-embroidered straps, and 1:1 time with Mikael."
+      }
+    }
+  },
+  "error": {
+    "eyebrow": "Error",
+    "title": "We couldn't load that page.",
+    "descriptionBefore": "Check your connection and try again. If it keeps happening, write to",
+    "ref": "ref: {digest}",
+    "retry": "Try again",
+    "toDashboard": "To dashboard"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "header": {
+    "eyebrow": "Indstillinger",
+    "title": "Din konto",
+    "subtitle": "Profil, notifikationer, data og konto-sletning. Alt under dine egne fingre."
+  },
+  "errors": {
+    "handle_invalid": "Handle skal starte med et bogstav (a-z) og være 2-31 tegn (a-z, 0-9, _, ., -).",
+    "handle_taken": "Handle er allerede taget — prøv et andet.",
+    "auth": "Du er ikke logget ind.",
+    "unknown": "Noget gik galt — prøv igen.",
+    "service_key_missing": "Konto-sletning kræver server-konfiguration der ikke er sat op.",
+    "prefs_save": "Kunne ikke gemme — prøv igen."
+  },
+  "profile": {
+    "eyebrow": "Profil",
+    "title": "Hvordan crewet ser dig",
+    "handleLabel": "Handle",
+    "displayNameLabel": "Display navn",
+    "displayNamePlaceholder": "Mikael Munk",
+    "bioLabel": "Bio",
+    "bioPlaceholder": "Hvad løfter du for? Hvor er du på rejsen?",
+    "save": "Gem profil"
+  },
+  "notifications": {
+    "eyebrow": "Notifikationer",
+    "title": "Hvornår vi må skrive til dig",
+    "pushTitle": "Push-påmindelser",
+    "pushDescription": "Notifikation på telefonen når det er tid til at logge mad eller starte session. Kræver at du tillader notifikationer i browseren.",
+    "formCheckLabel": "Coach-noter på dine form-checks",
+    "formCheckSub": "Mail når Mikael har gennemgået og skrevet en note.",
+    "mentionLabel": "@mentions",
+    "mentionSub": "Mail når et crew-medlem nævner dig i en kommentar.",
+    "digestLabel": "Ugentlig digest",
+    "digestSub": "Mandag morgen — top PR'er, nye medlemmer, månedens challenge.",
+    "tierUpLabel": "Tier-up notifikationer",
+    "tierUpSub": "Når du krydser fra Lifter → Athlete → Beast → Legend.",
+    "save": "Gem præferencer"
+  },
+  "account": {
+    "eyebrow": "Konto",
+    "title": "Bagved kulissen",
+    "email": "Email",
+    "tier": "Tier",
+    "memberSince": "Medlem siden"
+  },
+  "data": {
+    "eyebrow": "Data",
+    "title": "Eksportér alt vi har om dig",
+    "description": "Download en JSON-fil med din profil, dine sessioner og logs, dine posts og kommentarer, dine Reps-transaktioner og form-checks. GDPR Art. 20.",
+    "export": "Eksportér mine data ↓"
+  },
+  "danger": {
+    "eyebrow": "Danger zone",
+    "title": "Slet din konto",
+    "description": "Permanent og uigenkaldelig. Alle sessioner, posts, Reps og form-checks slettes. Eventuelt aktivt Stripe-abonnement skal opsiges separat fra billing-siden inden.",
+    "delete": "Slet min konto",
+    "deleting": "Sletter…",
+    "confirmPhrase": "SLET MIN KONTO",
+    "confirmPrompt": "Dette kan ikke fortrydes. Alle dine sessioner, posts, Reps og form-checks slettes permanent.\n\nSkriv \"{phrase}\" for at bekræfte:"
+  }
+}

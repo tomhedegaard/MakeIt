@@ -1,0 +1,60 @@
+{
+  "topBar": {
+    "exit": "End session",
+    "setsCount": "{completed} / {total} sets",
+    "programLine": "{programCode} · week {week} · {dayLabel}"
+  },
+  "targets": {
+    "goal": "Target",
+    "reps": "Reps",
+    "rpe": "RPE"
+  },
+  "steppers": {
+    "weight": "Weight",
+    "reps": "Reps"
+  },
+  "sets": {
+    "title": "Sets in this exercise",
+    "done": "Done",
+    "now": "Now"
+  },
+  "cta": {
+    "rest": "Rest",
+    "logSet": "Log set →"
+  },
+  "done": {
+    "eyebrow": "Session done",
+    "title": "Great work.",
+    "body": "You logged {sets} sets and stayed on program. We're sending the data on to your coach for weekly review.",
+    "sets": "Sets",
+    "volume": "Volume",
+    "reps": "Reps",
+    "share": "Share to crew",
+    "toToday": "To Today"
+  },
+  "exit": {
+    "title": "End session?",
+    "description": "Your logged sets are already saved — you can pick it up later.",
+    "stay": "Stay",
+    "confirm": "End"
+  },
+  "exercise": {
+    "position": "Exercise {current} / {total}",
+    "sets": "sets",
+    "openDetails": "Open exercise details",
+    "seeFull": "See the full exercise →",
+    "formCheck": "Form check with AI",
+    "moreCues": " · {count} more cues",
+    "duration": "~6 sec →"
+  },
+  "restTimer": {
+    "ariaLabel": "Rest",
+    "title": "Rest",
+    "description": "Next set in {time} — grab a sip of water.",
+    "skip": "Skip"
+  },
+  "rpe": {
+    "label": "RPE — how heavy did it feel?",
+    "ariaLabel": "RPE"
+  }
+}

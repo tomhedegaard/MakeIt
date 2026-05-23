@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 /**
  * Voice-message recorder using the MediaRecorder API.
@@ -27,6 +28,7 @@ export default function AudioRecorder({
   onSubmit: (blob: Blob, durationSec: number, mime: string) => Promise<void>;
   disabled?: boolean;
 }) {
+  const t = useTranslations("Messages.audioRecorder");
   const [state, setState] = useState<"idle" | "recording" | "preview">("idle");
   const [elapsed, setElapsed] = useState(0);
   const [pending, setPending] = useState(false);
@@ -103,8 +105,8 @@ export default function AudioRecorder({
         if (sec >= 300) stop(); // hard cap at 5 min
       }, 250);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "ukendt fejl";
-      setError(`Kunne ikke starte optagelse: ${msg}`);
+      const msg = err instanceof Error ? err.message : t("unknownError");
+      setError(t("startFailed", { message: msg }));
       stopStream();
     }
   }
@@ -135,7 +137,7 @@ export default function AudioRecorder({
       await onSubmit(blobRef.current.blob, blobRef.current.durationSec, blobRef.current.mime);
       // Let parent dismiss us; we keep state until they unmount.
     } catch {
-      setError("Kunne ikke sende — prøv igen.");
+      setError(t("sendFailed"));
     } finally {
       setPending(false);
     }
@@ -151,14 +153,14 @@ export default function AudioRecorder({
             disabled={disabled}
             className="btn btn-sm btn-primary"
           >
-            ● Optag
+            {t("record")}
           </button>
           <button
             type="button"
             onClick={onCancel}
             className="btn btn-sm btn-ghost"
           >
-            Annullér
+            {t("cancel")}
           </button>
         </>
       ) : null}
@@ -169,9 +171,9 @@ export default function AudioRecorder({
           <span className="font-mono text-sm tabular-nums">
             {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}
           </span>
-          <span className="text-[10px] font-mono text-fg-faint ml-auto">max 5:00</span>
+          <span className="text-[10px] font-mono text-fg-faint ml-auto">{t("max")}</span>
           <button type="button" onClick={stop} className="btn btn-sm">
-            ◼ Stop
+            {t("stop")}
           </button>
         </>
       ) : null}
@@ -185,7 +187,7 @@ export default function AudioRecorder({
             disabled={pending}
             className="btn btn-sm btn-ghost"
           >
-            Slet
+            {t("discard")}
           </button>
           <button
             type="button"
@@ -193,7 +195,7 @@ export default function AudioRecorder({
             disabled={pending}
             className="btn btn-sm btn-primary"
           >
-            {pending ? "Sender…" : "Send"}
+            {pending ? t("sending") : t("send")}
           </button>
         </>
       ) : null}
