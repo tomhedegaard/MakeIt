@@ -23,6 +23,12 @@
 # misc
 .DS_Store
 *.pem
+*.p8
+*.p12
+*.key
+
+# supabase CLI scratch
+supabase/.temp/
 
 # browser automation artifacts
 .playwright-mcp/
