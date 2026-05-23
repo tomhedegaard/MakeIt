@@ -35,6 +35,9 @@
 alter table public.hrv_streak_events
   add column if not exists seen_at timestamptz;
 
+comment on column public.hrv_streak_events.seen_at is
+  'When the member dismissed the /hrv milestone toast; null until seen. Drives §5.2 of the V2.5 spec.';
+
 -- ---------- trigger function ----------
 create or replace function public.award_hrv_sync_streak_reps()
 returns trigger
@@ -50,7 +53,10 @@ declare
 begin
   -- Short-circuit: if the 90-day milestone is already recorded,
   -- there is nothing more to pay. Avoids a COUNT on every sync
-  -- past day 90.
+  -- past day 90. We probe hrv_streak_events rather than caching a
+  -- "max milestone reached" column on members so the milestone
+  -- state stays local to one table — fewer cross-table writes,
+  -- simpler RLS story.
   if exists (
     select 1 from public.hrv_streak_events
     where member_id = new.member_id and milestone = 90
@@ -76,24 +82,32 @@ begin
                   end;
       v_streak_ref := 'hrv_sync_streak_' || v_milestone::text;
 
-      -- Event row (denormalised; drives the /hrv UI).
-      insert into public.hrv_streak_events
-        (member_id, milestone, reps_awarded)
-      values
-        (new.member_id, v_milestone, v_payout)
-      on conflict (member_id, milestone) do nothing;
-
-      -- Ledger row (source of truth for "paid").
+      -- Single CTE: gate the ledger insert on whether the event-row
+      -- insert actually wrote a row. The unique constraint on
+      -- hrv_streak_events(member_id, milestone) is the serialization
+      -- point — under concurrent inserts, only one transaction's
+      -- ON CONFLICT path returns a row, so only one will pay the
+      -- ledger. The downstream WHERE NOT EXISTS on reps_transactions
+      -- remains as belt-and-suspenders against backfill or replay
+      -- paths that bypass the trigger.
+      with inserted_event as (
+        insert into public.hrv_streak_events
+          (member_id, milestone, reps_awarded)
+        values (new.member_id, v_milestone, v_payout)
+        on conflict (member_id, milestone) do nothing
+        returning 1
+      )
       insert into public.reps_transactions
         (member_id, delta, reason, reference_type, reference_id)
       select new.member_id, v_payout,
              'HRV sync-streak: ' || v_milestone::text || ' dage',
              v_streak_ref, new.id
-      where not exists (
-        select 1 from public.reps_transactions
-        where member_id      = new.member_id
-          and reference_type = v_streak_ref
-      );
+       where exists (select 1 from inserted_event)
+         and not exists (
+           select 1 from public.reps_transactions
+           where member_id      = new.member_id
+             and reference_type = v_streak_ref
+         );
     end if;
   end loop;
 
@@ -118,6 +132,7 @@ create or replace function public.get_hrv_distinct_day_count(p_member_id uuid)
 returns integer
 language sql
 stable
+parallel safe
 as $$
   select count(distinct (measured_at at time zone 'UTC')::date)::integer
     from public.hrv_readings
