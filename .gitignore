@@ -33,6 +33,9 @@ supabase/.temp/
 # browser automation artifacts
 .playwright-mcp/
 
+# supabase CLI cache
+supabase/.temp/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

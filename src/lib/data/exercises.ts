@@ -231,6 +231,11 @@ export function dominantView(ex: Exercise): "front" | "back" {
   return back >= front ? "back" : "front";
 }
 
+// Demo-asset resolution lives in its own dependency-free module so
+// client components can use it without pulling this server-tainted
+// file (it imports @/lib/supabase/server) into the browser bundle.
+export { resolveDemoAssets, type DemoAssets } from "@/lib/data/demo-assets";
+
 function matches(e: Exercise, f: ExerciseFilters): boolean {
   if (f.category && e.category !== f.category) return false;
   if (f.equipment && e.equipment !== f.equipment) return false;
