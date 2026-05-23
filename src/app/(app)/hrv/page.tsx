@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
@@ -11,6 +12,8 @@ import HrvSubNav from "@/components/hrv/HrvSubNav";
 import ReadinessLadder from "@/components/hrv/ReadinessLadder";
 import LifestyleLogCard from "@/components/hrv/LifestyleLogCard";
 import { HrvSyncStreakLine } from "@/components/hrv/HrvSyncStreakLine";
+import { HrvMilestoneToast } from "@/components/hrv/HrvMilestoneToast";
+import { HrvWelcomeBonusToast } from "@/components/hrv/HrvWelcomeBonusToast";
 import ConnectButton from "./ConnectButton";
 
 /**
@@ -196,6 +199,13 @@ export default async function HrvPage() {
       />
       <Container className="py-8 lg:py-12 space-y-8">
         <HrvSubNav />
+
+        {/* V2.5 celebration toasts (spec §5.2, §5.3). HrvWelcomeBonusToast
+            uses useSearchParams — wrapped in Suspense per Next 16 guidance. */}
+        <Suspense fallback={null}>
+          <HrvWelcomeBonusToast />
+        </Suspense>
+        <HrvMilestoneToast unseen={progress.unseenMilestone} />
 
         {state.needsReauth ? (
           <div
