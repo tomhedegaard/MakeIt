@@ -236,3 +236,33 @@ export async function setSessionSuggestionEnabled(
   revalidatePath("/settings");
   return { ok: true };
 }
+
+/**
+ * Marks the calling member's milestone row as seen, so the /hrv
+ * toast disappears on the next page load. No-op in demo mode.
+ * RLS members_own_streak_events covers this — the service-role
+ * client is therefore overkill but matches the pattern in this
+ * file (which always uses createServiceClient for mutations and
+ * filters on member_id explicitly).
+ */
+export async function markHrvMilestoneSeen(
+  milestone: number,
+): Promise<ActionResult> {
+  if (!SUPABASE_ENABLED) return { ok: true };
+
+  const memberId = await getCurrentMemberId();
+  if (!memberId) return { ok: false, error: "no_session" };
+
+  const service = createServiceClient();
+  const { error } = await service
+    .from("hrv_streak_events")
+    .update({ seen_at: new Date().toISOString() })
+    .eq("member_id", memberId)
+    .eq("milestone", milestone)
+    .is("seen_at", null);
+
+  if (error) return { ok: false, error: "update_failed" };
+
+  revalidatePath("/hrv");
+  return { ok: true };
+}

@@ -3,6 +3,11 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { evaluateNudge, type NudgeResult } from "@/lib/hrv/nudge";
 import type { CorrelationCard } from "@/lib/hrv/insights";
+import {
+  deriveSyncProgress,
+  type HrvSyncProgress,
+  type MilestoneDay,
+} from "@/lib/hrv/progress";
 import type { ChartReading } from "@/lib/hrv/trend-chart";
 import type {
   HrvConfidence,
@@ -13,6 +18,7 @@ import type {
 } from "@/lib/hrv/types";
 
 export type ReadinessNudge = Exclude<NudgeResult, null>;
+export type { HrvSyncProgress } from "@/lib/hrv/progress";
 
 /**
  * Server-side HRV reading-history data module.
@@ -171,6 +177,98 @@ export async function getTodaysReadinessNudge(
       : null,
     now: new Date(),
   });
+}
+
+/**
+ * Narrows a number from the DB to the literal MilestoneDay union.
+ * The trigger CHECKs hrv_streak_events.milestone to (7,14,30,90),
+ * so off-ladder values shouldn't exist in practice — but the
+ * type system needs explicit narrowing.
+ */
+function asMilestoneDay(n: number): MilestoneDay | null {
+  return n === 7 || n === 14 || n === 30 || n === 90 ? n : null;
+}
+
+/**
+ * V2.5 — sync-streak progress for /hrv. See spec §4.3.
+ *
+ * Reads three cheap queries from Supabase and feeds them into the
+ * pure deriveSyncProgress for the typed shape:
+ *
+ *   1. count(distinct (measured_at at time zone 'UTC')::date) from
+ *      hrv_readings via the get_hrv_distinct_day_count RPC — the
+ *      member's total distinct synced days.
+ *   2. The set of milestones already paid (rows in hrv_streak_events).
+ *   3. The highest-milestone row still `seen_at is null` — drives the
+ *      one-shot toast on /hrv.
+ *
+ * Demo mode (no Supabase): returns the empty state — no special path,
+ * same as a real member with zero readings.
+ */
+export async function getHrvSyncProgress(
+  memberId: string,
+): Promise<HrvSyncProgress> {
+  const supabase = await createClient();
+  if (!supabase) {
+    return deriveSyncProgress({
+      daysSynced: 0,
+      paidMilestones: [],
+      latestUnseen: null,
+    });
+  }
+
+  // (1) distinct-day count via the RPC added in migration 0040.
+  // Postgres counts inside the DB — symmetric with the trigger's
+  // own COUNT and no row-cap risk for high-N members.
+  const { data: rpcCount, error: countError } = await supabase.rpc(
+    "get_hrv_distinct_day_count",
+    { p_member_id: memberId },
+  );
+  if (countError) {
+    console.error("[getHrvSyncProgress] count RPC failed:", countError);
+    return deriveSyncProgress({
+      daysSynced: 0,
+      paidMilestones: [],
+      latestUnseen: null,
+    });
+  }
+  const daysSynced: number = rpcCount ?? 0;
+
+  // (2) Paid milestones.
+  const { data: paidRows, error: paidError } = await supabase
+    .from("hrv_streak_events")
+    .select("milestone")
+    .eq("member_id", memberId);
+  if (paidError) {
+    console.error("[getHrvSyncProgress] paid query failed:", paidError);
+  }
+  const paidMilestones: MilestoneDay[] = (paidRows ?? [])
+    .map((r) => asMilestoneDay(r.milestone))
+    .filter((m): m is MilestoneDay => m !== null);
+
+  // (3) Highest unseen milestone — drives the toast. Highest, not
+  // lowest, so a stacked 7+14 pay shows the 14-toast.
+  const { data: unseenRow, error: unseenError } = await supabase
+    .from("hrv_streak_events")
+    .select("milestone, reps_awarded")
+    .eq("member_id", memberId)
+    .is("seen_at", null)
+    .order("milestone", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (unseenError) {
+    console.error("[getHrvSyncProgress] unseen query failed:", unseenError);
+  }
+
+  let latestUnseen: { milestone: MilestoneDay; reps: number } | null = null;
+  if (unseenRow) {
+    const m = asMilestoneDay(unseenRow.milestone);
+    if (m !== null) {
+      latestUnseen = { milestone: m, reps: unseenRow.reps_awarded };
+    }
+  }
+
+  return deriveSyncProgress({ daysSynced, paidMilestones, latestUnseen });
 }
 
 /**
