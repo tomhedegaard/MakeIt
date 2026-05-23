@@ -24,9 +24,15 @@ export function HrvMilestoneToast({ unseen }: Props) {
   const [visible, setVisible] = useState(unseen !== null);
 
   useEffect(() => {
-    if (unseen) {
-      void markHrvMilestoneSeen(unseen.milestone);
-    }
+    if (!unseen) return;
+    void markHrvMilestoneSeen(unseen.milestone).then((res) => {
+      if (!res.ok) {
+        console.warn(
+          "[HrvMilestoneToast] markHrvMilestoneSeen failed:",
+          res.error,
+        );
+      }
+    });
   }, [unseen]);
 
   if (!visible || !unseen) return null;
