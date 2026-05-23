@@ -141,3 +141,21 @@ $$;
 
 grant execute on function public.get_hrv_distinct_day_count(uuid)
   to authenticated;
+
+-- =================================================================
+-- Defence-in-depth: partial unique index on reps_transactions for
+-- first-connection bonuses. The OAuth callback (V2.5 §3.1, §4.2)
+-- already gates the bonus insert behind a where-not-exists check,
+-- but two concurrent OAuth completions could both pass that check
+-- and double-pay. This partial unique index makes the second
+-- INSERT raise a unique-violation that the callback's inner catch
+-- block already handles cleanly.
+--
+-- Scoped via `where reference_type = 'hrv_first_connection'` so we
+-- never constrain unrelated ledger rows (a member may earn many
+-- session-completion / cooking-streak / sync-streak rows; only the
+-- first-connection bonus is engangs per lifetime).
+-- =================================================================
+create unique index if not exists hrv_first_connection_once
+  on public.reps_transactions (member_id)
+  where reference_type = 'hrv_first_connection';

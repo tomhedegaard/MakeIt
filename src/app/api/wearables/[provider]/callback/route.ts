@@ -92,9 +92,10 @@ export async function GET(
   }
 
   // V2.5: tracks whether the first-wearable-connection +100 Reps
-  // bonus fired during this callback. Read at line 234's redirect
-  // to thread ?welcome_bonus=1 into the success URL. Declared at
-  // the top scope so it survives the outer try/catch.
+  // bonus fired during this callback. Read at the success redirect
+  // at the bottom of this function to thread ?welcome_bonus=1 into
+  // the success URL. Declared at function scope so it survives the
+  // outer try/catch.
   let awardedFirstConnectionBonus = false;
 
   try {
