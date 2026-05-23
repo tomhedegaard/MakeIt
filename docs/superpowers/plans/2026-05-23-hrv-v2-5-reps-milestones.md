@@ -4,7 +4,7 @@
 
 **Goal:** Pay members Reps for (A) their first wearable connection (+100, lifetime engangs) and (B) reaching distinct-day sync milestones at 7/14/30/90 (+50/+100/+200/+500, each engangs). Surface progress and celebrations on `/hrv`. Zero changes to the sync-cron TypeScript path.
 
-**Architecture:** One Postgres migration (`0039_hrv_reps_milestones.sql`) adds a `seen_at` column to `hrv_streak_events` and installs an `AFTER INSERT` trigger on `hrv_readings` that pays milestone Reps with two-layer idempotency. The OAuth callback awards the first-connection bonus right after persisting the connection (best-effort, idempotent via `where not exists`) and threads a `?welcome_bonus=1` query param into the redirect. `/hrv` reads progress via a new data function, renders a one-line progress display plus two toasts (milestone payouts use a `seen_at` DB marker; welcome-bonus uses a URL-stripped query param).
+**Architecture:** One Postgres migration (`0040_hrv_reps_milestones.sql`) adds a `seen_at` column to `hrv_streak_events` and installs an `AFTER INSERT` trigger on `hrv_readings` that pays milestone Reps with two-layer idempotency. The OAuth callback awards the first-connection bonus right after persisting the connection (best-effort, idempotent via `where not exists`) and threads a `?welcome_bonus=1` query param into the redirect. `/hrv` reads progress via a new data function, renders a one-line progress display plus two toasts (milestone payouts use a `seen_at` DB marker; welcome-bonus uses a URL-stripped query param).
 
 **Tech Stack:** Next.js 16, React 19 (server components), Supabase (Postgres triggers + RLS), TypeScript 5, Vitest. No new dependencies.
 
@@ -27,7 +27,7 @@
 
 | Path | Responsibility |
 |---|---|
-| `supabase/migrations/0039_hrv_reps_milestones.sql` | (a) `alter hrv_streak_events add column if not exists seen_at timestamptz`. (b) `award_hrv_sync_streak_reps()` plpgsql function (security definer): short-circuits when 90-milestone exists, otherwise counts distinct UTC dates and pays every unpaid milestone with two-layer idempotency. (c) AFTER INSERT trigger on `hrv_readings`. |
+| `supabase/migrations/0040_hrv_reps_milestones.sql` | (a) `alter hrv_streak_events add column if not exists seen_at timestamptz`. (b) `award_hrv_sync_streak_reps()` plpgsql function (security definer): short-circuits when 90-milestone exists, otherwise counts distinct UTC dates and pays every unpaid milestone with two-layer idempotency. (c) AFTER INSERT trigger on `hrv_readings`. |
 | `src/lib/hrv/progress.ts` | Pure logic — `deriveSyncProgress({ daysSynced, paidMilestones, latestUnseen }) → HrvSyncProgress`. Takes already-fetched data, returns the typed shape. Zero Supabase, fully unit-testable in Node. |
 | `src/lib/hrv/progress.test.ts` | Unit tests for `deriveSyncProgress` (10 fixtures covering: zero readings; mid-progression; just-paid milestone; stacked unseen; all four paid; empty unseen). |
 | `src/components/hrv/HrvSyncStreakLine.tsx` | Server component — renders the one-line progress display from a `HrvSyncProgress` prop. Returns `null` when `daysSynced=0`. |
@@ -52,15 +52,15 @@
 
 The migration is the foundation — everything downstream reads or relies on either the new column or the trigger's writes. One task creates the migration; one task verifies the trigger end-to-end against a local Supabase before any TS code goes in.
 
-### Task 1: Migration `0039_hrv_reps_milestones.sql`
+### Task 1: Migration `0040_hrv_reps_milestones.sql`
 
 **Files:**
-- Create: `supabase/migrations/0039_hrv_reps_milestones.sql`
+- Create: `supabase/migrations/0040_hrv_reps_milestones.sql`
 - Modify: `src/lib/supabase/database.types.ts` (regenerated)
 
 - [ ] **Step 1: Read `node_modules/next/dist/docs/` only if you touch Next.js code in this task.** This task is pure SQL — skip. Read `supabase/migrations/0015_nutrition_reps.sql` once as the pattern reference (`security definer`, `set search_path`, `where not exists` ledger insert, `on conflict do nothing` event-row insert).
 
-- [ ] **Step 2: Write the migration.** Create `supabase/migrations/0039_hrv_reps_milestones.sql`:
+- [ ] **Step 2: Write the migration.** Create `supabase/migrations/0040_hrv_reps_milestones.sql`:
 
   ```sql
   -- =================================================================
@@ -207,7 +207,7 @@ The migration is the foundation — everything downstream reads or relies on eit
   npm run db:reset
   ```
 
-  Expected: migration runs cleanly; supabase shell reports `Applying migration 0039_hrv_reps_milestones.sql...` with no errors. Re-run a second time to confirm idempotency — the `add column if not exists`, `create or replace function`, and `drop trigger if exists` / `create trigger` lines all tolerate re-application.
+  Expected: migration runs cleanly; supabase shell reports `Applying migration 0040_hrv_reps_milestones.sql...` with no errors. Re-run a second time to confirm idempotency — the `add column if not exists`, `create or replace function`, and `drop trigger if exists` / `create trigger` lines all tolerate re-application.
 
 - [ ] **Step 5: Regenerate database types.**
 
@@ -232,8 +232,8 @@ The migration is the foundation — everything downstream reads or relies on eit
 - [ ] **Step 7: Commit.**
 
   ```bash
-  git add supabase/migrations/0039_hrv_reps_milestones.sql src/lib/supabase/database.types.ts
-  git commit -m "feat(hrv): migration 0039 — sync-streak Reps trigger + RPC
+  git add supabase/migrations/0040_hrv_reps_milestones.sql src/lib/supabase/database.types.ts
+  git commit -m "feat(hrv): migration 0040 — sync-streak Reps trigger + RPC
 
   Adds:
   - hrv_streak_events.seen_at (read-receipt for /hrv toast)
@@ -492,7 +492,7 @@ This task is *verification*, not testing. The project has no SQL integration-tes
 - [ ] **Step 11: Commit verification.** No code changes — this is a checkpoint between the SQL chunk and the TS chunks.
 
   ```bash
-  git commit --allow-empty -m "chore(hrv): verify 0039 trigger against local supabase
+  git commit --allow-empty -m "chore(hrv): verify 0040 trigger against local supabase
 
   Manually exercised the AFTER INSERT trigger:
   - 6 readings → no payout
@@ -837,7 +837,7 @@ Two pieces: a pure derivation function (unit-testable) and an I/O wrapper (Supab
    *
    * Milestone ladder is fixed: 7 → 50, 14 → 100, 30 → 200, 90 → 500
    * (matches award_hrv_sync_streak_reps trigger in
-   * migration 0039_hrv_reps_milestones.sql).
+   * migration 0040_hrv_reps_milestones.sql).
    */
 
   export type MilestoneDay = 7 | 14 | 30 | 90;
@@ -952,7 +952,7 @@ Two pieces: a pure derivation function (unit-testable) and an I/O wrapper (Supab
       });
     }
 
-    // (1) distinct-day count via the RPC added in migration 0039.
+    // (1) distinct-day count via the RPC added in migration 0040.
     // Postgres counts inside the DB — symmetric with the trigger's
     // own COUNT and no row-cap risk for high-N members.
     const { data: rpcCount, error: countError } = await supabase.rpc(
@@ -1006,7 +1006,7 @@ Two pieces: a pure derivation function (unit-testable) and an I/O wrapper (Supab
   }
   ```
 
-  > **Why the RPC.** PostgREST cannot express `count(distinct expr)` natively. We could fetch all `measured_at` rows and dedupe client-side, but high-N members (5 years of daily syncs ≈ 1825 rows) would hit the PostgREST default 1000-row cap and silently return a wrong count. The RPC `get_hrv_distinct_day_count` (defined in migration 0039) counts inside Postgres — symmetric with the trigger and bounded by an index scan on `idx_hrv_readings_member_measured`.
+  > **Why the RPC.** PostgREST cannot express `count(distinct expr)` natively. We could fetch all `measured_at` rows and dedupe client-side, but high-N members (5 years of daily syncs ≈ 1825 rows) would hit the PostgREST default 1000-row cap and silently return a wrong count. The RPC `get_hrv_distinct_day_count` (defined in migration 0040) counts inside Postgres — symmetric with the trigger and bounded by an index scan on `idx_hrv_readings_member_measured`.
 
 - [ ] **Step 2: Add the mark-seen server action to `src/app/(app)/hrv/connect-actions.ts`.** Mirror the existing `setSessionSuggestionEnabled` (line 218) exactly:
 
@@ -1505,7 +1505,7 @@ Final sanity sweep + shipping commit. Matches the pattern from prior HRV phases.
   Verified:
   - 10 new deriveSyncProgress tests pass; full vitest suite green.
   - tsc + lint + build clean.
-  - Migration 0039 applies cleanly + is re-runnable.
+  - Migration 0040 applies cleanly + is re-runnable.
   - SQL verification reproduced on clean local DB: 0/7/14/30/90
     payout thresholds, idempotency, stacked-milestone behaviour,
     short-circuit after 90, UTC date-boundary case.
