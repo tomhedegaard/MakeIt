@@ -217,13 +217,41 @@ export async function getHrvSyncProgress(
     });
   }
 
-  // (1) distinct-day count via the RPC added in migration 0040.
-  // Postgres counts inside the DB — symmetric with the trigger's
-  // own COUNT and no row-cap risk for high-N members.
-  const { data: rpcCount, error: countError } = await supabase.rpc(
-    "get_hrv_distinct_day_count",
-    { p_member_id: memberId },
-  );
+  // All three reads are independent — run them in parallel for
+  // one round-trip latency. Mirrors getTodaysReadinessNudge.
+  //
+  // Error policy: only the count is "fatal" for the empty fallback
+  // (without it we'd display a stale-looking 0 days alongside any
+  // actually-present paid milestones, which is more confusing than
+  // showing nothing). Paid/unseen errors are logged but tolerated —
+  // a missing toast or progress marker is a degraded UX, not wrong
+  // information.
+  const [
+    { data: rpcCount, error: countError },
+    { data: paidRows, error: paidError },
+    { data: unseenRow, error: unseenError },
+  ] = await Promise.all([
+    // (1) distinct-day count via the RPC added in migration 0040.
+    // Postgres counts inside the DB — symmetric with the trigger's
+    // own COUNT and no row-cap risk for high-N members.
+    supabase.rpc("get_hrv_distinct_day_count", { p_member_id: memberId }),
+    // (2) Paid milestones.
+    supabase
+      .from("hrv_streak_events")
+      .select("milestone")
+      .eq("member_id", memberId),
+    // (3) Highest unseen milestone — drives the toast. Highest, not
+    // lowest, so a stacked 7+14 pay shows the 14-toast.
+    supabase
+      .from("hrv_streak_events")
+      .select("milestone, reps_awarded")
+      .eq("member_id", memberId)
+      .is("seen_at", null)
+      .order("milestone", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+  ]);
+
   if (countError) {
     console.error("[getHrvSyncProgress] count RPC failed:", countError);
     return deriveSyncProgress({
@@ -232,13 +260,8 @@ export async function getHrvSyncProgress(
       latestUnseen: null,
     });
   }
-  const daysSynced: number = rpcCount ?? 0;
+  const daysSynced = rpcCount ?? 0;
 
-  // (2) Paid milestones.
-  const { data: paidRows, error: paidError } = await supabase
-    .from("hrv_streak_events")
-    .select("milestone")
-    .eq("member_id", memberId);
   if (paidError) {
     console.error("[getHrvSyncProgress] paid query failed:", paidError);
   }
@@ -246,16 +269,6 @@ export async function getHrvSyncProgress(
     .map((r) => asMilestoneDay(r.milestone))
     .filter((m): m is MilestoneDay => m !== null);
 
-  // (3) Highest unseen milestone — drives the toast. Highest, not
-  // lowest, so a stacked 7+14 pay shows the 14-toast.
-  const { data: unseenRow, error: unseenError } = await supabase
-    .from("hrv_streak_events")
-    .select("milestone, reps_awarded")
-    .eq("member_id", memberId)
-    .is("seen_at", null)
-    .order("milestone", { ascending: false })
-    .limit(1)
-    .maybeSingle();
   if (unseenError) {
     console.error("[getHrvSyncProgress] unseen query failed:", unseenError);
   }
