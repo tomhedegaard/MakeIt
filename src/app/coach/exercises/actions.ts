@@ -80,7 +80,6 @@ export type ExerciseSavePayload = {
   setup: string | null;
   progression: string | null;
   regression: string | null;
-  demoAssetUrl: string | null;
   displayOrder: number;
   isPublished: boolean;
   phases: ExercisePhase[];
@@ -111,7 +110,6 @@ export async function saveExerciseAction(
       setup: payload.setup,
       progression: payload.progression,
       regression: payload.regression,
-      demo_asset_url: payload.demoAssetUrl,
       display_order: payload.displayOrder,
       is_published: payload.isPublished,
       phases: payload.phases,
@@ -126,4 +124,45 @@ export async function saveExerciseAction(
   revalidatePath("/train/exercises");
   revalidatePath(`/train/exercises/${payload.slug}`);
   return { ok: true };
+}
+
+/* ---------------------------------------------------------------- *
+ * Demo asset — persist demo_asset_url after a coach uploads the WebM
+ * ---------------------------------------------------------------- */
+
+/**
+ * Called by DemoAssetUploader after the WebM lands in the
+ * `exercise-demos` bucket. The WebM is the canonical primary asset;
+ * its public URL (plus a `?v=` cache-bust — the bucket is CDN-cached
+ * so a re-upload of the same path needs a changed URL) becomes
+ * demo_asset_url. The mp4/poster siblings are derived, never stored.
+ */
+export async function uploadDemoAssetAction(input: {
+  exerciseId: string;
+  slug: string;
+}): Promise<{ ok: boolean; demoAssetUrl?: string; error?: string }> {
+  // The exerciseId/slug pair is assumed consistent — the editor always
+  // passes a matched pair — and RLS gates who can call this action.
+  if (!SUPABASE_ENABLED) return { ok: false, error: "Supabase ikke konfigureret" };
+
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "Ingen forbindelse" };
+
+  const { data } = supabase.storage
+    .from("exercise-demos")
+    .getPublicUrl(`${input.slug}.webm`);
+  const demoAssetUrl = `${data.publicUrl}?v=${Date.now()}`;
+
+  const { error } = await supabase
+    .from("exercises")
+    .update({ demo_asset_url: demoAssetUrl })
+    .eq("id", input.exerciseId);
+
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath("/coach/exercises");
+  revalidatePath(`/coach/exercises/${input.slug}`);
+  revalidatePath("/train/exercises");
+  revalidatePath(`/train/exercises/${input.slug}`);
+  return { ok: true, demoAssetUrl };
 }
