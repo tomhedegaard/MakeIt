@@ -5,11 +5,12 @@ import { getSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { mockListReadings } from "@/lib/hrv/mock";
-import { getTodayLifestyleLogs } from "@/lib/data/hrv";
+import { getTodayLifestyleLogs, getHrvSyncProgress } from "@/lib/data/hrv";
 import type { ReadinessBucket, WarmUpState } from "@/lib/hrv/types";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
 import ReadinessLadder from "@/components/hrv/ReadinessLadder";
 import LifestyleLogCard from "@/components/hrv/LifestyleLogCard";
+import { HrvSyncStreakLine } from "@/components/hrv/HrvSyncStreakLine";
 import ConnectButton from "./ConnectButton";
 
 /**
@@ -173,6 +174,10 @@ export default async function HrvPage() {
 
   const provider = providerName(state.provider);
 
+  // Sync-streak progress (V2.5). Demo-safe: returns the zero-state when
+  // Supabase is unavailable, in which case the component renders nothing.
+  const progress = await getHrvSyncProgress(member.id);
+
   // Connected states (warming-up, active, pending-first-sync) also render the
   // daily lifestyle quick-log card. The no-connection state never reaches it.
   const lifestyleCard = state.connected ? (
@@ -226,6 +231,8 @@ export default async function HrvPage() {
           // Connected, but no readings synced yet — first sync pending.
           <StatePendingFirstSync provider={provider} />
         )}
+
+        <HrvSyncStreakLine progress={progress} />
 
         {lifestyleCard}
       </Container>
