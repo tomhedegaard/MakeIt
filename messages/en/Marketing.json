@@ -22,7 +22,7 @@
       "madeInSuffix": "Copenhagen"
     },
     "subline": "MakeIt isn't just straps and cuffs.",
-    "subline2": "It's the inner universe for the crew behind it — coaching, community and loyalty in one place. Built in Copenhagen. Made for athletes who lift heavy.",
+    "subline2": "It's the inner universe for the crew behind it — coaching, community, loyalty and HRV-aware recovery in one place. Built in Copenhagen. Made for athletes who lift heavy.",
     "ctaPrimary": "Get access",
     "ctaSecondary": "Learn more"
   },
@@ -54,6 +54,10 @@
       }
     }
   },
+  "worksWith": {
+    "label": "Works with",
+    "note": "Apple Watch via iPhone app"
+  },
   "pillars": {
     "coaching": {
       "label": "02 — Coaching",
@@ -62,6 +66,7 @@
       "bullet1": "Strength · Hypertrophy · Powerbuilding",
       "bullet2": "Video form check within 24 hours",
       "bullet3": "Personal PR tracks and deload weeks",
+      "bullet4": "Coach spots red flags in your HRV before you do — and writes first",
       "statLabel": "Programs live"
     },
     "community": {
@@ -89,6 +94,7 @@
       "bullet1": "Wearable-first — WHOOP · Oura · Polar (Apple Watch ships with the iPhone app)",
       "bullet2": "5-bucket readiness ladder · no fake 0-100 score",
       "bullet3": "Weekly insight in Danish · honest correlations (alcohol, sleep)",
+      "bullet4": "Lifestyle log + readiness nudge on your workout days",
       "statLabel": "Wearables"
     }
   },
@@ -122,12 +128,12 @@
   "app": {
     "eyebrow": "06 — The App",
     "heading": "Here's how it looks.",
-    "intro": "Three screens that define your week — from the moment you pick up your phone in the morning to the AI grading your heavy set.",
+    "intro": "Four screens that define your week — from the first morning tap, to the nudge above the first lift that adapts the day's load to your HRV, to the AI verdict on your heavy set.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Today's session, one tap to start",
-      "sessionLabel": "Active session",
-      "sessionDetail": "Set-by-set with RPE and rest timer",
+      "sessionLabel": "Session · HRV-aware",
+      "sessionDetail": "Nudge above the first lift on low days",
       "readinessLabel": "Readiness",
       "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
       "formCheckLabel": "Form check",
@@ -153,7 +159,10 @@
       "miniReps": "reps",
       "miniRpe": "rpe",
       "weightLabel": "Weight",
-      "logSet": "Log set →"
+      "logSet": "Log set →",
+      "nudgeEyebrow": "HRV LOW TODAY",
+      "nudgeBody": "Readiness below your normal range. Go light — skip the top sets.",
+      "nudgeCta": "See HRV →"
     },
     "readiness": {
       "todayLabel": "Today · HRV",
@@ -307,6 +316,18 @@
       "hrvPrivacy": {
         "q": "Who sees my HRV data and lifestyle logs?",
         "a": "You by default. Coach sharing is a toggle in the HRV settings — flip it on and Mikael can see your readings, lifestyle tags and weekly insights, and his red-flag queue only triggers on opted-in members. Flip it off and the HRV module runs quietly for you alone. We never pass your wearable data on."
+      },
+      "dataDirection": {
+        "q": "Do you push my data back to WHOOP, Oura or Polar?",
+        "a": "No. Data flows one way only — from your wearable into MakeIt. We never write to their APIs, never share with third parties, and OAuth tokens are encrypted at rest (AES-256-GCM). You can disconnect from the HRV settings at any time — the tokens are wiped immediately."
+      },
+      "weeklyInsight": {
+        "q": "What is the weekly HRV insight?",
+        "a": "Every Sunday evening we correlate your week's RMSSD against your lifestyle tags (sleep, alcohol, stress, illness) and send one short observation — in Danish, never diagnoses, never made-up numbers. Example: 'Sleeping under 7h for three nights drags RMSSD down by ~8%.' The full history lives at /hrv/insights."
+      },
+      "offPlanNutrition": {
+        "q": "What do I do if I eat something that's not in the meal plan?",
+        "a": "Tap 'I ate something else' in the Nutrition feed, briefly describe what you ate, and it's logged as an off-plan meal. No penalty, no scolding — just data. The coach sees it in weekly signals so next week's planning gets more realistic instead of ignoring reality."
       }
     }
   },

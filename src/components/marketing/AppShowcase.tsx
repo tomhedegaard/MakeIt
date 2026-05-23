@@ -142,17 +142,31 @@ async function SessionScreen() {
   const t = await getTranslations("Marketing.app.session");
   return (
     <div className="flex flex-col h-full text-[10px]">
-      <div className="flex items-center justify-between mb-3 text-[8px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+      <div className="flex items-center justify-between mb-2 text-[8px] font-mono uppercase tracking-[0.16em] text-fg-faint">
         <span>×</span>
         <span>{t("week")}</span>
         <span>4/16</span>
       </div>
-      <div className="h-0.5 bg-bg-3 -mx-4 mb-3">
+      <div className="h-0.5 bg-bg-3 -mx-4 mb-2">
         <div className="h-full bg-fg" style={{ width: "25%" }} />
       </div>
 
-      <div className="surface-2 rounded-xl p-3 mb-2">
-        <div className="flex items-center justify-between mb-1">
+      {/* HRV nudge — V2.4. Real component lives at
+          src/components/hrv/HrvReadinessNudge.tsx. */}
+      <div className="surface-2 rounded-xl p-2.5 mb-2 border hairline-strong">
+        <div className="text-[7px] tracking-[0.18em] uppercase font-mono text-fg-dim mb-1">
+          {t("nudgeEyebrow")}
+        </div>
+        <p className="text-[8.5px] leading-snug text-fg/85 mb-1.5">
+          {t("nudgeBody")}
+        </p>
+        <div className="text-[7px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+          {t("nudgeCta")}
+        </div>
+      </div>
+
+      <div className="surface-2 rounded-xl p-2.5 mb-2">
+        <div className="flex items-center justify-between">
           <div>
             <div className="text-[7px] tracking-[0.18em] uppercase text-fg-dim font-mono">{t("exercise")}</div>
             <div className="font-display text-sm leading-tight">Back Squat</div>
@@ -162,24 +176,12 @@ async function SessionScreen() {
             <div className="text-[7px] tracking-[0.18em] uppercase text-fg-dim font-mono">{t("setsLabel")}</div>
           </div>
         </div>
-        <div className="text-[8px] text-fg-dim leading-snug border-t hairline pt-2 mt-2">
-          {t("cue")}
-        </div>
       </div>
 
       <div className="grid grid-cols-3 gap-px bg-line border hairline rounded mb-2">
         <Mini v="150" k={t("miniKg")} />
         <Mini v="3" k={t("miniReps")} />
         <Mini v="8" k={t("miniRpe")} />
-      </div>
-
-      <div className="surface-2 rounded-lg p-2 mb-1.5 flex items-center">
-        <div className="size-7 surface-2 rounded flex items-center justify-center text-sm">−</div>
-        <div className="flex-1 text-center">
-          <div className="numeric text-base">150 <span className="text-fg-dim text-[8px]">kg</span></div>
-          <div className="text-[7px] text-fg-dim font-mono uppercase tracking-[0.14em]">{t("weightLabel")}</div>
-        </div>
-        <div className="size-7 surface-2 rounded flex items-center justify-center text-sm">+</div>
       </div>
 
       <div className="flex gap-1 mb-2">

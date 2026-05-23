@@ -22,7 +22,7 @@
       "madeInSuffix": "København"
     },
     "subline": "MakeIt er ikke bare straps og cuffs.",
-    "subline2": "Det er det interne univers for crewet bag — coaching, community og loyalitet samlet ét sted. Bygget i København. Lavet til atleter der løfter tungt.",
+    "subline2": "Det er det interne univers for crewet bag — coaching, community, loyalitet og HRV-aware restitution samlet ét sted. Bygget i København. Lavet til atleter der løfter tungt.",
     "ctaPrimary": "Få adgang",
     "ctaSecondary": "Læs mere"
   },
@@ -54,6 +54,10 @@
       }
     }
   },
+  "worksWith": {
+    "label": "Virker med",
+    "note": "Apple Watch via iPhone-appen"
+  },
   "pillars": {
     "coaching": {
       "label": "02 — Coaching",
@@ -62,6 +66,7 @@
       "bullet1": "Strength · Hypertrophy · Powerbuilding",
       "bullet2": "Video form-check inden for 24 timer",
       "bullet3": "Personlige PR-tracks og deload-uger",
+      "bullet4": "Coachen ser røde flag i din HRV før du gør — og skriver først",
       "statLabel": "Programmer live"
     },
     "community": {
@@ -89,6 +94,7 @@
       "bullet1": "Wearable-first — WHOOP · Oura · Polar (Apple Watch følger med iPhone-appen)",
       "bullet2": "5-bucket readiness ladder · ingen falsk 0-100 score",
       "bullet3": "Ugentlig indsigt på dansk · ærlige korrelationer (alkohol, søvn)",
+      "bullet4": "Lifestyle-log + readiness-nudge på dine workout-dage",
       "statLabel": "Wearables"
     }
   },
@@ -122,12 +128,12 @@
   "app": {
     "eyebrow": "06 — Appen",
     "heading": "Sådan ser det ud.",
-    "intro": "Tre skærme der definerer din uge — fra du tager telefonen op om morgenen til AI'en har vurderet dit tunge sæt.",
+    "intro": "Fire skærme der definerer din uge — fra morgenens første tap, til nudgen over første øvelse der tilpasser dagens belastning efter din HRV, til AI'ens dom over dit tunge sæt.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Dagens session, ét tap til start",
-      "sessionLabel": "Aktiv session",
-      "sessionDetail": "Sæt-for-sæt med RPE og rest-timer",
+      "sessionLabel": "Session · HRV-aware",
+      "sessionDetail": "Nudge over første øvelse på lave dage",
       "readinessLabel": "Readiness",
       "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
       "formCheckLabel": "Form-check",
@@ -153,7 +159,10 @@
       "miniReps": "reps",
       "miniRpe": "rpe",
       "weightLabel": "Vægt",
-      "logSet": "Log sæt →"
+      "logSet": "Log sæt →",
+      "nudgeEyebrow": "HRV LAV I DAG",
+      "nudgeBody": "Readiness under dit normalområde. Gå let — drop top-sættene.",
+      "nudgeCta": "Se HRV →"
     },
     "readiness": {
       "todayLabel": "I dag · HRV",
@@ -307,6 +316,18 @@
       "hrvPrivacy": {
         "q": "Hvem ser min HRV-data og mine livsstil-logs?",
         "a": "Du som standard. Coach-deling er en toggle i HRV-indstillingerne — slår du den til, kan Mikael se dine readings, livsstil-tags og ugentlige indsigter, og hans red-flag-kø trigger kun på opted-in medlemmer. Slår du den fra, kører HRV-modulet stille for dig selv. Vi sender aldrig dine wearable-data videre."
+      },
+      "dataDirection": {
+        "q": "Sender I min data tilbage til WHOOP, Oura eller Polar?",
+        "a": "Nej. Data flyder kun den ene vej — fra dit wearable ind i MakeIt. Vi skriver aldrig til deres API'er, deler ikke noget med tredjeparter, og OAuth-tokens ligger krypteret i hvile (AES-256-GCM). Du kan til enhver tid afbryde forbindelsen fra HRV-indstillingerne — så slettes tokens omgående."
+      },
+      "weeklyInsight": {
+        "q": "Hvad er den ugentlige HRV-indsigt?",
+        "a": "Hver søndag aften korrelerer vi din uges RMSSD mod dine livsstil-tags (søvn, alkohol, stress, sygdom) og sender én kort observation — på dansk, aldrig diagnoser, aldrig opfundne tal. Eksempel: 'Søvn under 7 t tre nætter trækker RMSSD ned med ~8%.' Du kan altid genlæse hele historikken på /hrv/insights."
+      },
+      "offPlanNutrition": {
+        "q": "Hvad gør jeg hvis jeg spiser noget der ikke står i mealplanen?",
+        "a": "Tryk 'Spiste noget andet' i Nutrition-feedet, beskriv kort hvad du spiste, og det logges som off-plan måltid. Ingen straf, ingen scolding — bare data. Coachen ser det i ugesignalerne, så næste uges planlægning bliver mere realistisk i stedet for at ignorere virkeligheden."
       }
     }
   },

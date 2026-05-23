@@ -1,5 +1,6 @@
 import MarketingNav from "@/components/marketing/MarketingNav";
 import Hero from "@/components/marketing/Hero";
+import WorksWith from "@/components/marketing/WorksWith";
 import CrewSection from "@/components/marketing/CrewSection";
 import PillarsSection from "@/components/marketing/PillarsSection";
 import TierJourney from "@/components/marketing/TierJourney";
@@ -28,6 +29,7 @@ export default function Home() {
             "FOR THE CREW",
           ]}
         />
+        <WorksWith />
         <CrewSection />
         <PillarsSection />
         <TierJourney />
