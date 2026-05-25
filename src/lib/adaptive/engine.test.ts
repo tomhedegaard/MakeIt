@@ -30,8 +30,7 @@ function baseInput(): EngineInput {
     lifestyle: {
       sleepHoursAvg2d: 7.5,
       alcoholLast2d: false,
-      feelingLast3d: 4,
-      timeAvailableMin: null,
+      feelingLast3d: "ok",
     },
     recentSessions: [
       session("s-1", "completed", { topSetRpeAvg: 7.5, topSetTargetRpeAvg: 8 }),
@@ -272,7 +271,7 @@ describe("evaluateAdaptation — HRV low combinations", () => {
     input.latestReading = { ...input.latestReading!, readinessBucket: "low" };
     input.lifestyle.sleepHoursAvg2d = 5.0;
     input.lifestyle.alcoholLast2d = true;
-    input.lifestyle.feelingLast3d = 2;
+    input.lifestyle.feelingLast3d = "tired";
     const result = evaluateAdaptation(input);
     expect(result.action).toBe("top_set_reduction");
     expect(result.reasons).toEqual([
@@ -310,21 +309,13 @@ describe("evaluateAdaptation — non-HRV signals", () => {
     expect(result.reasons).toEqual(["rpe_overshoot", "missed_sessions"]);
   });
 
-  it("shortens session on logged time constraint alone", () => {
-    const input = baseInput();
-    input.lifestyle.timeAvailableMin = 25;
-    const result = evaluateAdaptation(input);
-    expect(result.action).toBe("session_shorten");
-    expect(result.reasons).toEqual(["time_constraint"]);
-  });
-
   it("escalates on unusual combination (≥3 signals, no rule match)", () => {
     const input = baseInput();
     // Normal HRV, but three non-HRV signals that don't combine into a
     // direct action: low_sleep + recent_alcohol + low_feeling.
     input.lifestyle.sleepHoursAvg2d = 5.0;
     input.lifestyle.alcoholLast2d = true;
-    input.lifestyle.feelingLast3d = 2;
+    input.lifestyle.feelingLast3d = "tired";
     const result = evaluateAdaptation(input);
     expect(result.action).toBe("escalate_to_coach");
     expect(result.reasons[0]).toBe("unusual_signal_combination");

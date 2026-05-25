@@ -38,9 +38,6 @@ const MAX_READING_AGE_MS = 36 * 60 * 60 * 1000;
 /** Minimum hours of sleep (avg last 2 days) below which we flag low_sleep. */
 const LOW_SLEEP_THRESHOLD_HOURS = 5.5;
 
-/** Subjective feeling rating at or below this counts as low_feeling. */
-const LOW_FEELING_THRESHOLD = 2;
-
 /** RPE-drift threshold (14-day average of logged-target) for sustained-low. */
 const RPE_DRIFT_DELOAD_THRESHOLD = 1.5;
 
@@ -53,8 +50,8 @@ const MISSED_SESSIONS_THRESHOLD = 2;
 /** Form-check score below which a main lift swap becomes eligible. */
 const FORM_CHECK_CONCERN_THRESHOLD = 6;
 
-/** Self-reported time-available minutes below which session_shorten activates. */
-const TIME_CONSTRAINT_THRESHOLD_MIN = 30;
+/** Subjective feeling states that count as low_feeling signal. */
+const LOW_FEELING_STATES = new Set(["tired", "stressed"]);
 
 /**
  * Evaluate the rule layer for one member at one moment.
@@ -172,15 +169,9 @@ export function evaluateAdaptation(input: EngineInput): CandidateDecision {
   if (input.lifestyle.alcoholLast2d) signals.add("recent_alcohol");
   if (
     input.lifestyle.feelingLast3d !== null &&
-    input.lifestyle.feelingLast3d <= LOW_FEELING_THRESHOLD
+    LOW_FEELING_STATES.has(input.lifestyle.feelingLast3d)
   ) {
     signals.add("low_feeling");
-  }
-  if (
-    input.lifestyle.timeAvailableMin !== null &&
-    input.lifestyle.timeAvailableMin < TIME_CONSTRAINT_THRESHOLD_MIN
-  ) {
-    signals.add("time_constraint");
   }
 
   // Last session's RPE overshoot (logged − target).
@@ -277,19 +268,6 @@ export function evaluateAdaptation(input: EngineInput): CandidateDecision {
       humanReviewRecommended: false,
       explanationDa:
         "Sidste session var hårdere end planlagt og du har misset et par dage — vi har markeret accessory-blokken som valgfri.",
-    };
-  }
-
-  // Time constraint logged → shorten.
-  if (signals.has("time_constraint")) {
-    return {
-      action: "session_shorten",
-      confidence: 0.7,
-      reasons: ["time_constraint"],
-      params: {},
-      humanReviewRecommended: false,
-      explanationDa:
-        "Du har logget kort tid i dag — vi har markeret accessory-blokken som valgfri. Hovedløftene er prioriteret.",
     };
   }
 

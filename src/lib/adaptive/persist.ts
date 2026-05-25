@@ -120,7 +120,6 @@ function buildInputSnapshot(input: EngineInput): Json {
       sleep_hours_avg_2d: input.lifestyle.sleepHoursAvg2d,
       alcohol_last_2d: input.lifestyle.alcoholLast2d,
       feeling_last_3d: input.lifestyle.feelingLast3d,
-      time_available_min: input.lifestyle.timeAvailableMin,
     },
     recent_sessions_summary: input.recentSessions.map((s) => ({
       status: s.status,

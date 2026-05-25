@@ -10,6 +10,7 @@
  * `rule_decision` / `reasoning_output` jsonb columns.
  */
 
+import type { FeelingState } from "@/lib/hrv/lifestyle";
 import type { ReadinessBucket, WarmUpState } from "@/lib/hrv/types";
 
 /** Closed set of actions the engine can recommend (spec §3). */
@@ -41,27 +42,22 @@ export interface AdaptiveActionParams {
   variantReason?: "joint_friendly" | "unilateral" | "low_cns" | "time_efficient";
 }
 
-/** Lifestyle log signal types (matches `hrv_lifestyle_logs.event_type`). */
-export type LifestyleEventType =
-  | "sleep_hours"
-  | "alcohol"
-  | "feeling"
-  | "menstrual_phase"
-  | "time_available";
-
 /**
  * Aggregated lifestyle signals — pre-rolled by the data-layer wrapper
  * so the rule layer stays pure and side-effect-free.
+ *
+ * Source: `hrv_lifestyle_logs` (event_type ∈ alcohol_drinks, sleep_hours,
+ * feeling, late_meal, sick, menstrual_start). v0 consumes the first three;
+ * late_meal / sick / menstrual_start are not wired into the engine yet
+ * (sick is read separately from `hrv_readings.is_sick` for the acute path).
  */
 export interface LifestyleAggregate {
   /** Mean reported sleep duration across the last 2 logged days. Null if no log. */
   sleepHoursAvg2d: number | null;
-  /** True iff alcohol logged on any of the last 2 calendar days. */
+  /** True iff alcohol_drinks logged with count ≥1 on any of the last 2 calendar days. */
   alcoholLast2d: boolean;
-  /** Most recent subjective feeling rating 1..5, or null if no log in last 3d. */
-  feelingLast3d: number | null;
-  /** Self-reported time available for today's session in minutes. Null if not logged. */
-  timeAvailableMin: number | null;
+  /** Most recent subjective feeling state in last 3 days, or null if no log. */
+  feelingLast3d: FeelingState | null;
 }
 
 /** Snapshot of the previous N sessions (oldest first). */
@@ -190,7 +186,6 @@ export type RuleReasonCode =
   | "missed_sessions"
   | "sustained_low_readiness"
   | "form_check_concern"
-  | "time_constraint"
   | "unusual_signal_combination"
   | "no_actionable_signals";
 

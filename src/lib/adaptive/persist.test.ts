@@ -58,8 +58,7 @@ function engineInput(overrides: Partial<EngineInput> = {}): EngineInput {
     lifestyle: {
       sleepHoursAvg2d: 5.2,
       alcoholLast2d: false,
-      feelingLast3d: 3,
-      timeAvailableMin: null,
+      feelingLast3d: "ok",
     },
     recentSessions: [
       {
