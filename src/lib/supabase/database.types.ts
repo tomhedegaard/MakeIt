@@ -223,6 +223,42 @@ export type Database = {
           },
         ]
       }
+      exercise_variant_map: {
+        Row: {
+          created_at: string
+          exercise_id: string
+          lighter_variant_id: string
+          variant_reason: string
+        }
+        Insert: {
+          created_at?: string
+          exercise_id: string
+          lighter_variant_id: string
+          variant_reason: string
+        }
+        Update: {
+          created_at?: string
+          exercise_id?: string
+          lighter_variant_id?: string
+          variant_reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercise_variant_map_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercise_variant_map_lighter_variant_id_fkey"
+            columns: ["lighter_variant_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       exercises: {
         Row: {
           category: string | null
@@ -461,6 +497,13 @@ export type Database = {
             foreignKeyName: "hrv_alerts_session_modifier_id_fkey"
             columns: ["session_modifier_id"]
             isOneToOne: false
+            referencedRelation: "adaptive_outcomes_v0"
+            referencedColumns: ["modifier_id"]
+          },
+          {
+            foreignKeyName: "hrv_alerts_session_modifier_id_fkey"
+            columns: ["session_modifier_id"]
+            isOneToOne: false
             referencedRelation: "hrv_session_modifiers"
             referencedColumns: ["id"]
           },
@@ -609,34 +652,55 @@ export type Database = {
         Row: {
           accepted_by_member: boolean | null
           applied_value: Json | null
+          confidence: number | null
           created_at: string | null
+          explanation_da: string | null
           id: string
+          input_snapshot: Json | null
           member_id: string
           modifier_type: string
           program_id: string | null
           reason: string
+          reasoning_output: Json | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          rule_decision: Json | null
           session_id: string | null
         }
         Insert: {
           accepted_by_member?: boolean | null
           applied_value?: Json | null
+          confidence?: number | null
           created_at?: string | null
+          explanation_da?: string | null
           id?: string
+          input_snapshot?: Json | null
           member_id: string
           modifier_type: string
           program_id?: string | null
           reason: string
+          reasoning_output?: Json | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          rule_decision?: Json | null
           session_id?: string | null
         }
         Update: {
           accepted_by_member?: boolean | null
           applied_value?: Json | null
+          confidence?: number | null
           created_at?: string | null
+          explanation_da?: string | null
           id?: string
+          input_snapshot?: Json | null
           member_id?: string
           modifier_type?: string
           program_id?: string | null
           reason?: string
+          reasoning_output?: Json | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          rule_decision?: Json | null
           session_id?: string | null
         }
         Relationships: [
@@ -672,6 +736,7 @@ export type Database = {
       }
       hrv_settings: {
         Row: {
+          adaptive_program_enabled: boolean
           cycle_tracking_enabled: boolean | null
           inserted_at: string | null
           member_id: string
@@ -680,6 +745,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          adaptive_program_enabled?: boolean
           cycle_tracking_enabled?: boolean | null
           inserted_at?: string | null
           member_id: string
@@ -688,6 +754,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          adaptive_program_enabled?: boolean
           cycle_tracking_enabled?: boolean | null
           inserted_at?: string | null
           member_id?: string
@@ -2333,6 +2400,46 @@ export type Database = {
       }
     }
     Views: {
+      adaptive_outcomes_v0: {
+        Row: {
+          accepted_by_member: boolean | null
+          adapted_at: string | null
+          completed_at: string | null
+          completion_ratio: number | null
+          confidence: number | null
+          member_id: string | null
+          modifier_id: string | null
+          modifier_type: string | null
+          next_day_readiness: string | null
+          reviewed_by: string | null
+          session_id: string | null
+          session_status: string | null
+          top_set_rpe_delta: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hrv_session_modifiers_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "hrv_session_modifiers_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hrv_session_modifiers_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       member_active_subscriptions: {
         Row: {
           cancel_at_period_end: boolean | null
@@ -2673,6 +2780,7 @@ export type Database = {
           id: string
           in_progress_size: number
           key: string
+          metadata: Json | null
           owner_id: string | null
           upload_signature: string
           user_metadata: Json | null
@@ -2684,6 +2792,7 @@ export type Database = {
           id: string
           in_progress_size?: number
           key: string
+          metadata?: Json | null
           owner_id?: string | null
           upload_signature: string
           user_metadata?: Json | null
@@ -2695,6 +2804,7 @@ export type Database = {
           id?: string
           in_progress_size?: number
           key?: string
+          metadata?: Json | null
           owner_id?: string | null
           upload_signature?: string
           user_metadata?: Json | null
@@ -2813,6 +2923,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      allow_any_operation: {
+        Args: { expected_operations: string[] }
+        Returns: boolean
+      }
+      allow_only_operation: {
+        Args: { expected_operation: string }
+        Returns: boolean
+      }
       can_insert_object: {
         Args: { bucketid: string; metadata: Json; name: string; owner: string }
         Returns: undefined
