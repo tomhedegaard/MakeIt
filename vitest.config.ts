@@ -7,7 +7,7 @@ export default defineConfig({
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
     coverage: {
       provider: "v8",
-      include: ["src/lib/hrv/**"],
+      include: ["src/lib/hrv/**", "src/lib/adaptive/**"],
     },
   },
   resolve: {
