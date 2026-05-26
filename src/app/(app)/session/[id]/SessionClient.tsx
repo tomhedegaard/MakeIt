@@ -15,6 +15,8 @@ import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
 import Container from "@/components/Container";
 import HrvReadinessNudge from "@/components/hrv/HrvReadinessNudge";
+import AdaptationCard from "@/components/adaptive/AdaptationCard";
+import type { ActiveAdaptation } from "@/lib/adaptive/explanation";
 import { logSetAction, completeSessionAction } from "./actions";
 
 type Logged = Record<
@@ -65,10 +67,12 @@ export default function SessionClient({
   session,
   formCheckQuota,
   readinessNudge = null,
+  adaptation = null,
 }: {
   session: Session;
   formCheckQuota: FormCheckQuota;
   readinessNudge?: { bucket: "low" | "very_low" } | null;
+  adaptation?: ActiveAdaptation | null;
 }) {
   const router = useRouter();
   const t = useTranslations("Session");
@@ -206,8 +210,17 @@ export default function SessionClient({
 
       {/* Main column */}
       <Container size="narrow" className="flex-1 py-6 pb-32 lg:pb-12 space-y-6">
-        {/* HRV readiness nudge (V2.4) — renders null when conditions don't hold */}
-        <HrvReadinessNudge nudge={readinessNudge} />
+        {/*
+          Adaptive engine card supersedes the V2.4 nudge: if we already
+          adapted the session, the card carries the richer "here's what
+          we changed" message and the nudge's "your HRV is low" advice
+          would be redundant or outdated.
+        */}
+        {adaptation ? (
+          <AdaptationCard adaptation={adaptation} />
+        ) : (
+          <HrvReadinessNudge nudge={readinessNudge} />
+        )}
 
         {/* Exercise card */}
         <ExerciseSection

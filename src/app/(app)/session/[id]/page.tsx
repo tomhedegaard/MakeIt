@@ -9,6 +9,7 @@ import {
   type FormCheckQuota,
 } from "@/lib/data/form-check-quota";
 import { getFormCheckQuota } from "@/lib/data/form-check-quota-server";
+import { getActiveAdaptationForSession } from "@/lib/data/adaptive";
 import { getTodaysReadinessNudge } from "@/lib/data/hrv";
 
 export default async function SessionPage({
@@ -21,10 +22,11 @@ export default async function SessionPage({
   if (SUPABASE_ENABLED) {
     const member = await getSession();
     if (!member) notFound();
-    const [session, quota, readinessNudge] = await Promise.all([
+    const [session, quota, readinessNudge, adaptation] = await Promise.all([
       getFullSession(id, member.id),
       getFormCheckQuota(member.id, member.tier),
       getTodaysReadinessNudge(member.id),
+      getActiveAdaptationForSession(member.id, id),
     ]);
     if (!session) notFound();
     return (
@@ -32,6 +34,7 @@ export default async function SessionPage({
         session={session}
         formCheckQuota={quota}
         readinessNudge={readinessNudge}
+        adaptation={adaptation}
       />
     );
   }
@@ -51,6 +54,7 @@ export default async function SessionPage({
       session={session}
       formCheckQuota={quota}
       readinessNudge={null}
+      adaptation={null}
     />
   );
 }
