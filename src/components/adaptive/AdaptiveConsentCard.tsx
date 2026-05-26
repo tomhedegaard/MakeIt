@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 
 import { enableAdaptiveEngineAction } from "@/app/(app)/hrv/actions";
@@ -98,6 +99,12 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
           Slå adaptiv tilpasning til
         </button>
       </div>
+      <Link
+        href="/hrv/learn/adaptive"
+        className="inline-block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg lift touch-app"
+      >
+        Hvordan motoren tænker →
+      </Link>
     </section>
   );
 }
