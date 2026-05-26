@@ -217,7 +217,7 @@ export default function SessionClient({
           would be redundant or outdated.
         */}
         {adaptation ? (
-          <AdaptationCard adaptation={adaptation} />
+          <AdaptationCard adaptation={adaptation} sessionId={session.id} />
         ) : (
           <HrvReadinessNudge nudge={readinessNudge} />
         )}
