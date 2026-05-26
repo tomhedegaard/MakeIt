@@ -2,13 +2,18 @@
 
 import { useOptimistic, useRef, useTransition, type SyntheticEvent } from "react";
 
+import CounterfactualSliders from "@/components/adaptive/CounterfactualSliders";
 import ReasoningDetailPanel from "@/components/adaptive/ReasoningDetailPanel";
 import { hydrateEngineInputFromSnapshot } from "@/lib/adaptive/snapshot";
 import {
   type ActiveAdaptation,
   describeAdaptation,
 } from "@/lib/adaptive/explanation";
-import type { AdaptiveActionParams, RuleReasonCode } from "@/lib/adaptive/types";
+import type {
+  AdaptiveActionParams,
+  CandidateDecision,
+  RuleReasonCode,
+} from "@/lib/adaptive/types";
 import {
   markReasoningRevealedAction,
   setAdaptationResponseAction,
@@ -158,11 +163,16 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
 }
 
 /**
- * Assemble the ReasoningDetailPanel from the optional reasoning fields
- * on ActiveAdaptation. Returns null when the underlying data isn't
- * present (demo mode, older rows persisted before Søjle 2's data
- * additions, or the data layer didn't fetch it for some reason) —
- * caller hides the disclosure entirely in that case.
+ * Assemble the ReasoningDetailPanel + CounterfactualSliders from the
+ * optional reasoning fields on ActiveAdaptation. Returns null when
+ * the underlying data isn't present (demo mode, older rows persisted
+ * before Søjle 2's data additions, or the data layer didn't fetch
+ * it for some reason) — caller hides the disclosure entirely in that
+ * case.
+ *
+ * Both children share the same hydrated `signals` EngineInput so the
+ * counterfactual mutator works against the exact data the engine saw
+ * at decision time.
  */
 function buildReasoningPanel(adaptation: ActiveAdaptation) {
   if (!adaptation.ruleDecision || !adaptation.createdAt) return null;
@@ -170,20 +180,38 @@ function buildReasoningPanel(adaptation: ActiveAdaptation) {
     adaptation.inputSnapshot ?? null,
     new Date(adaptation.createdAt)
   );
+  // Reasons are stored as plain strings in jsonb; cast to the
+  // narrowed union for display. Unknown codes fall through to
+  // labelForReason's raw-string fallback (intentional).
+  const ruleDecisionForPanel = {
+    action: adaptation.ruleDecision.action,
+    reasons: adaptation.ruleDecision.reasons as RuleReasonCode[],
+    confidence: adaptation.ruleDecision.confidence,
+    params: adaptation.ruleDecision.params as AdaptiveActionParams,
+  };
+  // Construct a full CandidateDecision from the persisted bits for
+  // CounterfactualSliders' "var: X" diff. humanReviewRecommended +
+  // explanationDa are display-only here so safe defaults are fine.
+  const baselineDecision: CandidateDecision = {
+    action: ruleDecisionForPanel.action,
+    reasons: ruleDecisionForPanel.reasons,
+    confidence: ruleDecisionForPanel.confidence,
+    params: ruleDecisionForPanel.params,
+    humanReviewRecommended: false,
+    explanationDa: adaptation.explanationDa,
+  };
   return (
-    <ReasoningDetailPanel
-      signals={signals}
-      ruleDecision={{
-        action: adaptation.ruleDecision.action,
-        // Reasons are stored as plain strings in jsonb; cast to the
-        // narrowed union for display. Unknown codes fall through to
-        // labelForReason's raw-string fallback (intentional).
-        reasons: adaptation.ruleDecision.reasons as RuleReasonCode[],
-        confidence: adaptation.ruleDecision.confidence,
-        params: adaptation.ruleDecision.params as AdaptiveActionParams,
-      }}
-      reasoningOutput={adaptation.reasoningOutput ?? null}
-      recentFormCheckCount={adaptation.recentFormCheckCount ?? 0}
-    />
+    <>
+      <ReasoningDetailPanel
+        signals={signals}
+        ruleDecision={ruleDecisionForPanel}
+        reasoningOutput={adaptation.reasoningOutput ?? null}
+        recentFormCheckCount={adaptation.recentFormCheckCount ?? 0}
+      />
+      <CounterfactualSliders
+        baseline={signals}
+        baselineDecision={baselineDecision}
+      />
+    </>
   );
 }
