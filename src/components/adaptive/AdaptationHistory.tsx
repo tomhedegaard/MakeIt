@@ -6,6 +6,8 @@ import {
 } from "@/lib/adaptive/history-narratives";
 import { labelForAction } from "@/lib/adaptive/reason-narratives";
 import type { AdaptationHistoryItem } from "@/lib/data/adaptive";
+import AdaptationHistoryExpander from "./AdaptationHistoryExpander";
+import AdaptationHistoryImpression from "./AdaptationHistoryImpression";
 
 type Props = {
   items: AdaptationHistoryItem[];
@@ -55,6 +57,10 @@ export default function AdaptationHistory({
       aria-labelledby="adaptation-history-heading"
       className="surface-2 rounded-2xl p-5 lg:p-6 space-y-3"
     >
+      {/* Fire-once impression telemetry on mount. Tiny client component
+          so the rest of this section stays server-rendered. */}
+      <AdaptationHistoryImpression recentCount={items.length} />
+
       <div className="flex items-baseline justify-between gap-3">
         <h2 id="adaptation-history-heading" className="eyebrow">
           Tidligere tilpasninger
@@ -71,22 +77,13 @@ export default function AdaptationHistory({
       </ul>
 
       {hidden.length > 0 ? (
-        <details className="group/hist">
-          <summary className="cursor-pointer list-none text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg select-none inline-flex items-center gap-1 lift touch-app">
-            <span>Vis flere ({hidden.length})</span>
-            <span
-              aria-hidden
-              className="group-open/hist:rotate-180 transition-transform"
-            >
-              ↓
-            </span>
-          </summary>
+        <AdaptationHistoryExpander hiddenCount={hidden.length}>
           <ul className="divide-y hairline mt-1">
             {hidden.map((item) => (
               <AdaptationHistoryRow key={item.modifierId} item={item} />
             ))}
           </ul>
-        </details>
+        </AdaptationHistoryExpander>
       ) : null}
     </section>
   );

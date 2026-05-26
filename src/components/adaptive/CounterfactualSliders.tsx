@@ -2,7 +2,9 @@
 
 import {
   useDeferredValue,
+  useEffect,
   useMemo,
+  useRef,
   useState,
   type ChangeEvent,
   type ReactNode,
@@ -20,6 +22,7 @@ import type {
   EngineInput,
 } from "@/lib/adaptive/types";
 import type { FeelingState } from "@/lib/hrv/lifestyle";
+import { TELEMETRY, track } from "@/lib/telemetry";
 
 type Props = {
   /**
@@ -34,6 +37,13 @@ type Props = {
    * from the mutated input via evaluateAdaptation.
    */
   baselineDecision: CandidateDecision;
+  /**
+   * Modifier id for telemetry events. Pass "explainer" (or similar
+   * sentinel) when rendered from the static /hrv/learn/adaptive page
+   * where there's no real modifier; telemetry distinguishes the two
+   * use cases via the property value.
+   */
+  modifierId: string;
 };
 
 /**
@@ -78,6 +88,7 @@ const FEELING_OPTIONS: { value: FeelingState; label: string }[] = [
 export default function CounterfactualSliders({
   baseline,
   baselineDecision,
+  modifierId,
 }: Props) {
   // Initial state from baseline, with sensible fallbacks for null
   // values (member never logged that dimension).
@@ -118,6 +129,50 @@ export default function CounterfactualSliders({
     feeling !== baselineFeeling;
 
   const decisionMatches = hypothetical.action === baselineDecision.action;
+
+  // ---- Telemetry: fire-once `used` event on first slider change ----
+  const usedFiredRef = useRef(false);
+  useEffect(() => {
+    if (usedFiredRef.current || !sliderTouched) return;
+    usedFiredRef.current = true;
+    // Detect which dimension differs from baseline first — gives the
+    // dashboard a sense of which control draws the most curiosity.
+    const dimensionChanged: "sleep" | "alcohol" | "feeling" =
+      sleep !== baselineSleep
+        ? "sleep"
+        : alcohol !== baselineAlcohol
+          ? "alcohol"
+          : "feeling";
+    track(TELEMETRY.adaptiveCounterfactualUsed, {
+      modifier_id: modifierId,
+      dimension_changed: dimensionChanged,
+    });
+  }, [
+    sliderTouched,
+    sleep,
+    alcohol,
+    feeling,
+    baselineSleep,
+    baselineAlcohol,
+    baselineFeeling,
+    modifierId,
+  ]);
+
+  // ---- Telemetry: fire `result` event only when the hypothetical
+  // action crosses a rule boundary (changes from the last-seen one).
+  // This naturally debounces intermediate slider positions that
+  // didn't flip the decision.
+  const lastActionRef = useRef<AdaptiveAction>(baselineDecision.action);
+  useEffect(() => {
+    if (hypothetical.action === lastActionRef.current) return;
+    lastActionRef.current = hypothetical.action;
+    track(TELEMETRY.adaptiveCounterfactualResult, {
+      modifier_id: modifierId,
+      hypothetical_action: hypothetical.action,
+      baseline_action: baselineDecision.action,
+      would_have_changed: hypothetical.action !== baselineDecision.action,
+    });
+  }, [hypothetical.action, baselineDecision.action, modifierId]);
 
   function reset() {
     setSleep(baselineSleep);

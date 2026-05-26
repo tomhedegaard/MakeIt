@@ -131,6 +131,7 @@ export default function AdaptiveLearnPage() {
             <CounterfactualSliders
               baseline={baseline}
               baselineDecision={baselineDecision}
+              modifierId="explainer"
             />
           </div>
         </section>

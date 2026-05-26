@@ -14,6 +14,7 @@ import type {
   CandidateDecision,
   RuleReasonCode,
 } from "@/lib/adaptive/types";
+import { TELEMETRY, track } from "@/lib/telemetry";
 import {
   markReasoningRevealedAction,
   setAdaptationResponseAction,
@@ -91,6 +92,10 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
     // member toggles back-and-forth.
     if (!event.currentTarget.open || hasFiredRevealRef.current) return;
     hasFiredRevealRef.current = true;
+    track(TELEMETRY.adaptiveReasoningRevealed, {
+      modifier_id: optimisticAdaptation!.modifierId,
+      modifier_type: optimisticAdaptation!.modifierType,
+    });
     startTransition(async () => {
       await markReasoningRevealedAction({
         modifierId: optimisticAdaptation!.modifierId,
@@ -211,6 +216,7 @@ function buildReasoningPanel(adaptation: ActiveAdaptation) {
       <CounterfactualSliders
         baseline={signals}
         baselineDecision={baselineDecision}
+        modifierId={adaptation.modifierId}
       />
     </>
   );
