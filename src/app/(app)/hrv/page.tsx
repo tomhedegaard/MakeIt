@@ -7,8 +7,12 @@ import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { mockListReadings } from "@/lib/hrv/mock";
 import { getTodayLifestyleLogs, getHrvSyncProgress } from "@/lib/data/hrv";
-import { getAdaptiveConsentEligibility } from "@/lib/data/adaptive";
+import {
+  getAdaptiveConsentEligibility,
+  getRecentAdaptations,
+} from "@/lib/data/adaptive";
 import AdaptiveConsentCard from "@/components/adaptive/AdaptiveConsentCard";
+import AdaptationHistory from "@/components/adaptive/AdaptationHistory";
 import type { ReadinessBucket, WarmUpState } from "@/lib/hrv/types";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
 import ReadinessLadder from "@/components/hrv/ReadinessLadder";
@@ -186,9 +190,15 @@ export default async function HrvPage() {
   // Adaptive engine consent eligibility — gated on warmUpState='active'
   // + has active wearable + flag not yet enabled. The card renders
   // null otherwise so it's safe to include unconditionally.
-  const adaptiveConsent = SUPABASE_ENABLED
-    ? await getAdaptiveConsentEligibility(member.id)
-    : { eligible: false };
+  // Adaptive history — last 30 days of adaptive_v0 modifiers with
+  // outcomes. Empty in demo mode; empty-state copy in component when
+  // member hasn't had any adaptations yet.
+  const [adaptiveConsent, adaptiveHistory] = SUPABASE_ENABLED
+    ? await Promise.all([
+        getAdaptiveConsentEligibility(member.id),
+        getRecentAdaptations(member.id, 30),
+      ])
+    : [{ eligible: false, enabled: false }, []];
 
   // Connected states (warming-up, active, pending-first-sync) also render the
   // daily lifestyle quick-log card. The no-connection state never reaches it.
@@ -224,6 +234,17 @@ export default async function HrvPage() {
           the card is informational, not nag-y.
         */}
         <AdaptiveConsentCard eligible={adaptiveConsent.eligible} />
+
+        {/*
+          Adaptive history (OB-6) — last 30 days. Only rendered when
+          the member has opted in. Pre-opt-in members see only the
+          consent card above; not-yet-eligible members see neither.
+          Once opted in but before the cron has produced any modifiers,
+          the component renders its own "motoren starter når…" copy.
+        */}
+        {adaptiveConsent.enabled ? (
+          <AdaptationHistory items={adaptiveHistory} />
+        ) : null}
 
         {state.needsReauth ? (
           <div

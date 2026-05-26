@@ -2,7 +2,32 @@ import "server-only";
 
 import type { ActiveAdaptation } from "@/lib/adaptive/explanation";
 import type { AdaptiveAction } from "@/lib/adaptive/types";
+import type { ReadinessBucket } from "@/lib/hrv/types";
 import { createClient } from "@/lib/supabase/server";
+
+const MS_PER_DAY = 86_400_000;
+
+/**
+ * One row in the "Tidligere tilpasninger" section on /hrv. Joins the
+ * `adaptive_outcomes_v0` view (modifier + outcome metrics) with the
+ * matching session's title so the row can render with member-facing
+ * context without N+1 queries per row.
+ *
+ * Drives the AdaptationHistory component (Søjle 2 OB-6).
+ */
+export interface AdaptationHistoryItem {
+  modifierId: string;
+  modifierType: AdaptiveAction;
+  createdAt: string;
+  acceptedByMember: boolean | null;
+  reviewedBy: string | null;
+  sessionStatus: "scheduled" | "active" | "completed" | "skipped" | null;
+  sessionTitle: string | null;
+  sessionDayLabel: string | null;
+  topSetRpeDelta: number | null;
+  completionRatio: number | null;
+  nextDayReadiness: ReadinessBucket | null;
+}
 
 /**
  * Eligibility for the Adaptive Program Engine consent card. The card
@@ -14,14 +39,25 @@ import { createClient } from "@/lib/supabase/server";
  * Demo / no Supabase → `eligible=false`.
  */
 export interface AdaptiveConsentEligibility {
+  /**
+   * True when the consent card should show. Gated on warmUpState=
+   * 'active' + has active wearable + flag NOT yet enabled.
+   */
   eligible: boolean;
+  /**
+   * True when adaptive_program_enabled is currently true — the member
+   * has already opted in. Drives whether the history section shows
+   * (we hide history for members who haven't opted in to avoid
+   * competing with the consent card).
+   */
+  enabled: boolean;
 }
 
 export async function getAdaptiveConsentEligibility(
   memberId: string
 ): Promise<AdaptiveConsentEligibility> {
   const supabase = await createClient();
-  if (!supabase) return { eligible: false };
+  if (!supabase) return { eligible: false, enabled: false };
 
   const [
     { data: settings },
@@ -48,12 +84,12 @@ export async function getAdaptiveConsentEligibility(
   ]);
 
   const enabled = settings?.adaptive_program_enabled === true;
-  if (enabled) return { eligible: false };
+  if (enabled) return { eligible: false, enabled: true };
 
   const warmUpActive = latestReading?.warm_up_state === "active";
   const connected = (activeConnCount ?? 0) > 0;
 
-  return { eligible: warmUpActive && connected };
+  return { eligible: warmUpActive && connected, enabled: false };
 }
 
 /**
@@ -183,4 +219,86 @@ function narrowReasoningOutput(
     finalAction: obj.final_action as AdaptiveAction,
     confidence: typeof obj.confidence === "number" ? obj.confidence : 0,
   };
+}
+
+/**
+ * Fetch the member's recent adaptive_v0 history for the "Tidligere
+ * tilpasninger" surface on /hrv. Joins the outcomes view with session
+ * titles in two queries (PostgREST doesn't auto-detect view→table
+ * relationships, and a single batch query for titles is cheaper than
+ * altering the view).
+ *
+ * Returns rows in reverse chronological order (newest first), limited
+ * to `days` days back. Demo mode → empty array.
+ */
+export async function getRecentAdaptations(
+  memberId: string,
+  days = 30
+): Promise<AdaptationHistoryItem[]> {
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  const since = new Date(Date.now() - days * MS_PER_DAY).toISOString();
+
+  const { data: rows, error } = await supabase
+    .from("adaptive_outcomes_v0")
+    .select(
+      "modifier_id, modifier_type, adapted_at, accepted_by_member, reviewed_by, session_status, session_id, top_set_rpe_delta, completion_ratio, next_day_readiness"
+    )
+    .eq("member_id", memberId)
+    .gte("adapted_at", since)
+    .order("adapted_at", { ascending: false });
+
+  if (error) {
+    console.error(
+      "[data/adaptive] getRecentAdaptations outcomes:",
+      error.message
+    );
+    return [];
+  }
+  if (!rows || rows.length === 0) return [];
+
+  // Batch fetch session titles for all referenced sessions.
+  const sessionIds = rows
+    .map((r) => r.session_id as string | null)
+    .filter((id): id is string => id !== null);
+  const sessionTitles = new Map<
+    string,
+    { title: string | null; day_label: string | null }
+  >();
+  if (sessionIds.length > 0) {
+    const { data: sessions } = await supabase
+      .from("sessions")
+      .select("id, title, day_label")
+      .in("id", sessionIds);
+    for (const s of sessions ?? []) {
+      sessionTitles.set(s.id as string, {
+        title: (s.title as string | null) ?? null,
+        day_label: (s.day_label as string | null) ?? null,
+      });
+    }
+  }
+
+  return rows.map((r) => {
+    const sessionInfo = r.session_id
+      ? sessionTitles.get(r.session_id as string)
+      : null;
+    return {
+      modifierId: r.modifier_id as string,
+      modifierType: r.modifier_type as AdaptiveAction,
+      createdAt: r.adapted_at as string,
+      acceptedByMember: (r.accepted_by_member as boolean | null) ?? null,
+      reviewedBy: (r.reviewed_by as string | null) ?? null,
+      sessionStatus:
+        (r.session_status as AdaptationHistoryItem["sessionStatus"]) ?? null,
+      sessionTitle: sessionInfo?.title ?? null,
+      sessionDayLabel: sessionInfo?.day_label ?? null,
+      topSetRpeDelta:
+        typeof r.top_set_rpe_delta === "number" ? r.top_set_rpe_delta : null,
+      completionRatio:
+        typeof r.completion_ratio === "number" ? r.completion_ratio : null,
+      nextDayReadiness:
+        (r.next_day_readiness as ReadinessBucket | null) ?? null,
+    };
+  });
 }
