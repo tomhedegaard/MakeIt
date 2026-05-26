@@ -39,6 +39,14 @@ export interface AdaptationDisplay {
  * `params` is the deserialised `hrv_session_modifiers.applied_value`
  * jsonb — shape depends on `modifierType`. The apply layer
  * (`src/lib/adaptive/apply.ts`) narrows per action.
+ *
+ * The five `reasoning*` fields below are populated for Open Brain UI
+ * v0 (Søjle 2). They are all optional so:
+ *   - Demo mode + older rows can render the basic card unchanged
+ *   - Tests and consumers that only need the v1 fields aren't
+ *     required to provide reasoning context
+ *   - AdaptationCard guards on their presence before mounting the
+ *     "Vis tankegang" disclosure
  */
 export interface ActiveAdaptation {
   modifierId: string;
@@ -47,6 +55,31 @@ export interface ActiveAdaptation {
   reviewedBy: string | null;
   acceptedByMember: boolean | null;
   params: Record<string, unknown>;
+  // ---- Open Brain UI v0 reasoning context (optional) ----
+  /** Raw input_snapshot jsonb. Hydrated via snapshot.ts when present. */
+  inputSnapshot?: unknown;
+  /** Narrowed rule_decision blob. Drives "Hvilken regel fyrede" subpanel. */
+  ruleDecision?: {
+    action: AdaptiveAction;
+    reasons: string[];
+    confidence: number;
+    params: Record<string, unknown>;
+  };
+  /**
+   * Narrowed reasoning_output blob from the Claude reasoning layer.
+   * Null when the rule layer signed off alone (no API call); undefined
+   * when the data layer didn't fetch it (older row / demo mode).
+   */
+  reasoningOutput?: {
+    finalAction: AdaptiveAction;
+    confidence: number;
+  } | null;
+  /** Telemetry: first time member expanded "Vis tankegang". Null = never. */
+  reasoningRevealedAt?: string | null;
+  /** Modifier row's created_at — used as `now` when hydrating the snapshot. */
+  createdAt?: string;
+  /** Count helper for "Hvad motoren så" (form-checks array is dropped from snapshot). */
+  recentFormCheckCount?: number;
 }
 
 /**

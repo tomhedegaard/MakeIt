@@ -79,7 +79,7 @@ export async function getActiveAdaptationForSession(
   const { data, error } = await supabase
     .from("hrv_session_modifiers")
     .select(
-      "id, modifier_type, explanation_da, reviewed_by, accepted_by_member, applied_value"
+      "id, modifier_type, explanation_da, reviewed_by, accepted_by_member, applied_value, input_snapshot, rule_decision, reasoning_output, reasoning_revealed_at, created_at"
     )
     .eq("member_id", memberId)
     .eq("session_id", sessionId)
@@ -101,10 +101,20 @@ export async function getActiveAdaptationForSession(
   // applied_value is jsonb, typed as Json by Supabase-generated types.
   // It's either null or an object — we narrow to a record for the
   // apply layer.
-  const params =
-    data.applied_value && typeof data.applied_value === "object" && !Array.isArray(data.applied_value)
-      ? (data.applied_value as Record<string, unknown>)
-      : {};
+  const params = narrowJsonObject(data.applied_value);
+  const ruleDecision = narrowRuleDecision(data.rule_decision);
+  const reasoningOutput = narrowReasoningOutput(data.reasoning_output);
+  const inputSnapshot = data.input_snapshot ?? null;
+  const recentFormCheckCount =
+    typeof inputSnapshot === "object" &&
+    inputSnapshot !== null &&
+    !Array.isArray(inputSnapshot)
+      ? typeof (inputSnapshot as { recent_form_check_count?: unknown })
+          .recent_form_check_count === "number"
+        ? ((inputSnapshot as { recent_form_check_count: number })
+            .recent_form_check_count)
+        : 0
+      : 0;
 
   return {
     modifierId: data.id as string,
@@ -113,5 +123,64 @@ export async function getActiveAdaptationForSession(
     reviewedBy: (data.reviewed_by as string | null) ?? null,
     acceptedByMember: (data.accepted_by_member as boolean | null) ?? null,
     params,
+    inputSnapshot,
+    ruleDecision,
+    reasoningOutput,
+    reasoningRevealedAt:
+      (data.reasoning_revealed_at as string | null) ?? null,
+    createdAt: data.created_at as string,
+    recentFormCheckCount,
+  };
+}
+
+/** Narrow a jsonb cell to a flat record. Arrays + scalars → empty. */
+function narrowJsonObject(v: unknown): Record<string, unknown> {
+  if (v && typeof v === "object" && !Array.isArray(v)) {
+    return v as Record<string, unknown>;
+  }
+  return {};
+}
+
+/**
+ * Narrow `rule_decision` jsonb (written by persist.ts) to the shape
+ * AdaptationCard / ReasoningDetailPanel consume. Returns undefined
+ * (not null) when the blob is missing or malformed — the optional
+ * field on ActiveAdaptation distinguishes "absent" from "present
+ * but null" cleanly.
+ */
+function narrowRuleDecision(
+  v: unknown
+): ActiveAdaptation["ruleDecision"] | undefined {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return undefined;
+  const obj = v as Record<string, unknown>;
+  if (typeof obj.action !== "string") return undefined;
+  return {
+    action: obj.action as AdaptiveAction,
+    reasons: Array.isArray(obj.reasons)
+      ? (obj.reasons as unknown[]).filter(
+          (r): r is string => typeof r === "string"
+        )
+      : [],
+    confidence: typeof obj.confidence === "number" ? obj.confidence : 0,
+    params: narrowJsonObject(obj.params),
+  };
+}
+
+/**
+ * Narrow `reasoning_output` jsonb (Claude's raw output stored
+ * verbatim by persist.ts) to just the fields the reasoning panel
+ * needs. Returns null when the blob is null/missing (rule-only
+ * decision). Returns the narrowed shape otherwise.
+ */
+function narrowReasoningOutput(
+  v: unknown
+): ActiveAdaptation["reasoningOutput"] {
+  if (v === null || v === undefined) return null;
+  if (typeof v !== "object" || Array.isArray(v)) return null;
+  const obj = v as Record<string, unknown>;
+  if (typeof obj.final_action !== "string") return null;
+  return {
+    finalAction: obj.final_action as AdaptiveAction,
+    confidence: typeof obj.confidence === "number" ? obj.confidence : 0,
   };
 }

@@ -152,3 +152,52 @@ export async function setAdaptationResponseAction(input: {
   revalidatePath(`/session/${input.sessionId}`);
   return { ok: true };
 }
+
+/**
+ * Telemetry: stamp `hrv_session_modifiers.reasoning_revealed_at` the
+ * first time the member expands "Vis tankegang" on this modifier.
+ * Idempotent — only writes when the column is currently NULL, so
+ * repeat toggles in the same session and re-loads are no-ops.
+ *
+ * Auth model mirrors setAdaptationResponseAction: RLS-respecting
+ * client for the auth read, service-role client narrowed by an
+ * explicit `member_id = auth.uid()` filter for the write (no UPDATE
+ * RLS policy on hrv_session_modifiers).
+ *
+ * Returns `{ ok: true }` whether or not a row was actually updated
+ * (idempotent — already-revealed is success). Errors return
+ * `{ ok: false }` so the caller can decide whether to retry.
+ */
+export async function markReasoningRevealedAction(input: {
+  modifierId: string;
+}): Promise<{ ok: boolean }> {
+  if (!SUPABASE_ENABLED) return { ok: true };
+
+  const authClient = await createClient();
+  if (!authClient) return { ok: false };
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
+  if (!user) return { ok: false };
+
+  const svc = createServiceClient();
+  const { error } = await svc
+    .from("hrv_session_modifiers")
+    .update({ reasoning_revealed_at: new Date().toISOString() })
+    .eq("id", input.modifierId)
+    .eq("member_id", user.id)
+    .eq("reason", "adaptive_v0")
+    .is("reasoning_revealed_at", null);
+
+  if (error) {
+    console.error(
+      "[adaptive] markReasoningRevealedAction:",
+      error.message
+    );
+    return { ok: false };
+  }
+  // No revalidatePath — this is pure telemetry; the UI already
+  // showed the panel optimistically and doesn't depend on the
+  // DB state for rendering.
+  return { ok: true };
+}
