@@ -662,6 +662,7 @@ export type Database = {
           program_id: string | null
           reason: string
           reasoning_output: Json | null
+          reasoning_revealed_at: string | null
           reviewed_at: string | null
           reviewed_by: string | null
           rule_decision: Json | null
@@ -680,6 +681,7 @@ export type Database = {
           program_id?: string | null
           reason: string
           reasoning_output?: Json | null
+          reasoning_revealed_at?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           rule_decision?: Json | null
@@ -698,6 +700,7 @@ export type Database = {
           program_id?: string | null
           reason?: string
           reasoning_output?: Json | null
+          reasoning_revealed_at?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           rule_decision?: Json | null
