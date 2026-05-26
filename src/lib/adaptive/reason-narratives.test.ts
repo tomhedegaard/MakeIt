@@ -13,6 +13,10 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  formatFeelingState,
+  formatReadinessBucket,
+  formatRpeDelta,
+  formatSleepHours,
   labelForAction,
   labelForReason,
   narrateRule,
@@ -199,6 +203,82 @@ describe("narrateRule — engine path examples", () => {
     ).toBe(
       "Usædvanlig kombination + HRV lav + Alkohol seneste dage → coach gennemgår"
     );
+  });
+});
+
+describe("formatReadinessBucket", () => {
+  it("returns Danish labels for each bucket", () => {
+    expect(formatReadinessBucket("very_low")).toBe("Langt under din norm");
+    expect(formatReadinessBucket("low")).toBe("Under din norm");
+    expect(formatReadinessBucket("normal")).toBe("I dit normale område");
+    expect(formatReadinessBucket("high")).toBe("Over din norm");
+    expect(formatReadinessBucket("very_high")).toBe("Langt over din norm");
+  });
+
+  it("returns em-dash for null", () => {
+    expect(formatReadinessBucket(null)).toBe("—");
+  });
+});
+
+describe("formatFeelingState", () => {
+  it("returns Danish labels for each state", () => {
+    expect(formatFeelingState("fresh")).toBe("Frisk");
+    expect(formatFeelingState("ok")).toBe("Okay");
+    expect(formatFeelingState("tired")).toBe("Træt");
+    expect(formatFeelingState("stressed")).toBe("Stresset");
+  });
+
+  it("returns em-dash for null", () => {
+    expect(formatFeelingState(null)).toBe("—");
+  });
+});
+
+describe("formatSleepHours", () => {
+  it("formats whole hours without minutes", () => {
+    expect(formatSleepHours(7)).toBe("7t");
+    expect(formatSleepHours(8)).toBe("8t");
+  });
+
+  it("formats fractional hours as hours + minutes", () => {
+    expect(formatSleepHours(5.2)).toBe("5t12m");
+    expect(formatSleepHours(7.5)).toBe("7t30m");
+    expect(formatSleepHours(6.25)).toBe("6t15m");
+  });
+
+  it("returns em-dash for null, zero, negative, or non-finite values", () => {
+    expect(formatSleepHours(null)).toBe("—");
+    expect(formatSleepHours(0)).toBe("—");
+    expect(formatSleepHours(-3)).toBe("—");
+    expect(formatSleepHours(Infinity)).toBe("—");
+    expect(formatSleepHours(NaN)).toBe("—");
+  });
+
+  it("caps absurd values at 12 hours", () => {
+    expect(formatSleepHours(99)).toBe("12t");
+    expect(formatSleepHours(15.5)).toBe("12t");
+  });
+});
+
+describe("formatRpeDelta", () => {
+  it("renders overshoot with a + sign", () => {
+    expect(formatRpeDelta(8.5, 8)).toBe("8.5 vs 8 (+0.5)");
+    expect(formatRpeDelta(9, 7)).toBe("9 vs 7 (+2)");
+  });
+
+  it("renders undershoot with a minus sign (unicode −)", () => {
+    expect(formatRpeDelta(7, 8)).toBe("7 vs 8 (−1)");
+    expect(formatRpeDelta(6.5, 8)).toBe("6.5 vs 8 (−1.5)");
+  });
+
+  it("renders exact match with ±0", () => {
+    expect(formatRpeDelta(8, 8)).toBe("8 vs 8 (±0)");
+  });
+
+  it("returns em-dash when either input is null or non-finite", () => {
+    expect(formatRpeDelta(null, 8)).toBe("—");
+    expect(formatRpeDelta(8, null)).toBe("—");
+    expect(formatRpeDelta(null, null)).toBe("—");
+    expect(formatRpeDelta(NaN, 8)).toBe("—");
   });
 });
 

@@ -106,6 +106,88 @@ export interface NarrateRuleInput {
   reasons: RuleReasonCode[];
 }
 
+/* ================================================================== *
+ * Signal formatters — small Danish helpers used by ReasoningDetailPanel
+ * to render rows of "what the engine saw". Kept here (rather than in
+ * the component) so they're testable in isolation and share the
+ * adaptive UI's Danish-copy module.
+ * ================================================================== */
+
+import type { ReadinessBucket } from "@/lib/hrv/types";
+import type { FeelingState } from "@/lib/hrv/lifestyle";
+
+const READINESS_BUCKET_LABELS: Record<ReadinessBucket, string> = {
+  very_low: "Langt under din norm",
+  low: "Under din norm",
+  normal: "I dit normale område",
+  high: "Over din norm",
+  very_high: "Langt over din norm",
+};
+
+export function formatReadinessBucket(
+  bucket: ReadinessBucket | null
+): string {
+  if (bucket === null) return "—";
+  return READINESS_BUCKET_LABELS[bucket] ?? "—";
+}
+
+const FEELING_LABELS: Record<FeelingState, string> = {
+  fresh: "Frisk",
+  ok: "Okay",
+  tired: "Træt",
+  stressed: "Stresset",
+};
+
+export function formatFeelingState(state: FeelingState | null): string {
+  if (state === null) return "—";
+  return FEELING_LABELS[state] ?? "—";
+}
+
+/**
+ * Format sleep hours as "5t12m". Null returns em-dash. Negative or
+ * non-finite values return em-dash. >12h is rounded down to 12h to
+ * keep the chip width predictable (extreme self-reports are
+ * outliers we don't need to display precisely).
+ */
+export function formatSleepHours(hours: number | null): string {
+  if (hours === null || !Number.isFinite(hours) || hours <= 0) return "—";
+  const capped = Math.min(12, hours);
+  const wholeHours = Math.floor(capped);
+  const minutes = Math.round((capped - wholeHours) * 60);
+  if (minutes === 0) return `${wholeHours}t`;
+  return `${wholeHours}t${String(minutes).padStart(2, "0")}m`;
+}
+
+/**
+ * Format the top-set RPE delta as "8.5 vs 8 (+0.5)". Both values
+ * required — null in either input returns em-dash. Delta sign is
+ * always shown (positive overshoot is the signal we care about).
+ */
+export function formatRpeDelta(
+  logged: number | null,
+  target: number | null
+): string {
+  if (
+    logged === null ||
+    target === null ||
+    !Number.isFinite(logged) ||
+    !Number.isFinite(target)
+  ) {
+    return "—";
+  }
+  const delta = logged - target;
+  const sign = delta > 0 ? "+" : delta < 0 ? "−" : "±";
+  const mag = Math.abs(delta);
+  // 1 decimal unless we're at a whole number — then drop it.
+  const fmt = (n: number) =>
+    Number.isInteger(n) ? String(n) : n.toFixed(1);
+  return `${fmt(logged)} vs ${fmt(target)} (${sign}${fmt(mag)})`;
+}
+
+/* ================================================================== *
+ * Rule narrative — "signals → action"
+ * ================================================================== */
+
 /**
  * Assemble a one-line Danish "rule fired" sentence from an action +
  * reason list. Shape: `<reason phrase> → <action label>`.
