@@ -256,3 +256,103 @@ export async function markHrvAlertSeenAction(
   revalidatePath("/coach/queue");
   return { ok: true };
 }
+
+/**
+ * Sign off on an adaptive-engine escalation: stamps the modifier as
+ * reviewed by the coach (so applyAdaptationToSession transforms the
+ * session next render), closes the alert, and revalidates.
+ *
+ * RLS note: `hrv_session_modifiers` has no coach-write policy, so the
+ * modifier update goes through the service-role client. The alert
+ * update goes through the session client (covered by
+ * `coach_manages_alerts for all`). Same split as
+ * pauseSessionFromAlertAction.
+ *
+ * `accepted` flips the modifier in two ways:
+ *   - true → reviewed_by='munk', accepted_by_member unchanged →
+ *     applyAdaptationToSession transforms the session
+ *   - false → reviewed_by='munk' AND accepted_by_member=false →
+ *     applyAdaptationToSession short-circuits, session renders as
+ *     originally planned
+ *
+ * In both cases the alert closes — only the member-facing effect
+ * differs. The card on the member's session-flow reflects the
+ * outcome ("Tilpasset af Munk" vs "Coach valgte at beholde
+ * planlagt session").
+ *
+ * Idempotent: both updates are gated on starting state (alert
+ * status='open', modifier reviewed_by IS NULL) so double-submits
+ * are safe.
+ */
+export async function reviewAdaptiveAlertAction(input: {
+  alertId: string;
+  modifierId: string;
+  sessionId: string | null;
+  accepted: boolean;
+}): Promise<{ ok: boolean; reason?: string }> {
+  if (!SUPABASE_ENABLED) return { ok: true };
+
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, reason: "no-supabase" };
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, reason: "unauthenticated" };
+
+  const now = new Date().toISOString();
+
+  // 1) Modifier update — service-role client (no coach-write RLS).
+  //    `reviewed_by: 'munk'` literal matches the CHECK constraint
+  //    from migration 0041. Once we expand the team beyond Munk we
+  //    swap to `co_coach:<user.id>` based on a coach-role lookup.
+  const svc = createServiceClient();
+  const modifierUpdate: {
+    reviewed_by: "munk";
+    reviewed_at: string;
+    accepted_by_member?: boolean;
+  } = { reviewed_by: "munk", reviewed_at: now };
+  if (!input.accepted) modifierUpdate.accepted_by_member = false;
+
+  const { error: modErr, count: modCount } = await svc
+    .from("hrv_session_modifiers")
+    .update(modifierUpdate, { count: "exact" })
+    .eq("id", input.modifierId)
+    .eq("reason", "adaptive_v0")
+    .is("reviewed_by", null);
+
+  if (modErr) {
+    console.error("[adaptive] reviewAdaptiveAlertAction modifier:", modErr.message);
+    return { ok: false, reason: "modifier-update" };
+  }
+  if ((modCount ?? 0) === 0) {
+    // Already reviewed (race) — surface the alert close anyway so the
+    // queue clears, but report not-found so the caller knows.
+    return { ok: false, reason: "modifier-already-reviewed" };
+  }
+
+  // 2) Alert close — session-client write (covered by
+  //    coach_manages_alerts). status='reviewed_actioned' regardless
+  //    of approve/reject — the alert was actioned (closed); the
+  //    modifier state captures the outcome.
+  const { error: alertErr } = await supabase
+    .from("hrv_alerts")
+    .update({
+      status: "reviewed_actioned",
+      reviewed_at: now,
+      reviewed_by: user.id,
+    })
+    .eq("id", input.alertId)
+    .eq("status", "open");
+  if (alertErr) {
+    console.error("[adaptive] reviewAdaptiveAlertAction alert:", alertErr.message);
+    // Modifier update already landed; surface partial-success state.
+    return { ok: false, reason: "alert-close-failed" };
+  }
+
+  revalidatePath("/coach/queue");
+  if (input.sessionId) {
+    revalidatePath(`/session/${input.sessionId}`);
+  }
+  return { ok: true };
+}

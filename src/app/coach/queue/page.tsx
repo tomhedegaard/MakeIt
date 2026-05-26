@@ -1,13 +1,19 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
-import { getOpenHrvAlerts, getPendingFormChecks } from "@/lib/data/coach";
+import {
+  getOpenAdaptiveAlerts,
+  getOpenHrvAlerts,
+  getPendingFormChecks,
+} from "@/lib/data/coach";
 import CoachReviewButton from "@/components/coach/CoachReview";
 import HrvAlertCard from "@/components/coach/HrvAlertCard";
+import AdaptiveAlertCard from "@/components/coach/AdaptiveAlertCard";
 
 export default async function CoachQueuePage() {
   const t = await getTranslations("Coach.queue");
-  const [hrvAlerts, pending] = await Promise.all([
+  const [adaptiveAlerts, hrvAlerts, pending] = await Promise.all([
+    getOpenAdaptiveAlerts(50),
     getOpenHrvAlerts(50),
     getPendingFormChecks(50),
   ]);
@@ -25,6 +31,33 @@ export default async function CoachQueuePage() {
           </p>
         </div>
       </header>
+
+      {/*
+        Adaptive engine queue — escalations the engine couldn't act on
+        without Munk's sign-off (paused_session, deload_week_insertion,
+        escalate_to_coach, or any modifier the reasoning layer marked
+        humanReviewRecommended=true). Hidden when empty rather than
+        showing an empty-state — keeps the page quiet on a normal day.
+      */}
+      {adaptiveAlerts.length > 0 ? (
+        <section className="space-y-3">
+          <div>
+            <div className="eyebrow mb-2">Adaptive engine</div>
+            <h2 className="font-display text-2xl">
+              {adaptiveAlerts.length === 1
+                ? "1 forslag afventer dig"
+                : `${adaptiveAlerts.length} forslag afventer dig`}
+            </h2>
+          </div>
+          <ul className="space-y-3">
+            {adaptiveAlerts.map((a) => (
+              <li key={a.alertId}>
+                <AdaptiveAlertCard alert={a} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section className="space-y-3">
         <div>

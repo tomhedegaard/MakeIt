@@ -73,6 +73,32 @@ export interface HrvAlertRow {
   conditionsMet: AlertConditionsMet;
 }
 
+/**
+ * An open hrv_alerts row that was emitted by the adaptive engine
+ * (conditions_met.source = 'adaptive_v0'). Carries enough context for
+ * the coach to approve / reject the engine's proposal without
+ * additional round-trips.
+ */
+export interface AdaptiveAlertRow {
+  alertId: string;
+  modifierId: string;
+  memberId: string;
+  memberHandle: string;
+  triggeredAt: string;
+  action:
+    | "paused_session"
+    | "deload_week_insertion"
+    | "escalate_to_coach"
+    | "top_set_reduction"
+    | "volume_reduction"
+    | "exercise_swap_variant"
+    | "session_shorten";
+  confidence: number | null;
+  reasons: string[];
+  explanationDa: string;
+  sessionId: string | null;
+}
+
 const FORM_CHECK_BUCKET = "form-check-videos";
 
 export type MemberDetail = {
@@ -460,6 +486,9 @@ export async function getOpenHrvAlerts(limit = 30): Promise<HrvAlertRow[]> {
   const supabase = await createClient();
   if (!supabase) return [];
 
+  // Fetch all open alerts and filter out adaptive-engine ones in TS —
+  // PostgREST's jsonb operator syntax is fiddly and the alert table is
+  // small. The dedicated `getOpenAdaptiveAlerts` surfaces those.
   const { data } = await supabase
     .from("hrv_alerts")
     .select("id, triggered_at, conditions_met, member:members!inner(id, handle)")
@@ -468,16 +497,119 @@ export async function getOpenHrvAlerts(limit = 30): Promise<HrvAlertRow[]> {
     .limit(limit);
 
   if (!data) return [];
-  return data.map((a) => {
-    const m = Array.isArray(a.member) ? a.member[0] : a.member;
-    return {
-      id: a.id as string,
-      memberId: m?.id ?? "",
-      memberHandle: m?.handle ?? "—",
-      triggeredAt: a.triggered_at as string,
-      conditionsMet: a.conditions_met as unknown as AlertConditionsMet,
-    };
+  return data
+    .filter((a) => {
+      const cm = a.conditions_met as { source?: string } | null;
+      return cm?.source !== "adaptive_v0";
+    })
+    .map((a) => {
+      const m = Array.isArray(a.member) ? a.member[0] : a.member;
+      return {
+        id: a.id as string,
+        memberId: m?.id ?? "",
+        memberHandle: m?.handle ?? "—",
+        triggeredAt: a.triggered_at as string,
+        conditionsMet: a.conditions_met as unknown as AlertConditionsMet,
+      };
+    });
+}
+
+/**
+ * Adaptive-engine alerts awaiting Munk's review. Joins back to the
+ * `hrv_session_modifiers` row via the existing `session_modifier_id`
+ * FK so the coach UI can render the action, the explanation, and the
+ * session it targets without additional queries.
+ *
+ * Filters to `status='open'` (idempotency) and `reviewed_by IS NULL`
+ * on the modifier — once a coach signs off, the alert disappears
+ * from this queue regardless of approve/reject choice.
+ *
+ * Mirrors the shape + auth model of getOpenHrvAlerts; RLS
+ * `coach_manages_alerts for all using is_current_user_coach()`
+ * authorises the read.
+ */
+export async function getOpenAdaptiveAlerts(
+  limit = 30
+): Promise<AdaptiveAlertRow[]> {
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  // Two-step fetch — PostgREST struggles to infer the alert→modifier
+  // join shape (the FK lives on hrv_alerts but the relationship
+  // doesn't surface cleanly through embedded select), so we fetch
+  // alerts first and the matching modifiers in a single batch.
+  const { data: alertRows } = await supabase
+    .from("hrv_alerts")
+    .select(
+      "id, triggered_at, conditions_met, session_modifier_id, member:members!inner(id, handle)"
+    )
+    .eq("status", "open")
+    .not("session_modifier_id", "is", null)
+    .order("triggered_at", { ascending: false })
+    .limit(limit);
+  if (!alertRows) return [];
+
+  // Filter early to adaptive_v0 only — saves the second round-trip
+  // when the queue is mostly legacy detect-alerts.
+  type AlertCondShape = {
+    source?: string;
+    action?: AdaptiveAlertRow["action"];
+    confidence?: number | null;
+    reasons?: string[];
+    explanation_da?: string;
+    session_id?: string | null;
+  };
+  const adaptiveAlerts = alertRows.filter((a) => {
+    const cm = a.conditions_met as AlertCondShape | null;
+    return cm?.source === "adaptive_v0";
   });
+  if (adaptiveAlerts.length === 0) return [];
+
+  const modifierIds = adaptiveAlerts
+    .map((a) => a.session_modifier_id as string | null)
+    .filter((id): id is string => id !== null);
+  if (modifierIds.length === 0) return [];
+
+  const { data: modifierRows } = await supabase
+    .from("hrv_session_modifiers")
+    .select("id, reviewed_by, session_id")
+    .in("id", modifierIds);
+  const modifiersById = new Map<
+    string,
+    { reviewed_by: string | null; session_id: string | null }
+  >();
+  for (const m of modifierRows ?? []) {
+    modifiersById.set(m.id as string, {
+      reviewed_by: (m.reviewed_by as string | null) ?? null,
+      session_id: (m.session_id as string | null) ?? null,
+    });
+  }
+
+  const rows: AdaptiveAlertRow[] = [];
+  for (const a of adaptiveAlerts) {
+    const cm = a.conditions_met as AlertCondShape | null;
+    if (!cm) continue;
+
+    const memberArr = Array.isArray(a.member) ? a.member[0] : a.member;
+    const modifierId = a.session_modifier_id as string | null;
+    if (!modifierId) continue;
+    const mod = modifiersById.get(modifierId);
+    if (!mod || mod.reviewed_by !== null) continue;
+
+    rows.push({
+      alertId: a.id as string,
+      modifierId,
+      memberId: memberArr?.id ?? "",
+      memberHandle: memberArr?.handle ?? "—",
+      triggeredAt: a.triggered_at as string,
+      action: cm.action ?? "escalate_to_coach",
+      confidence: cm.confidence ?? null,
+      reasons: Array.isArray(cm.reasons) ? cm.reasons : [],
+      explanationDa: cm.explanation_da ?? "",
+      sessionId: cm.session_id ?? mod.session_id ?? null,
+    });
+  }
+  return rows;
 }
 
 /**
