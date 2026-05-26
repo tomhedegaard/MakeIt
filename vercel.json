@@ -5,6 +5,7 @@
     { "path": "/api/cron/streak-milestone-nudge", "schedule": "0 15 * * *" },
     { "path": "/api/cron/hrv-wearable-sync", "schedule": "0 5 * * *" },
     { "path": "/api/cron/hrv-alert-detect", "schedule": "0 6 * * *" },
-    { "path": "/api/cron/hrv-weekly-insights", "schedule": "0 18 * * 0" }
+    { "path": "/api/cron/hrv-weekly-insights", "schedule": "0 18 * * 0" },
+    { "path": "/api/cron/adapt-program-daily", "schedule": "30 3 * * *" }
   ]
 }
