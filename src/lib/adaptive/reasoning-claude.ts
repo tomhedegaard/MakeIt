@@ -76,9 +76,29 @@ export async function refineWithClaude(
     });
 
     const out: AdaptationDecisionOutput | null = response.parsed_output;
-    if (!out) return null;
+    if (!out) {
+      // Silent null here was the OB-1..8 mystery: refined:0 in cron
+      // summaries with no warn output. Now we capture enough to
+      // diagnose in Vercel logs if it ever happens again.
+      const firstBlock = response.content?.[0];
+      const blockType = firstBlock?.type ?? "none";
+      const preview =
+        firstBlock?.type === "text"
+          ? firstBlock.text?.slice(0, 140)
+          : JSON.stringify(firstBlock)?.slice(0, 140);
+      console.warn(
+        `[adaptive/reasoning-claude] parsed_output=null stop=${response.stop_reason} block=${blockType} preview=${preview}`
+      );
+      return null;
+    }
 
-    return mapToRefinement(out);
+    const mapped = mapToRefinement(out);
+    if (!mapped) {
+      console.warn(
+        `[adaptive/reasoning-claude] mapToRefinement returned null for action=${out.final_action}`
+      );
+    }
+    return mapped;
   } catch (err) {
     if (err instanceof Anthropic.APIError) {
       console.warn(

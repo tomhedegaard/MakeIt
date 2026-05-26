@@ -1,7 +1,10 @@
 # Adaptive reasoning layer — Claude refinement falling back to null
 
-Status: open investigation. Not blocking PR #17; cosmetic gap in
-Open Brain UI demo.
+Status: **RESOLVED** 2026-05-26. Root cause: Turbopack bundling
+issue with `@anthropic-ai/sdk/helpers/zod` when imported statically
+into a Next.js route handler. Fix: dynamic import (mirrors the
+working `program-generator-claude` pattern). See "Resolution"
+section at the bottom.
 
 ## Observed
 
@@ -103,3 +106,88 @@ block ourselves, matching the SDK's lower-level pattern.
 - Should be fixed before flipping `adaptive_program_enabled` for
   more than a handful of beta members — the polish loss compounds
   the more adaptations get persisted without the refinement layer
+
+---
+
+## Resolution (2026-05-26)
+
+### Diagnosis
+
+Three diagnostic layers reproduced cleanly:
+
+1. **Direct `curl` to Anthropic API** with the env key + model id
+   → 200, expected content. API key + model fine.
+2. **Standalone `scripts/debug-reasoning.mjs`** (since removed)
+   that mirrored reasoning-claude.ts's SDK call shape verbatim, with
+   the FULL system prompt loaded from `reasoning.ts`
+   → `parsed_output` populated, Zod validation passed, Claude
+   produced a refined decision with `percent: 15` and a smooth
+   Danish explanation citing specific signals.
+3. **Vitest smoke test** (`reasoning-claude.smoke.test.ts`,
+   gated on `RUN_REASONING_SMOKE=1`) that imports the actual
+   wrapper with `server-only` mocked
+   → also passed, returning a full ReasoningRefinement.
+
+Pattern: the wrapper code is correct. The standalone Node call
+works. Vitest-loaded call works. Only the route handler's static
+import path failed silently.
+
+### Root cause
+
+`src/lib/data/program-generator.ts` (which works) calls its
+Claude wrapper via `const { generateWithClaude } = await
+import("./program-generator-claude")` — dynamic import inside the
+function. `src/app/api/cron/adapt-program-daily/route.ts` (which
+failed) imported `refineWithClaude` statically at the top of the
+file.
+
+Turbopack appears to bundle `@anthropic-ai/sdk/helpers/zod`
+differently when it's reached via a static import from a route
+handler with `runtime="nodejs"`. The call succeeds (no thrown
+error) but `messages.parse` produces a response whose
+`parsed_output` is null — even though `content[0].text` contains
+the structured JSON. The Zod-extraction step in the helper appears
+to silently no-op.
+
+### Fix
+
+Two changes landed:
+
+1. **Dynamic import at the call site** in the cron handler:
+   ```ts
+   const { refineWithClaude } = await import(
+     "@/lib/adaptive/reasoning-claude"
+   );
+   ```
+   Matches `program-generator.ts`'s working pattern. Loading the
+   SDK lazily keeps Turbopack on its happy path.
+
+2. **Loud structured warn** in `reasoning-claude.ts` when
+   `parsed_output` is null, capturing `stop_reason`,
+   `content[0].type`, and the first 140 chars of the content.
+   So if this regresses in another runtime (Edge functions, future
+   Turbopack changes, alternate SDK version) we see it immediately
+   in Vercel logs instead of being mysteriously back to
+   rule-layer-only.
+
+The Vitest smoke test stays as a permanent regression guard
+(`reasoning-claude.smoke.test.ts`, gated on
+`RUN_REASONING_SMOKE=1` so it doesn't burn API credits on every
+`npm test`). Anyone touching the wrapper or its caller path can
+run:
+
+```bash
+RUN_REASONING_SMOKE=1 npx vitest run \
+  src/lib/adaptive/reasoning-claude.smoke.test.ts
+```
+
+…and verify the integration roundtrips before pushing.
+
+### Confirmation
+
+Cannot live-verify against the cron until Docker + local Supabase
+are running again. Expected outcome on next live trigger: cron
+summary returns `refined: <persisted>` (matching count) instead
+of `refined: 0`, and `hrv_session_modifiers.reasoning_output`
+becomes non-null on new rows. The "Hvad Munks assistent
+justerede" subpanel will then render on real AdaptationCards.

@@ -3,7 +3,6 @@ import { NextResponse, type NextRequest } from "next/server";
 import { buildEngineInput, loadEligibleMemberIds } from "@/lib/adaptive/data";
 import { evaluateAdaptation } from "@/lib/adaptive/engine";
 import { persistAdaptation } from "@/lib/adaptive/persist";
-import { refineWithClaude } from "@/lib/adaptive/reasoning-claude";
 import { createServiceClient } from "@/lib/supabase/service";
 
 export const runtime = "nodejs";
@@ -95,6 +94,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
       // 3. Optionally refine with Claude. Null on any failure → fall
       //    back to the rule decision verbatim.
+      //
+      // Dynamic import (rather than top-of-file static) mirrors the
+      // working pattern in src/lib/data/program-generator.ts. When
+      // imported statically into a route handler that exports
+      // runtime="nodejs", Turbopack bundles
+      // @anthropic-ai/sdk/helpers/zod in a way that causes
+      // messages.parse to silently return parsed_output:null. Deferring
+      // the import to call-site keeps the SDK on its happy path.
+      // Investigation: docs/superpowers/specs/2026-05-26-adaptive-reasoning-fallback-investigation.md
+      const { refineWithClaude } = await import(
+        "@/lib/adaptive/reasoning-claude"
+      );
       const refinement = await refineWithClaude(decision, input);
       if (refinement) refined += 1;
 
