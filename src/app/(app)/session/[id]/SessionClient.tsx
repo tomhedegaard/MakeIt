@@ -222,6 +222,26 @@ export default function SessionClient({
           <HrvReadinessNudge nudge={readinessNudge} />
         )}
 
+        {/*
+          Paused session: render the active-recovery replacement block
+          instead of the exercise + logging UI. Members shouldn't be
+          tempted to log sets when the engine + Munk have agreed today
+          is a rest day.
+        */}
+        {session.pausedReplacement ? (
+          <section
+            aria-labelledby="paused-heading"
+            className="surface-2 rounded-2xl p-6 lg:p-8 space-y-4 border hairline"
+          >
+            <h2 id="paused-heading" className="text-xl numeric tracking-tight">
+              {session.pausedReplacement.title}
+            </h2>
+            <p className="text-sm leading-relaxed text-fg-dim">
+              {session.pausedReplacement.body}
+            </p>
+          </section>
+        ) : null}
+
         {/* Exercise card */}
         <ExerciseSection
           ex={ex}
@@ -234,11 +254,26 @@ export default function SessionClient({
         {/* Targets row */}
         <section className="grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
           <div className="bg-bg-2 p-4 text-center">
-            <div className="eyebrow mb-1">{t("targets.goal")}</div>
+            <div className="eyebrow mb-1 flex items-center justify-center gap-1.5">
+              <span>{t("targets.goal")}</span>
+              {set.adapted?.kind === "weight_reduced" ? (
+                <span
+                  className="text-[9px] font-mono uppercase tracking-[0.12em] px-1.5 py-0.5 rounded-sm bg-bg-3 text-fg-dim"
+                  title={`Reduceret fra ${set.adapted.originalWeight} kg`}
+                >
+                  −{set.adapted.percent}%
+                </span>
+              ) : null}
+            </div>
             <div className="numeric text-xl">
               {set.targetWeight}
               <span className="text-fg-dim text-sm">kg</span>
             </div>
+            {set.adapted?.kind === "weight_reduced" ? (
+              <div className="text-[10px] font-mono text-fg-faint mt-1 numeric">
+                org {set.adapted.originalWeight} kg
+              </div>
+            ) : null}
           </div>
           <div className="bg-bg-2 p-4 text-center">
             <div className="eyebrow mb-1">{t("targets.reps")}</div>
@@ -284,11 +319,14 @@ export default function SessionClient({
               const sk = setKey(ex.id, s.id);
               const lg = logged[sk];
               const isCurrent = i === setIdx;
+              const isOptional = s.optional === true;
               return (
                 <li
                   key={s.id}
                   data-current={isCurrent}
-                  className="px-4 py-3 flex items-center gap-3 text-sm"
+                  className={`px-4 py-3 flex items-center gap-3 text-sm ${
+                    isOptional ? "opacity-55" : ""
+                  }`}
                   style={{ background: isCurrent ? "var(--bg-3)" : undefined }}
                 >
                   <span className="numeric text-fg-faint w-6 text-xs">
@@ -299,6 +337,11 @@ export default function SessionClient({
                       ? `${lg.weight}kg × ${lg.reps}${lg.rpe ? ` @ ${lg.rpe}` : ""}`
                       : `${s.targetWeight}kg × ${s.targetReps}${s.targetRpe ? ` @ ${s.targetRpe}` : ""}`}
                   </span>
+                  {isOptional ? (
+                    <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                      valgfri
+                    </span>
+                  ) : null}
                   {lg?.done ? (
                     <span className="text-fg" aria-label={t("sets.done")}>✓</span>
                   ) : isCurrent ? (

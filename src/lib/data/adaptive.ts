@@ -27,7 +27,7 @@ export async function getActiveAdaptationForSession(
   const { data, error } = await supabase
     .from("hrv_session_modifiers")
     .select(
-      "id, modifier_type, explanation_da, reviewed_by, accepted_by_member"
+      "id, modifier_type, explanation_da, reviewed_by, accepted_by_member, applied_value"
     )
     .eq("member_id", memberId)
     .eq("session_id", sessionId)
@@ -46,11 +46,20 @@ export async function getActiveAdaptationForSession(
   if (!data) return null;
   if (!data.explanation_da) return null;
 
+  // applied_value is jsonb, typed as Json by Supabase-generated types.
+  // It's either null or an object — we narrow to a record for the
+  // apply layer.
+  const params =
+    data.applied_value && typeof data.applied_value === "object" && !Array.isArray(data.applied_value)
+      ? (data.applied_value as Record<string, unknown>)
+      : {};
+
   return {
     modifierId: data.id as string,
     modifierType: data.modifier_type as AdaptiveAction,
     explanationDa: data.explanation_da,
     reviewedBy: (data.reviewed_by as string | null) ?? null,
     acceptedByMember: (data.accepted_by_member as boolean | null) ?? null,
+    params,
   };
 }

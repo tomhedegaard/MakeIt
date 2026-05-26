@@ -10,6 +10,7 @@ import {
 } from "@/lib/data/form-check-quota";
 import { getFormCheckQuota } from "@/lib/data/form-check-quota-server";
 import { getActiveAdaptationForSession } from "@/lib/data/adaptive";
+import { applyAdaptationToSession } from "@/lib/adaptive/apply";
 import { getTodaysReadinessNudge } from "@/lib/data/hrv";
 
 export default async function SessionPage({
@@ -29,9 +30,13 @@ export default async function SessionPage({
       getActiveAdaptationForSession(member.id, id),
     ]);
     if (!session) notFound();
+    // Apply the active adaptation server-side. SessionClient sees the
+    // already-modified session shape (reduced top-set weight, optional
+    // accessory sets, paused replacement) and renders the markers.
+    const adaptedSession = applyAdaptationToSession(session, adaptation);
     return (
       <SessionClient
-        session={session}
+        session={adaptedSession}
         formCheckQuota={quota}
         readinessNudge={readinessNudge}
         adaptation={adaptation}

@@ -35,6 +35,10 @@ export interface AdaptationDisplay {
 /**
  * The shape `getActiveAdaptationForSession` returns. Kept here so both
  * the data layer and the component refer to one canonical type.
+ *
+ * `params` is the deserialised `hrv_session_modifiers.applied_value`
+ * jsonb — shape depends on `modifierType`. The apply layer
+ * (`src/lib/adaptive/apply.ts`) narrows per action.
  */
 export interface ActiveAdaptation {
   modifierId: string;
@@ -42,6 +46,7 @@ export interface ActiveAdaptation {
   explanationDa: string;
   reviewedBy: string | null;
   acceptedByMember: boolean | null;
+  params: Record<string, unknown>;
 }
 
 /**

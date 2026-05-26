@@ -32,6 +32,19 @@ export type ExerciseSet = {
   loggedRpe?: number;
   done?: boolean;
   restSec?: number;
+  // -------------- adaptive-engine markers (optional, set by applyAdaptationToSession) --------------
+  /** True when the daily adaptive engine marked this set as skippable today. */
+  optional?: boolean;
+  /**
+   * Set when the engine reduced this set's weight (top_set_reduction).
+   * Carries the original weight so the UI can show a "−10%" badge and
+   * give the member a way to override back to the original.
+   */
+  adapted?: {
+    kind: "weight_reduced";
+    originalWeight: number;
+    percent: number;
+  };
 };
 
 export type Exercise = {
@@ -41,6 +54,23 @@ export type Exercise = {
   videoCue?: string;
   sets: ExerciseSet[];
   library?: ExerciseLibrary | null;
+  // -------------- adaptive-engine markers --------------
+  /** True when the daily adaptive engine marked this whole exercise as optional today. */
+  optional?: boolean;
+  /**
+   * Set when the engine suggested an exercise swap. v0 doesn't yet
+   * mutate the rendered exercise — the SessionClient surfaces this as
+   * a "Coach foreslår en lettere variant" hint above the exercise.
+   * Full swap rendering lands in a follow-up slice.
+   */
+  adapted?: {
+    kind: "swap_suggested";
+    variantReason:
+      | "joint_friendly"
+      | "unilateral"
+      | "low_cns"
+      | "time_efficient";
+  };
 };
 
 export type Session = {
@@ -52,6 +82,16 @@ export type Session = {
   title: string;
   estimatedMinutes: number;
   exercises: Exercise[];
+  // -------------- adaptive-engine markers --------------
+  /**
+   * Set when the engine paused today's session entirely. SessionClient
+   * renders the replacement block instead of the exercise list when
+   * present.
+   */
+  pausedReplacement?: {
+    title: string;
+    body: string;
+  };
 };
 
 export const TODAY_SESSION: Session = {
