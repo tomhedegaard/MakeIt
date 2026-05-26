@@ -7,6 +7,8 @@ import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { mockListReadings } from "@/lib/hrv/mock";
 import { getTodayLifestyleLogs, getHrvSyncProgress } from "@/lib/data/hrv";
+import { getAdaptiveConsentEligibility } from "@/lib/data/adaptive";
+import AdaptiveConsentCard from "@/components/adaptive/AdaptiveConsentCard";
 import type { ReadinessBucket, WarmUpState } from "@/lib/hrv/types";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
 import ReadinessLadder from "@/components/hrv/ReadinessLadder";
@@ -181,6 +183,13 @@ export default async function HrvPage() {
   // Supabase is unavailable, in which case the component renders nothing.
   const progress = await getHrvSyncProgress(member.id);
 
+  // Adaptive engine consent eligibility — gated on warmUpState='active'
+  // + has active wearable + flag not yet enabled. The card renders
+  // null otherwise so it's safe to include unconditionally.
+  const adaptiveConsent = SUPABASE_ENABLED
+    ? await getAdaptiveConsentEligibility(member.id)
+    : { eligible: false };
+
   // Connected states (warming-up, active, pending-first-sync) also render the
   // daily lifestyle quick-log card. The no-connection state never reaches it.
   const lifestyleCard = state.connected ? (
@@ -206,6 +215,15 @@ export default async function HrvPage() {
           <HrvWelcomeBonusToast />
         </Suspense>
         <HrvMilestoneToast unseen={progress.unseenMilestone} />
+
+        {/*
+          Adaptive engine consent — appears once the member's baseline
+          is mature and they have an active wearable, but they haven't
+          opted in yet. Disappears the moment they flip the flag (or
+          the connection goes inactive). No dismiss tracking for v0;
+          the card is informational, not nag-y.
+        */}
+        <AdaptiveConsentCard eligible={adaptiveConsent.eligible} />
 
         {state.needsReauth ? (
           <div

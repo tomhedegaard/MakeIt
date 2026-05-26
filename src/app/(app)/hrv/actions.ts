@@ -132,3 +132,43 @@ function mapRow(row: Record<string, unknown>): HrvReading {
     isSick: row.is_sick as boolean,
   };
 }
+
+/**
+ * Flip hrv_settings.adaptive_program_enabled to true for the calling
+ * member. Server-action target for the AdaptiveConsentCard on /hrv.
+ *
+ * RLS: `members_own_settings for all using (member_id = auth.uid())`
+ * covers the UPDATE; no service-role client needed. Returns
+ * `{ ok: false }` for any auth or DB error so the optimistic UI rolls
+ * back.
+ *
+ * Upserts in case the settings row doesn't exist yet (rare — most
+ * members have one created on first /hrv visit) so the flag flip
+ * always succeeds.
+ */
+export async function enableAdaptiveEngineAction(): Promise<{ ok: boolean }> {
+  if (!SUPABASE_ENABLED) return { ok: true };
+
+  const supabase = await createClient();
+  if (!supabase) return { ok: false };
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false };
+
+  const { error } = await supabase
+    .from("hrv_settings")
+    .upsert(
+      { member_id: user.id, adaptive_program_enabled: true },
+      { onConflict: "member_id" }
+    );
+  if (error) {
+    console.error("[adaptive] enableAdaptiveEngineAction:", error.message);
+    return { ok: false };
+  }
+
+  revalidatePath("/hrv");
+  revalidatePath("/dashboard");
+  return { ok: true };
+}

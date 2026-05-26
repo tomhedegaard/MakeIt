@@ -5,6 +5,58 @@ import type { AdaptiveAction } from "@/lib/adaptive/types";
 import { createClient } from "@/lib/supabase/server";
 
 /**
+ * Eligibility for the Adaptive Program Engine consent card. The card
+ * shows when the member has a mature baseline (warmUpState='active'),
+ * has the flag turned off, and has at least one active wearable
+ * connection. Returns `eligible=false` for any other state — caller
+ * renders nothing.
+ *
+ * Demo / no Supabase → `eligible=false`.
+ */
+export interface AdaptiveConsentEligibility {
+  eligible: boolean;
+}
+
+export async function getAdaptiveConsentEligibility(
+  memberId: string
+): Promise<AdaptiveConsentEligibility> {
+  const supabase = await createClient();
+  if (!supabase) return { eligible: false };
+
+  const [
+    { data: settings },
+    { data: latestReading },
+    { count: activeConnCount },
+  ] = await Promise.all([
+    supabase
+      .from("hrv_settings")
+      .select("adaptive_program_enabled")
+      .eq("member_id", memberId)
+      .maybeSingle(),
+    supabase
+      .from("hrv_readings")
+      .select("warm_up_state")
+      .eq("member_id", memberId)
+      .order("measured_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+    supabase
+      .from("hrv_wearable_connections")
+      .select("id", { head: true, count: "exact" })
+      .eq("member_id", memberId)
+      .eq("status", "active"),
+  ]);
+
+  const enabled = settings?.adaptive_program_enabled === true;
+  if (enabled) return { eligible: false };
+
+  const warmUpActive = latestReading?.warm_up_state === "active";
+  const connected = (activeConnCount ?? 0) > 0;
+
+  return { eligible: warmUpActive && connected };
+}
+
+/**
  * Return the active adaptive_v0 modifier for one (member, session)
  * pair, or null when no adaptation applies. The session-flow page
  * mounts the AdaptationCard from this — null means no card.
