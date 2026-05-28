@@ -1,10 +1,12 @@
 # Adaptive reasoning layer — Claude refinement falling back to null
 
-Status: **RESOLVED** 2026-05-26. Root cause: Turbopack bundling
-issue with `@anthropic-ai/sdk/helpers/zod` when imported statically
-into a Next.js route handler. Fix: dynamic import (mirrors the
-working `program-generator-claude` pattern). See "Resolution"
-section at the bottom.
+Status: **RESOLVED** 2026-05-26. Root cause (CORRECTED — see
+"Resolution: actual cause" at the bottom): `ANTHROPIC_API_KEY` was
+not present in the runtime env, so `refineWithClaude` bailed at its
+`if (!apiKey) return null` guard — silently, before any log line.
+The Turbopack-bundling theory below was a red herring; the dynamic
+import + loud logging shipped anyway (both harmless improvements)
+but were NOT the fix.
 
 ## Observed
 
@@ -191,3 +193,66 @@ summary returns `refined: <persisted>` (matching count) instead
 of `refined: 0`, and `hrv_session_modifiers.reasoning_output`
 becomes non-null on new rows. The "Hvad Munks assistent
 justerede" subpanel will then render on real AdaptationCards.
+
+---
+
+## Resolution: actual cause (corrected 2026-05-26, live verification)
+
+The Turbopack theory above was wrong. Live verification against
+remote Supabase pinned the real cause:
+
+Triggering the cron via a local dev server (`npm run dev` →
+localhost) against remote Supabase, with a demo member seeded:
+
+  - Run A: dev server started with `CRON_SECRET=… npm run dev`
+    (relying on .env.local to provide ANTHROPIC_API_KEY)
+    → cron summary `refined: 0`, NO warn output at all.
+  - Run B: dev server restarted with `ANTHROPIC_API_KEY` **explicitly
+    exported** into the shell before `npm run dev`
+    → cron summary `refined: 1`.
+
+The ONLY change between A and B was the explicit export. The
+dynamic import (committed in the prior session) was constant across
+both runs. Therefore the dynamic import was not the fix.
+
+Why `refined: 0` produced no warn: `refineWithClaude` returns null
+at `if (!apiKey) return null` BEFORE the try block — that early
+return had no log line, so the failure was invisible. (This is
+exactly why the loud-warn we added for the `parsed_output === null`
+case is valuable — but the warn we added was on the wrong branch;
+the silent branch was the apiKey guard.)
+
+### Why the local dev server didn't see the key
+
+Inconclusive — `.env.local` contains a valid `ANTHROPIC_API_KEY`
+(direct `curl` to the Anthropic API with it returns 200), yet the
+`npm run dev` process didn't expose it to the route handler until
+it was exported into the parent shell. Most likely a Next 16 /
+Turbopack env-load timing or parser quirk specific to this var.
+Not chased further because it doesn't affect deployed environments.
+
+### Why this does NOT affect Vercel
+
+On Vercel, `ANTHROPIC_API_KEY` is a platform environment variable
+(confirmed via `vercel env ls` — present in both Production and
+Preview, 16 days old). Platform env vars are injected directly into
+`process.env` at runtime, independent of `.env.local` loading. So
+the deployed preview + production refine correctly. Live proof:
+the seeded demo member's modifier now carries a populated
+`reasoning_output` after the env-corrected cron run persisted a
+fresh row.
+
+### Follow-up hardening (recommended, not yet done)
+
+Add an explicit warn at the `if (!apiKey) return null` guard so a
+missing key is never silent again:
+
+```ts
+if (!apiKey) {
+  console.warn("[adaptive/reasoning-claude] ANTHROPIC_API_KEY missing — skipping refinement, using rule layer");
+  return null;
+}
+```
+
+One line; turns the most confusing failure mode (silent
+rule-layer-only with no signal) into an obvious log entry.

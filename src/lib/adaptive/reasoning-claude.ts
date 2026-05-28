@@ -41,7 +41,16 @@ export async function refineWithClaude(
   if (decision.action === "no_change") return null;
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return null;
+  if (!apiKey) {
+    // The most confusing failure mode: silent rule-layer-only with no
+    // signal. A missing key on a runtime that should have one (e.g. a
+    // dev server not loading .env.local) looks identical to a working
+    // fallback. One warn turns it into an obvious log entry.
+    console.warn(
+      "[adaptive/reasoning-claude] ANTHROPIC_API_KEY missing — skipping refinement, using rule layer"
+    );
+    return null;
+  }
 
   const client = new Anthropic({ apiKey });
   const userPayload = buildUserPayload(decision, input);
