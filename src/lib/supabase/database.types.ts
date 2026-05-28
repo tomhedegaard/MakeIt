@@ -345,6 +345,8 @@ export type Database = {
       }
       form_checks: {
         Row: {
+          ai_drafted_reply: string | null
+          ai_drafted_reply_at: string | null
           ai_fix: string | null
           ai_headline: string | null
           ai_neg: Json | null
@@ -354,6 +356,7 @@ export type Database = {
           coach_reviewed_at: string | null
           coach_reviewed_by: string | null
           created_at: string
+          drafted_by_ai: boolean
           exercise_id: string | null
           exercise_name: string | null
           id: string
@@ -361,6 +364,8 @@ export type Database = {
           video_url: string | null
         }
         Insert: {
+          ai_drafted_reply?: string | null
+          ai_drafted_reply_at?: string | null
           ai_fix?: string | null
           ai_headline?: string | null
           ai_neg?: Json | null
@@ -370,6 +375,7 @@ export type Database = {
           coach_reviewed_at?: string | null
           coach_reviewed_by?: string | null
           created_at?: string
+          drafted_by_ai?: boolean
           exercise_id?: string | null
           exercise_name?: string | null
           id?: string
@@ -377,6 +383,8 @@ export type Database = {
           video_url?: string | null
         }
         Update: {
+          ai_drafted_reply?: string | null
+          ai_drafted_reply_at?: string | null
           ai_fix?: string | null
           ai_headline?: string | null
           ai_neg?: Json | null
@@ -386,6 +394,7 @@ export type Database = {
           coach_reviewed_at?: string | null
           coach_reviewed_by?: string | null
           created_at?: string
+          drafted_by_ai?: boolean
           exercise_id?: string | null
           exercise_name?: string | null
           id?: string
@@ -424,6 +433,86 @@ export type Database = {
           {
             foreignKeyName: "form_checks_member_id_fkey"
             columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coach_morning_reports: {
+        Row: {
+          coach_id: string
+          created_at: string
+          id: string
+          payload: Json
+          report_date: string
+          sent_email_at: string | null
+        }
+        Insert: {
+          coach_id: string
+          created_at?: string
+          id?: string
+          payload: Json
+          report_date: string
+          sent_email_at?: string | null
+        }
+        Update: {
+          coach_id?: string
+          created_at?: string
+          id?: string
+          payload?: Json
+          report_date?: string
+          sent_email_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_morning_reports_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coach_voice_samples: {
+        Row: {
+          curated_at: string
+          curated_by: string | null
+          exercise_id: string | null
+          id: string
+          notes: string | null
+          reply_text: string
+          tone: string
+        }
+        Insert: {
+          curated_at?: string
+          curated_by?: string | null
+          exercise_id?: string | null
+          id?: string
+          notes?: string | null
+          reply_text: string
+          tone: string
+        }
+        Update: {
+          curated_at?: string
+          curated_by?: string | null
+          exercise_id?: string | null
+          id?: string
+          notes?: string | null
+          reply_text?: string
+          tone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_voice_samples_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coach_voice_samples_curated_by_fkey"
+            columns: ["curated_by"]
             isOneToOne: false
             referencedRelation: "members"
             referencedColumns: ["id"]
