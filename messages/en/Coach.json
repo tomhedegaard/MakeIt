@@ -171,9 +171,12 @@
     "aiTip": "AI tip",
     "coachNotesLabel": "Coach notes (sent to @{handle})",
     "coachNotesPlaceholder": "What is the AI missing? Specific instructions for the next session?",
+    "draftLabel": "Munk's draft — edit inline (sent to @{handle})",
+    "draftBadge": "AI draft",
     "cancel": "Cancel",
     "sending": "Sending…",
     "submit": "Approve & send",
+    "submitDraft": "Send to @{handle}",
     "footnote": "Marks the form-check as reviewed and sends the notes to the member."
   },
   "digest": {

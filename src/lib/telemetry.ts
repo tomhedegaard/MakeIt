@@ -39,6 +39,15 @@ export const TELEMETRY = {
   adaptiveHistoryViewed: "adaptive_history_viewed",
   /** Member clicked "Vis flere (N)" to expand the truncated history. */
   adaptiveHistoryExpanded: "adaptive_history_expanded",
+  /** Coach opened a form-check review modal. Props: { form_check_id, draft_exists }. */
+  coachDraftReplyOpened: "coach_draft_reply_opened",
+  /**
+   * Coach sent a form-check reply that started from an AI draft. Props:
+   * { form_check_id, edit_ratio: 0..1, send_seconds_since_open }. Only
+   * fires when a draft was present, so the median edit_ratio stays a
+   * clean voice-fidelity signal (spec §8).
+   */
+  coachDraftReplySent: "coach_draft_reply_sent",
 } as const;
 
 export type TelemetryEventName = (typeof TELEMETRY)[keyof typeof TELEMETRY];

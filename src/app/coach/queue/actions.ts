@@ -8,6 +8,7 @@ import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { sendCoachReviewEmail } from "@/lib/email/templates/coach-review";
 import { isLocale, type Locale } from "@/i18n/config";
 import { sendHrvAlertEmail } from "@/lib/email/templates/hrv-alert";
+import { draftedByAi } from "@/lib/coach/draft-overlap";
 
 /**
  * Coach reviews a form-check: stamps reviewed_by/at and saves notes,
@@ -31,12 +32,23 @@ export async function reviewFormCheckAction(
 
   const trimmedNotes = notes.slice(0, 1000).trim();
 
+  // Decide drafted_by_ai server-side from the persisted draft — never
+  // trust a client-supplied draft. True when the sent note kept ≥70%
+  // character overlap with Claude's ai_drafted_reply (spec §MM-2).
+  const { data: draftRow } = await supabase
+    .from("form_checks")
+    .select("ai_drafted_reply")
+    .eq("id", formCheckId)
+    .single();
+  const draftedFromAi = draftedByAi(draftRow?.ai_drafted_reply, trimmedNotes);
+
   const { error } = await supabase
     .from("form_checks")
     .update({
       coach_reviewed_by: user.id,
       coach_reviewed_at: new Date().toISOString(),
       coach_notes: trimmedNotes || null,
+      drafted_by_ai: draftedFromAi,
     })
     .eq("id", formCheckId);
 

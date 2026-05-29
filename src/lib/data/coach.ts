@@ -58,6 +58,7 @@ export type FormCheckRow = {
   aiPos: string[];
   aiNeg: string[];
   aiFix: string | null;
+  aiDraftedReply: string | null; // Claude's pre-staged reply in Munk's voice (null = Munk writes from scratch)
   reviewedAt: string | null;
   reviewedBy: string | null;
   coachNotes: string | null;
@@ -165,6 +166,7 @@ const MOCK_FORM_CHECKS: FormCheckRow[] = [
     aiPos: ["Bar holder kontakt med kroppen hele vejen op", "Lats engageret fra setup", "God pace — ingen tøven ved knæene"],
     aiNeg: ["Hyperextension i lock-out (læn 5° tilbage)", "Hofte stiger marginalt før skuldrene"],
     aiFix: "Lås ud med squeeze i baller, ikke ved at læne tilbage. Tænk \"stå op\" frem for \"læn tilbage\".",
+    aiDraftedReply: "Stærkt løft, Nina — baren holder kontakt hele vejen op. Du låner lidt for langt tilbage i toppen; lås ud ved at knibe ballerne, ikke ved at læne dig bagud. Tænk \"stå op\" frem for \"læn tilbage\". Tag det med på næste deadlift-dag.",
     reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
     createdAt: new Date(Date.now() - 1000 * 60 * 32).toISOString(),
   },
@@ -176,6 +178,7 @@ const MOCK_FORM_CHECKS: FormCheckRow[] = [
     aiPos: ["Solid pause i bunden", "Ben i gulvet hele sættet", "Lige bar-path"],
     aiNeg: ["Lidt for hurtig på vej ned — accelerer i stedet for at kontrollere"],
     aiFix: "Tæl 3 sek på vej ned næste gang. Brug mindre vægt hvis nødvendigt — kvaliteten betyder mere.",
+    aiDraftedReply: "Flot pause-bench, Maria — solid pause og ben plantet hele sættet. Du falder lige lovlig hurtigt ned; styr det og tæl tre på vej ned. Tag evt. lidt vægt af, så kvaliteten holder. Kør det sådan næste gang.",
     reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
   },
@@ -187,6 +190,7 @@ const MOCK_FORM_CHECKS: FormCheckRow[] = [
     aiPos: ["Bardepth ramt på alle 3 reps", "Konsistent bar-path", "God spinal kontrol"],
     aiNeg: ["Højre knæ kollapser let indad på rep 2 og 3"],
     aiFix: "Driv knæene aktivt udad i bunden (\"spread the floor\"). Hold 1 sek pause i bunden næste sæt.",
+    aiDraftedReply: "Solidt sæt, Kasper — dybde ramt på alle tre reps. Højre knæ falder lidt indad på de sidste to; driv knæene aktivt udad i bunden. Tænk \"spread the floor\". Hold en sekunds pause i bunden på næste sæt.",
     reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
   },
@@ -198,6 +202,7 @@ const MOCK_FORM_CHECKS: FormCheckRow[] = [
     aiPos: ["Ryggen flad", "God ROM"],
     aiNeg: ["Bevæger sig mest fra knæene — RDL skal være hofte-dominant", "Bar drifter en smule fremad"],
     aiFix: "Tænk \"skub bagdelen mod væggen\" frem for \"bøj knæene\". Hofterne bagud — knæene holder kun en let bøjning.",
+    aiDraftedReply: "Godt forsøg, Frederik — ryggen er flad og ROM ser fin ud. Du bevæger dig mest fra knæene; en RDL skal være hofte-domineret. Skub bagdelen mod væggen og hold knæene næsten låste. Prøv det med lettere vægt næste gang.",
     reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 18).toISOString(),
   },
@@ -377,7 +382,7 @@ export async function getMemberDetail(memberId: string): Promise<MemberDetail | 
       .limit(10),
     supabase.from("member_reps_balance").select("balance").eq("member_id", memberId).maybeSingle(),
     supabase.from("reps_transactions").select("id, delta, reason, created_at").eq("member_id", memberId).order("created_at", { ascending: false }).limit(10),
-    supabase.from("form_checks").select("id, exercise_name, ai_score, ai_headline, ai_pos, ai_neg, ai_fix, video_url, coach_reviewed_at, coach_reviewed_by, coach_notes, created_at").eq("member_id", memberId).order("created_at", { ascending: false }).limit(10),
+    supabase.from("form_checks").select("id, exercise_name, ai_score, ai_headline, ai_pos, ai_neg, ai_fix, ai_drafted_reply, video_url, coach_reviewed_at, coach_reviewed_by, coach_notes, created_at").eq("member_id", memberId).order("created_at", { ascending: false }).limit(10),
   ]);
 
   // Sign storage paths in one batch.
@@ -428,6 +433,7 @@ export async function getMemberDetail(memberId: string): Promise<MemberDetail | 
       aiPos: Array.isArray(f.ai_pos) ? (f.ai_pos as string[]) : [],
       aiNeg: Array.isArray(f.ai_neg) ? (f.ai_neg as string[]) : [],
       aiFix: f.ai_fix,
+      aiDraftedReply: f.ai_drafted_reply,
       reviewedAt: f.coach_reviewed_at,
       reviewedBy: f.coach_reviewed_by,
       coachNotes: f.coach_notes,
@@ -445,7 +451,7 @@ export async function getPendingFormChecks(limit = 30): Promise<FormCheckRow[]> 
     .from("form_checks")
     .select(`
       id, exercise_name, ai_score, ai_headline, ai_pos, ai_neg, ai_fix,
-      video_url, created_at,
+      ai_drafted_reply, video_url, created_at,
       coach_reviewed_at, coach_reviewed_by, coach_notes,
       member:members(id, handle)
     `)
@@ -473,6 +479,7 @@ export async function getPendingFormChecks(limit = 30): Promise<FormCheckRow[]> 
       aiPos: Array.isArray(f.ai_pos) ? (f.ai_pos as string[]) : [],
       aiNeg: Array.isArray(f.ai_neg) ? (f.ai_neg as string[]) : [],
       aiFix: f.ai_fix,
+      aiDraftedReply: f.ai_drafted_reply,
       reviewedAt: f.coach_reviewed_at,
       reviewedBy: f.coach_reviewed_by,
       coachNotes: f.coach_notes,

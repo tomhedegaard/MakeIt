@@ -171,9 +171,12 @@
     "aiTip": "AI-tip",
     "coachNotesLabel": "Coach-noter (sendes til @{handle})",
     "coachNotesPlaceholder": "Hvad mangler AI'en at fange? Specifikke instruktioner til næste session?",
+    "draftLabel": "Munks udkast — rediger inline (sendes til @{handle})",
+    "draftBadge": "AI-udkast",
     "cancel": "Annullér",
     "sending": "Sender…",
     "submit": "Godkend & send",
+    "submitDraft": "Send til @{handle}",
     "footnote": "Markerer form-checken som reviewed og sender notes til medlemmet."
   },
   "digest": {

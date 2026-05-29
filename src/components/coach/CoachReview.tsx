@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import { reviewFormCheckAction } from "@/app/coach/queue/actions";
 import type { FormCheckRow } from "@/lib/data/coach";
+import { draftOverlapRatio } from "@/lib/coach/draft-overlap";
+import { track, TELEMETRY } from "@/lib/telemetry";
 
 export default function CoachReviewButton({
   formCheck,
@@ -12,16 +14,42 @@ export default function CoachReviewButton({
   formCheck: FormCheckRow;
 }) {
   const t = useTranslations("Coach.review");
+  const draft = formCheck.aiDraftedReply;
+  const hasDraft = !!draft;
   const [open, setOpen] = useState(false);
-  const [notes, setNotes] = useState("");
+  // Pre-fill with Claude's draft so Munk edits inline rather than
+  // writing from a blank box (spec §MM-2). Falls back to empty.
+  const [notes, setNotes] = useState(draft ?? "");
   const [pending, startTransition] = useTransition();
+  const openedAtRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    openedAtRef.current = Date.now();
+    track(TELEMETRY.coachDraftReplyOpened, {
+      form_check_id: formCheck.id,
+      draft_exists: hasDraft,
+    });
+  }, [open, formCheck.id, hasDraft]);
 
   function submit() {
+    // Only emit on draft-backed sends so the median edit_ratio stays a
+    // clean voice-fidelity signal (spec §8).
+    if (hasDraft && draft) {
+      const editRatio = 1 - draftOverlapRatio(draft, notes);
+      const openedAt = openedAtRef.current;
+      track(TELEMETRY.coachDraftReplySent, {
+        form_check_id: formCheck.id,
+        edit_ratio: Number(editRatio.toFixed(3)),
+        send_seconds_since_open:
+          openedAt === null ? null : Math.round((Date.now() - openedAt) / 1000),
+      });
+    }
     startTransition(async () => {
       const res = await reviewFormCheckAction(formCheck.id, notes);
       if (res.ok) {
         setOpen(false);
-        setNotes("");
+        setNotes(draft ?? "");
       }
     });
   }
@@ -79,7 +107,16 @@ export default function CoachReviewButton({
 
         <div className="mt-5">
           <label className="block">
-            <span className="eyebrow block mb-2">{t("coachNotesLabel", { handle: formCheck.memberHandle })}</span>
+            <span className="eyebrow mb-2 flex items-center gap-2">
+              {hasDraft
+                ? t("draftLabel", { handle: formCheck.memberHandle })
+                : t("coachNotesLabel", { handle: formCheck.memberHandle })}
+              {hasDraft ? (
+                <span className="inline-flex items-center rounded-full surface-2 px-2 py-0.5 text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+                  {t("draftBadge")}
+                </span>
+              ) : null}
+            </span>
             <textarea
               className="field min-h-[100px] py-3 resize-none w-full"
               placeholder={t("coachNotesPlaceholder")}
@@ -104,7 +141,11 @@ export default function CoachReviewButton({
             onClick={submit}
             disabled={pending}
           >
-            {pending ? t("sending") : t("submit")}
+            {pending
+              ? t("sending")
+              : hasDraft
+                ? t("submitDraft", { handle: formCheck.memberHandle })
+                : t("submit")}
           </button>
         </div>
 
