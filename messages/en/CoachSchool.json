@@ -37,5 +37,43 @@
     "submitButton": "Close and send",
     "closedFootnote": "Closed",
     "yourCall": "Your call"
+  },
+  "tree": {
+    "eyebrow": "Coach School",
+    "title": "Learn to coach like Munk",
+    "subtitle": "Lessons unlock by tier. Each lesson: a short video, three quiz questions, and a practice scenario where Claude evaluates your response against Munk's rubric.",
+    "empty": "No lessons published yet. Munk records the first cohort during M5.",
+    "tierHeader": {
+      "athlete": "Athlete",
+      "beast": "Beast",
+      "legend": "Legend"
+    },
+    "lockedTag": {
+      "athlete": "Locked — requires Athlete tier",
+      "beast": "Locked — requires Beast tier",
+      "legend": "Locked — requires Legend tier"
+    },
+    "completedTag": "Completed",
+    "repsLine": "+{reps} Reps on first completion"
+  },
+  "lesson": {
+    "backToTree": "← Back to the lesson tree",
+    "videoPlaceholder": "Video records by Munk in M5 — quiz and practice are ready now.",
+    "recordedBy": "Recorded by Mikael Munk",
+    "quizHeader": "Quiz · 3 questions",
+    "quizQuestionLabel": "Question {n}",
+    "practiceHeader": "Practice scenario · Claude evaluates your response",
+    "practicePlaceholder": "Write your coach response here. Keep it short and concrete — like you'd send to a member.",
+    "submitButton": "Send and evaluate",
+    "resultHeader": "Result",
+    "quizResultLine": "{correct}/{total} correct",
+    "evalHeader": "Claude's assessment",
+    "evalScore": {
+      "strong": "Strong",
+      "on_track": "On track",
+      "needs_work": "Needs work"
+    },
+    "evalUnavailable": "Claude couldn't evaluate right now — your response is saved; try again later.",
+    "completedFootnote": "Completed. {reps} Reps land once CC-10 goes live."
   }
 }

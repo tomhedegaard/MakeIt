@@ -302,3 +302,138 @@ export async function submitLiveReviewAction(input: {
   revalidatePath("/coach-school/live");
   return { ok: true };
 }
+
+/**
+ * CC-6 — submit a lesson attempt (quiz answers + practice response).
+ *
+ * Spec: docs/superpowers/specs/2026-05-25-crew-coaching-pyramid-v0-design.md §8
+ *
+ * Server re-loads the lesson (quiz with correct_indexes lives there,
+ * never trust the client) → grades the quiz → calls the practice-eval
+ * Claude wrapper for the free-text response → upserts lesson_progress.
+ *
+ * Reps award is intentionally deferred to CC-10 (the dedicated Reps-
+ * integration phase). On-completion notification + first-attempt-only
+ * award land there.
+ *
+ * The Claude wrapper is dynamic-imported so Turbopack stays on its
+ * happy path with the @anthropic-ai/sdk/helpers/zod entrypoint
+ * (lesson learned from the adaptive-reasoning rollout).
+ */
+export interface SubmitLessonResult {
+  ok: boolean;
+  reason?: string;
+  quizScore?: number;
+  practiceEvalScore?: "needs_work" | "on_track" | "strong" | null;
+  practiceFeedback?: string | null;
+}
+
+export async function submitLessonAction(input: {
+  slug: string;
+  /** Indexes the member picked, one per quiz question. */
+  quizAnswers: number[];
+  /** Optional — free-text response to the lesson's practice scenario. */
+  practiceResponse?: string | null;
+}): Promise<SubmitLessonResult> {
+  if (!SUPABASE_ENABLED) {
+    // Demo mode — optimistic: pretend every quiz answer is correct
+    // and the eval is on_track. Lets the page exercise the UI flow.
+    return {
+      ok: true,
+      quizScore: 1.0,
+      practiceEvalScore: "on_track",
+      practiceFeedback:
+        "Demo mode — det ser fint ud. Ægte Claude-eval kører i prod.",
+    };
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, reason: "no-supabase" };
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, reason: "unauthenticated" };
+
+  // Load lesson server-side — quiz correct_indexes + practice rubric
+  // must come from DB, never from the client.
+  const { data: lessonRow, error: lessonErr } = await supabase
+    .from("coaching_lessons")
+    .select("id, quiz, practice_scenario")
+    .eq("slug", input.slug)
+    .single();
+  if (lessonErr || !lessonRow) return { ok: false, reason: "lesson-not-found" };
+
+  // Grade the quiz.
+  const quiz =
+    (lessonRow.quiz as unknown as { correct_index: number }[]) ?? [];
+  let correct = 0;
+  for (let i = 0; i < quiz.length; i++) {
+    if (input.quizAnswers[i] === quiz[i]?.correct_index) correct += 1;
+  }
+  const quizScore = quiz.length > 0 ? correct / quiz.length : 0;
+
+  // Practice eval — only if the lesson has a scenario and the member wrote something.
+  const scenario = lessonRow.practice_scenario as unknown as {
+    prompt: string;
+    context?: string | null;
+    rubric_for_claude: string;
+  } | null;
+  const trimmedResponse =
+    (input.practiceResponse ?? "").slice(0, 1000).trim() || null;
+
+  let practiceEval: {
+    score: "needs_work" | "on_track" | "strong";
+    feedback_da: string;
+    specific_strength?: string;
+    specific_improvement?: string;
+  } | null = null;
+  if (scenario && trimmedResponse) {
+    try {
+      const { generatePracticeEval } = await import(
+        "@/lib/coach-school/practice-eval-claude"
+      );
+      practiceEval = await generatePracticeEval({
+        rubric: scenario.rubric_for_claude,
+        scenarioPrompt: scenario.prompt,
+        scenarioContext: scenario.context ?? null,
+        memberResponse: trimmedResponse,
+      });
+    } catch (err) {
+      console.warn("[coach-school] practice-eval failed:", err);
+      practiceEval = null;
+    }
+  }
+
+  // Upsert lesson_progress — UNIQUE(member_id, lesson_id) means
+  // retakes overwrite the prior attempt's row (matches the spec:
+  // "lesson can be retaken; only first attempt awards Reps" — the
+  // Reps idempotency lives in CC-10's transaction-insert).
+  const { error: upsertErr } = await supabase
+    .from("lesson_progress")
+    .upsert(
+      {
+        member_id: user.id,
+        lesson_id: lessonRow.id,
+        quiz_score: quizScore,
+        practice_eval: (practiceEval as unknown) as
+          | typeof practiceEval
+          | null,
+        completed_at: new Date().toISOString(),
+      },
+      { onConflict: "member_id,lesson_id" },
+    );
+  if (upsertErr) {
+    console.warn("[coach-school] lesson_progress upsert failed:", upsertErr.message);
+    return { ok: false, reason: "save-failed" };
+  }
+
+  revalidatePath("/coach-school");
+  revalidatePath(`/coach-school/lessons/${input.slug}`);
+  return {
+    ok: true,
+    quizScore,
+    practiceEvalScore: practiceEval?.score ?? null,
+    practiceFeedback: practiceEval?.feedback_da ?? null,
+  };
+}

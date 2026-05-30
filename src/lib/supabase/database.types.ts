@@ -715,6 +715,45 @@ export type Database = {
           },
         ]
       }
+      coaching_lessons: {
+        Row: {
+          duration_sec: number | null
+          id: string
+          practice_scenario: Json | null
+          published_at: string | null
+          quiz: Json
+          reps_award: number
+          required_tier: string
+          slug: string
+          title_da: string
+          video_url: string
+        }
+        Insert: {
+          duration_sec?: number | null
+          id?: string
+          practice_scenario?: Json | null
+          published_at?: string | null
+          quiz: Json
+          reps_award?: number
+          required_tier: string
+          slug: string
+          title_da: string
+          video_url: string
+        }
+        Update: {
+          duration_sec?: number | null
+          id?: string
+          practice_scenario?: Json | null
+          published_at?: string | null
+          quiz?: Json
+          reps_award?: number
+          required_tier?: string
+          slug?: string
+          title_da?: string
+          video_url?: string
+        }
+        Relationships: []
+      }
       hrv_alerts: {
         Row: {
           coach_note_text: string | null
@@ -1275,6 +1314,48 @@ export type Database = {
             columns: ["used_by"]
             isOneToOne: false
             referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lesson_progress: {
+        Row: {
+          completed_at: string | null
+          id: string
+          lesson_id: string
+          member_id: string
+          practice_eval: Json | null
+          quiz_score: number | null
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: string
+          lesson_id: string
+          member_id: string
+          practice_eval?: Json | null
+          quiz_score?: number | null
+        }
+        Update: {
+          completed_at?: string | null
+          id?: string
+          lesson_id?: string
+          member_id?: string
+          practice_eval?: Json | null
+          quiz_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_progress_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lesson_progress_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "coaching_lessons"
             referencedColumns: ["id"]
           },
         ]
