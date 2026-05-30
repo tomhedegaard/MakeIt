@@ -568,6 +568,59 @@ export type Database = {
           },
         ]
       }
+      coach_reviews: {
+        Row: {
+          agreement_score: number | null
+          decision: string
+          decision_payload: Json | null
+          id: string
+          mode: string
+          munk_decision: string | null
+          munk_decision_payload: Json | null
+          reasoning: string | null
+          reviewer_id: string
+          source_id: string
+          source_type: string
+          submitted_at: string
+        }
+        Insert: {
+          agreement_score?: number | null
+          decision: string
+          decision_payload?: Json | null
+          id?: string
+          mode: string
+          munk_decision?: string | null
+          munk_decision_payload?: Json | null
+          reasoning?: string | null
+          reviewer_id: string
+          source_id: string
+          source_type: string
+          submitted_at?: string
+        }
+        Update: {
+          agreement_score?: number | null
+          decision?: string
+          decision_payload?: Json | null
+          id?: string
+          mode?: string
+          munk_decision?: string | null
+          munk_decision_payload?: Json | null
+          reasoning?: string | null
+          reviewer_id?: string
+          source_id?: string
+          source_type?: string
+          submitted_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coach_voice_samples: {
         Row: {
           curated_at: string
@@ -1250,6 +1303,7 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          coach_tier: string | null
           created_at: string
           display_name: string | null
           email: string | null
@@ -1281,6 +1335,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          coach_tier?: string | null
           created_at?: string
           display_name?: string | null
           email?: string | null
@@ -1312,6 +1367,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          coach_tier?: string | null
           created_at?: string
           display_name?: string | null
           email?: string | null

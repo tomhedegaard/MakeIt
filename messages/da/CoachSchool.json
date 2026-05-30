@@ -1,0 +1,29 @@
+{
+  "eyebrow": "Coach School · Sandbox",
+  "title": "Beslut parallelt med Munk",
+  "subtitle": "{count} sandbox-cases venter på dit kald. Du ser hvad Munk så — men ikke hvad han valgte, før du har trykket Send.",
+  "empty": "Ingen åbne sandbox-cases lige nu. Tilbage når Munk har afgjort flere alerts.",
+  "footnote": "Sandbox-cases er hrv_alerts Munk allerede har afgjort. Dit kald sammenlignes med hans — gennemsnittet over de seneste 50 sandbox-runder driver promotion-gaten (mål: ≥80%).",
+  "triggeredAt": "Udløst {time}",
+  "conditionsHeader": "Signaler i alerten",
+  "decisionFieldsetLabel": "Vælg en beslutning",
+  "decisionHeader": "Dit kald",
+  "decisions": {
+    "approve": "Acceptér",
+    "modify": "Justér",
+    "escalate": "Eskalér",
+    "reject": "Afvis"
+  },
+  "reasoningLabel": "Begrundelse (valgfri)",
+  "reasoningPlaceholder": "Hvorfor det kald? — kort note, så Munk ser din tankegang.",
+  "errorLine": "Kunne ikke sende: {reason}",
+  "submitting": "Sender…",
+  "submitButton": "Send beslutning",
+  "revealed": {
+    "triggeredAt": "Udløst {time}",
+    "youHeader": "Dit kald",
+    "munkHeader": "Munks kald",
+    "yourReasoning": "Din begrundelse",
+    "footnote": "Sammenligning er gemt. Du flytter mod next-50 gennemsnittet."
+  }
+}

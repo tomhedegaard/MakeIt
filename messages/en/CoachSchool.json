@@ -1,0 +1,29 @@
+{
+  "eyebrow": "Coach School · Sandbox",
+  "title": "Call it in parallel with Munk",
+  "subtitle": "{count} sandbox cases waiting for your call. You see what Munk saw — but not what he chose, until you press Send.",
+  "empty": "No open sandbox cases right now. Come back once Munk has decided more alerts.",
+  "footnote": "Sandbox cases are hrv_alerts Munk has already decided. Your call is compared with his — the rolling mean over the last 50 sandbox cases drives the promotion gate (target: ≥80%).",
+  "triggeredAt": "Triggered {time}",
+  "conditionsHeader": "Signals in the alert",
+  "decisionFieldsetLabel": "Pick a decision",
+  "decisionHeader": "Your call",
+  "decisions": {
+    "approve": "Approve",
+    "modify": "Modify",
+    "escalate": "Escalate",
+    "reject": "Reject"
+  },
+  "reasoningLabel": "Reasoning (optional)",
+  "reasoningPlaceholder": "Why that call? — short note so Munk sees your thinking.",
+  "errorLine": "Could not send: {reason}",
+  "submitting": "Sending…",
+  "submitButton": "Send decision",
+  "revealed": {
+    "triggeredAt": "Triggered {time}",
+    "youHeader": "Your call",
+    "munkHeader": "Munk's call",
+    "yourReasoning": "Your reasoning",
+    "footnote": "Comparison saved. You move toward the next-50 mean."
+  }
+}
