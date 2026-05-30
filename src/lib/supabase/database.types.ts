@@ -1176,6 +1176,7 @@ export type Database = {
           notif_digest: boolean
           notif_form_check_review: boolean
           notif_mention: boolean
+          notif_morning_report: boolean
           notif_tier_up: boolean
           onboarded_at: string | null
           stripe_customer_id: string | null
@@ -1206,6 +1207,7 @@ export type Database = {
           notif_digest?: boolean
           notif_form_check_review?: boolean
           notif_mention?: boolean
+          notif_morning_report?: boolean
           notif_tier_up?: boolean
           onboarded_at?: string | null
           stripe_customer_id?: string | null
@@ -1236,6 +1238,7 @@ export type Database = {
           notif_digest?: boolean
           notif_form_check_review?: boolean
           notif_mention?: boolean
+          notif_morning_report?: boolean
           notif_tier_up?: boolean
           onboarded_at?: string | null
           stripe_customer_id?: string | null

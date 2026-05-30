@@ -2,6 +2,7 @@
   "footer": {
     "weeklyDigestNote": "Sent Monday morning to every active member. Turn off in settings.",
     "coachDigestNote": "Sent Monday morning to every coach. Turn off in /settings.",
+    "morningReportNote": "Sent every morning ~06:30 CET. Turn off in /settings.",
     "welcomeNote": "Let's lift heavy together.",
     "coachReviewNote": "Coach notes usually land within 24 hours of you uploading a form-check. Reply directly to this email — it goes straight to Mikael.",
     "mentionNote": "You only get this email when a crew member writes @{handle}. Turn off mention emails in your profile settings if it gets too much."
@@ -122,6 +123,39 @@
       "summary": "Crew: {total} · Active: {active} · Avg: {avg}% · At-risk: {atRisk}",
       "atRiskHeader": "CHECK IN WITH THESE:",
       "strongHeader": "RECOGNISE THESE STRONG WEEKS:",
+      "open": "Open: {url}",
+      "signoff": "— MakeIt // HQ"
+    }
+  },
+  "coachMorningReport": {
+    "subject": "Morning report · {date}",
+    "title": "Morning report — MakeIt // HQ",
+    "eyebrow": "Morning report · {date}",
+    "greeting": "Hey @{handle}.",
+    "urgentHeader": "Needs you now",
+    "sustainedLowItem": "{days} {days, plural, one {day} other {days}} of low HRV",
+    "escalations": "{count} engine {count, plural, one {escalation} other {escalations}} waiting for you",
+    "pending": "{count} {count, plural, one {form-check} other {form-checks}} in queue · avg {hours}h wait",
+    "patternsHeader": "Cross-cohort patterns",
+    "yesterdayHeader": "Yesterday",
+    "stats": {
+      "sessions": "Sessions",
+      "prs": "PRs",
+      "uploads": "Form-checks",
+      "adaptive": "Adaptations"
+    },
+    "sessionsValue": "{completed} / {skipped} skipped",
+    "adaptiveValue": "{accepted} / {modifiers}",
+    "cta": "Open coach console →",
+    "text": {
+      "header": "Morning report · {date}",
+      "urgentHeader": "NEEDS YOU NOW:",
+      "sustainedLow": "Sustained low HRV:",
+      "escalations": "{count} engine escalations waiting.",
+      "pending": "{count} form-checks in queue (avg {hours}h wait).",
+      "patternsHeader": "CROSS-COHORT PATTERNS:",
+      "yesterdayHeader": "YESTERDAY:",
+      "yesterdayLine": "Sessions: {completed} done, {skipped} skipped · PRs: {prs} · Form-checks: {uploads} · Adaptations: {accepted}/{modifiers} accepted",
       "open": "Open: {url}",
       "signoff": "— MakeIt // HQ"
     }

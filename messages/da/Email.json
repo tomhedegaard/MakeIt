@@ -2,6 +2,7 @@
   "footer": {
     "weeklyDigestNote": "Sendt mandag morgen til alle aktive medlemmer. Slå fra i indstillinger.",
     "coachDigestNote": "Sendt mandag morgen til alle coaches. Slå fra på /settings.",
+    "morningReportNote": "Sendt hver morgen ~06:30 CET. Slå fra på /settings.",
     "welcomeNote": "Lad os løfte tungt sammen.",
     "coachReviewNote": "Coach-noter sendes typisk inden for 24 timer efter du uploader en form-check. Svar gerne direkte på denne mail — den lander hos Mikael.",
     "mentionNote": "Du modtager kun denne mail når et crew-medlem har skrevet @{handle}. Slå mention-mails fra i indstillinger på din profil hvis det bliver for meget."
@@ -122,6 +123,39 @@
       "summary": "Crew: {total} · Aktive: {active} · Snit: {avg}% · At-risk: {atRisk}",
       "atRiskHeader": "TJEK IND MED DISSE:",
       "strongHeader": "ANERKEND DISSE STÆRKE UGER:",
+      "open": "Åbn: {url}",
+      "signoff": "— MakeIt // HQ"
+    }
+  },
+  "coachMorningReport": {
+    "subject": "Morgenrapport · {date}",
+    "title": "Morgenrapport — MakeIt // HQ",
+    "eyebrow": "Morgenrapport · {date}",
+    "greeting": "Hej @{handle}.",
+    "urgentHeader": "Kræver dig nu",
+    "sustainedLowItem": "{days} {days, plural, one {dag} other {dage}} med lav HRV",
+    "escalations": "{count} {count, plural, one {eskalering} other {eskaleringer}} fra motoren afventer dig",
+    "pending": "{count} {count, plural, one {form-check} other {form-checks}} i kø · snit {hours}t ventetid",
+    "patternsHeader": "Mønstre på tværs",
+    "yesterdayHeader": "I går",
+    "stats": {
+      "sessions": "Sessioner",
+      "prs": "PR'er",
+      "uploads": "Form-checks",
+      "adaptive": "Tilpasninger"
+    },
+    "sessionsValue": "{completed} / {skipped} sprunget",
+    "adaptiveValue": "{accepted} / {modifiers}",
+    "cta": "Åbn coach-konsol →",
+    "text": {
+      "header": "Morgenrapport · {date}",
+      "urgentHeader": "KRÆVER DIG NU:",
+      "sustainedLow": "Vedvarende lav HRV:",
+      "escalations": "{count} eskaleringer fra motoren afventer.",
+      "pending": "{count} form-checks i kø (snit {hours}t ventetid).",
+      "patternsHeader": "MØNSTRE PÅ TVÆRS:",
+      "yesterdayHeader": "I GÅR:",
+      "yesterdayLine": "Sessioner: {completed} gennemført, {skipped} sprunget · PR'er: {prs} · Form-checks: {uploads} · Tilpasninger: {accepted}/{modifiers} accepteret",
       "open": "Åbn: {url}",
       "signoff": "— MakeIt // HQ"
     }
