@@ -16,6 +16,7 @@
     "navQueue": "Form-check queue",
     "navRedemptions": "Reps redemptions",
     "navAnalytics": "Analytics",
+    "navPatterns": "Patterns",
     "navSystem": "System",
     "backToMemberApp": "← Back to member app",
     "memberApp": "Member ↗",
@@ -263,5 +264,21 @@
     "transitionPause": "Pause",
     "transitionReopen": "Reopen",
     "delete": "Delete"
+  },
+  "patterns": {
+    "eyebrow": "Coach console",
+    "title": "Cross-cohort patterns",
+    "subtitle": "{cohortSize} active members · last {windowDays} days",
+    "timeframeLabel": "Window:",
+    "daysOption": "{days} days",
+    "empty": "No cross-cohort patterns this window. All quiet.",
+    "drillInHeader": "Affected members",
+    "affectedCount": "{count} {count, plural, one {member} other {members}}",
+    "codes": {
+      "hrv_cluster_day": "HRV cluster",
+      "rpe_drift_program_week": "RPE drift",
+      "engine_reject_streak": "Engine reject",
+      "form_check_decline": "Form decline"
+    }
   }
 }

@@ -17,7 +17,8 @@ const NAV: NavItem[] = [
   { href: "/coach/queue",       labelKey: "navQueue",       num: "05" },
   { href: "/coach/redemptions", labelKey: "navRedemptions", num: "06" },
   { href: "/coach/analytics",   labelKey: "navAnalytics",   num: "07" },
-  { href: "/coach/system",      labelKey: "navSystem",      num: "08", adminOnly: true },
+  { href: "/coach/patterns",    labelKey: "navPatterns",    num: "08" },
+  { href: "/coach/system",      labelKey: "navSystem",      num: "09", adminOnly: true },
 ];
 
 export default function CoachShell({

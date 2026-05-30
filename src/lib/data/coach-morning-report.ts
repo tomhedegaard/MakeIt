@@ -22,6 +22,7 @@ import type { ReadinessBucket } from "@/lib/hrv/types";
 import type { Database } from "@/lib/supabase/database.types";
 import {
   detectCohortPatterns,
+  type CohortPatternInputs,
   type HrvReadinessDay,
   type MemberFormCheckHistory,
   type MemberModifierHistory,
@@ -409,3 +410,128 @@ export async function aggregateMorningReportInputs(
     },
   };
 }
+
+/* ============================================================== *
+ * On-demand cohort aggregator (MM-8 — /coach/patterns page)
+ * ============================================================== */
+
+/**
+ * Load the roster (every non-coach member). Shared by both aggregators.
+ * Tiny wrapper kept here so callers don't repeat the same query.
+ */
+export async function loadRoster(
+  supabase: SupabaseClient<Database>,
+): Promise<{ id: string; handle: string }[]> {
+  const { data, error } = await supabase
+    .from("members")
+    .select("id, handle")
+    .eq("is_coach", false);
+  if (error) throw new Error(`roster: ${error.message}`);
+  return (data ?? []).map((r) => ({
+    id: r.id as string,
+    handle: (r.handle as string) ?? "—",
+  }));
+}
+
+/**
+ * Self-contained CohortPatternInputs aggregator for the /coach/patterns
+ * on-demand page. Configurable window (default 30 days). Fetches roster
+ * if not supplied; fetches readiness days if not supplied.
+ *
+ * Same v0 simplification as the morning aggregator: programWeekRpe is
+ * empty until a stable program code + cross-member per-week aggregation
+ * lands.
+ */
+export async function aggregateCohortPatternInputs(
+  supabase: SupabaseClient<Database>,
+  opts: {
+    roster?: { id: string; handle: string }[];
+    now?: Date;
+    windowDays?: number;
+    /** Pre-computed readiness days — pass when the caller already built them. */
+    hrvReadinessDays?: HrvReadinessDay[];
+  } = {},
+): Promise<CohortPatternInputs> {
+  const now = opts.now ?? new Date();
+  const windowDays = opts.windowDays ?? 30;
+  const roster = opts.roster ?? (await loadRoster(supabase));
+  if (roster.length === 0) {
+    return {
+      hrvReadinessDays: [],
+      cohortSize: 0,
+      programWeekRpe: [],
+      memberModifierHistories: [],
+      memberFormCheckHistories: [],
+    };
+  }
+  const rosterIds = roster.map((r) => r.id);
+  const handleOf = new Map(roster.map((r) => [r.id, r.handle]));
+  const sinceIso = `${isoDate(addDays(now, -windowDays))}T00:00:00.000Z`;
+
+  // Skip the readings round-trip when caller already has the days.
+  const readingsQuery = opts.hrvReadinessDays
+    ? Promise.resolve({ data: null as RawReadingRow[] | null })
+    : supabase
+        .from("hrv_readings")
+        .select("member_id, measured_at, readiness_bucket")
+        .in("member_id", rosterIds)
+        .gte("measured_at", sinceIso)
+        .then((res) => ({
+          data: (res.data ?? []).map((r) => ({
+            memberId: r.member_id as string,
+            measuredAt: r.measured_at as string,
+            bucket: (r.readiness_bucket as ReadinessBucket | null) ?? null,
+          })) as RawReadingRow[],
+        }));
+
+  const [readingsRes, modHistRes, fcHistRes] = await Promise.all([
+    readingsQuery,
+    supabase
+      .from("hrv_session_modifiers")
+      .select("member_id, created_at, accepted_by_member")
+      .eq("reason", "adaptive_v0")
+      .in("member_id", rosterIds)
+      .gte("created_at", sinceIso)
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("form_checks")
+      .select("member_id, exercise_id, exercise_name, ai_score, coach_reviewed_at")
+      .in("member_id", rosterIds)
+      .not("coach_reviewed_at", "is", null)
+      .not("ai_score", "is", null)
+      .gte("coach_reviewed_at", sinceIso)
+      .order("coach_reviewed_at", { ascending: true }),
+  ]);
+
+  const hrvReadinessDays =
+    opts.hrvReadinessDays ?? collapseReadinessDays(readingsRes.data ?? [], handleOf);
+
+  const memberModifierHistories = groupModifierHistories(
+    (modHistRes.data ?? []).map((m) => ({
+      memberId: m.member_id as string,
+      createdAt: m.created_at as string,
+      acceptedByMember: (m.accepted_by_member as boolean | null) ?? null,
+    })),
+    handleOf,
+  );
+
+  const memberFormCheckHistories = groupFormCheckHistories(
+    (fcHistRes.data ?? []).map((r) => ({
+      memberId: r.member_id as string,
+      exerciseId: (r.exercise_id as string | null) ?? null,
+      exerciseName: (r.exercise_name as string | null) ?? null,
+      score: r.ai_score as number,
+      reviewedAt: r.coach_reviewed_at as string,
+    })),
+    handleOf,
+  );
+
+  return {
+    hrvReadinessDays,
+    cohortSize: roster.length,
+    programWeekRpe: [],
+    memberModifierHistories,
+    memberFormCheckHistories,
+  };
+}
+

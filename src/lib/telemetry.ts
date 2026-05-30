@@ -48,6 +48,13 @@ export const TELEMETRY = {
    * clean voice-fidelity signal (spec §8).
    */
   coachDraftReplySent: "coach_draft_reply_sent",
+  /**
+   * Coach clicked a cohort-pattern row on /coach/patterns to drill in.
+   * Props: { pattern_code, affected_count }. Fires once per row per
+   * page render (first expansion), so the metric reflects unique
+   * drill-ins, not re-toggles (spec §8).
+   */
+  coachPatternDrilledIn: "coach_pattern_drilled_in",
 } as const;
 
 export type TelemetryEventName = (typeof TELEMETRY)[keyof typeof TELEMETRY];
