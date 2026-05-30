@@ -1,0 +1,56 @@
+{
+  "eyebrow": "Crew Coaching Pyramid",
+  "titleEmpty": "You're not paired yet.",
+  "emptyBody": "We pair you next Sunday evening. The buddy system matches you with someone at your tier on complementarity, not similarity — so you pull each other forward from different angles.",
+  "titleWithHandle": "You and @{handle}",
+  "subtitle": "Tier: {tier} · You'll be learning to coach each other under Munk's supervision.",
+  "readinessLabel": "@{handle}'s readiness today",
+  "whyLink": "Why this buddy? →",
+  "reactionsHeader": "Send a quick reaction",
+  "recentHeader": "Recent interactions",
+  "noInteractions": "No interactions yet — start with a 🔥.",
+  "interactionFromYou": "You",
+  "interactionFromBuddy": "@{handle}",
+  "buckets": {
+    "very_low": "Very low",
+    "low": "Low",
+    "normal": "Normal",
+    "high": "High",
+    "very_high": "Very high",
+    "unknown": "Not measured today"
+  },
+  "reactions": {
+    "groupLabel": "Send a reaction to your buddy",
+    "fire": "Crushing it 🔥",
+    "strong": "Strong 💪",
+    "eyes": "Impressed 👀"
+  },
+  "whyTitle": "How we paired you with @{handle}",
+  "whyTitleEmpty": "No buddy to explain yet.",
+  "whyEmptyBody": "We pair you next Sunday — then there'll be something to show here.",
+  "whyIntro": "The algorithm weights complementarity over similarity. These three factors scored highest in your match:",
+  "whyAlgoLine": "Algorithm {version} · total score {score}/100",
+  "backToBuddy": "← Back to buddy",
+  "factors": {
+    "engagement_balance": {
+      "title": "Engagement balance",
+      "body": "One of you is on the rise, the other holds steady — you give each other an anchor without pushing too hard."
+    },
+    "training_phase_offset": {
+      "title": "Offset training phase",
+      "body": "You're not in the same program week — when @{handle} hits a heavy block, you're on deload. That creates good accountability windows."
+    },
+    "goal_focus_alignment": {
+      "title": "Different goals",
+      "body": "Cross-goal pairs (strength + hypertrophy) show higher accountability than same-goal pairs — you bring different lenses to the conversation."
+    },
+    "hrv_pattern_complement": {
+      "title": "Complementary HRV pattern",
+      "body": "@{handle}'s readiness rhythm mirrors yours in reverse — when one swings, the other holds calm."
+    },
+    "session_frequency_match": {
+      "title": "Same training cadence",
+      "body": "You train at roughly the same frequency — your weeks share the same rhythm, so you don't end up with one peaking while the other rests."
+    }
+  }
+}

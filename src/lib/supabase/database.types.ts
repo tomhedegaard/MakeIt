@@ -88,6 +88,58 @@ export type Database = {
           },
         ]
       }
+      buddy_interactions: {
+        Row: {
+          body: string | null
+          created_at: string
+          from_member: string
+          id: string
+          kind: string
+          pair_id: string
+          to_member: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          from_member: string
+          id?: string
+          kind: string
+          pair_id: string
+          to_member: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          from_member?: string
+          id?: string
+          kind?: string
+          pair_id?: string
+          to_member?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "buddy_interactions_pair_id_fkey"
+            columns: ["pair_id"]
+            isOneToOne: false
+            referencedRelation: "buddy_pairs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "buddy_interactions_from_member_fkey"
+            columns: ["from_member"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "buddy_interactions_to_member_fkey"
+            columns: ["to_member"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       buddy_pairs: {
         Row: {
           id: string

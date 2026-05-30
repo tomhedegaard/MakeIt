@@ -25,6 +25,7 @@ import Marketing from "./Marketing.json";
 import Coach from "./Coach.json";
 import CoachStudio from "./CoachStudio.json";
 import Email from "./Email.json";
+import Buddy from "./Buddy.json";
 
 const messages = {
   Common,
@@ -51,6 +52,7 @@ const messages = {
   Coach,
   CoachStudio,
   Email,
+  Buddy,
 };
 
 export default messages;
