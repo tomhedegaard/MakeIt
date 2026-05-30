@@ -8,6 +8,7 @@
     { "path": "/api/cron/hrv-weekly-insights", "schedule": "0 18 * * 0" },
     { "path": "/api/cron/adapt-program-daily", "schedule": "30 3 * * *" },
     { "path": "/api/cron/draft-form-check-replies", "schedule": "0 4 * * *" },
-    { "path": "/api/cron/coach-morning-report", "schedule": "0 5 * * *" }
+    { "path": "/api/cron/coach-morning-report", "schedule": "0 5 * * *" },
+    { "path": "/api/cron/buddy-rematch-weekly", "schedule": "0 19 * * 0" }
   ]
 }

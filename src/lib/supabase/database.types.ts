@@ -88,6 +88,48 @@ export type Database = {
           },
         ]
       }
+      buddy_pairs: {
+        Row: {
+          id: string
+          member_a: string
+          member_b: string
+          paired_at: string
+          pairing_reason: Json | null
+          unpaired_at: string | null
+        }
+        Insert: {
+          id?: string
+          member_a: string
+          member_b: string
+          paired_at?: string
+          pairing_reason?: Json | null
+          unpaired_at?: string | null
+        }
+        Update: {
+          id?: string
+          member_a?: string
+          member_b?: string
+          paired_at?: string
+          pairing_reason?: Json | null
+          unpaired_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "buddy_pairs_member_a_fkey"
+            columns: ["member_a"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "buddy_pairs_member_b_fkey"
+            columns: ["member_b"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       challenge_participants: {
         Row: {
           challenge_id: string
