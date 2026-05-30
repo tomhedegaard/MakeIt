@@ -25,5 +25,17 @@
     "munkHeader": "Munks kald",
     "yourReasoning": "Din begrundelse",
     "footnote": "Sammenligning er gemt. Du flytter mod next-50 gennemsnittet."
+  },
+  "live": {
+    "eyebrow": "Coach School · Live",
+    "title": "Dine tildelte medlemmer",
+    "subtitle": "{count} åbne alerts på medlemmer du co-coacher. Dit kald lukker køen.",
+    "empty": "Ingen åbne alerts på dine medlemmer lige nu. Godt arbejde — eller stille morgen.",
+    "footnote": "Live-kald gemmes som coach_reviews (mode=live). Munk spot-checker via /coach/co-coaches.",
+    "decisionHeader": "Dit kald — det her er den endelige beslutning",
+    "reasoningPlaceholder": "Kort note til medlemmet eller til Munks audit-spor.",
+    "submitButton": "Luk og send",
+    "closedFootnote": "Lukket",
+    "yourCall": "Dit kald"
   }
 }

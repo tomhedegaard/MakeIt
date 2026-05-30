@@ -25,5 +25,17 @@
     "munkHeader": "Munk's call",
     "yourReasoning": "Your reasoning",
     "footnote": "Comparison saved. You move toward the next-50 mean."
+  },
+  "live": {
+    "eyebrow": "Coach School · Live",
+    "title": "Your assigned members",
+    "subtitle": "{count} open alerts on members you co-coach. Your call closes the queue.",
+    "empty": "No open alerts on your members right now. Good work — or a quiet morning.",
+    "footnote": "Live calls are saved as coach_reviews (mode=live). Munk spot-checks via /coach/co-coaches.",
+    "decisionHeader": "Your call — this is the final decision",
+    "reasoningPlaceholder": "Short note for the member or Munk's audit trail.",
+    "submitButton": "Close and send",
+    "closedFootnote": "Closed",
+    "yourCall": "Your call"
   }
 }

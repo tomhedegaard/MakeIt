@@ -157,3 +157,87 @@ export async function getPendingSandboxCases(
   }
   return cases;
 }
+
+/* ================================================================== *
+ * CC-5 — live cases for a promoted co-coach
+ * ================================================================== */
+
+/** One open hrv_alert assigned to the current co-coach for live review. */
+export interface LiveCase {
+  alertId: string;
+  triggeredAt: string;
+  memberId: string;
+  memberHandle: string;
+  conditionsMet: Record<string, unknown>;
+}
+
+const MOCK_LIVE_CASES: LiveCase[] = [
+  {
+    alertId: "demo-live-1",
+    triggeredAt: new Date(Date.now() - 4 * 3_600_000).toISOString(),
+    memberId: "m-nina",
+    memberHandle: "nina_dl",
+    conditionsMet: {
+      readiness_bucket: "very_low",
+      rolling_low_days: 2,
+      sleep_hours_avg2d: 5.4,
+    },
+  },
+  {
+    alertId: "demo-live-2",
+    triggeredAt: new Date(Date.now() - 9 * 3_600_000).toISOString(),
+    memberId: "m-frederik",
+    memberHandle: "frederik",
+    conditionsMet: {
+      readiness_bucket: "low",
+      hr_delta: "+6 bpm vs baseline",
+    },
+  },
+];
+
+/**
+ * Open hrv_alerts for the members currently assigned to the caller as
+ * a live co-coach. Newest first. Demo mode returns a 2-case mock so
+ * the page is exercisable without real co_coach_assignments rows.
+ */
+export async function getOpenLiveCases(limit: number = 20): Promise<LiveCase[]> {
+  const member = await getSession();
+  if (!member) return [];
+  if (!SUPABASE_ENABLED) return MOCK_LIVE_CASES;
+
+  const svc = createServiceClient();
+
+  // The co-coach's current member assignments.
+  const { data: assignRows, error: assignErr } = await svc
+    .from("co_coach_assignments")
+    .select("assigned_member_id")
+    .eq("coach_member_id", member.id)
+    .is("ended_at", null);
+  if (assignErr) throw new Error(`assignments: ${assignErr.message}`);
+  const memberIds = (assignRows ?? []).map((r) => r.assigned_member_id as string);
+  if (memberIds.length === 0) return [];
+
+  // Open alerts for those members.
+  const { data: alertRows, error: alertErr } = await svc
+    .from("hrv_alerts")
+    .select(
+      "id, triggered_at, conditions_met, member:members!inner(id, handle)",
+    )
+    .eq("status", "open")
+    .in("member_id", memberIds)
+    .order("triggered_at", { ascending: false })
+    .limit(limit);
+  if (alertErr) throw new Error(`alerts: ${alertErr.message}`);
+
+  return (alertRows ?? []).map<LiveCase>((a) => {
+    const m = Array.isArray(a.member) ? a.member[0] : a.member;
+    return {
+      alertId: a.id as string,
+      triggeredAt: a.triggered_at as string,
+      memberId: (m?.id as string) ?? "",
+      memberHandle: (m?.handle as string) ?? "—",
+      conditionsMet:
+        (a.conditions_met as Record<string, unknown> | null) ?? {},
+    };
+  });
+}

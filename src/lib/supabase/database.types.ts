@@ -533,6 +533,55 @@ export type Database = {
           },
         ]
       }
+      co_coach_assignments: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          assigned_member_id: string
+          coach_member_id: string
+          ended_at: string | null
+          id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          assigned_member_id: string
+          coach_member_id: string
+          ended_at?: string | null
+          id?: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          assigned_member_id?: string
+          coach_member_id?: string
+          ended_at?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_coach_assignments_coach_member_id_fkey"
+            columns: ["coach_member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_coach_assignments_assigned_member_id_fkey"
+            columns: ["assigned_member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_coach_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coach_morning_reports: {
         Row: {
           coach_id: string
