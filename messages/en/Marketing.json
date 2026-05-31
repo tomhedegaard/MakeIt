@@ -1,13 +1,16 @@
 {
   "nav": {
     "crew": "Crew",
+    "engine": "Engine",
     "coaching": "Coaching",
     "tiers": "Tiers",
     "app": "The App",
     "price": "Pricing",
     "faq": "FAQ",
     "closedBeta": "Closed Beta",
-    "login": "Log in"
+    "login": "Log in",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu"
   },
   "hero": {
     "eyebrow": "Closed Beta · Invite only · est. 2026",
@@ -24,7 +27,25 @@
     "subline": "MakeIt isn't just straps and cuffs.",
     "subline2": "It's the inner universe for the crew behind it — coaching, community, loyalty and HRV-aware recovery in one place. Built in Copenhagen. Made for athletes who lift heavy.",
     "ctaPrimary": "Get access",
-    "ctaSecondary": "Learn more"
+    "ctaSecondary": "Learn more",
+    "ctaTertiary": "Try the engine ↓"
+  },
+  "engine": {
+    "eyebrow": "02 — Engine",
+    "heading": "Drag a slider. Watch the engine.",
+    "intro": "This is the real rule engine from the app — not a mockup. Drag a slider, and the engine recomputes its decision in your browser. No API, no waiting. Same code that runs for you every morning at 05:30.",
+    "signalsHeading": "What the engine sees right now",
+    "signalLabels": {
+      "hrv": "HRV reading",
+      "sleep": "Sleep (2-day average)",
+      "alcohol": "Alcohol (last 2 days)",
+      "feeling": "Most recent feeling"
+    },
+    "decisionHeading": "What the engine decides",
+    "reasoningHeading": "Why",
+    "previousLabel": "Before you touched it",
+    "disclaimer": "Same pure rule engine the app uses. No API, no spinner — runs in your browser.",
+    "ctaHowItWorks": "See the full reasoning chain →"
   },
   "crew": {
     "eyebrow": "01 — The Crew",
@@ -41,8 +62,8 @@
         "v": "Only via a personal code from Mikael Munk or an existing crew member."
       },
       "internal": {
-        "k": "Built from the inside",
-        "v": "We build the platform together with you. Your feedback is the feature set."
+        "k": "Open brain",
+        "v": "We show you how the engine thinks — and give you the knobs to move it. Every decision, every adjustment, every counterfactual is open."
       },
       "noNoise": {
         "k": "No noise",
@@ -59,6 +80,45 @@
     "note": "Apple Watch via iPhone app"
   },
   "pillars": {
+    "engine": {
+      "label": "02 — Engine",
+      "title": "The program rewrites itself. On your body's terms.",
+      "body": "Every morning at 05:30 the engine reads your HRV, your sleep, last session's RPE, and your most recent form-checks. It adjusts today's session — or doesn't — and tells you why. Munk sees the escalation before you do.",
+      "bullet1": "Top-set reduction, accessory cut, exercise swap — or no_change. Never more than one change per session.",
+      "bullet2": "HRV very_low → session paused, mobility + walk, Munk notified",
+      "bullet3": "You can always say \"keep original\" — nothing happens behind your back",
+      "statLabel": "actions",
+      "demoHook": "Drag the sliders"
+    },
+    "openBrain": {
+      "label": "03 — Open Brain",
+      "title": "Coaching that doesn't hide the calculator.",
+      "body": "Every decision shows the entire chain: raw signals → rule → Claude's refinement → action → outcome. You can inspect the last 30 days of adaptations and see how your body and your training connect.",
+      "bullet1": "30-day adaptation history with outcome tracking",
+      "bullet2": "Counterfactual sliders: \"What if I'd slept 7h?\" — computed live in your browser",
+      "bullet3": "Reason codes in Danish — no black box",
+      "statLabel": "days history",
+      "demoHook": "See the engine again"
+    },
+    "munkMultiplier": {
+      "label": "04 — Munk Multiplier",
+      "title": "One coach. 5× capacity. Still him.",
+      "body": "AI drafts form-check replies, cohort patterns, and morning reports — Munk edits in 30 seconds or rewrites. You never get an AI reply without his signature.",
+      "bullet1": "AI-drafted form-check replies, signed by Munk before sending",
+      "bullet2": "Daily morning report: prioritized queue of members Munk needs to write to",
+      "bullet3": "Cohort patterns: AI spots when 3+ athletes have the same problem in the same week",
+      "statLabel": "form-check"
+    },
+    "crewPyramid": {
+      "label": "05 — Crew Pyramid",
+      "title": "Beasts become co-coaches.",
+      "body": "When you hit Beast tier, Coach School unlocks: curated lessons, sandbox cases you practice on, and — if you pass — live members you co-coach with Munk as senior. Reps reward that work, not just your own PRs.",
+      "bullet1": "AI buddy pairing: training level + location + timing matches you with a partner",
+      "bullet2": "Coach School: lessons → sandbox → live, with safety moderation on every outgoing message",
+      "bullet3": "Reps for member feedback, not just for your own reps",
+      "statLabel": "tiers",
+      "demoHook": "See the ladder"
+    },
     "coaching": {
       "label": "02 — Coaching",
       "title": "Programs that work. Coaches who lift themselves.",
@@ -106,29 +166,55 @@
     },
     "intro": "Every completed session, form check and PR fills the Reps balance. Tiers aren't titles — they're proof of the work behind them. Each level unlocks new perks: form-check priority, IRL meets, exclusive gear, 1:1 coaching.",
     "cta": "Start your journey →",
+    "ctaSecondary": "See the engine driving this →",
     "ctaNote": "Closed beta · invite required",
     "locked": "Locked",
+    "promotionFooter": "Reps are earned for sessions, form-checks, lifestyle logs, and — from Beast and up — for the quality of your feedback to other members. Tier promotion happens automatically via the Reps ledger.",
     "lifter": {
       "description": "The way in. You've banked your first reps and you're learning the system — your first session is in the app, the program is dialed to your level.",
-      "quote": "First 30 days. The program hit my level exactly, and I've never felt this on track in my life."
+      "quote": "First 30 days. The program hit my level exactly, and I've never felt this on track in my life.",
+      "unlocks": {
+        "1": "Adaptive engine runs from day 1",
+        "2": "AI form-check with 24-hour Munk review",
+        "3": "Buddy pairing activates after 14 days",
+        "4": "1 IRL meet per quarter"
+      }
     },
     "athlete": {
       "description": "Consistency. You log sets and form checks weekly. PRs start dropping on the big lifts, and you've made the first lifestyle shifts that won't reverse.",
-      "quote": "Three months in and I've hit PRs on all three big lifts. The Reps system keeps me accountable every single day."
+      "quote": "Three months in and I've hit PRs on all three big lifts. The Reps system keeps me accountable every single day.",
+      "unlocks": {
+        "1": "Form-check priority in Munk's queue",
+        "2": "Lifestyle-log patterns in your Open Brain",
+        "3": "Buddy pod (3 people)",
+        "4": "Custom strap colour unlocked"
+      }
     },
     "beast": {
       "description": "The volume block. You know how your body responds under heavy load, and you work recovery deliberately. Coach feedback gets finer and more surgical.",
-      "quote": "The volume block was the hardest, physically and mentally — but that's where I learned what I can really handle."
+      "quote": "The volume block was the hardest, physically and mentally — but that's where I learned what I can really handle.",
+      "unlocks": {
+        "1": "Coach School unlocked — lessons with Claude evaluation",
+        "2": "Sandbox cases: practice against simulated members",
+        "3": "1:1 30-min with Munk per quarter",
+        "4": "Limited drops before everyone else"
+      }
     },
     "legend": {
       "description": "Few make it here. A multi-year commitment to building the body as a discipline, not a trend. You're the one the crew looks up to, and your sessions inspire the Lifter tier.",
-      "quote": "Three years. 200+ sessions. Two back injuries behind me. The Reps balance shows why — it's not luck, it's built kilo by kilo."
+      "quote": "Three years. 200+ sessions. Two back injuries behind me. The Reps balance shows why — it's not luck, it's built kilo by kilo.",
+      "unlocks": {
+        "1": "Co-coaching: you answer form-checks with Munk as senior",
+        "2": "Pod leader for new Lifters",
+        "3": "Reps for member feedback, not just your own reps",
+        "4": "Permanent seat in the Amagerbro loft"
+      }
     }
   },
   "app": {
     "eyebrow": "06 — The App",
     "heading": "Here's how it looks.",
-    "intro": "Four screens that define your week — from the first morning tap, to the nudge above the first lift that adapts the day's load to your HRV, to the AI verdict on your heavy set.",
+    "intro": "Six screens that define your week — from the first morning tap, to the nudge above the first lift that adapts the day's load to your HRV, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Today's session, one tap to start",
@@ -137,7 +223,39 @@
       "readinessLabel": "Readiness",
       "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
       "formCheckLabel": "Form check",
-      "formCheckDetail": "Claude grades it in 6 sec."
+      "formCheckDetail": "Claude grades it in 6 sec.",
+      "buddyLabel": "Buddy",
+      "buddyDetail": "AI-paired · weekly rematch",
+      "coachSchoolLabel": "Coach School",
+      "coachSchoolDetail": "Sandbox case · scored vs Munk"
+    },
+    "buddy": {
+      "eyebrow": "Your buddy",
+      "pairedSinceLabel": "Paired since",
+      "pairedSince": "3 weeks",
+      "matchLabel": "Match · Athlete",
+      "matchBlurb": "Same tier, complementary program. Trains 5-7pm just like you.",
+      "readinessLabel": "Her readiness today",
+      "hrvNote": "WHOOP · synced",
+      "interaction1": "You sent fire to her 175 kg DL",
+      "interaction2": "She sent muscle to your RPE-8 squat set",
+      "interaction3": "Nudge: \"Sleep well tonight, you have Squat-A tomorrow\"",
+      "sendCta": "Send nudge →"
+    },
+    "coachSchool": {
+      "eyebrow": "Coach School",
+      "modeLabel": "Sandbox · case 47/50",
+      "agreementLabel": "Your rolling agreement",
+      "alertAge": "fired 4h ago",
+      "signalsLabel": "Signals in the alert",
+      "yourCallLabel": "Your call",
+      "decisions": {
+        "approve": "Approve",
+        "modify": "Modify",
+        "escalate": "Escalate",
+        "reject": "Reject"
+      },
+      "submitCta": "Submit → compare with Munk"
     },
     "today": {
       "greeting": "Good morning",
@@ -211,10 +329,10 @@
       "foot": "No waiting · no template PDFs"
     },
     "pillar2": {
-      "eyebrow": "Instant feedback",
-      "title": "AI checks your form",
-      "body": "Upload a video and get technique feedback within seconds. One of the crew's head coaches verifies it weekly, so you never run on autopilot.",
-      "foot": "Seconds to respond · weekly human review"
+      "eyebrow": "Drafted by AI, signed by Munk",
+      "title": "Form-check with Munk's signature",
+      "body": "AI drafts the reply in Munk's voice in seconds, and Munk edits or rewrites in up to 30 seconds. You never get an AI reply without his name on it.",
+      "foot": "AI draft + Munk signature · within 24h"
     },
     "pillar3": {
       "eyebrow": "People for the milestones",
@@ -240,6 +358,10 @@
     "nina": {
       "cred": "DL specialization · 175 kg @ 68 kg BW",
       "quote": "+15 kg on the deadlift in 8 weeks, no injuries. The fact the Reps shop exists is dangerously good motivation — I'm saving up for the embroidered strap."
+    },
+    "anton": {
+      "cred": "Powerlifting · 2 years in the crew",
+      "quote": "First time I've seen a coach show me why he changed something. I can drag the sliders and watch the engine think. It's not a black-box program that asks me to lift less — it's coaching I understand."
     },
     "maria": {
       "cred": "Hypertrophy · switching between blocks",
@@ -324,6 +446,22 @@
       "weeklyInsight": {
         "q": "What is the weekly HRV insight?",
         "a": "Every Sunday evening we correlate your week's RMSSD against your lifestyle tags (sleep, alcohol, stress, illness) and send one short observation — in Danish, never diagnoses, never made-up numbers. Example: 'Sleeping under 7h for three nights drags RMSSD down by ~8%.' The full history lives at /hrv/insights."
+      },
+      "openBrainWhy": {
+        "q": "Why do you show the engine publicly?",
+        "a": "Because trust is built on transparency. Our rule layer is 300 lines of pure TypeScript that we show you right here on the landing page — drag the sliders and watch what it would have chosen. Competitors can copy the rules in a day; they cannot copy 6 months of audit logs, baselines, and Munk-in-the-loop UX. The moat is the flywheel, not a secret API."
+      },
+      "coCoach": {
+        "q": "What is a co-coach?",
+        "a": "A co-coach is a Beast-tier member (5,000+ Reps) Munk has chosen to help with form-check replies and HRV escalations. You start in Coach School: curated lessons, sandbox cases you practice on, and — if you hit 80% agreement with Munk over 50 cases — you're promoted to live with 2-3 assigned members. Munk co-signs everything. You're his lieutenants, not an independent operator."
+      },
+      "hrvSharing": {
+        "q": "Do you send my HRV to Munk?",
+        "a": "Only if you ask us to. Coach sharing is an explicit toggle in the HRV settings — turn it on and Munk can see your readings, lifestyle tags, and weekly insights (the red-flag queue only triggers on opted-in members). Turn it off and the HRV module runs for you alone. We never send your data to third parties."
+      },
+      "optOutAdaptive": {
+        "q": "What if I don't want AI adjustments?",
+        "a": "You always have control. You can disable adaptive adjustments from the HRV settings (the program then runs as planned without daily tweaks), and even with them on you can reject each individual adjustment with 'Keep original' directly in the session. The engine is an opinion, not a command."
       },
       "offPlanNutrition": {
         "q": "What do I do if I eat something that's not in the meal plan?",

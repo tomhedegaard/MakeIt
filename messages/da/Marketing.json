@@ -1,13 +1,16 @@
 {
   "nav": {
     "crew": "Crew",
+    "engine": "Motor",
     "coaching": "Coaching",
     "tiers": "Tiers",
     "app": "Appen",
     "price": "Pris",
     "faq": "FAQ",
     "closedBeta": "Closed Beta",
-    "login": "Log ind"
+    "login": "Log ind",
+    "menuOpen": "Åbn menu",
+    "menuClose": "Luk menu"
   },
   "hero": {
     "eyebrow": "Closed Beta · Invite only · est. 2026",
@@ -24,7 +27,25 @@
     "subline": "MakeIt er ikke bare straps og cuffs.",
     "subline2": "Det er det interne univers for crewet bag — coaching, community, loyalitet og HRV-aware restitution samlet ét sted. Bygget i København. Lavet til atleter der løfter tungt.",
     "ctaPrimary": "Få adgang",
-    "ctaSecondary": "Læs mere"
+    "ctaSecondary": "Læs mere",
+    "ctaTertiary": "Prøv motoren ↓"
+  },
+  "engine": {
+    "eyebrow": "02 — Motor",
+    "heading": "Træk i en slider. Se motoren tænke.",
+    "intro": "Det her er den rigtige regel-motor fra appen — ikke en mockup. Træk i en slider, og motoren genberegner sin beslutning i din browser. Ingen API, ingen ventetid. Samme kode kører for dig hver morgen klokken 05:30.",
+    "signalsHeading": "Hvad motoren ser lige nu",
+    "signalLabels": {
+      "hrv": "HRV-aflæsning",
+      "sleep": "Søvn (2 dages snit)",
+      "alcohol": "Alkohol (sidste 2 dage)",
+      "feeling": "Seneste følelse"
+    },
+    "decisionHeading": "Hvad motoren beslutter",
+    "reasoningHeading": "Hvorfor",
+    "previousLabel": "Før du rørte den",
+    "disclaimer": "Samme rene regel-motor som app'en. Ingen API, ingen spinner — kører i din browser.",
+    "ctaHowItWorks": "Se hele tankegangen →"
   },
   "crew": {
     "eyebrow": "01 — Crewet",
@@ -41,8 +62,8 @@
         "v": "Kun via personlig kode fra Mikael Munk eller en eksisterende crew-medlem."
       },
       "internal": {
-        "k": "Bygget internt",
-        "v": "Vi udvikler platformen sammen med jer. Jeres feedback er featurerne."
+        "k": "Åben hjerne",
+        "v": "Vi viser jer hvordan motoren tænker — og giver jer skruerne til at flytte den. Hver beslutning, hver tilpasning, hver counterfactual er åben."
       },
       "noNoise": {
         "k": "Ingen støj",
@@ -59,6 +80,45 @@
     "note": "Apple Watch via iPhone-appen"
   },
   "pillars": {
+    "engine": {
+      "label": "02 — Motor",
+      "title": "Programmet rewriter sig selv. På din krops præmisser.",
+      "body": "Hver morgen kl. 05:30 læser motoren din HRV, din søvn, sidste sessions RPE og dine seneste form-checks. Den justerer dagens session — eller lader være — og fortæller dig hvorfor. Munk ser eskaleringen før du gør.",
+      "bullet1": "Topsæt-reduktion, accessory-cut, øvelsesbytte — eller no_change. Aldrig mere end én ændring pr. session.",
+      "bullet2": "HRV very_low → session pauset, mobilitet + gåtur, Munk får besked",
+      "bullet3": "Du kan altid sige \"behold original\" — intet sker bag din ryg",
+      "statLabel": "actions",
+      "demoHook": "Træk i sliderne"
+    },
+    "openBrain": {
+      "label": "03 — Åben hjerne",
+      "title": "Coaching, der ikke gemmer regnemaskinen.",
+      "body": "Hver beslutning viser hele kæden: råsignaler → regel → Claudes refinement → handling → udfald. Du kan inspicere de seneste 30 dages tilpasninger og se hvordan din krop og din træning hænger sammen.",
+      "bullet1": "30-dages adaptation history med outcome-tracking",
+      "bullet2": "Counterfactual-sliders: \"Hvad hvis jeg havde sovet 7t?\" — beregnes live i din browser",
+      "bullet3": "Reason codes på dansk — ingen black box",
+      "statLabel": "dage historik",
+      "demoHook": "Se motoren igen"
+    },
+    "munkMultiplier": {
+      "label": "04 — Munk-multiplikator",
+      "title": "Én coach. 5× kapacitet. Stadig ham.",
+      "body": "AI udkaster form-check-svar, kohort-mønstre og morgenrapporter — Munk redigerer i 30 sekunder eller skriver om. Du får aldrig et AI-svar uden hans underskrift.",
+      "bullet1": "AI-drafted form-check-svar, signeret af Munk inden afsendelse",
+      "bullet2": "Daglig morgenrapport: prioriteret kø af medlemmer Munk skal skrive til",
+      "bullet3": "Kohort-mønstre: AI ser når 3+ atleter har samme problem i samme uge",
+      "statLabel": "form-check"
+    },
+    "crewPyramid": {
+      "label": "05 — Crew-pyramide",
+      "title": "Beasts bliver til co-coaches.",
+      "body": "Når du rammer Beast-tier, åbner Coach School: kuraterede lektioner, sandbox-cases du øver på, og — hvis du består — live-medlemmer du co-coacher med Munk som senior. Reps belønner det arbejde, ikke kun dine egne PR'er.",
+      "bullet1": "AI buddy-pairing: træningsniveau + lokation + timing matcher dig med en partner",
+      "bullet2": "Coach School: lektioner → sandbox → live, med safety-moderation på alle udgående beskeder",
+      "bullet3": "Reps for medlems-feedback, ikke kun for dine egne reps",
+      "statLabel": "tiers",
+      "demoHook": "Se stigen"
+    },
     "coaching": {
       "label": "02 — Coaching",
       "title": "Programmer der virker. Coaches der løfter selv.",
@@ -106,29 +166,55 @@
     },
     "intro": "Hver gennemført session, form-check og PR fylder Reps-balancen. Tiers er ikke titler — det er bevis på arbejdet bag. Hvert niveau låser nye perks op: form-check-prioritet, IRL-meets, eksklusivt udstyr, 1:1-coaching.",
     "cta": "Start din journey →",
+    "ctaSecondary": "Se motoren der driver det →",
     "ctaNote": "Closed beta · invite kræves",
     "locked": "Locked",
+    "promotionFooter": "Reps tjenes for sessioner, form-checks, lifestyle-logs, og — fra Beast og op — for kvaliteten af din feedback til andre medlemmer. Tier-promotionen sker automatisk via Reps-ledgeren.",
     "lifter": {
       "description": "Indgangen. Du har samlet dine første reps og er i gang med at lære systemet — første session ligger i appen, programmet er tilpasset dit niveau.",
-      "quote": "Første 30 dage. Programmet ramte præcis mit niveau, og jeg har aldrig følt mig så på sporet i mit liv."
+      "quote": "Første 30 dage. Programmet ramte præcis mit niveau, og jeg har aldrig følt mig så på sporet i mit liv.",
+      "unlocks": {
+        "1": "Adaptive engine kører fra dag 1",
+        "2": "AI form-check med 24-timers Munk-review",
+        "3": "Buddy-pairing slås til efter 14 dage",
+        "4": "1 IRL-meet pr. kvartal"
+      }
     },
     "athlete": {
       "description": "Konsistens. Du logger sæt og form-checks ugentligt. PR'er begynder at falde på big lifts, og du har lavet de første lifestyle-skift der ikke vender tilbage.",
-      "quote": "Tre måneder ind og jeg har slået PR på alle tre big lifts. Reps-systemet holder mig accountable hver eneste dag."
+      "quote": "Tre måneder ind og jeg har slået PR på alle tre big lifts. Reps-systemet holder mig accountable hver eneste dag.",
+      "unlocks": {
+        "1": "Form-check-prioritet i Munks kø",
+        "2": "Lifestyle-log-mønstre i din Open Brain",
+        "3": "Buddy-pod (3 personer)",
+        "4": "Custom-strap-farve unlocked"
+      }
     },
     "beast": {
       "description": "Volumen-blokken. Du kender din krops respons under tung belastning, og du arbejder bevidst med restitution. Coach-feedback bliver finere og mere kirurgisk.",
-      "quote": "Volumen-blokken var den sværeste fysisk og mentalt — men det er der jeg lærte hvad jeg virkelig kan klare."
+      "quote": "Volumen-blokken var den sværeste fysisk og mentalt — men det er der jeg lærte hvad jeg virkelig kan klare.",
+      "unlocks": {
+        "1": "Coach School låst op — lektioner med Claude-evaluering",
+        "2": "Sandbox-cases: du øver mod simulerede medlemmer",
+        "3": "1:1 30-min med Munk pr. kvartal",
+        "4": "Limited drops før alle andre"
+      }
     },
     "legend": {
       "description": "Få når hertil. Et flerårigt commitment til kropsbygning som disciplin, ikke trend. Du er den crewet kigger op til, og dine sessioner inspirerer Lifter-tieren.",
-      "quote": "Tre år. 200+ sessioner. To rygskader bagved mig. Reps-balancen viser hvorfor — det er ikke held, det er bygget kilo for kilo."
+      "quote": "Tre år. 200+ sessioner. To rygskader bagved mig. Reps-balancen viser hvorfor — det er ikke held, det er bygget kilo for kilo.",
+      "unlocks": {
+        "1": "Co-coaching: du svarer på form-checks med Munk som senior",
+        "2": "Pod-leader for nye Lifters",
+        "3": "Reps for medlems-feedback, ikke kun egne reps",
+        "4": "Permanent stol i Amagerbro-loftet"
+      }
     }
   },
   "app": {
     "eyebrow": "06 — Appen",
     "heading": "Sådan ser det ud.",
-    "intro": "Fire skærme der definerer din uge — fra morgenens første tap, til nudgen over første øvelse der tilpasser dagens belastning efter din HRV, til AI'ens dom over dit tunge sæt.",
+    "intro": "Seks skærme der definerer din uge — fra morgenens første tap, til nudgen over første øvelse der tilpasser dagens belastning efter din HRV, til din buddy's daglige readiness og den sandbox-case du øver på som Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Dagens session, ét tap til start",
@@ -137,7 +223,39 @@
       "readinessLabel": "Readiness",
       "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
       "formCheckLabel": "Form-check",
-      "formCheckDetail": "Claude vurderer på 6 sek."
+      "formCheckDetail": "Claude vurderer på 6 sek.",
+      "buddyLabel": "Buddy",
+      "buddyDetail": "AI-paired · ugentlig rematch",
+      "coachSchoolLabel": "Coach School",
+      "coachSchoolDetail": "Sandbox-case · agreement scoret mod Munk"
+    },
+    "buddy": {
+      "eyebrow": "Din buddy",
+      "pairedSinceLabel": "Pairet siden",
+      "pairedSince": "3 uger",
+      "matchLabel": "Match · Athlete",
+      "matchBlurb": "Samme tier, komplementært program. Træner kl. 17-19 lige som dig.",
+      "readinessLabel": "Hendes readiness i dag",
+      "hrvNote": "WHOOP · synced",
+      "interaction1": "Du sendte fire-bombe til hendes 175 kg DL",
+      "interaction2": "Hun sendte muscle til dit RPE-8 squat-set",
+      "interaction3": "Nudge: \"Sov ordentligt i nat, du har Squat-A i morgen\"",
+      "sendCta": "Send nudge →"
+    },
+    "coachSchool": {
+      "eyebrow": "Coach School",
+      "modeLabel": "Sandbox · case 47/50",
+      "agreementLabel": "Din rolling agreement",
+      "alertAge": "udløst 4t siden",
+      "signalsLabel": "Signaler i alerten",
+      "yourCallLabel": "Dit kald",
+      "decisions": {
+        "approve": "Acceptér",
+        "modify": "Justér",
+        "escalate": "Eskalér",
+        "reject": "Afvis"
+      },
+      "submitCta": "Submit → sammenlign med Munk"
     },
     "today": {
       "greeting": "God morgen",
@@ -211,10 +329,10 @@
       "foot": "Ingen ventetid · ingen template-pdf'er"
     },
     "pillar2": {
-      "eyebrow": "Instant feedback",
-      "title": "AI tjekker din form",
-      "body": "Upload en video og få teknik-feedback inden for sekunder. En af crewets head coaches verificerer ugentligt, så du aldrig kører på autopilot.",
-      "foot": "Sek. respons · ugentlig human review"
+      "eyebrow": "Drafted by AI, signed by Munk",
+      "title": "Form-check med Munks underskrift",
+      "body": "AI udkaster svaret i Munks stemme inden for sekunder, og Munk redigerer eller skriver om i op til 30 sekunder. Du får aldrig et AI-svar uden hans navn på.",
+      "foot": "AI-draft + Munk-signatur · inden for 24t"
     },
     "pillar3": {
       "eyebrow": "Mennesker til milepæle",
@@ -244,6 +362,10 @@
     "maria": {
       "cred": "Hypertrofi · skifter mellem blokke",
       "quote": "Crewet er der jeg poster, ikke Instagram. Stille, præcist, og på dansk. Ingen ads, ingen krav. Bare folk der løfter."
+    },
+    "anton": {
+      "cred": "Powerlifting · 2 år i crewet",
+      "quote": "Første gang jeg har set en coach vise mig hvorfor han ændrede noget. Jeg kan trække i sliderne og se motoren tænke. Det er ikke et black box-program der beder mig løfte mindre — det er coaching jeg forstår."
     }
   },
   "origin": {
@@ -328,6 +450,22 @@
       "offPlanNutrition": {
         "q": "Hvad gør jeg hvis jeg spiser noget der ikke står i mealplanen?",
         "a": "Tryk 'Spiste noget andet' i Nutrition-feedet, beskriv kort hvad du spiste, og det logges som off-plan måltid. Ingen straf, ingen scolding — bare data. Coachen ser det i ugesignalerne, så næste uges planlægning bliver mere realistisk i stedet for at ignorere virkeligheden."
+      },
+      "openBrainWhy": {
+        "q": "Hvorfor viser I motoren offentligt?",
+        "a": "Fordi tillid bygges på transparens. Vores rule-layer er 300 linjer Pure TypeScript som vi viser dig her på landingpagen — du kan trække i sliderne og se hvad den ville have valgt. Konkurrenter kan kopiere rules på en dag; de kan ikke kopiere 6 måneders audit-logs, baselines og Munk-i-loop UX. Vores moat er flywheel'en, ikke et hemmeligt API."
+      },
+      "coCoach": {
+        "q": "Hvad er en co-coach?",
+        "a": "En co-coach er et Beast-tier medlem (5.000+ Reps) som Munk har valgt til at hjælpe med form-check-svar og HRV-eskaleringer. Du starter i Coach School: kuraterede lektioner, sandbox-cases du øver på, og — hvis du rammer 80% agreement med Munk over 50 cases — bliver du promoveret til live med 2-3 tildelte medlemmer. Munk co-signerer alt. Du er hans håndlangere, ikke en uafhængig operatør."
+      },
+      "hrvSharing": {
+        "q": "Sender I min HRV til Munk?",
+        "a": "Kun hvis du beder os om det. Coach-deling er en eksplicit toggle i HRV-indstillingerne — slår du den til, kan Munk se dine readings, livsstil-tags og ugentlige indsigter (red-flag-køen trigger kun på opted-in medlemmer). Slår du den fra, kører HRV-modulet for dig selv. Vi sender aldrig dine data til tredjeparter."
+      },
+      "optOutAdaptive": {
+        "q": "Hvad sker hvis jeg ikke vil have AI-tilpasninger?",
+        "a": "Du har altid kontrollen. Du kan deaktivere adaptive tilpasninger fra HRV-indstillingerne (programmet kører så som planlagt uden daglige justeringer), og selv hvis du har dem slået til kan du afvise hver enkelt tilpasning med 'Behold original' direkte i sessionen. Motoren er en mening, ikke en kommando."
       }
     }
   },
