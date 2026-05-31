@@ -1,0 +1,50 @@
+{
+  "header": {
+    "eyebrow": "Billing",
+    "title": "Dit medlemskab",
+    "subtitle": "Administrér dit Crew-medlemskab og 1:1 add-on. Alle ændringer træder i kraft ved næste faktureringsdato."
+  },
+  "banners": {
+    "success": "Tak — din betaling gik igennem.",
+    "canceled": "Checkout afbrudt — intet er trukket.",
+    "demo": "Demo mode — Stripe er ikke koblet på. Tilføj <code>STRIPE_SECRET_KEY</code> + price-ID'er for at aktivere checkout.",
+    "error": "Noget gik galt under checkout ({err}). Prøv igen, eller skriv til os."
+  },
+  "crew": {
+    "eyebrow": "Crew-medlemskab",
+    "title": "Adgang til hele platformen",
+    "price": "Pris",
+    "nextBilling": "Næste fakturering",
+    "manage": "Manage abonnement",
+    "activate": "Aktivér Crew-medlemskab →",
+    "secureCheckout": "Sikker checkout via Stripe · ingen kort gemmes hos os"
+  },
+  "oneOnOne": {
+    "eyebrow": "1:1 Coaching · add-on",
+    "title": "Direkte adgang til Mikael Munk",
+    "price": "Pris",
+    "spots": "Pladser",
+    "spotsValue": "{count} ad gangen",
+    "manage": "Manage 1:1",
+    "apply": "Søg om plads →",
+    "requiresCrew": "Kræver aktivt Crew-medlemskab"
+  },
+  "help": {
+    "eyebrow": "Hjælp",
+    "body": "Spørgsmål om faktura, refund eller pause? Skriv til <link>{email}</link>."
+  },
+  "status": {
+    "notActivated": "Ikke aktiveret",
+    "stopping": " · stopper",
+    "list": {
+      "trialing": "Prøveperiode",
+      "active": "Aktiv",
+      "past_due": "Betaling fejlede",
+      "canceled": "Opsagt",
+      "incomplete": "Afventer betaling",
+      "incomplete_expired": "Udløbet",
+      "unpaid": "Ubetalt",
+      "paused": "Pauset"
+    }
+  }
+}

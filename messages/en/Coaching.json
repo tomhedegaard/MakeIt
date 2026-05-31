@@ -1,0 +1,50 @@
+{
+  "header": {
+    "eyebrow": "02 — Train",
+    "title": "Your week.",
+    "subtitle": "All planned automatically by the AI, tuned by your coach, and dialed in for you."
+  },
+  "week": {
+    "ariaLabel": "Week overview",
+    "done": "Completed",
+    "today": "Today"
+  },
+  "today": {
+    "label": "Today · {programCode} · week {week}",
+    "exercises": "Exercises",
+    "sets": "Sets",
+    "estTime": "Est. time",
+    "start": "Start session →"
+  },
+  "active": {
+    "eyebrow": "Active program",
+    "weeks": "weeks",
+    "volume": "Volume · 4w",
+    "prs": "PRs · 4w",
+    "streak": "Streak"
+  },
+  "library": {
+    "eyebrow": "Programs",
+    "activeBadge": "Active · week {week}",
+    "coach": "Coach",
+    "coachFallback": "AI + team",
+    "level": "Level",
+    "levelFallback": "—",
+    "continue": "Continue →",
+    "details": "Details"
+  },
+  "oneOnOne": {
+    "eyebrow": "1:1 Coaching · The only 100% human part",
+    "title": "Want Mikael Munk straight in your ear?",
+    "body": "A personal program, weekly form checks over video, and direct access on Signal. {spots} at a time.",
+    "priceSuffix": "{currency}/{period} on top of membership",
+    "apply": "Apply for a spot →",
+    "readMore": "Read more"
+  },
+  "startButton": {
+    "switchConfirm": "Switch to \"{name}\"? Your current program will be paused (you can resume it later).",
+    "startConfirm": "Start \"{name}\"?",
+    "starting": "Starting…",
+    "start": "Start program"
+  }
+}

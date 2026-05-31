@@ -1,17 +1,10 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import type { MealSlot } from "@/lib/data/nutrition";
 import { logMealAction } from "./actions";
-
-const SLOT_LABELS: Record<MealSlot, string> = {
-  morgen: "Morgen",
-  frokost: "Frokost",
-  aften: "Aften",
-  snack: "Snack",
-  pre: "Pre",
-  post: "Post",
-};
+import StreakCelebration from "@/components/nutrition/StreakCelebration";
 
 export default function LogMealButton({
   mealId,
@@ -24,10 +17,13 @@ export default function LogMealButton({
   slot?: MealSlot;
   dateIso: string;
 }) {
+  const t = useTranslations("Nutrition.logMeal");
+  const ts = useTranslations("Nutrition.slotLabels");
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const [rating, setRating] = useState<number>(4);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [celebration, setCelebration] = useState<number | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
@@ -47,11 +43,12 @@ export default function LogMealButton({
     const formData = new FormData(e.currentTarget);
     formData.set("rating", String(rating));
     startTransition(() => {
-      logMealAction(formData).then(() => {
+      logMealAction(formData).then((res) => {
         setOpen(false);
         setPhotoPreview(null);
         setRating(4);
         formRef.current?.reset();
+        if (res?.streakMilestone) setCelebration(res.streakMilestone);
       });
     });
   }
@@ -63,19 +60,19 @@ export default function LogMealButton({
         onClick={() => setOpen(true)}
         className="btn btn-ghost btn-sm"
       >
-        Log
+        {t("trigger")}
       </button>
 
       {open ? (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Log måltid"
+          aria-label={t("dialogLabel")}
           className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
         >
           <button
             type="button"
-            aria-label="Luk"
+            aria-label={t("closeLabel")}
             onClick={() => setOpen(false)}
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
@@ -86,20 +83,20 @@ export default function LogMealButton({
           >
             <header className="flex items-start justify-between gap-3">
               <div>
-                <div className="eyebrow mb-1">Log måltid</div>
+                <div className="eyebrow mb-1">{t("eyebrow")}</div>
                 <h3 className="font-display text-2xl leading-[1.05]">
-                  {mealTitle ?? "Frit måltid"}
+                  {mealTitle ?? t("freeMeal")}
                 </h3>
                 {slot ? (
                   <div className="text-xs text-fg-faint mt-1 font-mono">
-                    {SLOT_LABELS[slot]} · {dateIso}
+                    {t("slotDate", { slot: ts(slot), date: dateIso })}
                   </div>
                 ) : null}
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="Luk"
+                aria-label={t("closeLabel")}
                 className="text-fg-dim hover:text-fg text-2xl leading-none"
               >
                 ×
@@ -113,7 +110,7 @@ export default function LogMealButton({
 
             {/* Photo */}
             <div className="space-y-2">
-              <div className="text-sm">Tag billede af tallerkenen</div>
+              <div className="text-sm">{t("photoTitle")}</div>
               <label className="block surface-2 rounded-lg border-dashed border-2 border-fg-faint/30 px-4 py-6 text-center cursor-pointer hover:border-fg-dim/50">
                 <input
                   type="file"
@@ -129,14 +126,14 @@ export default function LogMealButton({
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={photoPreview}
-                    alt="Forhåndsvisning"
+                    alt={t("photoPreviewAlt")}
                     className="max-h-48 mx-auto rounded-md"
                   />
                 ) : (
                   <>
-                    <div className="text-sm">Tryk for at åbne kamera</div>
+                    <div className="text-sm">{t("photoPrompt")}</div>
                     <div className="text-xs text-fg-faint mt-1">
-                      Valgfrit · AI&apos;en sammenligner billedet med planen
+                      {t("photoHint")}
                     </div>
                   </>
                 )}
@@ -145,7 +142,7 @@ export default function LogMealButton({
 
             {/* Rating */}
             <div className="space-y-1.5">
-              <div className="text-sm">Hvordan smagte det</div>
+              <div className="text-sm">{t("ratingTitle")}</div>
               <div className="flex items-center gap-1">
                 {[1, 2, 3, 4, 5].map((n) => (
                   <button
@@ -157,7 +154,7 @@ export default function LogMealButton({
                       background: n <= rating ? "var(--fg)" : "transparent",
                       color: n <= rating ? "var(--bg)" : "var(--fg-dim)",
                     }}
-                    aria-label={`${n} stjerner`}
+                    aria-label={t("ratingStars", { n })}
                     aria-pressed={n === rating}
                   >
                     {n}
@@ -168,12 +165,12 @@ export default function LogMealButton({
 
             {/* Notes */}
             <label className="block space-y-1.5">
-              <span className="text-sm">Noter</span>
+              <span className="text-sm">{t("notesLabel")}</span>
               <textarea
                 name="notes"
                 rows={2}
                 className="input w-full"
-                placeholder="fx byttet kylling ud med tofu, ingen avocado i butikken"
+                placeholder={t("notesPlaceholder")}
               />
             </label>
 
@@ -183,19 +180,24 @@ export default function LogMealButton({
                 disabled={pending}
                 className="btn btn-primary flex-1"
               >
-                {pending ? "Logger…" : "Log måltid"}
+                {pending ? t("logging") : t("submit")}
               </button>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 className="btn btn-ghost"
               >
-                Annullér
+                {t("cancel")}
               </button>
             </div>
           </form>
         </div>
       ) : null}
+
+      <StreakCelebration
+        milestone={celebration}
+        onClose={() => setCelebration(null)}
+      />
     </>
   );
 }

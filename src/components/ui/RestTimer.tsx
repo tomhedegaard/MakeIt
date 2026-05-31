@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 function fmt(secs: number) {
   const m = Math.floor(secs / 60);
@@ -19,6 +20,7 @@ export default function RestTimer({
 }) {
   const [left, setLeft] = useState(() => durationSec);
   const ref = useRef<number | null>(null);
+  const t = useTranslations("Session.restTimer");
 
   useEffect(() => {
     const start = Date.now();
@@ -42,7 +44,7 @@ export default function RestTimer({
     <div
       className="surface-2 rounded-2xl px-5 py-4 flex items-center gap-4"
       role="timer"
-      aria-label="Hvile"
+      aria-label={t("ariaLabel")}
     >
       <div className="relative size-14 shrink-0">
         <svg viewBox="0 0 36 36" className="size-14 -rotate-90">
@@ -60,14 +62,14 @@ export default function RestTimer({
       </div>
 
       <div className="flex-1 min-w-0">
-        <div className="eyebrow mb-0.5">Hvile</div>
+        <div className="eyebrow mb-0.5">{t("title")}</div>
         <div className="text-sm text-fg-dim truncate">
-          Næste sæt om {fmt(left)} — tag en slurk vand.
+          {t("description", { time: fmt(left) })}
         </div>
       </div>
 
       <button type="button" className="btn btn-sm" onClick={onSkip}>
-        Skip
+        {t("skip")}
       </button>
     </div>
   );

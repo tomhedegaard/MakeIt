@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { createClient as createBrowserSupabase } from "@/lib/supabase/client";
 import {
   ensureMemberConversationAction,
@@ -36,6 +37,7 @@ export default function MessagesView({
   myMemberId: string;
   canSendVideo: boolean;
 }) {
+  const t = useTranslations("Messages.thread");
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [convId, setConvId] = useState<string | null>(conversationId);
   const [bootPending, startBoot] = useTransition();
@@ -166,15 +168,15 @@ export default function MessagesView({
       <ol
         ref={scrollRef}
         className="flex-1 min-h-0 overflow-y-auto px-4 py-4 space-y-3"
-        aria-label="Beskeder"
+        aria-label={t("ariaLabel")}
       >
         {bootPending && messages.length === 0 ? (
           <li className="text-center text-xs font-mono text-fg-faint py-8">
-            Henter…
+            {t("loading")}
           </li>
         ) : messages.length === 0 ? (
           <li className="text-center text-sm text-fg-dim py-8">
-            Ingen beskeder endnu. Skriv en besked til at starte.
+            {t("empty")}
           </li>
         ) : (
           messages.map((m) => (
@@ -191,7 +193,7 @@ export default function MessagesView({
         <Composer conversationId={convId} canSendVideo={canSendVideo} />
       ) : (
         <div className="border-t hairline px-4 py-4 text-center text-xs font-mono text-fg-faint">
-          Initialiserer samtale…
+          {t("initializing")}
         </div>
       )}
     </div>

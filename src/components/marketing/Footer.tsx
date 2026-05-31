@@ -1,9 +1,13 @@
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import Logo from "@/components/Logo";
 import Link from "next/link";
 import { COMPANY } from "@/lib/company";
+import LanguageSelector from "@/components/LanguageSelector";
 
-export default function MarketingFooter() {
+export default async function MarketingFooter() {
+  const t = await getTranslations("Marketing.footer");
+
   return (
     <footer className="relative border-t hairline">
       <Container>
@@ -11,27 +15,26 @@ export default function MarketingFooter() {
           <div className="md:col-span-5">
             <Logo />
             <p className="mt-6 text-fg-dim max-w-md text-sm leading-relaxed">
-              {COMPANY.product} er det interne univers for vores crew, atleter og coaches.
-              Webshoppen{" "}
+              {t("blurbBefore", { product: COMPANY.product })}{" "}
               <a href={COMPANY.marketingUrl} className="underline hover:text-fg">
                 {COMPANY.marketingDomain}
               </a>{" "}
-              kører som altid — det her er noget for sig.
+              {t("blurbAfter")}
             </p>
           </div>
 
           <div className="md:col-span-3">
-            <div className="eyebrow mb-4">Univers</div>
+            <div className="eyebrow mb-4">{t("universeLabel")}</div>
             <ul className="space-y-2.5 text-fg/85 text-sm">
-              <li><a href="#crew">Crew</a></li>
-              <li><a href="#coaching">Coaching</a></li>
-              <li><a href="#community">Community</a></li>
-              <li><a href="#reps">Reps Program</a></li>
+              <li><a href="#crew">{t("universeCrew")}</a></li>
+              <li><a href="#coaching">{t("universeCoaching")}</a></li>
+              <li><a href="#community">{t("universeCommunity")}</a></li>
+              <li><a href="#reps">{t("universeReps")}</a></li>
             </ul>
           </div>
 
           <div className="md:col-span-4">
-            <div className="eyebrow mb-4">Kontakt</div>
+            <div className="eyebrow mb-4">{t("contactLabel")}</div>
             <ul className="space-y-2.5 text-fg/85 text-sm">
               {COMPANY.legal.address ? <li>{COMPANY.legal.address}</li> : null}
               <li>
@@ -40,13 +43,13 @@ export default function MarketingFooter() {
               {COMPANY.social.instagramHandle ? (
                 <li>
                   <a href={COMPANY.social.instagramUrl ?? "#"}>
-                    Instagram @{COMPANY.social.instagramHandle}
+                    {t("instagram", { handle: COMPANY.social.instagramHandle })}
                   </a>
                 </li>
               ) : null}
             </ul>
 
-            <Link href="/login" className="btn btn-sm mt-6 inline-flex">Få adgang →</Link>
+            <Link href="/login" className="btn btn-sm mt-6 inline-flex">{t("getAccess")}</Link>
           </div>
         </div>
 
@@ -55,10 +58,11 @@ export default function MarketingFooter() {
             © {new Date().getFullYear()} {COMPANY.legal.entity ?? COMPANY.name}
           </span>
           <div className="flex items-center gap-5">
-            <Link href="/privacy" className="hover:text-fg">Privacy</Link>
-            <Link href="/terms" className="hover:text-fg">Vilkår</Link>
+            <Link href="/privacy" className="hover:text-fg">{t("privacy")}</Link>
+            <Link href="/terms" className="hover:text-fg">{t("terms")}</Link>
           </div>
-          <span>Made in DK · Closed Beta · v0.1</span>
+          <LanguageSelector />
+          <span>{t("madeIn")}</span>
         </div>
       </Container>
     </footer>

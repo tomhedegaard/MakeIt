@@ -1,0 +1,50 @@
+{
+  "header": {
+    "eyebrow": "Billing",
+    "title": "Your membership",
+    "subtitle": "Manage your Crew membership and 1:1 add-on. All changes take effect on your next billing date."
+  },
+  "banners": {
+    "success": "Thanks — your payment went through.",
+    "canceled": "Checkout cancelled — nothing was charged.",
+    "demo": "Demo mode — Stripe isn't connected. Add <code>STRIPE_SECRET_KEY</code> + price IDs to enable checkout.",
+    "error": "Something went wrong during checkout ({err}). Try again, or drop us a line."
+  },
+  "crew": {
+    "eyebrow": "Crew membership",
+    "title": "Access to the whole platform",
+    "price": "Price",
+    "nextBilling": "Next billing",
+    "manage": "Manage subscription",
+    "activate": "Activate Crew membership →",
+    "secureCheckout": "Secure checkout via Stripe · no cards stored with us"
+  },
+  "oneOnOne": {
+    "eyebrow": "1:1 Coaching · add-on",
+    "title": "Direct access to Mikael Munk",
+    "price": "Price",
+    "spots": "Spots",
+    "spotsValue": "{count} at a time",
+    "manage": "Manage 1:1",
+    "apply": "Apply for a spot →",
+    "requiresCrew": "Requires an active Crew membership"
+  },
+  "help": {
+    "eyebrow": "Help",
+    "body": "Questions about an invoice, refund or pause? Write to <link>{email}</link>."
+  },
+  "status": {
+    "notActivated": "Not activated",
+    "stopping": " · stopping",
+    "list": {
+      "trialing": "Trial period",
+      "active": "Active",
+      "past_due": "Payment failed",
+      "canceled": "Cancelled",
+      "incomplete": "Awaiting payment",
+      "incomplete_expired": "Expired",
+      "unpaid": "Unpaid",
+      "paused": "Paused"
+    }
+  }
+}

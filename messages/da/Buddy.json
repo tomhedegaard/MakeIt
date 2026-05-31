@@ -1,0 +1,56 @@
+{
+  "eyebrow": "Crew Coaching Pyramid",
+  "titleEmpty": "Du er ikke parret endnu.",
+  "emptyBody": "Vi parrer dig næste søndag aften. Buddy-systemet matcher dig med en på samme tier ud fra komplementaritet, ikke lighed — så I trækker hinanden fremad i hver sin retning.",
+  "titleWithHandle": "Du og @{handle}",
+  "subtitle": "Tier: {tier} · I lærer at coache hinanden under Munks supervision.",
+  "readinessLabel": "@{handle}'s readiness i dag",
+  "whyLink": "Hvorfor denne buddy? →",
+  "reactionsHeader": "Send en hilsen",
+  "recentHeader": "Seneste interaktioner",
+  "noInteractions": "Ingen interaktioner endnu — start med en 🔥.",
+  "interactionFromYou": "Du",
+  "interactionFromBuddy": "@{handle}",
+  "buckets": {
+    "very_low": "Meget lav",
+    "low": "Lav",
+    "normal": "Normal",
+    "high": "Høj",
+    "very_high": "Meget høj",
+    "unknown": "Ikke målt i dag"
+  },
+  "reactions": {
+    "groupLabel": "Send en hilsen til din buddy",
+    "fire": "Sådan! 🔥",
+    "strong": "Stærkt 💪",
+    "eyes": "Imponeret 👀"
+  },
+  "whyTitle": "Sådan parrede vi dig med @{handle}",
+  "whyTitleEmpty": "Ingen buddy at forklare endnu.",
+  "whyEmptyBody": "Vi parrer dig næste søndag — så er der noget at vise her.",
+  "whyIntro": "Algoritmen vægter komplementaritet over lighed. Disse tre faktorer scorede højest i jeres match:",
+  "whyAlgoLine": "Algoritme {version} · samlet score {score}/100",
+  "backToBuddy": "← Tilbage til buddy",
+  "factors": {
+    "engagement_balance": {
+      "title": "Engagement-balance",
+      "body": "En af jer er i fremgang lige nu, den anden holder stabil kurs — det giver hinanden et anker uden at presse for hårdt."
+    },
+    "training_phase_offset": {
+      "title": "Træningsfase forskudt",
+      "body": "I er ikke i samme uge af programmet — når @{handle} har en tung uge, har du deload. Det skaber gode accountability-vinduer."
+    },
+    "goal_focus_alignment": {
+      "title": "Forskelligt mål",
+      "body": "Cross-goal par (styrke + hypertrofi) viser højere accountability end par med samme fokus — I bringer hver jeres optik til samtalen."
+    },
+    "hrv_pattern_complement": {
+      "title": "Komplementært HRV-mønster",
+      "body": "@{handle}'s readiness-rytme spejler din modsat — når én svinger, holder den anden roen."
+    },
+    "session_frequency_match": {
+      "title": "Samme træningsfrekvens",
+      "body": "I træner ca. lige tit — så jeres uger har samme rytme, og I undgår at den ene er på toppen mens den anden er på bænken."
+    }
+  }
+}

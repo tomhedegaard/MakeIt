@@ -1,0 +1,61 @@
+{
+  "index": {
+    "metaTitle": "Exercises · Train",
+    "eyebrow": "Train · Exercise library",
+    "title": "Exercises.",
+    "subtitle": "Every exercise: which muscles it hits, how to do it right, and what to avoid. Our form coach in print.",
+    "allFilter": "All",
+    "empty": "No exercises in the library yet."
+  },
+  "categories": {
+    "lower-body": "Legs",
+    "upper-body-push": "Push",
+    "upper-body-pull": "Pull",
+    "full-body": "Full body",
+    "shoulders": "Shoulders",
+    "arms": "Arms",
+    "core": "Core"
+  },
+  "difficulty": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  },
+  "detail": {
+    "metaFallback": "Exercise",
+    "breadcrumb": "Exercises",
+    "mistakes": "Common mistakes",
+    "setup": "Setup",
+    "progression": "Progression",
+    "regression": "Regression"
+  },
+  "hero": {
+    "viewFront": "Front",
+    "viewBack": "Back",
+    "genderMale": "Male",
+    "genderFemale": "Female",
+    "tierPrimary": "Primary",
+    "tierSecondary": "Secondary",
+    "tierTertiary": "Tertiary",
+    "howTo": "How to do it",
+    "musclesInvolved": "Muscles involved"
+  },
+  "card": {
+    "primaryPrefix": "Primary: ",
+    "metaEmpty": "—"
+  },
+  "formCheck": {
+    "limitReached": "AI form check — monthly limit reached",
+    "test": "Test your form with AI",
+    "stats": "{cues} cues · {mistakes} common mistakes",
+    "used": " · {used}/{limit} used",
+    "upgrade": "Upgrade →",
+    "duration": "~6 sec →"
+  },
+  "anatomy": {
+    "figureFront": "Anatomy figure, front ({gender})",
+    "figureBack": "Anatomy figure, back ({gender})",
+    "genderMale": "male",
+    "genderFemale": "female"
+  }
+}

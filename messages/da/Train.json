@@ -1,0 +1,61 @@
+{
+  "index": {
+    "metaTitle": "Øvelser · Train",
+    "eyebrow": "Train · Øvelses-bibliotek",
+    "title": "Øvelser.",
+    "subtitle": "Hver øvelse: hvilke muskler den rammer, hvordan du udfører den rigtigt, og hvad du skal undgå. Vores form-coach på print.",
+    "allFilter": "Alle",
+    "empty": "Ingen øvelser i biblioteket endnu."
+  },
+  "categories": {
+    "lower-body": "Ben",
+    "upper-body-push": "Push",
+    "upper-body-pull": "Pull",
+    "full-body": "Helkrop",
+    "shoulders": "Skuldre",
+    "arms": "Arme",
+    "core": "Core"
+  },
+  "difficulty": {
+    "beginner": "Begynder",
+    "intermediate": "Mellem",
+    "advanced": "Avanceret"
+  },
+  "detail": {
+    "metaFallback": "Øvelse",
+    "breadcrumb": "Øvelser",
+    "mistakes": "Typiske fejl",
+    "setup": "Setup",
+    "progression": "Progression",
+    "regression": "Regression"
+  },
+  "hero": {
+    "viewFront": "Forfra",
+    "viewBack": "Bagfra",
+    "genderMale": "Mand",
+    "genderFemale": "Kvinde",
+    "tierPrimary": "Primær",
+    "tierSecondary": "Sekundær",
+    "tierTertiary": "Tertiær",
+    "howTo": "Sådan udfører du den",
+    "musclesInvolved": "Muskler involveret"
+  },
+  "card": {
+    "primaryPrefix": "Primær: ",
+    "metaEmpty": "—"
+  },
+  "formCheck": {
+    "limitReached": "AI form-check — månedlig grænse nået",
+    "test": "Test din form med AI",
+    "stats": "{cues} cues · {mistakes} typiske fejl",
+    "used": " · {used}/{limit} brugt",
+    "upgrade": "Upgrade →",
+    "duration": "~6 sek →"
+  },
+  "anatomy": {
+    "figureFront": "Anatomi-figur forfra ({gender})",
+    "figureBack": "Anatomi-figur bagfra ({gender})",
+    "genderMale": "mand",
+    "genderFemale": "kvinde"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "blocked": "Blocked in browser",
+  "turnOff": "Turn off",
+  "turnOn": "Turn reminders on",
+  "subscribing": "Subscribing…",
+  "test": "Test",
+  "sendTestTitle": "Send a test message",
+  "testSent": "Sent {seconds}s ago",
+  "dailyReminder": "Daily reminder · 08:00",
+  "vapidMissing": "VAPID keys missing",
+  "vapidMissingAdmin": "VAPID keys missing — contact an admin",
+  "vapidNotConfigured": "VAPID not configured",
+  "ellipsis": "…"
+}

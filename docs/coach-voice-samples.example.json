@@ -1,0 +1,65 @@
+{
+  "$comment": [
+    "Few-shot pool for the Munk Multiplier draft-reply generator.",
+    "",
+    "Spec: docs/superpowers/specs/2026-05-26-munk-multiplier-v0-design.md §6",
+    "",
+    "Each entry is one past Munk coach-reply hand-curated to span the",
+    "four tone registers his real voice uses. The draft cron picks 3",
+    "random samples per Claude call as <example> blocks in the system",
+    "prompt so generated replies land on-brand.",
+    "",
+    "Curation guidance:",
+    "  - 20-30 samples total, balanced across tones (~5-8 each)",
+    "  - Pull from real past form_checks.coach_notes Munk has sent",
+    "  - Edit lightly if needed to scrub PII; keep the voice intact",
+    "  - Tag tone honestly — Claude balances picks across registers",
+    "  - exercise_slug is optional but improves the picker when",
+    "    drafting a reply for a specific lift",
+    "",
+    "Schema:",
+    "  - reply_text: the actual reply (5-300 chars, no greetings/sign-off)",
+    "  - tone: one of encouraging | corrective | terse | playful",
+    "  - exercise_slug: optional; matches exercises.slug",
+    "  - notes: optional curator note (what makes this a good sample)",
+    "",
+    "Apply with: npm run seed:voice-samples (after migration 0043).",
+    "",
+    "THIS FILE IS A PLACEHOLDER. The samples below are STUBS to make",
+    "the seed script runnable end-to-end. Replace with real Munk replies",
+    "before the draft cron is wired up — otherwise the generator will",
+    "speak like a generic coaching app instead of like Munk."
+  ],
+  "samples": [
+    {
+      "exercise_slug": "back-squat",
+      "tone": "corrective",
+      "reply_text": "[STUB — replace with real Munk reply] Knæene rejser ind på set 4. Cue: pres ydersiden af foden ned først, så knæ ud. Tag 5kg af næste session og kør 5x5 med fokus på dette.",
+      "notes": "STUB. Replace with real Munk reply for back squat valgus."
+    },
+    {
+      "exercise_slug": "deadlift",
+      "tone": "encouraging",
+      "reply_text": "[STUB — replace with real Munk reply] Sætningen er solid. Hofte og skulder kommer op samtidigt, lats engageret, baren tæt. Tilføj 2.5kg næste gang.",
+      "notes": "STUB. Replace with real Munk reply for deadlift positive feedback."
+    },
+    {
+      "exercise_slug": "bench",
+      "tone": "terse",
+      "reply_text": "[STUB — replace with real Munk reply] Albue for høj på rep 3. Træk skulderblade længere ned. Næste session: pause-bench, 3x5 @ 80%.",
+      "notes": "STUB. Replace with real terse Munk correction for bench."
+    },
+    {
+      "exercise_slug": "rdl",
+      "tone": "playful",
+      "reply_text": "[STUB — replace with real Munk reply] Du hænger lidt i sidste rep — det er fint, det er der RDL'en levner. Næste sæt: stop én rep før det føles sådan.",
+      "notes": "STUB. Replace with real Munk RDL coaching that has a light touch."
+    },
+    {
+      "exercise_slug": null,
+      "tone": "corrective",
+      "reply_text": "[STUB — replace with real Munk reply] Set 4 og 5 er tydeligt over RPE 8. Du sigtede efter 8. Næste session: kør 5% lavere på topsæt, og noter RPE igen.",
+      "notes": "STUB. Replace with real Munk RPE-calibration feedback."
+    }
+  ]
+}

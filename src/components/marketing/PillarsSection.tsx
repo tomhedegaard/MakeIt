@@ -1,45 +1,62 @@
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 
-const pillars = [
-  {
-    id: "coaching",
-    label: "02 — Coaching",
-    title: "Programmer der virker. Coaches der løfter selv.",
-    body: "1:1 sessioner, 12-ugers strength- og hypertrofi-blokke, formchecks via video. Kurateret af Mikael Munk og crewets head coaches. Ikke generisk app-content.",
-    bullets: [
-      "Strength · Hypertrophy · Powerbuilding",
-      "Video form-check inden for 24 timer",
-      "Personlige PR-tracks og deload-uger",
-    ],
-    stat: { v: "07", k: "Programmer live" },
-  },
-  {
-    id: "community",
-    label: "03 — Community",
-    title: "Et feed bygget til løft — ikke til scroll.",
-    body: "Del PR'er, optagelser og tanker med folk der faktisk forstår forskellen mellem en RPE 8 og en 9. Ugentlige challenges, leaderboards pr. gym, og IRL-meets på Amagerbro.",
-    bullets: [
-      "PR-feed med video og kommentarer",
-      "Månedlige challenges & leaderboards",
-      "IRL-meets, åbent hus & co-labs",
-    ],
-    stat: { v: "412", k: "Aktive medlemmer" },
-  },
-  {
-    id: "reps",
-    label: "04 — Reps Program",
-    title: "Dit arbejde belønner sig.",
-    body: "Tjen Reps for køb, programmer du gennemfører, PR'er du poster, og folk du inviterer ind. Bytt dem til limited drops, custom-strap-farver, early access og 1:1 tid med Mikael Munk.",
-    bullets: [
-      "Tier: Lifter → Athlete → Beast → Legend",
-      "Limited drops kun for medlemmer",
-      "Reps konverteres aldrig til kontanter — kun til ægte ting",
-    ],
-    stat: { v: "4", k: "Tiers" },
-  },
-];
+export default async function PillarsSection() {
+  const t = await getTranslations("Marketing.pillars");
 
-export default function PillarsSection() {
+  const pillars = [
+    {
+      id: "coaching",
+      label: t("coaching.label"),
+      title: t("coaching.title"),
+      body: t("coaching.body"),
+      bullets: [
+        t("coaching.bullet1"),
+        t("coaching.bullet2"),
+        t("coaching.bullet3"),
+        t("coaching.bullet4"),
+      ],
+      stat: { v: "07", k: t("coaching.statLabel") },
+    },
+    {
+      id: "community",
+      label: t("community.label"),
+      title: t("community.title"),
+      body: t("community.body"),
+      bullets: [
+        t("community.bullet1"),
+        t("community.bullet2"),
+        t("community.bullet3"),
+      ],
+      stat: { v: "412", k: t("community.statLabel") },
+    },
+    {
+      id: "reps",
+      label: t("reps.label"),
+      title: t("reps.title"),
+      body: t("reps.body"),
+      bullets: [
+        t("reps.bullet1"),
+        t("reps.bullet2"),
+        t("reps.bullet3"),
+      ],
+      stat: { v: "4", k: t("reps.statLabel") },
+    },
+    {
+      id: "restitution",
+      label: t("restitution.label"),
+      title: t("restitution.title"),
+      body: t("restitution.body"),
+      bullets: [
+        t("restitution.bullet1"),
+        t("restitution.bullet2"),
+        t("restitution.bullet3"),
+        t("restitution.bullet4"),
+      ],
+      stat: { v: "3", k: t("restitution.statLabel") },
+    },
+  ];
+
   return (
     <section className="relative py-12 md:py-24">
       {pillars.map((p, idx) => (

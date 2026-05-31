@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import type { AlertConditionsMet } from "@/lib/hrv/alert";
 
 /* ---------------------------------------------------------------- *
  * Types
@@ -57,12 +58,47 @@ export type FormCheckRow = {
   aiPos: string[];
   aiNeg: string[];
   aiFix: string | null;
+  aiDraftedReply: string | null; // Claude's pre-staged reply in Munk's voice (null = Munk writes from scratch)
   reviewedAt: string | null;
   reviewedBy: string | null;
   coachNotes: string | null;
   videoUrl: string | null;       // Time-limited signed playback URL (1h)
   createdAt: string;
 };
+
+export interface HrvAlertRow {
+  id: string;
+  memberId: string;
+  memberHandle: string;
+  triggeredAt: string;
+  conditionsMet: AlertConditionsMet;
+}
+
+/**
+ * An open hrv_alerts row that was emitted by the adaptive engine
+ * (conditions_met.source = 'adaptive_v0'). Carries enough context for
+ * the coach to approve / reject the engine's proposal without
+ * additional round-trips.
+ */
+export interface AdaptiveAlertRow {
+  alertId: string;
+  modifierId: string;
+  memberId: string;
+  memberHandle: string;
+  triggeredAt: string;
+  action:
+    | "paused_session"
+    | "deload_week_insertion"
+    | "escalate_to_coach"
+    | "top_set_reduction"
+    | "volume_reduction"
+    | "exercise_swap_variant"
+    | "session_shorten";
+  confidence: number | null;
+  reasons: string[];
+  explanationDa: string;
+  sessionId: string | null;
+}
 
 const FORM_CHECK_BUCKET = "form-check-videos";
 
@@ -130,6 +166,7 @@ const MOCK_FORM_CHECKS: FormCheckRow[] = [
     aiPos: ["Bar holder kontakt med kroppen hele vejen op", "Lats engageret fra setup", "God pace — ingen tøven ved knæene"],
     aiNeg: ["Hyperextension i lock-out (læn 5° tilbage)", "Hofte stiger marginalt før skuldrene"],
     aiFix: "Lås ud med squeeze i baller, ikke ved at læne tilbage. Tænk \"stå op\" frem for \"læn tilbage\".",
+    aiDraftedReply: "Stærkt løft, Nina — baren holder kontakt hele vejen op. Du låner lidt for langt tilbage i toppen; lås ud ved at knibe ballerne, ikke ved at læne dig bagud. Tænk \"stå op\" frem for \"læn tilbage\". Tag det med på næste deadlift-dag.",
     reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
     createdAt: new Date(Date.now() - 1000 * 60 * 32).toISOString(),
   },
@@ -141,6 +178,7 @@ const MOCK_FORM_CHECKS: FormCheckRow[] = [
     aiPos: ["Solid pause i bunden", "Ben i gulvet hele sættet", "Lige bar-path"],
     aiNeg: ["Lidt for hurtig på vej ned — accelerer i stedet for at kontrollere"],
     aiFix: "Tæl 3 sek på vej ned næste gang. Brug mindre vægt hvis nødvendigt — kvaliteten betyder mere.",
+    aiDraftedReply: "Flot pause-bench, Maria — solid pause og ben plantet hele sættet. Du falder lige lovlig hurtigt ned; styr det og tæl tre på vej ned. Tag evt. lidt vægt af, så kvaliteten holder. Kør det sådan næste gang.",
     reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
   },
@@ -152,6 +190,7 @@ const MOCK_FORM_CHECKS: FormCheckRow[] = [
     aiPos: ["Bardepth ramt på alle 3 reps", "Konsistent bar-path", "God spinal kontrol"],
     aiNeg: ["Højre knæ kollapser let indad på rep 2 og 3"],
     aiFix: "Driv knæene aktivt udad i bunden (\"spread the floor\"). Hold 1 sek pause i bunden næste sæt.",
+    aiDraftedReply: "Solidt sæt, Kasper — dybde ramt på alle tre reps. Højre knæ falder lidt indad på de sidste to; driv knæene aktivt udad i bunden. Tænk \"spread the floor\". Hold en sekunds pause i bunden på næste sæt.",
     reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
   },
@@ -163,6 +202,7 @@ const MOCK_FORM_CHECKS: FormCheckRow[] = [
     aiPos: ["Ryggen flad", "God ROM"],
     aiNeg: ["Bevæger sig mest fra knæene — RDL skal være hofte-dominant", "Bar drifter en smule fremad"],
     aiFix: "Tænk \"skub bagdelen mod væggen\" frem for \"bøj knæene\". Hofterne bagud — knæene holder kun en let bøjning.",
+    aiDraftedReply: "Godt forsøg, Frederik — ryggen er flad og ROM ser fin ud. Du bevæger dig mest fra knæene; en RDL skal være hofte-domineret. Skub bagdelen mod væggen og hold knæene næsten låste. Prøv det med lettere vægt næste gang.",
     reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 18).toISOString(),
   },
@@ -342,7 +382,7 @@ export async function getMemberDetail(memberId: string): Promise<MemberDetail | 
       .limit(10),
     supabase.from("member_reps_balance").select("balance").eq("member_id", memberId).maybeSingle(),
     supabase.from("reps_transactions").select("id, delta, reason, created_at").eq("member_id", memberId).order("created_at", { ascending: false }).limit(10),
-    supabase.from("form_checks").select("id, exercise_name, ai_score, ai_headline, ai_pos, ai_neg, ai_fix, video_url, coach_reviewed_at, coach_reviewed_by, coach_notes, created_at").eq("member_id", memberId).order("created_at", { ascending: false }).limit(10),
+    supabase.from("form_checks").select("id, exercise_name, ai_score, ai_headline, ai_pos, ai_neg, ai_fix, ai_drafted_reply, video_url, coach_reviewed_at, coach_reviewed_by, coach_notes, created_at").eq("member_id", memberId).order("created_at", { ascending: false }).limit(10),
   ]);
 
   // Sign storage paths in one batch.
@@ -393,6 +433,7 @@ export async function getMemberDetail(memberId: string): Promise<MemberDetail | 
       aiPos: Array.isArray(f.ai_pos) ? (f.ai_pos as string[]) : [],
       aiNeg: Array.isArray(f.ai_neg) ? (f.ai_neg as string[]) : [],
       aiFix: f.ai_fix,
+      aiDraftedReply: f.ai_drafted_reply,
       reviewedAt: f.coach_reviewed_at,
       reviewedBy: f.coach_reviewed_by,
       coachNotes: f.coach_notes,
@@ -410,7 +451,7 @@ export async function getPendingFormChecks(limit = 30): Promise<FormCheckRow[]> 
     .from("form_checks")
     .select(`
       id, exercise_name, ai_score, ai_headline, ai_pos, ai_neg, ai_fix,
-      video_url, created_at,
+      ai_drafted_reply, video_url, created_at,
       coach_reviewed_at, coach_reviewed_by, coach_notes,
       member:members(id, handle)
     `)
@@ -438,6 +479,7 @@ export async function getPendingFormChecks(limit = 30): Promise<FormCheckRow[]> 
       aiPos: Array.isArray(f.ai_pos) ? (f.ai_pos as string[]) : [],
       aiNeg: Array.isArray(f.ai_neg) ? (f.ai_neg as string[]) : [],
       aiFix: f.ai_fix,
+      aiDraftedReply: f.ai_drafted_reply,
       reviewedAt: f.coach_reviewed_at,
       reviewedBy: f.coach_reviewed_by,
       coachNotes: f.coach_notes,
@@ -445,6 +487,136 @@ export async function getPendingFormChecks(limit = 30): Promise<FormCheckRow[]> 
       createdAt: f.created_at,
     };
   });
+}
+
+export async function getOpenHrvAlerts(limit = 30): Promise<HrvAlertRow[]> {
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  // Fetch all open alerts and filter out adaptive-engine ones in TS —
+  // PostgREST's jsonb operator syntax is fiddly and the alert table is
+  // small. The dedicated `getOpenAdaptiveAlerts` surfaces those.
+  const { data } = await supabase
+    .from("hrv_alerts")
+    .select("id, triggered_at, conditions_met, member:members!inner(id, handle)")
+    .eq("status", "open")
+    .order("triggered_at", { ascending: false })
+    .limit(limit);
+
+  if (!data) return [];
+  return data
+    .filter((a) => {
+      const cm = a.conditions_met as { source?: string } | null;
+      return cm?.source !== "adaptive_v0";
+    })
+    .map((a) => {
+      const m = Array.isArray(a.member) ? a.member[0] : a.member;
+      return {
+        id: a.id as string,
+        memberId: m?.id ?? "",
+        memberHandle: m?.handle ?? "—",
+        triggeredAt: a.triggered_at as string,
+        conditionsMet: a.conditions_met as unknown as AlertConditionsMet,
+      };
+    });
+}
+
+/**
+ * Adaptive-engine alerts awaiting Munk's review. Joins back to the
+ * `hrv_session_modifiers` row via the existing `session_modifier_id`
+ * FK so the coach UI can render the action, the explanation, and the
+ * session it targets without additional queries.
+ *
+ * Filters to `status='open'` (idempotency) and `reviewed_by IS NULL`
+ * on the modifier — once a coach signs off, the alert disappears
+ * from this queue regardless of approve/reject choice.
+ *
+ * Mirrors the shape + auth model of getOpenHrvAlerts; RLS
+ * `coach_manages_alerts for all using is_current_user_coach()`
+ * authorises the read.
+ */
+export async function getOpenAdaptiveAlerts(
+  limit = 30
+): Promise<AdaptiveAlertRow[]> {
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  // Two-step fetch — PostgREST struggles to infer the alert→modifier
+  // join shape (the FK lives on hrv_alerts but the relationship
+  // doesn't surface cleanly through embedded select), so we fetch
+  // alerts first and the matching modifiers in a single batch.
+  const { data: alertRows } = await supabase
+    .from("hrv_alerts")
+    .select(
+      "id, triggered_at, conditions_met, session_modifier_id, member:members!inner(id, handle)"
+    )
+    .eq("status", "open")
+    .not("session_modifier_id", "is", null)
+    .order("triggered_at", { ascending: false })
+    .limit(limit);
+  if (!alertRows) return [];
+
+  // Filter early to adaptive_v0 only — saves the second round-trip
+  // when the queue is mostly legacy detect-alerts.
+  type AlertCondShape = {
+    source?: string;
+    action?: AdaptiveAlertRow["action"];
+    confidence?: number | null;
+    reasons?: string[];
+    explanation_da?: string;
+    session_id?: string | null;
+  };
+  const adaptiveAlerts = alertRows.filter((a) => {
+    const cm = a.conditions_met as AlertCondShape | null;
+    return cm?.source === "adaptive_v0";
+  });
+  if (adaptiveAlerts.length === 0) return [];
+
+  const modifierIds = adaptiveAlerts
+    .map((a) => a.session_modifier_id as string | null)
+    .filter((id): id is string => id !== null);
+  if (modifierIds.length === 0) return [];
+
+  const { data: modifierRows } = await supabase
+    .from("hrv_session_modifiers")
+    .select("id, reviewed_by, session_id")
+    .in("id", modifierIds);
+  const modifiersById = new Map<
+    string,
+    { reviewed_by: string | null; session_id: string | null }
+  >();
+  for (const m of modifierRows ?? []) {
+    modifiersById.set(m.id as string, {
+      reviewed_by: (m.reviewed_by as string | null) ?? null,
+      session_id: (m.session_id as string | null) ?? null,
+    });
+  }
+
+  const rows: AdaptiveAlertRow[] = [];
+  for (const a of adaptiveAlerts) {
+    const cm = a.conditions_met as AlertCondShape | null;
+    if (!cm) continue;
+
+    const memberArr = Array.isArray(a.member) ? a.member[0] : a.member;
+    const modifierId = a.session_modifier_id as string | null;
+    if (!modifierId) continue;
+    const mod = modifiersById.get(modifierId);
+    if (!mod || mod.reviewed_by !== null) continue;
+
+    rows.push({
+      alertId: a.id as string,
+      modifierId,
+      memberId: memberArr?.id ?? "",
+      memberHandle: memberArr?.handle ?? "—",
+      triggeredAt: a.triggered_at as string,
+      action: cm.action ?? "escalate_to_coach",
+      confidence: cm.confidence ?? null,
+      reasons: Array.isArray(cm.reasons) ? cm.reasons : [],
+      explanationDa: cm.explanation_da ?? "",
+      sessionId: cm.session_id ?? mod.session_id ?? null,
+    });
+  }
+  return rows;
 }
 
 /**

@@ -1,13 +1,17 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import Logo from "@/components/Logo";
 import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 
-export const metadata = {
-  title: `Vilkår — ${COMPANY.product}`,
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Legal.terms");
+  return { title: t("metaTitle", { product: COMPANY.product }) };
+}
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const t = await getTranslations("Legal.terms");
+
   return (
     <main className="relative z-10 flex-1 py-16 md:py-24">
       <Container size="narrow">
@@ -15,91 +19,80 @@ export default function TermsPage() {
           <Logo />
         </Link>
 
-        <div className="eyebrow mb-3">Vilkår</div>
+        <div className="eyebrow mb-3">{t("eyebrow")}</div>
         <h1 className="font-display text-4xl md:text-6xl mb-6 leading-[0.95]">
-          Spillereglerne.
+          {t("title")}
         </h1>
         <p className="text-fg-dim text-base leading-relaxed mb-10">
-          Senest opdateret: maj 2026 · Ved at bruge {COMPANY.product} accepterer du
-          disse vilkår. Spørgsmål?{" "}
+          {t("introBefore", { product: COMPANY.product })}
           <a className="underline hover:text-fg" href={SUPPORT_MAILTO}>
             {COMPANY.emails.support}
           </a>
           .
         </p>
 
-        <Section eyebrow="01" title="Tjenesten">
+        <Section eyebrow={t("s01.eyebrow")} title={t("s01.title")}>
           <p>
-            {COMPANY.product} er en lukket coaching-platform leveret af{" "}
-            {COMPANY.legal.entity ?? COMPANY.name}
-            {COMPANY.legal.cvr ? ` (CVR ${COMPANY.legal.cvr})` : " (CVR — kontakt)"}.
-            Vi giver adgang til AI-genererede styrketrænings-programmer,
-            video-baseret form-feedback, et community af crew-medlemmer, og et Reps-loyalty
-            program. Adgang kræver invite-kode og aktivt medlemskab.
+            {t("s01.bodyBefore", {
+              product: COMPANY.product,
+              entity: COMPANY.legal.entity ?? COMPANY.name,
+            })}
+            {COMPANY.legal.cvr
+              ? t("s01.cvr", { cvr: COMPANY.legal.cvr })
+              : t("s01.cvrFallback")}
+            {t("s01.bodyAfter")}
           </p>
         </Section>
 
-        <Section eyebrow="02" title="Medlemskab og betaling">
+        <Section eyebrow={t("s02.eyebrow")} title={t("s02.title")}>
           <List
             items={[
-              ["Faktureres", "Månedligt forud via Stripe. Pris vises tydeligt før checkout."],
-              ["Opsigelse", "Når som helst fra Billing-siden. Træder i kraft ved næste fakturering — ingen tilbagebetaling for igangværende periode."],
-              ["1:1 add-on", "Begrænsede pladser, separate vilkår — vi annullerer manuelt hvis ingen plads er ledig."],
-              ["Pris-ændringer", "Varsles 30 dage forud. Du kan opsige inden ændringen træder i kraft."],
+              [t("s02.items.billed.k"), t("s02.items.billed.v")],
+              [t("s02.items.cancel.k"), t("s02.items.cancel.v")],
+              [t("s02.items.addon.k"), t("s02.items.addon.v")],
+              [t("s02.items.priceChanges.k"), t("s02.items.priceChanges.v")],
             ]}
           />
         </Section>
 
-        <Section eyebrow="03" title="Sundheds-disclaimer">
+        <Section eyebrow={t("s03.eyebrow")} title={t("s03.title")}>
           <p>
-            <strong>Du træner på eget ansvar.</strong> Vores coaching og AI-feedback erstatter
-            ikke medicinsk eller fysioterapeutisk rådgivning. Du bør konsultere en læge før
-            start af et nyt træningsprogram, særligt hvis du har eksisterende skader,
-            hjertesygdomme, eller andre helbredsmæssige forhold.
+            <strong>{t("s03.p1Emphasis")}</strong>{t("s03.p1")}
           </p>
           <p>
-            AI form-checks er en teknisk vurdering, ikke en endelig kvalitetssikring.
-            Mikael Munk gennemgår personligt inden for 24 timer, men ansvaret for at løfte
-            sikkert ligger hos dig.
+            {t("s03.p2")}
           </p>
         </Section>
 
-        <Section eyebrow="04" title="Acceptabel brug">
+        <Section eyebrow={t("s04.eyebrow")} title={t("s04.title")}>
           <List
             items={[
-              ["Personligt", "Din konto er personlig. Del ikke login eller invite-koder."],
-              ["Respekt", "I crew-feedet: konstruktiv feedback, ingen hate, ingen ads, ingen spam."],
-              ["Indhold", "Du beholder ophavsret til dine posts og videos. Vi har en evig licens til at vise dem inden for platformen."],
-              ["Suspension", "Vi kan suspendere konti der bryder reglerne. Vi giver besked og chance for at rette hvis muligt."],
+              [t("s04.items.personal.k"), t("s04.items.personal.v")],
+              [t("s04.items.respect.k"), t("s04.items.respect.v")],
+              [t("s04.items.content.k"), t("s04.items.content.v")],
+              [t("s04.items.suspension.k"), t("s04.items.suspension.v")],
             ]}
           />
         </Section>
 
-        <Section eyebrow="05" title="Reps og indløsninger">
+        <Section eyebrow={t("s05.eyebrow")} title={t("s05.title")}>
           <p>
-            Reps har ingen kontant-værdi og kan ikke konverteres til penge eller overføres
-            mellem medlemmer. De udløber ikke — men hvis du sletter din konto eller
-            opsiger dit medlemskab, mister du adgangen til både balance og indløsninger.
+            {t("s05.p1")}
           </p>
           <p>
-            Limited drops sendes med GLS når Mikael har bekræftet — typisk inden for
-            5 hverdage. Custom-broderede produkter har 2-3 ugers leveringstid.
+            {t("s05.p2")}
           </p>
         </Section>
 
-        <Section eyebrow="06" title="Ansvarsbegrænsning">
+        <Section eyebrow={t("s06.eyebrow")} title={t("s06.title")}>
           <p>
-            Vores samlede ansvar over for dig er begrænset til det beløb du har betalt
-            i medlemsskab de seneste 12 måneder. Vi er ikke ansvarlige for indirekte
-            tab, tabt fortjeneste eller skader som følge af tjenestens utilgængelighed.
-            Dette begrænser ikke ansvar der ikke kan fraskrives efter dansk lov.
+            {t("s06.body")}
           </p>
         </Section>
 
-        <Section eyebrow="07" title="Lovvalg + tvister">
+        <Section eyebrow={t("s07.eyebrow")} title={t("s07.title")}>
           <p>
-            Disse vilkår er underlagt dansk ret. Tvister der ikke kan løses i mindelighed,
-            afgøres ved Københavns Byret som første instans.
+            {t("s07.body")}
           </p>
         </Section>
 

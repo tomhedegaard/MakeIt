@@ -1,0 +1,93 @@
+{
+  "metaTitle": "Welcome — MakeIt // HQ",
+  "goals": {
+    "strength": {
+      "title": "Strength",
+      "sub": "Squat, bench, DL — building toward new PRs"
+    },
+    "hypertrophy": {
+      "title": "Hypertrophy",
+      "sub": "Volume and mass — more reps, more work"
+    },
+    "hybrid": {
+      "title": "Powerbuilding",
+      "sub": "Both — heavy top sets + accessory"
+    },
+    "deadlift_spec": {
+      "title": "Deadlift spec.",
+      "sub": "6 weeks focused on a new deadlift PR"
+    }
+  },
+  "levels": {
+    "beginner": {
+      "title": "Beginner",
+      "sub": "< 1 year of structured strength training"
+    },
+    "intermediate": {
+      "title": "Intermediate",
+      "sub": "1-3 years — knows RPE and periodization"
+    },
+    "advanced": {
+      "title": "Advanced",
+      "sub": "3+ years — knows your body's response well"
+    }
+  },
+  "equipment": {
+    "full": {
+      "title": "Full gym",
+      "sub": "Access to everything — cables, machines, space"
+    },
+    "home_rack": {
+      "title": "Home + rack",
+      "sub": "Squat rack, barbell, bench and plates"
+    },
+    "minimal": {
+      "title": "Minimal",
+      "sub": "Dumbbells, maybe a bench and a bar"
+    }
+  },
+  "freqOption": "{days} days / week",
+  "step1": {
+    "introEyebrow": "Hey @{handle}",
+    "introTitle": "Let's build your program.",
+    "introSub": "We'll ask about your goal, your level and your equipment — then the AI generates a personalized program in 30 seconds.",
+    "errorBanner": "Pick an option in each group.",
+    "goalEyebrow": "Goal",
+    "goalTitle": "What are you aiming for?",
+    "levelEyebrow": "Level",
+    "levelTitle": "Where are you at?",
+    "freqEyebrow": "Frequency",
+    "freqTitle": "How often do you train?",
+    "equipEyebrow": "Equipment",
+    "equipTitle": "What do you have access to?"
+  },
+  "step2": {
+    "introEyebrow": "Maxes",
+    "introTitle": "How strong are you today?",
+    "introSub": "Enter your ~1RM for each lift if you know it. Skip it if not — we'll use averages for your level as a starting point.",
+    "squat": "Squat",
+    "bench": "Bench",
+    "deadlift": "Deadlift",
+    "ohp": "OHP",
+    "footnote": "All fields in kg · You can always update them later on your profile."
+  },
+  "step3": {
+    "introEyebrow": "Last one",
+    "introTitle": "Anything we should know?",
+    "introSub": "Injuries, mobility issues or things you'd like to work around. Totally optional.",
+    "injuriesLabel": "Injuries / notes",
+    "injuriesPlaceholder": "E.g. Slightly strained right shoulder — avoid behind-the-neck press.",
+    "footnote": "When you hit Done, we generate your program and drop the first session onto your Today screen."
+  },
+  "summary": {
+    "goal": "Goal",
+    "level": "Level",
+    "freq": "Frequency",
+    "equip": "Equipment"
+  },
+  "nav": {
+    "back": "Back",
+    "next": "Next →",
+    "submit": "Generate my program →"
+  }
+}

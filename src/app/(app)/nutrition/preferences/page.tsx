@@ -1,16 +1,19 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { getSession } from "@/lib/auth";
 import { getOrCreateNutritionProfile } from "@/lib/data/nutrition";
 import { savePreferencesAction } from "../actions";
 
-export const metadata = {
-  title: "Mad · Indstillinger",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Nutrition.preferences");
+  return { title: t("metaTitle") };
+}
 
 export default async function PreferencesPage() {
   const member = (await getSession())!;
   const profile = await getOrCreateNutritionProfile(member.id);
+  const t = await getTranslations("Nutrition.preferences");
 
   return (
     <Container className="py-6 lg:py-12 max-w-2xl space-y-8">
@@ -20,24 +23,23 @@ export default async function PreferencesPage() {
             href="/nutrition"
             className="text-fg-dim hover:text-fg text-sm"
           >
-            ← Mad
+            {t("back")}
           </Link>
           <span className="text-fg-faint" aria-hidden>·</span>
-          <span className="eyebrow">Indstillinger</span>
+          <span className="eyebrow">{t("eyebrow")}</span>
         </div>
         <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          Hvad spiser du.
+          {t("title")}
         </h1>
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-          Sæt rammerne én gang. AI&apos;en holder sig indenfor — ingen
-          rapsolie, ingen UPF, ingen gæt.
+          {t("intro")}
         </p>
       </header>
 
       <form action={savePreferencesAction} className="space-y-8">
         {/* Goal */}
         <section className="surface-2 rounded-xl p-5 lg:p-6 space-y-3">
-          <div className="eyebrow">Mål</div>
+          <div className="eyebrow">{t("goalEyebrow")}</div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {(["cut", "recomp", "maintain", "mass"] as const).map((g) => (
               <label
@@ -52,10 +54,10 @@ export default async function PreferencesPage() {
                   className="sr-only"
                 />
                 <div className="text-sm">
-                  {g === "cut" ? "Cut" : g === "recomp" ? "Recomp" : g === "mass" ? "Mass" : "Hold"}
+                  {g === "cut" ? t("goalCut") : g === "recomp" ? t("goalRecomp") : g === "mass" ? t("goalMass") : t("goalMaintain")}
                 </div>
                 <div className="text-[10px] font-mono uppercase tracking-[0.14em] opacity-70 mt-0.5">
-                  {g === "cut" ? "−400 kcal" : g === "recomp" ? "−150 kcal" : g === "mass" ? "+300 kcal" : "Stabil"}
+                  {g === "cut" ? t("goalCutDelta") : g === "recomp" ? t("goalRecompDelta") : g === "mass" ? t("goalMassDelta") : t("goalMaintainDelta")}
                 </div>
               </label>
             ))}
@@ -64,7 +66,7 @@ export default async function PreferencesPage() {
 
         {/* Diet */}
         <section className="surface-2 rounded-xl p-5 lg:p-6 space-y-3">
-          <div className="eyebrow">Kost</div>
+          <div className="eyebrow">{t("dietEyebrow")}</div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {(["omnivore", "pescatarian", "vegetarian", "vegan"] as const).map((d) => (
               <label
@@ -79,7 +81,7 @@ export default async function PreferencesPage() {
                   className="sr-only"
                 />
                 <div className="text-sm capitalize">
-                  {d === "omnivore" ? "Alt" : d === "pescatarian" ? "Fisk + plante" : d === "vegetarian" ? "Vegetar" : "Vegan"}
+                  {d === "omnivore" ? t("dietOmnivore") : d === "pescatarian" ? t("dietPescatarian") : d === "vegetarian" ? t("dietVegetarian") : t("dietVegan")}
                 </div>
               </label>
             ))}
@@ -88,9 +90,9 @@ export default async function PreferencesPage() {
 
         {/* Cooking & lifestyle */}
         <section className="surface-2 rounded-xl p-5 lg:p-6 space-y-5">
-          <div className="eyebrow">Køkken &amp; husstand</div>
+          <div className="eyebrow">{t("kitchenEyebrow")}</div>
 
-          <Field label="Måltider pr. dag" hint="2–6">
+          <Field label={t("mealsPerDayLabel")} hint={t("mealsPerDayHint")}>
             <input
               type="number"
               name="mealsPerDay"
@@ -101,7 +103,7 @@ export default async function PreferencesPage() {
             />
           </Field>
 
-          <Field label="Husstand" hint="Antal personer du laver mad til">
+          <Field label={t("householdLabel")} hint={t("householdHint")}>
             <input
               type="number"
               name="householdSize"
@@ -112,7 +114,7 @@ export default async function PreferencesPage() {
             />
           </Field>
 
-          <Field label="Fede fisk pr. uge" hint="Mål fra Sundhedsstyrelsen er 2-3">
+          <Field label={t("fishLabel")} hint={t("fishHint")}>
             <input
               type="number"
               name="fishPerWeek"
@@ -123,7 +125,7 @@ export default async function PreferencesPage() {
             />
           </Field>
 
-          <Field label="Madlavnings-niveau">
+          <Field label={t("cookingLabel")}>
             <div className="flex gap-2">
               {(["basic", "intermediate", "advanced"] as const).map((c) => (
                 <label
@@ -137,13 +139,13 @@ export default async function PreferencesPage() {
                     defaultChecked={profile.cookingLevel === c}
                     className="sr-only"
                   />
-                  {c === "basic" ? "Basis" : c === "intermediate" ? "Mellem" : "Avanceret"}
+                  {c === "basic" ? t("cookingBasic") : c === "intermediate" ? t("cookingIntermediate") : t("cookingAdvanced")}
                 </label>
               ))}
             </div>
           </Field>
 
-          <Field label="Budget">
+          <Field label={t("budgetLabel")}>
             <div className="flex gap-2">
               {(["lean", "standard", "premium"] as const).map((b) => (
                 <label
@@ -157,15 +159,15 @@ export default async function PreferencesPage() {
                     defaultChecked={profile.budgetLevel === b}
                     className="sr-only"
                   />
-                  {b === "lean" ? "Slankt" : b === "standard" ? "Standard" : "Premium"}
+                  {b === "lean" ? t("budgetLean") : b === "standard" ? t("budgetStandard") : t("budgetPremium")}
                 </label>
               ))}
             </div>
           </Field>
 
           <Field
-            label="Meal-prep mode"
-            hint="Genbrug 2-3 måltider strategisk på tværs af ugen (samme frokost mandag + onsdag, samme aftensmad tirsdag + torsdag). Færre unikke meals = mindre prep + indkøb."
+            label={t("mealPrepLabel")}
+            hint={t("mealPrepHint")}
           >
             <label className="flex items-center gap-3 cursor-pointer">
               <input
@@ -176,7 +178,7 @@ export default async function PreferencesPage() {
                 className="size-5 accent-fg"
               />
               <span className="text-sm">
-                Genbrug måltider for Sunday batch-cook
+                {t("mealPrepCheckbox")}
               </span>
             </label>
           </Field>
@@ -184,43 +186,43 @@ export default async function PreferencesPage() {
 
         {/* Free-text lists */}
         <section className="surface-2 rounded-xl p-5 lg:p-6 space-y-5">
-          <div className="eyebrow">Allergier &amp; præferencer</div>
+          <div className="eyebrow">{t("listsEyebrow")}</div>
 
           <Field
-            label="Allergier"
-            hint="Hard-stop. AI'en møder dem aldrig på tallerkenen. Adskil med komma."
+            label={t("allergiesLabel")}
+            hint={t("allergiesHint")}
           >
             <textarea
               name="allergies"
               rows={2}
               className="input w-full"
-              placeholder="fx nødder, rejer, gluten"
+              placeholder={t("allergiesPlaceholder")}
               defaultValue={profile.allergies.join(", ")}
             />
           </Field>
 
           <Field
-            label="Dislikes"
-            hint="Undgås når der er alternativer. Adskil med komma."
+            label={t("dislikesLabel")}
+            hint={t("dislikesHint")}
           >
             <textarea
               name="dislikes"
               rows={2}
               className="input w-full"
-              placeholder="fx koriander, lever, blåskimmelost"
+              placeholder={t("dislikesPlaceholder")}
               defaultValue={profile.dislikes.join(", ")}
             />
           </Field>
 
           <Field
-            label="Foretrækker"
-            hint="Boost. AI'en vælger oftere disse, alt andet lige."
+            label={t("preferencesLabel")}
+            hint={t("preferencesHint")}
           >
             <textarea
               name="preferences"
               rows={2}
               className="input w-full"
-              placeholder="fx kylling, rugbrød, citrus, syrlig"
+              placeholder={t("preferencesPlaceholder")}
               defaultValue={profile.preferences.join(", ")}
             />
           </Field>
@@ -228,13 +230,13 @@ export default async function PreferencesPage() {
 
         <div className="flex flex-wrap items-center gap-3 sticky bottom-3 surface-2 rounded-xl p-4 backdrop-blur">
           <button type="submit" className="btn btn-primary">
-            Gem indstillinger
+            {t("save")}
           </button>
           <Link href="/nutrition" className="btn btn-ghost">
-            Annullér
+            {t("cancel")}
           </Link>
           <span className="text-xs text-fg-faint font-mono ml-auto">
-            Senest opdateret · {new Date(profile.updatedAt).toLocaleDateString("da-DK")}
+            {t("lastUpdated", { date: new Date(profile.updatedAt).toLocaleDateString("da-DK") })}
           </span>
         </div>
       </form>

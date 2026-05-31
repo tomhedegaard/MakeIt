@@ -1,15 +1,16 @@
 "use client";
 
 import { useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { setRedemptionStatusAction } from "@/app/coach/redemptions/actions";
 import type { PendingRedemption } from "@/lib/data/coach";
 
-const STATUS_LABEL: Record<PendingRedemption["status"], string> = {
-  pending: "Afventer",
-  approved: "Godkendt",
-  shipped: "Sendt",
-  fulfilled: "Modtaget",
-  cancelled: "Annulleret",
+const STATUS_KEY: Record<PendingRedemption["status"], string> = {
+  pending: "statusPending",
+  approved: "statusApproved",
+  shipped: "statusShipped",
+  fulfilled: "statusFulfilled",
+  cancelled: "statusCancelled",
 };
 
 export default function RedemptionRow({
@@ -17,6 +18,7 @@ export default function RedemptionRow({
 }: {
   redemption: PendingRedemption;
 }) {
+  const t = useTranslations("Coach.redemptionRow");
   const [pending, startTransition] = useTransition();
 
   function go(status: "approved" | "shipped" | "fulfilled" | "cancelled") {
@@ -37,7 +39,7 @@ export default function RedemptionRow({
         <div className="text-sm truncate">@{redemption.memberHandle}</div>
         <div className="text-[11px] font-mono text-fg-faint truncate">
           {redemption.rewardName} ·{" "}
-          {redemption.costReps.toLocaleString("da-DK")} Reps
+          {t("reps", { cost: redemption.costReps.toLocaleString("da-DK") })}
         </div>
       </div>
       <span
@@ -47,7 +49,7 @@ export default function RedemptionRow({
             redemption.status === "approved" ? "var(--fg)" : "var(--fg-dim)",
         }}
       >
-        {STATUS_LABEL[redemption.status]}
+        {t(STATUS_KEY[redemption.status])}
       </span>
       <div className="flex gap-1.5 shrink-0">
         {redemption.status === "pending" ? (
@@ -58,7 +60,7 @@ export default function RedemptionRow({
               onClick={() => go("approved")}
               disabled={pending}
             >
-              Godkend
+              {t("approve")}
             </button>
             <button
               type="button"
@@ -66,7 +68,7 @@ export default function RedemptionRow({
               onClick={() => go("cancelled")}
               disabled={pending}
             >
-              Afvis
+              {t("reject")}
             </button>
           </>
         ) : redemption.status === "approved" ? (
@@ -76,7 +78,7 @@ export default function RedemptionRow({
             onClick={() => go("shipped")}
             disabled={pending}
           >
-            Marker afsendt
+            {t("markShipped")}
           </button>
         ) : null}
       </div>

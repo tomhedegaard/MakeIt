@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import Container from "@/components/Container";
 import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 
@@ -18,6 +19,8 @@ export default function AppError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations("Nav.error");
+
   useEffect(() => {
     console.error("[(app)/error.tsx]", error);
   }, [error]);
@@ -25,12 +28,12 @@ export default function AppError({
   return (
     <Container className="py-16 md:py-24">
       <div className="max-w-md">
-        <div className="eyebrow mb-3">Fejl</div>
+        <div className="eyebrow mb-3">{t("eyebrow")}</div>
         <h1 className="font-display text-3xl md:text-4xl mb-4 leading-[0.95]">
-          Den side kunne vi ikke loade.
+          {t("title")}
         </h1>
         <p className="text-fg-dim text-base leading-relaxed mb-8">
-          Tjek din forbindelse og prøv igen. Hvis det fortsætter, skriv til{" "}
+          {t("descriptionBefore")}{" "}
           <a className="underline hover:text-fg" href={SUPPORT_MAILTO}>
             {COMPANY.emails.support}
           </a>
@@ -38,15 +41,15 @@ export default function AppError({
         </p>
         {error.digest && (
           <p className="text-xs font-mono text-fg-faint mb-8">
-            ref: {error.digest}
+            {t("ref", { digest: error.digest })}
           </p>
         )}
         <div className="flex items-center gap-3">
           <button onClick={reset} type="button" className="btn btn-primary">
-            Prøv igen
+            {t("retry")}
           </button>
           <Link href="/dashboard" className="btn">
-            Til dashboard
+            {t("toDashboard")}
           </Link>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import Container from "@/components/Container";
 
@@ -22,77 +23,82 @@ import Container from "@/components/Container";
  * volume block, three years). When real members hit each tier we
  * can swap to actual quotes via a small server fetch.
  */
-const TIERS = [
-  {
-    num: "01",
-    name: "Lifter",
-    range: "0 – 999",
-    description:
-      "Indgangen. Du har samlet dine første reps og er i gang med at lære systemet — første session ligger i appen, programmet er tilpasset dit niveau.",
-    sigil: "▲",
-    testimonial: {
-      quote:
-        "Første 30 dage. Programmet ramte præcis mit niveau, og jeg har aldrig følt mig så på sporet i mit liv.",
-      handle: "nora.lift",
-    },
-  },
-  {
-    num: "02",
-    name: "Athlete",
-    range: "1.000 – 4.999",
-    description:
-      "Konsistens. Du logger sæt og form-checks ugentligt. PR'er begynder at falde på big lifts, og du har lavet de første lifestyle-skift der ikke vender tilbage.",
-    sigil: "▲▲",
-    testimonial: {
-      quote:
-        "Tre måneder ind og jeg har slået PR på alle tre big lifts. Reps-systemet holder mig accountable hver eneste dag.",
-      handle: "emil.beast",
-    },
-  },
-  {
-    num: "03",
-    name: "Beast",
-    range: "5.000 – 14.999",
-    description:
-      "Volumen-blokken. Du kender din krops respons under tung belastning, og du arbejder bevidst med restitution. Coach-feedback bliver finere og mere kirurgisk.",
-    sigil: "▲▲▲",
-    testimonial: {
-      quote:
-        "Volumen-blokken var den sværeste fysisk og mentalt — men det er der jeg lærte hvad jeg virkelig kan klare.",
-      handle: "kira.power",
-    },
-  },
-  {
-    num: "04",
-    name: "Legend",
-    range: "15.000+",
-    description:
-      "Få når hertil. Et flerårigt commitment til kropsbygning som disciplin, ikke trend. Du er den crewet kigger op til, og dine sessioner inspirerer Lifter-tieren.",
-    sigil: "▲▲▲▲",
-    testimonial: {
-      quote:
-        "Tre år. 200+ sessioner. To rygskader bagved mig. Reps-balancen viser hvorfor — det er ikke held, det er bygget kilo for kilo.",
-      handle: "marius.legend",
-    },
-  },
-];
+type Tier = {
+  num: string;
+  name: string;
+  range: string;
+  tierKey: "lifter" | "athlete" | "beast" | "legend";
+  description: string;
+  sigil: string;
+  testimonial: { quote: string; handle: string };
+};
 
 export default function TierJourney() {
+  const t = useTranslations("Marketing.tiers");
+
+  const TIERS: Tier[] = [
+    {
+      num: "01",
+      name: "Lifter",
+      range: "0 – 999",
+      tierKey: "lifter",
+      description: t("lifter.description"),
+      sigil: "▲",
+      testimonial: {
+        quote: t("lifter.quote"),
+        handle: "nora.lift",
+      },
+    },
+    {
+      num: "02",
+      name: "Athlete",
+      range: "1.000 – 4.999",
+      tierKey: "athlete",
+      description: t("athlete.description"),
+      sigil: "▲▲",
+      testimonial: {
+        quote: t("athlete.quote"),
+        handle: "emil.beast",
+      },
+    },
+    {
+      num: "03",
+      name: "Beast",
+      range: "5.000 – 14.999",
+      tierKey: "beast",
+      description: t("beast.description"),
+      sigil: "▲▲▲",
+      testimonial: {
+        quote: t("beast.quote"),
+        handle: "kira.power",
+      },
+    },
+    {
+      num: "04",
+      name: "Legend",
+      range: "15.000+",
+      tierKey: "legend",
+      description: t("legend.description"),
+      sigil: "▲▲▲▲",
+      testimonial: {
+        quote: t("legend.quote"),
+        handle: "marius.legend",
+      },
+    },
+  ];
+
   return (
     <section id="tiers" className="relative py-32 md:py-48">
       <Container>
         <div className="max-w-2xl mb-20">
-          <div className="eyebrow mb-3">Reps Program</div>
+          <div className="eyebrow mb-3">{t("eyebrow")}</div>
           <h2 className="font-display text-[clamp(2.4rem,7vw,5.5rem)] leading-[0.92] mb-5">
-            Fra Lifter
+            {t("heading.line1")}
             <br />
-            til Legend.
+            {t("heading.line2")}
           </h2>
           <p className="text-fg-dim text-lg leading-relaxed max-w-lg">
-            Hver gennemført session, form-check og PR fylder Reps-balancen.
-            Tiers er ikke titler — det er bevis på arbejdet bag. Hvert
-            niveau låser nye perks op: form-check-prioritet, IRL-meets,
-            eksklusivt udstyr, 1:1-coaching.
+            {t("intro")}
           </p>
         </div>
 
@@ -114,10 +120,10 @@ export default function TierJourney() {
 
         <div className="mt-24 flex flex-wrap items-center gap-4">
           <Link href="/login" className="btn btn-primary">
-            Start din journey →
+            {t("cta")}
           </Link>
           <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
-            Closed beta · invite kræves
+            {t("ctaNote")}
           </span>
         </div>
       </Container>
@@ -131,11 +137,12 @@ function TierRow({
   tier,
   isLast,
 }: {
-  tier: (typeof TIERS)[number];
+  tier: Tier;
   isLast: boolean;
 }) {
   const ref = useRef<HTMLLIElement>(null);
   const reduced = useReducedMotion();
+  const t = useTranslations("Marketing.tiers");
   // Unlock when the card is 40% into the viewport; once: true so we
   // don't re-lock on scroll-back which would feel jittery. Reduced-
   // motion users get every tier pre-unlocked so they don't have to
@@ -223,7 +230,7 @@ function TierRow({
             screaming. Positioned at the bottom-right of the card. */}
         {!unlocked ? (
           <div className="absolute right-0 top-1.5 flex items-center gap-2 text-xs font-mono uppercase tracking-[0.16em] text-fg-faint">
-            <LockGlyph /> Locked
+            <LockGlyph /> {t("locked")}
           </div>
         ) : null}
       </motion.div>

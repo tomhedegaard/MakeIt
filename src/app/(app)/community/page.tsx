@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PostComposer from "@/components/community/PostComposer";
 import PostCard from "@/components/community/PostCard";
@@ -57,6 +58,8 @@ const LEADERBOARD = [
 ];
 
 export default async function CrewPage() {
+  const t = await getTranslations("Community.page");
+
   // In connected mode: fetch real feed. Empty array = no posts yet (show empty state).
   // In demo mode: getFeedPosts returns null → render mock feed.
   const realFeed = await getFeedPosts(30);
@@ -70,9 +73,9 @@ export default async function CrewPage() {
       {/* Header + post composer */}
       <header className="flex items-end justify-between gap-4 pt-2">
         <div>
-          <div className="eyebrow mb-2">03 — Crew</div>
+          <div className="eyebrow mb-2">{t("eyebrow")}</div>
           <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
-            Live feed.
+            {t("title")}
           </h1>
         </div>
         <PostComposer
@@ -80,9 +83,9 @@ export default async function CrewPage() {
             <button
               type="button"
               className="btn btn-primary btn-sm"
-              aria-label="Del med crewet"
+              aria-label={t("shareAria")}
             >
-              + Del
+              {t("shareButton")}
             </button>
           }
         />
@@ -90,7 +93,7 @@ export default async function CrewPage() {
 
       {/* Story strip — who trained today */}
       <section
-        aria-label="Crew der træner i dag"
+        aria-label={t("storiesAria")}
         className="-mx-6 md:mx-0 px-6 md:px-0 overflow-x-auto"
       >
         <ol className="flex gap-3 md:gap-4 min-w-max md:flex-wrap md:min-w-0">
@@ -112,7 +115,7 @@ export default async function CrewPage() {
               </div>
               <div className="text-[10px] font-mono text-fg-dim">{s.who.replace("@", "")}</div>
               <div className="text-[9px] font-mono text-fg-faint uppercase tracking-[0.14em]">
-                {s.trained ? "Trænede" : "Hviler"}
+                {s.trained ? t("trained") : t("resting")}
               </div>
             </li>
           ))}
@@ -123,21 +126,24 @@ export default async function CrewPage() {
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 pt-5 pb-3">
           <div className="flex items-center justify-between mb-3">
-            <div className="eyebrow">Maj challenge · 11 dage tilbage</div>
-            <span className="numeric text-xs text-fg-dim">128 deltagere</span>
+            <div className="eyebrow">{t("challengeEyebrow")}</div>
+            <span className="numeric text-xs text-fg-dim">
+              {t("challengeParticipants")}
+            </span>
           </div>
           <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-3">
-            100K Volumen Club
+            {t("challengeTitle")}
           </h2>
           <p className="text-fg-dim text-sm">
-            Løft 100.000 kg samlet volumen i maj og bliv medlem af 100K-klubben.
-            Belønning: limited cuff i sølv + 1.000 Reps.
+            {t("challengeDescription")}
           </p>
         </div>
         <div className="px-5 pb-3">
           <div className="flex items-baseline justify-between mb-2">
             <span className="numeric text-2xl">68.4 / 100K</span>
-            <span className="text-xs font-mono text-fg-dim">Du · 68%</span>
+            <span className="text-xs font-mono text-fg-dim">
+              {t("challengeProgress")}
+            </span>
           </div>
           <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
             <div className="h-full bg-fg" style={{ width: "68.4%" }} />
@@ -145,12 +151,12 @@ export default async function CrewPage() {
         </div>
         <div className="border-t hairline grid grid-cols-2">
           <button type="button" className="px-5 py-4 text-left hover:bg-bg-3 border-r hairline">
-            <div className="eyebrow mb-1">Belønning</div>
-            <div className="text-sm">Limited sølv-cuff + 1.000 Reps</div>
+            <div className="eyebrow mb-1">{t("challengeRewardLabel")}</div>
+            <div className="text-sm">{t("challengeRewardValue")}</div>
           </button>
           <button type="button" className="px-5 py-4 text-left hover:bg-bg-3">
-            <div className="eyebrow mb-1">Status</div>
-            <div className="text-sm">Tilmeldt — på vej</div>
+            <div className="eyebrow mb-1">{t("challengeStatusLabel")}</div>
+            <div className="text-sm">{t("challengeStatusValue")}</div>
           </button>
         </div>
       </section>
@@ -158,21 +164,25 @@ export default async function CrewPage() {
       {/* Feed */}
       <section>
         <div className="flex items-end justify-between mb-3">
-          <div className="eyebrow">Live feed</div>
+          <div className="eyebrow">{t("feedEyebrow")}</div>
           <span className="text-xs font-mono text-fg-faint">
-            {useReal ? `${feed.length} posts` : "Senest opdateret · nu"}
+            {useReal
+              ? t("feedCount", { count: feed.length })
+              : t("feedUpdated")}
           </span>
         </div>
 
         {isEmpty ? (
           <div className="surface-2 rounded-2xl p-8 text-center">
-            <div className="font-display text-2xl mb-2">Crewet er stille.</div>
+            <div className="font-display text-2xl mb-2">{t("emptyTitle")}</div>
             <p className="text-fg-dim text-sm mb-4 max-w-sm mx-auto">
-              Vær den første til at dele en PR, en note eller et form-check. De andre kommer.
+              {t("emptyBody")}
             </p>
             <PostComposer
               trigger={
-                <button type="button" className="btn btn-primary btn-sm">+ Del</button>
+                <button type="button" className="btn btn-primary btn-sm">
+                  {t("shareButton")}
+                </button>
               }
             />
           </div>
@@ -191,10 +201,10 @@ export default async function CrewPage() {
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 py-4 border-b hairline flex items-center justify-between">
           <div>
-            <div className="eyebrow mb-1">Leaderboard</div>
-            <div className="font-display text-2xl">Top atleter</div>
+            <div className="eyebrow mb-1">{t("leaderboardEyebrow")}</div>
+            <div className="font-display text-2xl">{t("leaderboardTitle")}</div>
           </div>
-          <span className="eyebrow">Maj 2026</span>
+          <span className="eyebrow">{t("leaderboardMonth")}</span>
         </div>
         <ul className="divide-y hairline">
           {LEADERBOARD.map((row, i) => (
@@ -218,14 +228,16 @@ export default async function CrewPage() {
 
       {/* IRL meet */}
       <section className="surface-2 rounded-2xl p-5">
-        <div className="eyebrow mb-2">Næste IRL-meet</div>
-        <div className="font-display text-2xl mb-1">Open House — Amagerbro</div>
+        <div className="eyebrow mb-2">{t("meetEyebrow")}</div>
+        <div className="font-display text-2xl mb-1">{t("meetTitle")}</div>
         <p className="text-sm text-fg-dim mb-4">
-          Lørdag 24/05 · København · Træning, kaffe, og en sneak peek af nye produkter.
+          {t("meetDescription")}
         </p>
         <div className="flex gap-2">
-          <button type="button" className="btn btn-primary btn-sm flex-1">RSVP</button>
-          <button type="button" className="btn btn-sm">Læs mere</button>
+          <button type="button" className="btn btn-primary btn-sm flex-1">
+            {t("meetRsvp")}
+          </button>
+          <button type="button" className="btn btn-sm">{t("meetReadMore")}</button>
         </div>
       </section>
     </Container>

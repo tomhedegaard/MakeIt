@@ -1,0 +1,68 @@
+{
+  "header": {
+    "eyebrow": "05 — Profil",
+    "subtitle": "Tier: {tier} · Medlem siden {date}",
+    "settings": "Indstillinger",
+    "openCoachConsole": "Åbn coach-konsol →"
+  },
+  "lifts": {
+    "ariaLabel": "Lifts",
+    "title": "Lifts på record",
+    "delta": "{sign}{value} kg / 4u",
+    "e1rmUnit": "kg e1RM",
+    "weeksOne": "{count} uge data",
+    "weeksOther": "{count} uger data",
+    "noData": "Log et sæt for at starte",
+    "formula": "e1RM beregnet med Epley · weight × (1 + reps / 30) · top reps ≤ 10"
+  },
+  "prs": {
+    "ariaLabel": "Seneste PRs",
+    "title": "Seneste PR'er",
+    "autoDetected": "Detekteret automatisk",
+    "e1rm": "e1RM"
+  },
+  "settings": {
+    "eyebrow": "Indstillinger",
+    "email": "Email",
+    "notifications": "Notifikationer",
+    "notificationsValue": "Crew + PR'er",
+    "language": "Sprog",
+    "languageValue": "Dansk",
+    "theme": "Tema",
+    "themeValue": "Mørk (kun)"
+  },
+  "billing": {
+    "eyebrow": "Billing",
+    "title": "Abonnement & betaling",
+    "description": "Administrér dit Crew-medlemskab og 1:1 add-on. Sikker checkout via Stripe.",
+    "open": "Åbn billing →"
+  },
+  "formChecks": {
+    "ariaLabel": "Mine form-checks",
+    "eyebrow": "Form-checks",
+    "titleEmpty": "Ingen form-checks endnu",
+    "titleWithData": "Dine seneste optagelser",
+    "description": "AI-vurdering først, derefter en personlig note fra Mikael Munk inden for 24 timer.",
+    "coachRepliesOne": "{count} svar fra coach",
+    "coachRepliesOther": "{count} svar fra coach",
+    "emptyHint": "Tap “Form-check med AI” i en aktiv session eller via + Del i Crew for at få din første vurdering.",
+    "exerciseFallback": "Form-check",
+    "aiHeadlineFallback": "AI-svar",
+    "outOf": "/ 100",
+    "good": "Godt",
+    "tightenUp": "Stram op",
+    "coachTip": "Coach-tip",
+    "awaitingReview": "Afventer coach-review · typisk inden for 24 timer",
+    "footerPending": "{pending} afventer review · {reviewed} besvaret",
+    "footerAllAnswered": "Alle {reviewed} besvaret"
+  },
+  "progression": {
+    "eyebrow": "Progression",
+    "latest": "/ 100 seneste",
+    "formCheckOne": "{count} form-check",
+    "formCheckOther": "{count} form-checks",
+    "average": "Snit {value}",
+    "sinceFirst": "{sign}{value} siden første",
+    "sparklineAria": "Score-udvikling over tid"
+  }
+}

@@ -23,6 +23,15 @@
 # misc
 .DS_Store
 *.pem
+*.p8
+*.p12
+*.key
+
+# supabase CLI scratch
+supabase/.temp/
+
+# browser automation artifacts
+.playwright-mcp/
 
 # debug
 npm-debug.log*
@@ -40,3 +49,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# git worktrees (isolated workspaces for plan execution)
+.worktrees/
+
+# coach voice few-shot pool — local curated copy stays out of VCS
+# (the .example.json with STUBs IS committed as the seed schema doc)
+docs/coach-voice-samples.local.json

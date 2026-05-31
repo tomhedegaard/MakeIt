@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { startProgramAction } from "./actions";
 
 /**
@@ -22,12 +23,13 @@ export default function StartProgramButton({
   className?: string;
 }) {
   const [pending, startTransition] = useTransition();
+  const t = useTranslations("Coaching.startButton");
 
   function handleClick() {
     if (pending) return;
     const confirmText = hasOtherActive
-      ? `Skifte til "${programName}"? Dit nuværende program pauses (kan genoptages senere).`
-      : `Start "${programName}"?`;
+      ? t("switchConfirm", { name: programName })
+      : t("startConfirm", { name: programName });
     if (!confirm(confirmText)) return;
 
     const fd = new FormData();
@@ -44,7 +46,7 @@ export default function StartProgramButton({
       disabled={pending}
       className={className ?? "btn btn-sm flex-1"}
     >
-      {pending ? "Starter…" : "Start program"}
+      {pending ? t("starting") : t("start")}
     </button>
   );
 }

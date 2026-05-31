@@ -12,6 +12,7 @@ import {
   type ProfileInput,
 } from "@/lib/data/program-generator";
 import { sendWelcomeEmail } from "@/lib/email/templates/welcome";
+import { isLocale, type Locale } from "@/i18n/config";
 
 const GOALS: GoalFocus[] = [
   "strength",
@@ -162,7 +163,7 @@ export async function completeOnboardingAction(formData: FormData) {
   try {
     const { data: m } = await supabase
       .from("members")
-      .select("email, handle")
+      .select("email, handle, locale")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -171,12 +172,14 @@ export async function completeOnboardingAction(formData: FormData) {
       const h = await headers();
       const proto = h.get("x-forwarded-proto") ?? "http";
       const host = h.get("host") ?? "localhost:3002";
+      const locale: Locale = isLocale(m.locale) ? m.locale : "da";
       await sendWelcomeEmail({
         to: m.email,
         handle: m.handle,
         programName: generated.programName,
         firstSessionLabel: firstSession?.dayLabel ?? null,
         baseUrl: `${proto}://${host}`,
+        locale,
       });
     }
   } catch (err) {

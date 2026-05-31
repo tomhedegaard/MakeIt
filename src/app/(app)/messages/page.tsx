@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { getSession } from "@/lib/auth";
 import {
@@ -48,16 +49,19 @@ export default async function MessagesPage() {
     }
   }
 
+  const t = await getTranslations("Messages.page");
+
   return (
     <Container className="py-6 lg:py-12">
       <header className="pt-2 pb-4 mb-4 border-b hairline">
-        <div className="eyebrow mb-2">07 — Beskeder</div>
+        <div className="eyebrow mb-2">{t("eyebrow")}</div>
         <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {coachHandle ? `Chat med @${coachHandle}` : "Din coach"}
+          {coachHandle
+            ? t("titleWithCoach", { handle: coachHandle })
+            : t("titleFallback")}
         </h1>
         <p className="mt-2 text-fg-dim text-sm max-w-md">
-          Direkte linje til din coach. Send tekst, billeder eller en
-          lydbesked — videoer modtager du.
+          {t("subtitle")}
         </p>
       </header>
 

@@ -4,6 +4,14 @@ import SessionClient from "./SessionClient";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getFullSession } from "@/lib/data/session";
 import { getSession } from "@/lib/auth";
+import {
+  FORM_CHECK_LIMIT,
+  type FormCheckQuota,
+} from "@/lib/data/form-check-quota";
+import { getFormCheckQuota } from "@/lib/data/form-check-quota-server";
+import { getActiveAdaptationForSession } from "@/lib/data/adaptive";
+import { applyAdaptationToSession } from "@/lib/adaptive/apply";
+import { getTodaysReadinessNudge } from "@/lib/data/hrv";
 
 export default async function SessionPage({
   params,
@@ -15,13 +23,43 @@ export default async function SessionPage({
   if (SUPABASE_ENABLED) {
     const member = await getSession();
     if (!member) notFound();
-    const session = await getFullSession(id, member.id);
+    const [session, quota, readinessNudge, adaptation] = await Promise.all([
+      getFullSession(id, member.id),
+      getFormCheckQuota(member.id, member.tier),
+      getTodaysReadinessNudge(member.id),
+      getActiveAdaptationForSession(member.id, id),
+    ]);
     if (!session) notFound();
-    return <SessionClient session={session} />;
+    // Apply the active adaptation server-side. SessionClient sees the
+    // already-modified session shape (reduced top-set weight, optional
+    // accessory sets, paused replacement) and renders the markers.
+    const adaptedSession = applyAdaptationToSession(session, adaptation);
+    return (
+      <SessionClient
+        session={adaptedSession}
+        formCheckQuota={quota}
+        readinessNudge={readinessNudge}
+        adaptation={adaptation}
+      />
+    );
   }
 
   // Demo mode — only the static TODAY_SESSION resolves
   const session = id === TODAY_SESSION.id ? TODAY_SESSION : null;
   if (!session) notFound();
-  return <SessionClient session={session} />;
+  const quota: FormCheckQuota = {
+    used: 0,
+    limit: FORM_CHECK_LIMIT.Legend,
+    remaining: FORM_CHECK_LIMIT.Legend,
+    resetsAt: new Date().toISOString(),
+    hasRemaining: true,
+  };
+  return (
+    <SessionClient
+      session={session}
+      formCheckQuota={quota}
+      readinessNudge={null}
+      adaptation={null}
+    />
+  );
 }

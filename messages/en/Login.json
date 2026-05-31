@@ -1,0 +1,73 @@
+{
+  "metaTitle": "Sign in — {product}",
+  "errors": {
+    "1": "Something went wrong — try again",
+    "missing": "Email and code are required",
+    "invite": "Invalid invite code",
+    "otp": "Could not send email — try again",
+    "pw_short": "Password must be at least 8 characters",
+    "exists": "Email is already registered — sign in instead",
+    "signup": "Could not create account — try again",
+    "creds": "Wrong email or password",
+    "signin": "Could not sign in — try again",
+    "oauth": "OAuth flow failed — try again",
+    "provider": "Unknown provider",
+    "callback": "Login link expired or invalid",
+    "disabled": "Backend not connected",
+    "fallback": "Something went wrong — try again"
+  },
+  "beta": "Closed Beta · Invite only",
+  "headline": {
+    "line1": "Welcome",
+    "line2": "to the crew."
+  },
+  "statusConnected": "Connected · ",
+  "statusDemo": "Demo mode · no backend connected",
+  "mock": {
+    "intro": "Enter your invite code to get access. Don't have one? Write to ",
+    "inviteCodeLabel": "Invite code",
+    "invalidCode": "· Invalid code — try again",
+    "submit": "Get access →",
+    "testCodesLabel": "Test codes: "
+  },
+  "tabs": {
+    "magic": "Magic link",
+    "password": "Password",
+    "oauth": "Google / Apple"
+  },
+  "magic": {
+    "intro": "Enter email + invite code. We'll send a one-time login link.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@email.com",
+    "inviteCodeLabel": "Invite code",
+    "submit": "Send login link →"
+  },
+  "password": {
+    "introSignup": "Create an account with email + password. Invite code required.",
+    "introSignin": "Sign in with email + password.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@email.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "At least 8 characters",
+    "inviteCodeLabel": "Invite code",
+    "submitSignup": "Create account →",
+    "submitSignin": "Sign in →",
+    "hasAccount": "Already have an account?",
+    "signinLink": "Sign in",
+    "newHere": "New here?",
+    "signupLink": "Create account"
+  },
+  "oauth": {
+    "intro": "Sign in or create an account with Google or Apple. Invite code required whether you're new or existing.",
+    "inviteCodeLabel": "Invite code",
+    "continueGoogle": "Continue with Google",
+    "continueApple": "Continue with Apple"
+  },
+  "sent": {
+    "eyebrow": "Email sent",
+    "body": "We've sent a login link to ",
+    "fallbackEmail": "your email",
+    "bodyTail": ". Open the link on the same device and you're in.",
+    "expiry": "The link works for 1 hour."
+  }
+}

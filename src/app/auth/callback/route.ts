@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE, isLocale } from "@/i18n/config";
 
 const PENDING_INVITE_COOKIE = "mi_pending_invite";
 
@@ -69,6 +70,27 @@ export async function GET(req: NextRequest) {
     // Always clear the cookie — even if we read invite from the URL,
     // a stale cookie shouldn't linger.
     cookieStore.delete(PENDING_INVITE_COOKIE);
+  }
+
+  // Re-seed the language cookie from the member's saved preference so
+  // the chosen locale follows the user onto a new device. Best-effort:
+  // a missing column or row leaves the existing cookie untouched.
+  const {
+    data: { user: sessionUser },
+  } = await supabase.auth.getUser();
+  if (sessionUser) {
+    const { data: member } = await supabase
+      .from("members")
+      .select("locale")
+      .eq("id", sessionUser.id)
+      .maybeSingle();
+    if (isLocale(member?.locale)) {
+      cookieStore.set(LOCALE_COOKIE, member.locale, {
+        path: "/",
+        maxAge: LOCALE_COOKIE_MAX_AGE,
+        sameSite: "lax",
+      });
+    }
   }
 
   return NextResponse.redirect(new URL(next, url));

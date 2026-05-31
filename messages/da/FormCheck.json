@@ -1,0 +1,89 @@
+{
+  "eyebrow": "Form-check",
+  "choose": {
+    "title": "Optag eller upload din video.",
+    "titleBlocked": "Du er løbet tør for form-checks.",
+    "descriptionDefault": "Vores AI tjekker dybde, bar-path og bevægelseskvalitet på din øvelse.",
+    "descriptionExercise": "Vores AI tjekker dybde, bar-path og bevægelseskvalitet på {exercise} — og en head coach gennemgår alt ugentligt.",
+    "descriptionBlocked": "AI form-check er en Athlete-tier perk og opefter. Upgradér for at få flere.",
+    "recordNow": "Optag nu",
+    "recordNowSub": "Brug kameraet til at filme dit næste sæt.",
+    "uploadGallery": "Upload fra galleri",
+    "uploadGallerySub": "Vælg en eksisterende klip fra din telefon.",
+    "demo": "Demo med eksempelvideo",
+    "demoSub": "Spring upload over og se AI-svaret med det samme."
+  },
+  "quota": {
+    "used": "{used} / {limit} brugt denne måned"
+  },
+  "upgrade": {
+    "title": "Upgrade til Athlete eller højere",
+    "body": "Athlete: 1 form-check/md · Beast: 5 · Legend: ubegrænset. Se tier-perks →",
+    "orWait": "Eller vent på månedlig reset"
+  },
+  "progress": {
+    "uploadingEyebrow": "Uploader",
+    "analyzingEyebrow": "Analyserer",
+    "uploadingTitle": "Sender video op.",
+    "analyzingTitle": "AI kigger på din teknik.",
+    "uploadingSub": "{fileName} · krypteret upload",
+    "analyzingSub": "Måler dybde, knæ-vinkel, hofte-shift og bar-path. ~ 6 sek.",
+    "videoFallback": "Video",
+    "stepUpload": "Upload video",
+    "stepAnalyze": "AI-analyse: dybde · bar-path · tempo",
+    "stepResult": "Resultat klar"
+  },
+  "result": {
+    "eyebrow": "AI form-check",
+    "outOf": "/ 100",
+    "mockNote": "Demo-svar · ægte AI aktiveres med ANTHROPIC_API_KEY",
+    "realNote": "AI-vurdering · godkendes af head coach inden for 24t",
+    "cardPos": "Hvad du gjorde rigtigt",
+    "cardNeg": "Hvor du kan stramme op",
+    "coachTip": "Coach-tip",
+    "newRecording": "Ny optagelse",
+    "done": "Færdig",
+    "coachReviewNote": "Sendes også til din coach for ugentlig review."
+  },
+  "verdicts": {
+    "back squat": {
+      "headline": "Solid sæt — let knæ-valgus i hullet",
+      "pos": [
+        "Bardepth ramt — hofte under knæ på alle 3 reps",
+        "Konsistent bar-path lige over midtfod",
+        "God spinal kontrol gennem hele sættet"
+      ],
+      "neg": [
+        "Højre knæ kollapser let indad på rep 2 og 3",
+        "Tempo accelererer ud af hullet — mister tension"
+      ],
+      "fix": "Driv knæene aktivt udad i bunden (\"spread the floor\"). Hold 1 sek pause i bunden næste sæt for at genopbygge tension."
+    },
+    "deadlift": {
+      "headline": "Stærkt løft — hyperekstension på toppen",
+      "pos": [
+        "Bar holder kontakt med kroppen hele vejen op",
+        "Bagdel og lats engageret fra setup",
+        "God pace — ingen tøven ved knæene"
+      ],
+      "neg": [
+        "Hyperextension i lock-out (læn dig 5° tilbage)",
+        "Hofte stiger marginalt før skuldrene"
+      ],
+      "fix": "Lås ud med squeeze i baller, ikke ved at læne tilbage. Tænk \"stå op\" frem for \"læn tilbage\" på toppen."
+    },
+    "default": {
+      "headline": "Teknisk solidt — to mindre justeringer",
+      "pos": [
+        "God kontrol over hele bevægelsen",
+        "Konsistent ROM (range of motion) på alle reps",
+        "Tempo matcher programmets foreskrevne"
+      ],
+      "neg": [
+        "Let asymmetri mellem venstre og højre side",
+        "Bar-path drifter en smule fremad i excentrisk fase"
+      ],
+      "fix": "Filmoptag fra siden næste gang for at validere bar-path. Overvej en deload-sæt på den svage side næste session."
+    }
+  }
+}

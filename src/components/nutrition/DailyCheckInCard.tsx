@@ -1,20 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import type { DailyCheckIn } from "@/lib/data/nutrition-checkin";
-import type { MealSlot } from "@/lib/data/nutrition";
 import { quickLogAction } from "@/app/(app)/nutrition/actions";
 import LogMealButton from "@/app/(app)/nutrition/LogMealButton";
-
-const SLOT_LABELS: Record<MealSlot, string> = {
-  morgen: "Morgen",
-  frokost: "Frokost",
-  aften: "Aften",
-  snack: "Snack",
-  pre: "Pre",
-  post: "Post",
-};
+import StreakCelebration from "@/components/nutrition/StreakCelebration";
 
 /**
  * Daily check-in card. Renders only when there's a meal to surface
@@ -34,7 +26,10 @@ export default function DailyCheckInCard({
   /** "compact" drops the meal description for tighter dashboard placement */
   variant?: "full" | "compact";
 }) {
+  const t = useTranslations("Nutrition.checkIn");
+  const ts = useTranslations("Nutrition.slotLabels");
   const [pending, startTransition] = useTransition();
+  const [celebration, setCelebration] = useState<number | null>(null);
 
   if (checkin.state === "no-plan" || !checkin.slot) return null;
 
@@ -45,21 +40,23 @@ export default function DailyCheckInCard({
 
   function handleQuickLog(status: "eaten" | "skipped") {
     if (pending || !checkin.slot) return;
-    if (status === "skipped" && !confirm("Markér dette måltid som skippet?")) return;
+    if (status === "skipped" && !confirm(t("skipConfirm"))) return;
     const fd = new FormData();
     if (checkin.meal?.id) fd.set("mealId", checkin.meal.id);
     fd.set("loggedForDate", checkin.dateIso);
     fd.set("loggedForSlot", checkin.slot);
     fd.set("status", status);
-    startTransition(() => {
-      quickLogAction(fd);
+    startTransition(async () => {
+      const res = await quickLogAction(fd);
+      if (res?.streakMilestone) setCelebration(res.streakMilestone);
     });
   }
 
-  const slotLabel = SLOT_LABELS[checkin.slot];
-  const headline = headlineFor(checkin);
+  const slotLabel = ts(checkin.slot);
+  const headline = headlineFor(checkin, t, ts);
 
   return (
+    <>
     <article
       className="surface-2 rounded-2xl overflow-hidden"
       style={{
@@ -73,16 +70,18 @@ export default function DailyCheckInCard({
         />
         <div className="flex-1 min-w-0">
           <div className="eyebrow mb-1.5 flex items-center gap-2 flex-wrap">
-            <span>Daily check-in</span>
+            <span>{t("eyebrow")}</span>
             <span aria-hidden className="text-fg-faint">·</span>
             <span>
-              {slotLabel} {checkin.slotWindow ? `· ${checkin.slotWindow}` : ""}
+              {checkin.slotWindow
+                ? t("slotWindow", { slot: slotLabel, window: checkin.slotWindow })
+                : t("slotNoWindow", { slot: slotLabel })}
             </span>
             {checkin.mealsToday > 0 ? (
               <>
                 <span aria-hidden className="text-fg-faint">·</span>
                 <span className="numeric">
-                  {checkin.loggedToday}/{checkin.mealsToday} i dag
+                  {t("loggedToday", { logged: checkin.loggedToday, total: checkin.mealsToday })}
                 </span>
               </>
             ) : null}
@@ -99,20 +98,21 @@ export default function DailyCheckInCard({
         {checkin.streakDays > 0 ? (
           <div className="text-right shrink-0">
             <div className="numeric text-2xl">{checkin.streakDays}</div>
-            <div className="eyebrow">streak</div>
+            <div className="eyebrow">{t("streak")}</div>
             {checkin.nextMilestone ? (
               <div className="mt-1 text-[10px] font-mono text-fg-dim whitespace-nowrap">
-                +50 om {checkin.nextMilestone.daysAway}{" "}
-                {checkin.nextMilestone.daysAway === 1 ? "dag" : "dage"}
+                {checkin.nextMilestone.daysAway === 1
+                  ? t("milestoneDaysAwayOne", { days: checkin.nextMilestone.daysAway })
+                  : t("milestoneDaysAwayOther", { days: checkin.nextMilestone.daysAway })}
               </div>
             ) : null}
           </div>
         ) : checkin.nextMilestone ? (
           <div className="text-right shrink-0">
             <div className="text-[11px] font-mono text-fg-dim leading-tight">
-              Log mad i {checkin.nextMilestone.days} dage
+              {t("milestonePrompt", { days: checkin.nextMilestone.days })}
               <br />
-              <span className="text-fg">→ +50 Reps</span>
+              <span className="text-fg">{t("milestoneReward")}</span>
             </div>
           </div>
         ) : null}
@@ -122,15 +122,15 @@ export default function DailyCheckInCard({
       {variant === "full" && checkin.meal ? (
         <div className="px-5 pb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-mono">
           <span className="text-fg-dim">
-            {checkin.meal.estKcal ?? "—"} kcal
+            {t("kcal", { value: checkin.meal.estKcal ?? "—" })}
           </span>
           <span className="text-fg-faint" aria-hidden>·</span>
           <span className="text-fg-dim">
-            {checkin.meal.estProteinG ?? "—"}g protein
+            {t("protein", { value: checkin.meal.estProteinG ?? "—" })}
           </span>
           <span className="text-fg-faint" aria-hidden>·</span>
           <span className="text-fg-dim">
-            {checkin.meal.prepMinutes ?? "—"} min prep
+            {t("prep", { value: checkin.meal.prepMinutes ?? "—" })}
           </span>
         </div>
       ) : null}
@@ -145,7 +145,7 @@ export default function DailyCheckInCard({
               disabled={pending}
               className="btn btn-primary btn-sm"
             >
-              {pending ? "Logger…" : "Som planlagt"}
+              {pending ? t("logging") : t("asPlanned")}
             </button>
             {checkin.meal ? (
               <LogMealButton
@@ -161,47 +161,56 @@ export default function DailyCheckInCard({
               disabled={pending}
               className="btn btn-ghost btn-sm"
             >
-              Skippet
+              {t("skipped")}
             </button>
             <Link href="/nutrition" className="btn btn-ghost btn-sm ml-auto">
-              Hele planen →
+              {t("fullPlan")}
             </Link>
           </>
         ) : showCelebration ? (
           <>
             <span className="px-3 py-2 text-xs font-mono text-fg-dim">
               {checkin.state === "skipped"
-                ? `${slotLabel} skippet — næste check-in venter.`
-                : `${slotLabel} logget. Godt arbejde.`}
+                ? t("skippedNote", { slot: slotLabel })
+                : t("loggedNote", { slot: slotLabel })}
             </span>
             <Link href="/nutrition" className="btn btn-ghost btn-sm ml-auto">
-              Hele planen →
+              {t("fullPlan")}
             </Link>
           </>
         ) : (
           <>
             <span className="px-3 py-2 text-xs font-mono text-fg-dim">
-              Næste: {slotLabel} {checkin.slotWindow}
+              {t("nextNote", { slot: slotLabel, window: checkin.slotWindow ?? "" })}
             </span>
             <Link href="/nutrition" className="btn btn-ghost btn-sm ml-auto">
-              Hele planen →
+              {t("fullPlan")}
             </Link>
           </>
         )}
       </div>
     </article>
+    <StreakCelebration
+      milestone={celebration}
+      onClose={() => setCelebration(null)}
+    />
+    </>
   );
 }
 
-function headlineFor(c: DailyCheckIn): string {
-  if (!c.slot) return "Intet måltid lige nu.";
-  if (c.state === "skipped") return "Skippet.";
-  if (c.state === "logged") return c.meal?.title ?? "Logget.";
+function headlineFor(
+  c: DailyCheckIn,
+  t: ReturnType<typeof useTranslations<"Nutrition.checkIn">>,
+  ts: ReturnType<typeof useTranslations<"Nutrition.slotLabels">>,
+): string {
+  if (!c.slot) return t("headlineNoMeal");
+  if (c.state === "skipped") return t("headlineSkipped");
+  if (c.state === "logged") return c.meal?.title ?? t("headlineLogged");
   if (c.state === "upcoming") {
     return c.meal?.title
-      ? `Næste: ${c.meal.title}`
-      : `Næste: ${SLOT_LABELS[c.slot]}`;
+      ? t("headlineNextMeal", { title: c.meal.title })
+      : t("headlineNextSlot", { slot: ts(c.slot) });
   }
   // due
-  return c.meal?.title ?? "Hvad spiste du?";
+  return c.meal?.title ?? t("headlineDue");
 }

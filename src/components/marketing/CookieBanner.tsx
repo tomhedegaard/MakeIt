@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const STORAGE_KEY = "mi_cookie_consent_v1";
 
 type Choice = "accepted" | "essential" | null;
 
 export default function CookieBanner() {
+  const t = useTranslations("Misc.cookieBanner");
   const [choice, setChoice] = useState<Choice>("essential"); // assume dismissed until checked
   const [hasChecked, setHasChecked] = useState(false);
 
@@ -43,17 +45,16 @@ export default function CookieBanner() {
       className="fixed bottom-4 inset-x-4 md:inset-x-auto md:right-6 md:left-auto md:max-w-md z-50 surface-2 rounded-2xl p-5"
       style={{ borderColor: "var(--line-bright)" }}
     >
-      <div className="eyebrow mb-2">Cookies</div>
+      <div className="eyebrow mb-2">{t("eyebrow")}</div>
       <h3 id="cookie-title" className="font-display text-lg leading-snug mb-2">
-        Vi sætter en enkelt session-cookie.
+        {t("title")}
       </h3>
       <p className="text-sm text-fg-dim leading-relaxed mb-4">
-        Vi bruger en strengt nødvendig cookie for at holde dig logget ind. Ingen
-        analytics-cookies, ingen tracking, ingen ad-pixels. Læs detaljerne i{" "}
+        {t("bodyBefore")}
         <Link href="/privacy" className="underline hover:text-fg">
-          privacy policy
+          {t("privacyLink")}
         </Link>
-        .
+        {t("bodyAfter")}
       </p>
       <div className="flex flex-wrap items-center gap-2">
         <button
@@ -61,14 +62,14 @@ export default function CookieBanner() {
           className="btn btn-sm btn-primary"
           onClick={() => persist("accepted")}
         >
-          OK
+          {t("accept")}
         </button>
         <button
           type="button"
           className="btn btn-sm btn-ghost"
           onClick={() => persist("essential")}
         >
-          Kun nødvendige
+          {t("essential")}
         </button>
       </div>
     </div>

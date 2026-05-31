@@ -1,12 +1,14 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { getSession } from "@/lib/auth";
 import { COMPANY } from "@/lib/company";
 import AnatomyPreview from "./AnatomyPreview";
 
-export const metadata = {
-  title: `Anatomi preview · Coach · ${COMPANY.product}`,
-};
+export async function generateMetadata() {
+  const t = await getTranslations("CoachStudio.anatomy");
+  return { title: t("metaTitle", { product: COMPANY.product }) };
+}
 
 /**
  * Admin-only iteration sandbox for the AnatomyFigure component.
@@ -23,17 +25,17 @@ export default async function AnatomyPreviewPage() {
   const member = await getSession();
   if (!member?.isAdmin) redirect("/coach");
 
+  const t = await getTranslations("CoachStudio.anatomy");
+
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       <header>
-        <div className="eyebrow mb-2">Coach · Anatomi-preview</div>
+        <div className="eyebrow mb-2">{t("eyebrow")}</div>
         <h1 className="font-display text-[clamp(2rem,5vw,3.5rem)] leading-[0.95]">
-          Anatomi-figur sandbox.
+          {t("title")}
         </h1>
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-          Live preview af AnatomyFigure-komponenten. Vælg en øvelse +
-          view, juster paths i src/components/anatomy/AnatomyFigure.tsx,
-          se ændringer her. Sletter route'en når figuren sidder.
+          {t("intro")}
         </p>
       </header>
 

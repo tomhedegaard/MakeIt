@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 /**
  * Live video recorder for chat messages (coach-only at the call
@@ -35,6 +36,7 @@ export default function VideoRecorder({
   onSubmit: (blob: Blob, durationSec: number, mime: string) => Promise<void>;
   disabled?: boolean;
 }) {
+  const t = useTranslations("Messages.videoRecorder");
   const [state, setState] = useState<"idle" | "recording" | "preview">("idle");
   const [elapsed, setElapsed] = useState(0);
   const [pending, setPending] = useState(false);
@@ -158,19 +160,19 @@ export default function VideoRecorder({
         if (sec >= 300) stop(); // hard cap at 5 min
       }, 250);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "ukendt fejl";
+      const msg = err instanceof Error ? err.message : t("unknownError");
       // Specific error names worth distinguishing for UX:
       //   NotAllowedError → user denied permission
       //   NotFoundError → no camera/mic on the device
       //   NotReadableError → device is busy (in use by another app)
       if (err instanceof Error && err.name === "NotAllowedError") {
-        setError("Tilgang nægtet — tillad kamera + mikrofon i browseren.");
+        setError(t("permissionDenied"));
       } else if (err instanceof Error && err.name === "NotFoundError") {
-        setError("Intet kamera fundet på enheden.");
+        setError(t("noCamera"));
       } else if (err instanceof Error && err.name === "NotReadableError") {
-        setError("Kamera er optaget af et andet program.");
+        setError(t("cameraBusy"));
       } else {
-        setError(`Kunne ikke starte optagelse: ${msg}`);
+        setError(t("startFailed", { message: msg }));
       }
       stopStream();
     }
@@ -220,7 +222,7 @@ export default function VideoRecorder({
         blobRef.current.mime
       );
     } catch {
-      setError("Kunne ikke sende — prøv igen.");
+      setError(t("sendFailed"));
     } finally {
       setPending(false);
     }
@@ -236,17 +238,17 @@ export default function VideoRecorder({
             disabled={disabled}
             className="btn btn-sm btn-primary"
           >
-            ● Optag video
+            {t("record")}
           </button>
           <button
             type="button"
             onClick={onCancel}
             className="btn btn-sm btn-ghost"
           >
-            Annullér
+            {t("cancel")}
           </button>
           <span className="text-[10px] font-mono text-fg-faint ml-auto">
-            max 5:00
+            {t("max")}
           </span>
         </div>
       ) : null}
@@ -270,14 +272,14 @@ export default function VideoRecorder({
           </div>
           <div className="flex items-center gap-3">
             <span className="text-[10px] font-mono text-fg-faint">
-              max 5:00
+              {t("max")}
             </span>
             <button
               type="button"
               onClick={stop}
               className="btn btn-sm btn-primary ml-auto"
             >
-              ◼ Stop
+              {t("stop")}
             </button>
           </div>
         </>
@@ -299,7 +301,7 @@ export default function VideoRecorder({
               disabled={pending}
               className="btn btn-sm btn-ghost"
             >
-              Slet
+              {t("discard")}
             </button>
             <span className="text-[10px] font-mono text-fg-faint">
               {(() => {
@@ -313,7 +315,7 @@ export default function VideoRecorder({
               disabled={pending}
               className="btn btn-sm btn-primary ml-auto"
             >
-              {pending ? "Sender…" : "Send"}
+              {pending ? t("sending") : t("send")}
             </button>
           </div>
         </>

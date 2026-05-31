@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { revalidatePath } from "next/cache";
 import { maybeAdvanceWeek } from "@/lib/data/week-progression";
@@ -83,4 +84,120 @@ export async function completeSessionAction(sessionId: string): Promise<{
   revalidatePath("/reps");
 
   return { ok: true, repsAwarded: Number(awarded ?? 0) };
+}
+
+/**
+ * Member's response to an active adaptive_v0 modifier: accept it (run
+ * the adapted session) or keep the original. Updates
+ * `hrv_session_modifiers.accepted_by_member` and revalidates the
+ * session page so applyAdaptationToSession sees the new state.
+ *
+ * Auth model: read the authenticated member via the RLS-respecting
+ * client (cookies-backed), then perform the update with the
+ * service-role client narrowed by an explicit
+ * `member_id = <auth-uid>` filter. Two reasons for this split:
+ *   - 0032 only granted SELECT on hrv_session_modifiers to members;
+ *     an UPDATE policy would require a follow-up migration.
+ *   - The explicit filter in the update is stricter than a column
+ *     check would be — no risk of leaking other members' rows via
+ *     a malicious modifier id.
+ *
+ * Returns `{ ok: true }` on success; `{ ok: false, reason }` on auth
+ * failure, missing row, or DB error. The caller's optimistic UI
+ * rolls back on `!ok`.
+ */
+export async function setAdaptationResponseAction(input: {
+  modifierId: string;
+  sessionId: string;
+  accepted: boolean;
+}): Promise<{ ok: boolean; reason?: string }> {
+  if (!SUPABASE_ENABLED) return { ok: true };
+
+  // RLS-respecting client just to read the authed user id.
+  const authClient = await createClient();
+  if (!authClient) return { ok: false, reason: "no-supabase" };
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
+  if (!user) return { ok: false, reason: "unauthenticated" };
+
+  // Service-role client for the write — narrowed by an explicit
+  // member_id filter so we can only ever touch the caller's own row.
+  const svc = createServiceClient();
+  const { error, count } = await svc
+    .from("hrv_session_modifiers")
+    .update(
+      { accepted_by_member: input.accepted },
+      { count: "exact" }
+    )
+    .eq("id", input.modifierId)
+    .eq("member_id", user.id)
+    .eq("reason", "adaptive_v0");
+
+  if (error) {
+    console.error(
+      "[adaptive] setAdaptationResponseAction:",
+      error.message
+    );
+    return { ok: false, reason: "db-error" };
+  }
+  if ((count ?? 0) === 0) {
+    // Nothing updated — either the modifier id is wrong or belongs
+    // to someone else. Caller doesn't need to distinguish.
+    return { ok: false, reason: "not-found" };
+  }
+
+  // Re-render the session page so applyAdaptationToSession picks up
+  // the new accepted_by_member value.
+  revalidatePath(`/session/${input.sessionId}`);
+  return { ok: true };
+}
+
+/**
+ * Telemetry: stamp `hrv_session_modifiers.reasoning_revealed_at` the
+ * first time the member expands "Vis tankegang" on this modifier.
+ * Idempotent — only writes when the column is currently NULL, so
+ * repeat toggles in the same session and re-loads are no-ops.
+ *
+ * Auth model mirrors setAdaptationResponseAction: RLS-respecting
+ * client for the auth read, service-role client narrowed by an
+ * explicit `member_id = auth.uid()` filter for the write (no UPDATE
+ * RLS policy on hrv_session_modifiers).
+ *
+ * Returns `{ ok: true }` whether or not a row was actually updated
+ * (idempotent — already-revealed is success). Errors return
+ * `{ ok: false }` so the caller can decide whether to retry.
+ */
+export async function markReasoningRevealedAction(input: {
+  modifierId: string;
+}): Promise<{ ok: boolean }> {
+  if (!SUPABASE_ENABLED) return { ok: true };
+
+  const authClient = await createClient();
+  if (!authClient) return { ok: false };
+  const {
+    data: { user },
+  } = await authClient.auth.getUser();
+  if (!user) return { ok: false };
+
+  const svc = createServiceClient();
+  const { error } = await svc
+    .from("hrv_session_modifiers")
+    .update({ reasoning_revealed_at: new Date().toISOString() })
+    .eq("id", input.modifierId)
+    .eq("member_id", user.id)
+    .eq("reason", "adaptive_v0")
+    .is("reasoning_revealed_at", null);
+
+  if (error) {
+    console.error(
+      "[adaptive] markReasoningRevealedAction:",
+      error.message
+    );
+    return { ok: false };
+  }
+  // No revalidatePath — this is pure telemetry; the UI already
+  // showed the panel optimistically and doesn't depend on the
+  // DB state for rendering.
+  return { ok: true };
 }

@@ -29,6 +29,11 @@ import {
   getSkipDayIndices,
   removeSkipDay,
 } from "@/lib/data/skip-days";
+import {
+  computeStreak,
+  copenhagenIsoDate,
+  isCookingMilestone,
+} from "@/lib/data/nutrition-checkin";
 import { randomUUID } from "crypto";
 
 /* ---------------------------------------------------------------- *
@@ -39,6 +44,42 @@ async function requireMember() {
   const member = await getSession();
   if (!member) redirect("/login");
   return member;
+}
+
+export type LogResult = {
+  /**
+   * Set to the milestone day-count (3/7/14/30) when this log just
+   * advanced the cooking streak across a milestone — the client
+   * shows the celebration moment. Null otherwise.
+   */
+  streakMilestone: number | null;
+};
+
+/**
+ * Detect whether an `eaten` log just crossed a cooking-streak
+ * milestone. Compares the streak before vs. after the insert: only
+ * a strict increase that lands on a milestone counts (so logging a
+ * second meal the same day, or a skipped log, never re-fires it).
+ *
+ * Returns a closure pair — call before() pre-insert, then after()
+ * post-insert. Both no-op (return null) outside Supabase mode.
+ */
+async function streakMilestoneTracker(
+  memberId: string,
+  loggedForDate: string,
+  status: "eaten" | "skipped",
+  supabase: Awaited<ReturnType<typeof createClient>>,
+) {
+  if (status !== "eaten" || !supabase) {
+    return { after: async (): Promise<number | null> => null };
+  }
+  const before = await computeStreak(memberId, loggedForDate, supabase);
+  return {
+    after: async (): Promise<number | null> => {
+      const next = await computeStreak(memberId, loggedForDate, supabase);
+      return next > before && isCookingMilestone(next) ? next : null;
+    },
+  };
 }
 
 function parseStringList(raw: FormDataEntryValue | null): string[] {
@@ -278,7 +319,7 @@ export async function swapMealAction(formData: FormData): Promise<void> {
  * Photo-log a meal
  * ---------------------------------------------------------------- */
 
-export async function logMealAction(formData: FormData): Promise<void> {
+export async function logMealAction(formData: FormData): Promise<LogResult> {
   const member = await requireMember();
 
   const mealId = String(formData.get("mealId") ?? "") || null;
@@ -288,7 +329,7 @@ export async function logMealAction(formData: FormData): Promise<void> {
   const notes = String(formData.get("notes") ?? "") || null;
   const photo = formData.get("photo");
 
-  if (!loggedForDate) return;
+  if (!loggedForDate) return { streakMilestone: null };
 
   // Upload photo if present
   let photoPath: string | null = null;
@@ -314,6 +355,14 @@ export async function logMealAction(formData: FormData): Promise<void> {
     }
   }
 
+  // Photo-logged meals are always 'eaten' (createLog defaults to it).
+  const tracker = await streakMilestoneTracker(
+    member.id,
+    loggedForDate,
+    "eaten",
+    await createClient(),
+  );
+
   const log = await createLog({
     memberId: member.id,
     mealId,
@@ -323,6 +372,8 @@ export async function logMealAction(formData: FormData): Promise<void> {
     rating,
     notes,
   });
+
+  const streakMilestone = await tracker.after();
 
   // Background-grade the photo if we have one and a planned meal to compare to.
   if (log && photoBytes && photoMime && mealId) {
@@ -351,6 +402,7 @@ export async function logMealAction(formData: FormData): Promise<void> {
 
   revalidatePath("/nutrition");
   revalidatePath("/dashboard");
+  return { streakMilestone };
 }
 
 /* ---------------------------------------------------------------- *
@@ -363,14 +415,14 @@ export async function logMealAction(formData: FormData): Promise<void> {
  * short-circuits if a log already exists for the slot.
  * ---------------------------------------------------------------- */
 
-export async function quickLogAction(formData: FormData): Promise<void> {
+export async function quickLogAction(formData: FormData): Promise<LogResult> {
   const member = await requireMember();
   const mealId = String(formData.get("mealId") ?? "") || null;
   const loggedForDate = String(formData.get("loggedForDate") ?? "");
   const slot = String(formData.get("loggedForSlot") ?? "") as MealSlot | "";
   const status = String(formData.get("status") ?? "eaten") as "eaten" | "skipped";
 
-  if (!loggedForDate || !slot) return;
+  if (!loggedForDate || !slot) return { streakMilestone: null };
 
   const supabase = await createClient();
   if (supabase) {
@@ -383,9 +435,16 @@ export async function quickLogAction(formData: FormData): Promise<void> {
       .limit(1);
     if (existing && existing.length > 0) {
       // Already logged this slot — do nothing rather than duplicate.
-      return;
+      return { streakMilestone: null };
     }
   }
+
+  const tracker = await streakMilestoneTracker(
+    member.id,
+    loggedForDate,
+    status,
+    supabase,
+  );
 
   await createLog({
     memberId: member.id,
@@ -398,8 +457,67 @@ export async function quickLogAction(formData: FormData): Promise<void> {
     notes: null,
   });
 
+  const streakMilestone = await tracker.after();
+
   revalidatePath("/nutrition");
   revalidatePath("/dashboard");
+  return { streakMilestone };
+}
+
+/* ---------------------------------------------------------------- *
+ * Off-plan quick-log — the "Spiste noget andet" flow.
+ *
+ * Records an off-plan meal with just a calorie + protein estimate
+ * and an optional label. No slot, no planned meal — the row is
+ * meal_id=null, off_plan=true, status='eaten' so it counts toward
+ * the cooking streak (honesty > broken streaks). Logged against
+ * today (Europe/Copenhagen), computed server-side rather than
+ * trusting the client.
+ *
+ * Invalid macros are a silent no-op — the modal validates client-
+ * side, this is just the server backstop.
+ * ---------------------------------------------------------------- */
+
+export async function logOffPlanAction(formData: FormData): Promise<LogResult> {
+  const member = await requireMember();
+
+  const kcal = Number.parseInt(String(formData.get("kcal") ?? ""), 10);
+  const proteinG = Number.parseInt(String(formData.get("proteinG") ?? ""), 10);
+  const label = String(formData.get("label") ?? "").trim().slice(0, 200) || null;
+
+  // Sanity ranges mirror the migration 0033 CHECK constraints.
+  const kcalOk = Number.isFinite(kcal) && kcal > 0 && kcal <= 10000;
+  const proteinOk = Number.isFinite(proteinG) && proteinG >= 0 && proteinG <= 500;
+  if (!kcalOk || !proteinOk) return { streakMilestone: null };
+
+  const loggedForDate = copenhagenIsoDate();
+
+  const tracker = await streakMilestoneTracker(
+    member.id,
+    loggedForDate,
+    "eaten",
+    await createClient(),
+  );
+
+  await createLog({
+    memberId: member.id,
+    mealId: null,
+    loggedForDate,
+    loggedForSlot: null,
+    status: "eaten",
+    offPlan: true,
+    kcal,
+    proteinG,
+    photoPath: null,
+    rating: null,
+    notes: label,
+  });
+
+  const streakMilestone = await tracker.after();
+
+  revalidatePath("/nutrition");
+  revalidatePath("/dashboard");
+  return { streakMilestone };
 }
 
 /* ---------------------------------------------------------------- *

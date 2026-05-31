@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 const RPE_VALUES = [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10] as const;
@@ -13,8 +14,9 @@ export default function RpeSelect({
   onChange: (v: number) => void;
   className?: string;
 }) {
+  const t = useTranslations("Session.rpe");
   return (
-    <div className={cn("pillgroup", className)} role="radiogroup" aria-label="RPE">
+    <div className={cn("pillgroup", className)} role="radiogroup" aria-label={t("ariaLabel")}>
       {RPE_VALUES.map((rpe) => (
         <button
           key={rpe}

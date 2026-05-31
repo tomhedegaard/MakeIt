@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 /**
  * Full-screen overlay shown while Claude is generating a meal plan.
@@ -21,15 +22,15 @@ import { useEffect, useState } from "react";
  * doesn't claim more progress than it actually has.
  */
 
-type Stage = { label: string; afterSec: number };
+type Stage = { labelKey: string; afterSec: number };
 
 const STAGES: Stage[] = [
-  { label: "Analyserer din profil", afterSec: 0 },
-  { label: "Vælger måltider der matcher dit mål", afterSec: 3 },
-  { label: "Beregner macros for hver dag", afterSec: 8 },
-  { label: "Validerer mod brand-policy", afterSec: 16 },
-  { label: "Pakker indkøbsliste sammen", afterSec: 24 },
-  { label: "Næsten klar — sidste sanity-tjek", afterSec: 35 },
+  { labelKey: "stage1", afterSec: 0 },
+  { labelKey: "stage2", afterSec: 3 },
+  { labelKey: "stage3", afterSec: 8 },
+  { labelKey: "stage4", afterSec: 16 },
+  { labelKey: "stage5", afterSec: 24 },
+  { labelKey: "stage6", afterSec: 35 },
 ];
 
 export default function PlanGenerationOverlay({
@@ -37,6 +38,7 @@ export default function PlanGenerationOverlay({
 }: {
   pending: boolean;
 }) {
+  const t = useTranslations("Nutrition.planOverlay");
   const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
@@ -68,9 +70,9 @@ export default function PlanGenerationOverlay({
       aria-live="polite"
     >
       <div className="max-w-md mx-auto text-center px-6">
-        <div className="eyebrow mb-3">Genererer</div>
+        <div className="eyebrow mb-3">{t("eyebrow")}</div>
         <h2 className="font-display text-[clamp(2rem,5vw,3rem)] leading-[0.95] mb-8">
-          Bygger din plan.
+          {t("title")}
         </h2>
 
         {/* 3-dot loading indicator — staggered pulse, no fake % */}
@@ -85,21 +87,21 @@ export default function PlanGenerationOverlay({
         </div>
 
         <p className="text-base md:text-lg text-fg leading-relaxed mb-3">
-          {currentStage.label}…
+          {t("stageProgress", { label: t(currentStage.labelKey) })}
         </p>
 
         <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint mb-1">
-          {elapsed}s elapsed · forventet 10–20 sek · max 50 sek
+          {t("elapsed", { elapsed })}
         </p>
 
         {overtime ? (
           <p className="mt-6 text-xs font-mono uppercase tracking-[0.14em] text-yellow-400">
-            Tager lidt længere end normalt — falder tilbage til regelbaseret plan om lidt
+            {t("overtime")}
           </p>
         ) : null}
 
         <div className="mt-12 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-          Bliv på siden — ingen grund til at refreshe
+          {t("stayOnPage")}
         </div>
       </div>
     </div>

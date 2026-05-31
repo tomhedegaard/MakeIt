@@ -1,0 +1,84 @@
+{
+  "eyebrow": "Coach School · Sandbox",
+  "title": "Beslut parallelt med Munk",
+  "subtitle": "{count} sandbox-cases venter på dit kald. Du ser hvad Munk så — men ikke hvad han valgte, før du har trykket Send.",
+  "empty": "Ingen åbne sandbox-cases lige nu. Tilbage når Munk har afgjort flere alerts.",
+  "footnote": "Sandbox-cases er hrv_alerts Munk allerede har afgjort. Dit kald sammenlignes med hans — gennemsnittet over de seneste 50 sandbox-runder driver promotion-gaten (mål: ≥80%).",
+  "triggeredAt": "Udløst {time}",
+  "conditionsHeader": "Signaler i alerten",
+  "decisionFieldsetLabel": "Vælg en beslutning",
+  "decisionHeader": "Dit kald",
+  "decisions": {
+    "approve": "Acceptér",
+    "modify": "Justér",
+    "escalate": "Eskalér",
+    "reject": "Afvis"
+  },
+  "reasoningLabel": "Begrundelse (valgfri)",
+  "reasoningPlaceholder": "Hvorfor det kald? — kort note, så Munk ser din tankegang.",
+  "errorLine": "Kunne ikke sende: {reason}",
+  "submitting": "Sender…",
+  "submitButton": "Send beslutning",
+  "held": {
+    "badge": "Holdt tilbage",
+    "title": "Munk skal lige se den her først. Du behøver ikke gøre noget — din note venter på review.",
+    "reasonLine": "Reason-kode: {reason}"
+  },
+  "revealed": {
+    "triggeredAt": "Udløst {time}",
+    "youHeader": "Dit kald",
+    "munkHeader": "Munks kald",
+    "yourReasoning": "Din begrundelse",
+    "footnote": "Sammenligning er gemt. Du flytter mod next-50 gennemsnittet."
+  },
+  "live": {
+    "eyebrow": "Coach School · Live",
+    "title": "Dine tildelte medlemmer",
+    "subtitle": "{count} åbne alerts på medlemmer du co-coacher. Dit kald lukker køen.",
+    "empty": "Ingen åbne alerts på dine medlemmer lige nu. Godt arbejde — eller stille morgen.",
+    "footnote": "Live-kald gemmes som coach_reviews (mode=live). Munk spot-checker via /coach/co-coaches.",
+    "decisionHeader": "Dit kald — det her er den endelige beslutning",
+    "reasoningPlaceholder": "Kort note til medlemmet eller til Munks audit-spor.",
+    "submitButton": "Luk og send",
+    "closedFootnote": "Lukket",
+    "yourCall": "Dit kald"
+  },
+  "tree": {
+    "eyebrow": "Coach School",
+    "title": "Lær at coache som Munk",
+    "subtitle": "Lektioner låses op af din tier. Hver lektion: kort video, 3 quiz-spørgsmål, og en praksis-scenarie hvor Claude evaluerer dit svar mod Munks rubrikker.",
+    "empty": "Ingen lektioner er udgivet endnu. Munk optager den første kohorte i M5.",
+    "tierHeader": {
+      "athlete": "Athlete",
+      "beast": "Beast",
+      "legend": "Legend"
+    },
+    "lockedTag": {
+      "athlete": "Låst — kræver Athlete-tier",
+      "beast": "Låst — kræver Beast-tier",
+      "legend": "Låst — kræver Legend-tier"
+    },
+    "completedTag": "Gennemført",
+    "repsLine": "+{reps} Reps ved første gennemførsel"
+  },
+  "lesson": {
+    "backToTree": "← Tilbage til lektions-træet",
+    "videoPlaceholder": "Video optages af Munk i M5 — quiz og praksis er klar nu.",
+    "recordedBy": "Optaget af Mikael Munk",
+    "quizHeader": "Quiz · 3 spørgsmål",
+    "quizQuestionLabel": "Spørgsmål {n}",
+    "practiceHeader": "Praksis-scenarie · Claude evaluerer dit svar",
+    "practicePlaceholder": "Skriv dit coach-svar her. Hold det kort og konkret — som du ville sende til en lærling.",
+    "submitButton": "Send og evaluér",
+    "resultHeader": "Resultat",
+    "quizResultLine": "{correct}/{total} rigtige",
+    "evalHeader": "Claudes vurdering",
+    "evalScore": {
+      "strong": "Solid",
+      "on_track": "På rette spor",
+      "needs_work": "Brug for justering"
+    },
+    "evalUnavailable": "Claude kunne ikke evaluere lige nu — dit svar er gemt; prøv igen senere.",
+    "completedFootnote": "Gennemført. {reps} Reps lander når CC-10 går live."
+  }
+}
