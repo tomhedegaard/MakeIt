@@ -17,6 +17,11 @@ import {
   shouldModerate,
   type SafetyVerdict,
 } from "@/lib/coach-school/safety";
+import {
+  awardCoCoachPromotion,
+  awardLessonCompletion,
+  awardSandboxReview,
+} from "@/lib/coach-school/reps-awards";
 
 /**
  * Safety-check pipeline (CC-9) — shared by sandbox + live submit actions.
@@ -192,7 +197,7 @@ export async function submitSandboxReviewAction(input: {
     };
   }
 
-  const { error: insErr } = await supabase
+  const { data: insertedRow, error: insErr } = await supabase
     .from("coach_reviews")
     .insert({
       reviewer_id: user.id,
@@ -203,10 +208,27 @@ export async function submitSandboxReviewAction(input: {
       reasoning,
       munk_decision: munkDecision,
       agreement_score: agreementScore,
-    });
-  if (insErr) {
-    console.warn("[coach-school] sandbox review insert failed:", insErr.message);
+    })
+    .select("id")
+    .single();
+  if (insErr || !insertedRow) {
+    console.warn("[coach-school] sandbox review insert failed:", insErr?.message);
     return { ok: false, reason: "insert-failed" };
+  }
+
+  // CC-10: best-effort Reps award. Only fires when the Beast agreed
+  // with Munk strongly (≥0.8) — the helper gates on the score. A
+  // Reps insert failure is logged but never rolls back the review.
+  const repsResult = await awardSandboxReview(supabase, {
+    memberId: user.id,
+    coachReviewId: insertedRow.id as string,
+    agreementScore,
+  });
+  if (!repsResult.ok) {
+    console.warn(
+      "[coach-school] sandbox reps award failed:",
+      repsResult.reason,
+    );
   }
 
   revalidatePath("/coach-school/sandbox");
@@ -329,6 +351,17 @@ export async function promoteToLiveAction(input: {
         assignedMemberIds: [],
       };
     }
+  }
+
+  // CC-10: best-effort +200 Reps to the newly-promoted Beast. The
+  // helper is idempotent on (beast_member_id, 'co_coach_promotion',
+  // null), so re-running this action against the same Beast — even
+  // if they're later demoted + re-promoted — won't double-award.
+  const promoReps = await awardCoCoachPromotion(svc, {
+    memberId: input.beastMemberId,
+  });
+  if (!promoReps.ok) {
+    console.warn("[coach-school] promotion reps award failed:", promoReps.reason);
   }
 
   revalidatePath("/coach/co-coaches");
@@ -582,6 +615,19 @@ export async function submitLessonAction(input: {
   if (upsertErr) {
     console.warn("[coach-school] lesson_progress upsert failed:", upsertErr.message);
     return { ok: false, reason: "save-failed" };
+  }
+
+  // CC-10: best-effort +20 Reps on first-time completion. The helper
+  // is idempotent on (member_id, 'lesson_completed', lesson_id) so
+  // retakes of the same lesson never double-award. Lesson_progress
+  // upsert already happened — a Reps insert failure logs but never
+  // rolls back the lesson completion.
+  const lessonReps = await awardLessonCompletion(supabase, {
+    memberId: user.id,
+    lessonId: lessonRow.id as string,
+  });
+  if (!lessonReps.ok) {
+    console.warn("[coach-school] lesson reps award failed:", lessonReps.reason);
   }
 
   revalidatePath("/coach-school");
