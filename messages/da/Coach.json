@@ -16,6 +16,7 @@
     "navQueue": "Form-check kø",
     "navRedemptions": "Reps-indløsninger",
     "navAnalytics": "Analytics",
+    "navCoCoaches": "Co-coaches",
     "navPatterns": "Mønstre",
     "navSystem": "System",
     "backToMemberApp": "← Tilbage til medlem-app",
@@ -264,6 +265,22 @@
     "transitionPause": "Pause",
     "transitionReopen": "Reopen",
     "delete": "Slet"
+  },
+  "coCoaches": {
+    "eyebrow": "Coach console · Co-coaches",
+    "title": "Beasts in training.",
+    "subtitle": "{count} i sandbox · live-grænse: {threshold}% over seneste {window} reviews.",
+    "empty": "Ingen Beasts i sandbox lige nu — inviter nogen op fra crewet.",
+    "reviewsLabel": "{count} sandbox-reviews",
+    "lastReviewLabel": "sidst: {iso}",
+    "promoteButton": "Promote to live",
+    "promoting": "Promoter…",
+    "promotedConfirmation": "Live · {assigned} medlem(mer) tildelt",
+    "notReadyLabel": "Endnu ikke klar",
+    "notReadyHint": "Skal ramme grænsen over de seneste 50 sandbox-reviews først.",
+    "confirmPromote": "Promote @{handle} fra sandbox til live? De får automatisk op til 3 medlemmer tildelt.",
+    "promoteError": "Fejl: {reason}",
+    "footnote": "Promote flytter coach_tier til 'beast_live' og auto-assigner op til 3 medlemmer. Demotion kører via CC-8's kvalitets-cron."
   },
   "patterns": {
     "eyebrow": "Coach console",

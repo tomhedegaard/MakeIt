@@ -241,3 +241,151 @@ export async function getOpenLiveCases(limit: number = 20): Promise<LiveCase[]> 
     };
   });
 }
+
+/* ================================================================== *
+ * CC-7 — Munks ops-view: Beasts-in-training agreement stats
+ * ================================================================== */
+
+/**
+ * Rolling window for agreement-score averages on the co-coach surface.
+ *
+ * Matches the gate documented in src/lib/coach-school/agreement.ts:
+ * "the rolling mean of the last 50 scores drives the promotion gate
+ * (CC-7's /coach/co-coaches view, threshold = 0.80)."
+ */
+export const PROMOTE_THRESHOLD = 0.8;
+export const ROLLING_WINDOW = 50;
+
+/** One sandbox-Beast row for the /coach/co-coaches surface. */
+export interface BeastInTraining {
+  memberId: string;
+  handle: string;
+  /** Avg agreement_score over the last ROLLING_WINDOW sandbox reviews. */
+  rollingAgreement: number | null;
+  /** Total sandbox reviews submitted (used as a "have we enough data" hint). */
+  sandboxReviewCount: number;
+  /** Timestamp of the most recent sandbox review, ISO. */
+  lastReviewAt: string | null;
+  /** True iff rollingAgreement ≥ PROMOTE_THRESHOLD with ≥ROLLING_WINDOW reviews. */
+  liveReady: boolean;
+}
+
+const MOCK_BEASTS: BeastInTraining[] = [
+  {
+    memberId: "demo-beast-1",
+    handle: "nina_dl",
+    rollingAgreement: 0.87,
+    sandboxReviewCount: 52,
+    lastReviewAt: new Date(Date.now() - 6 * 3_600_000).toISOString(),
+    liveReady: true,
+  },
+  {
+    memberId: "demo-beast-2",
+    handle: "kasper_s",
+    rollingAgreement: 0.74,
+    sandboxReviewCount: 41,
+    lastReviewAt: new Date(Date.now() - 20 * 3_600_000).toISOString(),
+    liveReady: false,
+  },
+  {
+    memberId: "demo-beast-3",
+    handle: "maria.lift",
+    rollingAgreement: 0.92,
+    sandboxReviewCount: 63,
+    lastReviewAt: new Date(Date.now() - 2 * 3_600_000).toISOString(),
+    liveReady: true,
+  },
+  {
+    memberId: "demo-beast-4",
+    handle: "frederik",
+    rollingAgreement: null,
+    sandboxReviewCount: 3,
+    lastReviewAt: new Date(Date.now() - 48 * 3_600_000).toISOString(),
+    liveReady: false,
+  },
+];
+
+/**
+ * All members currently in coach_tier='beast_sandbox', enriched with
+ * the rolling-average agreement_score over the last ROLLING_WINDOW
+ * sandbox reviews each Beast submitted.
+ *
+ * Service-role client — page-level Munk-only gate keeps this surface
+ * private (caller is /coach/co-coaches, gated by getSandboxTier()==='munk').
+ *
+ * v0 aggregation pulls the last ROLLING_WINDOW rows per Beast in a
+ * single round-trip then averages in-memory: a window-function query
+ * would scale better but the sandbox cohort is small (<50 Beasts) and
+ * keeping the SQL boring trumps premature optimization here.
+ *
+ * `rollingAgreement` is null when the Beast has submitted zero reviews
+ * (avoids a misleading "0% agreement" badge on someone who hasn't
+ * started). `liveReady` requires ≥ROLLING_WINDOW reviews so Munk
+ * doesn't promote on a 3-sample 1.0 fluke.
+ */
+export async function getBeastsInTraining(): Promise<BeastInTraining[]> {
+  if (!SUPABASE_ENABLED) return MOCK_BEASTS;
+
+  const svc = createServiceClient();
+
+  const { data: beastRows, error: beastErr } = await svc
+    .from("members")
+    .select("id, handle")
+    .eq("coach_tier", "beast_sandbox");
+  if (beastErr) throw new Error(`beasts: ${beastErr.message}`);
+  const beasts = beastRows ?? [];
+  if (beasts.length === 0) return [];
+
+  const beastIds = beasts.map((b) => b.id as string);
+
+  // One query: every sandbox review for every Beast, newest first. We
+  // then take the first ROLLING_WINDOW per reviewer in JS. Smaller and
+  // more predictable than a per-Beast window query at this cohort size.
+  const { data: reviewRows, error: revErr } = await svc
+    .from("coach_reviews")
+    .select("reviewer_id, agreement_score, submitted_at")
+    .eq("mode", "sandbox")
+    .in("reviewer_id", beastIds)
+    .order("submitted_at", { ascending: false });
+  if (revErr) throw new Error(`reviews: ${revErr.message}`);
+
+  // Group → first N per reviewer → avg of non-null scores.
+  const perBeast = new Map<
+    string,
+    { scores: number[]; total: number; lastAt: string | null }
+  >();
+  for (const r of reviewRows ?? []) {
+    const id = r.reviewer_id as string;
+    const bucket =
+      perBeast.get(id) ?? { scores: [], total: 0, lastAt: null };
+    bucket.total += 1;
+    if (bucket.lastAt === null) bucket.lastAt = r.submitted_at as string;
+    if (
+      bucket.scores.length < ROLLING_WINDOW &&
+      r.agreement_score !== null
+    ) {
+      bucket.scores.push(r.agreement_score as number);
+    }
+    perBeast.set(id, bucket);
+  }
+
+  return beasts.map<BeastInTraining>((b) => {
+    const id = b.id as string;
+    const bucket = perBeast.get(id);
+    const scores = bucket?.scores ?? [];
+    const avg =
+      scores.length > 0
+        ? scores.reduce((acc, s) => acc + s, 0) / scores.length
+        : null;
+    const liveReady =
+      avg !== null && avg >= PROMOTE_THRESHOLD && scores.length >= ROLLING_WINDOW;
+    return {
+      memberId: id,
+      handle: (b.handle as string) ?? "—",
+      rollingAgreement: avg,
+      sandboxReviewCount: bucket?.total ?? 0,
+      lastReviewAt: bucket?.lastAt ?? null,
+      liveReady,
+    };
+  });
+}

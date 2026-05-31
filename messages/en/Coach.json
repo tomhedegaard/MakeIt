@@ -16,6 +16,7 @@
     "navQueue": "Form-check queue",
     "navRedemptions": "Reps redemptions",
     "navAnalytics": "Analytics",
+    "navCoCoaches": "Co-coaches",
     "navPatterns": "Patterns",
     "navSystem": "System",
     "backToMemberApp": "← Back to member app",
@@ -264,6 +265,22 @@
     "transitionPause": "Pause",
     "transitionReopen": "Reopen",
     "delete": "Delete"
+  },
+  "coCoaches": {
+    "eyebrow": "Coach console · Co-coaches",
+    "title": "Beasts in training.",
+    "subtitle": "{count} in sandbox · live threshold: {threshold}% over the latest {window} reviews.",
+    "empty": "No Beasts in sandbox right now — invite someone up from the crew.",
+    "reviewsLabel": "{count} sandbox reviews",
+    "lastReviewLabel": "last: {iso}",
+    "promoteButton": "Promote to live",
+    "promoting": "Promoting…",
+    "promotedConfirmation": "Live · {assigned} member(s) assigned",
+    "notReadyLabel": "Not yet ready",
+    "notReadyHint": "Must clear the threshold over the latest 50 sandbox reviews first.",
+    "confirmPromote": "Promote @{handle} from sandbox to live? They'll automatically be assigned up to 3 members.",
+    "promoteError": "Error: {reason}",
+    "footnote": "Promote flips coach_tier to 'beast_live' and auto-assigns up to 3 members. Demotion runs via CC-8's quality cron."
   },
   "patterns": {
     "eyebrow": "Coach console",

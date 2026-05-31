@@ -9,6 +9,9 @@ import type { Member } from "@/lib/auth";
 
 type NavItem = { href: string; labelKey: string; num: string; adminOnly?: boolean };
 
+// "08 Co-coaches" is Munk-only (page also enforces tier='munk').
+// In this codebase the Munk session === the admin session (see auth.ts),
+// so the existing `adminOnly` flag is the right gate.
 const NAV: NavItem[] = [
   { href: "/coach",             labelKey: "navOverview",    num: "01" },
   { href: "/coach/members",     labelKey: "navMembers",     num: "02" },
@@ -17,8 +20,9 @@ const NAV: NavItem[] = [
   { href: "/coach/queue",       labelKey: "navQueue",       num: "05" },
   { href: "/coach/redemptions", labelKey: "navRedemptions", num: "06" },
   { href: "/coach/analytics",   labelKey: "navAnalytics",   num: "07" },
-  { href: "/coach/patterns",    labelKey: "navPatterns",    num: "08" },
-  { href: "/coach/system",      labelKey: "navSystem",      num: "09", adminOnly: true },
+  { href: "/coach/co-coaches",  labelKey: "navCoCoaches",   num: "08", adminOnly: true },
+  { href: "/coach/patterns",    labelKey: "navPatterns",    num: "09" },
+  { href: "/coach/system",      labelKey: "navSystem",      num: "10", adminOnly: true },
 ];
 
 export default function CoachShell({
