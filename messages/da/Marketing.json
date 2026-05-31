@@ -8,7 +8,9 @@
     "price": "Pris",
     "faq": "FAQ",
     "closedBeta": "Closed Beta",
-    "login": "Log ind"
+    "login": "Log ind",
+    "menuOpen": "Åbn menu",
+    "menuClose": "Luk menu"
   },
   "hero": {
     "eyebrow": "Closed Beta · Invite only · est. 2026",
@@ -60,8 +62,8 @@
         "v": "Kun via personlig kode fra Mikael Munk eller en eksisterende crew-medlem."
       },
       "internal": {
-        "k": "Bygget internt",
-        "v": "Vi udvikler platformen sammen med jer. Jeres feedback er featurerne."
+        "k": "Åben hjerne",
+        "v": "Vi viser jer hvordan motoren tænker — og giver jer skruerne til at flytte den. Hver beslutning, hver tilpasning, hver counterfactual er åben."
       },
       "noNoise": {
         "k": "Ingen støj",
@@ -360,6 +362,10 @@
     "maria": {
       "cred": "Hypertrofi · skifter mellem blokke",
       "quote": "Crewet er der jeg poster, ikke Instagram. Stille, præcist, og på dansk. Ingen ads, ingen krav. Bare folk der løfter."
+    },
+    "anton": {
+      "cred": "Powerlifting · 2 år i crewet",
+      "quote": "Første gang jeg har set en coach vise mig hvorfor han ændrede noget. Jeg kan trække i sliderne og se motoren tænke. Det er ikke et black box-program der beder mig løfte mindre — det er coaching jeg forstår."
     }
   },
   "origin": {

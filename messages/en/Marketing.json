@@ -8,7 +8,9 @@
     "price": "Pricing",
     "faq": "FAQ",
     "closedBeta": "Closed Beta",
-    "login": "Log in"
+    "login": "Log in",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu"
   },
   "hero": {
     "eyebrow": "Closed Beta · Invite only · est. 2026",
@@ -60,8 +62,8 @@
         "v": "Only via a personal code from Mikael Munk or an existing crew member."
       },
       "internal": {
-        "k": "Built from the inside",
-        "v": "We build the platform together with you. Your feedback is the feature set."
+        "k": "Open brain",
+        "v": "We show you how the engine thinks — and give you the knobs to move it. Every decision, every adjustment, every counterfactual is open."
       },
       "noNoise": {
         "k": "No noise",
@@ -356,6 +358,10 @@
     "nina": {
       "cred": "DL specialization · 175 kg @ 68 kg BW",
       "quote": "+15 kg on the deadlift in 8 weeks, no injuries. The fact the Reps shop exists is dangerously good motivation — I'm saving up for the embroidered strap."
+    },
+    "anton": {
+      "cred": "Powerlifting · 2 years in the crew",
+      "quote": "First time I've seen a coach show me why he changed something. I can drag the sliders and watch the engine think. It's not a black-box program that asks me to lift less — it's coaching I understand."
     },
     "maria": {
       "cred": "Hypertrophy · switching between blocks",
