@@ -1,6 +1,7 @@
 {
   "nav": {
     "crew": "Crew",
+    "engine": "Motor",
     "coaching": "Coaching",
     "tiers": "Tiers",
     "app": "Appen",
@@ -24,7 +25,25 @@
     "subline": "MakeIt er ikke bare straps og cuffs.",
     "subline2": "Det er det interne univers for crewet bag — coaching, community, loyalitet og HRV-aware restitution samlet ét sted. Bygget i København. Lavet til atleter der løfter tungt.",
     "ctaPrimary": "Få adgang",
-    "ctaSecondary": "Læs mere"
+    "ctaSecondary": "Læs mere",
+    "ctaTertiary": "Prøv motoren ↓"
+  },
+  "engine": {
+    "eyebrow": "02 — Motor",
+    "heading": "Træk i en slider. Se motoren tænke.",
+    "intro": "Det her er den rigtige regel-motor fra appen — ikke en mockup. Træk i en slider, og motoren genberegner sin beslutning i din browser. Ingen API, ingen ventetid. Samme kode kører for dig hver morgen klokken 05:30.",
+    "signalsHeading": "Hvad motoren ser lige nu",
+    "signalLabels": {
+      "hrv": "HRV-aflæsning",
+      "sleep": "Søvn (2 dages snit)",
+      "alcohol": "Alkohol (sidste 2 dage)",
+      "feeling": "Seneste følelse"
+    },
+    "decisionHeading": "Hvad motoren beslutter",
+    "reasoningHeading": "Hvorfor",
+    "previousLabel": "Før du rørte den",
+    "disclaimer": "Samme rene regel-motor som app'en. Ingen API, ingen spinner — kører i din browser.",
+    "ctaHowItWorks": "Se hele tankegangen →"
   },
   "crew": {
     "eyebrow": "01 — Crewet",
@@ -59,6 +78,45 @@
     "note": "Apple Watch via iPhone-appen"
   },
   "pillars": {
+    "engine": {
+      "label": "02 — Motor",
+      "title": "Programmet rewriter sig selv. På din krops præmisser.",
+      "body": "Hver morgen kl. 05:30 læser motoren din HRV, din søvn, sidste sessions RPE og dine seneste form-checks. Den justerer dagens session — eller lader være — og fortæller dig hvorfor. Munk ser eskaleringen før du gør.",
+      "bullet1": "Topsæt-reduktion, accessory-cut, øvelsesbytte — eller no_change. Aldrig mere end én ændring pr. session.",
+      "bullet2": "HRV very_low → session pauset, mobilitet + gåtur, Munk får besked",
+      "bullet3": "Du kan altid sige \"behold original\" — intet sker bag din ryg",
+      "statLabel": "actions",
+      "demoHook": "Træk i sliderne"
+    },
+    "openBrain": {
+      "label": "03 — Åben hjerne",
+      "title": "Coaching, der ikke gemmer regnemaskinen.",
+      "body": "Hver beslutning viser hele kæden: råsignaler → regel → Claudes refinement → handling → udfald. Du kan inspicere de seneste 30 dages tilpasninger og se hvordan din krop og din træning hænger sammen.",
+      "bullet1": "30-dages adaptation history med outcome-tracking",
+      "bullet2": "Counterfactual-sliders: \"Hvad hvis jeg havde sovet 7t?\" — beregnes live i din browser",
+      "bullet3": "Reason codes på dansk — ingen black box",
+      "statLabel": "dage historik",
+      "demoHook": "Se motoren igen"
+    },
+    "munkMultiplier": {
+      "label": "04 — Munk-multiplikator",
+      "title": "Én coach. 5× kapacitet. Stadig ham.",
+      "body": "AI udkaster form-check-svar, kohort-mønstre og morgenrapporter — Munk redigerer i 30 sekunder eller skriver om. Du får aldrig et AI-svar uden hans underskrift.",
+      "bullet1": "AI-drafted form-check-svar, signeret af Munk inden afsendelse",
+      "bullet2": "Daglig morgenrapport: prioriteret kø af medlemmer Munk skal skrive til",
+      "bullet3": "Kohort-mønstre: AI ser når 3+ atleter har samme problem i samme uge",
+      "statLabel": "form-check"
+    },
+    "crewPyramid": {
+      "label": "05 — Crew-pyramide",
+      "title": "Beasts bliver til co-coaches.",
+      "body": "Når du rammer Beast-tier, åbner Coach School: kuraterede lektioner, sandbox-cases du øver på, og — hvis du består — live-medlemmer du co-coacher med Munk som senior. Reps belønner det arbejde, ikke kun dine egne PR'er.",
+      "bullet1": "AI buddy-pairing: træningsniveau + lokation + timing matcher dig med en partner",
+      "bullet2": "Coach School: lektioner → sandbox → live, med safety-moderation på alle udgående beskeder",
+      "bullet3": "Reps for medlems-feedback, ikke kun for dine egne reps",
+      "statLabel": "tiers",
+      "demoHook": "Se stigen"
+    },
     "coaching": {
       "label": "02 — Coaching",
       "title": "Programmer der virker. Coaches der løfter selv.",

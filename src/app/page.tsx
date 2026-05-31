@@ -2,6 +2,7 @@ import MarketingNav from "@/components/marketing/MarketingNav";
 import Hero from "@/components/marketing/Hero";
 import WorksWith from "@/components/marketing/WorksWith";
 import CrewSection from "@/components/marketing/CrewSection";
+import AdaptivePlaygroundPublic from "@/components/marketing/AdaptivePlaygroundPublic";
 import PillarsSection from "@/components/marketing/PillarsSection";
 import TierJourney from "@/components/marketing/TierJourney";
 import AppShowcase from "@/components/marketing/AppShowcase";
@@ -31,6 +32,7 @@ export default function Home() {
         />
         <WorksWith />
         <CrewSection />
+        <AdaptivePlaygroundPublic />
         <PillarsSection />
         <TierJourney />
         <AppShowcase />

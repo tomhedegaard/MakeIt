@@ -17,12 +17,13 @@ export default function MarketingNav() {
             <Logo />
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-[12px] tracking-[0.18em] uppercase text-fg-dim font-mono">
-            <a href="#crew"     className="hover:text-fg transition-colors">{t("crew")}</a>
-            <a href="#coaching" className="hover:text-fg transition-colors">{t("coaching")}</a>
-            <a href="#tiers"    className="hover:text-fg transition-colors">{t("tiers")}</a>
-            <a href="#app"      className="hover:text-fg transition-colors">{t("app")}</a>
-            <a href="#how"      className="hover:text-fg transition-colors">{t("price")}</a>
-            <a href="#faq"      className="hover:text-fg transition-colors">{t("faq")}</a>
+            <a href="#crew"           className="hover:text-fg transition-colors">{t("crew")}</a>
+            <a href="#engine"         className="hover:text-fg transition-colors">{t("engine")}</a>
+            <a href="#pillar-engine"  className="hover:text-fg transition-colors">{t("coaching")}</a>
+            <a href="#tiers"          className="hover:text-fg transition-colors">{t("tiers")}</a>
+            <a href="#app"            className="hover:text-fg transition-colors">{t("app")}</a>
+            <a href="#how"            className="hover:text-fg transition-colors">{t("price")}</a>
+            <a href="#faq"            className="hover:text-fg transition-colors">{t("faq")}</a>
           </nav>
           <div className="flex items-center gap-3">
             <span className="hidden sm:flex items-center gap-2 text-[10px] tracking-[0.18em] uppercase font-mono text-fg-dim">

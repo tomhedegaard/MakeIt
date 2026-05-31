@@ -1,6 +1,7 @@
 {
   "nav": {
     "crew": "Crew",
+    "engine": "Engine",
     "coaching": "Coaching",
     "tiers": "Tiers",
     "app": "The App",
@@ -24,7 +25,25 @@
     "subline": "MakeIt isn't just straps and cuffs.",
     "subline2": "It's the inner universe for the crew behind it — coaching, community, loyalty and HRV-aware recovery in one place. Built in Copenhagen. Made for athletes who lift heavy.",
     "ctaPrimary": "Get access",
-    "ctaSecondary": "Learn more"
+    "ctaSecondary": "Learn more",
+    "ctaTertiary": "Try the engine ↓"
+  },
+  "engine": {
+    "eyebrow": "02 — Engine",
+    "heading": "Drag a slider. Watch the engine.",
+    "intro": "This is the real rule engine from the app — not a mockup. Drag a slider, and the engine recomputes its decision in your browser. No API, no waiting. Same code that runs for you every morning at 05:30.",
+    "signalsHeading": "What the engine sees right now",
+    "signalLabels": {
+      "hrv": "HRV reading",
+      "sleep": "Sleep (2-day average)",
+      "alcohol": "Alcohol (last 2 days)",
+      "feeling": "Most recent feeling"
+    },
+    "decisionHeading": "What the engine decides",
+    "reasoningHeading": "Why",
+    "previousLabel": "Before you touched it",
+    "disclaimer": "Same pure rule engine the app uses. No API, no spinner — runs in your browser.",
+    "ctaHowItWorks": "See the full reasoning chain →"
   },
   "crew": {
     "eyebrow": "01 — The Crew",
@@ -59,6 +78,45 @@
     "note": "Apple Watch via iPhone app"
   },
   "pillars": {
+    "engine": {
+      "label": "02 — Engine",
+      "title": "The program rewrites itself. On your body's terms.",
+      "body": "Every morning at 05:30 the engine reads your HRV, your sleep, last session's RPE, and your most recent form-checks. It adjusts today's session — or doesn't — and tells you why. Munk sees the escalation before you do.",
+      "bullet1": "Top-set reduction, accessory cut, exercise swap — or no_change. Never more than one change per session.",
+      "bullet2": "HRV very_low → session paused, mobility + walk, Munk notified",
+      "bullet3": "You can always say \"keep original\" — nothing happens behind your back",
+      "statLabel": "actions",
+      "demoHook": "Drag the sliders"
+    },
+    "openBrain": {
+      "label": "03 — Open Brain",
+      "title": "Coaching that doesn't hide the calculator.",
+      "body": "Every decision shows the entire chain: raw signals → rule → Claude's refinement → action → outcome. You can inspect the last 30 days of adaptations and see how your body and your training connect.",
+      "bullet1": "30-day adaptation history with outcome tracking",
+      "bullet2": "Counterfactual sliders: \"What if I'd slept 7h?\" — computed live in your browser",
+      "bullet3": "Reason codes in Danish — no black box",
+      "statLabel": "days history",
+      "demoHook": "See the engine again"
+    },
+    "munkMultiplier": {
+      "label": "04 — Munk Multiplier",
+      "title": "One coach. 5× capacity. Still him.",
+      "body": "AI drafts form-check replies, cohort patterns, and morning reports — Munk edits in 30 seconds or rewrites. You never get an AI reply without his signature.",
+      "bullet1": "AI-drafted form-check replies, signed by Munk before sending",
+      "bullet2": "Daily morning report: prioritized queue of members Munk needs to write to",
+      "bullet3": "Cohort patterns: AI spots when 3+ athletes have the same problem in the same week",
+      "statLabel": "form-check"
+    },
+    "crewPyramid": {
+      "label": "05 — Crew Pyramid",
+      "title": "Beasts become co-coaches.",
+      "body": "When you hit Beast tier, Coach School unlocks: curated lessons, sandbox cases you practice on, and — if you pass — live members you co-coach with Munk as senior. Reps reward that work, not just your own PRs.",
+      "bullet1": "AI buddy pairing: training level + location + timing matches you with a partner",
+      "bullet2": "Coach School: lessons → sandbox → live, with safety moderation on every outgoing message",
+      "bullet3": "Reps for member feedback, not just for your own reps",
+      "statLabel": "tiers",
+      "demoHook": "See the ladder"
+    },
     "coaching": {
       "label": "02 — Coaching",
       "title": "Programs that work. Coaches who lift themselves.",

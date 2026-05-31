@@ -44,6 +44,15 @@ type Props = {
    * use cases via the property value.
    */
   modifierId: string;
+  /**
+   * When true, render sliders + result as a flat section instead of
+   * the collapsible `<details>`. Used by the public landing-page
+   * playground (WAUW-1) where the playground IS the section — no
+   * meta-summary needed. Defaults to false so every existing caller
+   * (the in-app /session/[id] and /hrv/learn/adaptive surfaces) keeps
+   * their current collapse-on-default behavior.
+   */
+  alwaysOpen?: boolean;
 };
 
 /**
@@ -89,6 +98,7 @@ export default function CounterfactualSliders({
   baseline,
   baselineDecision,
   modifierId,
+  alwaysOpen = false,
 }: Props) {
   // Initial state from baseline, with sensible fallbacks for null
   // values (member never logged that dimension).
@@ -180,14 +190,13 @@ export default function CounterfactualSliders({
     setFeeling(baselineFeeling);
   }
 
-  return (
-    <details className="group/cf mt-2 pt-2 border-t hairline">
-      <summary className="cursor-pointer list-none text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg select-none inline-flex items-center gap-1 lift touch-app">
-        <span>Hvad hvis du havde…</span>
-        <span aria-hidden className="group-open/cf:rotate-180 transition-transform">↓</span>
-      </summary>
-
-      <div className="space-y-4 pt-3">
+  // WAUW-1: when alwaysOpen, render as a flat section (no <details>
+  // collapse). The body is identical — the wrapper element is the
+  // only difference, so we duplicate the JSX structure rather than
+  // conditionally rendering a tag (avoids React reconciler thrash
+  // when the prop changes between mounts).
+  const body = (
+    <div className="space-y-4 pt-3">
         {/* ----------------- Sleep slider ----------------- */}
         <ControlRow
           label="Søvn (2-dages snit)"
@@ -298,6 +307,19 @@ export default function CounterfactualSliders({
           )}
         </div>
       </div>
+  );
+
+  if (alwaysOpen) {
+    return <section aria-label="Counterfactual playground">{body}</section>;
+  }
+
+  return (
+    <details className="group/cf mt-2 pt-2 border-t hairline">
+      <summary className="cursor-pointer list-none text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg select-none inline-flex items-center gap-1 lift touch-app">
+        <span>Hvad hvis du havde…</span>
+        <span aria-hidden className="group-open/cf:rotate-180 transition-transform">↓</span>
+      </summary>
+      {body}
     </details>
   );
 }

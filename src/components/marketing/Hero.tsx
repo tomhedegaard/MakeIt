@@ -197,6 +197,7 @@ export default function Hero() {
                   <span aria-hidden>→</span>
                 </Link>
                 <a href="#crew" className="btn">{t("ctaSecondary")}</a>
+                <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
               </motion.div>
             </div>
 
@@ -273,6 +274,7 @@ function HeroContent({
               <span aria-hidden>→</span>
             </Link>
             <a href="#crew" className="btn">{t("ctaSecondary")}</a>
+            <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
           </div>
         </div>
 

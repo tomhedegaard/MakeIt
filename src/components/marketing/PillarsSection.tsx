@@ -1,59 +1,89 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 
+/**
+ * WAUW-1 — the 4 søjler section.
+ *
+ * Spec: .claude/plans/for-at-have-wauw-humble-naur.md §"Ny PillarsSection"
+ *
+ * Replaces the v0 generic "Coaching/Community/Reps/Restitution"
+ * pillars with the four wauw-plan søjler that are actually shipped:
+ *
+ *   02 — Motor              (Søjle 1: Adaptive Engine)
+ *   03 — Åben hjerne        (Søjle 2: Open Brain UI)
+ *   04 — Munk-multiplikator (Søjle 3: Munk Multiplier)
+ *   05 — Crew-pyramide      (Søjle 4: Crew Coaching Pyramid)
+ *
+ * Layout grammar is intentionally identical to v0 — eyebrow + display
+ * heading left, body + numbered bullets + big stat right, alternating
+ * via `data-reveal` stagger. The redesign is content-deep, not
+ * layout-wide; the design system stays untouched so the page reads
+ * as one continuous editorial.
+ *
+ * Each pillar carries an optional `demoHook` — a short link rendered
+ * under the stat that anchors to the relevant interactive surface
+ * (e.g. Motor → #engine playground, Crew-pyramide → #tiers). This is
+ * how the section earns its keep: not just "we built X" but "here's
+ * where you touch it."
+ */
 export default async function PillarsSection() {
   const t = await getTranslations("Marketing.pillars");
 
   const pillars = [
     {
-      id: "coaching",
-      label: t("coaching.label"),
-      title: t("coaching.title"),
-      body: t("coaching.body"),
+      // Prefix with "pillar-" so #engine on the page resolves to the
+      // standalone playground (AdaptivePlaygroundPublic) and never
+      // collides with the pillar's anchor.
+      id: "pillar-engine",
+      label: t("engine.label"),
+      title: t("engine.title"),
+      body: t("engine.body"),
       bullets: [
-        t("coaching.bullet1"),
-        t("coaching.bullet2"),
-        t("coaching.bullet3"),
-        t("coaching.bullet4"),
+        t("engine.bullet1"),
+        t("engine.bullet2"),
+        t("engine.bullet3"),
       ],
-      stat: { v: "07", k: t("coaching.statLabel") },
+      stat: { v: "8", k: t("engine.statLabel") },
+      demoHook: { href: "#engine", label: t("engine.demoHook") },
     },
     {
-      id: "community",
-      label: t("community.label"),
-      title: t("community.title"),
-      body: t("community.body"),
+      id: "pillar-open-brain",
+      label: t("openBrain.label"),
+      title: t("openBrain.title"),
+      body: t("openBrain.body"),
       bullets: [
-        t("community.bullet1"),
-        t("community.bullet2"),
-        t("community.bullet3"),
+        t("openBrain.bullet1"),
+        t("openBrain.bullet2"),
+        t("openBrain.bullet3"),
       ],
-      stat: { v: "412", k: t("community.statLabel") },
+      stat: { v: "30", k: t("openBrain.statLabel") },
+      demoHook: { href: "#engine", label: t("openBrain.demoHook") },
     },
     {
-      id: "reps",
-      label: t("reps.label"),
-      title: t("reps.title"),
-      body: t("reps.body"),
+      id: "pillar-munk-multiplier",
+      label: t("munkMultiplier.label"),
+      title: t("munkMultiplier.title"),
+      body: t("munkMultiplier.body"),
       bullets: [
-        t("reps.bullet1"),
-        t("reps.bullet2"),
-        t("reps.bullet3"),
+        t("munkMultiplier.bullet1"),
+        t("munkMultiplier.bullet2"),
+        t("munkMultiplier.bullet3"),
       ],
-      stat: { v: "4", k: t("reps.statLabel") },
+      stat: { v: "24t", k: t("munkMultiplier.statLabel") },
+      demoHook: null,
     },
     {
-      id: "restitution",
-      label: t("restitution.label"),
-      title: t("restitution.title"),
-      body: t("restitution.body"),
+      id: "pillar-crew-pyramid",
+      label: t("crewPyramid.label"),
+      title: t("crewPyramid.title"),
+      body: t("crewPyramid.body"),
       bullets: [
-        t("restitution.bullet1"),
-        t("restitution.bullet2"),
-        t("restitution.bullet3"),
-        t("restitution.bullet4"),
+        t("crewPyramid.bullet1"),
+        t("crewPyramid.bullet2"),
+        t("crewPyramid.bullet3"),
       ],
-      stat: { v: "3", k: t("restitution.statLabel") },
+      stat: { v: "4", k: t("crewPyramid.statLabel") },
+      demoHook: { href: "#tiers", label: t("crewPyramid.demoHook") },
     },
   ];
 
@@ -109,6 +139,17 @@ export default async function PillarsSection() {
                   </div>
                   <div className="eyebrow pb-2">{p.stat.k}</div>
                 </div>
+
+                {p.demoHook ? (
+                  <a
+                    href={p.demoHook.href}
+                    data-reveal
+                    style={{ transitionDelay: "600ms" }}
+                    className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg lift"
+                  >
+                    {p.demoHook.label} →
+                  </a>
+                ) : null}
               </div>
             </div>
           </Container>
