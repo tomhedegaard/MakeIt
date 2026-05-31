@@ -27,12 +27,14 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
   const [decision, setDecision] = useState<CoachDecision | null>(null);
   const [reasoning, setReasoning] = useState("");
   const [sent, setSent] = useState<{ decision: CoachDecision; reasoning: string | null } | null>(null);
+  const [heldReason, setHeldReason] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   function submit() {
     if (!decision) return;
     setError(null);
+    setHeldReason(null);
     startTransition(async () => {
       const res = await submitLiveReviewAction({
         alertId: liveCase.alertId,
@@ -40,11 +42,36 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
         reasoning: reasoning.trim() || null,
       });
       if (!res.ok) {
+        // CC-9: held-for-review takes a distinct branch so the UI shows
+        // "Munk skal lige se den her først" rather than a raw error.
+        if (res.held) {
+          setHeldReason(res.holdReason ?? "held");
+          return;
+        }
         setError(res.reason ?? "unknown");
         return;
       }
       setSent({ decision, reasoning: reasoning.trim() || null });
     });
+  }
+
+  if (heldReason) {
+    return (
+      <div className="surface rounded-lg p-5 space-y-3" aria-live="polite">
+        <div className="flex items-center justify-between gap-4">
+          <div className="eyebrow">@{liveCase.memberHandle}</div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-amber-400">
+            {t("held.badge")}
+          </div>
+        </div>
+        <p className="text-sm text-fg/90 leading-snug">
+          {t("held.title")}
+        </p>
+        <p className="text-xs font-mono text-fg-faint">
+          {t("held.reasonLine", { reason: heldReason })}
+        </p>
+      </div>
+    );
   }
 
   if (sent) {

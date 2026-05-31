@@ -44,11 +44,13 @@ export default function SandboxCaseCard({
     beast: CoachDecision;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [heldReason, setHeldReason] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   function submit() {
     if (!decision) return;
     setError(null);
+    setHeldReason(null);
     startTransition(async () => {
       const res = await submitSandboxReviewAction({
         alertId: sandboxCase.alertId,
@@ -56,6 +58,12 @@ export default function SandboxCaseCard({
         reasoning: reasoning.trim() || null,
       });
       if (!res.ok) {
+        // CC-9: safety pipeline held the message — surface a friendly
+        // "Munk skal lige se den her først" instead of a generic error.
+        if (res.held) {
+          setHeldReason(res.holdReason ?? "held");
+          return;
+        }
         setError(res.reason ?? "unknown");
         return;
       }
@@ -69,6 +77,25 @@ export default function SandboxCaseCard({
         : (res.agreementScore ?? scoreFor(decision, munk));
       setRevealed({ score, munk, beast: decision });
     });
+  }
+
+  if (heldReason) {
+    return (
+      <div className="surface rounded-lg p-5 space-y-3" aria-live="polite">
+        <div className="flex items-center justify-between gap-4">
+          <div className="eyebrow">@{sandboxCase.memberHandle}</div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-amber-400">
+            {t("held.badge")}
+          </div>
+        </div>
+        <p className="text-sm text-fg/90 leading-snug">
+          {t("held.title")}
+        </p>
+        <p className="text-xs font-mono text-fg-faint">
+          {t("held.reasonLine", { reason: heldReason })}
+        </p>
+      </div>
+    );
   }
 
   if (revealed) {

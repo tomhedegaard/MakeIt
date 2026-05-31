@@ -11,6 +11,83 @@ import {
   type CoachDecision,
 } from "@/lib/coach-school/agreement";
 import { pickMembersForCoCoach } from "@/lib/coach-school/assignment";
+import {
+  detectInjuryKeywords,
+  describeVerdictReason,
+  shouldModerate,
+  type SafetyVerdict,
+} from "@/lib/coach-school/safety";
+
+/**
+ * Safety-check pipeline (CC-9) — shared by sandbox + live submit actions.
+ *
+ * Returns null (= allow) on:
+ *   - reasoning empty/null (no message to moderate)
+ *   - caller's coach_tier doesn't gate (munk, legend_live, non-coach)
+ *   - Claude moderator unavailable AND injury-keyword check passes
+ *     (fail-open: we'd rather let one message through than block
+ *     everyone when Anthropic is down)
+ *
+ * Returns a SafetyVerdict with held=true on:
+ *   - injury-keyword hit (skips the Claude call to save tokens)
+ *   - Claude moderation flag
+ *
+ * Telemetry — emits `[telemetry] safety.moderation_held` to server
+ * logs (client-side `track()` is window-guarded and useless here).
+ * Replace with the real analytics SDK in the same change as
+ * src/lib/telemetry.ts.
+ */
+async function runSafetyCheck(args: {
+  reviewerId: string;
+  coachTier: string | null | undefined;
+  reasoning: string | null;
+  reviewMode: "sandbox" | "live";
+  decision: CoachDecision;
+}): Promise<SafetyVerdict | null> {
+  if (!args.reasoning) return null;
+  if (!shouldModerate(args.coachTier)) return null;
+
+  // Cheap pre-check first — saves a Claude round-trip on obvious cases.
+  const injury = detectInjuryKeywords(args.reasoning);
+  if (injury.hit && injury.keyword) {
+    const verdict: SafetyVerdict = {
+      held: true,
+      reason: { kind: "injury_keyword", keyword: injury.keyword },
+    };
+    console.info(
+      "[telemetry] safety.moderation_held",
+      { reviewer_id: args.reviewerId, reason: describeVerdictReason(verdict) },
+    );
+    return verdict;
+  }
+
+  // Claude moderation — dynamic-imported so Turbopack stays on its
+  // happy path with the @anthropic-ai/sdk/helpers/zod entrypoint
+  // (same lesson as CC-6's practice-eval-claude).
+  try {
+    const { moderateCoachMessage } = await import(
+      "@/lib/coach-school/moderation-claude"
+    );
+    const verdict = await moderateCoachMessage({
+      messageText: args.reasoning,
+      reviewMode: args.reviewMode,
+      decision: args.decision,
+    });
+    if (verdict?.held) {
+      console.info(
+        "[telemetry] safety.moderation_held",
+        { reviewer_id: args.reviewerId, reason: describeVerdictReason(verdict) },
+      );
+      return verdict;
+    }
+  } catch (err) {
+    // Moderation wrapper is meant to swallow API errors and return
+    // null itself; a throw here means an import/setup issue. Log
+    // loudly and fail-open per the v0 ceiling.
+    console.warn("[coach-school] moderation pipeline threw:", err);
+  }
+  return null;
+}
 
 /**
  * CC-4 — submit one sandbox review on an hrv_alert.
@@ -33,6 +110,12 @@ export interface SandboxSubmitResult {
   reason?: string;
   agreementScore?: number;
   munkDecision?: CoachDecision;
+  /** CC-9: true when the safety pipeline held the message for
+   *  Munk review. UI shows "Munk skal lige se den her først". */
+  held?: boolean;
+  /** CC-9: machine-readable hold reason, e.g. "injury:smerte"
+   *  or "moderation:medical_claim". For telemetry + display. */
+  holdReason?: string;
 }
 
 export async function submitSandboxReviewAction(input: {
@@ -48,6 +131,17 @@ export async function submitSandboxReviewAction(input: {
   if (!SUPABASE_ENABLED) {
     // Demo mode: optimistic path. The page rendered against MOCK_CASES,
     // so callers handle the "what Munk decided" reveal client-side.
+    // CC-9: still run the cheap injury-keyword pre-check so demo
+    // mode can exercise the held-message UI without Supabase.
+    const injuryDemo = detectInjuryKeywords(input.reasoning ?? "");
+    if (injuryDemo.hit && injuryDemo.keyword) {
+      return {
+        ok: false,
+        reason: "held-for-review",
+        held: true,
+        holdReason: `injury:${injuryDemo.keyword}`,
+      };
+    }
     return { ok: true, agreementScore: 1.0, munkDecision: beastDecision };
   }
 
@@ -72,6 +166,31 @@ export async function submitSandboxReviewAction(input: {
   const agreementScore = computeAgreementScore(beastDecision, munkDecision);
   const reasoning =
     (input.reasoning ?? "").slice(0, 1000).trim() || null;
+
+  // CC-9: safety check on reasoning text before we insert anything.
+  // Lookup the caller's tier via service-role (members RLS allows
+  // own-row reads but service-role is cheaper than two calls).
+  const svcForTier = createServiceClient();
+  const { data: tierRow } = await svcForTier
+    .from("members")
+    .select("coach_tier")
+    .eq("id", user.id)
+    .single();
+  const safetyVerdict = await runSafetyCheck({
+    reviewerId: user.id,
+    coachTier: tierRow?.coach_tier ?? null,
+    reasoning,
+    reviewMode: "sandbox",
+    decision: beastDecision,
+  });
+  if (safetyVerdict?.held) {
+    return {
+      ok: false,
+      reason: "held-for-review",
+      held: true,
+      holdReason: describeVerdictReason(safetyVerdict),
+    };
+  }
 
   const { error: insErr } = await supabase
     .from("coach_reviews")
@@ -240,6 +359,10 @@ export async function promoteToLiveAction(input: {
 export interface SubmitLiveResult {
   ok: boolean;
   reason?: string;
+  /** CC-9 — see SandboxSubmitResult.held. */
+  held?: boolean;
+  /** CC-9 — see SandboxSubmitResult.holdReason. */
+  holdReason?: string;
 }
 
 export async function submitLiveReviewAction(input: {
@@ -253,7 +376,17 @@ export async function submitLiveReviewAction(input: {
   const decision: CoachDecision = input.decision;
 
   if (!SUPABASE_ENABLED) {
-    // Demo mode — optimistic no-op.
+    // Demo mode — optimistic no-op. CC-9: injury-keyword pre-check
+    // still runs so the held-state UI is exercisable in demo.
+    const injuryDemo = detectInjuryKeywords(input.reasoning ?? "");
+    if (injuryDemo.hit && injuryDemo.keyword) {
+      return {
+        ok: false,
+        reason: "held-for-review",
+        held: true,
+        holdReason: `injury:${injuryDemo.keyword}`,
+      };
+    }
     return { ok: true };
   }
 
@@ -266,6 +399,29 @@ export async function submitLiveReviewAction(input: {
   if (!user) return { ok: false, reason: "unauthenticated" };
 
   const reasoning = (input.reasoning ?? "").slice(0, 1000).trim() || null;
+
+  // CC-9: safety check on reasoning text before we insert OR close the alert.
+  const svcForLiveTier = createServiceClient();
+  const { data: liveTierRow } = await svcForLiveTier
+    .from("members")
+    .select("coach_tier")
+    .eq("id", user.id)
+    .single();
+  const liveSafetyVerdict = await runSafetyCheck({
+    reviewerId: user.id,
+    coachTier: liveTierRow?.coach_tier ?? null,
+    reasoning,
+    reviewMode: "live",
+    decision,
+  });
+  if (liveSafetyVerdict?.held) {
+    return {
+      ok: false,
+      reason: "held-for-review",
+      held: true,
+      holdReason: describeVerdictReason(liveSafetyVerdict),
+    };
+  }
 
   const { error: insErr } = await supabase
     .from("coach_reviews")

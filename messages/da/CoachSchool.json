@@ -19,6 +19,11 @@
   "errorLine": "Kunne ikke sende: {reason}",
   "submitting": "Sender…",
   "submitButton": "Send beslutning",
+  "held": {
+    "badge": "Holdt tilbage",
+    "title": "Munk skal lige se den her først. Du behøver ikke gøre noget — din note venter på review.",
+    "reasonLine": "Reason-kode: {reason}"
+  },
   "revealed": {
     "triggeredAt": "Udløst {time}",
     "youHeader": "Dit kald",

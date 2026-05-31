@@ -19,6 +19,11 @@
   "errorLine": "Could not send: {reason}",
   "submitting": "Sending…",
   "submitButton": "Send decision",
+  "held": {
+    "badge": "Held for review",
+    "title": "Munk needs to look at this one first. You don't need to do anything — your note is waiting for review.",
+    "reasonLine": "Reason code: {reason}"
+  },
   "revealed": {
     "triggeredAt": "Triggered {time}",
     "youHeader": "Your call",
