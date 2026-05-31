@@ -327,10 +327,10 @@
       "foot": "No waiting · no template PDFs"
     },
     "pillar2": {
-      "eyebrow": "Instant feedback",
-      "title": "AI checks your form",
-      "body": "Upload a video and get technique feedback within seconds. One of the crew's head coaches verifies it weekly, so you never run on autopilot.",
-      "foot": "Seconds to respond · weekly human review"
+      "eyebrow": "Drafted by AI, signed by Munk",
+      "title": "Form-check with Munk's signature",
+      "body": "AI drafts the reply in Munk's voice in seconds, and Munk edits or rewrites in up to 30 seconds. You never get an AI reply without his name on it.",
+      "foot": "AI draft + Munk signature · within 24h"
     },
     "pillar3": {
       "eyebrow": "People for the milestones",
@@ -440,6 +440,22 @@
       "weeklyInsight": {
         "q": "What is the weekly HRV insight?",
         "a": "Every Sunday evening we correlate your week's RMSSD against your lifestyle tags (sleep, alcohol, stress, illness) and send one short observation — in Danish, never diagnoses, never made-up numbers. Example: 'Sleeping under 7h for three nights drags RMSSD down by ~8%.' The full history lives at /hrv/insights."
+      },
+      "openBrainWhy": {
+        "q": "Why do you show the engine publicly?",
+        "a": "Because trust is built on transparency. Our rule layer is 300 lines of pure TypeScript that we show you right here on the landing page — drag the sliders and watch what it would have chosen. Competitors can copy the rules in a day; they cannot copy 6 months of audit logs, baselines, and Munk-in-the-loop UX. The moat is the flywheel, not a secret API."
+      },
+      "coCoach": {
+        "q": "What is a co-coach?",
+        "a": "A co-coach is a Beast-tier member (5,000+ Reps) Munk has chosen to help with form-check replies and HRV escalations. You start in Coach School: curated lessons, sandbox cases you practice on, and — if you hit 80% agreement with Munk over 50 cases — you're promoted to live with 2-3 assigned members. Munk co-signs everything. You're his lieutenants, not an independent operator."
+      },
+      "hrvSharing": {
+        "q": "Do you send my HRV to Munk?",
+        "a": "Only if you ask us to. Coach sharing is an explicit toggle in the HRV settings — turn it on and Munk can see your readings, lifestyle tags, and weekly insights (the red-flag queue only triggers on opted-in members). Turn it off and the HRV module runs for you alone. We never send your data to third parties."
+      },
+      "optOutAdaptive": {
+        "q": "What if I don't want AI adjustments?",
+        "a": "You always have control. You can disable adaptive adjustments from the HRV settings (the program then runs as planned without daily tweaks), and even with them on you can reject each individual adjustment with 'Keep original' directly in the session. The engine is an opinion, not a command."
       },
       "offPlanNutrition": {
         "q": "What do I do if I eat something that's not in the meal plan?",

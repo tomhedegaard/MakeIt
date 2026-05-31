@@ -327,10 +327,10 @@
       "foot": "Ingen ventetid · ingen template-pdf'er"
     },
     "pillar2": {
-      "eyebrow": "Instant feedback",
-      "title": "AI tjekker din form",
-      "body": "Upload en video og få teknik-feedback inden for sekunder. En af crewets head coaches verificerer ugentligt, så du aldrig kører på autopilot.",
-      "foot": "Sek. respons · ugentlig human review"
+      "eyebrow": "Drafted by AI, signed by Munk",
+      "title": "Form-check med Munks underskrift",
+      "body": "AI udkaster svaret i Munks stemme inden for sekunder, og Munk redigerer eller skriver om i op til 30 sekunder. Du får aldrig et AI-svar uden hans navn på.",
+      "foot": "AI-draft + Munk-signatur · inden for 24t"
     },
     "pillar3": {
       "eyebrow": "Mennesker til milepæle",
@@ -444,6 +444,22 @@
       "offPlanNutrition": {
         "q": "Hvad gør jeg hvis jeg spiser noget der ikke står i mealplanen?",
         "a": "Tryk 'Spiste noget andet' i Nutrition-feedet, beskriv kort hvad du spiste, og det logges som off-plan måltid. Ingen straf, ingen scolding — bare data. Coachen ser det i ugesignalerne, så næste uges planlægning bliver mere realistisk i stedet for at ignorere virkeligheden."
+      },
+      "openBrainWhy": {
+        "q": "Hvorfor viser I motoren offentligt?",
+        "a": "Fordi tillid bygges på transparens. Vores rule-layer er 300 linjer Pure TypeScript som vi viser dig her på landingpagen — du kan trække i sliderne og se hvad den ville have valgt. Konkurrenter kan kopiere rules på en dag; de kan ikke kopiere 6 måneders audit-logs, baselines og Munk-i-loop UX. Vores moat er flywheel'en, ikke et hemmeligt API."
+      },
+      "coCoach": {
+        "q": "Hvad er en co-coach?",
+        "a": "En co-coach er et Beast-tier medlem (5.000+ Reps) som Munk har valgt til at hjælpe med form-check-svar og HRV-eskaleringer. Du starter i Coach School: kuraterede lektioner, sandbox-cases du øver på, og — hvis du rammer 80% agreement med Munk over 50 cases — bliver du promoveret til live med 2-3 tildelte medlemmer. Munk co-signerer alt. Du er hans håndlangere, ikke en uafhængig operatør."
+      },
+      "hrvSharing": {
+        "q": "Sender I min HRV til Munk?",
+        "a": "Kun hvis du beder os om det. Coach-deling er en eksplicit toggle i HRV-indstillingerne — slår du den til, kan Munk se dine readings, livsstil-tags og ugentlige indsigter (red-flag-køen trigger kun på opted-in medlemmer). Slår du den fra, kører HRV-modulet for dig selv. Vi sender aldrig dine data til tredjeparter."
+      },
+      "optOutAdaptive": {
+        "q": "Hvad sker hvis jeg ikke vil have AI-tilpasninger?",
+        "a": "Du har altid kontrollen. Du kan deaktivere adaptive tilpasninger fra HRV-indstillingerne (programmet kører så som planlagt uden daglige justeringer), og selv hvis du har dem slået til kan du afvise hver enkelt tilpasning med 'Behold original' direkte i sessionen. Motoren er en mening, ikke en kommando."
       }
     }
   },
