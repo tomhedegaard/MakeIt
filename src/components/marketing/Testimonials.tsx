@@ -28,6 +28,15 @@ export default async function Testimonials() {
       cred: t("maria.cred"),
       quote: t("maria.quote"),
     },
+    // WAUW-4: a 4th testimonial that names the Open Brain
+    // experience explicitly — the section now reads as both crew-
+    // proof and Søjle-2-proof.
+    {
+      who: "@anton",
+      tier: "Athlete",
+      cred: t("anton.cred"),
+      quote: t("anton.quote"),
+    },
   ];
 
   return (
@@ -43,7 +52,7 @@ export default async function Testimonials() {
           </p>
         </div>
 
-        <ul className="grid gap-px bg-line border hairline md:grid-cols-3">
+        <ul className="grid gap-px bg-line border hairline md:grid-cols-2 lg:grid-cols-4">
           {QUOTES.map((q, i) => (
             <li
               key={q.who}

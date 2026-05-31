@@ -20,6 +20,11 @@ export default async function FAQ() {
     { q: t("items.hrvPrivacy.q"),   a: t("items.hrvPrivacy.a") },
     { q: t("items.dataDirection.q"),    a: t("items.dataDirection.a") },
     { q: t("items.offPlanNutrition.q"), a: t("items.offPlanNutrition.a") },
+    // WAUW-3: new søjle-aware FAQ entries
+    { q: t("items.openBrainWhy.q"),    a: t("items.openBrainWhy.a") },
+    { q: t("items.coCoach.q"),         a: t("items.coCoach.a") },
+    { q: t("items.hrvSharing.q"),      a: t("items.hrvSharing.a") },
+    { q: t("items.optOutAdaptive.q"),  a: t("items.optOutAdaptive.a") },
   ];
 
   return (

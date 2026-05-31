@@ -8,9 +8,18 @@ import Container from "@/components/Container";
 
 /**
  * Tier journey — scroll-driven visualization of the Reps tier
- * system. Each tier card is "locked" by default (dimmed, blurred
- * testimonial, lock badge) and unlocks when it scrolls 50% into
- * the viewport.
+ * system as a FUNCTIONAL coaching ladder (WAUW-2 rewrite).
+ *
+ * Spec: .claude/plans/for-at-have-wauw-humble-naur.md §"Ny TierJourney"
+ *
+ * Each tier card is "locked" by default (dimmed, blurred, lock
+ * badge) and unlocks when it scrolls 40% into the viewport. The
+ * scaffolding (sigil-disc + connector + reveal-on-scroll) is
+ * unchanged from v1. The CONTENT swap is the wauw:
+ *
+ *   v1: cosmetic tier → 1 testimonial quote
+ *   v2: cosmetic tier → 4 concrete unlocks (functional capabilities
+ *        the member earns) + an optional testimonial footnote
  *
  * Threshold values come from migration 0008_tier_promotion.sql:
  *   0–999       → Lifter
@@ -18,10 +27,15 @@ import Container from "@/components/Container";
  *   5.000–14.999→ Beast
  *   15.000+     → Legend
  *
- * Testimonial copy is fictional crew quotes that anchor each tier
- * in a concrete narrative (first 30 days, three months in, the
- * volume block, three years). When real members hit each tier we
- * can swap to actual quotes via a small server fetch.
+ * Unlocks copy is i18n-driven so Munk can edit without a code change.
+ * Each tier's `unlocks` array is 3–4 short Danish capability strings
+ * (e.g. "Coach School låst op", "Sandbox-cases (du øver mod
+ * simulerede medlemmer)") that connect the Reps balance to a real
+ * member capability.
+ *
+ * The bottom CTAs are now two: primary "Start din journey → /login"
+ * (unchanged) and ghost "Se motoren der driver det → #engine" which
+ * sends curious tier-scrollers back to the playground.
  */
 type Tier = {
   num: string;
@@ -30,7 +44,8 @@ type Tier = {
   tierKey: "lifter" | "athlete" | "beast" | "legend";
   description: string;
   sigil: string;
-  testimonial: { quote: string; handle: string };
+  unlocks: string[];
+  testimonial?: { quote: string; handle: string };
 };
 
 export default function TierJourney() {
@@ -44,10 +59,13 @@ export default function TierJourney() {
       tierKey: "lifter",
       description: t("lifter.description"),
       sigil: "▲",
-      testimonial: {
-        quote: t("lifter.quote"),
-        handle: "nora.lift",
-      },
+      unlocks: [
+        t("lifter.unlocks.1"),
+        t("lifter.unlocks.2"),
+        t("lifter.unlocks.3"),
+        t("lifter.unlocks.4"),
+      ],
+      testimonial: { quote: t("lifter.quote"), handle: "nora.lift" },
     },
     {
       num: "02",
@@ -56,10 +74,13 @@ export default function TierJourney() {
       tierKey: "athlete",
       description: t("athlete.description"),
       sigil: "▲▲",
-      testimonial: {
-        quote: t("athlete.quote"),
-        handle: "emil.beast",
-      },
+      unlocks: [
+        t("athlete.unlocks.1"),
+        t("athlete.unlocks.2"),
+        t("athlete.unlocks.3"),
+        t("athlete.unlocks.4"),
+      ],
+      testimonial: { quote: t("athlete.quote"), handle: "emil.beast" },
     },
     {
       num: "03",
@@ -68,10 +89,13 @@ export default function TierJourney() {
       tierKey: "beast",
       description: t("beast.description"),
       sigil: "▲▲▲",
-      testimonial: {
-        quote: t("beast.quote"),
-        handle: "kira.power",
-      },
+      unlocks: [
+        t("beast.unlocks.1"),
+        t("beast.unlocks.2"),
+        t("beast.unlocks.3"),
+        t("beast.unlocks.4"),
+      ],
+      testimonial: { quote: t("beast.quote"), handle: "kira.power" },
     },
     {
       num: "04",
@@ -80,10 +104,13 @@ export default function TierJourney() {
       tierKey: "legend",
       description: t("legend.description"),
       sigil: "▲▲▲▲",
-      testimonial: {
-        quote: t("legend.quote"),
-        handle: "marius.legend",
-      },
+      unlocks: [
+        t("legend.unlocks.1"),
+        t("legend.unlocks.2"),
+        t("legend.unlocks.3"),
+        t("legend.unlocks.4"),
+      ],
+      testimonial: { quote: t("legend.quote"), handle: "marius.legend" },
     },
   ];
 
@@ -118,10 +145,18 @@ export default function TierJourney() {
           </ul>
         </div>
 
-        <div className="mt-24 flex flex-wrap items-center gap-4">
+        {/* Promotion-path footer + ctas */}
+        <p className="mt-16 max-w-2xl text-sm text-fg-dim leading-relaxed">
+          {t("promotionFooter")}
+        </p>
+
+        <div className="mt-8 flex flex-wrap items-center gap-3">
           <Link href="/login" className="btn btn-primary">
             {t("cta")}
           </Link>
+          <a href="#engine" className="btn btn-ghost">
+            {t("ctaSecondary")}
+          </a>
           <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
             {t("ctaNote")}
           </span>
@@ -205,26 +240,57 @@ function TierRow({
           {tier.description}
         </p>
 
-        {/* Testimonial — masked until unlock so the locked state
-            doesn't leak the quote. Once unlocked, slides in from
-            below with a small delay so it lands after the title. */}
-        <motion.figure
-          initial={{ opacity: 0, y: 16 }}
-          animate={unlocked ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{
-            duration: 0.7,
-            delay: unlocked ? 0.25 : 0,
-            ease: [0.2, 0.7, 0.2, 1],
-          }}
-          className="surface-2 rounded-2xl p-5 md:p-6 border-l-2 border-fg max-w-2xl"
-        >
-          <blockquote className="text-fg/90 text-base md:text-lg leading-relaxed italic">
-            “{tier.testimonial.quote}”
-          </blockquote>
-          <figcaption className="mt-3 text-xs font-mono uppercase tracking-[0.16em] text-fg-faint">
-            — @{tier.testimonial.handle}
-          </figcaption>
-        </motion.figure>
+        {/* Unlocks list — replaces the v1 testimonial-as-hero block.
+            Stagger-revealed by 60ms per item once the card unlocks
+            so the list "fills in" rather than appearing all at once. */}
+        <ul className="space-y-2 max-w-2xl mb-5">
+          {tier.unlocks.map((unlock, idx) => (
+            <motion.li
+              key={`${tier.num}-${idx}`}
+              initial={{ opacity: 0, x: -8 }}
+              animate={
+                unlocked ? { opacity: 1, x: 0 } : { opacity: 0, x: -8 }
+              }
+              transition={{
+                duration: 0.5,
+                delay: unlocked ? 0.2 + idx * 0.06 : 0,
+                ease: [0.2, 0.7, 0.2, 1],
+              }}
+              className="flex items-start gap-3 border-t hairline pt-3 text-fg/90"
+            >
+              <span className="numeric text-fg-faint text-xs w-6 shrink-0 pt-0.5">
+                {String(idx + 1).padStart(2, "0")}
+              </span>
+              <span className="text-sm md:text-base leading-snug">
+                {unlock}
+              </span>
+            </motion.li>
+          ))}
+        </ul>
+
+        {/* Optional testimonial — kept as small footnote under the
+            unlocks. The concrete capabilities ARE the section; the
+            quote just adds a human face. Truncated visually by the
+            italics + size — Munk can edit per-tier later. */}
+        {tier.testimonial ? (
+          <motion.figure
+            initial={{ opacity: 0, y: 8 }}
+            animate={unlocked ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+            transition={{
+              duration: 0.6,
+              delay: unlocked ? 0.45 : 0,
+              ease: [0.2, 0.7, 0.2, 1],
+            }}
+            className="max-w-2xl pt-2 border-t hairline/40"
+          >
+            <blockquote className="text-fg-dim text-sm leading-relaxed italic">
+              “{tier.testimonial.quote}”
+            </blockquote>
+            <figcaption className="mt-2 text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+              — @{tier.testimonial.handle}
+            </figcaption>
+          </motion.figure>
+        ) : null}
 
         {/* Locked badge — only renders while locked. Subtle, not
             screaming. Positioned at the bottom-right of the card. */}
