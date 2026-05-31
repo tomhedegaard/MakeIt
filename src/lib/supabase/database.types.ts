@@ -617,6 +617,52 @@ export type Database = {
           },
         ]
       }
+      // Hand-augmented for CC-8 (migration 0045) — pending `npm run db:types`
+      // refresh once Docker is up. Shape mirrors public.coach_quality_scores.
+      coach_quality_scores: {
+        Row: {
+          agreement_with_munk: number | null
+          coach_member_id: string
+          id: string
+          intervention_count_week: number | null
+          member_satisfaction: number | null
+          notes: string | null
+          response_time_p50_minutes: number | null
+          snapshot_at: string
+          status: string
+        }
+        Insert: {
+          agreement_with_munk?: number | null
+          coach_member_id: string
+          id?: string
+          intervention_count_week?: number | null
+          member_satisfaction?: number | null
+          notes?: string | null
+          response_time_p50_minutes?: number | null
+          snapshot_at?: string
+          status: string
+        }
+        Update: {
+          agreement_with_munk?: number | null
+          coach_member_id?: string
+          id?: string
+          intervention_count_week?: number | null
+          member_satisfaction?: number | null
+          notes?: string | null
+          response_time_p50_minutes?: number | null
+          snapshot_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_quality_scores_coach_member_id_fkey"
+            columns: ["coach_member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coach_reviews: {
         Row: {
           agreement_score: number | null
