@@ -164,29 +164,55 @@
     },
     "intro": "Hver gennemført session, form-check og PR fylder Reps-balancen. Tiers er ikke titler — det er bevis på arbejdet bag. Hvert niveau låser nye perks op: form-check-prioritet, IRL-meets, eksklusivt udstyr, 1:1-coaching.",
     "cta": "Start din journey →",
+    "ctaSecondary": "Se motoren der driver det →",
     "ctaNote": "Closed beta · invite kræves",
     "locked": "Locked",
+    "promotionFooter": "Reps tjenes for sessioner, form-checks, lifestyle-logs, og — fra Beast og op — for kvaliteten af din feedback til andre medlemmer. Tier-promotionen sker automatisk via Reps-ledgeren.",
     "lifter": {
       "description": "Indgangen. Du har samlet dine første reps og er i gang med at lære systemet — første session ligger i appen, programmet er tilpasset dit niveau.",
-      "quote": "Første 30 dage. Programmet ramte præcis mit niveau, og jeg har aldrig følt mig så på sporet i mit liv."
+      "quote": "Første 30 dage. Programmet ramte præcis mit niveau, og jeg har aldrig følt mig så på sporet i mit liv.",
+      "unlocks": {
+        "1": "Adaptive engine kører fra dag 1",
+        "2": "AI form-check med 24-timers Munk-review",
+        "3": "Buddy-pairing slås til efter 14 dage",
+        "4": "1 IRL-meet pr. kvartal"
+      }
     },
     "athlete": {
       "description": "Konsistens. Du logger sæt og form-checks ugentligt. PR'er begynder at falde på big lifts, og du har lavet de første lifestyle-skift der ikke vender tilbage.",
-      "quote": "Tre måneder ind og jeg har slået PR på alle tre big lifts. Reps-systemet holder mig accountable hver eneste dag."
+      "quote": "Tre måneder ind og jeg har slået PR på alle tre big lifts. Reps-systemet holder mig accountable hver eneste dag.",
+      "unlocks": {
+        "1": "Form-check-prioritet i Munks kø",
+        "2": "Lifestyle-log-mønstre i din Open Brain",
+        "3": "Buddy-pod (3 personer)",
+        "4": "Custom-strap-farve unlocked"
+      }
     },
     "beast": {
       "description": "Volumen-blokken. Du kender din krops respons under tung belastning, og du arbejder bevidst med restitution. Coach-feedback bliver finere og mere kirurgisk.",
-      "quote": "Volumen-blokken var den sværeste fysisk og mentalt — men det er der jeg lærte hvad jeg virkelig kan klare."
+      "quote": "Volumen-blokken var den sværeste fysisk og mentalt — men det er der jeg lærte hvad jeg virkelig kan klare.",
+      "unlocks": {
+        "1": "Coach School låst op — lektioner med Claude-evaluering",
+        "2": "Sandbox-cases: du øver mod simulerede medlemmer",
+        "3": "1:1 30-min med Munk pr. kvartal",
+        "4": "Limited drops før alle andre"
+      }
     },
     "legend": {
       "description": "Få når hertil. Et flerårigt commitment til kropsbygning som disciplin, ikke trend. Du er den crewet kigger op til, og dine sessioner inspirerer Lifter-tieren.",
-      "quote": "Tre år. 200+ sessioner. To rygskader bagved mig. Reps-balancen viser hvorfor — det er ikke held, det er bygget kilo for kilo."
+      "quote": "Tre år. 200+ sessioner. To rygskader bagved mig. Reps-balancen viser hvorfor — det er ikke held, det er bygget kilo for kilo.",
+      "unlocks": {
+        "1": "Co-coaching: du svarer på form-checks med Munk som senior",
+        "2": "Pod-leader for nye Lifters",
+        "3": "Reps for medlems-feedback, ikke kun egne reps",
+        "4": "Permanent stol i Amagerbro-loftet"
+      }
     }
   },
   "app": {
     "eyebrow": "06 — Appen",
     "heading": "Sådan ser det ud.",
-    "intro": "Fire skærme der definerer din uge — fra morgenens første tap, til nudgen over første øvelse der tilpasser dagens belastning efter din HRV, til AI'ens dom over dit tunge sæt.",
+    "intro": "Seks skærme der definerer din uge — fra morgenens første tap, til nudgen over første øvelse der tilpasser dagens belastning efter din HRV, til din buddy's daglige readiness og den sandbox-case du øver på som Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Dagens session, ét tap til start",
@@ -195,7 +221,39 @@
       "readinessLabel": "Readiness",
       "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
       "formCheckLabel": "Form-check",
-      "formCheckDetail": "Claude vurderer på 6 sek."
+      "formCheckDetail": "Claude vurderer på 6 sek.",
+      "buddyLabel": "Buddy",
+      "buddyDetail": "AI-paired · ugentlig rematch",
+      "coachSchoolLabel": "Coach School",
+      "coachSchoolDetail": "Sandbox-case · agreement scoret mod Munk"
+    },
+    "buddy": {
+      "eyebrow": "Din buddy",
+      "pairedSinceLabel": "Pairet siden",
+      "pairedSince": "3 uger",
+      "matchLabel": "Match · Athlete",
+      "matchBlurb": "Samme tier, komplementært program. Træner kl. 17-19 lige som dig.",
+      "readinessLabel": "Hendes readiness i dag",
+      "hrvNote": "WHOOP · synced",
+      "interaction1": "Du sendte fire-bombe til hendes 175 kg DL",
+      "interaction2": "Hun sendte muscle til dit RPE-8 squat-set",
+      "interaction3": "Nudge: \"Sov ordentligt i nat, du har Squat-A i morgen\"",
+      "sendCta": "Send nudge →"
+    },
+    "coachSchool": {
+      "eyebrow": "Coach School",
+      "modeLabel": "Sandbox · case 47/50",
+      "agreementLabel": "Din rolling agreement",
+      "alertAge": "udløst 4t siden",
+      "signalsLabel": "Signaler i alerten",
+      "yourCallLabel": "Dit kald",
+      "decisions": {
+        "approve": "Acceptér",
+        "modify": "Justér",
+        "escalate": "Eskalér",
+        "reject": "Afvis"
+      },
+      "submitCta": "Submit → sammenlign med Munk"
     },
     "today": {
       "greeting": "God morgen",

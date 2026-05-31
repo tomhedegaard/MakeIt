@@ -164,29 +164,55 @@
     },
     "intro": "Every completed session, form check and PR fills the Reps balance. Tiers aren't titles — they're proof of the work behind them. Each level unlocks new perks: form-check priority, IRL meets, exclusive gear, 1:1 coaching.",
     "cta": "Start your journey →",
+    "ctaSecondary": "See the engine driving this →",
     "ctaNote": "Closed beta · invite required",
     "locked": "Locked",
+    "promotionFooter": "Reps are earned for sessions, form-checks, lifestyle logs, and — from Beast and up — for the quality of your feedback to other members. Tier promotion happens automatically via the Reps ledger.",
     "lifter": {
       "description": "The way in. You've banked your first reps and you're learning the system — your first session is in the app, the program is dialed to your level.",
-      "quote": "First 30 days. The program hit my level exactly, and I've never felt this on track in my life."
+      "quote": "First 30 days. The program hit my level exactly, and I've never felt this on track in my life.",
+      "unlocks": {
+        "1": "Adaptive engine runs from day 1",
+        "2": "AI form-check with 24-hour Munk review",
+        "3": "Buddy pairing activates after 14 days",
+        "4": "1 IRL meet per quarter"
+      }
     },
     "athlete": {
       "description": "Consistency. You log sets and form checks weekly. PRs start dropping on the big lifts, and you've made the first lifestyle shifts that won't reverse.",
-      "quote": "Three months in and I've hit PRs on all three big lifts. The Reps system keeps me accountable every single day."
+      "quote": "Three months in and I've hit PRs on all three big lifts. The Reps system keeps me accountable every single day.",
+      "unlocks": {
+        "1": "Form-check priority in Munk's queue",
+        "2": "Lifestyle-log patterns in your Open Brain",
+        "3": "Buddy pod (3 people)",
+        "4": "Custom strap colour unlocked"
+      }
     },
     "beast": {
       "description": "The volume block. You know how your body responds under heavy load, and you work recovery deliberately. Coach feedback gets finer and more surgical.",
-      "quote": "The volume block was the hardest, physically and mentally — but that's where I learned what I can really handle."
+      "quote": "The volume block was the hardest, physically and mentally — but that's where I learned what I can really handle.",
+      "unlocks": {
+        "1": "Coach School unlocked — lessons with Claude evaluation",
+        "2": "Sandbox cases: practice against simulated members",
+        "3": "1:1 30-min with Munk per quarter",
+        "4": "Limited drops before everyone else"
+      }
     },
     "legend": {
       "description": "Few make it here. A multi-year commitment to building the body as a discipline, not a trend. You're the one the crew looks up to, and your sessions inspire the Lifter tier.",
-      "quote": "Three years. 200+ sessions. Two back injuries behind me. The Reps balance shows why — it's not luck, it's built kilo by kilo."
+      "quote": "Three years. 200+ sessions. Two back injuries behind me. The Reps balance shows why — it's not luck, it's built kilo by kilo.",
+      "unlocks": {
+        "1": "Co-coaching: you answer form-checks with Munk as senior",
+        "2": "Pod leader for new Lifters",
+        "3": "Reps for member feedback, not just your own reps",
+        "4": "Permanent seat in the Amagerbro loft"
+      }
     }
   },
   "app": {
     "eyebrow": "06 — The App",
     "heading": "Here's how it looks.",
-    "intro": "Four screens that define your week — from the first morning tap, to the nudge above the first lift that adapts the day's load to your HRV, to the AI verdict on your heavy set.",
+    "intro": "Six screens that define your week — from the first morning tap, to the nudge above the first lift that adapts the day's load to your HRV, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Today's session, one tap to start",
@@ -195,7 +221,39 @@
       "readinessLabel": "Readiness",
       "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
       "formCheckLabel": "Form check",
-      "formCheckDetail": "Claude grades it in 6 sec."
+      "formCheckDetail": "Claude grades it in 6 sec.",
+      "buddyLabel": "Buddy",
+      "buddyDetail": "AI-paired · weekly rematch",
+      "coachSchoolLabel": "Coach School",
+      "coachSchoolDetail": "Sandbox case · scored vs Munk"
+    },
+    "buddy": {
+      "eyebrow": "Your buddy",
+      "pairedSinceLabel": "Paired since",
+      "pairedSince": "3 weeks",
+      "matchLabel": "Match · Athlete",
+      "matchBlurb": "Same tier, complementary program. Trains 5-7pm just like you.",
+      "readinessLabel": "Her readiness today",
+      "hrvNote": "WHOOP · synced",
+      "interaction1": "You sent fire to her 175 kg DL",
+      "interaction2": "She sent muscle to your RPE-8 squat set",
+      "interaction3": "Nudge: \"Sleep well tonight, you have Squat-A tomorrow\"",
+      "sendCta": "Send nudge →"
+    },
+    "coachSchool": {
+      "eyebrow": "Coach School",
+      "modeLabel": "Sandbox · case 47/50",
+      "agreementLabel": "Your rolling agreement",
+      "alertAge": "fired 4h ago",
+      "signalsLabel": "Signals in the alert",
+      "yourCallLabel": "Your call",
+      "decisions": {
+        "approve": "Approve",
+        "modify": "Modify",
+        "escalate": "Escalate",
+        "reject": "Reject"
+      },
+      "submitCta": "Submit → compare with Munk"
     },
     "today": {
       "greeting": "Good morning",
