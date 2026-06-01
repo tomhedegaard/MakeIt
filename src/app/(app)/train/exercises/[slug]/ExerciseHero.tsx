@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import ExerciseDemo from "@/components/exercise/ExerciseDemo";
+import CuesList from "@/components/exercise/CuesList";
 import { MUSCLE_LABELS, type MuscleGroup, type AnatomyView } from "@/lib/data/muscle-groups";
 import type { AnatomyGender } from "@/lib/data/anatomy/paths";
 import type { ExercisePhase } from "@/lib/data/exercises";
@@ -40,6 +41,16 @@ export default function ExerciseHero({
 }: Props) {
   const [view, setView] = useState<AnatomyView>(defaultView);
   const [gender, setGender] = useState<AnatomyGender>("male");
+  // Active phase index drives the cue list highlight. Stays null in
+  // video / static-figure modes (no rep cycle to sync against); the
+  // PhaseAnimator emits 0 on mount and on every advance.
+  const [activePhaseIdx, setActivePhaseIdx] = useState<number | null>(null);
+  // Stable identity so PhaseAnimator's onPhaseChange-effect doesn't
+  // re-fire on every render of this component.
+  const handlePhaseChange = useCallback(
+    (idx: number) => setActivePhaseIdx(idx),
+    [],
+  );
   const t = useTranslations("Train.hero");
 
   return (
@@ -55,6 +66,7 @@ export default function ExerciseHero({
             tertiary={tertiary}
             view={view}
             gender={gender}
+            onPhaseChange={handlePhaseChange}
           />
         </div>
 
@@ -92,16 +104,11 @@ export default function ExerciseHero({
       <div className="space-y-6">
         <div>
           <div className="eyebrow mb-4">{t("howTo")}</div>
-          <ol className="space-y-3">
-            {cues.map((cue, i) => (
-              <li key={i} className="flex gap-4">
-                <span className="font-display text-2xl text-fg-faint shrink-0 w-8 leading-none mt-0.5">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="text-base md:text-lg leading-snug">{cue}</span>
-              </li>
-            ))}
-          </ol>
+          <CuesList
+            cues={cues}
+            phases={phases}
+            activePhaseIdx={activePhaseIdx}
+          />
         </div>
 
         <MuscleChips

@@ -22,15 +22,33 @@ export default function PhaseAnimator({
   view,
   gender,
   figureSize = { width: 220, height: 440 },
+  onPhaseChange,
 }: {
   phases: ExercisePhase[];
   view: AnatomyView;
   gender: AnatomyGender;
   figureSize?: { width: number; height: number };
+  /**
+   * Called whenever the active phase index changes (including on
+   * mount with idx=0 and again every time the loop advances). Lets
+   * sibling components — typically the cue list — sync their own
+   * UI state to which phase is on screen right now. Optional so
+   * existing PhaseAnimator usages without a parent listener keep
+   * working unchanged.
+   */
+  onPhaseChange?: (phaseIdx: number) => void;
 }) {
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(true);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Notify parent every time the active phase changes. Including on
+  // first mount (idx=0) so the cue list starts in the right state
+  // rather than waiting for the first phase transition. We also fire
+  // when paused — the index hasn't reset, only the loop has stopped.
+  useEffect(() => {
+    onPhaseChange?.(idx);
+  }, [idx, onPhaseChange]);
 
   // Advance to the next phase after the current one's duration.
   useEffect(() => {

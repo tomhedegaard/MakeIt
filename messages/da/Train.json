@@ -38,7 +38,8 @@
     "tierSecondary": "Sekundær",
     "tierTertiary": "Tertiær",
     "howTo": "Sådan udfører du den",
-    "musclesInvolved": "Muskler involveret"
+    "musclesInvolved": "Muskler involveret",
+    "currentPhase": "Aktiv fase"
   },
   "card": {
     "primaryPrefix": "Primær: ",
