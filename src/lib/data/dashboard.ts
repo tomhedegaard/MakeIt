@@ -17,7 +17,7 @@ export type TodayCard = {
   estimatedMinutes: number;
   exerciseCount: number;
   setCount: number;
-  exercises: { name: string; setCount: number }[];
+  exercises: { name: string; setCount: number; slug: string | null }[];
 };
 
 export type UpcomingSession = {
@@ -63,6 +63,10 @@ type SessionRow = {
   exercises: {
     id: string;
     exercise_name: string;
+    library:
+      | { slug: string | null }
+      | { slug: string | null }[]
+      | null;
     sets: { id: string }[];
   }[];
 };
@@ -82,7 +86,11 @@ export async function getTodayCard(memberId: string): Promise<TodayCard | null> 
       `
       id, week, day_label, title, estimated_minutes, scheduled_for,
       program:programs(code, name),
-      exercises:session_exercises(id, exercise_name, sets:session_sets(id))
+      exercises:session_exercises(
+        id, exercise_name,
+        library:exercises(slug),
+        sets:session_sets(id)
+      )
     `
     )
     .eq("member_id", memberId)
@@ -109,10 +117,14 @@ export async function getTodayCard(memberId: string): Promise<TodayCard | null> 
     estimatedMinutes: data.estimated_minutes ?? 0,
     exerciseCount: exercises.length,
     setCount,
-    exercises: exercises.map((e) => ({
-      name: e.exercise_name,
-      setCount: e.sets?.length ?? 0,
-    })),
+    exercises: exercises.map((e) => {
+      const lib = Array.isArray(e.library) ? e.library[0] ?? null : e.library;
+      return {
+        name: e.exercise_name,
+        setCount: e.sets?.length ?? 0,
+        slug: lib?.slug ?? null,
+      };
+    }),
   };
 }
 

@@ -1,0 +1,24 @@
+{
+  "metaFallback": "Program — MakeIt",
+  "breadcrumb": "Træn",
+  "meta": {
+    "weeks": "Uger",
+    "days": "Dage / uge",
+    "level": "Niveau",
+    "levelFallback": "Alle",
+    "coach": "Coach",
+    "coachFallback": "MakeIt HQ"
+  },
+  "template": {
+    "eyebrow": "Programstruktur",
+    "title": "Skabelon for ugen — gentages i {weeks} uger med progressivt overload.",
+    "body": "Hver dag herunder er den samme uge efter uge — kun belastning, reps og deload skifter. Hver 4. uge er deload."
+  },
+  "day": {
+    "position": "Dag {position}",
+    "estTime": "Tid",
+    "exercises": "{count} øvelser",
+    "sets": "{count} sæt"
+  },
+  "emptyDays": "Programmet har ikke fået dage tilføjet endnu."
+}

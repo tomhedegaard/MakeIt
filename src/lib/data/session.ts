@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { ExerciseLibrary, Session } from "@/lib/workout";
+import type { ExerciseLibrary, Session, SessionStatus } from "@/lib/workout";
 import type { MuscleGroup } from "@/lib/data/muscle-groups";
 
 /**
@@ -24,7 +24,7 @@ export async function getFullSession(
     .from("sessions")
     .select(
       `
-      id, week, day_label, title, estimated_minutes,
+      id, week, day_label, title, estimated_minutes, status,
       program:programs(code, name),
       exercises:session_exercises(
         id, exercise_name, cue, position,
@@ -58,6 +58,7 @@ export async function getFullSession(
     dayLabel: data.day_label ?? "",
     title: data.title,
     estimatedMinutes: data.estimated_minutes ?? 0,
+    status: (data.status ?? "scheduled") as SessionStatus,
     exercises: exercises.map((ex) => ({
       id: ex.id,
       name: ex.exercise_name,

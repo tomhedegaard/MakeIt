@@ -73,6 +73,8 @@ export type Exercise = {
   };
 };
 
+export type SessionStatus = "scheduled" | "active" | "completed" | "skipped";
+
 export type Session = {
   id: string;
   programCode: string;
@@ -81,6 +83,7 @@ export type Session = {
   dayLabel: string;
   title: string;
   estimatedMinutes: number;
+  status: SessionStatus;
   exercises: Exercise[];
   // -------------- adaptive-engine markers --------------
   /**
@@ -102,6 +105,7 @@ export const TODAY_SESSION: Session = {
   dayLabel: "Dag A — Squat",
   title: "Squat — Top set @ RPE 8, 3×3 backoff",
   estimatedMinutes: 65,
+  status: "active",
   exercises: [
     {
       id: "ex-1",

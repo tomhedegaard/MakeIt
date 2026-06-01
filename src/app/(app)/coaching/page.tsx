@@ -272,9 +272,12 @@ export default async function TrainPage() {
                       hasOtherActive={Boolean(active)}
                     />
                   )}
-                  <button type="button" className="btn btn-sm" disabled>
+                  <Link
+                    href={`/program/${p.code}`}
+                    className="btn btn-sm"
+                  >
                     {t("library.details")}
-                  </button>
+                  </Link>
                 </div>
               </article>
             </li>
@@ -421,6 +424,7 @@ function todayCardFromMock(): TodayCard {
     exercises: TODAY_SESSION.exercises.map((ex) => ({
       name: ex.name,
       setCount: ex.sets.length,
+      slug: ex.library?.slug ?? null,
     })),
   };
 }
