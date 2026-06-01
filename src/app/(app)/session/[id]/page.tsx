@@ -1,6 +1,7 @@
 import { TODAY_SESSION } from "@/lib/workout";
 import { notFound } from "next/navigation";
 import SessionClient from "./SessionClient";
+import SessionPreview from "./SessionPreview";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getFullSession } from "@/lib/data/session";
 import { getSession } from "@/lib/auth";
@@ -23,13 +24,22 @@ export default async function SessionPage({
   if (SUPABASE_ENABLED) {
     const member = await getSession();
     if (!member) notFound();
-    const [session, quota, readinessNudge, adaptation] = await Promise.all([
-      getFullSession(id, member.id),
+    const session = await getFullSession(id, member.id);
+    if (!session) notFound();
+
+    // Scheduled (not-yet-started) sessions render the read-only
+    // preview. The "Start session" button flips status to "active"
+    // and revalidates — the next render falls through to
+    // SessionClient automatically.
+    if (session.status === "scheduled") {
+      return <SessionPreview session={session} />;
+    }
+
+    const [quota, readinessNudge, adaptation] = await Promise.all([
       getFormCheckQuota(member.id, member.tier),
       getTodaysReadinessNudge(member.id),
       getActiveAdaptationForSession(member.id, id),
     ]);
-    if (!session) notFound();
     // Apply the active adaptation server-side. SessionClient sees the
     // already-modified session shape (reduced top-set weight, optional
     // accessory sets, paused replacement) and renders the markers.
@@ -47,6 +57,9 @@ export default async function SessionPage({
   // Demo mode — only the static TODAY_SESSION resolves
   const session = id === TODAY_SESSION.id ? TODAY_SESSION : null;
   if (!session) notFound();
+  if (session.status === "scheduled") {
+    return <SessionPreview session={session} />;
+  }
   const quota: FormCheckQuota = {
     used: 0,
     limit: FORM_CHECK_LIMIT.Legend,

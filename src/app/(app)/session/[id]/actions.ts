@@ -87,6 +87,31 @@ export async function completeSessionAction(sessionId: string): Promise<{
 }
 
 /**
+ * Flip a scheduled session to "active" so SessionClient takes over.
+ * Called from the SessionPreview "Start session" CTA. Idempotent: a
+ * session already active/completed is left untouched.
+ */
+export async function startSessionAction(
+  sessionId: string
+): Promise<{ ok: boolean }> {
+  if (!SUPABASE_ENABLED) return { ok: true };
+
+  const supabase = await createClient();
+  if (!supabase) return { ok: false };
+
+  const { error } = await supabase
+    .from("sessions")
+    .update({ status: "active", started_at: new Date().toISOString() })
+    .eq("id", sessionId)
+    .eq("status", "scheduled");
+
+  if (error) return { ok: false };
+
+  revalidatePath(`/session/${sessionId}`);
+  return { ok: true };
+}
+
+/**
  * Member's response to an active adaptive_v0 modifier: accept it (run
  * the adapted session) or keep the original. Updates
  * `hrv_session_modifiers.accepted_by_member` and revalidates the
