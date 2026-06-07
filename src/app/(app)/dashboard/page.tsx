@@ -23,6 +23,12 @@ import TierBanner from "@/components/app/TierBanner";
 import FirstTimeTour from "@/components/app/FirstTimeTour";
 import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
+import MindTile from "@/components/mind/MindTile";
+import {
+  getOrCreateMentalSettings,
+  getTodayMentalCoachOutput,
+  hasMindCheckToday,
+} from "@/lib/data/mind";
 
 type Translator = Awaited<ReturnType<typeof getTranslations<"Dashboard">>>;
 
@@ -158,6 +164,13 @@ export default async function TodayPage() {
   // HRV readiness chip: latest synced reading, or a connect CTA.
   const hrv = await getHrvChipData(member.id);
 
+  // Mind module tile (B-layer): surface today's state to the dashboard.
+  const [mindChecked, coachOutput, mentalSettings] = await Promise.all([
+    hasMindCheckToday(member.id),
+    getTodayMentalCoachOutput(member.id),
+    getOrCreateMentalSettings(member.id),
+  ]);
+
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       <FirstTimeTour />
@@ -185,6 +198,12 @@ export default async function TodayPage() {
       ) : null}
 
       <DailyCheckInCard checkin={checkin} variant="compact" />
+
+      <MindTile
+        hasMindCheckToday={mindChecked}
+        hasCoachOutputToday={!!coachOutput}
+        currentStreak={mentalSettings.current_streak_days}
+      />
 
       <HrvChip hrv={hrv} />
 
