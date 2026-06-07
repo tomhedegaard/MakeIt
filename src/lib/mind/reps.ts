@@ -15,6 +15,19 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/database.types";
 
+/**
+ * ISO week tag YYYY-WW for idempotency keys. Same week → same tag,
+ * regardless of timezone (UTC anchor).
+ */
+export function isoWeekTagUtc(date: Date = new Date()): string {
+  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNum = Math.ceil(((d.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7);
+  return `${d.getUTCFullYear()}-${String(weekNum).padStart(2, "0")}`;
+}
+
 export type MindRepsRefType =
   | "mind_check_streak"
   | "mental_session_completed"
@@ -150,6 +163,61 @@ export async function awardMentalSessionCompletion(
     memberId: args.memberId,
     refType: "mental_session_completed",
     referenceId: args.completionId,
+    delta: spec.delta,
+    reason: spec.reason,
+  });
+}
+
+/**
+ * Award a weekly cirkel-participation Rep. Idempotent on the ISO week
+ * tag — re-running in the same week is a no-op.
+ */
+export async function awardCirkelPost(
+  client: SupabaseClient<Database>,
+  args: { memberId: string; postId: string },
+): Promise<AwardResult> {
+  const spec = MIND_REPS_TABLE.cirkel_participation.post;
+  if (!spec) return { ok: false, reason: "spec-missing" };
+  return awardOnce(client, {
+    memberId: args.memberId,
+    refType: "cirkel_participation",
+    referenceId: args.postId,
+    delta: spec.delta,
+    reason: spec.reason,
+  });
+}
+
+/**
+ * Award the 30-day mental engagement milestone. One-time per member.
+ */
+export async function awardMentalMilestone30d(
+  client: SupabaseClient<Database>,
+  args: { memberId: string },
+): Promise<AwardResult> {
+  const spec = MIND_REPS_TABLE.mental_milestone_30d.once;
+  if (!spec) return { ok: false, reason: "spec-missing" };
+  return awardOnce(client, {
+    memberId: args.memberId,
+    refType: "mental_milestone_30d",
+    referenceId: args.memberId,
+    delta: spec.delta,
+    reason: spec.reason,
+  });
+}
+
+/**
+ * Award the 90-day mental engagement milestone. One-time per member.
+ */
+export async function awardMentalMilestone90d(
+  client: SupabaseClient<Database>,
+  args: { memberId: string },
+): Promise<AwardResult> {
+  const spec = MIND_REPS_TABLE.mental_milestone_90d.once;
+  if (!spec) return { ok: false, reason: "spec-missing" };
+  return awardOnce(client, {
+    memberId: args.memberId,
+    refType: "mental_milestone_90d",
+    referenceId: args.memberId,
     delta: spec.delta,
     reason: spec.reason,
   });

@@ -280,6 +280,15 @@ export async function submitMindCheck(
   const cur = currentStreak((logs ?? []) as unknown as { logged_date: string }[]);
   const lon = longestStreak((logs ?? []) as unknown as { logged_date: string }[]);
 
+  // Read the previous streak BEFORE updating so we can detect
+  // milestone crossings.
+  const { data: prevSettings } = await db
+    .from("mental_settings")
+    .select("current_streak_days, longest_streak_days")
+    .eq("member_id", memberId)
+    .maybeSingle();
+  const prev = (prevSettings as { current_streak_days?: number } | null)?.current_streak_days ?? 0;
+
   await db.from("mental_settings").upsert(
     {
       member_id: memberId,
@@ -290,6 +299,36 @@ export async function submitMindCheck(
     },
     { onConflict: "member_id" },
   );
+
+  // Streak-milestone Reps awards (3/7/30/90/180 days). Idempotent
+  // per milestone via the awardMindCheckStreak reference_id pattern.
+  try {
+    const { newlyHitMilestones } = await import("@/lib/mind/streak");
+    const { awardMindCheckStreak, awardMentalMilestone30d, awardMentalMilestone90d } = await import(
+      "@/lib/mind/reps"
+    );
+    const hits = newlyHitMilestones(prev, cur);
+    for (const m of hits) {
+      await awardMindCheckStreak(
+        supabase as unknown as Parameters<typeof awardMindCheckStreak>[0],
+        { memberId, milestone: m as 3 | 7 | 30 | 90 | 180 },
+      );
+      if (m === 30) {
+        await awardMentalMilestone30d(
+          supabase as unknown as Parameters<typeof awardMentalMilestone30d>[0],
+          { memberId },
+        );
+      }
+      if (m === 90) {
+        await awardMentalMilestone90d(
+          supabase as unknown as Parameters<typeof awardMentalMilestone90d>[0],
+          { memberId },
+        );
+      }
+    }
+  } catch (e) {
+    console.warn("[mind] streak milestone Reps award failed (non-fatal)", e);
+  }
 
   return { ok: true };
 }
@@ -659,6 +698,204 @@ export async function getBuddyMindSnapshot(
       focus: median(logs.map((l) => l.focus)),
     },
   };
+}
+
+/**
+ * Cirkler the member belongs to. Beast+ unlocks via tier gate at the
+ * call site (not enforced in this helper since some Munk-admin reads
+ * may want all cirkler).
+ */
+export async function getMyCirkler(memberId: string): Promise<
+  Array<{
+    id: string;
+    name: string;
+    leader_id: string | null;
+    member_count: number;
+  }>
+> {
+  if (!SUPABASE_ENABLED) {
+    return [
+      { id: "demo-cirkel-1", name: "Beast Crew · København", leader_id: null, member_count: 4 },
+    ];
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  const { data: memberships, error } = await mindDb(supabase)
+    .from("mental_cirkel_members")
+    .select("cirkel_id")
+    .eq("member_id", memberId);
+
+  if (error) {
+    console.warn("[mind] my-cirkler read failed", error.message);
+    return [];
+  }
+
+  const ids = ((memberships ?? []) as { cirkel_id: string }[]).map((r) => r.cirkel_id);
+  if (ids.length === 0) return [];
+
+  const { data: cirkler } = await mindDb(supabase)
+    .from("mental_cirkler")
+    .select("id, name, leader_id")
+    .in("id", ids);
+
+  // Per-cirkel member count — separate small query to keep types simple.
+  const { data: members } = await mindDb(supabase)
+    .from("mental_cirkel_members")
+    .select("cirkel_id")
+    .in("cirkel_id", ids);
+
+  const counts = new Map<string, number>();
+  for (const m of ((members ?? []) as { cirkel_id: string }[])) {
+    counts.set(m.cirkel_id, (counts.get(m.cirkel_id) ?? 0) + 1);
+  }
+
+  return ((cirkler ?? []) as { id: string; name: string; leader_id: string | null }[]).map((c) => ({
+    ...c,
+    member_count: counts.get(c.id) ?? 0,
+  }));
+}
+
+interface CirkelPost {
+  id: string;
+  cirkel_id: string;
+  author_id: string;
+  author_handle: string;
+  posted_at: string;
+  body: string;
+  mind_share: { energy?: number; stress?: number; focus?: number } | null;
+  reactions: { fire: number; flex: number; heart: number };
+}
+
+/**
+ * Recent posts in a cirkel, newest first. Members-only via RLS.
+ */
+export async function getCirkelFeed(cirkelId: string, limit = 30): Promise<CirkelPost[]> {
+  if (!SUPABASE_ENABLED) return [];
+
+  const supabase = await createClient();
+  if (!supabase) return [];
+  const db = mindDb(supabase);
+
+  const { data: posts, error } = await db
+    .from("mental_cirkel_posts")
+    .select("id, cirkel_id, author_id, posted_at, body, mind_share")
+    .eq("cirkel_id", cirkelId)
+    .order("posted_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.warn("[mind] cirkel feed read failed", error.message);
+    return [];
+  }
+
+  const rows = (posts ?? []) as {
+    id: string;
+    cirkel_id: string;
+    author_id: string;
+    posted_at: string;
+    body: string;
+    mind_share: { energy?: number; stress?: number; focus?: number } | null;
+  }[];
+
+  if (rows.length === 0) return [];
+
+  const authorIds = Array.from(new Set(rows.map((r) => r.author_id)));
+  const postIds = rows.map((r) => r.id);
+
+  const [{ data: members }, { data: reactionRows }] = await Promise.all([
+    db.from("members").select("id, handle").in("id", authorIds),
+    db.from("mental_cirkel_post_reactions").select("post_id, reaction").in("post_id", postIds),
+  ]);
+
+  const handleMap = new Map(
+    ((members ?? []) as { id: string; handle: string }[]).map((m) => [m.id, m.handle]),
+  );
+
+  const reactionsByPost = new Map<string, { fire: number; flex: number; heart: number }>();
+  for (const r of ((reactionRows ?? []) as { post_id: string; reaction: string }[])) {
+    const curr = reactionsByPost.get(r.post_id) ?? { fire: 0, flex: 0, heart: 0 };
+    if (r.reaction === "fire" || r.reaction === "flex" || r.reaction === "heart") {
+      curr[r.reaction]++;
+    }
+    reactionsByPost.set(r.post_id, curr);
+  }
+
+  return rows.map((r) => ({
+    ...r,
+    author_handle: handleMap.get(r.author_id) ?? "ukendt",
+    reactions: reactionsByPost.get(r.id) ?? { fire: 0, flex: 0, heart: 0 },
+  }));
+}
+
+/**
+ * Post to a cirkel. Upsert on (cirkel_id, author_id, posted_week) so
+ * a same-week re-post replaces (the spec allows one per week).
+ *
+ * Best-effort Reps award for the weekly cirkel_participation.post.
+ */
+export async function postToCirkel(args: {
+  authorId: string;
+  cirkelId: string;
+  body: string;
+  shareMindCheck: boolean;
+}): Promise<{ ok: true; postId: string } | { ok: false; error: string }> {
+  const trimmed = args.body.trim();
+  if (trimmed.length === 0) return { ok: false, error: "empty" };
+  if (trimmed.length > 600) return { ok: false, error: "too_long" };
+
+  const { isoWeekTagUtc, awardCirkelPost } = await import("@/lib/mind/reps");
+  const week = isoWeekTagUtc();
+
+  let mindShare: Record<string, number> | null = null;
+  if (args.shareMindCheck) {
+    const today = await getTodayMindCheck(args.authorId);
+    if (today) {
+      mindShare = { energy: today.energy, stress: today.stress, focus: today.focus };
+    }
+  }
+
+  if (!SUPABASE_ENABLED) {
+    console.info("[mind] demo-mode postToCirkel", { ...args, week, mindShare });
+    return { ok: true, postId: `demo-${Date.now()}` };
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "no_supabase_client" };
+  const db = mindDb(supabase);
+
+  const { data, error } = await db
+    .from("mental_cirkel_posts")
+    .upsert(
+      {
+        cirkel_id: args.cirkelId,
+        author_id: args.authorId,
+        posted_week: week,
+        body: trimmed,
+        mind_share: mindShare,
+      },
+      { onConflict: "cirkel_id,author_id,posted_week" },
+    )
+    .select("id")
+    .single();
+
+  if (error) {
+    console.warn("[mind] cirkel post failed", error.message);
+    return { ok: false, error: error.message };
+  }
+
+  const row = data as unknown as { id: string };
+  try {
+    await awardCirkelPost(
+      supabase as unknown as Parameters<typeof awardCirkelPost>[0],
+      { memberId: args.authorId, postId: row.id },
+    );
+  } catch (e) {
+    console.warn("[mind] cirkel Reps award failed (non-fatal)", e);
+  }
+
+  return { ok: true, postId: row.id };
 }
 
 /** Today's journal entry if any (for pre-filling the form). */
