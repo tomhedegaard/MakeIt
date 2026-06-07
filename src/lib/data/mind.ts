@@ -20,10 +20,13 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import {
   DEFAULT_MENTAL_SETTINGS,
+  type JournalEntry,
   type MentalSettings,
   type MindCheckLog,
 } from "@/lib/mind/types";
 import { mockMentalSettings, mockMindCheckLogs } from "@/lib/mind/mock";
+import { detectCrisisKeywords } from "@/lib/mind/crisis-keywords";
+import { awardJournalEntry } from "@/lib/mind/reps";
 
 export const MIND_DISCLAIMER_COOKIE = "mi_mind_disclaimer_ack";
 
@@ -292,4 +295,153 @@ function isoDateNDaysAgo(n: number): string {
   d.setUTCHours(0, 0, 0, 0);
   d.setUTCDate(d.getUTCDate() - n);
   return d.toISOString().slice(0, 10);
+}
+
+/**
+ * Last N journal entries for the member, newest first. Always
+ * owner-only — RLS enforces; demo mode returns an empty list (the
+ * journal is intentionally not seeded with mock entries).
+ */
+export async function getRecentJournalEntries(
+  memberId: string,
+  limit = 30,
+): Promise<JournalEntry[]> {
+  if (!SUPABASE_ENABLED) return [];
+
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  const { data, error } = await mindDb(supabase)
+    .from("journal_entries")
+    .select("*")
+    .eq("member_id", memberId)
+    .order("logged_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.warn("[mind] journal read failed", error.message);
+    return [];
+  }
+  return (data ?? []) as unknown as JournalEntry[];
+}
+
+/**
+ * Submit a journal entry. Runs the lightweight crisis-keyword
+ * pre-filter and stores the moderation_status accordingly. Awards
+ * Reps if not crisis. Returns the persisted entry + flag state.
+ *
+ * Spec: docs/superpowers/specs/2026-06-07-mental-health-pillar-v0-design.md §6 + §11
+ */
+export async function submitJournalEntry(
+  memberId: string,
+  input: { body: string; prompt: string | null },
+): Promise<
+  | {
+      ok: true;
+      entry: JournalEntry;
+      moderation: "clean" | "crisis";
+      crisisCategories: string[];
+    }
+  | { ok: false; error: string }
+> {
+  const trimmedBody = input.body.trim();
+  if (trimmedBody.length === 0) {
+    return { ok: false, error: "empty_body" };
+  }
+  if (trimmedBody.length > 2000) {
+    return { ok: false, error: "too_long" };
+  }
+
+  const flag = detectCrisisKeywords(trimmedBody);
+  const moderation_status: "clean" | "crisis" = flag.isCrisis ? "crisis" : "clean";
+
+  if (!SUPABASE_ENABLED) {
+    const entry: JournalEntry = {
+      id: `demo-${Date.now()}`,
+      member_id: memberId,
+      logged_at: new Date().toISOString(),
+      logged_date: new Date().toISOString().slice(0, 10),
+      prompt: input.prompt,
+      body: trimmedBody,
+      moderation_status,
+      moderation_reason: flag.isCrisis ? flag.categories.join(",") : null,
+      created_at: new Date().toISOString(),
+    };
+    console.info("[mind] demo-mode submitJournalEntry", {
+      memberId,
+      moderation_status,
+      categories: flag.categories,
+    });
+    return {
+      ok: true,
+      entry,
+      moderation: moderation_status,
+      crisisCategories: flag.categories,
+    };
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "no_supabase_client" };
+
+  const db = mindDb(supabase);
+  const todayDate = new Date().toISOString().slice(0, 10);
+
+  // Upsert on (member_id, logged_date) — one entry per day. The
+  // moderation_status is replaced each upsert, so a re-submit after
+  // editing-out a crisis phrase will correctly re-flag/un-flag.
+  const { data: upserted, error: upsertErr } = await db
+    .from("journal_entries")
+    .upsert(
+      {
+        member_id: memberId,
+        logged_date: todayDate,
+        prompt: input.prompt,
+        body: trimmedBody,
+        moderation_status,
+        moderation_reason: flag.isCrisis ? flag.categories.join(",") : null,
+      },
+      { onConflict: "member_id,logged_date" },
+    )
+    .select("*")
+    .single();
+
+  if (upsertErr) {
+    console.warn("[mind] submitJournalEntry failed", upsertErr.message);
+    return { ok: false, error: upsertErr.message };
+  }
+
+  const entry = upserted as unknown as JournalEntry;
+
+  // Award Reps only for non-crisis entries — we don't want to make
+  // "writing about crisis" feel like a points game.
+  if (!flag.isCrisis) {
+    try {
+      const svc = await createClient();
+      if (svc) {
+        // The award helper is typed against the generated Database — fine to
+        // pass the cookie-backed server client; insert RLS allows owner.
+        await awardJournalEntry(
+          svc as unknown as Parameters<typeof awardJournalEntry>[0],
+          { memberId, journalEntryId: entry.id },
+        );
+      }
+    } catch (e) {
+      console.warn("[mind] journal Reps award failed (non-fatal)", e);
+    }
+  }
+
+  return {
+    ok: true,
+    entry,
+    moderation: moderation_status,
+    crisisCategories: flag.categories,
+  };
+}
+
+/** Today's journal entry if any (for pre-filling the form). */
+export async function getTodayJournalEntry(memberId: string): Promise<JournalEntry | null> {
+  if (!SUPABASE_ENABLED) return null;
+  const entries = await getRecentJournalEntries(memberId, 1);
+  const today = new Date().toISOString().slice(0, 10);
+  return entries.find((e) => e.logged_date === today) ?? null;
 }
