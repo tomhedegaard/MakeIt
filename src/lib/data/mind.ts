@@ -535,6 +535,88 @@ export async function persistPersonalSession(args: {
 }
 
 /**
+ * Hero session catalog — evergreen sessions in the library. Demo mode
+ * returns the same 8 mocked sessions as the migration seed.
+ */
+export async function getHeroSessions(locale: "da" | "en" = "da"): Promise<
+  import("@/lib/mind/types").MentalSession[]
+> {
+  if (!SUPABASE_ENABLED) {
+    const { mockHeroSessions } = await import("@/lib/mind/mock");
+    return mockHeroSessions().filter((s) => s.locale === locale);
+  }
+
+  const supabase = await createClient();
+  if (!supabase) {
+    const { mockHeroSessions } = await import("@/lib/mind/mock");
+    return mockHeroSessions().filter((s) => s.locale === locale);
+  }
+
+  const { data, error } = await mindDb(supabase)
+    .from("mental_sessions")
+    .select("*")
+    .eq("is_hero", true)
+    .eq("locale", locale)
+    .order("category", { ascending: true })
+    .order("duration_seconds", { ascending: true });
+
+  if (error) {
+    console.warn("[mind] hero sessions read failed", error.message);
+    return [];
+  }
+  return (data ?? []) as unknown as import("@/lib/mind/types").MentalSession[];
+}
+
+/**
+ * Single hero session by slug. Used by the runner page.
+ */
+export async function getSessionBySlug(
+  slug: string,
+): Promise<import("@/lib/mind/types").MentalSession | null> {
+  if (!SUPABASE_ENABLED) {
+    const { mockHeroSessions } = await import("@/lib/mind/mock");
+    return mockHeroSessions().find((s) => s.slug === slug) ?? null;
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const { data, error } = await mindDb(supabase)
+    .from("mental_sessions")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (error) {
+    console.warn("[mind] session by slug read failed", error.message);
+    return null;
+  }
+  return (data ?? null) as unknown as import("@/lib/mind/types").MentalSession | null;
+}
+
+/**
+ * Session ids the member has completed at least once. Used for the
+ * "✓ gennemført" badge on catalog cards.
+ */
+export async function getCompletedSessionIds(memberId: string): Promise<Set<string>> {
+  if (!SUPABASE_ENABLED) return new Set();
+
+  const supabase = await createClient();
+  if (!supabase) return new Set();
+
+  const { data, error } = await mindDb(supabase)
+    .from("mental_session_completions")
+    .select("session_id")
+    .eq("member_id", memberId);
+
+  if (error) {
+    console.warn("[mind] completions read failed", error.message);
+    return new Set();
+  }
+  return new Set(((data ?? []) as { session_id: string }[]).map((r) => r.session_id));
+}
+
+/**
  * Record a session completion. Idempotent on (member_id, session_id,
  * completed_date). Triggers Reps award out-of-band (best-effort).
  */
