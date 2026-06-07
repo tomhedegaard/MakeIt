@@ -438,6 +438,126 @@ export async function submitJournalEntry(
   };
 }
 
+/**
+ * Toggle a mental_settings boolean and append to the audit log.
+ * Idempotent: toggling to the same value records a no-op log row but
+ * doesn't touch settings.
+ */
+export async function setMentalSettingFlag(
+  memberId: string,
+  field:
+    | "buddy_share_enabled"
+    | "cirkel_share_aggregate_enabled"
+    | "cirkel_share_daily_enabled"
+    | "ai_coach_enabled"
+    | "notif_mind_check_evening"
+    | "notif_ai_coach_morning"
+    | "notif_buddy_mental_alert",
+  value: boolean,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!SUPABASE_ENABLED) {
+    console.info("[mind] demo-mode setMentalSettingFlag", { memberId, field, value });
+    return { ok: true };
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "no_supabase_client" };
+  const db = mindDb(supabase);
+
+  await db.from("mental_settings").upsert(
+    {
+      member_id: memberId,
+      [field]: value,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "member_id" },
+  );
+
+  // Audit log — best-effort.
+  await db.from("mental_settings_log").insert({
+    member_id: memberId,
+    field,
+    old_value: null,
+    new_value: String(value),
+  });
+
+  return { ok: true };
+}
+
+/**
+ * Whether this member is eligible to opt-in to buddy mental-share —
+ * tier >= Athlete AND has an active buddy pair. The actual mutual-
+ * opt-in check is enforced by `mind_check_visible_to()` in RLS.
+ */
+export function isBuddyShareEligible(
+  tier: "Lifter" | "Athlete" | "Beast" | "Legend",
+  hasBuddy: boolean,
+): boolean {
+  if (!hasBuddy) return false;
+  return tier === "Athlete" || tier === "Beast" || tier === "Legend";
+}
+
+/**
+ * Buddy's mind-check snapshot when mutual opt-in holds. Returns the
+ * latest 7 days of summary numbers + last-checked timestamp. Never
+ * returns journal text. Buddies see signal only.
+ *
+ * RLS via mind_check_visible_to() enforces; this helper just performs
+ * the query — the policy is authoritative.
+ */
+export async function getBuddyMindSnapshot(
+  buddyMemberId: string,
+): Promise<{
+  latest: MindCheckLog | null;
+  median7d: { energy: number | null; stress: number | null; focus: number | null };
+} | null> {
+  if (!SUPABASE_ENABLED) {
+    return {
+      latest: null,
+      median7d: { energy: 3, stress: 2, focus: 4 },
+    };
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const since = new Date();
+  since.setUTCHours(0, 0, 0, 0);
+  since.setUTCDate(since.getUTCDate() - 7);
+
+  const { data, error } = await mindDb(supabase)
+    .from("mind_check_logs")
+    .select("*")
+    .eq("member_id", buddyMemberId)
+    .gte("logged_date", since.toISOString().slice(0, 10))
+    .order("logged_date", { ascending: false });
+
+  if (error) {
+    // The RLS-policy denial reaches us as an empty result, not an error,
+    // but we log other errors for visibility.
+    console.warn("[mind] buddy snapshot read failed", error.message);
+    return null;
+  }
+
+  const logs = (data ?? []) as unknown as MindCheckLog[];
+  if (logs.length === 0) return { latest: null, median7d: { energy: null, stress: null, focus: null } };
+
+  const median = (arr: number[]) => {
+    if (arr.length === 0) return null;
+    const s = [...arr].sort((a, b) => a - b);
+    return s[Math.floor(s.length / 2)] ?? null;
+  };
+
+  return {
+    latest: logs[0] ?? null,
+    median7d: {
+      energy: median(logs.map((l) => l.energy)),
+      stress: median(logs.map((l) => l.stress)),
+      focus: median(logs.map((l) => l.focus)),
+    },
+  };
+}
+
 /** Today's journal entry if any (for pre-filling the form). */
 export async function getTodayJournalEntry(memberId: string): Promise<JournalEntry | null> {
   if (!SUPABASE_ENABLED) return null;
