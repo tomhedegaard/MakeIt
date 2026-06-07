@@ -535,6 +535,70 @@ export async function persistPersonalSession(args: {
 }
 
 /**
+ * Get today's AI mental coach output if cached. Null if not yet
+ * generated (caller generates inline or via cron).
+ */
+export async function getTodayMentalCoachOutput(
+  memberId: string,
+): Promise<import("@/lib/mind/types").MentalCoachOutput | null> {
+  if (!SUPABASE_ENABLED) return null;
+
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const today = new Date().toISOString().slice(0, 10);
+  const { data, error } = await mindDb(supabase)
+    .from("mental_coach_outputs")
+    .select("*")
+    .eq("member_id", memberId)
+    .eq("for_date", today)
+    .maybeSingle();
+
+  if (error) {
+    console.warn("[mind] coach output read failed", error.message);
+    return null;
+  }
+  return (data ?? null) as unknown as import("@/lib/mind/types").MentalCoachOutput | null;
+}
+
+/**
+ * Persist a generated AI mental coach output. Idempotent on
+ * (member_id, for_date) — same-day regeneration replaces.
+ */
+export async function persistMentalCoachOutput(args: {
+  memberId: string;
+  forDate: string;
+  bodyMd: string;
+  promptSeed: Record<string, unknown> | null;
+}): Promise<{ id: string } | null> {
+  if (!SUPABASE_ENABLED) return { id: `demo-${args.forDate}` };
+
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const { data, error } = await mindDb(supabase)
+    .from("mental_coach_outputs")
+    .upsert(
+      {
+        member_id: args.memberId,
+        for_date: args.forDate,
+        body_md: args.bodyMd,
+        prompt_seed: args.promptSeed ?? null,
+        moderation_status: "clean",
+      },
+      { onConflict: "member_id,for_date" },
+    )
+    .select("id")
+    .single();
+
+  if (error) {
+    console.warn("[mind] persist coach output failed", error.message);
+    return null;
+  }
+  return data as unknown as { id: string };
+}
+
+/**
  * Hero session catalog — evergreen sessions in the library. Demo mode
  * returns the same 8 mocked sessions as the migration seed.
  */

@@ -17,7 +17,7 @@ function baseInput(): EngineInput {
     latestReading: {
       measuredAt: "2026-06-07T06:00:00Z",
       warmUpState: "active",
-      readinessBucket: "green",
+      readinessBucket: "normal",
       isSick: false,
     },
     veryLowDaysLast5: 0,
@@ -63,20 +63,25 @@ describe("isMentalSignalLow", () => {
 
 describe("applyMentalAdjustment", () => {
   it("no signal: bucket unchanged", () => {
-    expect(applyMentalAdjustment("green", null)).toEqual({
-      bucket: "green",
+    expect(applyMentalAdjustment("normal", null)).toEqual({
+      bucket: "normal",
       mentalFired: false,
     });
   });
-  it("fresh + low_for_days >= 3 drops green to yellow", () => {
+  it("fresh + low_for_days >= 3 drops normal to low", () => {
     expect(
-      applyMentalAdjustment("green", fresh({ low_for_days: 3 })),
-    ).toEqual({ bucket: "yellow", mentalFired: true });
-  });
-  it("fresh + low_for_days >= 3 drops yellow to low", () => {
-    expect(
-      applyMentalAdjustment("yellow", fresh({ low_for_days: 4 })),
+      applyMentalAdjustment("normal", fresh({ low_for_days: 4 })),
     ).toEqual({ bucket: "low", mentalFired: true });
+  });
+  it("fresh + low_for_days >= 3 drops high to normal", () => {
+    expect(
+      applyMentalAdjustment("high", fresh({ low_for_days: 4 })),
+    ).toEqual({ bucket: "normal", mentalFired: true });
+  });
+  it("fresh + low_for_days >= 3 drops very_high to high", () => {
+    expect(
+      applyMentalAdjustment("very_high", fresh({ low_for_days: 4 })),
+    ).toEqual({ bucket: "high", mentalFired: true });
   });
   it("fresh + low_for_days >= 3 drops low to very_low", () => {
     expect(
@@ -89,13 +94,13 @@ describe("applyMentalAdjustment", () => {
   });
   it("stale signal: bucket unchanged even if low", () => {
     expect(
-      applyMentalAdjustment("green", fresh({ low_for_days: 5, freshness_days: 7 })),
-    ).toEqual({ bucket: "green", mentalFired: false });
+      applyMentalAdjustment("normal", fresh({ low_for_days: 5, freshness_days: 7 })),
+    ).toEqual({ bucket: "normal", mentalFired: false });
   });
   it("low_for_days < 3: bucket unchanged", () => {
     expect(
-      applyMentalAdjustment("green", fresh({ low_for_days: 2 })),
-    ).toEqual({ bucket: "green", mentalFired: false });
+      applyMentalAdjustment("normal", fresh({ low_for_days: 2 })),
+    ).toEqual({ bucket: "normal", mentalFired: false });
   });
   it("null bucket: returns null", () => {
     expect(
@@ -120,10 +125,10 @@ describe("mentalAwareEngineInput", () => {
     const out = mentalAwareEngineInput(inp, fresh({ low_for_days: 5 }));
     expect(out.latestReading?.readinessBucket).toBe("very_low");
   });
-  it("downgrades green to yellow when mental signal low", () => {
+  it("downgrades normal to low when mental signal low", () => {
     const inp = baseInput();
     const out = mentalAwareEngineInput(inp, fresh({ low_for_days: 4 }));
-    expect(out.latestReading?.readinessBucket).toBe("yellow");
+    expect(out.latestReading?.readinessBucket).toBe("low");
     expect(out).not.toBe(inp);
   });
   it("leaves bucket alone when signal stale", () => {

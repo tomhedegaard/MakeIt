@@ -36,11 +36,12 @@ export function isMentalSignalLow(signal: MentalSignal | null): boolean {
  * possibly-downgraded bucket plus a flag indicating whether the
  * mental rule fired.
  *
- *   green  → yellow (mental)
- *   yellow → low (mental)
- *   low    → very_low (mental)
- *   very_low → very_low (no further drop)
- *   null   → null (no signal to adjust)
+ *   very_high → high (mental)
+ *   high      → normal (mental)
+ *   normal    → low (mental)
+ *   low       → very_low (mental)
+ *   very_low  → very_low (no further drop)
+ *   null      → null (no signal to adjust)
  */
 export function applyMentalAdjustment(
   bucket: ReadinessBucket | null,
@@ -57,8 +58,9 @@ export function applyMentalAdjustment(
   }
 
   const next: Record<ReadinessBucket, ReadinessBucket> = {
-    green: "yellow",
-    yellow: "low",
+    very_high: "high",
+    high: "normal",
+    normal: "low",
     low: "very_low",
     very_low: "very_low",
   };

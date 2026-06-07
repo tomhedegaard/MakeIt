@@ -4,15 +4,20 @@ import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
 import {
   getRecentMindCheckLogs,
+  getTodayMentalCoachOutput,
   getTodayMindCheck,
   getTodayPersonalSession,
   hasAcknowledgedMentalDisclaimer,
+  persistMentalCoachOutput,
   persistPersonalSession,
 } from "@/lib/data/mind";
 import SessionRunner from "@/components/mind/SessionRunner";
+import CoachReflection from "@/components/mind/CoachReflection";
 import { buildCoachContext, computeMentalSignal } from "@/lib/mind/coach-context";
 import { generatePersonalSession } from "@/lib/mind/session-generator-claude";
 import { buildFallbackSession } from "@/lib/mind/session-fallback";
+import { generateMentalCoachOutput } from "@/lib/mind/coach-claude";
+import { buildFallbackCoachOutput } from "@/lib/mind/coach-fallback";
 
 export const metadata = {
   title: "I dag · Mind · MakeIt",
@@ -36,6 +41,7 @@ export default async function MindTodayPage() {
 
   const today = new Date().toISOString().slice(0, 10);
 
+  const coachOutput = await getTodayMentalCoachOutput(member.id);
   let session = await getTodayPersonalSession(member.id);
 
   // First visit of the day — generate inline. The cron pre-warms
@@ -106,14 +112,59 @@ export default async function MindTodayPage() {
         };
   }
 
+  // If no coach output yet today, generate inline (cron pre-warms in
+  // production but the demo + edge cases need the fallback path).
+  let coachBody: string | null = coachOutput?.body_md ?? null;
+  if (!coachBody) {
+    const [todayMc, logs] = await Promise.all([
+      getTodayMindCheck(member.id),
+      getRecentMindCheckLogs(member.id, 7),
+    ]);
+    const signal = computeMentalSignal(logs);
+    const ctx = buildCoachContext({
+      member: { handle: member.handle, tier: member.tier },
+      mindToday: todayMc
+        ? {
+            energy: todayMc.energy,
+            stress: todayMc.stress,
+            focus: todayMc.focus,
+            note: todayMc.note,
+          }
+        : null,
+      signal,
+      hrv: {
+        week_mean_rmssd_ms: null,
+        prior_week_mean_rmssd_ms: null,
+        week_reading_count: 0,
+      },
+      training: {
+        sessions_completed_7d: 0,
+        sessions_planned_7d: 0,
+        last_session_rpe: null,
+        last_session_was: null,
+      },
+      forDate: today,
+    });
+    const generated = await generateMentalCoachOutput(ctx);
+    coachBody = generated?.bodyMd ?? buildFallbackCoachOutput(ctx);
+    await persistMentalCoachOutput({
+      memberId: member.id,
+      forDate: today,
+      bodyMd: coachBody,
+      promptSeed: { source: generated ? "claude" : "fallback" },
+    });
+  }
+
   return (
     <>
       <PageHeader
         eyebrow="Mind · I dag"
-        title="Dagens session."
-        subtitle="Personlig session — bygget til dagens mind-check + HRV. Bibliotek åbner i MH-5."
+        title="Dagens refleksion."
+        subtitle="Personlig refleksion + session — bygget til din mind-check, HRV og uge."
       />
-      <Container size="narrow" className="py-10 md:py-14">
+      <Container size="narrow" className="py-10 md:py-14 space-y-12">
+        <CoachReflection bodyMd={coachBody} />
+
         <SessionRunner
           sessionId={session.id}
           title={session.title}
@@ -123,12 +174,6 @@ export default async function MindTodayPage() {
           durationSeconds={session.duration_seconds}
           context="library"
         />
-
-        <p className="mt-10 text-fg-dim text-sm leading-relaxed">
-          MH-7 lægger en daglig Claude-skrevet refleksion oven på sessionen
-          — dit Mind-check + HRV + træningsuge bliver til en kort,
-          personlig observation.
-        </p>
       </Container>
     </>
   );
