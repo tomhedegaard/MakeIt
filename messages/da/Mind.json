@@ -1,0 +1,27 @@
+{
+  "nav": {
+    "label": "Mind",
+    "today": "I dag",
+    "check": "Mind-check",
+    "journal": "Journal",
+    "sessions": "Sessions",
+    "settings": "Indstillinger"
+  },
+  "disclaimer": {
+    "eyebrow": "Mind · Søjle 5",
+    "title": "Mental sundhed — vores 5. søjle.",
+    "intro": "Ægte sundhed er fysisk OG psykisk. /mind er din daglige mentale check-in, dit private journal, dit sessions-bibliotek og din AI-coach for hovedet.",
+    "important_title": "Vigtigt — læs én gang.",
+    "important_body": "MakeIt's Mind-modul er IKKE klinisk behandling. Det er træning af mentale vaner — sammenlignelig med vejrtrækning, journaling og refleksion, ikke med terapi eller medicin. Hvis du har det meget skidt, eller hvis du tænker på at gøre skade på dig selv eller andre, så tal med et menneske der kan hjælpe nu.",
+    "resources_title": "Hvis det brænder",
+    "resources_livslinien": "Livslinien · 70 201 201 (døgnet rundt)",
+    "resources_emergency": "Akut hjælp · 112",
+    "resources_doctor": "Din egen læge eller psykiatrisk skadestue",
+    "privacy_title": "Sådan håndterer vi dine data",
+    "privacy_journal": "Din journal er ALTID privat. Hverken Munk, coaches eller andre medlemmer kan læse den. Aldrig.",
+    "privacy_mind_check": "Dit mind-check er privat som default. Når du rykker tier, kan du vælge at dele dit signal med din buddy. Begge skal sige ja.",
+    "privacy_ai": "AI-coach læser dit mind-check, HRV og træningsuge — ikke din journal — for at skrive dig en daglig refleksion. Output gemmes så du kan læse den igen.",
+    "accept": "Jeg har forstået — fortsæt",
+    "accepted": "Tak — modulet er åbnet."
+  }
+}

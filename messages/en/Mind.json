@@ -1,0 +1,27 @@
+{
+  "nav": {
+    "label": "Mind",
+    "today": "Today",
+    "check": "Mind-check",
+    "journal": "Journal",
+    "sessions": "Sessions",
+    "settings": "Settings"
+  },
+  "disclaimer": {
+    "eyebrow": "Mind · Pillar 5",
+    "title": "Mental health — our 5th pillar.",
+    "intro": "Real health is physical AND mental. /mind is your daily mental check-in, your private journal, your sessions library, and your AI coach for the head.",
+    "important_title": "Important — read once.",
+    "important_body": "MakeIt's Mind module is NOT clinical treatment. It's training mental habits — comparable to breathwork, journaling, and reflection. NOT a substitute for therapy or medication. If you're in a bad place, or thinking about harming yourself or others, talk to a real human who can help right now.",
+    "resources_title": "If it's burning",
+    "resources_livslinien": "Livslinien · 70 201 201 (Denmark, 24/7)",
+    "resources_emergency": "Emergency · 112 (EU) / 911 (US)",
+    "resources_doctor": "Your doctor or the psychiatric ER",
+    "privacy_title": "How we handle your data",
+    "privacy_journal": "Your journal is ALWAYS private. Not Munk, not coaches, not other members can read it. Ever.",
+    "privacy_mind_check": "Your mind-check is private by default. When you tier up, you can choose to share your signal with your buddy. Both must opt in.",
+    "privacy_ai": "AI coach reads your mind-check, HRV, and training week — never your journal — to write you a daily reflection. Output is stored so you can re-read it.",
+    "accept": "I understand — continue",
+    "accepted": "Thank you — the module is open."
+  }
+}
