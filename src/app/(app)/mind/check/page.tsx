@@ -1,15 +1,26 @@
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
-import { hasAcknowledgedMentalDisclaimer } from "@/lib/data/mind";
+import {
+  getRecentMindCheckLogs,
+  getTodayMindCheck,
+  hasAcknowledgedMentalDisclaimer,
+} from "@/lib/data/mind";
+import MindCheckForm from "@/components/mind/MindCheckForm";
+import MentalGraph from "@/components/mind/MentalGraph";
+import StreakBadge from "@/components/mind/StreakBadge";
+import { currentStreak, longestStreak } from "@/lib/mind/streak";
+
+export const metadata = {
+  title: "Mind-check · MakeIt",
+};
 
 /**
- * `/mind/check` — MH-2 wires the real 60-second flow here.
+ * `/mind/check` — the daily 60-second mental signal surface.
  *
- * MH-1 ships a placeholder so the disclaimer's "fortsæt" lands somewhere
- * sensible. Linked off the disclaimer accept action.
+ * MH-2: 3 sliders + optional note, 30-day mental graph, streak badge.
+ * Adaptive Engine integration (mental signal → readiness) lands in MH-6.
  */
 export default async function MindCheckPage() {
   const member = await getSession();
@@ -19,27 +30,50 @@ export default async function MindCheckPage() {
     redirect("/mind/onboarding");
   }
 
-  const t = await getTranslations("Mind.nav");
+  const [logs, today] = await Promise.all([
+    getRecentMindCheckLogs(member.id, 30),
+    getTodayMindCheck(member.id),
+  ]);
+
+  const current = currentStreak(logs);
+  const longest = longestStreak(logs);
 
   return (
     <>
       <PageHeader
         eyebrow="Mind · Søjle 5"
-        title="Mind-check kommer i MH-2."
-        subtitle={`Velkommen, ${member.handle}. Skemaet og din mentale graf lander i næste fase.`}
+        title={today ? "Mind-check — opdater." : "Mind-check — 60 sek."}
+        subtitle={
+          today
+            ? "Du har tjekket ind i dag. Du kan opdatere indtil midnat."
+            : "Tre sliders. Én sætning hvis du har lyst. Det tager kortere tid end at vente på din næste sæt."
+        }
+        right={<StreakBadge current={current} longest={longest} />}
       />
-      <Container size="narrow" className="py-12">
-        <p className="text-fg-dim leading-relaxed">
-          Du er gennem disclaimer-step. Dit access til hele Mind-modulet er
-          låst op. Næste fase (MH-2) tilføjer den 60-sekunders daglige
-          mind-check + 30-dages mental graf på denne side.
+      <Container size="narrow" className="py-10 md:py-14">
+        <MindCheckForm
+          initial={
+            today
+              ? {
+                  energy: today.energy,
+                  stress: today.stress,
+                  focus: today.focus,
+                  note: today.note,
+                }
+              : null
+          }
+        />
+
+        <div className="mt-16">
+          <MentalGraph logs={logs} days={30} />
+        </div>
+
+        <p className="mt-10 text-fg-dim text-sm leading-relaxed">
+          Din journal og dine sessioner lander her i de næste faser
+          (MH-3 til MH-5). Når Adaptive Engine (MH-6) sluges sammen med
+          mental-signalen, vil dårlige mind-check uger lade Munks
+          motor justere træningsdosis automatisk.
         </p>
-        <ul className="mt-6 text-fg-dim text-sm space-y-1">
-          <li>· {t("today")}</li>
-          <li>· {t("journal")}</li>
-          <li>· {t("sessions")}</li>
-          <li>· {t("settings")}</li>
-        </ul>
       </Container>
     </>
   );
