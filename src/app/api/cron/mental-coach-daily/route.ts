@@ -5,6 +5,7 @@ import { sendPushToMember } from "@/lib/push";
 import { buildCoachContext, computeMentalSignal } from "@/lib/mind/coach-context";
 import { generateMentalCoachOutput } from "@/lib/mind/coach-claude";
 import { buildFallbackCoachOutput } from "@/lib/mind/coach-fallback";
+import { moderateJournalText } from "@/lib/mind/moderation-claude";
 import type { MindCheckLog } from "@/lib/mind/types";
 
 export const runtime = "nodejs";
@@ -156,16 +157,34 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       if (usedClaude) generated++;
       else fallback++;
 
-      // Persist via the typed mindDb wrapper (service-role bypasses RLS).
+      // Safety moderation on AI output BEFORE persist + push (MH-9).
+      // Fallback templates are deterministic so we skip moderation
+      // for them — they don't contain user-generated risk.
+      let moderationStatus: "clean" | "flagged" = "clean";
+      if (usedClaude) {
+        const verdict = await moderateJournalText(bodyMd);
+        if (verdict && verdict.status !== "clean") {
+          moderationStatus = "flagged";
+        }
+      }
+
+      // If flagged, discard silently and serve the fallback instead
+      // (never push something Claude flagged as potentially harmful).
+      const safeBodyMd =
+        moderationStatus === "flagged" ? buildFallbackCoachOutput(ctx) : bodyMd;
+
       const { error: upsertErr } = await db
         .from("mental_coach_outputs")
         .upsert(
           {
             member_id: memberId,
             for_date: today,
-            body_md: bodyMd,
-            prompt_seed: { source: usedClaude ? "claude" : "fallback" },
-            moderation_status: "clean",
+            body_md: safeBodyMd,
+            prompt_seed: {
+              source: usedClaude ? "claude" : "fallback",
+              moderation_status: moderationStatus,
+            },
+            moderation_status: moderationStatus,
           },
           { onConflict: "member_id,for_date" },
         );

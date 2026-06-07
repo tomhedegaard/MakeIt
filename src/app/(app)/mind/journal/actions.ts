@@ -15,7 +15,7 @@ export async function submitJournalEntryAction(
   formData: FormData,
 ):
   Promise<
-    | { ok: true; moderation: "clean" | "crisis" }
+    | { ok: true; moderation: "clean" | "flagged" | "crisis" }
     | { error: string }
   > {
   const member = await getSession();

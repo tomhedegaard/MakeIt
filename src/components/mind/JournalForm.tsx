@@ -35,7 +35,7 @@ export default function JournalForm({
         return;
       }
       setSaved(true);
-      if (res.moderation === "crisis") {
+      if (res.moderation === "crisis" || res.moderation === "flagged") {
         setShowResources(true);
       }
       router.refresh();

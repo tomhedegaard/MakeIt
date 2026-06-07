@@ -26,6 +26,10 @@ import {
 } from "@/lib/mind/types";
 import { mockMentalSettings, mockMindCheckLogs } from "@/lib/mind/mock";
 import { detectCrisisKeywords } from "@/lib/mind/crisis-keywords";
+import {
+  combineModerationVerdicts,
+  moderateJournalText,
+} from "@/lib/mind/moderation-claude";
 import { awardJournalEntry } from "@/lib/mind/reps";
 
 export const MIND_DISCLAIMER_COOKIE = "mi_mind_disclaimer_ack";
@@ -339,7 +343,7 @@ export async function submitJournalEntry(
   | {
       ok: true;
       entry: JournalEntry;
-      moderation: "clean" | "crisis";
+      moderation: "clean" | "flagged" | "crisis";
       crisisCategories: string[];
     }
   | { ok: false; error: string }
@@ -353,7 +357,16 @@ export async function submitJournalEntry(
   }
 
   const flag = detectCrisisKeywords(trimmedBody);
-  const moderation_status: "clean" | "crisis" = flag.isCrisis ? "crisis" : "clean";
+  // Claude moderation as second check (~2-3s). Skipped if API key
+  // absent — keyword filter alone is the fallback.
+  const claudeVerdict = await moderateJournalText(trimmedBody);
+  const moderation_status: "clean" | "flagged" | "crisis" =
+    combineModerationVerdicts(flag.isCrisis, claudeVerdict);
+  const moderation_reason_pieces: string[] = [];
+  if (flag.isCrisis) moderation_reason_pieces.push(`keyword:${flag.categories.join(",")}`);
+  if (claudeVerdict) moderation_reason_pieces.push(`claude:${claudeVerdict.status}:${claudeVerdict.categories.join(",")}`);
+  const moderation_reason =
+    moderation_reason_pieces.length > 0 ? moderation_reason_pieces.join(" | ") : null;
 
   if (!SUPABASE_ENABLED) {
     const entry: JournalEntry = {
@@ -364,19 +377,25 @@ export async function submitJournalEntry(
       prompt: input.prompt,
       body: trimmedBody,
       moderation_status,
-      moderation_reason: flag.isCrisis ? flag.categories.join(",") : null,
+      moderation_reason,
       created_at: new Date().toISOString(),
     };
     console.info("[mind] demo-mode submitJournalEntry", {
       memberId,
       moderation_status,
-      categories: flag.categories,
+      keywordCategories: flag.categories,
+      claudeStatus: claudeVerdict?.status,
     });
     return {
       ok: true,
       entry,
       moderation: moderation_status,
-      crisisCategories: flag.categories,
+      crisisCategories: Array.from(
+        new Set([
+          ...flag.categories,
+          ...((claudeVerdict?.categories ?? []) as string[]),
+        ]),
+      ),
     };
   }
 
@@ -398,7 +417,7 @@ export async function submitJournalEntry(
         prompt: input.prompt,
         body: trimmedBody,
         moderation_status,
-        moderation_reason: flag.isCrisis ? flag.categories.join(",") : null,
+        moderation_reason,
       },
       { onConflict: "member_id,logged_date" },
     )
@@ -414,12 +433,10 @@ export async function submitJournalEntry(
 
   // Award Reps only for non-crisis entries — we don't want to make
   // "writing about crisis" feel like a points game.
-  if (!flag.isCrisis) {
+  if (moderation_status !== "crisis") {
     try {
       const svc = await createClient();
       if (svc) {
-        // The award helper is typed against the generated Database — fine to
-        // pass the cookie-backed server client; insert RLS allows owner.
         await awardJournalEntry(
           svc as unknown as Parameters<typeof awardJournalEntry>[0],
           { memberId, journalEntryId: entry.id },
@@ -434,8 +451,94 @@ export async function submitJournalEntry(
     ok: true,
     entry,
     moderation: moderation_status,
-    crisisCategories: flag.categories,
+    crisisCategories: Array.from(
+      new Set([
+        ...flag.categories,
+        ...((claudeVerdict?.categories ?? []) as string[]),
+      ]),
+    ),
   };
+}
+
+/**
+ * Member-initiated coach escalation for mental safety. Creates an
+ * hrv_alerts row with conditions_met.source='mental_safety' and the
+ * member-written summary as the body. Munk sees it in the existing
+ * coach queue; he NEVER sees the raw journal — only what the member
+ * chose to write.
+ *
+ * Returns the alert id. Idempotent on (member_id, today, 'mental_safety')
+ * — calling twice in the same day reuses the open alert if any.
+ */
+export async function escalateMentalSafetyToCoach(
+  memberId: string,
+  args: { summary: string },
+): Promise<{ ok: true; alertId: string } | { ok: false; error: string }> {
+  const summary = args.summary.trim();
+  if (summary.length < 4) return { ok: false, error: "summary_too_short" };
+  if (summary.length > 1000) return { ok: false, error: "summary_too_long" };
+
+  if (!SUPABASE_ENABLED) {
+    console.info("[mind] demo-mode escalateMentalSafetyToCoach", { memberId, summary });
+    return { ok: true, alertId: `demo-mental-${Date.now()}` };
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "no_supabase_client" };
+  const db = mindDb(supabase);
+
+  // Look for an existing open mental_safety alert today — if found,
+  // reuse it (member can update their summary in the same incident).
+  const todayStart = new Date();
+  todayStart.setUTCHours(0, 0, 0, 0);
+
+  const { data: existing } = await db
+    .from("hrv_alerts")
+    .select("id, conditions_met")
+    .eq("member_id", memberId)
+    .eq("status", "open")
+    .gte("triggered_at", todayStart.toISOString())
+    .order("triggered_at", { ascending: false })
+    .limit(10);
+
+  const existingRows = (existing ?? []) as {
+    id: string;
+    conditions_met: { source?: string } | null;
+  }[];
+
+  const reuse = existingRows.find(
+    (r) => r.conditions_met && r.conditions_met.source === "mental_safety",
+  );
+
+  if (reuse) {
+    await db
+      .from("hrv_alerts")
+      .update({
+        conditions_met: { source: "mental_safety", summary, updated_at: new Date().toISOString() },
+      })
+      .eq("id", reuse.id);
+    return { ok: true, alertId: reuse.id };
+  }
+
+  const { data: inserted, error } = await db
+    .from("hrv_alerts")
+    .insert({
+      member_id: memberId,
+      conditions_met: {
+        source: "mental_safety",
+        summary,
+        opened_at: new Date().toISOString(),
+      },
+      status: "open",
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    console.warn("[mind] mental safety escalation failed", error.message);
+    return { ok: false, error: error.message };
+  }
+  return { ok: true, alertId: (inserted as unknown as { id: string }).id };
 }
 
 /**
