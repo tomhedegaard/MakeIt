@@ -445,3 +445,144 @@ export async function getTodayJournalEntry(memberId: string): Promise<JournalEnt
   const today = new Date().toISOString().slice(0, 10);
   return entries.find((e) => e.logged_date === today) ?? null;
 }
+
+/**
+ * Personal daily session for a member — slug pattern:
+ *   personal-<memberId>-<YYYY-MM-DD>
+ *
+ * Returns existing session if already generated for today, else null
+ * (caller generates via Claude + persists).
+ */
+export async function getTodayPersonalSession(memberId: string): Promise<{
+  id: string;
+  slug: string;
+  title: string;
+  subtitle: string | null;
+  body_md: string;
+  visual_pattern: import("@/lib/mind/types").MentalSessionVisualPattern;
+  duration_seconds: number;
+  category: import("@/lib/mind/types").MentalSessionCategory;
+} | null> {
+  if (!SUPABASE_ENABLED) return null;
+
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const today = new Date().toISOString().slice(0, 10);
+  const slug = `personal-${memberId}-${today}`;
+
+  const { data, error } = await mindDb(supabase)
+    .from("mental_sessions")
+    .select("id, slug, title, subtitle, body_md, visual_pattern, duration_seconds, category")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (error) {
+    console.warn("[mind] personal session read failed", error.message);
+    return null;
+  }
+  return (data as unknown as Awaited<ReturnType<typeof getTodayPersonalSession>>) ?? null;
+}
+
+/**
+ * Persist a generated personal session. Idempotent via the unique
+ * slug constraint — re-running the cron for the same member+date is
+ * a no-op (the upsert silently keeps the original).
+ */
+export async function persistPersonalSession(args: {
+  memberId: string;
+  forDate: string;
+  script: import("@/lib/mind/session-fallback").SessionScript;
+  promptSeed: Record<string, unknown> | null;
+  generatedBy: "claude" | "human" | "imported";
+  locale?: "da" | "en";
+}): Promise<{ id: string } | null> {
+  if (!SUPABASE_ENABLED) {
+    return { id: `demo-personal-${args.forDate}` };
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const slug = `personal-${args.memberId}-${args.forDate}`;
+
+  const { data, error } = await mindDb(supabase)
+    .from("mental_sessions")
+    .upsert(
+      {
+        slug,
+        category: args.script.category,
+        title: args.script.title,
+        subtitle: args.script.subtitle,
+        duration_seconds: args.script.duration_seconds,
+        body_md: args.script.body_md,
+        visual_pattern: args.script.visual_pattern,
+        generated_by: args.generatedBy,
+        prompt_seed: args.promptSeed ?? null,
+        locale: args.locale ?? "da",
+        is_hero: false,
+      },
+      { onConflict: "slug" },
+    )
+    .select("id")
+    .single();
+
+  if (error) {
+    console.warn("[mind] persist personal session failed", error.message);
+    return null;
+  }
+  return data as unknown as { id: string };
+}
+
+/**
+ * Record a session completion. Idempotent on (member_id, session_id,
+ * completed_date). Triggers Reps award out-of-band (best-effort).
+ */
+export async function completeMentalSession(args: {
+  memberId: string;
+  sessionId: string;
+  isHero: boolean;
+  context: "library" | "prescribed_by_coach" | "suggested_by_adaptive" | "pre_session" | "post_session";
+}): Promise<{ ok: true; completionId: string } | { ok: false; error: string }> {
+  if (!SUPABASE_ENABLED) {
+    return { ok: true, completionId: `demo-${Date.now()}` };
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "no_supabase_client" };
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  const { data, error } = await mindDb(supabase)
+    .from("mental_session_completions")
+    .upsert(
+      {
+        member_id: args.memberId,
+        session_id: args.sessionId,
+        completed_date: today,
+        context: args.context,
+      },
+      { onConflict: "member_id,session_id,completed_date" },
+    )
+    .select("id")
+    .single();
+
+  if (error) {
+    console.warn("[mind] session completion failed", error.message);
+    return { ok: false, error: error.message };
+  }
+  const row = data as unknown as { id: string };
+
+  // Best-effort Reps award.
+  try {
+    const { awardMentalSessionCompletion } = await import("@/lib/mind/reps");
+    await awardMentalSessionCompletion(
+      supabase as unknown as Parameters<typeof awardMentalSessionCompletion>[0],
+      { memberId: args.memberId, completionId: row.id, isHero: args.isHero },
+    );
+  } catch (e) {
+    console.warn("[mind] session Reps award failed (non-fatal)", e);
+  }
+
+  return { ok: true, completionId: row.id };
+}
