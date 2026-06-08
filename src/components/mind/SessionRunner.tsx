@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import BreathingRing from "./BreathingRing";
+import AudioPlayer from "./AudioPlayer";
 import { completeMentalSessionAction } from "@/app/(app)/mind/today/actions";
 
 interface SessionRunnerProps {
@@ -17,6 +18,13 @@ interface SessionRunnerProps {
     | "still_focus"
     | "none";
   durationSeconds: number;
+  /**
+   * Optional audio narration URL. When present, an inline player
+   * renders above the breathing ring. Voice-source agnostic — any
+   * direct-streamable URL works (Supabase Storage, Vercel Blob,
+   * external CDN). Null = text+ring only (current default).
+   */
+  audioUrl?: string | null;
   context?: "library" | "prescribed_by_coach" | "suggested_by_adaptive" | "pre_session" | "post_session";
   alreadyCompleted?: boolean;
 }
@@ -39,6 +47,7 @@ export default function SessionRunner({
   bodyMd,
   visualPattern,
   durationSeconds,
+  audioUrl = null,
   context = "library",
   alreadyCompleted = false,
 }: SessionRunnerProps) {
@@ -113,7 +122,12 @@ export default function SessionRunner({
       </div>
 
       <div className="flex-1 grid md:grid-cols-2 gap-8 p-8 overflow-y-auto">
-        <div className="flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center gap-6">
+          {audioUrl ? (
+            <div className="w-full max-w-md">
+              <AudioPlayer src={audioUrl} durationSeconds={durationSeconds} />
+            </div>
+          ) : null}
           <BreathingRing pattern={visualPattern} />
         </div>
         <div className="space-y-6 max-w-prose">

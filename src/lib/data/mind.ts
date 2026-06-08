@@ -922,6 +922,7 @@ export async function getTodayPersonalSession(memberId: string): Promise<{
   visual_pattern: import("@/lib/mind/types").MentalSessionVisualPattern;
   duration_seconds: number;
   category: import("@/lib/mind/types").MentalSessionCategory;
+  audio_url: string | null;
 } | null> {
   if (!SUPABASE_ENABLED) return null;
 
@@ -933,7 +934,7 @@ export async function getTodayPersonalSession(memberId: string): Promise<{
 
   const { data, error } = await mindDb(supabase)
     .from("mental_sessions")
-    .select("id, slug, title, subtitle, body_md, visual_pattern, duration_seconds, category")
+    .select("id, slug, title, subtitle, body_md, visual_pattern, duration_seconds, category, audio_url")
     .eq("slug", slug)
     .maybeSingle();
 

@@ -66,6 +66,7 @@ export default async function MindSessionRunnerPage({
           bodyMd={session.body_md}
           visualPattern={session.visual_pattern}
           durationSeconds={session.duration_seconds}
+          audioUrl={session.audio_url}
           context="library"
           alreadyCompleted={completedIds.has(session.id)}
         />

@@ -99,6 +99,7 @@ export default async function MindTodayPage() {
           visual_pattern: script.visual_pattern,
           duration_seconds: script.duration_seconds,
           category: script.category,
+          audio_url: null,
         }
       : {
           id: "ephemeral",
@@ -109,6 +110,7 @@ export default async function MindTodayPage() {
           visual_pattern: script.visual_pattern,
           duration_seconds: script.duration_seconds,
           category: script.category,
+          audio_url: null,
         };
   }
 
@@ -172,6 +174,7 @@ export default async function MindTodayPage() {
           bodyMd={session.body_md}
           visualPattern={session.visual_pattern}
           durationSeconds={session.duration_seconds}
+          audioUrl={session.audio_url}
           context="library"
         />
       </Container>
