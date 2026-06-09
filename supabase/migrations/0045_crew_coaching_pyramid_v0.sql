@@ -10,8 +10,8 @@
 -- engines, crons, and UI on this schema.
 --
 -- Structure:
---   1. is_current_user_munk() helper (mirrors is_current_user_admin)
---   2. members.coach_tier column
+--   1. members.coach_tier column (must exist before the helper references it)
+--   2. is_current_user_munk() helper (mirrors is_current_user_admin)
 --   3. buddy_pairs + buddy_interactions
 --   4. co_coach_assignments
 --   5. coach_reviews (sandbox + live)
@@ -22,7 +22,24 @@
 -- =================================================================
 
 -- ---------------------------------------------------------------------
--- 1) is_current_user_munk() — Munk-only RLS predicate
+-- 1) members.coach_tier — extends the existing role system
+-- ---------------------------------------------------------------------
+-- Null = not a coach (most members). is_coach stays as the broad gate;
+-- coach_tier names the pyramid level.
+--
+-- This block runs BEFORE the helper function so the function body can
+-- reference the column. Postgres validates LANGUAGE sql function bodies
+-- at creation time; if coach_tier didn't exist yet, the CREATE FUNCTION
+-- would fail with SQLSTATE 42703.
+alter table public.members
+  add column if not exists coach_tier text
+    check (coach_tier is null or coach_tier in ('munk', 'legend_live', 'beast_live', 'beast_sandbox'));
+
+comment on column public.members.coach_tier is
+  'Crew Coaching Pyramid (Søjle 4) tier. Null for crew members; "munk" for the head coach; "legend_live"/"beast_live" for active co-coaches; "beast_sandbox" for in-training co-coaches.';
+
+-- ---------------------------------------------------------------------
+-- 2) is_current_user_munk() — Munk-only RLS predicate
 -- ---------------------------------------------------------------------
 -- The Crew Coaching Pyramid introduces co-coaches (beast_live /
 -- legend_live). is_current_user_coach() returns true for them too once
@@ -42,18 +59,6 @@ as $$
   );
 $$;
 grant execute on function public.is_current_user_munk() to authenticated;
-
--- ---------------------------------------------------------------------
--- 2) members.coach_tier — extends the existing role system
--- ---------------------------------------------------------------------
--- Null = not a coach (most members). is_coach stays as the broad gate;
--- coach_tier names the pyramid level.
-alter table public.members
-  add column if not exists coach_tier text
-    check (coach_tier is null or coach_tier in ('munk', 'legend_live', 'beast_live', 'beast_sandbox'));
-
-comment on column public.members.coach_tier is
-  'Crew Coaching Pyramid (Søjle 4) tier. Null for crew members; "munk" for the head coach; "legend_live"/"beast_live" for active co-coaches; "beast_sandbox" for in-training co-coaches.';
 
 -- ---------------------------------------------------------------------
 -- 3) Buddy pairs + interactions (AI buddy pairing — same-tier crew)
