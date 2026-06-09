@@ -639,7 +639,113 @@ export async function setMentalSettingFlag(
     new_value: String(value),
   });
 
+  // Side effect: when buddy_share_enabled flips ON and the buddy has
+  // ALREADY enabled it, both sides have just unlocked mutual mental-share.
+  // Fire a warm one-time push to both. Skipped silently if anything
+  // doesn't line up (no buddy, RLS, etc.) — never blocks the toggle.
+  if (field === "buddy_share_enabled" && value === true) {
+    try {
+      await maybeFireBuddyMentalShareUnlock(supabase, memberId);
+    } catch (e) {
+      console.warn("[mind] buddy-share unlock push failed (non-fatal)", e);
+    }
+  }
+
   return { ok: true };
+}
+
+/**
+ * Detect the moment both buddies have enabled buddy_share_enabled and
+ * push a one-time "I deler nu mental signal" notification to both.
+ * Uses an idempotency marker in mental_settings_log so the push fires
+ * exactly once per pair, even if the toggle flips multiple times.
+ */
+async function maybeFireBuddyMentalShareUnlock(
+  supabase: NonNullable<Awaited<ReturnType<typeof createClient>>>,
+  memberId: string,
+): Promise<void> {
+  const db = mindDb(supabase);
+
+  // Find this member's active buddy.
+  const { data: pairs } = await db
+    .from("buddy_pairs")
+    .select("member_a, member_b")
+    .is("unpaired_at", null);
+
+  const myPair = ((pairs ?? []) as { member_a: string; member_b: string }[]).find(
+    (p) => p.member_a === memberId || p.member_b === memberId,
+  );
+  if (!myPair) return;
+
+  const buddyId = myPair.member_a === memberId ? myPair.member_b : myPair.member_a;
+
+  // Check buddy's share state.
+  const { data: buddySettings } = await db
+    .from("mental_settings")
+    .select("buddy_share_enabled")
+    .eq("member_id", buddyId)
+    .maybeSingle();
+
+  const buddyHasIt =
+    (buddySettings as { buddy_share_enabled?: boolean } | null)?.buddy_share_enabled === true;
+  if (!buddyHasIt) return;
+
+  // Idempotency marker: a single mental_settings_log row with a synthetic
+  // field name + the OTHER member's id as new_value. The pair is unordered
+  // so we key on the smaller id to avoid double-pushing from each side.
+  const [a, b] = [memberId, buddyId].sort();
+  const marker = `${a}|${b}`;
+
+  const { data: existingMarker } = await db
+    .from("mental_settings_log")
+    .select("id")
+    .eq("field", "_buddy_share_unlock_push")
+    .eq("new_value", marker)
+    .limit(1);
+
+  if ((existingMarker ?? []).length > 0) return;
+
+  // Lookup handles for the push body.
+  const { data: members } = await db
+    .from("members")
+    .select("id, handle")
+    .in("id", [memberId, buddyId]);
+  const handleMap = new Map(
+    ((members ?? []) as { id: string; handle: string }[]).map((m) => [m.id, m.handle]),
+  );
+  const myHandle = handleMap.get(memberId) ?? "din buddy";
+  const buddyHandle = handleMap.get(buddyId) ?? "din buddy";
+
+  await db.from("mental_settings_log").insert({
+    member_id: memberId,
+    field: "_buddy_share_unlock_push",
+    old_value: null,
+    new_value: marker,
+  });
+
+  // Best-effort push to both — failure leaves the marker so we don't
+  // double-fire on retry, which is the right tradeoff for v0.
+  const { sendPushToMember } = await import("@/lib/push");
+  try {
+    await sendPushToMember(memberId, {
+      title: "Mental-deling låst op",
+      body: `Du og ${buddyHandle} deler nu jeres signal. I kan tjekke ind på hinanden uden ord.`,
+      url: "/buddy",
+      tag: "mind-buddy-share-unlock",
+    });
+  } catch (e) {
+    console.warn("[mind] push to member failed", e);
+  }
+  try {
+    await sendPushToMember(buddyId, {
+      title: "Mental-deling låst op",
+      body: `Du og ${myHandle} deler nu jeres signal. I kan tjekke ind på hinanden uden ord.`,
+      url: "/buddy",
+      tag: "mind-buddy-share-unlock",
+    });
+  } catch (e) {
+    console.warn("[mind] push to buddy failed", e);
+  }
 }
 
 /**
