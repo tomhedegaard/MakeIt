@@ -187,6 +187,74 @@ Nu er det blevet nemt. Du er kommet ned.
 
 Ingen telefon når du går herfra. Drik et glas vand. Læs noget på papir. Eller bare sid.`;
 
+const POLISHED_BOX_BREATH = `## Sæt dig op
+
+Fødderne i gulvet. Skulderne ned. Du behøver ikke lukke øjnene — det her er ikke meditation, det er teknik.
+
+## Mønstret
+
+4 sekunder ind. 4 hold. 4 ud. 4 hold. Gentag. Følg ringen.
+
+## I 3 minutter
+
+Den anden runde er nemmere end den første. Det er pointet — kroppen får signalet om at det her er sikkert.
+
+Tanker kommer. Lad dem passere. Tilbage til vejret.
+
+## Når du er færdig
+
+To stille minutter mere. Det her er det mest pålidelige værktøj du har til at skifte mode på krævelse.`;
+
+const POLISHED_RESTART = `## Du har fået en pause
+
+Træningen, arbejde, livet — du var væk. Nu skal du tilbage. Ikke ved at presse hårdere. Ved at vælge ÉN ting.
+
+## I 90 sekunder
+
+Hvad er den ene ting du vil have lavet før du går i seng i aften? Det første spontane svar er som regel det rigtige.
+
+## I 90 sekunder mere
+
+Hvor starter du? Det første konkrete skridt — ikke "begynd", men noget du fysisk gør.
+
+Når alarmen ringer: gå direkte til det skridt. Ingen tilbagekig.`;
+
+const POLISHED_SLEEP_SCAN = `## Mens du lægger dig
+
+Læg dig på ryggen. Tæppet over. Lyset slukket. Telefonen i et andet rum.
+
+## Scan ovenfra
+
+Isse. Pande. Øjenlåg — tunge. Mund — afslappet kæbe. For hvert område: mærk det, ånd ud, slip det.
+
+## Ned gennem kroppen
+
+Nakke. Skuldre — lad dem falde mod gulvet. Bryst. Mave. Hofter. Lår — slap helt af. Knæ. Læg. Fødder.
+
+## Hele kroppen samtidig
+
+Den er tung. Sengen bærer den. Tanker om i morgen kommer — send dem videre.
+
+Hvis du falder i søvn under scanningen, godt. Det er målet.`;
+
+const POLISHED_DEBRIEF_GOOD = `## Stop op
+
+Du er lige færdig. 2 minutter inden du går videre. De fleste gode sessioner ryger ud af kroppen igen fordi vi ikke ankrer dem.
+
+## Hvad virkede?
+
+Én ting. Helt konkret. Opvarmning? Cue? Tempo? Mindset? Vælg den én.
+
+## Hvorfor virkede det?
+
+Du havde gjort noget anderledes. Hvad var det?
+
+## Næste gang
+
+Hvordan får du den samme ting med igen? Skriv det evt. ned i journalen med to ord.
+
+Du vil takke dig selv om en måned.`;
+
 const POLISHED_DEBRIEF_BAD = `## Det var skidt
 
 Fair. Det sker. Vi taler om hvad du gør med det inden du går herfra.
@@ -216,13 +284,13 @@ Skriv det evt. ned i journalen. To linjer. Du vil takke dig selv om en måned.
 Gå. Ingen tilbagekig.`;
 
 const HERO_SEEDS: HeroSeed[] = [
-  { slug: "box-breath-4-4-4-4-da", category: "breathing", title: "Box breath 4-4-4-4", subtitle: "For indre ro — 3 min", duration_seconds: 180, visual_pattern: "box_breath_4_4_4_4", body_md: "## Sæt dig op\n\nFødderne i gulvet. Skulderne ned.\n\n## Mønstret\n\nIndånd 4. Hold 4. Ud 4. Hold 4. Følg ringen.\n\n## I 3 minutter\n\nLad tankerne passere. Tilbage til vejrtrækningen." },
+  { slug: "box-breath-4-4-4-4-da", category: "breathing", title: "Box breath 4-4-4-4", subtitle: "For indre ro — 3 min", duration_seconds: 180, visual_pattern: "box_breath_4_4_4_4", body_md: POLISHED_BOX_BREATH },
   { slug: "coherence-5-5-da", category: "breathing", title: "Coherence 5-5", subtitle: "For HRV-løft — 4 min", duration_seconds: 240, visual_pattern: "coherence_5_5", body_md: POLISHED_COHERENCE },
   { slug: "pre-session-priming-da", category: "focus", title: "Pre-session priming", subtitle: "90 sekunder inden du tager fat", duration_seconds: 90, visual_pattern: "still_focus", body_md: POLISHED_PRIMING },
-  { slug: "restart-from-brain-fog-da", category: "focus", title: "Genstart efter pause", subtitle: "Fra hjerne-tåge til klart sigte — 3 min", duration_seconds: 180, visual_pattern: "still_focus", body_md: "## Du har fået en pause\n\nNu skal du tilbage. Ikke ved at presse hårdere. Ved at vælge ÉN ting." },
+  { slug: "restart-from-brain-fog-da", category: "focus", title: "Genstart efter pause", subtitle: "Fra hjerne-tåge til klart sigte — 3 min", duration_seconds: 180, visual_pattern: "still_focus", body_md: POLISHED_RESTART },
   { slug: "wind-down-beast-mode-da", category: "recovery", title: "Vind ned efter beast-mode", subtitle: "Skift fra på til af — 4 min", duration_seconds: 240, visual_pattern: "wave_4_8", body_md: POLISHED_WIND_DOWN },
-  { slug: "sleep-body-scan-da", category: "recovery", title: "Sov bedre — body scan", subtitle: "Til sengetid — 5 min", duration_seconds: 300, visual_pattern: "none", body_md: "## Mens du lægger dig\n\nLæg dig på ryggen. Tæppet over. Lyset slukket.\n\n## Scan ovenfra\n\nPande. Kæbe. Skuldre. Bryst. Mave. Ben. Slip hvert område." },
-  { slug: "debrief-what-worked-da", category: "debrief", title: "Hvad gik godt? Hvad næste gang?", subtitle: "Efter en god session — 2 min", duration_seconds: 120, visual_pattern: "still_focus", body_md: "## Stop op\n\nDu er lige færdig. 2 minutter inden du går videre.\n\n## Hvad virkede?\n\nÉn ting. Helt konkret." },
+  { slug: "sleep-body-scan-da", category: "recovery", title: "Sov bedre — body scan", subtitle: "Til sengetid — 5 min", duration_seconds: 300, visual_pattern: "none", body_md: POLISHED_SLEEP_SCAN },
+  { slug: "debrief-what-worked-da", category: "debrief", title: "Hvad gik godt? Hvad næste gang?", subtitle: "Efter en god session — 2 min", duration_seconds: 120, visual_pattern: "still_focus", body_md: POLISHED_DEBRIEF_GOOD },
   { slug: "debrief-bad-session-da", category: "debrief", title: "Når træningen var dårlig", subtitle: "Lige efter en lortesession — 3 min", duration_seconds: 180, visual_pattern: "still_focus", body_md: POLISHED_DEBRIEF_BAD },
 ];
 
