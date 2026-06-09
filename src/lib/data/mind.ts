@@ -717,6 +717,144 @@ export async function getBuddyMindSnapshot(
 }
 
 /**
+ * All cirkler, with leader info + member count. Munk-only read.
+ * Powers /coach/cirkler admin surface.
+ */
+export async function getAllCirklerForAdmin(): Promise<
+  Array<{
+    id: string;
+    name: string;
+    leader_id: string | null;
+    leader_handle: string | null;
+    max_members: number;
+    member_count: number;
+    created_at: string;
+  }>
+> {
+  if (!SUPABASE_ENABLED) {
+    return [
+      {
+        id: "demo-cirkel-1",
+        name: "Beast Crew · København",
+        leader_id: "demo-legend",
+        leader_handle: "legend_jens",
+        max_members: 6,
+        member_count: 4,
+        created_at: new Date().toISOString(),
+      },
+    ];
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  const { data: cirkler, error } = await mindDb(supabase)
+    .from("mental_cirkler")
+    .select("id, name, leader_id, max_members, created_at")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.warn("[mind] all-cirkler admin read failed", error.message);
+    return [];
+  }
+
+  const rows = (cirkler ?? []) as {
+    id: string;
+    name: string;
+    leader_id: string | null;
+    max_members: number;
+    created_at: string;
+  }[];
+
+  if (rows.length === 0) return [];
+
+  const cirkelIds = rows.map((r) => r.id);
+  const leaderIds = rows
+    .map((r) => r.leader_id)
+    .filter((id): id is string => id !== null);
+
+  const [{ data: members }, { data: leaders }] = await Promise.all([
+    mindDb(supabase)
+      .from("mental_cirkel_members")
+      .select("cirkel_id")
+      .in("cirkel_id", cirkelIds),
+    leaderIds.length > 0
+      ? mindDb(supabase).from("members").select("id, handle").in("id", leaderIds)
+      : Promise.resolve({ data: [] }),
+  ]);
+
+  const counts = new Map<string, number>();
+  for (const m of ((members ?? []) as { cirkel_id: string }[])) {
+    counts.set(m.cirkel_id, (counts.get(m.cirkel_id) ?? 0) + 1);
+  }
+  const leaderHandle = new Map(
+    ((leaders ?? []) as { id: string; handle: string }[]).map((l) => [l.id, l.handle]),
+  );
+
+  return rows.map((r) => ({
+    id: r.id,
+    name: r.name,
+    leader_id: r.leader_id,
+    leader_handle: r.leader_id ? (leaderHandle.get(r.leader_id) ?? null) : null,
+    max_members: r.max_members,
+    member_count: counts.get(r.id) ?? 0,
+    created_at: r.created_at,
+  }));
+}
+
+/**
+ * Create a new cirkel. Munk-only — RLS enforces via mental_cirkler_munk_write.
+ */
+export async function createCirkel(args: {
+  name: string;
+  leaderId: string | null;
+  maxMembers: number;
+}): Promise<{ ok: true; id: string } | { ok: false; error: string }> {
+  if (!SUPABASE_ENABLED) {
+    return { ok: true, id: `demo-cirkel-${Date.now()}` };
+  }
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "no_supabase_client" };
+  const { data, error } = await mindDb(supabase)
+    .from("mental_cirkler")
+    .insert({
+      name: args.name,
+      leader_id: args.leaderId,
+      max_members: args.maxMembers,
+    })
+    .select("id")
+    .single();
+  if (error) {
+    console.warn("[mind] createCirkel failed", error.message);
+    return { ok: false, error: error.message };
+  }
+  return { ok: true, id: (data as { id: string }).id };
+}
+
+/**
+ * Add a member to a cirkel. Munk-only.
+ */
+export async function addMemberToCirkel(args: {
+  cirkelId: string;
+  memberId: string;
+}): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!SUPABASE_ENABLED) return { ok: true };
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "no_supabase_client" };
+  const { error } = await mindDb(supabase)
+    .from("mental_cirkel_members")
+    .insert({
+      cirkel_id: args.cirkelId,
+      member_id: args.memberId,
+    });
+  if (error) {
+    console.warn("[mind] addMemberToCirkel failed", error.message);
+    return { ok: false, error: error.message };
+  }
+  return { ok: true };
+}
+
+/**
  * Cirkler the member belongs to. Beast+ unlocks via tier gate at the
  * call site (not enforced in this helper since some Munk-admin reads
  * may want all cirkler).
