@@ -10,6 +10,8 @@ import {
 import MindCheckForm from "@/components/mind/MindCheckForm";
 import MentalGraph from "@/components/mind/MentalGraph";
 import StreakBadge from "@/components/mind/StreakBadge";
+import MindFirstTimeTour from "@/components/mind/MindFirstTimeTour";
+import MindCelebration from "@/components/mind/MindCelebration";
 import { currentStreak, longestStreak } from "@/lib/mind/streak";
 
 export const metadata = {
@@ -38,8 +40,13 @@ export default async function MindCheckPage() {
   const current = currentStreak(logs);
   const longest = longestStreak(logs);
 
+  // Derive the milestone celebration kind. Renders only on the day a
+  // milestone is crossed; localStorage per-kind keeps each one-shot.
+  const celebrationKind = pickCelebration(logs.length, today, current);
+
   return (
     <>
+      <MindFirstTimeTour />
       <PageHeader
         eyebrow="Mind · Søjle 5"
         title={today ? "Mind-check — opdater." : "Mind-check — 60 sek."}
@@ -50,7 +57,9 @@ export default async function MindCheckPage() {
         }
         right={<StreakBadge current={current} longest={longest} />}
       />
-      <Container size="narrow" className="py-10 md:py-14">
+      <Container size="narrow" className="py-10 md:py-14 space-y-10">
+        {celebrationKind ? <MindCelebration kind={celebrationKind} /> : null}
+
         <MindCheckForm
           initial={
             today
@@ -64,17 +73,31 @@ export default async function MindCheckPage() {
           }
         />
 
-        <div className="mt-16">
+        <div className="mt-6">
           <MentalGraph logs={logs} days={30} />
         </div>
 
-        <p className="mt-10 text-fg-dim text-sm leading-relaxed">
-          Din journal og dine sessioner lander her i de næste faser
-          (MH-3 til MH-5). Når Adaptive Engine (MH-6) sluges sammen med
-          mental-signalen, vil dårlige mind-check uger lade Munks
-          motor justere træningsdosis automatisk.
-        </p>
       </Container>
     </>
   );
+}
+
+/**
+ * Decide which celebration (if any) to render. Pure derivation from
+ * inputs the page already has. Returns null when no milestone is
+ * freshly crossed; the celebration's own localStorage flag is the
+ * once-only guard for repeat visits.
+ */
+function pickCelebration(
+  totalLogs: number,
+  today: import("@/lib/mind/types").MindCheckLog | null,
+  currentStreakDays: number,
+): "first_check" | "streak_3" | "streak_7" | "streak_30" | "streak_90" | null {
+  if (!today) return null;
+  if (totalLogs <= 1) return "first_check";
+  if (currentStreakDays >= 90) return "streak_90";
+  if (currentStreakDays >= 30) return "streak_30";
+  if (currentStreakDays >= 7) return "streak_7";
+  if (currentStreakDays >= 3) return "streak_3";
+  return null;
 }
