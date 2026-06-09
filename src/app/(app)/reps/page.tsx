@@ -3,12 +3,54 @@ import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
 import {
+  getRecentRepsTransactions,
   getRewardCatalog,
   getMyRedemptions,
   getRepsBalance,
   statusLabel,
 } from "@/lib/data/rewards";
 import RedeemButton from "./RedeemButton";
+
+/** Categorize a reference_type for icon + accent. */
+function txCategory(refType: string | null): "mental" | "coaching" | "training" {
+  if (!refType) return "training";
+  if (
+    refType === "mind_check_streak" ||
+    refType === "mental_session_completed" ||
+    refType === "journal_entry" ||
+    refType === "mental_buddy_interaction" ||
+    refType === "cirkel_participation" ||
+    refType === "mental_milestone_30d" ||
+    refType === "mental_milestone_90d"
+  ) {
+    return "mental";
+  }
+  if (
+    refType === "lesson_completed" ||
+    refType === "coach_review_sandbox" ||
+    refType === "co_coach_promotion" ||
+    refType === "buddy_interaction_streak"
+  ) {
+    return "coaching";
+  }
+  return "training";
+}
+
+const CATEGORY_LABEL: Record<"mental" | "coaching" | "training", string> = {
+  mental: "Mental",
+  coaching: "Coaching",
+  training: "Træning",
+};
+
+function formatRelative(iso: string): string {
+  const ms = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(ms / 60_000);
+  if (m < 60) return `${Math.max(1, m)} min siden`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h} t siden`;
+  const d = Math.floor(h / 24);
+  return `${d} dage siden`;
+}
 
 const TIER_NAMES = ["Lifter", "Athlete", "Beast", "Legend"] as const;
 const HOW_KEYS = ["buy", "week", "pr", "invite", "challenge", "expiry"] as const;
@@ -40,10 +82,11 @@ function tierProgress(balance: number) {
 export default async function RepsPage() {
   const member = (await getSession())!;
 
-  const [rewards, redemptions, balance] = await Promise.all([
+  const [rewards, redemptions, balance, transactions] = await Promise.all([
     getRewardCatalog(),
     getMyRedemptions(member.id, 10),
     getRepsBalance(member.id),
+    getRecentRepsTransactions(member.id, 20),
   ]);
   const progress = tierProgress(balance);
 
@@ -141,6 +184,55 @@ export default async function RepsPage() {
               );
             })}
           </div>
+        </section>
+
+        <section>
+          <div className="flex items-end justify-between mb-6">
+            <div className="eyebrow">Seneste Reps</div>
+            <span className="text-xs text-fg-dim font-mono uppercase tracking-[0.14em]">
+              Sidste {transactions.length}
+            </span>
+          </div>
+          {transactions.length === 0 ? (
+            <p className="text-fg-dim text-sm">
+              Endnu ingen Reps registreret. Træn, tjek mind-check eller skriv journal.
+            </p>
+          ) : (
+            <ul className="divide-y divide-line border hairline rounded-lg overflow-hidden">
+              {transactions.map((tx) => {
+                const cat = txCategory(tx.reference_type);
+                const dot =
+                  cat === "mental"
+                    ? "bg-emerald-300"
+                    : cat === "coaching"
+                      ? "bg-yellow-300"
+                      : "bg-sky-300";
+                return (
+                  <li
+                    key={tx.id}
+                    className="flex items-center gap-3 px-4 py-3 bg-bg-2/30"
+                  >
+                    <span className={`inline-block w-2 h-2 rounded-full shrink-0 ${dot}`} />
+                    <span className="text-xs uppercase tracking-wide text-fg-faint font-mono w-16 shrink-0">
+                      {CATEGORY_LABEL[cat]}
+                    </span>
+                    <span className="flex-1 text-sm">{tx.reason}</span>
+                    <span className="text-xs text-fg-dim shrink-0">
+                      {formatRelative(tx.created_at)}
+                    </span>
+                    <span
+                      className={`numeric text-sm tabular-nums shrink-0 w-14 text-right ${
+                        tx.delta > 0 ? "text-fg" : "text-fg-dim"
+                      }`}
+                    >
+                      {tx.delta > 0 ? "+" : ""}
+                      {tx.delta}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </section>
 
         <section>
