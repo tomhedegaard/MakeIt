@@ -717,6 +717,97 @@ export async function getBuddyMindSnapshot(
 }
 
 /**
+ * Aggregated mental safety metrics for the Munk-only observability
+ * surface (/coach/safety). Returns COUNTS only — never journal bodies
+ * or moderation reasons. The journal-body privacy rule (RLS hard-deny)
+ * extends here: we only query counts via aggregation.
+ */
+export async function getMentalSafetyMetrics(days = 7): Promise<{
+  totalEntries: number;
+  cleanCount: number;
+  flaggedCount: number;
+  crisisCount: number;
+  openMentalAlerts: number;
+  windowDays: number;
+}> {
+  const empty = {
+    totalEntries: 0,
+    cleanCount: 0,
+    flaggedCount: 0,
+    crisisCount: 0,
+    openMentalAlerts: 0,
+    windowDays: days,
+  };
+  if (!SUPABASE_ENABLED) {
+    return {
+      totalEntries: 12,
+      cleanCount: 11,
+      flaggedCount: 1,
+      crisisCount: 0,
+      openMentalAlerts: 0,
+      windowDays: days,
+    };
+  }
+
+  const supabase = await createClient();
+  if (!supabase) return empty;
+
+  const since = new Date();
+  since.setUTCHours(0, 0, 0, 0);
+  since.setUTCDate(since.getUTCDate() - days);
+  const sinceIso = since.toISOString().slice(0, 10);
+
+  // We can't directly aggregate counts without SQL functions, so we
+  // select just the moderation_status column (no body) and aggregate
+  // client-side. Munk's RLS allows SELECT — but the body column is
+  // never requested.
+  const { data: entries, error: entriesErr } = await mindDb(supabase)
+    .from("journal_entries")
+    .select("moderation_status")
+    .gte("logged_date", sinceIso);
+
+  if (entriesErr) {
+    console.warn("[mind/safety] journal aggregate read failed", entriesErr.message);
+    return empty;
+  }
+
+  let total = 0;
+  let clean = 0;
+  let flagged = 0;
+  let crisis = 0;
+  for (const row of ((entries ?? []) as { moderation_status: string }[])) {
+    total++;
+    if (row.moderation_status === "clean") clean++;
+    else if (row.moderation_status === "flagged") flagged++;
+    else if (row.moderation_status === "crisis") crisis++;
+  }
+
+  // Open mental_safety alerts in the existing coach queue.
+  const { data: alerts, error: alertsErr } = await mindDb(supabase)
+    .from("hrv_alerts")
+    .select("id, conditions_met")
+    .eq("status", "open");
+
+  let openMental = 0;
+  if (alertsErr) {
+    console.warn("[mind/safety] alerts read failed", alertsErr.message);
+  } else {
+    for (const a of ((alerts ?? []) as { conditions_met: { source?: string } | null }[])) {
+      if (a.conditions_met?.source === "mental_safety") openMental++;
+    }
+  }
+
+  return {
+    totalEntries: total,
+    cleanCount: clean,
+    flaggedCount: flagged,
+    crisisCount: crisis,
+    openMentalAlerts: openMental,
+    windowDays: days,
+  };
+}
+
+/**
  * All cirkler, with leader info + member count. Munk-only read.
  * Powers /coach/cirkler admin surface.
  */
