@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-08
 **Branch:** `claude/makeit-online-platform-XF2UE`
-**Scope:** apply migrations 0045 → 0046 → 0047 → 0048 + regenerate `database.types.ts` against live Supabase.
+**Scope:** apply migrations 0045 → 0046 → 0047 → 0048 → 0049 + regenerate `database.types.ts` against live Supabase.
 
 > This runbook covers the cumulative migration debt for Søjle 4 (0045, still pending per memory) and Søjle 5 (0046, 0047, 0048). Run them as one block.
 
@@ -136,7 +136,7 @@ select conname from pg_constraint
 -- expect: includes mental_cirkel_posts_one_per_week_uidx + others
 ```
 
-### 1d. Apply 0048 — Hero session polish
+### 1d. Apply 0048 — Hero session polish round 1
 
 ```bash
 cat supabase/migrations/0048_mind_hero_polish.sql
@@ -159,6 +159,30 @@ select slug, length(body_md) as chars
 -- expect: all four rows, chars > 800 for the long ones
 ```
 
+### 1e. Apply 0049 — Hero session polish round 2 + EN parity
+
+```bash
+cat supabase/migrations/0049_mind_hero_polish_complete_plus_en.sql
+```
+
+Paste, **Run**.
+
+**Verification:**
+
+```sql
+-- All 8 DA hero sessions are now polished (≥ 600 chars each)
+select slug, length(body_md) as chars
+  from public.mental_sessions
+ where is_hero = true and locale = 'da'
+ order by slug;
+-- expect: 8 rows, all chars > 600
+
+-- 8 EN hero sessions seeded
+select count(*) as en_count from public.mental_sessions
+ where is_hero = true and locale = 'en';
+-- expect: 8
+```
+
 ---
 
 ## 2. Regenerate `database.types.ts`
@@ -173,7 +197,7 @@ Expect a large diff with the new tables. Commit it:
 
 ```bash
 git add src/lib/supabase/database.types.ts
-git commit -m "chore(db): regenerate types after 0045-0048 (Søjle 5)
+git commit -m "chore(db): regenerate types after 0045-0049 (Søjle 5)
 
 Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ```
