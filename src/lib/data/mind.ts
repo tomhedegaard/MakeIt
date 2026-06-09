@@ -1012,6 +1012,36 @@ export async function persistPersonalSession(args: {
 }
 
 /**
+ * Recent session completions for weekly-insights aggregation.
+ * Returns last N days of `completed_date` rows for one member.
+ */
+export async function getRecentSessionCompletions(
+  memberId: string,
+  days = 14,
+): Promise<{ completed_date: string }[]> {
+  if (!SUPABASE_ENABLED) return [];
+
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  const since = new Date();
+  since.setUTCHours(0, 0, 0, 0);
+  since.setUTCDate(since.getUTCDate() - days);
+
+  const { data, error } = await mindDb(supabase)
+    .from("mental_session_completions")
+    .select("completed_date")
+    .eq("member_id", memberId)
+    .gte("completed_date", since.toISOString().slice(0, 10));
+
+  if (error) {
+    console.warn("[mind] completions weekly read failed", error.message);
+    return [];
+  }
+  return (data ?? []) as unknown as { completed_date: string }[];
+}
+
+/**
  * Get today's AI mental coach output if cached. Null if not yet
  * generated (caller generates inline or via cron).
  */
