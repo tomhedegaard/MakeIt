@@ -36,10 +36,24 @@ export async function completeOnboardingAction(formData: FormData) {
   const equipRaw = String(formData.get("equipment") ?? "");
   const freqRaw = Number(formData.get("frequency") ?? 4);
 
-  if (!GOALS.includes(goalRaw as GoalFocus)) redirect("/onboarding?err=goal");
-  if (!LEVELS.includes(levelRaw as ExperienceLevel)) redirect("/onboarding?err=level");
-  if (!EQUIP.includes(equipRaw as EquipmentLevel)) redirect("/onboarding?err=equip");
-  if (freqRaw < 2 || freqRaw > 6) redirect("/onboarding?err=freq");
+  console.info("[onboarding] step=validate", { goalRaw, levelRaw, equipRaw, freqRaw });
+
+  if (!GOALS.includes(goalRaw as GoalFocus)) {
+    console.info("[onboarding] reject=goal", { goalRaw });
+    redirect("/onboarding?err=goal");
+  }
+  if (!LEVELS.includes(levelRaw as ExperienceLevel)) {
+    console.info("[onboarding] reject=level", { levelRaw });
+    redirect("/onboarding?err=level");
+  }
+  if (!EQUIP.includes(equipRaw as EquipmentLevel)) {
+    console.info("[onboarding] reject=equip", { equipRaw });
+    redirect("/onboarding?err=equip");
+  }
+  if (freqRaw < 2 || freqRaw > 6) {
+    console.info("[onboarding] reject=freq", { freqRaw });
+    redirect("/onboarding?err=freq");
+  }
 
   const profile: ProfileInput = {
     goalFocus: goalRaw as GoalFocus,
@@ -55,19 +69,29 @@ export async function completeOnboardingAction(formData: FormData) {
 
   if (!SUPABASE_ENABLED) {
     // Demo mode: nothing to persist; just send the user to dashboard.
+    console.info("[onboarding] step=demo-mode-skip-persist");
     redirect("/dashboard");
   }
 
   const supabase = await createClient();
-  if (!supabase) redirect("/onboarding?err=auth");
+  if (!supabase) {
+    console.info("[onboarding] reject=no-supabase-client");
+    redirect("/onboarding?err=auth");
+  }
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) {
+    console.info("[onboarding] reject=no-auth-user");
+    redirect("/login");
+  }
 
-  // 1) Save profile
-  const { error: profErr } = await supabase
+  console.info("[onboarding] step=auth-ok", { userId: user.id });
+
+  // 1) Save profile — capture the updated row so we can verify the
+  //    write actually persisted (not just that no error was returned).
+  const { data: updatedRow, error: profErr } = await supabase
     .from("members")
     .update({
       goal_focus: profile.goalFocus,
@@ -81,12 +105,63 @@ export async function completeOnboardingAction(formData: FormData) {
       notes_injuries: profile.notesInjuries,
       onboarded_at: new Date().toISOString(),
     })
-    .eq("id", user.id);
+    .eq("id", user.id)
+    .select("id, onboarded_at, goal_focus");
 
-  if (profErr) redirect("/onboarding?err=save");
+  console.info("[onboarding] step=members-update", {
+    userId: user.id,
+    profErr: profErr?.message ?? null,
+    rowsUpdated: updatedRow?.length ?? 0,
+    persistedOnboardedAt: updatedRow?.[0]?.onboarded_at ?? null,
+    persistedGoalFocus: updatedRow?.[0]?.goal_focus ?? null,
+  });
+
+  if (profErr) {
+    console.error("[onboarding] reject=save", { userId: user.id, error: profErr.message });
+    redirect("/onboarding?err=save");
+  }
+
+  // Defense in depth: even if no error, verify the row was actually updated.
+  // If the trigger didn't create a members row, .update() returns no error
+  // but matches 0 rows. The user would loop forever on /onboarding.
+  if (!updatedRow || updatedRow.length === 0) {
+    console.error("[onboarding] reject=no-members-row", { userId: user.id });
+    // Self-heal: insert the missing row so the next attempt succeeds.
+    const { error: insertErr } = await supabase
+      .from("members")
+      .insert({
+        id: user.id,
+        handle:
+          (user.email?.split("@")[0] ?? "lifter")
+            .toLowerCase()
+            .replace(/[^a-z0-9_]/g, "") || "lifter",
+        email: user.email,
+        display_name: user.user_metadata?.display_name ?? null,
+        goal_focus: profile.goalFocus,
+        experience_level: profile.experienceLevel,
+        weekly_frequency: profile.weeklyFrequency,
+        equipment_level: profile.equipmentLevel,
+        max_squat_kg: profile.maxSquatKg,
+        max_bench_kg: profile.maxBenchKg,
+        max_deadlift_kg: profile.maxDeadliftKg,
+        max_ohp_kg: profile.maxOhpKg,
+        notes_injuries: profile.notesInjuries,
+        onboarded_at: new Date().toISOString(),
+      });
+    console.info("[onboarding] self-heal-insert", {
+      userId: user.id,
+      insertErr: insertErr?.message ?? null,
+    });
+    if (insertErr) redirect("/onboarding?err=save");
+  }
 
   // 2) Generate program week 1
+  console.info("[onboarding] step=generate-program-start");
   const generated = await generateProgram(profile);
+  console.info("[onboarding] step=generate-program-ok", {
+    programCode: generated.programCode,
+    sessionCount: generated.sessions.length,
+  });
 
   // Resolve program template id (matching code)
   const { data: prog } = await supabase
@@ -94,6 +169,10 @@ export async function completeOnboardingAction(formData: FormData) {
     .select("id")
     .eq("code", generated.programCode)
     .maybeSingle();
+  console.info("[onboarding] step=program-lookup", {
+    programCode: generated.programCode,
+    found: !!prog,
+  });
 
   // 3) Active program assignment
   if (prog) {
@@ -186,5 +265,6 @@ export async function completeOnboardingAction(formData: FormData) {
     console.warn("[onboarding] welcome email failed:", err);
   }
 
+  console.info("[onboarding] step=success-redirect-dashboard", { userId: user.id });
   redirect("/dashboard");
 }
