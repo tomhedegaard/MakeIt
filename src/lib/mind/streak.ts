@@ -21,7 +21,20 @@ export function utcDateNDaysAgo(daysAgo: number, today: Date = new Date()): stri
 }
 
 /**
+ * Cooldown for grace day usage: ≥ this many days since the last grace
+ * must pass before another grace can be used. With 7, members get
+ * essentially one grace per ISO-week-aligned 7-day window.
+ */
+export const GRACE_COOLDOWN_DAYS = 7;
+
+/**
  * Current consecutive-day streak ending at today or yesterday.
+ *
+ * Grace day: members can miss ONE day per rolling 7-day window without
+ * breaking their streak. Two consecutive missed days, or two graces
+ * inside 7 days, breaks it. The grace day itself doesn't count toward
+ * the streak — it's a free pass over a hole.
+ *
  * Logs may be in any order — we work off the set of logged_date strings.
  */
 export function currentStreak(logs: Pick<MindCheckLog, "logged_date">[], today: Date = new Date()): number {
@@ -40,8 +53,26 @@ export function currentStreak(logs: Pick<MindCheckLog, "logged_date">[], today: 
   }
 
   let count = 0;
-  while (dates.has(utcDateNDaysAgo(cursor, today))) {
-    count++;
+  let consecutiveMisses = 0;
+  let lastGraceCursor = -Infinity;
+  // Safety cap so a malformed input set can never loop forever.
+  const safetyCap = 366;
+
+  for (let i = 0; i < safetyCap; i++) {
+    const curDate = utcDateNDaysAgo(cursor, today);
+    if (dates.has(curDate)) {
+      count++;
+      consecutiveMisses = 0;
+      cursor++;
+      continue;
+    }
+    consecutiveMisses++;
+    // Two consecutive missed days breaks the streak.
+    if (consecutiveMisses > 1) break;
+    // Grace cooldown not yet elapsed since last use.
+    if (cursor - lastGraceCursor < GRACE_COOLDOWN_DAYS) break;
+    // Use grace: skip this day without counting it.
+    lastGraceCursor = cursor;
     cursor++;
   }
   return count;
