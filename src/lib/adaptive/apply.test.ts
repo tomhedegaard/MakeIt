@@ -26,6 +26,7 @@ function baseSession(): Session {
     dayLabel: "Dag A — Squat",
     title: "Squat day",
     estimatedMinutes: 60,
+    status: "active",
     exercises: [
       {
         id: "ex-squat",

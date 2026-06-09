@@ -165,3 +165,48 @@ export async function getRepsBalance(memberId: string): Promise<number> {
 
   return data?.balance ?? 0;
 }
+
+export interface RepsTransaction {
+  id: string;
+  delta: number;
+  reason: string;
+  reference_type: string | null;
+  created_at: string;
+}
+
+/**
+ * Recent Reps transactions for the member, newest first. Includes
+ * physical (sessions/PRs), coaching (lessons, sandbox reviews), and
+ * mental (mind-check streaks, sessions, journal, cirkel) events —
+ * unified history view on /reps.
+ */
+export async function getRecentRepsTransactions(
+  memberId: string,
+  limit = 20,
+): Promise<RepsTransaction[]> {
+  const supabase = await createClient();
+  if (!supabase) {
+    // Demo mock — include a mix so the surface shows what live looks like.
+    const now = Date.now();
+    return [
+      { id: "tx-1", delta: 250, reason: "Session gennemført", reference_type: "session_completed", created_at: new Date(now - 2 * 3600_000).toISOString() },
+      { id: "tx-2", delta: 5, reason: "Journal-post", reference_type: "journal_entry", created_at: new Date(now - 5 * 3600_000).toISOString() },
+      { id: "tx-3", delta: 10, reason: "Mental session gennemført", reference_type: "mental_session_completed", created_at: new Date(now - 8 * 3600_000).toISOString() },
+      { id: "tx-4", delta: 20, reason: "Mind-check stribe — 7 dage", reference_type: "mind_check_streak", created_at: new Date(now - 26 * 3600_000).toISOString() },
+      { id: "tx-5", delta: 100, reason: "Ugentligt program", reference_type: "weekly_program", created_at: new Date(now - 48 * 3600_000).toISOString() },
+    ];
+  }
+
+  const { data, error } = await supabase
+    .from("reps_transactions")
+    .select("id, delta, reason, reference_type, created_at")
+    .eq("member_id", memberId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.warn("[reps] history read failed", error.message);
+    return [];
+  }
+  return (data ?? []) as unknown as RepsTransaction[];
+}

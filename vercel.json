@@ -11,6 +11,10 @@
     { "path": "/api/cron/coach-morning-report", "schedule": "0 5 * * *" },
     { "path": "/api/cron/buddy-rematch-weekly", "schedule": "0 19 * * 0" },
     { "path": "/api/cron/coach-quality-score", "schedule": "0 6 * * 1" },
-    { "path": "/api/cron/buddy-streak-weekly", "schedule": "0 7 * * 1" }
+    { "path": "/api/cron/buddy-streak-weekly", "schedule": "0 7 * * 1" },
+    { "path": "/api/cron/mind-check-nudge", "schedule": "0 18 * * *" },
+    { "path": "/api/cron/mental-coach-daily", "schedule": "30 4 * * *" },
+    { "path": "/api/cron/buddy-mental-weekly-checkin", "schedule": "0 7 * * 1" },
+    { "path": "/api/cron/mental-weekly-insights", "schedule": "0 18 * * 0" }
   ]
 }

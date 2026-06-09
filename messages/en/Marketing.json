@@ -119,6 +119,16 @@
       "statLabel": "tiers",
       "demoHook": "See the ladder"
     },
+    "mind": {
+      "label": "06 — Mental engine",
+      "title": "The head, in the equation. Not as an accessory.",
+      "body": "Real health is physical AND mental. A 60-second mind-check daily builds a mental graph parallel to your HRV. When mind-checks show strain for 3 days, the Adaptive Engine dials down without waiting for HRV to break — because the head often feels it first. Private journaling, AI coach written for your week, and — when you tier up — crew sharing so you don't go alone.",
+      "bullet1": "Mind-check × HRV × training — Adaptive Engine fuses all three. No other app does.",
+      "bullet2": "AI coach writes today's reflection based on your signal — not a generic meditation.",
+      "bullet3": "Privacy as progression: Lifter private, Athlete unlocks buddy share, Beast unlocks circles. Your journal is always yours.",
+      "statLabel": "sec/day",
+      "demoHook": "See the mind module"
+    },
     "coaching": {
       "label": "02 — Coaching",
       "title": "Programs that work. Coaches who lift themselves.",

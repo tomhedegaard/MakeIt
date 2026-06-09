@@ -15,9 +15,10 @@ const NAV = [
   { href: "/nutrition", labelKey: "food",     num: "03" },
   { href: "/community", labelKey: "crew",     num: "04" },
   { href: "/hrv",       labelKey: "hrv",      num: "05" },
-  { href: "/reps",      labelKey: "reps",     num: "06" },
-  { href: "/profile",   labelKey: "me",       num: "07" },
-  { href: "/messages",  labelKey: "messages", num: "08" },
+  { href: "/mind",      labelKey: "mind",     num: "06" },
+  { href: "/reps",      labelKey: "reps",     num: "07" },
+  { href: "/profile",   labelKey: "me",       num: "08" },
+  { href: "/messages",  labelKey: "messages", num: "09" },
 ] as const;
 
 export default function AppShell({
@@ -123,13 +124,39 @@ export default function AppShell({
         {/* Mobile top header */}
         <header className="lg:hidden flex h-14 items-center justify-between px-5 border-b hairline sticky top-0 z-30 bg-bg/85 backdrop-blur">
           <Logo />
-          <Link
-            href="/profile"
-            className="size-9 rounded-full surface-2 flex items-center justify-center text-xs font-mono uppercase"
-            aria-label={t("shell.myProfile")}
-          >
-            {member.handle.slice(0, 2)}
-          </Link>
+          <div className="flex items-center gap-3">
+            {/* Messages — kept one-tap on mobile after the tab bar
+                lost its Messages slot to /mind (Søjle 5). */}
+            <Link
+              href="/messages"
+              className="relative size-9 rounded-full surface-2 flex items-center justify-center"
+              aria-label={t("links.messages")}
+            >
+              <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5" aria-hidden>
+                <path
+                  d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4 3.5v-3.5H6.5A2.5 2.5 0 0 1 4 14.5v-8z"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {unreadMessages > 0 ? (
+                <span
+                  className="absolute -top-0.5 -right-0.5 numeric text-[9px] tabular-nums px-1 py-0.5 rounded-full bg-fg text-bg leading-none min-w-[14px] text-center"
+                  aria-label={t("shell.unread", { count: unreadMessages })}
+                >
+                  {unreadMessages > 9 ? "9+" : unreadMessages}
+                </span>
+              ) : null}
+            </Link>
+            <Link
+              href="/profile"
+              className="size-9 rounded-full surface-2 flex items-center justify-center text-xs font-mono uppercase"
+              aria-label={t("shell.myProfile")}
+            >
+              {member.handle.slice(0, 2)}
+            </Link>
+          </div>
         </header>
 
         <main className="flex-1 pb-tabbar lg:pb-0">{children}</main>

@@ -55,6 +55,18 @@ const Icon = {
       />
     </svg>
   ),
+  mind: (
+    <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
+      <path
+        d="M12 4c-3.5 0-6 2.5-6 5.5 0 2 1 3.5 2 4.5v3a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-3c1-1 2-2.5 2-4.5 0-3-2.5-5.5-6-5.5z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path d="M10 19h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M12 11v3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  ),
 };
 
 const TABS: Tab[] = [
@@ -62,7 +74,7 @@ const TABS: Tab[] = [
   { href: "/coaching",  labelKey: "train", icon: Icon.train },
   { href: "/nutrition", labelKey: "food",  icon: Icon.food },
   { href: "/community", labelKey: "crew",  icon: Icon.crew },
-  { href: "/messages",  labelKey: "chat",  icon: Icon.chat },
+  { href: "/mind",      labelKey: "mind",  icon: Icon.mind },
   { href: "/reps",      labelKey: "reps",  icon: Icon.reps },
   { href: "/profile",   labelKey: "me",    icon: Icon.me },
 ];

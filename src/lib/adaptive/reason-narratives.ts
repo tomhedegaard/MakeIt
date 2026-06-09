@@ -65,6 +65,9 @@ const REASON_LABELS: Record<RuleReasonCode, string> = {
   // Composite / fallback.
   unusual_signal_combination: "Usædvanlig kombination",
   no_actionable_signals: "Alt ser normalt ud",
+
+  // Mental signal (Søjle 5 / MH-6).
+  mental_state_low_energy_or_high_stress: "Mental belastning",
 };
 
 export function labelForReason(code: RuleReasonCode | string): string {

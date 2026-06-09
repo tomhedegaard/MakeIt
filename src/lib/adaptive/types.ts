@@ -187,7 +187,8 @@ export type RuleReasonCode =
   | "sustained_low_readiness"
   | "form_check_concern"
   | "unusual_signal_combination"
-  | "no_actionable_signals";
+  | "no_actionable_signals"
+  | "mental_state_low_energy_or_high_stress";
 
 /**
  * What the rule layer produces. Stored verbatim in

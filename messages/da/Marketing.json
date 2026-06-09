@@ -119,6 +119,16 @@
       "statLabel": "tiers",
       "demoHook": "Se stigen"
     },
+    "mind": {
+      "label": "06 — Mental motor",
+      "title": "Hovedet med i regnestykket. Ikke som tilbehør.",
+      "body": "Ægte sundhed er fysisk OG psykisk. En 60-sekunders mind-check hver dag bygger en mental graf parallelt med din HRV. Når dine mind-check viser belastning i 3 dage, skruer Adaptive Engine ned uden at vente på at HRV bryder sammen — fordi hovedet ofte mærker det først. Privat journaling, AI-coach skrevet til din uge, og — når du rykker tier — crew-deling så du ikke skal gå alene.",
+      "bullet1": "Mind-check × HRV × træning — Adaptive Engine bruger alle tre. Ingen anden app fusionerer dem.",
+      "bullet2": "AI-coach skriver dagens refleksion baseret på dit signal — ikke en generisk meditation.",
+      "bullet3": "Privacy som progression: Lifter privat, Athlete åbner buddy-deling, Beast åbner cirkler. Din journal er altid din.",
+      "statLabel": "sek/dag",
+      "demoHook": "Se mind-modulet"
+    },
     "coaching": {
       "label": "02 — Coaching",
       "title": "Programmer der virker. Coaches der løfter selv.",

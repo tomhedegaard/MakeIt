@@ -85,6 +85,19 @@ export default async function PillarsSection() {
       stat: { v: "4", k: t("crewPyramid.statLabel") },
       demoHook: { href: "#tiers", label: t("crewPyramid.demoHook") },
     },
+    {
+      id: "pillar-mind",
+      label: t("mind.label"),
+      title: t("mind.title"),
+      body: t("mind.body"),
+      bullets: [
+        t("mind.bullet1"),
+        t("mind.bullet2"),
+        t("mind.bullet3"),
+      ],
+      stat: { v: "60", k: t("mind.statLabel") },
+      demoHook: null,
+    },
   ];
 
   return (

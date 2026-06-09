@@ -23,6 +23,12 @@ import TierBanner from "@/components/app/TierBanner";
 import FirstTimeTour from "@/components/app/FirstTimeTour";
 import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
+import MindTile from "@/components/mind/MindTile";
+import {
+  getOrCreateMentalSettings,
+  getTodayMentalCoachOutput,
+  hasMindCheckToday,
+} from "@/lib/data/mind";
 
 type Translator = Awaited<ReturnType<typeof getTranslations<"Dashboard">>>;
 
@@ -57,6 +63,7 @@ function todayCardFromMock(): TodayCard {
     exercises: TODAY_SESSION.exercises.map((ex) => ({
       name: ex.name,
       setCount: ex.sets.length,
+      slug: ex.library?.slug ?? null,
     })),
   };
 }
@@ -157,6 +164,13 @@ export default async function TodayPage() {
   // HRV readiness chip: latest synced reading, or a connect CTA.
   const hrv = await getHrvChipData(member.id);
 
+  // Mind module tile (B-layer): surface today's state to the dashboard.
+  const [mindChecked, coachOutput, mentalSettings] = await Promise.all([
+    hasMindCheckToday(member.id),
+    getTodayMentalCoachOutput(member.id),
+    getOrCreateMentalSettings(member.id),
+  ]);
+
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       <FirstTimeTour />
@@ -184,6 +198,12 @@ export default async function TodayPage() {
       ) : null}
 
       <DailyCheckInCard checkin={checkin} variant="compact" />
+
+      <MindTile
+        hasMindCheckToday={mindChecked}
+        hasCoachOutputToday={!!coachOutput}
+        currentStreak={mentalSettings.current_streak_days}
+      />
 
       <HrvChip hrv={hrv} />
 
@@ -253,15 +273,31 @@ export default async function TodayPage() {
         </div>
 
         <ul className="divide-y hairline">
-          {today.exercises.map((ex, i) => (
-            <li key={`${ex.name}-${i}`} className="px-5 py-3 flex items-center gap-4">
-              <span className="numeric text-fg-faint text-xs w-6">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="flex-1 text-fg/90 text-sm md:text-base truncate">{ex.name}</span>
-              <span className="numeric text-fg-faint text-xs">{ex.setCount}{t("todaySession.setCountSuffix")}</span>
-            </li>
-          ))}
+          {today.exercises.map((ex, i) => {
+            const row = (
+              <>
+                <span className="numeric text-fg-faint text-xs w-6">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="flex-1 text-fg/90 text-sm md:text-base truncate">{ex.name}</span>
+                <span className="numeric text-fg-faint text-xs">{ex.setCount}{t("todaySession.setCountSuffix")}</span>
+              </>
+            );
+            return (
+              <li key={`${ex.name}-${i}`}>
+                {ex.slug ? (
+                  <Link
+                    href={`/train/exercises/${ex.slug}`}
+                    className="px-5 py-3 flex items-center gap-4 lift"
+                  >
+                    {row}
+                  </Link>
+                ) : (
+                  <div className="px-5 py-3 flex items-center gap-4">{row}</div>
+                )}
+              </li>
+            );
+          })}
         </ul>
 
         <div className="p-4 lg:p-5">
@@ -317,10 +353,15 @@ export default async function TodayPage() {
         {upcoming && upcoming.length > 0 ? (
           <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">
             {upcoming.map((row) => (
-              <li key={row.id} className="px-4 py-3 flex items-center gap-4">
-                <span className="eyebrow w-16 shrink-0">{fmtUpcomingDate(row.scheduledFor, t)}</span>
-                <span className="flex-1 text-sm text-fg/90 truncate">{row.title}</span>
-                <span className="numeric text-fg-faint text-xs shrink-0">{row.estimatedMinutes}m</span>
+              <li key={row.id}>
+                <Link
+                  href={`/session/${row.id}`}
+                  className="px-4 py-3 flex items-center gap-4 lift"
+                >
+                  <span className="eyebrow w-16 shrink-0">{fmtUpcomingDate(row.scheduledFor, t)}</span>
+                  <span className="flex-1 text-sm text-fg/90 truncate">{row.title}</span>
+                  <span className="numeric text-fg-faint text-xs shrink-0">{row.estimatedMinutes}m</span>
+                </Link>
               </li>
             ))}
           </ul>

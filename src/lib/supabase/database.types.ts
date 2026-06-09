@@ -7,6 +7,11 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
   graphql_public: {
     Tables: {
       [_ in never]: never
@@ -118,11 +123,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "buddy_interactions_pair_id_fkey"
-            columns: ["pair_id"]
+            foreignKeyName: "buddy_interactions_from_member_fkey"
+            columns: ["from_member"]
             isOneToOne: false
-            referencedRelation: "buddy_pairs"
-            referencedColumns: ["id"]
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
           },
           {
             foreignKeyName: "buddy_interactions_from_member_fkey"
@@ -130,6 +135,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "members"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "buddy_interactions_pair_id_fkey"
+            columns: ["pair_id"]
+            isOneToOne: false
+            referencedRelation: "buddy_pairs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "buddy_interactions_to_member_fkey"
+            columns: ["to_member"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
           },
           {
             foreignKeyName: "buddy_interactions_to_member_fkey"
@@ -170,8 +189,22 @@ export type Database = {
             foreignKeyName: "buddy_pairs_member_a_fkey"
             columns: ["member_a"]
             isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "buddy_pairs_member_a_fkey"
+            columns: ["member_a"]
+            isOneToOne: false
             referencedRelation: "members"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "buddy_pairs_member_b_fkey"
+            columns: ["member_b"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
           },
           {
             foreignKeyName: "buddy_pairs_member_b_fkey"
@@ -261,6 +294,320 @@ export type Database = {
           reward_text?: string | null
           slug?: string
           starts_at?: string
+        }
+        Relationships: []
+      }
+      co_coach_assignments: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          assigned_member_id: string
+          coach_member_id: string
+          ended_at: string | null
+          id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          assigned_member_id: string
+          coach_member_id: string
+          ended_at?: string | null
+          id?: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          assigned_member_id?: string
+          coach_member_id?: string
+          ended_at?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_coach_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "co_coach_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_coach_assignments_assigned_member_id_fkey"
+            columns: ["assigned_member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "co_coach_assignments_assigned_member_id_fkey"
+            columns: ["assigned_member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_coach_assignments_coach_member_id_fkey"
+            columns: ["coach_member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "co_coach_assignments_coach_member_id_fkey"
+            columns: ["coach_member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coach_morning_reports: {
+        Row: {
+          coach_id: string
+          created_at: string
+          id: string
+          payload: Json
+          report_date: string
+          sent_email_at: string | null
+        }
+        Insert: {
+          coach_id: string
+          created_at?: string
+          id?: string
+          payload: Json
+          report_date: string
+          sent_email_at?: string | null
+        }
+        Update: {
+          coach_id?: string
+          created_at?: string
+          id?: string
+          payload?: Json
+          report_date?: string
+          sent_email_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_morning_reports_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "coach_morning_reports_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coach_quality_scores: {
+        Row: {
+          agreement_with_munk: number | null
+          coach_member_id: string
+          id: string
+          intervention_count_week: number | null
+          member_satisfaction: number | null
+          notes: string | null
+          response_time_p50_minutes: number | null
+          snapshot_at: string
+          status: string
+        }
+        Insert: {
+          agreement_with_munk?: number | null
+          coach_member_id: string
+          id?: string
+          intervention_count_week?: number | null
+          member_satisfaction?: number | null
+          notes?: string | null
+          response_time_p50_minutes?: number | null
+          snapshot_at?: string
+          status: string
+        }
+        Update: {
+          agreement_with_munk?: number | null
+          coach_member_id?: string
+          id?: string
+          intervention_count_week?: number | null
+          member_satisfaction?: number | null
+          notes?: string | null
+          response_time_p50_minutes?: number | null
+          snapshot_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_quality_scores_coach_member_id_fkey"
+            columns: ["coach_member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "coach_quality_scores_coach_member_id_fkey"
+            columns: ["coach_member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coach_reviews: {
+        Row: {
+          agreement_score: number | null
+          decision: string
+          decision_payload: Json | null
+          id: string
+          mode: string
+          munk_decision: string | null
+          munk_decision_payload: Json | null
+          reasoning: string | null
+          reviewer_id: string
+          source_id: string
+          source_type: string
+          submitted_at: string
+        }
+        Insert: {
+          agreement_score?: number | null
+          decision: string
+          decision_payload?: Json | null
+          id?: string
+          mode: string
+          munk_decision?: string | null
+          munk_decision_payload?: Json | null
+          reasoning?: string | null
+          reviewer_id: string
+          source_id: string
+          source_type: string
+          submitted_at?: string
+        }
+        Update: {
+          agreement_score?: number | null
+          decision?: string
+          decision_payload?: Json | null
+          id?: string
+          mode?: string
+          munk_decision?: string | null
+          munk_decision_payload?: Json | null
+          reasoning?: string | null
+          reviewer_id?: string
+          source_id?: string
+          source_type?: string
+          submitted_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "coach_reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coach_voice_samples: {
+        Row: {
+          curated_at: string
+          curated_by: string | null
+          exercise_id: string | null
+          id: string
+          notes: string | null
+          reply_text: string
+          tone: string
+        }
+        Insert: {
+          curated_at?: string
+          curated_by?: string | null
+          exercise_id?: string | null
+          id?: string
+          notes?: string | null
+          reply_text: string
+          tone: string
+        }
+        Update: {
+          curated_at?: string
+          curated_by?: string | null
+          exercise_id?: string | null
+          id?: string
+          notes?: string | null
+          reply_text?: string
+          tone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_voice_samples_curated_by_fkey"
+            columns: ["curated_by"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "coach_voice_samples_curated_by_fkey"
+            columns: ["curated_by"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coach_voice_samples_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coaching_lessons: {
+        Row: {
+          duration_sec: number | null
+          id: string
+          practice_scenario: Json | null
+          published_at: string | null
+          quiz: Json
+          reps_award: number
+          required_tier: string
+          slug: string
+          title_da: string
+          video_url: string
+        }
+        Insert: {
+          duration_sec?: number | null
+          id?: string
+          practice_scenario?: Json | null
+          published_at?: string | null
+          quiz: Json
+          reps_award?: number
+          required_tier: string
+          slug: string
+          title_da: string
+          video_url: string
+        }
+        Update: {
+          duration_sec?: number | null
+          id?: string
+          practice_scenario?: Json | null
+          published_at?: string | null
+          quiz?: Json
+          reps_award?: number
+          required_tier?: string
+          slug?: string
+          title_da?: string
+          video_url?: string
         }
         Relationships: []
       }
@@ -532,273 +879,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      co_coach_assignments: {
-        Row: {
-          assigned_at: string
-          assigned_by: string | null
-          assigned_member_id: string
-          coach_member_id: string
-          ended_at: string | null
-          id: string
-        }
-        Insert: {
-          assigned_at?: string
-          assigned_by?: string | null
-          assigned_member_id: string
-          coach_member_id: string
-          ended_at?: string | null
-          id?: string
-        }
-        Update: {
-          assigned_at?: string
-          assigned_by?: string | null
-          assigned_member_id?: string
-          coach_member_id?: string
-          ended_at?: string | null
-          id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "co_coach_assignments_coach_member_id_fkey"
-            columns: ["coach_member_id"]
-            isOneToOne: false
-            referencedRelation: "members"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "co_coach_assignments_assigned_member_id_fkey"
-            columns: ["assigned_member_id"]
-            isOneToOne: false
-            referencedRelation: "members"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "co_coach_assignments_assigned_by_fkey"
-            columns: ["assigned_by"]
-            isOneToOne: false
-            referencedRelation: "members"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      coach_morning_reports: {
-        Row: {
-          coach_id: string
-          created_at: string
-          id: string
-          payload: Json
-          report_date: string
-          sent_email_at: string | null
-        }
-        Insert: {
-          coach_id: string
-          created_at?: string
-          id?: string
-          payload: Json
-          report_date: string
-          sent_email_at?: string | null
-        }
-        Update: {
-          coach_id?: string
-          created_at?: string
-          id?: string
-          payload?: Json
-          report_date?: string
-          sent_email_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "coach_morning_reports_coach_id_fkey"
-            columns: ["coach_id"]
-            isOneToOne: false
-            referencedRelation: "members"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      // Hand-augmented for CC-8 (migration 0045) — pending `npm run db:types`
-      // refresh once Docker is up. Shape mirrors public.coach_quality_scores.
-      coach_quality_scores: {
-        Row: {
-          agreement_with_munk: number | null
-          coach_member_id: string
-          id: string
-          intervention_count_week: number | null
-          member_satisfaction: number | null
-          notes: string | null
-          response_time_p50_minutes: number | null
-          snapshot_at: string
-          status: string
-        }
-        Insert: {
-          agreement_with_munk?: number | null
-          coach_member_id: string
-          id?: string
-          intervention_count_week?: number | null
-          member_satisfaction?: number | null
-          notes?: string | null
-          response_time_p50_minutes?: number | null
-          snapshot_at?: string
-          status: string
-        }
-        Update: {
-          agreement_with_munk?: number | null
-          coach_member_id?: string
-          id?: string
-          intervention_count_week?: number | null
-          member_satisfaction?: number | null
-          notes?: string | null
-          response_time_p50_minutes?: number | null
-          snapshot_at?: string
-          status?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "coach_quality_scores_coach_member_id_fkey"
-            columns: ["coach_member_id"]
-            isOneToOne: false
-            referencedRelation: "members"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      coach_reviews: {
-        Row: {
-          agreement_score: number | null
-          decision: string
-          decision_payload: Json | null
-          id: string
-          mode: string
-          munk_decision: string | null
-          munk_decision_payload: Json | null
-          reasoning: string | null
-          reviewer_id: string
-          source_id: string
-          source_type: string
-          submitted_at: string
-        }
-        Insert: {
-          agreement_score?: number | null
-          decision: string
-          decision_payload?: Json | null
-          id?: string
-          mode: string
-          munk_decision?: string | null
-          munk_decision_payload?: Json | null
-          reasoning?: string | null
-          reviewer_id: string
-          source_id: string
-          source_type: string
-          submitted_at?: string
-        }
-        Update: {
-          agreement_score?: number | null
-          decision?: string
-          decision_payload?: Json | null
-          id?: string
-          mode?: string
-          munk_decision?: string | null
-          munk_decision_payload?: Json | null
-          reasoning?: string | null
-          reviewer_id?: string
-          source_id?: string
-          source_type?: string
-          submitted_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "coach_reviews_reviewer_id_fkey"
-            columns: ["reviewer_id"]
-            isOneToOne: false
-            referencedRelation: "members"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      coach_voice_samples: {
-        Row: {
-          curated_at: string
-          curated_by: string | null
-          exercise_id: string | null
-          id: string
-          notes: string | null
-          reply_text: string
-          tone: string
-        }
-        Insert: {
-          curated_at?: string
-          curated_by?: string | null
-          exercise_id?: string | null
-          id?: string
-          notes?: string | null
-          reply_text: string
-          tone: string
-        }
-        Update: {
-          curated_at?: string
-          curated_by?: string | null
-          exercise_id?: string | null
-          id?: string
-          notes?: string | null
-          reply_text?: string
-          tone?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "coach_voice_samples_exercise_id_fkey"
-            columns: ["exercise_id"]
-            isOneToOne: false
-            referencedRelation: "exercises"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "coach_voice_samples_curated_by_fkey"
-            columns: ["curated_by"]
-            isOneToOne: false
-            referencedRelation: "members"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      coaching_lessons: {
-        Row: {
-          duration_sec: number | null
-          id: string
-          practice_scenario: Json | null
-          published_at: string | null
-          quiz: Json
-          reps_award: number
-          required_tier: string
-          slug: string
-          title_da: string
-          video_url: string
-        }
-        Insert: {
-          duration_sec?: number | null
-          id?: string
-          practice_scenario?: Json | null
-          published_at?: string | null
-          quiz: Json
-          reps_award?: number
-          required_tier: string
-          slug: string
-          title_da: string
-          video_url: string
-        }
-        Update: {
-          duration_sec?: number | null
-          id?: string
-          practice_scenario?: Json | null
-          published_at?: string | null
-          quiz?: Json
-          reps_award?: number
-          required_tier?: string
-          slug?: string
-          title_da?: string
-          video_url?: string
-        }
-        Relationships: []
       }
       hrv_alerts: {
         Row: {
@@ -1364,6 +1444,57 @@ export type Database = {
           },
         ]
       }
+      journal_entries: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          logged_at: string
+          logged_date: string
+          member_id: string
+          moderation_reason: string | null
+          moderation_status: string
+          prompt: string | null
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          logged_at?: string
+          logged_date?: string
+          member_id: string
+          moderation_reason?: string | null
+          moderation_status?: string
+          prompt?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          logged_at?: string
+          logged_date?: string
+          member_id?: string
+          moderation_reason?: string | null
+          moderation_status?: string
+          prompt?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_entries_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "journal_entries_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_progress: {
         Row: {
           completed_at: string | null
@@ -1391,17 +1522,24 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "lesson_progress_member_id_fkey"
-            columns: ["member_id"]
-            isOneToOne: false
-            referencedRelation: "members"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "lesson_progress_lesson_id_fkey"
             columns: ["lesson_id"]
             isOneToOne: false
             referencedRelation: "coaching_lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lesson_progress_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "lesson_progress_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
             referencedColumns: ["id"]
           },
         ]
@@ -1477,6 +1615,7 @@ export type Database = {
       }
       members: {
         Row: {
+          acknowledged_mental_disclaimer_at: string | null
           avatar_url: string | null
           bio: string | null
           coach_tier: string | null
@@ -1509,6 +1648,7 @@ export type Database = {
           weekly_frequency: number | null
         }
         Insert: {
+          acknowledged_mental_disclaimer_at?: string | null
           avatar_url?: string | null
           bio?: string | null
           coach_tier?: string | null
@@ -1541,6 +1681,7 @@ export type Database = {
           weekly_frequency?: number | null
         }
         Update: {
+          acknowledged_mental_disclaimer_at?: string | null
           avatar_url?: string | null
           bio?: string | null
           coach_tier?: string | null
@@ -1573,6 +1714,448 @@ export type Database = {
           weekly_frequency?: number | null
         }
         Relationships: []
+      }
+      mental_cirkel_members: {
+        Row: {
+          cirkel_id: string
+          daily_share_opt_in: boolean
+          joined_at: string
+          member_id: string
+        }
+        Insert: {
+          cirkel_id: string
+          daily_share_opt_in?: boolean
+          joined_at?: string
+          member_id: string
+        }
+        Update: {
+          cirkel_id?: string
+          daily_share_opt_in?: boolean
+          joined_at?: string
+          member_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mental_cirkel_members_cirkel_id_fkey"
+            columns: ["cirkel_id"]
+            isOneToOne: false
+            referencedRelation: "mental_cirkler"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mental_cirkel_members_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "mental_cirkel_members_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mental_cirkel_post_reactions: {
+        Row: {
+          created_at: string
+          id: string
+          member_id: string
+          post_id: string
+          reaction: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          member_id: string
+          post_id: string
+          reaction: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          member_id?: string
+          post_id?: string
+          reaction?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mental_cirkel_post_reactions_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "mental_cirkel_post_reactions_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mental_cirkel_post_reactions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "mental_cirkel_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mental_cirkel_posts: {
+        Row: {
+          author_id: string
+          body: string
+          cirkel_id: string
+          created_at: string
+          id: string
+          mind_share: Json | null
+          posted_at: string
+          posted_week: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          cirkel_id: string
+          created_at?: string
+          id?: string
+          mind_share?: Json | null
+          posted_at?: string
+          posted_week: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          cirkel_id?: string
+          created_at?: string
+          id?: string
+          mind_share?: Json | null
+          posted_at?: string
+          posted_week?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mental_cirkel_posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "mental_cirkel_posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mental_cirkel_posts_cirkel_id_fkey"
+            columns: ["cirkel_id"]
+            isOneToOne: false
+            referencedRelation: "mental_cirkler"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mental_cirkler: {
+        Row: {
+          created_at: string
+          id: string
+          leader_id: string | null
+          max_members: number
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          leader_id?: string | null
+          max_members?: number
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          leader_id?: string | null
+          max_members?: number
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mental_cirkler_leader_id_fkey"
+            columns: ["leader_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "mental_cirkler_leader_id_fkey"
+            columns: ["leader_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mental_coach_outputs: {
+        Row: {
+          body_md: string
+          created_at: string
+          for_date: string
+          id: string
+          member_id: string
+          moderation_status: string
+          prompt_seed: Json | null
+        }
+        Insert: {
+          body_md: string
+          created_at?: string
+          for_date: string
+          id?: string
+          member_id: string
+          moderation_status?: string
+          prompt_seed?: Json | null
+        }
+        Update: {
+          body_md?: string
+          created_at?: string
+          for_date?: string
+          id?: string
+          member_id?: string
+          moderation_status?: string
+          prompt_seed?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mental_coach_outputs_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "mental_coach_outputs_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mental_session_completions: {
+        Row: {
+          completed_at: string
+          completed_date: string
+          context: string | null
+          created_at: string
+          id: string
+          member_id: string
+          session_id: string
+        }
+        Insert: {
+          completed_at?: string
+          completed_date?: string
+          context?: string | null
+          created_at?: string
+          id?: string
+          member_id: string
+          session_id: string
+        }
+        Update: {
+          completed_at?: string
+          completed_date?: string
+          context?: string | null
+          created_at?: string
+          id?: string
+          member_id?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mental_session_completions_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "mental_session_completions_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mental_session_completions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "mental_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mental_sessions: {
+        Row: {
+          audio_url: string | null
+          body_md: string
+          category: string
+          created_at: string
+          duration_seconds: number
+          generated_by: string
+          id: string
+          is_hero: boolean
+          locale: string
+          prompt_seed: Json | null
+          published_at: string | null
+          slug: string
+          subtitle: string | null
+          title: string
+          visual_pattern: string
+          voice: string | null
+        }
+        Insert: {
+          audio_url?: string | null
+          body_md: string
+          category: string
+          created_at?: string
+          duration_seconds: number
+          generated_by?: string
+          id?: string
+          is_hero?: boolean
+          locale?: string
+          prompt_seed?: Json | null
+          published_at?: string | null
+          slug: string
+          subtitle?: string | null
+          title: string
+          visual_pattern: string
+          voice?: string | null
+        }
+        Update: {
+          audio_url?: string | null
+          body_md?: string
+          category?: string
+          created_at?: string
+          duration_seconds?: number
+          generated_by?: string
+          id?: string
+          is_hero?: boolean
+          locale?: string
+          prompt_seed?: Json | null
+          published_at?: string | null
+          slug?: string
+          subtitle?: string | null
+          title?: string
+          visual_pattern?: string
+          voice?: string | null
+        }
+        Relationships: []
+      }
+      mental_settings: {
+        Row: {
+          ai_coach_enabled: boolean
+          buddy_share_enabled: boolean
+          cirkel_share_aggregate_enabled: boolean
+          cirkel_share_daily_enabled: boolean
+          created_at: string
+          current_streak_days: number
+          last_mind_check_at: string | null
+          longest_streak_days: number
+          member_id: string
+          notif_ai_coach_morning: boolean
+          notif_buddy_mental_alert: boolean
+          notif_mind_check_evening: boolean
+          updated_at: string
+        }
+        Insert: {
+          ai_coach_enabled?: boolean
+          buddy_share_enabled?: boolean
+          cirkel_share_aggregate_enabled?: boolean
+          cirkel_share_daily_enabled?: boolean
+          created_at?: string
+          current_streak_days?: number
+          last_mind_check_at?: string | null
+          longest_streak_days?: number
+          member_id: string
+          notif_ai_coach_morning?: boolean
+          notif_buddy_mental_alert?: boolean
+          notif_mind_check_evening?: boolean
+          updated_at?: string
+        }
+        Update: {
+          ai_coach_enabled?: boolean
+          buddy_share_enabled?: boolean
+          cirkel_share_aggregate_enabled?: boolean
+          cirkel_share_daily_enabled?: boolean
+          created_at?: string
+          current_streak_days?: number
+          last_mind_check_at?: string | null
+          longest_streak_days?: number
+          member_id?: string
+          notif_ai_coach_morning?: boolean
+          notif_buddy_mental_alert?: boolean
+          notif_mind_check_evening?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mental_settings_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: true
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "mental_settings_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: true
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mental_settings_log: {
+        Row: {
+          changed_at: string
+          field: string
+          id: string
+          member_id: string
+          new_value: string | null
+          old_value: string | null
+        }
+        Insert: {
+          changed_at?: string
+          field: string
+          id?: string
+          member_id: string
+          new_value?: string | null
+          old_value?: string | null
+        }
+        Update: {
+          changed_at?: string
+          field?: string
+          id?: string
+          member_id?: string
+          new_value?: string | null
+          old_value?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mental_settings_log_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "mental_settings_log_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages: {
         Row: {
@@ -1629,6 +2212,60 @@ export type Database = {
           {
             foreignKeyName: "messages_sender_id_fkey"
             columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mind_check_logs: {
+        Row: {
+          created_at: string
+          energy: number
+          focus: number
+          id: string
+          logged_at: string
+          logged_date: string
+          member_id: string
+          note: string | null
+          source: string
+          stress: number
+        }
+        Insert: {
+          created_at?: string
+          energy: number
+          focus: number
+          id?: string
+          logged_at?: string
+          logged_date?: string
+          member_id: string
+          note?: string | null
+          source?: string
+          stress: number
+        }
+        Update: {
+          created_at?: string
+          energy?: number
+          focus?: number
+          id?: string
+          logged_at?: string
+          logged_date?: string
+          member_id?: string
+          note?: string | null
+          source?: string
+          stress?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mind_check_logs_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "mind_check_logs_member_id_fkey"
+            columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "members"
             referencedColumns: ["id"]
@@ -2919,7 +3556,12 @@ export type Database = {
       }
       is_current_user_admin: { Args: never; Returns: boolean }
       is_current_user_coach: { Args: never; Returns: boolean }
+      is_current_user_munk: { Args: never; Returns: boolean }
       is_invite_valid: { Args: { p_code: string }; Returns: boolean }
+      mind_check_visible_to: {
+        Args: { owner: string; viewer: string }
+        Returns: boolean
+      }
       redeem_reward: { Args: { p_reward_id: string }; Returns: string }
       tier_for_balance: { Args: { balance: number }; Returns: string }
     }
@@ -3024,101 +3666,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
-      }
-      iceberg_namespaces: {
-        Row: {
-          bucket_name: string
-          catalog_id: string
-          created_at: string
-          id: string
-          metadata: Json
-          name: string
-          updated_at: string
-        }
-        Insert: {
-          bucket_name: string
-          catalog_id: string
-          created_at?: string
-          id?: string
-          metadata?: Json
-          name: string
-          updated_at?: string
-        }
-        Update: {
-          bucket_name?: string
-          catalog_id?: string
-          created_at?: string
-          id?: string
-          metadata?: Json
-          name?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "iceberg_namespaces_catalog_id_fkey"
-            columns: ["catalog_id"]
-            isOneToOne: false
-            referencedRelation: "buckets_analytics"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      iceberg_tables: {
-        Row: {
-          bucket_name: string
-          catalog_id: string
-          created_at: string
-          id: string
-          location: string
-          name: string
-          namespace_id: string
-          remote_table_id: string | null
-          shard_id: string | null
-          shard_key: string | null
-          updated_at: string
-        }
-        Insert: {
-          bucket_name: string
-          catalog_id: string
-          created_at?: string
-          id?: string
-          location: string
-          name: string
-          namespace_id: string
-          remote_table_id?: string | null
-          shard_id?: string | null
-          shard_key?: string | null
-          updated_at?: string
-        }
-        Update: {
-          bucket_name?: string
-          catalog_id?: string
-          created_at?: string
-          id?: string
-          location?: string
-          name?: string
-          namespace_id?: string
-          remote_table_id?: string | null
-          shard_id?: string | null
-          shard_key?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "iceberg_tables_catalog_id_fkey"
-            columns: ["catalog_id"]
-            isOneToOne: false
-            referencedRelation: "buckets_analytics"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "iceberg_tables_namespace_id_fkey"
-            columns: ["namespace_id"]
-            isOneToOne: false
-            referencedRelation: "iceberg_namespaces"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       migrations: {
         Row: {
@@ -3607,4 +4154,3 @@ export const Constants = {
     },
   },
 } as const
-

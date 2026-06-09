@@ -38,7 +38,8 @@
     "tierSecondary": "Secondary",
     "tierTertiary": "Tertiary",
     "howTo": "How to do it",
-    "musclesInvolved": "Muscles involved"
+    "musclesInvolved": "Muscles involved",
+    "currentPhase": "Active phase"
   },
   "card": {
     "primaryPrefix": "Primary: ",

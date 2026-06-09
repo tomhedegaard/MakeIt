@@ -56,5 +56,14 @@
   "rpe": {
     "label": "RPE — hvor tungt føltes det?",
     "ariaLabel": "RPE"
+  },
+  "preview": {
+    "back": "Tilbage",
+    "eyebrow": "Planlagt session",
+    "exercises": "Øvelser",
+    "sets": "Sæt",
+    "estTime": "Tid",
+    "summary": "{exerciseCount} øvelser · {setCount} sæt",
+    "start": "Start session"
   }
 }

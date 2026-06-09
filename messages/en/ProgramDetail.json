@@ -1,0 +1,24 @@
+{
+  "metaFallback": "Program — MakeIt",
+  "breadcrumb": "Train",
+  "meta": {
+    "weeks": "Weeks",
+    "days": "Days / week",
+    "level": "Level",
+    "levelFallback": "All",
+    "coach": "Coach",
+    "coachFallback": "MakeIt HQ"
+  },
+  "template": {
+    "eyebrow": "Program structure",
+    "title": "Weekly template — repeats for {weeks} weeks with progressive overload.",
+    "body": "Each day below stays the same week to week — only weight, reps, and deload shift. Every 4th week is a deload."
+  },
+  "day": {
+    "position": "Day {position}",
+    "estTime": "Time",
+    "exercises": "{count} exercises",
+    "sets": "{count} sets"
+  },
+  "emptyDays": "This program hasn't had days added yet."
+}

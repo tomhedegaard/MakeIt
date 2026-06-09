@@ -4,26 +4,27 @@ import Container from "@/components/Container";
 import { getSession } from "@/lib/auth";
 import { COMPANY } from "@/lib/company";
 import AnatomyPreview from "./AnatomyPreview";
+import AnatomyFigure3DSpikeLoader from "@/components/anatomy/AnatomyFigure3DSpike.loader";
 
 export async function generateMetadata() {
   const t = await getTranslations("CoachStudio.anatomy");
   return { title: t("metaTitle", { product: COMPANY.product }) };
 }
 
-/**
- * Admin-only iteration sandbox for the AnatomyFigure component.
- * Picks an exercise from a small library + a view (front/back), and
- * renders the figure live so we can tune muscle paths, colors,
- * proportions, and the highlight system together before wiring the
- * component into real exercise pages.
- *
- * This page is intentionally minimal — no DB hits, no plan
- * generation, just the figure + controls. When the figure is dialled
- * in, we delete this route + add the production wiring.
- */
-export default async function AnatomyPreviewPage() {
+export default async function AnatomyPreviewPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ spike?: string }>;
+}) {
   const member = await getSession();
-  if (!member?.isAdmin) redirect("/coach");
+  if (!member) redirect("/login?next=/coach/system/anatomy");
+
+  const { spike } = await searchParams;
+  const isSpike = spike === "1";
+
+  // Spike-routen (Fase 0) er åben for alle indloggede members for at lette
+  // visuel verifikation. Default-sandboxen er fortsat admin-only.
+  if (!isSpike && !member.isAdmin) redirect("/coach");
 
   const t = await getTranslations("CoachStudio.anatomy");
 
@@ -32,14 +33,16 @@ export default async function AnatomyPreviewPage() {
       <header>
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
         <h1 className="font-display text-[clamp(2rem,5vw,3.5rem)] leading-[0.95]">
-          {t("title")}
+          {isSpike ? "R3F Spike" : t("title")}
         </h1>
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-          {t("intro")}
+          {isSpike
+            ? "Fase 1: 3D-version af vores 2D-anatomy-figur. Samme muskel-taxonomi og brand-palette, extruderede SVG-paths. Sammenlign med 2D-mode side-om-side; drag for at rotere 3D-figuren."
+            : t("intro")}
         </p>
       </header>
 
-      <AnatomyPreview />
+      {isSpike ? <AnatomyFigure3DSpikeLoader /> : <AnatomyPreview />}
     </Container>
   );
 }
