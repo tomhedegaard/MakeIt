@@ -72,15 +72,22 @@ export function mindDb(supabase: MaybeClient | ReturnType<typeof createServiceCl
 
 /**
  * Has the current member acknowledged the mental disclaimer?
- * Demo mode: stored in cookie. Connected mode: stored on members row.
+ *
+ * Cookie is the durable acknowledgment in all modes — both demo and
+ * "migration 0046 not yet applied to live DB". The DB column is read
+ * as a fall-back so cross-device persistence works after migration.
+ * If the column doesn't exist (read errors), we tolerate and rely on
+ * the cookie. Prevents an /mind/onboarding loop when the column is
+ * missing.
  */
 export async function hasAcknowledgedMentalDisclaimer(
   memberId: string,
 ): Promise<boolean> {
-  if (!SUPABASE_ENABLED) {
-    const c = await cookies();
-    return c.get(MIND_DISCLAIMER_COOKIE)?.value === "1";
-  }
+  // Cookie is checked first — fast, works in every mode.
+  const c = await cookies();
+  if (c.get(MIND_DISCLAIMER_COOKIE)?.value === "1") return true;
+
+  if (!SUPABASE_ENABLED) return false;
 
   const supabase = await createClient();
   if (!supabase) return false;
@@ -92,7 +99,10 @@ export async function hasAcknowledgedMentalDisclaimer(
     .maybeSingle();
 
   if (error) {
-    console.warn("[mind] disclaimer read failed", error.message);
+    // Almost certainly "column does not exist" until migration 0046
+    // is applied to live DB. Treat as not-yet-acknowledged via the
+    // cookie path; that's what users see on first visit.
+    console.warn("[mind] disclaimer read failed (cookie fallback used)", error.message);
     return false;
   }
   const row = data as { acknowledged_mental_disclaimer_at?: string | null } | null;
@@ -102,18 +112,23 @@ export async function hasAcknowledgedMentalDisclaimer(
 /**
  * Mark the disclaimer as acknowledged.
  * Idempotent — re-acknowledging is a no-op.
+ *
+ * Always writes the cookie (durable across all DB states). Also
+ * attempts the DB UPDATE as a best-effort cross-device sync — but
+ * tolerates the "column missing" error so the action never silently
+ * loops the user back to /mind/onboarding.
  */
 export async function acknowledgeMentalDisclaimer(memberId: string): Promise<void> {
-  if (!SUPABASE_ENABLED) {
-    const c = await cookies();
-    c.set(MIND_DISCLAIMER_COOKIE, "1", {
-      maxAge: 60 * 60 * 24 * 365,
-      path: "/",
-      sameSite: "lax",
-      httpOnly: false,
-    });
-    return;
-  }
+  // Set the cookie unconditionally — this is the durable record.
+  const c = await cookies();
+  c.set(MIND_DISCLAIMER_COOKIE, "1", {
+    maxAge: 60 * 60 * 24 * 365,
+    path: "/",
+    sameSite: "lax",
+    httpOnly: false,
+  });
+
+  if (!SUPABASE_ENABLED) return;
 
   const supabase = await createClient();
   if (!supabase) return;
@@ -125,7 +140,8 @@ export async function acknowledgeMentalDisclaimer(memberId: string): Promise<voi
     .is("acknowledged_mental_disclaimer_at", null);
 
   if (error) {
-    console.warn("[mind] disclaimer ack failed", error.message);
+    // Column does not exist (migration 0046 pending) — cookie suffices.
+    console.warn("[mind] disclaimer DB write failed (cookie set)", error.message);
   }
 }
 
