@@ -7,6 +7,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import RevealObserver from "@/components/RevealObserver";
 import CookieBanner from "@/components/marketing/CookieBanner";
 import CustomCursor from "@/components/CustomCursor";
+import SWRegister from "@/components/pwa/SWRegister";
 import { COMPANY } from "@/lib/company";
 
 const sans = Inter({
@@ -38,6 +39,15 @@ export const metadata: Metadata = {
     type: "website",
   },
   robots: { index: false, follow: false },
+  icons: {
+    icon: [{ url: "/icons/favicon-32.png", sizes: "32x32", type: "image/png" }],
+    apple: "/icons/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: COMPANY.name,
+  },
 };
 
 export const viewport: Viewport = {
@@ -64,6 +74,7 @@ export default async function RootLayout({
           <SmoothScroll />
           <RevealObserver />
           <CustomCursor />
+          <SWRegister />
           {children}
           <CookieBanner />
         </NextIntlClientProvider>
