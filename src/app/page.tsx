@@ -5,6 +5,7 @@ import CrewSection from "@/components/marketing/CrewSection";
 import AdaptivePlaygroundPublic from "@/components/marketing/AdaptivePlaygroundPublic";
 import PillarsSection from "@/components/marketing/PillarsSection";
 import TierJourney from "@/components/marketing/TierJourney";
+import DomainIndexSection from "@/components/marketing/DomainIndexSection";
 import AppShowcase from "@/components/marketing/AppShowcase";
 import ValueSection from "@/components/marketing/ValueSection";
 import Testimonials from "@/components/marketing/Testimonials";
@@ -35,6 +36,7 @@ export default function Home() {
         <AdaptivePlaygroundPublic />
         <PillarsSection />
         <TierJourney />
+        <DomainIndexSection />
         <AppShowcase />
         <ValueSection />
         <Testimonials />

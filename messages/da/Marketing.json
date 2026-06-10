@@ -221,6 +221,36 @@
       }
     }
   },
+  "domainIndex": {
+    "eyebrow": "Farvekoden",
+    "heading": "Fire farver. Fire verdener.",
+    "intro": "Basen er sort/hvid — det rører vi ikke. Farve betyder ét: hvor i din sundhed du er. De samme fire farver går igen i menuen, på kortene og i graferne, så du altid ved hvad du kigger på.",
+    "body": {
+      "kicker": "Træning",
+      "title": "Krop",
+      "body": "Programmer, øvelser og pas. Orange er belastningen, du selv styrer.",
+      "surfaces": "Programmer · Øvelser · Live-pas"
+    },
+    "food": {
+      "kicker": "Kost",
+      "title": "Mad",
+      "body": "Måltidsplan, indkøb og vægt. Grøn følger brændstoffet.",
+      "surfaces": "Madplan · Indkøb · Vægt"
+    },
+    "heart": {
+      "kicker": "Puls & HRV",
+      "title": "Hjerte",
+      "body": "Readiness, baseline og 60-dages tendens. Rød er motoren, der sætter tempoet.",
+      "surfaces": "Readiness · Forløb · Indsigt"
+    },
+    "mind": {
+      "kicker": "Mind",
+      "title": "Sind",
+      "body": "Check-in, journal og sessioner. Blå holder hovedet med i regnestykket.",
+      "surfaces": "Check-in · Journal · Sessioner"
+    },
+    "note": "Samme numre som i menuen — 02, 03, 05, 06. Farven følger dig hele vejen ind."
+  },
   "app": {
     "eyebrow": "06 — Appen",
     "heading": "Sådan ser det ud.",

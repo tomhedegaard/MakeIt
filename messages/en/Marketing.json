@@ -221,6 +221,36 @@
       }
     }
   },
+  "domainIndex": {
+    "eyebrow": "The color code",
+    "heading": "Four colors. Four worlds.",
+    "intro": "The base is black and white — we don't touch that. Color means one thing: where in your health you are. The same four colors repeat in the menu, on the cards and in the charts, so you always know what you're looking at.",
+    "body": {
+      "kicker": "Training",
+      "title": "Body",
+      "body": "Programs, exercises and sessions. Orange is the load you control.",
+      "surfaces": "Programs · Exercises · Live session"
+    },
+    "food": {
+      "kicker": "Nutrition",
+      "title": "Food",
+      "body": "Meal plan, shopping and weight. Green tracks the fuel.",
+      "surfaces": "Meal plan · Shopping · Weight"
+    },
+    "heart": {
+      "kicker": "Pulse & HRV",
+      "title": "Heart",
+      "body": "Readiness, baseline and 60-day trend. Red is the engine that sets the pace.",
+      "surfaces": "Readiness · Trends · Insights"
+    },
+    "mind": {
+      "kicker": "Mind",
+      "title": "Mind",
+      "body": "Check-in, journal and sessions. Blue keeps the head in the equation.",
+      "surfaces": "Check-in · Journal · Sessions"
+    },
+    "note": "Same numbers as the menu — 02, 03, 05, 06. The color follows you all the way in."
+  },
   "app": {
     "eyebrow": "06 — The App",
     "heading": "Here's how it looks.",
