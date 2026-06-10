@@ -477,7 +477,11 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 }
 .tabbar-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  /* Column-flow auto-grid: every tab gets an equal column regardless of
+   * count — the bar grew from 5 to 7 tabs (Søjle 5) and a hardcoded
+   * repeat(5, 1fr) wrapped the last two tabs out of the fixed height. */
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   height: var(--tabbar-h);
 }
 .tab {
