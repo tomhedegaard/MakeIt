@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import { domainTags } from "@/components/marketing/domainTags";
 
 /**
  * WAUW-1 — the 4 søjler section.
@@ -16,9 +17,11 @@ import Container from "@/components/Container";
  *
  * Layout grammar is intentionally identical to v0 — eyebrow + display
  * heading left, body + numbered bullets + big stat right, alternating
- * via `data-reveal` stagger. The redesign is content-deep, not
- * layout-wide; the design system stays untouched so the page reads
- * as one continuous editorial.
+ * via `data-reveal` stagger. Domain colors appear only where copy
+ * genuinely references a health domain (HRV→heart, søvn/mind→mind,
+ * RPE→body via t.rich + domainTags), and the Mind pillar — the one
+ * build-pillar that IS a domain — carries data-domain="mind" so its
+ * eyebrow takes the hue. See docs/DOMAIN_COLOR_SYSTEM.md.
  *
  * Each pillar carries an optional `demoHook` — a short link rendered
  * under the stat that anchors to the relevant interactive surface
@@ -37,7 +40,7 @@ export default async function PillarsSection() {
       id: "pillar-engine",
       label: t("engine.label"),
       title: t("engine.title"),
-      body: t("engine.body"),
+      body: t.rich("engine.body", domainTags),
       bullets: [
         t("engine.bullet1"),
         t("engine.bullet2"),
@@ -87,9 +90,10 @@ export default async function PillarsSection() {
     },
     {
       id: "pillar-mind",
+      domain: "mind",
       label: t("mind.label"),
       title: t("mind.title"),
-      body: t("mind.body"),
+      body: t.rich("mind.body", domainTags),
       bullets: [
         t("mind.bullet1"),
         t("mind.bullet2"),
@@ -106,12 +110,13 @@ export default async function PillarsSection() {
         <div
           key={p.id}
           id={p.id}
+          data-domain={"domain" in p ? p.domain : undefined}
           className={`relative border-t hairline ${idx === pillars.length - 1 ? "border-b" : ""}`}
         >
           <Container className="py-20 md:py-32">
             <div className="grid gap-12 md:grid-cols-12 items-start">
               <div className="md:col-span-5" data-reveal>
-                <div className="eyebrow mb-6">{p.label}</div>
+                <div className="eyebrow eyebrow-domain mb-6">{p.label}</div>
                 <h3 className="font-display text-[clamp(2rem,5.2vw,4.5rem)] leading-[0.95]">
                   {p.title}
                 </h3>

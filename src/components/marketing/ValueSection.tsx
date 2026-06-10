@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { pricing } from "@/lib/pricing";
+import { domainTags } from "@/components/marketing/domainTags";
 
 export default async function ValueSection() {
   const t = await getTranslations("Marketing.value");
@@ -9,14 +10,14 @@ export default async function ValueSection() {
     {
       n: "01",
       eyebrow: t("pillar1.eyebrow"),
-      title: t("pillar1.title"),
+      title: t.rich("pillar1.title", domainTags),
       body: t("pillar1.body"),
       foot: t("pillar1.foot"),
     },
     {
       n: "02",
       eyebrow: t("pillar2.eyebrow"),
-      title: t("pillar2.title"),
+      title: t.rich("pillar2.title", domainTags),
       body: t("pillar2.body"),
       foot: t("pillar2.foot"),
     },

@@ -7,6 +7,7 @@ import Container from "@/components/Container";
 import CountUp from "@/components/CountUp";
 import Spotlight from "@/components/Spotlight";
 import Link from "next/link";
+import { domainTags } from "@/components/marketing/domainTags";
 
 const ease = [0.2, 0.7, 0.2, 1] as const;
 
@@ -185,7 +186,7 @@ export default function Hero() {
               >
                 {t("subline")}
                 <br />
-                {t("subline2")}
+                {t.rich("subline2", domainTags)}
               </motion.p>
 
               <motion.div
@@ -266,7 +267,7 @@ function HeroContent({
           <p className="md:col-span-6 text-fg-dim text-lg md:text-xl leading-relaxed max-w-xl">
             {t("subline")}
             <br />
-            {t("subline2")}
+            {t.rich("subline2", domainTags)}
           </p>
           <div className="md:col-span-6 flex flex-wrap items-center gap-3 md:justify-end">
             <Link href="/login" className="btn btn-primary">
