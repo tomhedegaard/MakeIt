@@ -19,7 +19,7 @@ export default function PageHeader({
       <Container className="py-12 md:py-16">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <div className="eyebrow mb-4">{eyebrow}</div>
+            <div className="eyebrow eyebrow-domain mb-4">{eyebrow}</div>
             <h1 className="font-display text-[clamp(2.4rem,6vw,4.5rem)] leading-[0.95]">
               {title}
             </h1>

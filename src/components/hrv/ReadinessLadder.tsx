@@ -11,8 +11,10 @@ import type { ReadinessBucket } from "@/lib/hrv/types";
  * member is still warming up: all segments render in a uniform neutral
  * outline plus an explanatory caption.
  *
- * Monochrome only — the filled / outline / sketch hierarchy is expressed
- * purely through fill, stroke weight, and opacity.
+ * The filled / outline / sketch hierarchy is expressed through fill,
+ * stroke weight, and opacity. The active bucket fills in the domain
+ * color (heart, via the /hrv data-domain scope) — it is data-ink,
+ * the one place color is allowed (docs/DOMAIN_COLOR_SYSTEM.md).
  */
 
 /** Bottom-up order: index 0 is the bottom rung of the ladder. */
@@ -49,8 +51,8 @@ function toneFor(
 }
 
 const TONE_CLASSES: Record<SegmentTone, string> = {
-  // Solid block — the member's current readiness.
-  filled: "bg-fg border border-fg",
+  // Solid block — the member's current readiness, in domain ink.
+  filled: "bg-domain border border-domain",
   // Hairline outline — immediate neighbours.
   outline: "border border-line-strong",
   // Faint, thinner sketch line — distant segments.

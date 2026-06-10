@@ -168,6 +168,10 @@ html.cursor-custom * {
   color: var(--fg-dim);
 }
 
+/* Opt-in domain kicker — colored only inside a [data-domain] scope,
+ * falls back to the monochrome .eyebrow color everywhere else */
+[data-domain] .eyebrow-domain { color: var(--domain); }
+
 .numeric {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
@@ -299,25 +303,16 @@ html.cursor-custom * {
 .input::placeholder { color: var(--fg-faint); }
 textarea.input { min-height: 4.5rem; resize: vertical; }
 
-/* Pulse dot */
+/* Pulse dot — domain-aware: inherits hue from the nearest
+ * [data-domain] scope, stays white everywhere else */
 @keyframes pulseDot {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 242, 236, 0.55); }
-  50%      { box-shadow: 0 0 0 6px rgba(245, 242, 236, 0); }
-}
-.pulse-dot {
-  width: 8px; height: 8px; border-radius: 999px; background: var(--fg);
-  animation: pulseDot 1.8s ease-out infinite;
-}
-
-/* Domain-aware pulse dot — inherits hue from nearest [data-domain] */
-@keyframes pulseDotDomain {
   0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--domain, var(--fg)) 55%, transparent); }
   50%      { box-shadow: 0 0 0 6px transparent; }
 }
-.pulse-dot-domain {
+.pulse-dot {
   width: 8px; height: 8px; border-radius: 999px;
   background: var(--domain, var(--fg));
-  animation: pulseDotDomain 1.8s ease-out infinite;
+  animation: pulseDot 1.8s ease-out infinite;
 }
 
 /* Input */
