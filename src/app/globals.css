@@ -92,6 +92,9 @@
   --color-mind:       var(--mind);
   --color-mind-tint:  var(--mind-tint);
   --color-mind-line:  var(--mind-line);
+  --color-mind-energy: var(--mind-energy);
+  --color-mind-stress: var(--mind-stress);
+  --color-mind-focus:  var(--mind-focus);
 
   /* Contextual domain utilities — resolve via the nearest
    * [data-domain] ancestor; fall back to monochrome */
