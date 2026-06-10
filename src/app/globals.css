@@ -175,6 +175,14 @@ html.cursor-custom * {
  * falls back to the monochrome .eyebrow color everywhere else */
 [data-domain] .eyebrow-domain { color: var(--domain); }
 
+/* Dashboard tile accent — the one place a structural stroke is allowed.
+ * Short 24×2px bar in the tile's domain hue (docs/DOMAIN_COLOR_SYSTEM.md §3) */
+.domain-stroke {
+  display: block;
+  width: 24px; height: 2px; border-radius: 1px;
+  background: var(--domain, var(--line-bright));
+}
+
 .numeric {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-variant-numeric: tabular-nums;

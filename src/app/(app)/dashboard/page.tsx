@@ -210,6 +210,7 @@ export default async function TodayPage() {
       {reviewedCount > 0 ? (
         <Link
           href="/profile#form-checks"
+          data-domain="body"
           className="block surface-2 rounded-xl px-5 py-4 lift"
           style={{ borderColor: "var(--line-bright)" }}
         >
@@ -236,12 +237,14 @@ export default async function TodayPage() {
       {/* Today's session */}
       <section
         aria-label={t("todaySession.ariaLabel")}
+        data-domain="body"
         className="surface-2 rounded-2xl overflow-hidden"
       >
         <div className="px-5 pt-5 pb-4 border-b hairline">
+          <span className="domain-stroke mb-3" aria-hidden />
           <div className="flex items-center gap-2 mb-3 flex-wrap">
             <span className="pulse-dot" />
-            <span className="eyebrow">{t("todaySession.eyebrow", { programCode: today.programCode, week: today.week })}</span>
+            <span className="eyebrow eyebrow-domain">{t("todaySession.eyebrow", { programCode: today.programCode, week: today.week })}</span>
             {today.isDeload ? (
               <span className="ml-auto numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
                 {t("todaySession.deload")}
@@ -448,11 +451,12 @@ function HrvChip({ hrv }: { hrv: HrvChipData | null }) {
   return (
     <Link
       href="/hrv"
+      data-domain="heart"
       className="block surface-2 rounded-lg px-5 py-4 lift group"
     >
       <div className="flex items-center gap-4">
         <div className="flex-1 min-w-0">
-          <div className="eyebrow mb-1.5">HRV readiness</div>
+          <div className="eyebrow eyebrow-domain mb-1.5">HRV readiness</div>
           {hrv ? (
             <div className="flex items-baseline gap-2">
               <span className="numeric text-2xl lg:text-3xl">
