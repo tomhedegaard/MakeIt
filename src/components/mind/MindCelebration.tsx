@@ -90,7 +90,7 @@ export default function MindCelebration({ kind }: CelebrationProps) {
       className="relative rounded-2xl border-2 border-fg/40 bg-bg-2 p-6 md:p-8 space-y-3 overflow-hidden"
     >
       <div
-        className="absolute inset-0 bg-gradient-to-br from-yellow-300/5 via-transparent to-emerald-300/5 pointer-events-none"
+        className="absolute inset-0 bg-gradient-to-br from-mind-energy/5 via-transparent to-mind-focus/5 pointer-events-none"
         aria-hidden
       />
       <div className="relative space-y-3">

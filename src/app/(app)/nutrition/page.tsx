@@ -206,8 +206,8 @@ function KcalAdjustBanner({
 }) {
   const sign = delta > 0 ? "+" : "";
   return (
-    <div className="surface-2 rounded-xl border border-blue-400/40 px-5 py-3 text-sm">
-      <span className="eyebrow text-blue-400 mr-2">{t("page.kcalAdjustEyebrow")}</span>
+    <div className="surface-2 rounded-xl border hairline-strong px-5 py-3 text-sm">
+      <span className="eyebrow mr-2">{t("page.kcalAdjustEyebrow")}</span>
       {t.rich("page.kcalAdjustBody", {
         sign,
         delta,
@@ -234,8 +234,8 @@ function QuotaBanner({
   const reset = describeNextAvailable(limit.nextAvailableAt);
   const label = kind === "plan" ? t("page.quotaLabelPlan") : t("page.quotaLabelSwap");
   return (
-    <div className="surface-2 rounded-xl border border-yellow-400/40 px-5 py-3 text-sm">
-      <span className="eyebrow text-yellow-400 mr-2">{t("page.quotaEyebrow")}</span>
+    <div className="surface-2 rounded-xl border border-warn/40 px-5 py-3 text-sm">
+      <span className="eyebrow text-warn mr-2">{t("page.quotaEyebrow")}</span>
       {t("page.quotaBody", {
         label,
         dailyUsed: limit.daily.used,

@@ -264,7 +264,7 @@ export default function VideoRecorder({
               className="w-full h-full object-cover"
             />
             <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-black/60 rounded-full px-2 py-1">
-              <span className="size-2 rounded-full bg-red-500 animate-pulse" aria-hidden />
+              <span className="size-2 rounded-full bg-danger animate-pulse" aria-hidden />
               <span className="font-mono text-[11px] tabular-nums text-white">
                 {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}
               </span>
@@ -322,7 +322,7 @@ export default function VideoRecorder({
       ) : null}
 
       {error ? (
-        <p className="text-[10px] font-mono text-red-400">{error}</p>
+        <p className="text-[10px] font-mono text-danger">{error}</p>
       ) : null}
     </div>
   );

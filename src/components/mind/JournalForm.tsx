@@ -69,7 +69,7 @@ export default function JournalForm({
         </div>
 
         {error ? (
-          <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-300">
+          <div className="rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
             {error}
           </div>
         ) : null}
