@@ -201,12 +201,14 @@ export default async function RepsPage() {
             <ul className="divide-y divide-line border hairline rounded-lg overflow-hidden">
               {transactions.map((tx) => {
                 const cat = txCategory(tx.reference_type);
+                // Domain hues: mental → mind, training → body.
+                // Coach-school stays monochrome (no domain color in v1).
                 const dot =
                   cat === "mental"
-                    ? "bg-emerald-300"
+                    ? "bg-mind"
                     : cat === "coaching"
-                      ? "bg-yellow-300"
-                      : "bg-sky-300";
+                      ? "bg-fg/50"
+                      : "bg-body";
                 return (
                   <li
                     key={tx.id}

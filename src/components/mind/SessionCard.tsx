@@ -25,7 +25,7 @@ export default function SessionCard({
       className="block rounded-2xl border hairline bg-bg-2/30 hover:bg-bg-2/60 transition-colors p-5 space-y-3 group"
     >
       <div className="flex items-baseline justify-between">
-        <div className="eyebrow">{CATEGORY_LABEL[session.category]}</div>
+        <div className="eyebrow eyebrow-domain">{CATEGORY_LABEL[session.category]}</div>
         <div className="text-fg-dim text-xs tabular-nums">{minutes} min</div>
       </div>
       <h3 className="font-display text-xl group-hover:translate-x-0.5 transition-transform">
@@ -35,7 +35,7 @@ export default function SessionCard({
         <p className="text-fg-dim text-sm">{session.subtitle}</p>
       ) : null}
       {completed ? (
-        <div className="text-xs text-emerald-300/80 pt-1">✓ Gennemført</div>
+        <div className="text-xs text-domain/80 pt-1">✓ Gennemført</div>
       ) : null}
     </Link>
   );

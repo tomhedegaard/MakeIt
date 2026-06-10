@@ -25,7 +25,7 @@
       "madeInSuffix": "Copenhagen"
     },
     "subline": "MakeIt isn't just straps and cuffs.",
-    "subline2": "It's the inner universe for the crew behind it — coaching, community, loyalty and HRV-aware recovery in one place. Built in Copenhagen. Made for athletes who lift heavy.",
+    "subline2": "It's the inner universe for the crew behind it — coaching, community, loyalty and <heart>HRV-aware recovery</heart> in one place. Built in Copenhagen. Made for athletes who lift heavy.",
     "ctaPrimary": "Get access",
     "ctaSecondary": "Learn more",
     "ctaTertiary": "Try the engine ↓"
@@ -83,7 +83,7 @@
     "engine": {
       "label": "02 — Engine",
       "title": "The program rewrites itself. On your body's terms.",
-      "body": "Every morning at 05:30 the engine reads your HRV, your sleep, last session's RPE, and your most recent form-checks. It adjusts today's session — or doesn't — and tells you why. Munk sees the escalation before you do.",
+      "body": "Every morning at 05:30 the engine reads your <heart>HRV</heart>, your <mind>sleep</mind>, last session's <body>RPE</body>, and your most recent form-checks. It adjusts today's session — or doesn't — and tells you why. Munk sees the escalation before you do.",
       "bullet1": "Top-set reduction, accessory cut, exercise swap — or no_change. Never more than one change per session.",
       "bullet2": "HRV very_low → session paused, mobility + walk, Munk notified",
       "bullet3": "You can always say \"keep original\" — nothing happens behind your back",
@@ -122,7 +122,7 @@
     "mind": {
       "label": "06 — Mental engine",
       "title": "The head, in the equation. Not as an accessory.",
-      "body": "Real health is physical AND mental. A 60-second mind-check daily builds a mental graph parallel to your HRV. When mind-checks show strain for 3 days, the Adaptive Engine dials down without waiting for HRV to break — because the head often feels it first. Private journaling, AI coach written for your week, and — when you tier up — crew sharing so you don't go alone.",
+      "body": "Real health is physical AND mental. A 60-second <mind>mind-check</mind> daily builds a mental graph parallel to your <heart>HRV</heart>. When mind-checks show strain for 3 days, the Adaptive Engine dials down without waiting for HRV to break — because the head often feels it first. Private journaling, AI coach written for your week, and — when you tier up — crew sharing so you don't go alone.",
       "bullet1": "Mind-check × HRV × training — Adaptive Engine fuses all three. No other app does.",
       "bullet2": "AI coach writes today's reflection based on your signal — not a generic meditation.",
       "bullet3": "Privacy as progression: Lifter private, Athlete unlocks buddy share, Beast unlocks circles. Your journal is always yours.",
@@ -221,10 +221,40 @@
       }
     }
   },
+  "domainIndex": {
+    "eyebrow": "The color code",
+    "heading": "Four colors. Four worlds.",
+    "intro": "The base is black and white — we don't touch that. Color means one thing: where in your health you are. The same four colors repeat in the menu, on the cards and in the charts, so you always know what you're looking at.",
+    "body": {
+      "kicker": "Training",
+      "title": "Body",
+      "body": "Programs, exercises and sessions. Orange is the load you control.",
+      "surfaces": "Programs · Exercises · Live session"
+    },
+    "food": {
+      "kicker": "Nutrition",
+      "title": "Food",
+      "body": "Meal plan, shopping and weight. Green tracks the fuel.",
+      "surfaces": "Meal plan · Shopping · Weight"
+    },
+    "heart": {
+      "kicker": "Pulse & HRV",
+      "title": "Heart",
+      "body": "Readiness, baseline and 60-day trend. Red is the engine that sets the pace.",
+      "surfaces": "Readiness · Trends · Insights"
+    },
+    "mind": {
+      "kicker": "Mind",
+      "title": "Mind",
+      "body": "Check-in, journal and sessions. Blue keeps the head in the equation.",
+      "surfaces": "Check-in · Journal · Sessions"
+    },
+    "note": "Same numbers as the menu — 02, 03, 05, 06. The color follows you all the way in."
+  },
   "app": {
     "eyebrow": "06 — The App",
     "heading": "Here's how it looks.",
-    "intro": "Six screens that define your week — from the first morning tap, to the nudge above the first lift that adapts the day's load to your HRV, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
+    "intro": "Six screens that define your week — from the first morning tap, to the nudge above the first lift that adapts the day's load to your <heart>HRV</heart>, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Today's session, one tap to start",
@@ -334,13 +364,13 @@
     "marketLabel": "market average for personal coaching",
     "pillar1": {
       "eyebrow": "Automated",
-      "title": "AI builds the program",
+      "title": "AI builds <body>the program</body>",
       "body": "Personal strength and hypertrophy programs are generated from your maxes, your history and your goal — and updated week by week based on how you actually lift.",
       "foot": "No waiting · no template PDFs"
     },
     "pillar2": {
       "eyebrow": "Drafted by AI, signed by Munk",
-      "title": "Form-check with Munk's signature",
+      "title": "<body>Form-check</body> with Munk's signature",
       "body": "AI drafts the reply in Munk's voice in seconds, and Munk edits or rewrites in up to 30 seconds. You never get an AI reply without his name on it.",
       "foot": "AI draft + Munk signature · within 24h"
     },

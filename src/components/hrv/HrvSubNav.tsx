@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils";
  * `HrvSubNav` — compact sub-navigation shared across the four `/hrv` pages.
  *
  * A horizontal row of four links: I dag (`/hrv`) · Forløb (`/hrv/trends`) ·
- * Indsigt (`/hrv/insights`) · Lær (`/hrv/learn`). The active link is emphasised
- * via weight + opacity only — monochrome, no colour accents (MakeIt design
- * language).
+ * Indsigt (`/hrv/insights`) · Lær (`/hrv/learn`). The active link keeps white
+ * text but underlines in the heart domain color (resolved via the /hrv
+ * layout's data-domain scope) — see docs/DOMAIN_COLOR_SYSTEM.md.
  *
  * Client component: reads `usePathname` to resolve the active link. `/hrv` is
  * matched exactly so it doesn't light up on a sub-route.
@@ -44,7 +44,7 @@ export default function HrvSubNav() {
             className={cn(
               "transition-colors",
               active
-                ? "text-fg underline underline-offset-4"
+                ? "text-fg underline underline-offset-4 decoration-2 decoration-domain"
                 : "text-fg-faint hover:text-fg",
             )}
           >

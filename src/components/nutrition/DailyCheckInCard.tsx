@@ -58,6 +58,7 @@ export default function DailyCheckInCard({
   return (
     <>
     <article
+      data-domain="food"
       className="surface-2 rounded-2xl overflow-hidden"
       style={{
         borderColor: isActionable ? "var(--line-bright)" : undefined,
@@ -69,7 +70,7 @@ export default function DailyCheckInCard({
           className={isActionable ? "pulse-dot mt-1.5" : "size-2 rounded-full bg-fg/40 mt-1.5"}
         />
         <div className="flex-1 min-w-0">
-          <div className="eyebrow mb-1.5 flex items-center gap-2 flex-wrap">
+          <div className="eyebrow eyebrow-domain mb-1.5 flex items-center gap-2 flex-wrap">
             <span>{t("eyebrow")}</span>
             <span aria-hidden className="text-fg-faint">·</span>
             <span>

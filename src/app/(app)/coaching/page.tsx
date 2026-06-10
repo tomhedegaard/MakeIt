@@ -55,7 +55,7 @@ export default async function TrainPage() {
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2 pb-1">
-        <div className="eyebrow mb-2">{t("header.eyebrow")}</div>
+        <div className="eyebrow eyebrow-domain mb-2">{t("header.eyebrow")}</div>
         <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
           {t("header.title")}
         </h1>

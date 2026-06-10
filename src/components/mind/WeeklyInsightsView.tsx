@@ -98,7 +98,7 @@ function MetricCell({
       {delta !== null && delta !== 0 ? (
         <div
           className={`text-xs mt-1 ${
-            (delta > 0) === higherIsBetter ? "text-emerald-300" : "text-yellow-300"
+            (delta > 0) === higherIsBetter ? "text-ok" : "text-warn"
           }`}
         >
           {delta > 0 ? "+" : ""}
@@ -132,7 +132,7 @@ function CountCell({
       {delta !== 0 ? (
         <div
           className={`text-xs mt-1 ${
-            delta > 0 ? "text-emerald-300" : "text-yellow-300"
+            delta > 0 ? "text-ok" : "text-warn"
           }`}
         >
           {delta > 0 ? "+" : ""}

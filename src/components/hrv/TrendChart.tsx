@@ -10,9 +10,11 @@ import {
  * no client island. All geometry comes from `buildTrendChartModel`; this
  * component is a thin renderer that only emits SVG elements from the model.
  *
- * Monochrome strength-editorial: every stroke / fill is `currentColor`
- * (the SVG inherits the surrounding text colour) with opacity expressing
- * the visual hierarchy — NO colour accents.
+ * Strength-editorial with domain ink: axes and labels stay monochrome
+ * (`currentColor` + opacity), while the data itself — baseline band,
+ * mean line and daily points — renders in the heart domain color
+ * resolved from the /hrv data-domain scope (falls back to currentColor
+ * outside it). See docs/DOMAIN_COLOR_SYSTEM.md.
  *
  * Z-order, back to front: baseline band → 7-day mean line → daily points
  * → axis ticks. Sick days render as hollow (outline-only) dots.
@@ -63,22 +65,22 @@ export default function TrendChart({
           baseline-bånd. {readings.length} målinger.
         </desc>
 
-        {/* 1. Baseline band — translucent region behind everything. */}
+        {/* 1. Baseline band — translucent domain-ink region behind everything. */}
         {model.baselineBand ? (
           <path
             d={model.baselineBand.path}
-            fill="currentColor"
+            fill="var(--domain, currentColor)"
             fillOpacity={0.15}
             stroke="none"
           />
         ) : null}
 
-        {/* 2. 7-day mean line. */}
+        {/* 2. 7-day mean line — primary data ink. */}
         {model.meanLinePath ? (
           <path
             d={model.meanLinePath}
             fill="none"
-            stroke="currentColor"
+            stroke="var(--domain, currentColor)"
             strokeWidth={1.5}
             strokeLinejoin="round"
             strokeLinecap="round"
@@ -92,8 +94,8 @@ export default function TrendChart({
             cx={p.x}
             cy={p.y}
             r={2.5}
-            fill={p.isSick ? "none" : "currentColor"}
-            stroke="currentColor"
+            fill={p.isSick ? "none" : "var(--domain, currentColor)"}
+            stroke="var(--domain, currentColor)"
             strokeWidth={p.isSick ? 1 : 0}
           />
         ))}
