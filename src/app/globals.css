@@ -23,7 +23,47 @@
   /* Accents (still monochrome — depth via cool undertone) */
   --steel:        #1A1D24;
   --signal:       #F5F2EC; /* emphasis = white, not color */
+
+  /* Domain accents — "farve er retning, ikke dekoration".
+   * Only allowed in: kickers, chart data-ink, active nav, dots,
+   * badge tints and the dashboard tile accent stroke.
+   * Never in: buttons/CTAs, alerts, body text, large fills.
+   * See docs/DOMAIN_COLOR_SYSTEM.md */
+  --heart: #F2545B; /* HRV, puls, kardiovaskulært */
+  --food:  #45C487; /* kost, måltider, vægt */
+  --body:  #FF9C41; /* træning, øvelser, programmer */
+  --mind:  #5B9DF5; /* mentalt, check-in, journal, søvn */
+
+  --heart-tint: color-mix(in oklab, var(--heart) 12%, transparent);
+  --food-tint:  color-mix(in oklab, var(--food) 12%, transparent);
+  --body-tint:  color-mix(in oklab, var(--body) 12%, transparent);
+  --mind-tint:  color-mix(in oklab, var(--mind) 12%, transparent);
+
+  --heart-line: color-mix(in oklab, var(--heart) 32%, transparent);
+  --food-line:  color-mix(in oklab, var(--food) 32%, transparent);
+  --body-line:  color-mix(in oklab, var(--body) 32%, transparent);
+  --mind-line:  color-mix(in oklab, var(--mind) 32%, transparent);
+
+  /* Mind chart series — cool family so the graph reads as one domain
+   * while the three series stay distinguishable */
+  --mind-energy: #9F8CFB;
+  --mind-stress: #5B9DF5;
+  --mind-focus:  #6FE0E8;
+
+  /* Status — separate from domains. Status colors only appear in
+   * filled alerts/badges WITH icon and text; domain colors never do. */
+  --ok:     #4ADE80;
+  --warn:   #FACC15;
+  --danger: #F87171;
 }
+
+/* data-domain scope — set once on a layout/section/card, every
+ * descendant resolves text-domain / bg-domain-tint / border-domain-line
+ * to the right hue. One component, four colors, zero props. */
+[data-domain="heart"] { --domain: var(--heart); --domain-tint: var(--heart-tint); --domain-line: var(--heart-line); }
+[data-domain="food"]  { --domain: var(--food);  --domain-tint: var(--food-tint);  --domain-line: var(--food-line); }
+[data-domain="body"]  { --domain: var(--body);  --domain-tint: var(--body-tint);  --domain-line: var(--body-line); }
+[data-domain="mind"]  { --domain: var(--mind);  --domain-tint: var(--mind-tint);  --domain-line: var(--mind-line); }
 
 @theme inline {
   --color-bg:          var(--bg);
@@ -38,6 +78,31 @@
   --color-line-bright: var(--line-bright);
   --color-steel:       var(--steel);
   --color-signal:      var(--signal);
+
+  /* Domain accents */
+  --color-heart:      var(--heart);
+  --color-heart-tint: var(--heart-tint);
+  --color-heart-line: var(--heart-line);
+  --color-food:       var(--food);
+  --color-food-tint:  var(--food-tint);
+  --color-food-line:  var(--food-line);
+  --color-body:       var(--body);
+  --color-body-tint:  var(--body-tint);
+  --color-body-line:  var(--body-line);
+  --color-mind:       var(--mind);
+  --color-mind-tint:  var(--mind-tint);
+  --color-mind-line:  var(--mind-line);
+
+  /* Contextual domain utilities — resolve via the nearest
+   * [data-domain] ancestor; fall back to monochrome */
+  --color-domain:      var(--domain, var(--fg-dim));
+  --color-domain-tint: var(--domain-tint, transparent);
+  --color-domain-line: var(--domain-line, var(--line-strong));
+
+  /* Status */
+  --color-ok:     var(--ok);
+  --color-warn:   var(--warn);
+  --color-danger: var(--danger);
 
   --font-sans:    var(--font-sans-stack);
   --font-display: var(--font-display-stack);
@@ -244,6 +309,17 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   animation: pulseDot 1.8s ease-out infinite;
 }
 
+/* Domain-aware pulse dot — inherits hue from nearest [data-domain] */
+@keyframes pulseDotDomain {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--domain, var(--fg)) 55%, transparent); }
+  50%      { box-shadow: 0 0 0 6px transparent; }
+}
+.pulse-dot-domain {
+  width: 8px; height: 8px; border-radius: 999px;
+  background: var(--domain, var(--fg));
+  animation: pulseDotDomain 1.8s ease-out infinite;
+}
+
 /* Input */
 .field {
   width: 100%;
@@ -417,6 +493,9 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   background: var(--fg);
   border-radius: 0 0 2px 2px;
 }
+/* Domain tabs activate in their hue instead of white */
+.tab[data-domain][data-active="true"] { color: var(--domain); }
+.tab[data-domain][data-active="true"]::before { background: var(--domain); }
 .tab-icon { width: 22px; height: 22px; }
 
 /* ---------------------------------------------------------------- *
