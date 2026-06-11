@@ -46,5 +46,9 @@
       "unpaid": "Ubetalt",
       "paused": "Pauset"
     }
+  },
+  "native": {
+    "subtitle": "Status på dit medlemskab.",
+    "note": "Medlemskab administreres uden for appen."
   }
 }

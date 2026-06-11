@@ -2949,6 +2949,7 @@ export type Database = {
           last_seen_at: string
           member_id: string
           p256dh: string
+          platform: string
           user_agent: string | null
         }
         Insert: {
@@ -2959,6 +2960,7 @@ export type Database = {
           last_seen_at?: string
           member_id: string
           p256dh: string
+          platform?: string
           user_agent?: string | null
         }
         Update: {
@@ -2969,6 +2971,7 @@ export type Database = {
           last_seen_at?: string
           member_id?: string
           p256dh?: string
+          platform?: string
           user_agent?: string | null
         }
         Relationships: [
