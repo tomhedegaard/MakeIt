@@ -92,12 +92,18 @@ async function dispatchPush(
 
   if (!subs || subs.length === 0) return 0;
 
+  // Web-push only: native rows (Fase 3) hold APNs/FCM device-tokens,
+  // not https endpoints — the shape check routes without depending on
+  // the platform column existing yet (migration 0050).
+  const webSubs = subs.filter((s) => s.endpoint.startsWith("http"));
+  if (webSubs.length === 0) return 0;
+
   const json = JSON.stringify(payload);
   const deadIds: string[] = [];
   let sent = 0;
 
   await Promise.all(
-    subs.map(async (s) => {
+    webSubs.map(async (s) => {
       try {
         await webpush.sendNotification(
           {

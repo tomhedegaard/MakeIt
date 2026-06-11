@@ -7,17 +7,24 @@ import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { sendPushToMember, PUSH_ENABLED } from "@/lib/push";
 
 /**
- * Save a Web Push subscription for the current member.
+ * Save a push subscription for the current member.
  *
  * Endpoint is unique globally — re-subscribing from the same browser
  * yields the same endpoint. We upsert by endpoint so the row is
  * refreshed (last_seen_at) without duplicating.
+ *
+ * platform routes the sender (APP_STORE_PLAN Fase 2): 'web' rows are
+ * web-push; 'ios'/'android' rows hold APNs/FCM device-tokens from the
+ * native shells (Fase 3). Defensive: if migration 0050 hasn't been
+ * applied yet (42703 = column does not exist), retry without platform
+ * so web push never regresses on a stale schema.
  */
 export async function savePushSubscriptionAction(input: {
   endpoint: string;
   p256dh: string;
   auth: string;
   userAgent?: string;
+  platform?: "web" | "ios" | "android";
 }): Promise<{ ok: boolean }> {
   if (!SUPABASE_ENABLED) return { ok: true };
 
@@ -27,19 +34,27 @@ export async function savePushSubscriptionAction(input: {
   const supabase = await createClient();
   if (!supabase) return { ok: false };
 
-  const { error } = await supabase
+  const row = {
+    member_id: member.id,
+    endpoint: input.endpoint,
+    p256dh: input.p256dh,
+    auth: input.auth,
+    user_agent: input.userAgent ?? null,
+    last_seen_at: new Date().toISOString(),
+  };
+
+  let { error } = await supabase
     .from("push_subscriptions")
     .upsert(
-      {
-        member_id: member.id,
-        endpoint: input.endpoint,
-        p256dh: input.p256dh,
-        auth: input.auth,
-        user_agent: input.userAgent ?? null,
-        last_seen_at: new Date().toISOString(),
-      },
+      { ...row, platform: input.platform ?? "web" },
       { onConflict: "endpoint" }
     );
+
+  if (error?.code === "42703") {
+    ({ error } = await supabase
+      .from("push_subscriptions")
+      .upsert(row, { onConflict: "endpoint" }));
+  }
 
   if (error) {
     console.warn("[push] save subscription failed:", error.message);
