@@ -65,5 +65,13 @@
     "stable": "Stabil",
     "up": "Op {pct} procent",
     "down": "Ned {pct} procent"
+  },
+  "installHint": {
+    "eyebrow": "Få appen",
+    "title": "MakeIt på hjemmeskærmen",
+    "bodyIos": "Tryk på Del-ikonet i Safari og vælg “Føj til hjemmeskærm” — så åbner MakeIt som app, og du kan slå notifikationer til.",
+    "bodyAndroid": "Installér MakeIt som app — fuld skærm, hurtigere start og notifikationer.",
+    "install": "Installér",
+    "dismiss": "Ikke nu"
   }
 }

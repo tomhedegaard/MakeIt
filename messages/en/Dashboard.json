@@ -65,5 +65,13 @@
     "stable": "Stable",
     "up": "Up {pct} percent",
     "down": "Down {pct} percent"
+  },
+  "installHint": {
+    "eyebrow": "Get the app",
+    "title": "MakeIt on your home screen",
+    "bodyIos": "Tap the Share icon in Safari and choose “Add to Home Screen” — MakeIt opens as an app and you can turn on notifications.",
+    "bodyAndroid": "Install MakeIt as an app — full screen, faster launch and notifications.",
+    "install": "Install",
+    "dismiss": "Not now"
   }
 }

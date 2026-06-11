@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import InstallHint from "@/components/pwa/InstallHint";
 import { getSession } from "@/lib/auth";
 import { TODAY_SESSION, totalSets } from "@/lib/workout";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
@@ -206,6 +207,8 @@ export default async function TodayPage() {
       />
 
       <HrvChip hrv={hrv} />
+
+      <InstallHint />
 
       {reviewedCount > 0 ? (
         <Link
