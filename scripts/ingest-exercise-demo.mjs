@@ -40,7 +40,11 @@ if (!/^[a-z0-9-]+$/.test(slug)) {
   process.exit(1);
 }
 
-const OUT = new URL("../public/exercise-demos/", import.meta.url).pathname;
+// Output-dir: default public/exercise-demos/ (core-løft, bundlet/offline);
+// override med MI_DEMO_OUT for at stage til Supabase Storage-upload.
+const OUT = process.env.MI_DEMO_OUT
+  ? (process.env.MI_DEMO_OUT.endsWith("/") ? process.env.MI_DEMO_OUT : process.env.MI_DEMO_OUT + "/")
+  : new URL("../public/exercise-demos/", import.meta.url).pathname;
 await mkdir(OUT, { recursive: true });
 
 // Bevar kildens aspect ratio (MoveKit er 1300×720 landscape, custom-
