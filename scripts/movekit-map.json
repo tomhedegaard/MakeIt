@@ -1,0 +1,27 @@
+{
+  "_doc": "Mapping fra MakeIts 20 øvelses-slugs (supabase/seed-exercises.sql) til MoveKit-kildeklip. confidence: 'match' = samme bevægelse; 'proxy' = tæt men afviger (redskab/variant), kræver godkendelse; 'gap' = intet godt klip i biblioteket. Brug: node scripts/ingest-movekit-batch.mjs",
+  "exercises": [
+    { "slug": "back-squat", "movekit": "barbell-squat", "confidence": "match" },
+    { "slug": "deadlift", "movekit": "barbell-deadlift", "confidence": "match" },
+    { "slug": "bench", "movekit": "barbell-bench-press", "confidence": "match" },
+    { "slug": "paused-bench", "movekit": "barbell-bench-press", "confidence": "match", "note": "Samme bevægelse som bench — paused er en tempo-cue, visuelt identisk" },
+    { "slug": "ohp", "movekit": "barbell-overhead-press", "confidence": "match" },
+    { "slug": "pull-up", "movekit": "pull-ups", "confidence": "match" },
+    { "slug": "row", "movekit": "barbell-bent-over-row", "confidence": "match" },
+    { "slug": "lunge", "movekit": "lunge-walking", "confidence": "match" },
+    { "slug": "khr", "movekit": "hanging-knee-raises", "confidence": "match" },
+    { "slug": "push-up", "movekit": "push-up", "confidence": "match" },
+    { "slug": "dip", "movekit": "parralel-bar-dips", "confidence": "match" },
+    { "slug": "plank", "movekit": "hand-plank", "confidence": "match" },
+    { "slug": "barbell-curl", "movekit": "barbell-curl", "confidence": "match" },
+    { "slug": "tricep-pushdown", "movekit": "cable-bar-pushdown", "confidence": "match" },
+    { "slug": "lateral-raise", "movekit": "dumbbell-lateral-raise", "confidence": "match" },
+
+    { "slug": "rdl", "movekit": "barbell-stiff-leg-deadlifts", "confidence": "proxy", "note": "Biblioteket har ingen barbell RDL; stiff-leg deadlift er nærmeste (minimal knæbøjning vs. RDL's bløde knæ)" },
+    { "slug": "push-press", "movekit": "barbell-thruster", "confidence": "proxy", "note": "Ingen ren barbell push-press; thruster er nærmeste (front squat + press). Alt: kettlebell-push-press" },
+    { "slug": "hip-thrust", "movekit": "kettlebell-hip-thrust", "confidence": "proxy", "note": "Ingen barbell hip thrust; samme bevægelse med kettlebell" },
+    { "slug": "standing-calf-raise", "movekit": "kettlebell-calf-raise", "confidence": "proxy", "note": "Ingen barbell/maskine standing calf raise; kettlebell-variant er nærmeste stående" },
+
+    { "slug": "front-squat", "movekit": null, "confidence": "gap", "note": "Intet front squat-klip i de 206. Kandidat til custom-render eller dumbbell-goblet-squat som svag proxy" }
+  ]
+}

@@ -43,9 +43,11 @@ if (!/^[a-z0-9-]+$/.test(slug)) {
 const OUT = new URL("../public/exercise-demos/", import.meta.url).pathname;
 await mkdir(OUT, { recursive: true });
 
-// Portræt 720×1280, pad (ikke beskær) så hele figuren bevares; 30 fps.
-const scalePad =
-  "scale=720:1280:force_original_aspect_ratio=decrease,pad=720:1280:(ow-iw)/2:(oh-ih)/2:color=0x00000000,fps=30";
+// Bevar kildens aspect ratio (MoveKit er 1300×720 landscape, custom-
+// renders kan være portræt). Skalér så længste kant ≤ 720 px (vises
+// ved max 240 px → 720 = 3× retina, rigeligt og let). force_divisible_by=2
+// holder dimensionerne lige til yuv420p. 30 fps, ingen padding/letterbox.
+const vf = "scale=720:720:force_original_aspect_ratio=decrease:force_divisible_by=2,fps=30";
 
 function run(label, args) {
   const r = spawnSync("ffmpeg", ["-y", ...args], { stdio: ["ignore", "ignore", "inherit"] });
@@ -62,7 +64,7 @@ const poster = `${OUT}${slug}-poster.jpg`;
 // MP4 (H.264) — universel fallback. yuv420p for bred afspilning.
 run("mp4", [
   "-i", src,
-  "-vf", `${scalePad},format=yuv420p`,
+  "-vf", `${vf},format=yuv420p`,
   "-c:v", "libx264", "-profile:v", "high", "-crf", "26", "-preset", "slow",
   "-an", "-movflags", "+faststart", "-pix_fmt", "yuv420p",
   mp4,
@@ -71,7 +73,7 @@ run("mp4", [
 // WebM (VP9) — primær. Alfa bevares kun med --alpha (yuva420p).
 run("webm", [
   "-i", src,
-  "-vf", `${scalePad},format=${alpha ? "yuva420p" : "yuv420p"}`,
+  "-vf", `${vf},format=${alpha ? "yuva420p" : "yuv420p"}`,
   "-c:v", "libvpx-vp9", "-crf", "34", "-b:v", "0", "-row-mt", "1",
   ...(alpha ? ["-auto-alt-ref", "0"] : []),
   "-an",
@@ -81,7 +83,7 @@ run("webm", [
 // Poster — ét still-frame fra ~apex (midt i klippet).
 run("poster", [
   "-i", src,
-  "-vf", `${scalePad},format=yuvj420p`,
+  "-vf", `${vf},format=yuvj420p`,
   "-frames:v", "1", "-ss", "00:00:01",
   "-q:v", "3",
   poster,
