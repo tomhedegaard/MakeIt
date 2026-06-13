@@ -79,6 +79,28 @@ rotere/zoome; animation phase-synkes via `AnimationMixer` mod `phases[]`.
    Samme `demoAssetUrl`-slot tager begge — ingen kodeændring ved udskiftning.
 2. **v2 = ja, byg interaktiv real-time 3D** på detaljesiden (se §6).
 
+## 3b. Kan vi generere flere øvelser ud fra MoveKit-biblioteket? Nej.
+
+Verificeret (2026-06-11): MoveKit leverer **udelukkende renderede MP4-klip** —
+ingen riggede 3D-kilder, ingen glTF/FBX/Blender, ingen rig-adgang. De 206 er
+derfor et **lukket katalog**, ikke en generativ base:
+
+- **Teknisk:** Renderet video er flade pixels; en renderet bænkpres kan ikke
+  gen-animeres til en skråbænk. Det generative aktiv er RIGGEN (figur + skelet),
+  ikke det bagte output.
+- **Licens:** "Own it forever, use commercially" er en brugs-licens, ikke en
+  derivat-/kilde-licens. AI-aflednig fra licenserede klip er både licensmæssigt
+  tvivlsomt og teknisk upålideligt for anatomisk korrekte stangløft.
+
+**Vejen til vilkårligt mange øvelser går gennem at EJE en rig:**
+- **v2 interaktiv 3D** (§6) — den riggede glTF-figur er motoren, der laver flere
+  øvelser direkte i appen.
+- **Custom-renders MED source-filer** — EXERCISE_VISUAL_BRIEF.md §"Source files"
+  beder allerede om Blender/C4D-kilderne netop for at kunne lave varianter senere.
+
+**Konsekvens:** MoveKit = hurtigt v1-indhold (køb til hastighed). Men betragt det
+ikke som fundamentet I udvider fra — det fundament er riggen.
+
 ## 4. v1-ingestion (MoveKit → pipelinen)
 
 MoveKit leverer MP4 + poster; pipelinen afleder en `.webm`-søskende fra
