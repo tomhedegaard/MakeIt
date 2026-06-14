@@ -49,3 +49,42 @@ for (const { src, size, file } of jobs) {
   await sharp(src).resize(size, size).png().toFile(`${OUT}${file}`);
   console.log(`✓ public/icons/${file} (${size}×${size})`);
 }
+
+/* ---------------------------------------------------------------- *
+ * Native shell sources (assets/ → @capacitor/assets generate)
+ * Icon 1024 + splash 2732 med mærket lille og centreret — splash
+ * skal føles som et blink af brandet, ikke en plakat.
+ * ---------------------------------------------------------------- */
+const ASSETS = new URL("../assets/", import.meta.url).pathname;
+await mkdir(ASSETS, { recursive: true });
+
+function splashSvg() {
+  const s = (2732 * 0.14) / 32;
+  const offset = (2732 - 32 * s) / 2;
+  return Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2732 2732">
+  <rect width="2732" height="2732" fill="${BG}"/>
+  <g transform="translate(${offset} ${offset}) scale(${s})">
+    <path d="M8 22 V10 L13 18 L18 10 V22" stroke="${FG}" stroke-width="2.2" fill="none" stroke-linejoin="miter"/>
+    <rect x="21" y="14" width="3" height="8" fill="${FG}"/>
+  </g>
+</svg>`);
+}
+
+const nativeJobs = [
+  { src: standard, size: 1024, file: "icon-only.png" },
+  { src: maskable, size: 1024, file: "icon-foreground.png" },
+  { src: splashSvg(), size: 2732, file: "splash.png" },
+  { src: splashSvg(), size: 2732, file: "splash-dark.png" },
+];
+
+await sharp({
+  create: { width: 1024, height: 1024, channels: 4, background: BG },
+})
+  .png()
+  .toFile(`${ASSETS}icon-background.png`);
+console.log("✓ assets/icon-background.png (1024×1024)");
+
+for (const { src, size, file } of nativeJobs) {
+  await sharp(src).resize(size, size).png().toFile(`${ASSETS}${file}`);
+  console.log(`✓ assets/${file} (${size}×${size})`);
+}

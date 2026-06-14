@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>MakeIt</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; min-height: 100dvh;
+    display: flex; align-items: center; justify-content: center;
+    background: #0A0A0B; color: #F5F2EC;
+    font-family: system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 24px;
+  }
+  main { max-width: 380px; text-align: center; }
+  .kicker {
+    font-family: ui-monospace, monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; color: #A8A6A0;
+  }
+  h1 {
+    font-size: 2.2rem; line-height: 0.95; text-transform: uppercase;
+    letter-spacing: -0.02em; margin: 14px 0 12px;
+  }
+  p { color: #A8A6A0; font-size: 15px; line-height: 1.6; }
+  button {
+    margin-top: 24px; height: 44px; padding: 0 22px;
+    font-family: ui-monospace, monospace; font-size: 12px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    background: #F5F2EC; color: #0A0A0B;
+    border: 1px solid #F5F2EC; border-radius: 999px; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<!-- Fallback shell: vises kun hvis den remote app (server.url i
+     capacitor.config.ts) ikke kan loades. Normal drift rammer
+     aldrig denne fil. -->
+<main>
+  <div class="kicker">MakeIt // HQ</div>
+  <h1>Ingen forbindelse</h1>
+  <p>Appen kræver netværk. Prøv igen, når du er online.</p>
+  <button onclick="location.href='https://makeit.tomhedegaard.dk'">Prøv igen →</button>
+</main>
+</body>
+</html>

@@ -56,3 +56,6 @@ next-env.d.ts
 # coach voice few-shot pool — local curated copy stays out of VCS
 # (the .example.json with STUBs IS committed as the seed schema doc)
 docs/coach-voice-samples.local.json
+
+# MoveKit source clips (468MB) — source assets, ikke i repo
+/MoveKit/

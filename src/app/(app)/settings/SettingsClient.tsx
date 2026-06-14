@@ -10,6 +10,7 @@ import {
 } from "./actions";
 import type { MemberSettings, HrvSettings } from "@/lib/data/settings";
 import PushToggle from "@/components/push/PushToggle";
+import NativePushToggle from "@/components/push/NativePushToggle";
 import LanguageSelector from "@/components/LanguageSelector";
 import HrvSettingsSection from "@/components/hrv/HrvSettingsSection";
 
@@ -175,7 +176,10 @@ export default function SettingsClient({
               {t("notifications.pushDescription")}
             </div>
           </div>
+          {/* Web og native gater sig selv: PushToggle forsvinder uden
+              PushManager (WKWebView), NativePushToggle uden shell. */}
           <PushToggle vapidPublicKey={vapidPublicKey} />
+          <NativePushToggle />
         </div>
         <ul className="divide-y hairline">
           <Toggle
