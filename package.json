@@ -13,6 +13,8 @@
     "apple:jwt": "node scripts/generate-apple-jwt.mjs",
     "seed:adaptive": "node scripts/seed-adaptive-demo.mjs",
     "seed:voice-samples": "node scripts/seed-coach-voice-samples.mjs",
+    "science:feed": "tsx scripts/science-feed.ts",
+    "science:feed:dry": "tsx scripts/science-feed.ts --fixture --dry-run",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
@@ -55,6 +57,7 @@
     "eslint-config-next": "16.2.4",
     "jsdom": "^25.0.1",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5",
     "vitest": "^3.2.4"
   }

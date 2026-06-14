@@ -1,0 +1,23 @@
+/* science.css — importér i app/science/page.tsx:  import "./science.css";
+   Matcher MakeIt's sort/hvide base med farve som domæne-signal. */
+.science { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; color: #ECECEE; }
+.science .kick { letter-spacing: .18em; font-size: 11px; color: #8A8A92; text-transform: uppercase; }
+.science h1 { font-size: 40px; margin: .2em 0 .1em; font-weight: 800; letter-spacing: -.02em; }
+.science .sub { color: #8A8A92; max-width: 60ch; }
+.science .sub a { color: #ECECEE; }
+.science .empty { color: #8A8A92; padding: 40px 0; }
+.science .feed { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 14px; }
+.science .card { display: flex; background: #141416; border: 1px solid #26262b; border-radius: 14px; overflow: hidden; }
+.science .bar { width: 5px; flex: none; }
+.science .body { padding: 18px 20px; }
+.science .meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 12px; margin-bottom: 8px; }
+.science .tag { border: 1px solid; padding: 2px 9px; border-radius: 999px; font-weight: 600; }
+.science .badge { background: #1d1d22; border: 1px solid #26262b; padding: 2px 9px; border-radius: 999px; }
+.science .verify { color: #4CAF7D; }
+.science h2 { font-size: 18px; margin: 2px 0 8px; line-height: 1.3; }
+.science .tldr { margin: 0 0 8px; line-height: 1.55; }
+.science .effect, .science .caveat { margin: 0 0 8px; color: #8A8A92; font-size: 13px; }
+.science code { background: #1d1d22; padding: 1px 6px; border-radius: 5px; font-size: 12px; }
+.science .foot { display: flex; justify-content: space-between; gap: 12px; align-items: center; font-size: 12px; color: #8A8A92; flex-wrap: wrap; }
+.science .foot a { color: #ECECEE; text-decoration: none; border-bottom: 1px solid #8A8A92; }
+.science footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #26262b; color: #8A8A92; font-size: 12px; }

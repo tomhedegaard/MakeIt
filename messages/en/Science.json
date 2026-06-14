@@ -1,0 +1,27 @@
+{
+  "metaTitle": "MakeIt // Science",
+  "metaDescription": "The latest credible research: nutrition, movement and mental wellbeing.",
+  "eyebrow": "MakeIt // HQ · Science",
+  "title": "The latest evidence, filtered hard.",
+  "subtitle": "Credible research on nutrition, movement and mental wellbeing — only meta-analyses, systematic reviews and RCTs from whitelisted journals. Updated automatically every day.",
+  "rss": "RSS",
+  "filters": {
+    "all": "All",
+    "allEvidence": "All evidence",
+    "domainLabel": "Filter by domain",
+    "evidenceLabel": "Filter by evidence level"
+  },
+  "domains": {
+    "mad": "Food",
+    "krop": "Body",
+    "sind": "Mind"
+  },
+  "empty": "No new studies passed the threshold today.",
+  "verified": "numbers verified",
+  "verifiedTitle": "Number verification against the source abstract",
+  "effectLabel": "Effect",
+  "caveatLabel": "Caveat",
+  "openAccess": "Open Access",
+  "readSource": "Read the source →",
+  "disclaimer": "Research summaries — not individual health or nutrition advice."
+}

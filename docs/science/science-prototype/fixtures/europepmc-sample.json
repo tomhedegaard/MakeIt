@@ -1,0 +1,145 @@
+{
+  "_comment": "Ægte Europe PMC-records (hentet juni 2026) brugt som offline-fixture, så prototypen kan køre uden netværk. Samme felt-form som det live REST-API returnerer i resultList.result[].",
+  "result": [
+    {
+      "id": "41712097",
+      "doi": "10.1007/s40279-025-02341-z",
+      "title": "The Effect of Carbohydrate Intake on Muscle Hypertrophy: A Systematic Review and Meta-analysis.",
+      "authorString": "Henselmans M, Vårvik FT, Izquierdo M.",
+      "journalInfo": { "journal": { "title": "Sports Medicine", "issn": "0112-1642", "essn": "1179-2035" }, "yearOfPublication": 2026 },
+      "pubYear": "2026",
+      "firstPublicationDate": "2026-02-19",
+      "firstIndexDate": "2026-02-20",
+      "isOpenAccess": "Y",
+      "pubTypeList": { "pubType": ["Meta-Analysis", "Systematic Review", "review-article", "Journal Article"] },
+      "meshHeadingList": { "meshHeading": [
+        { "majorTopic_YN": "Y", "descriptorName": "Muscle, Skeletal" },
+        { "majorTopic_YN": "N", "descriptorName": "Hypertrophy" },
+        { "majorTopic_YN": "Y", "descriptorName": "Dietary Carbohydrates" },
+        { "majorTopic_YN": "Y", "descriptorName": "Resistance Training" }
+      ] },
+      "abstractText": "Background High-carbohydrate diets are often recommended to enhance resistance training-induced muscle hypertrophy; however, the isolated effect of carbohydrate intake on muscle growth has not been systematically analyzed outside ketogenic diet conditions. Objective This meta-analysis aimed to assess whether a higher carbohydrate intake influences muscle hypertrophy under isonitrogenous conditions. Methods A systematic search identified randomized controlled trials comparing higher with lower carbohydrate intakes during resistance training in healthy adults. Results Eleven studies met the inclusion criteria. A pooled analysis revealed no significant effect of carbohydrate intake on muscle hypertrophy (SMD = 0.15, p = 0.23), with negligible heterogeneity across studies. GRADE certainty of evidence was low (2/4) because of imprecision and a moderate risk of bias. Conclusions A higher carbohydrate intake may not independently enhance muscle hypertrophy during resistance training, though certainty of evidence is low.",
+      "fullTextUrlList": { "fullTextUrl": [ { "site": "DOI", "url": "https://doi.org/10.1007/s40279-025-02341-z" } ] }
+    },
+    {
+      "id": "41343037",
+      "doi": "10.1007/s40279-025-02344-w",
+      "title": "The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains.",
+      "authorString": "Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC.",
+      "journalInfo": { "journal": { "title": "Sports Medicine", "issn": "0112-1642", "essn": "1179-2035" }, "yearOfPublication": 2026 },
+      "pubYear": "2026",
+      "firstPublicationDate": "2025-12-04",
+      "firstIndexDate": "2025-12-05",
+      "isOpenAccess": "N",
+      "pubTypeList": { "pubType": ["Meta-Analysis", "Systematic Review", "Journal Article"] },
+      "meshHeadingList": { "meshHeading": [
+        { "majorTopic_YN": "Y", "descriptorName": "Muscle, Skeletal" },
+        { "majorTopic_YN": "N", "descriptorName": "Hypertrophy" },
+        { "majorTopic_YN": "Y", "descriptorName": "Muscle Strength" },
+        { "majorTopic_YN": "Y", "descriptorName": "Resistance Training" }
+      ] },
+      "abstractText": "Background Weekly set volume and frequency are used to manipulate resistance training dosage. Objective We aimed to explore the dose-response relationships between key resistance training dosage variables (weekly set volume and frequency) and strength and hypertrophy. Methods A series of multi-level meta-regressions were performed for muscle hypertrophy and strength, utilizing 67 total studies of 2058 participants. Results The posterior probability of the marginal slope exceeding zero for the effect of volume on both hypertrophy and strength was 100%, indicating that gains in muscle size and strength increase as volume increases. However, both best-fit models suggest diminishing returns, with the diminishing returns for strength being considerably more pronounced. Conclusions Volume and frequency have unique dose-response relationships with hypertrophy and strength gains.",
+      "fullTextUrlList": { "fullTextUrl": [ { "site": "DOI", "url": "https://doi.org/10.1007/s40279-025-02344-w" } ] }
+    },
+    {
+      "id": "32067343",
+      "doi": "10.1111/obr.13007",
+      "title": "Hypertrophy versus muscular endurance training as therapeutic interventions in adults with type 2 diabetes mellitus: A systematic review and meta-analysis.",
+      "authorString": "Acosta-Manzano P, Rodriguez-Ayllon M, Acosta FM, Niederseer D, Niebauer J.",
+      "journalInfo": { "journal": { "title": "Obesity Reviews", "issn": "1467-7881", "essn": "1467-789X" }, "yearOfPublication": 2020 },
+      "pubYear": "2020",
+      "firstPublicationDate": "2020-02-17",
+      "firstIndexDate": "2020-02-19",
+      "isOpenAccess": "N",
+      "pubTypeList": { "pubType": ["Meta-Analysis", "Systematic Review", "Journal Article"] },
+      "meshHeadingList": { "meshHeading": [
+        { "majorTopic_YN": "N", "descriptorName": "Diabetes Mellitus, Type 2" },
+        { "majorTopic_YN": "Y", "descriptorName": "Resistance Training" },
+        { "majorTopic_YN": "Y", "descriptorName": "Endurance Training" }
+      ] },
+      "abstractText": "Resistance training (RT) is a powerful first-line intervention for the management of type 2 diabetes mellitus (T2DM). Both hypertrophy training and muscular endurance training improved HbA1c, insulin sensitivity, muscle strength, body mass index and fat mass. Overall, HT and MERT exert beneficial effects well comparable with aerobic training.",
+      "fullTextUrlList": { "fullTextUrl": [ { "site": "DOI", "url": "https://doi.org/10.1111/obr.13007" } ] }
+    },
+    {
+      "id": "42141930",
+      "doi": "10.1080/15502783.2026.2668435",
+      "title": "Creatine monohydrate for lean mass, strength, and bone density in postmenopausal women: a systematic review and meta-analysis.",
+      "authorString": "Naddafha S, Antonio J, Kreider RB, Stout JR.",
+      "journalInfo": { "journal": { "title": "Journal of the International Society of Sports Nutrition", "issn": "1550-2783", "essn": "1550-2783" }, "yearOfPublication": 2026 },
+      "pubYear": "2026",
+      "firstPublicationDate": "2026-05-16",
+      "firstIndexDate": "2026-05-19",
+      "isOpenAccess": "Y",
+      "pubTypeList": { "pubType": ["Meta-Analysis", "Systematic Review", "review-article", "Review", "Journal Article"] },
+      "meshHeadingList": { "meshHeading": [
+        { "majorTopic_YN": "Y", "descriptorName": "Creatine" },
+        { "majorTopic_YN": "N", "descriptorName": "Body Composition" },
+        { "majorTopic_YN": "Y", "descriptorName": "Dietary Supplements" },
+        { "majorTopic_YN": "Y", "descriptorName": "Muscle Strength" },
+        { "majorTopic_YN": "N", "descriptorName": "Resistance Training" }
+      ] },
+      "abstractText": "Background Menopause is accompanied by accelerated losses in muscle mass and strength and declining bone density. Whether creatine monohydrate benefits postmenopausal women are uncertain. Methods We systematically reviewed randomized, placebo-controlled trials examining creatine supplementation, with or without resistance training (RT), in postmenopausal women. Results Seven RCTs (n = 608 randomized) enrolled postmenopausal women (mean age approximately 62 y). Lean mass favored creatine: mean difference (MD) + 0.37 kg (95% CI + 0.05 to + 0.69). Leg-press 1RM improved with creatine: MD + 7.5 kg (95% CI + 2.2 to + 12.8). Benefits were evident when creatine >= 5 g/day was combined with RT; trials using <= 3 g/day without RT showed no measurable effect. Bone density was unchanged overall. Adverse events were mild and similar to placebo. Conclusions In postmenopausal women, creatine, particularly >= 5 g/day with RT, yields small but meaningful gains in lean mass and strength without evidence of harm. Effects on bone density remain unclear.",
+      "fullTextUrlList": { "fullTextUrl": [ { "site": "DOI", "url": "https://doi.org/10.1080/15502783.2026.2668435" } ] }
+    },
+    {
+      "id": "41433039",
+      "doi": "10.1080/15502783.2025.2605338",
+      "title": "The effectiveness of protein supplements on athletic performance and post-exercise recovery - a Bayesian multilevel meta-analysis of randomized controlled trials.",
+      "authorString": "Zhao S, Zhang X, Liang T, Ng S, Liu Y, Ning Z.",
+      "journalInfo": { "journal": { "title": "Journal of the International Society of Sports Nutrition", "issn": "1550-2783", "essn": "1550-2783" }, "yearOfPublication": 2026 },
+      "pubYear": "2026",
+      "firstPublicationDate": "2025-12-23",
+      "firstIndexDate": "2025-12-24",
+      "isOpenAccess": "Y",
+      "pubTypeList": { "pubType": ["Meta-Analysis", "Systematic Review", "review-article", "Journal Article"] },
+      "meshHeadingList": { "meshHeading": [
+        { "majorTopic_YN": "Y", "descriptorName": "Dietary Proteins" },
+        { "majorTopic_YN": "Y", "descriptorName": "Exercise" },
+        { "majorTopic_YN": "Y", "descriptorName": "Dietary Supplements" },
+        { "majorTopic_YN": "Y", "descriptorName": "Athletic Performance" }
+      ] },
+      "abstractText": "Background Protein supplements are a popular category of dietary supplements among fitness enthusiasts and athletes. Method A systematic search identified 6129 studies; 75 studies involving 1206 athletes were included in the meta-analysis using a Bayesian hierarchical model. Results Pure protein supplements demonstrated statistically significant effects compared to the placebo group in both endurance performance (SMD 0.37, 95% CI 0.02 to 0.71) and muscle strength (SMD 0.72, 95% CI 0.18 to 1.27). However, all significant effects were observed where energy intake between groups was not matched. Conclusion An additional intake of 1 g/kg/day of protein from supplements, resulting in a total daily protein intake of approximately 2 g/kg/day, appears to be most effective for enhancing athletic performance.",
+      "fullTextUrlList": { "fullTextUrl": [ { "site": "DOI", "url": "https://doi.org/10.1080/15502783.2025.2605338" } ] }
+    },
+    {
+      "id": "42189223",
+      "doi": "10.1080/20008066.2026.2664277",
+      "title": "Effects of virtual reality mindfulness interventions on depression and anxiety: a meta-analysis.",
+      "authorString": "He X, Ren Y, Bian Q, Wang Y, Wang X.",
+      "journalInfo": { "journal": { "title": "European Journal of Psychotraumatology", "issn": "2000-8066", "essn": "2000-8066" }, "yearOfPublication": 2026 },
+      "pubYear": "2026",
+      "firstPublicationDate": "2026-05-26",
+      "firstIndexDate": "2026-05-27",
+      "isOpenAccess": "Y",
+      "pubTypeList": { "pubType": ["Meta-Analysis", "review-article", "Review", "Journal Article"] },
+      "meshHeadingList": { "meshHeading": [
+        { "majorTopic_YN": "Y", "descriptorName": "Depression" },
+        { "majorTopic_YN": "Y", "descriptorName": "Anxiety" },
+        { "majorTopic_YN": "Y", "descriptorName": "Mindfulness" },
+        { "majorTopic_YN": "Y", "descriptorName": "Virtual Reality" }
+      ] },
+      "abstractText": "Background Depression and anxiety are common mental health problems. Mindfulness-based interventions reduce these symptoms; however, their implementation is often limited by poor accessibility and low adherence. Objective This exploratory meta-analysis aimed to evaluate the effectiveness of VR-based mindfulness interventions in reducing depressive and anxiety symptoms. Methods Randomized controlled trials investigating VR-based mindfulness interventions for depression and/or anxiety were included. Results Fifteen RCTs involving 864 participants were included. VR-based mindfulness interventions were associated with significant reductions in depressive and anxiety symptoms. Subgroup analyses indicated larger effect sizes among older adults (SMD = -1.40, p = .005), and session lengths of <= 30 min were associated with greater symptom reduction (SMD = -0.93, p = .005). Conclusions VR-based mindfulness interventions are associated with reductions in depression and anxiety symptoms, though high-quality studies with longer follow-up are needed to confirm sustained effects.",
+      "fullTextUrlList": { "fullTextUrl": [ { "site": "DOI", "url": "https://doi.org/10.1080/20008066.2026.2664277" } ] }
+    },
+    {
+      "id": "42080480",
+      "doi": "10.1080/07853890.2026.2667061",
+      "title": "Effect of photobiomodulation on pain relief and functional improvement in fractures: a systematic review and meta-analysis.",
+      "authorString": "Wang W, Xiu R, Zhao X, Qiu X, Tang L.",
+      "journalInfo": { "journal": { "title": "Annals of Medicine", "issn": "0785-3890", "essn": "1365-2060" }, "yearOfPublication": 2026 },
+      "pubYear": "2026",
+      "firstPublicationDate": "2026-05-04",
+      "firstIndexDate": "2026-05-13",
+      "isOpenAccess": "Y",
+      "pubTypeList": { "pubType": ["Meta-Analysis", "research-article", "Systematic Review", "Journal Article"] },
+      "meshHeadingList": { "meshHeading": [
+        { "majorTopic_YN": "Y", "descriptorName": "Pain" },
+        { "majorTopic_YN": "Y", "descriptorName": "Fractures, Bone" },
+        { "majorTopic_YN": "Y", "descriptorName": "Pain Management" },
+        { "majorTopic_YN": "Y", "descriptorName": "Low-Level Light Therapy" }
+      ] },
+      "abstractText": "Introduction Fractures, the most common type of trauma, can cause considerable distress to patients. Photobiomodulation (PBM) has been associated with pain reduction. Methods We systematically searched databases for RCTs that investigated PBM in fractures. Results The pooled analysis showed that the one-week pain score was lower in the PBM group than in the placebo group (MD -0.74, 95% CI -1.00, -0.47). The improvement in grip strength at 4 weeks was significantly greater in PBM than in placebo (MD 5.03, 95% CI 4.29, 5.78). Conclusion PBM appears to relieve short-term pain in fractures and improve grip strength in patients with upper limb fractures, but does not show significant long-term benefits.",
+      "fullTextUrlList": { "fullTextUrl": [ { "site": "DOI", "url": "https://doi.org/10.1080/07853890.2026.2667061" } ] }
+    }
+  ]
+}
