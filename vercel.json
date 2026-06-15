@@ -1,76 +1,27 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "crons": [
-    {
-      "path": "/api/cron/coach-digest",
-      "schedule": "0 6 * * 1"
-    },
-    {
-      "path": "/api/cron/streak-milestone-nudge",
-      "schedule": "0 15 * * *"
-    },
-    {
-      "path": "/api/cron/hrv-wearable-sync",
-      "schedule": "0 5 * * *"
-    },
-    {
-      "path": "/api/cron/hrv-alert-detect",
-      "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/cron/hrv-weekly-insights",
-      "schedule": "0 18 * * 0"
-    },
-    {
-      "path": "/api/cron/adapt-program-daily",
-      "schedule": "30 3 * * *"
-    },
-    {
-      "path": "/api/cron/draft-form-check-replies",
-      "schedule": "0 4 * * *"
-    },
-    {
-      "path": "/api/cron/coach-morning-report",
-      "schedule": "0 5 * * *"
-    },
-    {
-      "path": "/api/cron/buddy-rematch-weekly",
-      "schedule": "0 19 * * 0"
-    },
-    {
-      "path": "/api/cron/coach-quality-score",
-      "schedule": "0 6 * * 1"
-    },
-    {
-      "path": "/api/cron/buddy-streak-weekly",
-      "schedule": "0 7 * * 1"
-    },
-    {
-      "path": "/api/cron/mind-check-nudge",
-      "schedule": "0 18 * * *"
-    },
-    {
-      "path": "/api/cron/mental-coach-daily",
-      "schedule": "30 4 * * *"
-    },
-    {
-      "path": "/api/cron/buddy-mental-weekly-checkin",
-      "schedule": "0 7 * * 1"
-    },
-    {
-      "path": "/api/cron/mental-weekly-insights",
-      "schedule": "0 18 * * 0"
-    }
+    { "path": "/api/cron/coach-digest", "schedule": "0 6 * * 1" },
+    { "path": "/api/cron/streak-milestone-nudge", "schedule": "0 15 * * *" },
+    { "path": "/api/cron/hrv-wearable-sync", "schedule": "0 5 * * *" },
+    { "path": "/api/cron/hrv-alert-detect", "schedule": "0 6 * * *" },
+    { "path": "/api/cron/hrv-weekly-insights", "schedule": "0 18 * * 0" },
+    { "path": "/api/cron/adapt-program-daily", "schedule": "30 3 * * *" },
+    { "path": "/api/cron/draft-form-check-replies", "schedule": "0 4 * * *" },
+    { "path": "/api/cron/coach-morning-report", "schedule": "0 5 * * *" },
+    { "path": "/api/cron/buddy-rematch-weekly", "schedule": "0 19 * * 0" },
+    { "path": "/api/cron/coach-quality-score", "schedule": "0 6 * * 1" },
+    { "path": "/api/cron/buddy-streak-weekly", "schedule": "0 7 * * 1" },
+    { "path": "/api/cron/mind-check-nudge", "schedule": "0 18 * * *" },
+    { "path": "/api/cron/mental-coach-daily", "schedule": "30 4 * * *" },
+    { "path": "/api/cron/buddy-mental-weekly-checkin", "schedule": "0 7 * * 1" },
+    { "path": "/api/cron/mental-weekly-insights", "schedule": "0 18 * * 0" },
+    { "path": "/api/cron/science-feed", "schedule": "30 5 * * *" }
   ],
   "headers": [
     {
       "source": "/.well-known/apple-app-site-association",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/json"
-        }
-      ]
+      "headers": [{ "key": "Content-Type", "value": "application/json" }]
     }
   ]
 }

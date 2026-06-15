@@ -67,6 +67,17 @@ const Icon = {
       <path d="M12 11v3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   ),
+  science: (
+    <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
+      <path
+        d="M10 3h4M10.5 3v6L5.5 18a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3l-5-9V3"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path d="M8 15h8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  ),
 };
 
 const TABS: Tab[] = [
@@ -76,6 +87,7 @@ const TABS: Tab[] = [
   { href: "/community", labelKey: "crew",  icon: Icon.crew },
   { href: "/mind",      labelKey: "mind",  icon: Icon.mind,  domain: "mind" },
   { href: "/reps",      labelKey: "reps",  icon: Icon.reps },
+  { href: "/science",   labelKey: "science", icon: Icon.science },
   { href: "/profile",   labelKey: "me",    icon: Icon.me },
 ];
 
