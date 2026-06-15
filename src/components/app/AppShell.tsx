@@ -11,11 +11,11 @@ import MobileTabBar from "@/components/app/MobileTabBar";
 
 const NAV = [
   { href: "/dashboard", labelKey: "today",    num: "01" },
-  { href: "/coaching",  labelKey: "train",    num: "02" },
-  { href: "/nutrition", labelKey: "food",     num: "03" },
+  { href: "/coaching",  labelKey: "train",    num: "02", domain: "body" },
+  { href: "/nutrition", labelKey: "food",     num: "03", domain: "food" },
   { href: "/community", labelKey: "crew",     num: "04" },
-  { href: "/hrv",       labelKey: "hrv",      num: "05" },
-  { href: "/mind",      labelKey: "mind",     num: "06" },
+  { href: "/hrv",       labelKey: "hrv",      num: "05", domain: "heart" },
+  { href: "/mind",      labelKey: "mind",     num: "06", domain: "mind" },
   { href: "/reps",      labelKey: "reps",     num: "07" },
   { href: "/science",   labelKey: "science",  num: "08" },
   { href: "/profile",   labelKey: "me",       num: "09" },
@@ -55,18 +55,28 @@ export default function AppShell({
                 item.href === "/dashboard"
                   ? pathname === "/dashboard"
                   : pathname?.startsWith(item.href);
+              const domain = "domain" in item ? item.domain : undefined;
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
+                    data-domain={domain}
                     className={cn(
-                      "group flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors",
+                      "group flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors border-l-2 border-transparent",
                       active
                         ? "bg-bg-3 text-fg"
-                        : "text-fg-dim hover:text-fg hover:bg-bg-3/60"
+                        : "text-fg-dim hover:text-fg hover:bg-bg-3/60",
+                      active && domain && "border-l-domain"
                     )}
                   >
-                    <span className="numeric text-[11px] text-fg-faint group-hover:text-fg-dim w-6">
+                    <span
+                      className={cn(
+                        "numeric text-[11px] w-6",
+                        domain
+                          ? "text-domain"
+                          : "text-fg-faint group-hover:text-fg-dim"
+                      )}
+                    >
                       {item.num}
                     </span>
                     <span className="tracking-tight">{t(`links.${item.labelKey}`)}</span>

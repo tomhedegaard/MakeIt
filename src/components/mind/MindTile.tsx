@@ -45,6 +45,7 @@ export default function MindTile({
   return (
     <Link
       href="/mind"
+      data-domain="mind"
       className="block surface-2 rounded-xl px-5 py-4 lift"
       style={{ borderColor: "var(--line-bright)" }}
     >

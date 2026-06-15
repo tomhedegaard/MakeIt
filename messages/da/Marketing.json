@@ -25,7 +25,7 @@
       "madeInSuffix": "København"
     },
     "subline": "MakeIt er ikke bare straps og cuffs.",
-    "subline2": "Det er det interne univers for crewet bag — coaching, community, loyalitet og HRV-aware restitution samlet ét sted. Bygget i København. Lavet til atleter der løfter tungt.",
+    "subline2": "Det er det interne univers for crewet bag — coaching, community, loyalitet og <heart>HRV-aware restitution</heart> samlet ét sted. Bygget i København. Lavet til atleter der løfter tungt.",
     "ctaPrimary": "Få adgang",
     "ctaSecondary": "Læs mere",
     "ctaTertiary": "Prøv motoren ↓"
@@ -83,7 +83,7 @@
     "engine": {
       "label": "02 — Motor",
       "title": "Programmet rewriter sig selv. På din krops præmisser.",
-      "body": "Hver morgen kl. 05:30 læser motoren din HRV, din søvn, sidste sessions RPE og dine seneste form-checks. Den justerer dagens session — eller lader være — og fortæller dig hvorfor. Munk ser eskaleringen før du gør.",
+      "body": "Hver morgen kl. 05:30 læser motoren din <heart>HRV</heart>, din <mind>søvn</mind>, sidste sessions <body>RPE</body> og dine seneste form-checks. Den justerer dagens session — eller lader være — og fortæller dig hvorfor. Munk ser eskaleringen før du gør.",
       "bullet1": "Topsæt-reduktion, accessory-cut, øvelsesbytte — eller no_change. Aldrig mere end én ændring pr. session.",
       "bullet2": "HRV very_low → session pauset, mobilitet + gåtur, Munk får besked",
       "bullet3": "Du kan altid sige \"behold original\" — intet sker bag din ryg",
@@ -122,7 +122,7 @@
     "mind": {
       "label": "06 — Mental motor",
       "title": "Hovedet med i regnestykket. Ikke som tilbehør.",
-      "body": "Ægte sundhed er fysisk OG psykisk. En 60-sekunders mind-check hver dag bygger en mental graf parallelt med din HRV. Når dine mind-check viser belastning i 3 dage, skruer Adaptive Engine ned uden at vente på at HRV bryder sammen — fordi hovedet ofte mærker det først. Privat journaling, AI-coach skrevet til din uge, og — når du rykker tier — crew-deling så du ikke skal gå alene.",
+      "body": "Ægte sundhed er fysisk OG psykisk. En 60-sekunders <mind>mind-check</mind> hver dag bygger en mental graf parallelt med din <heart>HRV</heart>. Når dine mind-check viser belastning i 3 dage, skruer Adaptive Engine ned uden at vente på at HRV bryder sammen — fordi hovedet ofte mærker det først. Privat journaling, AI-coach skrevet til din uge, og — når du rykker tier — crew-deling så du ikke skal gå alene.",
       "bullet1": "Mind-check × HRV × træning — Adaptive Engine bruger alle tre. Ingen anden app fusionerer dem.",
       "bullet2": "AI-coach skriver dagens refleksion baseret på dit signal — ikke en generisk meditation.",
       "bullet3": "Privacy som progression: Lifter privat, Athlete åbner buddy-deling, Beast åbner cirkler. Din journal er altid din.",
@@ -221,10 +221,40 @@
       }
     }
   },
+  "domainIndex": {
+    "eyebrow": "Farvekoden",
+    "heading": "Fire farver. Fire verdener.",
+    "intro": "Basen er sort/hvid — det rører vi ikke. Farve betyder ét: hvor i din sundhed du er. De samme fire farver går igen i menuen, på kortene og i graferne, så du altid ved hvad du kigger på.",
+    "body": {
+      "kicker": "Træning",
+      "title": "Krop",
+      "body": "Programmer, øvelser og pas. Orange er belastningen, du selv styrer.",
+      "surfaces": "Programmer · Øvelser · Live-pas"
+    },
+    "food": {
+      "kicker": "Kost",
+      "title": "Mad",
+      "body": "Måltidsplan, indkøb og vægt. Grøn følger brændstoffet.",
+      "surfaces": "Madplan · Indkøb · Vægt"
+    },
+    "heart": {
+      "kicker": "Puls & HRV",
+      "title": "Hjerte",
+      "body": "Readiness, baseline og 60-dages tendens. Rød er motoren, der sætter tempoet.",
+      "surfaces": "Readiness · Forløb · Indsigt"
+    },
+    "mind": {
+      "kicker": "Mind",
+      "title": "Sind",
+      "body": "Check-in, journal og sessioner. Blå holder hovedet med i regnestykket.",
+      "surfaces": "Check-in · Journal · Sessioner"
+    },
+    "note": "Samme numre som i menuen — 02, 03, 05, 06. Farven følger dig hele vejen ind."
+  },
   "app": {
     "eyebrow": "06 — Appen",
     "heading": "Sådan ser det ud.",
-    "intro": "Seks skærme der definerer din uge — fra morgenens første tap, til nudgen over første øvelse der tilpasser dagens belastning efter din HRV, til din buddy's daglige readiness og den sandbox-case du øver på som Beast.",
+    "intro": "Seks skærme der definerer din uge — fra morgenens første tap, til nudgen over første øvelse der tilpasser dagens belastning efter din <heart>HRV</heart>, til din buddy's daglige readiness og den sandbox-case du øver på som Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Dagens session, ét tap til start",
@@ -334,13 +364,13 @@
     "marketLabel": "markedssnit for personlig coaching",
     "pillar1": {
       "eyebrow": "Automatiseret",
-      "title": "AI bygger programmet",
+      "title": "AI bygger <body>programmet</body>",
       "body": "Personlige strength- og hypertrofi-programmer genereres ud fra dine maks, din historik og dit mål — og opdateres uge for uge baseret på hvordan du faktisk løfter.",
       "foot": "Ingen ventetid · ingen template-pdf'er"
     },
     "pillar2": {
       "eyebrow": "Drafted by AI, signed by Munk",
-      "title": "Form-check med Munks underskrift",
+      "title": "<body>Form-check</body> med Munks underskrift",
       "body": "AI udkaster svaret i Munks stemme inden for sekunder, og Munk redigerer eller skriver om i op til 30 sekunder. Du får aldrig et AI-svar uden hans navn på.",
       "foot": "AI-draft + Munk-signatur · inden for 24t"
     },

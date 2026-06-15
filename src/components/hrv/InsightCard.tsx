@@ -11,7 +11,8 @@ import {
  * A delta is a description of an observed difference, never advice (spec §10):
  * copy stays calm and descriptive, never prescriptive.
  *
- * Monochrome only — hierarchy is expressed through type weight and opacity.
+ * Hierarchy is expressed through type weight and opacity; the kicker
+ * carries the heart domain color via the /hrv data-domain scope.
  */
 
 /** Danish label for each factor. */
@@ -38,7 +39,7 @@ export default function InsightCard({ card }: { card: CorrelationCard }) {
 
   return (
     <div className="surface-2 rounded-2xl p-5">
-      <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-domain">
         {FACTOR_FRAMING[card.factor]}
       </div>
       <div className="mt-1 font-display text-lg leading-tight text-fg">

@@ -64,8 +64,8 @@ export default function LogWeightCard({
                         Math.abs(deltaKg) < 0.1
                           ? "text-fg-faint"
                           : deltaKg < 0
-                          ? "text-green-400"
-                          : "text-yellow-400"
+                          ? "text-food"
+                          : "text-warn"
                       }
                     >
                       {t("deltaLastWeek", {

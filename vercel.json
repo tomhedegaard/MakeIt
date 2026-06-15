@@ -17,5 +17,11 @@
     { "path": "/api/cron/buddy-mental-weekly-checkin", "schedule": "0 7 * * 1" },
     { "path": "/api/cron/mental-weekly-insights", "schedule": "0 18 * * 0" },
     { "path": "/api/cron/science-feed", "schedule": "30 5 * * *" }
+  ],
+  "headers": [
+    {
+      "source": "/.well-known/apple-app-site-association",
+      "headers": [{ "key": "Content-Type", "value": "application/json" }]
+    }
   ]
 }

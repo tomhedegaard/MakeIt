@@ -103,6 +103,9 @@ export default function PushToggle({
         p256dh: json.keys!.p256dh!,
         auth: json.keys!.auth!,
         userAgent: navigator.userAgent,
+        // This component is the web-push path; native shells register
+        // APNs/FCM tokens via their own bridge (APP_STORE_PLAN Fase 3).
+        platform: "web",
       });
       if (res.ok) setState("on");
       else {

@@ -167,7 +167,7 @@ export default function AudioRecorder({
 
       {state === "recording" ? (
         <>
-          <span className="size-2.5 rounded-full bg-red-500 animate-pulse" aria-hidden />
+          <span className="size-2.5 rounded-full bg-danger animate-pulse" aria-hidden />
           <span className="font-mono text-sm tabular-nums">
             {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}
           </span>
@@ -201,7 +201,7 @@ export default function AudioRecorder({
       ) : null}
 
       {error ? (
-        <span className="text-[10px] font-mono text-red-400 ml-2">{error}</span>
+        <span className="text-[10px] font-mono text-danger ml-2">{error}</span>
       ) : null}
     </div>
   );

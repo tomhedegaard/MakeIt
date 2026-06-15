@@ -95,7 +95,7 @@ export default function PlanGenerationOverlay({
         </p>
 
         {overtime ? (
-          <p className="mt-6 text-xs font-mono uppercase tracking-[0.14em] text-yellow-400">
+          <p className="mt-6 text-xs font-mono uppercase tracking-[0.14em] text-warn">
             {t("overtime")}
           </p>
         ) : null}

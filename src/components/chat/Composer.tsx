@@ -234,7 +234,7 @@ export default function Composer({
           disabled={pending}
         />
         {error ? (
-          <p className="mt-2 text-[10px] font-mono text-red-400">{error}</p>
+          <p className="mt-2 text-[10px] font-mono text-danger">{error}</p>
         ) : null}
       </div>
     );
@@ -249,7 +249,7 @@ export default function Composer({
           disabled={pending}
         />
         {error ? (
-          <p className="mt-2 text-[10px] font-mono text-red-400">{error}</p>
+          <p className="mt-2 text-[10px] font-mono text-danger">{error}</p>
         ) : null}
       </div>
     );
@@ -329,7 +329,7 @@ export default function Composer({
       </button>
 
       {error ? (
-        <p className="absolute mt-2 text-[10px] font-mono text-red-400">{error}</p>
+        <p className="absolute mt-2 text-[10px] font-mono text-danger">{error}</p>
       ) : null}
     </div>
   );

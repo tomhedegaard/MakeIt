@@ -69,7 +69,7 @@ export default function SkipDaysCard({
             onClick={() => toggle(d.dateIso, d.skipped)}
             className={`relative rounded-lg p-2 text-center transition-colors hairline border ${
               d.skipped
-                ? "bg-red-400/15 border-red-400/40 text-red-300"
+                ? "bg-danger/15 border-danger/40 text-danger"
                 : "bg-bg hover:bg-bg-3"
             } disabled:opacity-50`}
             aria-pressed={d.skipped}

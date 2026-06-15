@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import { domainTags } from "@/components/marketing/domainTags";
 
 /**
  * WAUW-2 — section showing what the platform looks like across SIX
@@ -35,7 +36,7 @@ export default async function AppShowcase() {
             {t("heading")}
           </h2>
           <p className="text-lg md:text-xl text-fg-dim leading-relaxed max-w-xl">
-            {t("intro")}
+            {t.rich("intro", domainTags)}
           </p>
         </div>
 
@@ -43,13 +44,13 @@ export default async function AppShowcase() {
           <Phone label={t("phone.todayLabel")} detail={t("phone.todayDetail")} delay={0}>
             <TodayScreen />
           </Phone>
-          <Phone label={t("phone.sessionLabel")} detail={t("phone.sessionDetail")} delay={120}>
+          <Phone label={t("phone.sessionLabel")} detail={t("phone.sessionDetail")} delay={120} domain="body">
             <SessionScreen />
           </Phone>
-          <Phone label={t("phone.readinessLabel")} detail={t("phone.readinessDetail")} delay={240}>
+          <Phone label={t("phone.readinessLabel")} detail={t("phone.readinessDetail")} delay={240} domain="heart">
             <ReadinessScreen />
           </Phone>
-          <Phone label={t("phone.formCheckLabel")} detail={t("phone.formCheckDetail")} delay={360}>
+          <Phone label={t("phone.formCheckLabel")} detail={t("phone.formCheckDetail")} delay={360} domain="body">
             <FormCheckScreen />
           </Phone>
           <Phone label={t("phone.buddyLabel")} detail={t("phone.buddyDetail")} delay={480}>
@@ -73,14 +74,22 @@ function Phone({
   label,
   detail,
   delay,
+  domain,
 }: {
   children: React.ReactNode;
   label: string;
   detail: string;
   delay: number;
+  /** Optional domain hue for the callout (docs/DOMAIN_COLOR_SYSTEM.md) */
+  domain?: "heart" | "food" | "body" | "mind";
 }) {
   return (
-    <div data-reveal style={{ transitionDelay: `${delay}ms` }} className="flex flex-col items-center">
+    <div
+      data-reveal
+      data-domain={domain}
+      style={{ transitionDelay: `${delay}ms` }}
+      className="flex flex-col items-center"
+    >
       <div
         className="surface-2 rounded-[2.6rem] p-3 w-full max-w-[300px] mx-auto"
         style={{ boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)" }}
@@ -98,7 +107,12 @@ function Phone({
         </div>
       </div>
       <div className="mt-5 text-center">
-        <div className="eyebrow mb-1">{label}</div>
+        <div className="eyebrow eyebrow-domain mb-1 flex items-center justify-center gap-2">
+          {domain ? (
+            <span className="size-1.5 rounded-full bg-domain" aria-hidden />
+          ) : null}
+          {label}
+        </div>
         <div className="text-xs text-fg-dim font-mono">{detail}</div>
       </div>
     </div>

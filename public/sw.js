@@ -1,27 +1,57 @@
 /* MakeIt // HQ — service worker
  *
- * Single-purpose: Web Push. We don't intercept fetches, don't
- * cache assets — the app is a Next.js SSR app and adding cache
- * logic here would risk serving stale auth state. If a future
- * version wants offline support, layer it on top with a versioned
- * cache name.
- *
- * Push payload contract (sent by src/lib/push.ts):
- *   { title, body, url, tag }
- * tag dedupes notifications (e.g. only one daily check-in at a time).
- * url is the destination for the click handler; defaults to '/'.
+ * Two responsibilities (docs/APP_STORE_PLAN.md Fase 1):
+ *  1. Web Push — payload contract from src/lib/push.ts:
+ *     { title, body, url, tag }. tag dedupes notifications; url is
+ *     the click destination.
+ *  2. Offline fallback — navigations are network-first; when the
+ *     network is gone we serve /offline.html from a versioned cache.
+ *     We deliberately cache NOTHING else: the app is SSR and caching
+ *     pages/data would risk serving stale auth state.
  */
 
-const VERSION = "v1";
+const VERSION = "v2";
+const OFFLINE_CACHE = `mi-offline-${VERSION}`;
+const OFFLINE_URL = "/offline.html";
 
 self.addEventListener("install", (event) => {
-  // Activate immediately so members on a hot reload get the new
-  // worker — there's no cache to migrate.
-  event.waitUntil(self.skipWaiting());
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(OFFLINE_CACHE);
+      await cache.addAll([OFFLINE_URL, "/icons/icon-192.png"]);
+      // Activate immediately so members on a hot reload get the new worker.
+      await self.skipWaiting();
+    })()
+  );
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    (async () => {
+      // Drop caches from older SW versions.
+      const keys = await caches.keys();
+      await Promise.all(
+        keys.filter((k) => k !== OFFLINE_CACHE).map((k) => caches.delete(k))
+      );
+      await self.clients.claim();
+    })()
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  // Only page navigations get the offline net — assets and data
+  // requests pass through untouched.
+  if (event.request.mode !== "navigate") return;
+  event.respondWith(
+    fetch(event.request).catch(async () => {
+      const cache = await caches.open(OFFLINE_CACHE);
+      const fallback = await cache.match(OFFLINE_URL);
+      return (
+        fallback ||
+        new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain" } })
+      );
+    })
+  );
 });
 
 self.addEventListener("push", (event) => {
@@ -46,9 +76,7 @@ self.addEventListener("push", (event) => {
     self.registration.showNotification(title, {
       body,
       tag,
-      // Icons intentionally omitted until /public/icon-192.png exists.
-      // Browsers fall back to their default app icon when missing,
-      // which is cleaner than a 404 in DevTools.
+      icon: "/icons/icon-192.png",
       data: { url },
       // Renotify when a tag updates so members see something flash
       // even on a tag-deduped notification.

@@ -10,7 +10,12 @@ export default async function WorksWith() {
     <section className="relative border-t border-b hairline py-10 md:py-14">
       <Container>
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:gap-12">
-          <div className="eyebrow shrink-0" data-reveal>
+          <div
+            className="eyebrow eyebrow-domain shrink-0 flex items-center gap-2"
+            data-domain="heart"
+            data-reveal
+          >
+            <span className="size-1.5 rounded-full bg-domain" aria-hidden />
             {t("label")}
           </div>
 

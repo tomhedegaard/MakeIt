@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-type Tab = { href: string; labelKey: string; icon: React.ReactNode };
+type Tab = { href: string; labelKey: string; icon: React.ReactNode; domain?: string };
 
 const Icon = {
   today: (
@@ -82,10 +82,10 @@ const Icon = {
 
 const TABS: Tab[] = [
   { href: "/dashboard", labelKey: "today", icon: Icon.today },
-  { href: "/coaching",  labelKey: "train", icon: Icon.train },
-  { href: "/nutrition", labelKey: "food",  icon: Icon.food },
+  { href: "/coaching",  labelKey: "train", icon: Icon.train, domain: "body" },
+  { href: "/nutrition", labelKey: "food",  icon: Icon.food,  domain: "food" },
   { href: "/community", labelKey: "crew",  icon: Icon.crew },
-  { href: "/mind",      labelKey: "mind",  icon: Icon.mind },
+  { href: "/mind",      labelKey: "mind",  icon: Icon.mind,  domain: "mind" },
   { href: "/reps",      labelKey: "reps",  icon: Icon.reps },
   { href: "/science",   labelKey: "science", icon: Icon.science },
   { href: "/profile",   labelKey: "me",    icon: Icon.me },
@@ -116,6 +116,7 @@ export default function MobileTabBar({
               href={tab.href}
               className="tab relative"
               data-active={active || false}
+              data-domain={tab.domain}
             >
               {tab.icon}
               <span>{t(`links.${tab.labelKey}`)}</span>

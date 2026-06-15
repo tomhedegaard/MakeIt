@@ -7,6 +7,11 @@ import { utcDateNDaysAgo } from "@/lib/mind/streak";
  *
  * Stress is inverted (5 - stress) so all three lines read "higher = good".
  * Otherwise the graph would zig-zag against the user's mental model.
+ *
+ * Series colors are the mind-domain chart tokens (--mind-energy/-stress/
+ * -focus) — a cool violet/blue/cyan family so the graph reads as one
+ * domain while the three series stay distinguishable. Axes stay
+ * monochrome. See docs/DOMAIN_COLOR_SYSTEM.md.
  */
 export default function MentalGraph({
   logs,
@@ -68,15 +73,15 @@ export default function MentalGraph({
         <h2 className="font-display text-2xl">Mental graf — sidste 30 dage</h2>
         <div className="flex items-center gap-3 text-xs text-fg-dim">
           <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block w-3 h-3 rounded-full bg-yellow-300" />
+            <span className="inline-block w-3 h-3 rounded-full bg-mind-energy" />
             Energi
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block w-3 h-3 rounded-full bg-sky-300" />
+            <span className="inline-block w-3 h-3 rounded-full bg-mind-stress" />
             Ro (omvendt stress)
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block w-3 h-3 rounded-full bg-emerald-300" />
+            <span className="inline-block w-3 h-3 rounded-full bg-mind-focus" />
             Fokus
           </span>
         </div>
@@ -113,12 +118,12 @@ export default function MentalGraph({
             </g>
           ))}
 
-          <path d={path("stress", true)} fill="none" stroke="rgb(125 211 252)" strokeWidth={1.5} />
-          <path d={path("focus")} fill="none" stroke="rgb(110 231 183)" strokeWidth={1.5} />
-          <path d={path("energy")} fill="none" stroke="rgb(253 224 71)" strokeWidth={1.5} />
+          <path d={path("stress", true)} fill="none" stroke="var(--mind-stress)" strokeWidth={1.5} />
+          <path d={path("focus")} fill="none" stroke="var(--mind-focus)" strokeWidth={1.5} />
+          <path d={path("energy")} fill="none" stroke="var(--mind-energy)" strokeWidth={1.5} />
 
           {energyDots.map((p, i) => (
-            <circle key={i} cx={p.cx} cy={p.cy} r={2} fill="rgb(253 224 71)" />
+            <circle key={i} cx={p.cx} cy={p.cy} r={2} fill="var(--mind-energy)" />
           ))}
         </svg>
       </div>
