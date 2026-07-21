@@ -8,6 +8,7 @@ describe("modules catalog", () => {
       expect(MODULES[key].priceEnv).toMatch(/^STRIPE_PRICE_/);
       expect(MODULES[key].trialDays).toBeGreaterThan(0);
     }
+    expect(Object.keys(MODULES).sort()).toEqual([...MODULE_KEYS].sort());
   });
 
   it("maps each module to a distinct domain and route", () => {

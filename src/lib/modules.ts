@@ -4,14 +4,8 @@
  * ingen runtime-afhængigheder. Pris-opslag sker i lib/stripe.ts via
  * `priceEnv`. Domænefarver matcher data-domain-systemet (body/food/heart/mind).
  */
-export type ModuleKey = "train" | "nutrition" | "hrv" | "mind";
-
-export const MODULE_KEYS: readonly ModuleKey[] = [
-  "train",
-  "nutrition",
-  "hrv",
-  "mind",
-] as const;
+export const MODULE_KEYS = ["train", "nutrition", "hrv", "mind"] as const;
+export type ModuleKey = (typeof MODULE_KEYS)[number];
 
 export type ModuleDef = {
   key: ModuleKey;
