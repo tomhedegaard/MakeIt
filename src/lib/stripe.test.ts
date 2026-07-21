@@ -5,20 +5,29 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 // ikke. Samme mønster som src/lib/coach/draft-reply-claude.smoke.test.ts.
 vi.mock("server-only", () => ({}));
 
-import { priceIdFor } from "./stripe";
+import { priceIdFor, type ProductKind } from "./stripe";
 
 describe("priceIdFor — moduler", () => {
   afterEach(() => {
-    delete process.env.STRIPE_PRICE_TRAIN;
+    vi.unstubAllEnvs();
   });
 
   it("returnerer modul-pris fra env når sat", () => {
-    process.env.STRIPE_PRICE_TRAIN = "price_train_123";
+    vi.stubEnv("STRIPE_PRICE_TRAIN", "price_train_123");
     expect(priceIdFor("train")).toBe("price_train_123");
   });
 
   it("returnerer null for modul uden env-pris", () => {
-    delete process.env.STRIPE_PRICE_HRV;
+    vi.stubEnv("STRIPE_PRICE_HRV", "");
     expect(priceIdFor("hrv")).toBeNull();
+  });
+
+  it("returnerer null for ukendt kind (untrusted boundary-cast)", () => {
+    expect(priceIdFor("garbage" as ProductKind)).toBeNull();
+  });
+
+  it("tom env-streng behandles som ikke sat", () => {
+    vi.stubEnv("STRIPE_PRICE_MIND", "");
+    expect(priceIdFor("mind")).toBeNull();
   });
 });

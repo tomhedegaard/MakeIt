@@ -36,7 +36,7 @@ export function priceIdFor(kind: ProductKind): string | null {
   if (kind === "crew") return STRIPE_PRICE_CREW || null;
   if (kind === "one_on_one") return STRIPE_PRICE_ONE_ON_ONE || null;
   // Modul-priser slås op på call-time via katalogets priceEnv.
-  const def = MODULES[kind as ModuleKey];
+  const def = MODULES[kind];
   if (def) return process.env[def.priceEnv] || null;
   return null;
 }
