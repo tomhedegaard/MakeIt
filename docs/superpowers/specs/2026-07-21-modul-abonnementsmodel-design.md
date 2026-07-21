@@ -18,7 +18,7 @@
 | Active-subs view | `supabase/migrations/0005_subscriptions.sql` — `member_active_subscriptions` (status in `trialing/active/past_due`) | Shipped — **rører vi ikke**. Inkluderer allerede `trialing`, som resolveren tæller som adgang. Resolveren læser alle rækker for medlemmet. |
 | Stripe env-gate + client | `src/lib/stripe.ts` — `ProductKind = "crew" \| "one_on_one"`, `priceIdFor()`, `STRIPE_ENABLED` | Shipped — `ProductKind` udvides med de fire moduler; `priceIdFor()` mapper nye env-vars (`STRIPE_PRICE_TRAIN/_NUTRITION/_HRV/_MIND`). Demo-mode-mønster genbruges. |
 | Stripe-webhook | `src/app/api/stripe/webhook/route.ts:95,111` — læser `sub.metadata.product_kind`, upserter `product_kind` generisk | Shipped — skriver allerede `product_kind` fra metadata → moduler virker **uden** ændring i skrive-logikken. Udvides kun til at logge trial-start i `member_module_trials`. |
-| Checkout + portal actions | `src/app/(app)/billing/actions.ts` — `startCheckoutAction(kind)`, `openPortalAction()` | Shipped — `startCheckoutAction` tager allerede `kind` fra formdata; udvides med `subscription_data.trial_period_days` (opslået i modul-katalog + anti-abuse-tjek). |
+| Checkout + portal actions | `src/app/(app)/billing/actions.ts` — `startCheckoutAction(formData)` (læser `kind`), `openPortalAction()` | Shipped — `startCheckoutAction` tager allerede `kind` fra formdata; udvides med `subscription_data.trial_period_days` (opslået i modul-katalog + anti-abuse-tjek). |
 | Billing-side | `src/app/(app)/billing/page.tsx` — crew- + one_on_one-kort, `isNativeRequest()`-gren der skjuler købs-UI | Shipped — bygges om til modul-kort (Fase C). Native status-only-grenen genbruges 1:1 for moduler. |
 | Billing data | `src/lib/data/billing.ts` — `getActiveSubscriptions()` (fast-formet Record over 2 kinds) | Shipped — får følgeskab af ny `getEntitlements()`; den gamle funktion kan blive stående til billing-status eller refaktoreres i Fase C. |
 | Auth / middleware | `src/middleware.ts` — auth-only route-beskyttelse (login-redirect) | Shipped — **rører vi ikke**. Entitlements er per-feature, ikke per-rute; gratis-gulvet bor på samme rute. |
@@ -178,7 +178,7 @@ Et modul spænder over **flere ruter**, ikke kun sin root. En root-side-forgreni
 
 Hvert modul har allerede en `layout.tsx` (`coaching/`, `nutrition/`, `hrv/`, `mind/`, `train/`, `program/`). Layoutet er entitlement-resolutionens naturlige punkt for hele subtræet. `getEntitlements()` wrappes i React `cache()`, så root-side, dybe-sider og action-guards inden for samme request kun rammer DB én gang — ingen prop-drilling nødvendig, hver server-komponent kalder resolveren direkte og får det memo'iserede svar.
 
-Layoutet **blokerer ikke** subtræet blindt (så ville det også skjule root-gratis-gulvet). Det resolver kun; hver side afgør sin egen rendering (§6.2).
+Layoutet **blokerer ikke** subtræet blindt (så ville det også skjule root-gratis-gulvet). Det resolver kun; hver side afgør sin egen rendering (§6.2). **Bemærk `train`:** dens premium-dybe-ruter (`/session/[id]`, `/train/exercises`, `/program/[code]`) ligger i *søskende*-træer, ikke under `coaching/`-layoutet — de guardes derfor på side-niveau via `requireModuleOrRedirect`, ikke via `coaching/layout.tsx`. Fordi resolveren er `cache()`-memo'iseret, koster de direkte kald i søskende-ruterne stadig kun ét DB-opslag pr. request.
 
 ### 6.2 Pr.-side-beslutning: fork vs. guard
 
