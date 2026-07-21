@@ -173,7 +173,13 @@ Stripe-unionen udvides og `priceIdFor()` lærer at slå modul-priser op. Samme c
 
 ```ts
 // src/lib/stripe.test.ts
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+// stripe.ts importerer "server-only" (ikke installeret; vitest kører i
+// node-miljø uden alias for det). Uden denne mock loader testen slet
+// ikke. Samme mønster som src/lib/coach/draft-reply-claude.smoke.test.ts.
+vi.mock("server-only", () => ({}));
+
 import { priceIdFor } from "./stripe";
 
 describe("priceIdFor — moduler", () => {
@@ -196,7 +202,7 @@ describe("priceIdFor — moduler", () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 Run: `npx vitest run src/lib/stripe.test.ts`
-Expected: FAIL — TypeScript afviser `"train"` som `ProductKind`, eller `priceIdFor("train")` returnerer `null` fordi modul-grenen ikke findes endnu.
+Expected: FAIL (RED) — vitest transpilerer via esbuild uden type-tjek, så fejlen er en assertion-mismatch: den endnu-ikke-udvidede `priceIdFor("train")` returnerer `null`, så `expect(...).toBe("price_train_123")` fejler. (`server-only`-mocken sikrer at testen overhovedet loader; uden den er fejlen `Cannot find package 'server-only'`.)
 
 - [ ] **Step 3: Implement — udvid `stripe.ts`**
 
