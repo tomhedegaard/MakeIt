@@ -2,7 +2,7 @@ import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getSession } from "@/lib/auth";
-import { MODULE_KEYS, type ModuleKey } from "@/lib/modules";
+import { MODULES, MODULE_KEYS, type ModuleKey } from "@/lib/modules";
 
 export type Entitlements = Record<ModuleKey, boolean>;
 
@@ -43,18 +43,30 @@ export function deriveEntitlements(
 /**
  * Et medlems modul-entitlements. Request-memo'iseret via React cache(),
  * så gentagne kald (layout + sider + action-guards inden for samme
- * request) kun rammer DB én gang. Demo-mode (ingen Supabase) → alt-true,
+ * request) kun rammer DB én gang. Demo-mode (ingen Supabase eller ingen
+ * Stripe-konfiguration) → alt-true,
  * så lokal udvikling ser fuldt indhold — samme filosofi som billing.ts.
  */
 export const getEntitlements = cache(
   async (memberId: string): Promise<Entitlements> => {
+    // Demo-mode: uden Supabase ELLER uden Stripe-konfiguration (spejl af
+    // STRIPE_ENABLED i lib/stripe.ts, læst call-time så testbarhed og
+    // entitlements ikke trækker "server-only" ind) → alt låst op, så
+    // gating er inert indtil betalings-setup faktisk er live.
+    const stripeConfigured = Boolean(
+      process.env.STRIPE_SECRET_KEY && process.env.STRIPE_PRICE_CREW
+    );
     const supabase = await createClient();
-    if (!supabase) return { ...ALL };
+    if (!supabase || !stripeConfigured) return { ...ALL };
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("member_active_subscriptions")
       .select("product_kind")
       .eq("member_id", memberId);
+
+    if (error) {
+      console.error("[entitlements] query failed:", error);
+    }
 
     return deriveEntitlements(data ?? []);
   }
@@ -67,7 +79,7 @@ export const getEntitlements = cache(
  */
 export async function requireModuleOrRedirect(
   moduleKey: ModuleKey,
-  freeFloorRoute: string
+  freeFloorRoute: string = MODULES[moduleKey].route
 ): Promise<void> {
   const member = await getSession();
   if (!member) redirect("/login");
