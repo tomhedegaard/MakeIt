@@ -23,10 +23,11 @@ const ALL: Entitlements = {
  * kinds ignoreres.
  */
 export function deriveEntitlements(
-  rows: { product_kind: string }[]
+  rows: { product_kind: string | null }[]
 ): Entitlements {
   const e: Entitlements = { ...NONE };
   for (const r of rows) {
+    if (r.product_kind === null) continue; // view-kolonner er nullable; null ⇒ ignorér
     if (r.product_kind === "crew") return { ...ALL };
     if ((MODULE_KEYS as readonly string[]).includes(r.product_kind)) {
       e[r.product_kind as ModuleKey] = true;
