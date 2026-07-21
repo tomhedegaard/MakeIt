@@ -1,7 +1,8 @@
 # Modul-abonnementsmodel — gratis start + tilkøbsmoduler (freemium + à la carte + bundle)
 
-**Date:** 2026-07-21 · **Spec revision:** 1
+**Date:** 2026-07-21 · **Spec revision:** 2
 **Status:** Draft (design) — afventer brugerens spec-review før planlægning
+**Rev. 2:** layout-baseret håndhævelse + eksplicit premium-rute-inventar (§6.4); compile-sikker `billing.ts`-touch i Fase A; webhook-default-hærdning; `cache()` på resolver.
 **Phase:** Monetiseringsmodel v1 — introducerer et **entitlement-lag** oven på den eksisterende Stripe-spine
 **Module path:** ny `src/lib/modules.ts`, ny `src/lib/data/entitlements.ts`, ny migration `0055_module_entitlements.sql`, udvider `src/lib/stripe.ts` + Stripe-webhook + hver søjle-side + `/billing` + i18n
 
@@ -97,7 +98,7 @@ De 8 nav-søjler mappet ind i modellen. Domænefarve i parentes.
 
 **Bundle & menneske-lag:**
 - **`crew` "Hele holdet"** — alle fire moduler + fuldt Fællesskab, rabatteret vs. at købe modulerne enkeltvis. (Reframe af eksisterende `crew`.)
-- **`one_on_one`** — menneske-coaching-add-on, uændret. Kræver crew eller ≥1 modul. Giver **ikke** i sig selv indholds-moduler.
+- **`one_on_one`** — menneske-coaching-add-on, uændret. Giver **ikke** i sig selv indholds-moduler. "Kræver crew eller ≥1 modul" er i v1 **informativt** (samme som dagens `t("oneOnOne.requiresCrew")`-note), ikke håndhævet i checkout — hård-håndhævelse er flipbar (§13).
 
 **Bærende princip:** gating sker **i-siden, ikke i middleware**. Samme rute (`/nutrition` osv.) renderer enten fuld eller gratis-gulv-udgave + `ModuleUpsell`. `middleware.ts` forbliver auth-only.
 
@@ -147,6 +148,7 @@ export const BUNDLE_GRANTS: Record<"crew", ModuleKey[]>;
 - `ProductKind` union udvides: `"crew" | "one_on_one" | ModuleKey`.
 - `priceIdFor(kind)` udvides til at slå modul-priser op via `MODULES[kind].priceEnv` (og beholde crew/one_on_one).
 - Nye env-vars dokumenteres i `.env.example`: `STRIPE_PRICE_TRAIN`, `STRIPE_PRICE_NUTRITION`, `STRIPE_PRICE_HRV`, `STRIPE_PRICE_MIND`.
+- **Compile-sikkerhed:** `src/lib/data/billing.ts:37` initialiserer `Record<ProductKind, …> = { crew: null, one_on_one: null }`. Når `ProductKind` udvides til seks værdier, fejler den literal at kompilere (manglende keys). Derfor **skal `billing.ts` have en minimal touch i samme fase som union-udvidelsen** (Fase A): enten gør returtypen `Partial<Record<ProductKind, …>>` og byg mappen dynamisk, eller behold den fast-formede funktion men initialisér kun de to billing-relevante keys via en eksplicit type der ikke kræver alle seks. Dette holder `npm run build` grøn gennem hele fasen.
 
 ### 5.4 `src/lib/data/entitlements.ts` (nyt — resolver)
 
@@ -170,22 +172,36 @@ Resolveren er en **ren funktion over aktive abonnementer** — ingen materialise
 
 ## 6. Håndhævelse (enforcement)
 
-### 6.1 I-siden-rendering
+Et modul spænder over **flere ruter**, ikke kun sin root. En root-side-forgrening alene lader en gratis-bruger deep-linke direkte til premium-dybe-ruter (fx `/hrv/trends`, `/mind/sessions`, `/session/[id]`). Derfor er håndhævelsen tre-laget: (1) entitlement resolves **én gang pr. request i modulets `layout.tsx`**, (2) hver side beslutter fuld/gratis-gulv/upsell, (3) mutationer guardes uafhængigt.
 
-Hver betalt søjles server-side page kalder resolveren og forgrener:
+### 6.1 Layout-resolution (én gang pr. request)
 
-```
-const ent = await getEntitlements(member.id);
-if (!ent.nutrition) return <NutritionFreeFloor />; // + <ModuleUpsell moduleKey="nutrition" />
-// ellers fuld udgave
-```
+Hvert modul har allerede en `layout.tsx` (`coaching/`, `nutrition/`, `hrv/`, `mind/`, `train/`, `program/`). Layoutet er entitlement-resolutionens naturlige punkt for hele subtræet. `getEntitlements()` wrappes i React `cache()`, så root-side, dybe-sider og action-guards inden for samme request kun rammer DB én gang — ingen prop-drilling nødvendig, hver server-komponent kalder resolveren direkte og får det memo'iserede svar.
 
-- `<ModuleUpsell moduleKey>` — dedikeret ny komponent (IKKE TierBanner). Farvekodet efter modulets domæne. På web: CTA → checkout m. trial. På native: CTA → "Administrér på web" (ingen pris/checkout).
+Layoutet **blokerer ikke** subtræet blindt (så ville det også skjule root-gratis-gulvet). Det resolver kun; hver side afgør sin egen rendering (§6.2).
+
+### 6.2 Pr.-side-beslutning: fork vs. guard
+
+To rute-typer, jf. inventaret i §6.4:
+
+- **Root-ruter med gratis-gulv** (fx `/nutrition`, `/hrv`, `/mind`, `/coaching`): forgren fuld vs. gratis-gulv.
+  ```
+  const ent = await getEntitlements(member.id);
+  if (!ent.nutrition) return <NutritionFreeFloor />; // + <ModuleUpsell moduleKey="nutrition" />
+  // ellers fuld udgave
+  ```
+- **Premium-dybe-ruter uden gratis-ækvivalent** (fx `/hrv/trends`, `/mind/sessions`, `/session/[id]`): guard øverst i server-siden med en delt helper:
+  ```
+  await requireModuleOrRedirect("hrv", "/hrv"); // ikke entitlet → redirect til root (gratis-gulv + upsell)
+  ```
+  `requireModuleOrRedirect(moduleKey, freeFloorRoute)` bor i `lib/data/entitlements.ts`, bruger den `cache()`-memo'iserede resolver, og redirecter til modulets root med `?upsell=<key>`.
+
+- `<ModuleUpsell moduleKey>` — dedikeret ny komponent (**IKKE** TierBanner, som er en Reps-promotions-banner). Farvekodet efter modulets domæne. Web: CTA → checkout m. trial. Native: CTA → "Administrér på web" (ingen pris/checkout).
 - Gratis-gulv-komponenter (`*FreeFloor`) renderer den kuraterede delmængde fra §4.
 
-### 6.2 Action-guards (bypass-sikring)
+### 6.3 Action-guards (bypass-sikring)
 
-Da middleware ikke gater, skal **hver modul-eksklusiv server-action** guardes:
+Da middleware ikke gater, skal **hver modul-eksklusiv server-action** guardes uafhængigt af side-rendering:
 
 ```
 const ent = await getEntitlements(member.id);
@@ -194,7 +210,20 @@ if (!ent.train) return { error: "module_required", moduleKey: "train" };
 
 Gælder mutationer som "generér adaptiv plan", "tilknyt wearable", "opret cirkel-post" osv. Free-floor-actions (log måltid manuelt, manuel HRV-score) er ikke guardede.
 
-### 6.3 Reps-optjening
+### 6.4 Premium-rute-inventar (verificeret mod kodebasen)
+
+Hver betalt modul-nøgle → de ruter der gates. **Root** = fuld/gulv-fork; **dyb** = `requireModuleOrRedirect`; **action** = guard i §6.3.
+
+| Modul | Root (fork) | Premium-dybe-ruter (guard-redirect) | Actions |
+|---|---|---|---|
+| `train` | `/coaching` | `/train/exercises`, `/session/[id]`, `/program/[code]`¹ | `form-check`, program-generering |
+| `nutrition` | `/nutrition` | `/nutrition/preferences`, `/nutrition/setup`, `/nutrition/shopping` | plan-generering, billed-logging |
+| `hrv` | `/hrv` | `/hrv/insights`, `/hrv/trends`, `/hrv/learn`² | wearable-tilknytning |
+| `mind` | `/mind` | `/mind/{today,sessions,cirkler,journal,weekly,check}` | cirkel-post, session-completion |
+
+¹ `program/[code]` = join-via-kode; hvis dette skal forblive åbent for coach-delte programmer, undtages det eksplicit (flipbart, §13). ² `/hrv/learn` er edukativt og kan vælges som gratis-gulv i stedet for guard (§13). `/mind/{settings,onboarding}` forbliver tilgængelige (konto/opsætning), ikke premium-gated.
+
+### 6.5 Reps-optjening
 
 Optjeningskilder knyttet til **modul-eksklusive** features kræver modulet; gratis-gulv-handlinger optjener altid (habit-loop bevares). Konkret: eksisterende `awardReps`-kaldesteder i modul-eksklusive flows får et entitlement-tjek; free-floor-kaldesteder ændres ikke.
 
@@ -202,8 +231,9 @@ Optjeningskilder knyttet til **modul-eksklusive** features kræver modulet; grat
 
 ## 7. Stripe, trials & anti-abuse
 
-- **Checkout:** `startCheckoutAction(kind)` udvides — for `ModuleKey` sættes `subscription_data.trial_period_days = MODULES[kind].trialDays`, medmindre medlemmet allerede har en `member_module_trials`-række for det modul (så: ingen trial, direkte betaling). crew/one_on_one uændret.
+- **Checkout:** `startCheckoutAction(formData)` (læser `kind` fra formdata, som i dag) udvides — for `ModuleKey` sættes `subscription_data.trial_period_days = MODULES[kind].trialDays`, medmindre medlemmet allerede har en `member_module_trials`-række for det modul (så: ingen trial, direkte betaling). crew/one_on_one uændret.
 - **Webhook:** ved `customer.subscription.created` med `status = 'trialing'` og et modul-`product_kind` → upsert `member_module_trials(member_id, module_kind)`. Skrive-logikken for `subscriptions` er allerede generisk over `product_kind`.
+- **Webhook-default-hærdning:** `route.ts:95` defaulter i dag et manglende `metadata.product_kind` til `"crew"`. Under den nye model giver `crew` **alle fire moduler** — så en manglende/forkert metadata ville over-tildele. Checkout sætter altid metadata, så risikoen er lav, men defaulten ændres til en ikke-tildelende værdi (fx spring upsert over + log en advarsel) frem for `"crew"`.
 - **Portal:** uændret — Stripe Customer Portal håndterer skift/annullering/genoptagelse pr. abonnement.
 - **Bundle-interaktion:** hvis et medlem har enkeltmoduler og opgraderer til `crew`, håndteres det som separate abonnementer; entitlement-resolveren giver stadig korrekt alt-true via crew. (Oprydning i overlappende enkeltmodul-subs er en manuel/portal-beslutning, ikke automatiseret i v1 — noteret som bevidst forenkling.)
 
@@ -235,7 +265,7 @@ Ingen ny brug af ordet "tier" i billing-/modul-kode.
 Hver fase er selvstændigt testbar og efterlader appen i en fungerende tilstand.
 
 - **Fase A — Entitlement-fundament (ingen priser live).**
-  Migration `0055`; `lib/modules.ts`; `lib/stripe.ts`-udvidelse; `lib/data/entitlements.ts` (demo=alt-true). Unit-tests for resolveren. Ingen UI-ændring endnu — appen ser uændret ud, men fundamentet står.
+  Migration `0055`; `lib/modules.ts`; `lib/stripe.ts`-udvidelse (+ **compile-sikker `billing.ts`-touch i samme fase**, jf. §5.3, så `ProductKind`-udvidelsen ikke brækker build); `lib/data/entitlements.ts` med `cache()`-wrappet resolver (demo=alt-true) + `requireModuleOrRedirect`. Unit-tests for resolveren. Ingen UI-ændring endnu — appen ser uændret ud, men fundamentet står, og `npm run build` er grøn.
 - **Fase B — Gratis-gulv-rendering + upsell.**
   `*FreeFloor`-komponenter + `<ModuleUpsell>` pr. betalt søjle; page-forgrening; action-guards. Stadig demo=alt-true, så alt er åbent lokalt, men gulv/fuld-strukturen er på plads og testes med et fremtvunget ikke-entitlet fixture.
 - **Fase C — Stripe-priser + trials + billing-revamp.**
@@ -273,7 +303,10 @@ Disse er sat som defaults og kan ændres med ét flag i `lib/modules.ts` / copy 
 2. **Fællesskab-posting åben** (default: ja). Alternativ: gate posting bag ethvert ejet modul.
 3. **Trial-længde = 7 dage** pr. modul. Justerbar pr. modul via `trialDays`.
 4. **`one_on_one` giver ikke indholds-moduler** (default). Alternativ: lad 1:1 inkludere crew-bundlen.
-5. **Prisbeløb** — forretningsinput i `lib/pricing.ts` ved launch (struktur er specificeret; tal er ikke).
+5. **`one_on_one`-precondition informativ** (default: ikke håndhævet i checkout). Alternativ: hård-håndhæv "kræver crew eller ≥1 modul".
+6. **`/program/[code]` gated som train-premium** (default). Alternativ: hold åben for coach-delte programmer via kode.
+7. **`/hrv/learn` guardes** (default). Alternativ: gør det edukative indhold til gratis-gulv.
+8. **Prisbeløb** — forretningsinput i `lib/pricing.ts` ved launch (struktur er specificeret; tal er ikke).
 
 ---
 
