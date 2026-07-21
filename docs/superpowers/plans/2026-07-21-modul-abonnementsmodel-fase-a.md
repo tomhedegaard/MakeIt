@@ -401,6 +401,8 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 
 Tynd glue oven på den rene funktion: request-memo'iseret Supabase-fetch (demo-mode → alt-true) og en rute-guard til premium-dybe-ruter. Ingen dedikeret unit-test (side-effektfuld glue, testes via Fase B's side-integration).
 
+> **Rettelse under eksekvering (kvalitets-review):** kodeblokken nedenfor gatede demo-mode alene på manglende Supabase, men spec §5.4 kræver `!STRIPE_ENABLED` → alt-true. Som implementeret returnerer `getEntitlements` alt-true når **enten** Supabase **eller** Stripe-konfigurationen (`STRIPE_SECRET_KEY` + `STRIPE_PRICE_CREW`, læst call-time — ikke via `@/lib/stripe`, som er `server-only` og ville brække vitest) mangler. Derudover: query-fejl logges (`[entitlements]`-tag, stadig fail-closed), og `freeFloorRoute` defaulter til `MODULES[moduleKey].route`.
+
 **Files:**
 - Modify: `src/lib/data/entitlements.ts`
 
