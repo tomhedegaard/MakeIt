@@ -25,7 +25,7 @@ export type ActiveSubscription = {
  */
 export async function getActiveSubscriptions(
   memberId: string
-): Promise<Record<ProductKind, ActiveSubscription | null> | null> {
+): Promise<Partial<Record<ProductKind, ActiveSubscription>> | null> {
   const supabase = await createClient();
   if (!supabase) return null;
 
@@ -34,21 +34,16 @@ export async function getActiveSubscriptions(
     .select("product_kind, status, current_period_end, cancel_at_period_end")
     .eq("member_id", memberId);
 
-  const result: Record<ProductKind, ActiveSubscription | null> = {
-    crew: null,
-    one_on_one: null,
-  };
+  const result: Partial<Record<ProductKind, ActiveSubscription>> = {};
 
   for (const r of data ?? []) {
     const kind = r.product_kind as ProductKind;
-    if (kind in result) {
-      result[kind] = {
-        productKind: kind,
-        status: r.status as SubscriptionStatus,
-        currentPeriodEnd: r.current_period_end,
-        cancelAtPeriodEnd: !!r.cancel_at_period_end,
-      };
-    }
+    result[kind] = {
+      productKind: kind,
+      status: r.status as SubscriptionStatus,
+      currentPeriodEnd: r.current_period_end,
+      cancelAtPeriodEnd: !!r.cancel_at_period_end,
+    };
   }
 
   return result;

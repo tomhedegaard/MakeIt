@@ -7,6 +7,7 @@
  */
 import "server-only";
 import Stripe from "stripe";
+import { MODULES, type ModuleKey } from "./modules";
 
 export const STRIPE_SECRET_KEY    = process.env.STRIPE_SECRET_KEY ?? "";
 export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET ?? "";
@@ -29,10 +30,13 @@ export function getStripe(): Stripe | null {
   return _stripe;
 }
 
-export type ProductKind = "crew" | "one_on_one";
+export type ProductKind = "crew" | "one_on_one" | ModuleKey;
 
 export function priceIdFor(kind: ProductKind): string | null {
   if (kind === "crew") return STRIPE_PRICE_CREW || null;
   if (kind === "one_on_one") return STRIPE_PRICE_ONE_ON_ONE || null;
+  // Modul-priser slås op på call-time via katalogets priceEnv.
+  const def = MODULES[kind as ModuleKey];
+  if (def) return process.env[def.priceEnv] || null;
   return null;
 }
