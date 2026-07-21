@@ -1,3 +1,7 @@
+import { cache } from "react";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { getSession } from "@/lib/auth";
 import { MODULE_KEYS, type ModuleKey } from "@/lib/modules";
 
 export type Entitlements = Record<ModuleKey, boolean>;
@@ -34,4 +38,39 @@ export function deriveEntitlements(
     }
   }
   return e;
+}
+
+/**
+ * Et medlems modul-entitlements. Request-memo'iseret via React cache(),
+ * så gentagne kald (layout + sider + action-guards inden for samme
+ * request) kun rammer DB én gang. Demo-mode (ingen Supabase) → alt-true,
+ * så lokal udvikling ser fuldt indhold — samme filosofi som billing.ts.
+ */
+export const getEntitlements = cache(
+  async (memberId: string): Promise<Entitlements> => {
+    const supabase = await createClient();
+    if (!supabase) return { ...ALL };
+
+    const { data } = await supabase
+      .from("member_active_subscriptions")
+      .select("product_kind")
+      .eq("member_id", memberId);
+
+    return deriveEntitlements(data ?? []);
+  }
+);
+
+/**
+ * Rute-guard til premium-dybe-ruter uden gratis-ækvivalent.
+ * Ikke logget ind → /login. Mangler modulet → redirect til modulets
+ * gratis-gulv-rute med ?upsell=<key>. Kaldes øverst i server-siden.
+ */
+export async function requireModuleOrRedirect(
+  moduleKey: ModuleKey,
+  freeFloorRoute: string
+): Promise<void> {
+  const member = await getSession();
+  if (!member) redirect("/login");
+  const ent = await getEntitlements(member.id);
+  if (!ent[moduleKey]) redirect(`${freeFloorRoute}?upsell=${moduleKey}`);
 }
