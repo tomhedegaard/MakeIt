@@ -2,7 +2,7 @@
 // oprindelige tomhedegaard/Penge dashboard.html (rapport 4. marts 2026).
 // Beløb er månedsaggregater i hele kroner; kilden er markeret
 // "Anonymiseret" i original-rapporten. Original bevaret i
-// docs/penge/dashboard-original.html.
+// arkiv/penge/dashboard-original.html.
 
 export type MonthCashflow = {
   /** Sorterbar månedsnøgle, fx "2025-03" */
