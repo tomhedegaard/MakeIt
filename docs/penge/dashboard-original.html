@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Økonomi · Overblik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e1117; --paper: #f5f2eb; --cream: #ede9df;
+  --gold: #c9a84c; --red: #c0392b; --green: #1e6e42;
+  --muted: #7a7569; --line: #d6d0c4; --blue: #1a3a5c; --blue-light: #e8eef5;
+  --tab-h: 52px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--paper); color:var(--ink); font-family:'Instrument Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
+body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:9999; opacity:0.6; }
+
+/* ── HEADER ── */
+header { padding:36px 60px 28px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:flex-end; animation:fadeDown 0.7s ease both; }
+.header-left h1 { font-family:'DM Serif Display',serif; font-size:clamp(2rem,4vw,3.2rem); line-height:1.05; letter-spacing:-0.02em; }
+.header-left h1 em { font-style:italic; color:var(--gold); }
+.header-sub { margin-top:6px; font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; }
+.header-right { text-align:right; }
+.header-date { font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--muted); letter-spacing:0.08em; }
+.header-period { font-size:0.82rem; color:var(--ink); margin-top:4px; font-weight:500; }
+.gold-rule { width:100%; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+
+/* ── TABS ── */
+.tab-bar { display:flex; border-bottom:1px solid var(--line); background:var(--cream); padding:0 60px; animation:fadeDown 0.7s 0.05s ease both; }
+.tab-btn { font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; padding:0 24px; height:var(--tab-h); border:none; background:none; cursor:pointer; color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.18s ease; display:flex; align-items:center; gap:8px; }
+.tab-btn:hover { color:var(--ink); }
+.tab-btn.active { color:var(--ink); border-bottom-color:var(--gold); font-weight:600; }
+.tab-dot { width:7px; height:7px; border-radius:50%; }
+
+/* ── PERIOD BAR ── */
+.period-bar { padding:12px 60px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:14px; background:var(--paper); }
+.period-label { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
+.period-pills { display:flex; gap:5px; }
+.pill { font-family:'DM Mono',monospace; font-size:0.63rem; letter-spacing:0.06em; text-transform:uppercase; padding:4px 12px; border:1px solid var(--line); background:var(--paper); color:var(--muted); border-radius:2px; cursor:pointer; transition:all 0.15s; }
+.pill:hover { border-color:var(--gold); color:var(--ink); }
+.pill.active { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+.period-range { margin-left:auto; font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--muted); }
+
+/* ── PANELS ── */
+.panel { display:none; }
+.panel.active { display:block; }
+
+/* ── KPI STRIP ── */
+.kpi-strip { display:grid; border-bottom:1px solid var(--line); }
+.kpi-strip.cols-5 { grid-template-columns:repeat(5,1fr); }
+.kpi-strip.cols-3 { grid-template-columns:repeat(3,1fr); }
+.kpi-card { padding:24px 22px; border-right:1px solid var(--line); position:relative; transition:background 0.2s; }
+.kpi-card:last-child { border-right:none; }
+.kpi-card:hover { background:var(--cream); }
+.kpi-label { font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.kpi-name { font-family:'DM Serif Display',serif; font-size:1rem; color:var(--ink); margin-bottom:10px; line-height:1.2; }
+.kpi-saldo { font-family:'DM Mono',monospace; font-size:1.15rem; font-weight:500; letter-spacing:-0.03em; }
+.kpi-sub { font-family:'DM Mono',monospace; font-size:0.57rem; color:var(--muted); margin-top:2px; }
+.kpi-count { margin-top:5px; font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--muted); }
+.kpi-bar { position:absolute; bottom:0; left:0; height:3px; background:var(--gold); transition:width 1s cubic-bezier(0.16,1,0.3,1); }
+.pos { color:var(--green); } .neg { color:var(--red); } .neu { color:var(--ink); }
+
+/* ── MAIN CONTENT ── */
+.content { padding:0 60px 80px; }
+.section-head { display:flex; align-items:center; gap:14px; padding:34px 0 20px; border-bottom:1px solid var(--line); margin-bottom:30px; }
+.section-head h2 { font-family:'DM Serif Display',serif; font-size:1.55rem; letter-spacing:-0.02em; }
+.section-num { font-family:'DM Mono',monospace; font-size:0.63rem; letter-spacing:0.1em; color:var(--muted); padding:3px 8px; border:1px solid var(--line); border-radius:2px; }
+
+/* ── ACCOUNT GRID ── */
+.accounts-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; background:var(--line); border:1px solid var(--line); margin-bottom:50px; }
+.accounts-grid.cols-3 { grid-template-columns:1fr 1fr 1fr; }
+.account-block { background:var(--paper); padding:28px 26px; }
+.acc-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+.acc-nr { font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--muted); letter-spacing:0.1em; margin-bottom:4px; }
+.acc-name { font-family:'DM Serif Display',serif; font-size:1.15rem; }
+.acc-badge { padding:3px 9px; font-family:'DM Mono',monospace; font-size:0.57rem; letter-spacing:0.1em; text-transform:uppercase; border-radius:2px; }
+.badge-green { background:#d4edda; color:var(--green); }
+.badge-red { background:#fde8e6; color:var(--red); }
+.badge-neutral { background:var(--blue-light); color:var(--blue); }
+.badge-gold { background:#fdf3dc; color:#8a6a10; }
+
+.acc-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:14px; }
+.stat-label { font-family:'DM Mono',monospace; font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:2px; }
+.stat-val { font-family:'DM Mono',monospace; font-size:0.8rem; font-weight:500; color:var(--ink); }
+.stat-val.green { color:var(--green); } .stat-val.red { color:var(--red); }
+
+.avg-row { display:flex; justify-content:space-between; align-items:center; padding:6px 10px; margin-bottom:12px; background:var(--cream); border-radius:2px; border-left:2px solid var(--gold); }
+.avg-label { font-family:'DM Mono',monospace; font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); }
+.avg-vals { display:flex; align-items:center; gap:4px; }
+.avg-item { font-family:'DM Mono',monospace; font-size:0.72rem; font-weight:500; }
+.avg-item.pos { color:var(--green); } .avg-item.neg { color:var(--red); }
+.avg-sep { font-family:'DM Mono',monospace; font-size:0.58rem; color:var(--line); }
+.avg-row.hidden { display:none; }
+
+.raadighed-box { margin-bottom:12px; padding:8px 12px; background:var(--cream); border-left:3px solid var(--gold); display:flex; justify-content:space-between; align-items:center; }
+.raadighed-label { font-family:'DM Mono',monospace; font-size:0.57rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); }
+.raadighed-val { font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--red); }
+
+.chart-label { font-family:'DM Mono',monospace; font-size:0.56rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.chart-wrap { position:relative; height:70px; width:100%; }
+.chart-bars { display:flex; align-items:flex-end; height:100%; gap:2px; }
+.chart-baseline { position:absolute; bottom:0; left:0; right:0; height:1px; background:var(--line); }
+.bar-group { flex:1; display:flex; align-items:flex-end; gap:1px; height:100%; }
+.bar { flex:1; border-radius:1px 1px 0 0; position:relative; cursor:default; }
+.bar:hover { opacity:0.7; }
+.bar.income { background:var(--green); opacity:0.65; }
+.bar.expense { background:var(--red); opacity:0.55; }
+.bar-tooltip { display:none; position:absolute; bottom:calc(100% + 4px); left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; font-family:'DM Mono',monospace; font-size:0.54rem; padding:3px 7px; border-radius:2px; white-space:nowrap; z-index:100; pointer-events:none; }
+.bar:hover .bar-tooltip { display:block; }
+.sparkline-wrap { margin-top:8px; }
+svg.sparkline { width:100%; height:38px; overflow:visible; }
+
+/* ── COMBINED CASHFLOW CHART ── */
+.combined-section { padding:0 60px 80px; }
+.combined-head { display:flex; align-items:center; justify-content:space-between; padding:34px 0 24px; border-bottom:1px solid var(--line); margin-bottom:30px; }
+.combined-head-left { display:flex; align-items:center; gap:14px; }
+.combined-head h2 { font-family:'DM Serif Display',serif; font-size:1.55rem; letter-spacing:-0.02em; }
+.combined-totals { display:flex; gap:28px; flex-wrap:wrap; justify-content:flex-end; }
+.combined-total-item { text-align:right; }
+.combined-total-label { font-family:'DM Mono',monospace; font-size:0.57rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:2px; }
+.combined-total-val { font-family:'DM Mono',monospace; font-size:1rem; font-weight:500; }
+.combined-chart-outer { background:var(--cream); border:1px solid var(--line); padding:28px 32px 20px; }
+.combined-chart-area { position:relative; height:180px; width:100%; margin-bottom:6px; }
+.combined-svg { width:100%; height:100%; overflow:visible; }
+.month-labels { display:flex; margin-top:4px; }
+.month-label { flex:1; font-family:'DM Mono',monospace; font-size:0.52rem; color:var(--muted); text-align:center; }
+.combined-legend { display:flex; gap:20px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line); flex-wrap:wrap; }
+.combined-legend-item { display:flex; align-items:center; gap:7px; font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--muted); }
+.combined-legend-line { width:20px; height:3px; border-radius:2px; }
+
+/* ── TVÆRSNIT ── */
+.cross-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:50px; }
+.cross-card { background:var(--cream); border:1px solid var(--line); padding:28px; }
+.cross-card h3 { font-family:'DM Serif Display',serif; font-size:1.15rem; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+.cross-chart-wrap { height:160px; position:relative; }
+.cross-svg { width:100%; height:100%; overflow:visible; }
+.cross-stat-row { display:flex; justify-content:space-between; margin-top:14px; padding-top:12px; border-top:1px solid var(--line); }
+.cross-stat { text-align:center; }
+.cross-stat-label { font-family:'DM Mono',monospace; font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:3px; }
+.cross-stat-val { font-family:'DM Mono',monospace; font-size:0.88rem; font-weight:500; }
+
+/* ── FOOTER ── */
+footer { padding:18px 60px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+.footer-left { font-family:'DM Mono',monospace; font-size:0.58rem; color:var(--muted); letter-spacing:0.05em; }
+.footer-right { display:flex; gap:16px; font-family:'DM Mono',monospace; font-size:0.56rem; color:var(--muted); }
+.legend-dot { display:inline-block; width:7px; height:7px; border-radius:1px; margin-right:3px; vertical-align:middle; }
+
+.fade-update { animation:blip 0.3s ease; }
+@keyframes blip { 0%,100%{opacity:1} 40%{opacity:0.2} }
+@keyframes fadeDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(18px)}  to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Samlet <em>økonomi</em></h1>
+    <div class="header-sub">Spar Nord · AL Bank · Privat &amp; Virksomhed</div>
+  </div>
+  <div class="header-right">
+    <div class="header-date">RAPPORT GENERERET</div>
+    <div class="header-period">4. marts 2026</div>
+  </div>
+</header>
+<div class="gold-rule"></div>
+
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="privat">
+    <span class="tab-dot" style="background:var(--green)"></span>Privat
+  </button>
+  <button class="tab-btn" data-tab="virksomhed">
+    <span class="tab-dot" style="background:var(--blue)"></span>Virksomhed
+  </button>
+  <button class="tab-btn" data-tab="tvaer">
+    <span class="tab-dot" style="background:var(--gold)"></span>Tværsnit
+  </button>
+</div>
+
+<!-- PERIOD BAR -->
+<div class="period-bar">
+  <span class="period-label">Vis periode</span>
+  <div class="period-pills">
+    <button class="pill" data-period="1m">1 mdr.</button>
+    <button class="pill" data-period="3m">3 mdr.</button>
+    <button class="pill" data-period="6m">6 mdr.</button>
+    <button class="pill" data-period="2024">2024</button>
+    <button class="pill" data-period="2025">2025</button>
+    <button class="pill" data-period="2026">2026</button>
+    <button class="pill active" data-period="all">Hele perioden</button>
+  </div>
+  <span class="period-range" id="period-range-label">aug 2024 – mar 2026</span>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PANEL: PRIVAT
+════════════════════════════════════════════ -->
+<div class="panel active" id="panel-privat">
+  <div class="kpi-strip cols-5">
+    <div class="kpi-card"><div class="kpi-label">Privat 01</div><div class="kpi-name">Udlejningskonto</div><div class="kpi-saldo pos" id="p-kpi-s-0"></div><div class="kpi-sub" id="p-kpi-sub-0"></div><div class="kpi-count" id="p-kpi-c-0"></div><div class="kpi-bar" id="p-kpi-b-0" style="width:0%"></div></div>
+    <div class="kpi-card"><div class="kpi-label">Privat 02</div><div class="kpi-name">Forbrugskonto</div><div class="kpi-saldo neu" id="p-kpi-s-1"></div><div class="kpi-sub" id="p-kpi-sub-1"></div><div class="kpi-count" id="p-kpi-c-1"></div><div class="kpi-bar" id="p-kpi-b-1" style="width:0%"></div></div>
+    <div class="kpi-card"><div class="kpi-label">Privat 03</div><div class="kpi-name">Budgetkonto</div><div class="kpi-saldo pos" id="p-kpi-s-2"></div><div class="kpi-sub" id="p-kpi-sub-2"></div><div class="kpi-count" id="p-kpi-c-2"></div><div class="kpi-bar" id="p-kpi-b-2" style="width:0%"></div></div>
+    <div class="kpi-card"><div class="kpi-label">Privat 04</div><div class="kpi-name">Friværdikredit</div><div class="kpi-saldo pos" id="p-kpi-s-3">372.142 kr.</div><div class="kpi-sub">rådighedsbeløb</div><div class="kpi-count" id="p-kpi-c-3"></div><div class="kpi-bar" id="p-kpi-b-3" style="width:0%;background:var(--gold)"></div></div>
+    <div class="kpi-card"><div class="kpi-label">Privat 05</div><div class="kpi-name">Hustruens konto</div><div class="kpi-saldo neu" id="p-kpi-s-4"></div><div class="kpi-sub" id="p-kpi-sub-4"></div><div class="kpi-count" id="p-kpi-c-4"></div><div class="kpi-bar" id="p-kpi-b-4" style="width:0%"></div></div>
+  </div>
+
+  <div class="content">
+    <div class="section-head"><span class="section-num">01 — 05</span><h2>Private konti</h2></div>
+    <div class="accounts-grid" id="privat-grid">
+
+      <!-- Udlejning -->
+      <div class="account-block">
+        <div class="acc-header"><div><div class="acc-nr">XXXX 1290 71 0711</div><div class="acc-name">Udlejningskonto</div></div><span class="acc-badge badge-green">Positiv</span></div>
+        <div class="acc-stats"><div><div class="stat-label">Indbetalt</div><div class="stat-val green" id="p-ind-0"></div></div><div><div class="stat-label">Udbetalt</div><div class="stat-val red" id="p-ud-0"></div></div><div><div class="stat-label">Netto</div><div class="stat-val" id="p-net-0"></div></div></div>
+        <div class="avg-row" id="p-avg-0"><span class="avg-label">Gns. pr. måned</span><span class="avg-vals"><span class="avg-item pos" id="p-ai-0"></span><span class="avg-sep">/</span><span class="avg-item neg" id="p-au-0"></span><span class="avg-sep">/</span><span class="avg-item" id="p-an-0"></span></span></div>
+        <div class="chart-label">Månedlig cashflow</div>
+        <div class="chart-wrap"><div class="chart-baseline"></div><div class="chart-bars" id="p-bars-0"></div></div>
+        <div class="sparkline-wrap"><div class="chart-label" style="margin-top:8px">Netto pr. måned</div><svg class="sparkline" id="p-spark-0" viewBox="0 0 300 38" preserveAspectRatio="none"></svg></div>
+      </div>
+
+      <!-- Forbrugskonto -->
+      <div class="account-block">
+        <div class="acc-header"><div><div class="acc-nr">XXXX 1290 70 2433</div><div class="acc-name">Forbrugskonto</div></div><span class="acc-badge badge-neutral">Aktiv</span></div>
+        <div class="acc-stats"><div><div class="stat-label">Indbetalt</div><div class="stat-val green" id="p-ind-1"></div></div><div><div class="stat-label">Udbetalt</div><div class="stat-val red" id="p-ud-1"></div></div><div><div class="stat-label">Netto</div><div class="stat-val" id="p-net-1"></div></div></div>
+        <div class="avg-row" id="p-avg-1"><span class="avg-label">Gns. pr. måned</span><span class="avg-vals"><span class="avg-item pos" id="p-ai-1"></span><span class="avg-sep">/</span><span class="avg-item neg" id="p-au-1"></span><span class="avg-sep">/</span><span class="avg-item" id="p-an-1"></span></span></div>
+        <div class="chart-label">Månedlig cashflow</div>
+        <div class="chart-wrap"><div class="chart-baseline"></div><div class="chart-bars" id="p-bars-1"></div></div>
+        <div class="sparkline-wrap"><div class="chart-label" style="margin-top:8px">Netto pr. måned</div><svg class="sparkline" id="p-spark-1" viewBox="0 0 300 38" preserveAspectRatio="none"></svg></div>
+      </div>
+
+      <!-- Budgetkonto -->
+      <div class="account-block">
+        <div class="acc-header"><div><div class="acc-nr">XXXX 1290 70 2441</div><div class="acc-name">Budgetkonto</div></div><span class="acc-badge badge-neutral">Aktiv</span></div>
+        <div class="acc-stats"><div><div class="stat-label">Indbetalt</div><div class="stat-val green" id="p-ind-2"></div></div><div><div class="stat-label">Udbetalt</div><div class="stat-val red" id="p-ud-2"></div></div><div><div class="stat-label">Netto</div><div class="stat-val" id="p-net-2"></div></div></div>
+        <div class="avg-row" id="p-avg-2"><span class="avg-label">Gns. pr. måned</span><span class="avg-vals"><span class="avg-item pos" id="p-ai-2"></span><span class="avg-sep">/</span><span class="avg-item neg" id="p-au-2"></span><span class="avg-sep">/</span><span class="avg-item" id="p-an-2"></span></span></div>
+        <div class="chart-label">Månedlig cashflow</div>
+        <div class="chart-wrap"><div class="chart-baseline"></div><div class="chart-bars" id="p-bars-2"></div></div>
+        <div class="sparkline-wrap"><div class="chart-label" style="margin-top:8px">Netto pr. måned</div><svg class="sparkline" id="p-spark-2" viewBox="0 0 300 38" preserveAspectRatio="none"></svg></div>
+      </div>
+
+      <!-- Friværdikredit -->
+      <div class="account-block">
+        <div class="acc-header"><div><div class="acc-nr">XXXX 1290 70 8989</div><div class="acc-name">Friværdikredit</div></div><span class="acc-badge badge-neutral">Kredit</span></div>
+        <div class="acc-stats">
+          <div><div class="stat-label">Rådighedsbeløb</div><div class="stat-val green" style="font-size:1rem;font-weight:600">372.142 kr.</div></div>
+          <div><div class="stat-label">Indbetalt</div><div class="stat-val green" id="p-ind-3"></div></div>
+          <div><div class="stat-label">Udbetalt</div><div class="stat-val red" id="p-ud-3"></div></div>
+        </div>
+        <div class="raadighed-box"><span class="raadighed-label">Aktuel kontosaldo</span><span class="raadighed-val">−947.858,37 kr.</span></div>
+        <div class="chart-label">Månedlig cashflow</div>
+        <div class="chart-wrap"><div class="chart-baseline"></div><div class="chart-bars" id="p-bars-3"></div></div>
+        <div class="sparkline-wrap"><div class="chart-label" style="margin-top:8px">Netto pr. måned</div><svg class="sparkline" id="p-spark-3" viewBox="0 0 300 38" preserveAspectRatio="none"></svg></div>
+      </div>
+
+      <!-- Hustruens konto -->
+      <div class="account-block">
+        <div class="acc-header"><div><div class="acc-nr">XXXX 1290 70 2425</div><div class="acc-name">Hustruens konto</div></div><span class="acc-badge badge-neutral">Aktiv</span></div>
+        <div class="acc-stats"><div><div class="stat-label">Indbetalt</div><div class="stat-val green" id="p-ind-4"></div></div><div><div class="stat-label">Udbetalt</div><div class="stat-val red" id="p-ud-4"></div></div><div><div class="stat-label">Netto</div><div class="stat-val" id="p-net-4"></div></div></div>
+        <div class="avg-row" id="p-avg-4"><span class="avg-label">Gns. pr. måned</span><span class="avg-vals"><span class="avg-item pos" id="p-ai-4"></span><span class="avg-sep">/</span><span class="avg-item neg" id="p-au-4"></span><span class="avg-sep">/</span><span class="avg-item" id="p-an-4"></span></span></div>
+        <div class="chart-label">Månedlig cashflow</div>
+        <div class="chart-wrap"><div class="chart-baseline"></div><div class="chart-bars" id="p-bars-4"></div></div>
+        <div class="sparkline-wrap"><div class="chart-label" style="margin-top:8px">Netto pr. måned</div><svg class="sparkline" id="p-spark-4" viewBox="0 0 300 38" preserveAspectRatio="none"></svg></div>
+      </div>
+
+    </div>
+
+    <!-- Combined private cashflow -->
+    <div class="combined-section" style="padding:0 0 60px">
+      <div class="combined-head">
+        <div class="combined-head-left"><span class="section-num">Samlet</span><h2>Privat cashflow på tværs</h2></div>
+        <div class="combined-totals">
+          <div class="combined-total-item"><div class="combined-total-label">Total ind</div><div class="combined-total-val pos" id="p-ctotal-ind"></div></div>
+          <div class="combined-total-item"><div class="combined-total-label">Total ud</div><div class="combined-total-val neg" id="p-ctotal-ud"></div></div>
+          <div class="combined-total-item"><div class="combined-total-label">Netto</div><div class="combined-total-val" id="p-ctotal-net"></div></div>
+          <div class="combined-total-item"><div class="combined-total-label">Gns. ind/mdr.</div><div class="combined-total-val pos" id="p-ctotal-avg-ind"></div></div>
+          <div class="combined-total-item"><div class="combined-total-label">Gns. ud/mdr.</div><div class="combined-total-val neg" id="p-ctotal-avg-ud"></div></div>
+          <div class="combined-total-item" style="border-left:1px solid var(--line);padding-left:28px"><div class="combined-total-label">Netto pr. måned</div><div class="combined-total-val" id="p-ctotal-avg-net"></div></div>
+        </div>
+      </div>
+      <div class="combined-chart-outer">
+        <div class="combined-chart-area"><svg class="combined-svg" id="p-combined-svg" viewBox="0 0 800 200" preserveAspectRatio="none"></svg></div>
+        <div class="month-labels" id="p-combined-labels"></div>
+        <div class="combined-legend">
+          <div class="combined-legend-item"><div class="combined-legend-line" style="background:var(--green);opacity:0.7"></div>Indbetalinger</div>
+          <div class="combined-legend-item"><div class="combined-legend-line" style="background:var(--red);opacity:0.6"></div>Udbetalinger</div>
+          <div class="combined-legend-item"><div class="combined-legend-line" style="background:var(--gold)"></div>Netto (linje)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PANEL: VIRKSOMHED
+════════════════════════════════════════════ -->
+<div class="panel" id="panel-virksomhed">
+  <div class="kpi-strip cols-3">
+    <div class="kpi-card"><div class="kpi-label">Virksomhed 01</div><div class="kpi-name">Driftskonto</div><div class="kpi-saldo pos" id="v-kpi-s-0"></div><div class="kpi-sub" id="v-kpi-sub-0"></div><div class="kpi-count" id="v-kpi-c-0"></div><div class="kpi-bar" id="v-kpi-b-0" style="width:0%;background:var(--blue)"></div></div>
+    <div class="kpi-card"><div class="kpi-label">Virksomhed 02</div><div class="kpi-name">Skattekonto</div><div class="kpi-saldo pos" id="v-kpi-s-1"></div><div class="kpi-sub" id="v-kpi-sub-1"></div><div class="kpi-count" id="v-kpi-c-1"></div><div class="kpi-bar" id="v-kpi-b-1" style="width:0%;background:var(--blue)"></div></div>
+    <div class="kpi-card"><div class="kpi-label">Virksomhed 03</div><div class="kpi-name">Klientkonto</div><div class="kpi-saldo pos" id="v-kpi-s-2"></div><div class="kpi-sub" id="v-kpi-sub-2"></div><div class="kpi-count" id="v-kpi-c-2"></div><div class="kpi-bar" id="v-kpi-b-2" style="width:0%;background:var(--blue)"></div></div>
+  </div>
+
+  <div class="content">
+    <div class="section-head"><span class="section-num">01 — 03</span><h2>Virksomhedskonti · AL Bank</h2></div>
+    <div class="accounts-grid cols-3">
+
+      <!-- Driftskonto -->
+      <div class="account-block">
+        <div class="acc-header"><div><div class="acc-nr">5442 0256 846</div><div class="acc-name">Driftskonto</div></div><span class="acc-badge badge-neutral">Aktiv</span></div>
+        <div class="acc-stats"><div><div class="stat-label">Omsætning ind</div><div class="stat-val green" id="v-ind-0"></div></div><div><div class="stat-label">Udgifter ud</div><div class="stat-val red" id="v-ud-0"></div></div><div><div class="stat-label">Netto</div><div class="stat-val" id="v-net-0"></div></div></div>
+        <div class="avg-row" id="v-avg-0"><span class="avg-label">Gns. pr. måned</span><span class="avg-vals"><span class="avg-item pos" id="v-ai-0"></span><span class="avg-sep">/</span><span class="avg-item neg" id="v-au-0"></span><span class="avg-sep">/</span><span class="avg-item" id="v-an-0"></span></span></div>
+        <div class="chart-label">Månedlig cashflow</div>
+        <div class="chart-wrap"><div class="chart-baseline"></div><div class="chart-bars" id="v-bars-0"></div></div>
+        <div class="sparkline-wrap"><div class="chart-label" style="margin-top:8px">Netto pr. måned</div><svg class="sparkline" id="v-spark-0" viewBox="0 0 300 38" preserveAspectRatio="none"></svg></div>
+      </div>
+
+      <!-- Skattekonto -->
+      <div class="account-block">
+        <div class="acc-header"><div><div class="acc-nr">5442 0257 265</div><div class="acc-name">Skattekonto</div></div><span class="acc-badge badge-gold">Moms &amp; Skat</span></div>
+        <div class="acc-stats"><div><div class="stat-label">Indbetalt</div><div class="stat-val green" id="v-ind-1"></div></div><div><div class="stat-label">Udbetalt</div><div class="stat-val red" id="v-ud-1"></div></div><div><div class="stat-label">Saldo</div><div class="stat-val" id="v-net-1"></div></div></div>
+        <div class="avg-row" id="v-avg-1"><span class="avg-label">Gns. pr. måned</span><span class="avg-vals"><span class="avg-item pos" id="v-ai-1"></span><span class="avg-sep">/</span><span class="avg-item neg" id="v-au-1"></span><span class="avg-sep">/</span><span class="avg-item" id="v-an-1"></span></span></div>
+        <div class="chart-label">Månedlig cashflow</div>
+        <div class="chart-wrap"><div class="chart-baseline"></div><div class="chart-bars" id="v-bars-1"></div></div>
+        <div class="sparkline-wrap"><div class="chart-label" style="margin-top:8px">Netto pr. måned</div><svg class="sparkline" id="v-spark-1" viewBox="0 0 300 38" preserveAspectRatio="none"></svg></div>
+      </div>
+
+      <!-- Klientkonto -->
+      <div class="account-block">
+        <div class="acc-header"><div><div class="acc-nr">5442 0332 526</div><div class="acc-name">Klientkonto</div></div><span class="acc-badge badge-neutral">Aktiv</span></div>
+        <div class="acc-stats"><div><div class="stat-label">Indbetalt</div><div class="stat-val green" id="v-ind-2"></div></div><div><div class="stat-label">Udbetalt</div><div class="stat-val red" id="v-ud-2"></div></div><div><div class="stat-label">Netto</div><div class="stat-val" id="v-net-2"></div></div></div>
+        <div class="avg-row" id="v-avg-2"><span class="avg-label">Gns. pr. måned</span><span class="avg-vals"><span class="avg-item pos" id="v-ai-2"></span><span class="avg-sep">/</span><span class="avg-item neg" id="v-au-2"></span><span class="avg-sep">/</span><span class="avg-item" id="v-an-2"></span></span></div>
+        <div class="chart-label">Månedlig cashflow</div>
+        <div class="chart-wrap"><div class="chart-baseline"></div><div class="chart-bars" id="v-bars-2"></div></div>
+        <div class="sparkline-wrap"><div class="chart-label" style="margin-top:8px">Netto pr. måned</div><svg class="sparkline" id="v-spark-2" viewBox="0 0 300 38" preserveAspectRatio="none"></svg></div>
+      </div>
+
+    </div>
+
+    <!-- Combined virksomhed cashflow -->
+    <div class="combined-section" style="padding:0 0 60px">
+      <div class="combined-head">
+        <div class="combined-head-left"><span class="section-num">Samlet</span><h2>Driftskonto cashflow</h2></div>
+        <div class="combined-totals">
+          <div class="combined-total-item"><div class="combined-total-label">Total ind</div><div class="combined-total-val pos" id="v-ctotal-ind"></div></div>
+          <div class="combined-total-item"><div class="combined-total-label">Total ud</div><div class="combined-total-val neg" id="v-ctotal-ud"></div></div>
+          <div class="combined-total-item"><div class="combined-total-label">Netto</div><div class="combined-total-val" id="v-ctotal-net"></div></div>
+          <div class="combined-total-item"><div class="combined-total-label">Gns. omsætning/mdr.</div><div class="combined-total-val pos" id="v-ctotal-avg-ind"></div></div>
+          <div class="combined-total-item"><div class="combined-total-label">Gns. udgifter/mdr.</div><div class="combined-total-val neg" id="v-ctotal-avg-ud"></div></div>
+        </div>
+      </div>
+      <div class="combined-chart-outer">
+        <div class="combined-chart-area"><svg class="combined-svg" id="v-combined-svg" viewBox="0 0 800 200" preserveAspectRatio="none"></svg></div>
+        <div class="month-labels" id="v-combined-labels"></div>
+        <div class="combined-legend">
+          <div class="combined-legend-item"><div class="combined-legend-line" style="background:var(--blue);opacity:0.7"></div>Omsætning ind</div>
+          <div class="combined-legend-item"><div class="combined-legend-line" style="background:var(--red);opacity:0.6"></div>Udgifter ud</div>
+          <div class="combined-legend-item"><div class="combined-legend-line" style="background:var(--gold)"></div>Netto (linje)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PANEL: TVÆRSNIT
+════════════════════════════════════════════ -->
+<div class="panel" id="panel-tvaer">
+  <div class="content" style="padding-top:40px">
+    <div class="section-head" style="padding-top:0"><span class="section-num">Tværsnit</span><h2>Privat møder Virksomhed</h2></div>
+
+    <div class="cross-grid">
+
+      <!-- Løn: virksomhed → privat -->
+      <div class="cross-card">
+        <h3>💸 Løn fra virksomhed → privat</h3>
+        <div class="cross-chart-wrap"><svg class="cross-svg" id="cross-loen-svg" viewBox="0 0 400 160" preserveAspectRatio="none"></svg></div>
+        <div class="month-labels" id="cross-loen-labels" style="margin-top:4px"></div>
+        <div class="cross-stat-row">
+          <div class="cross-stat"><div class="cross-stat-label">Total løn (Tom)</div><div class="cross-stat-val pos" id="cross-loen-tom"></div></div>
+          <div class="cross-stat"><div class="cross-stat-label">Total løn (hustru)</div><div class="cross-stat-val pos" id="cross-loen-dina"></div></div>
+          <div class="cross-stat"><div class="cross-stat-label">Gns. pr. måned</div><div class="cross-stat-val" id="cross-loen-avg"></div></div>
+        </div>
+      </div>
+
+      <!-- Omsætning vs. privat rådighedsbeløb -->
+      <div class="cross-card">
+        <h3>📊 Virksomhed omsætning vs. privat forbrug</h3>
+        <div class="cross-chart-wrap"><svg class="cross-svg" id="cross-omst-svg" viewBox="0 0 400 160" preserveAspectRatio="none"></svg></div>
+        <div class="month-labels" id="cross-omst-labels" style="margin-top:4px"></div>
+        <div class="cross-stat-row">
+          <div class="cross-stat"><div class="cross-stat-label">Gns. omsætning/mdr.</div><div class="cross-stat-val pos" id="cross-omst-virk"></div></div>
+          <div class="cross-stat"><div class="cross-stat-label">Gns. privat ud/mdr.</div><div class="cross-stat-val neg" id="cross-omst-priv"></div></div>
+          <div class="cross-stat"><div class="cross-stat-label">Dækningsgrad</div><div class="cross-stat-val" id="cross-omst-ratio"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">Spar Nord · AL Bank · Privat &amp; Virksomhed · Data 2024–2026 · Anonymiseret</div>
+  <div class="footer-right">
+    <span><span class="legend-dot" style="background:var(--green)"></span>Privat</span>
+    <span><span class="legend-dot" style="background:var(--blue)"></span>Virksomhed</span>
+    <span><span class="legend-dot" style="background:var(--gold)"></span>Tværsnit</span>
+  </div>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════
+
+const PRIVAT = {
+  0: [ // Udlejning
+    {ym:"2024-09",l:"sep 24",ind:3823,  ud:0},     {ym:"2024-10",l:"okt 24",ind:10000, ud:0},
+    {ym:"2024-11",l:"nov 24",ind:10000, ud:0},     {ym:"2024-12",l:"dec 24",ind:20028, ud:0},
+    {ym:"2025-01",l:"jan 25",ind:0,     ud:2624},  {ym:"2025-02",l:"feb 25",ind:10000, ud:24625},
+    {ym:"2025-03",l:"mar 25",ind:13671, ud:40273}, {ym:"2025-04",l:"apr 25",ind:10000, ud:10000},
+    {ym:"2025-05",l:"maj 25",ind:10000, ud:10000}, {ym:"2025-06",l:"jun 25",ind:10000, ud:10000},
+    {ym:"2025-07",l:"jul 25",ind:10000, ud:10000}, {ym:"2025-08",l:"aug 25",ind:10000, ud:10000},
+    {ym:"2025-09",l:"sep 25",ind:10000, ud:10000}, {ym:"2025-12",l:"dec 25",ind:30,    ud:0},
+    {ym:"2026-01",l:"jan 26",ind:5985,  ud:0},     {ym:"2026-02",l:"feb 26",ind:4912,  ud:0},
+    {ym:"2026-03",l:"mar 26",ind:1904,  ud:6333},
+  ],
+  1: [ // Forbrugskonto
+    {ym:"2024-06",l:"jun 24",ind:50000, ud:4974},  {ym:"2024-08",l:"aug 24",ind:55519, ud:38565},
+    {ym:"2024-09",l:"sep 24",ind:28151, ud:38316}, {ym:"2024-10",l:"okt 24",ind:36912, ud:59690},
+    {ym:"2024-11",l:"nov 24",ind:65688, ud:41760}, {ym:"2024-12",l:"dec 24",ind:97,    ud:26815},
+    {ym:"2025-01",l:"jan 25",ind:22870, ud:17323}, {ym:"2025-02",l:"feb 25",ind:53908, ud:34314},
+    {ym:"2025-03",l:"mar 25",ind:18049, ud:16334}, {ym:"2025-04",l:"apr 25",ind:34352, ud:63702},
+    {ym:"2025-05",l:"maj 25",ind:30675, ud:29503}, {ym:"2025-06",l:"jun 25",ind:20597, ud:27766},
+    {ym:"2025-07",l:"jul 25",ind:63405, ud:39744}, {ym:"2025-08",l:"aug 25",ind:47602, ud:23155},
+    {ym:"2025-09",l:"sep 25",ind:31661, ud:54966}, {ym:"2025-10",l:"okt 25",ind:28298, ud:43127},
+    {ym:"2025-11",l:"nov 25",ind:25640, ud:19404}, {ym:"2025-12",l:"dec 25",ind:20815, ud:22825},
+    {ym:"2026-01",l:"jan 26",ind:53974, ud:63856}, {ym:"2026-02",l:"feb 26",ind:25000, ud:23235},
+    {ym:"2026-03",l:"mar 26",ind:0,     ud:1423},
+  ],
+  2: [ // Budgetkonto
+    {ym:"2024-08",l:"aug 24",ind:89859, ud:24836}, {ym:"2024-09",l:"sep 24",ind:3052,  ud:56752},
+    {ym:"2024-10",l:"okt 24",ind:76892, ud:36795}, {ym:"2024-11",l:"nov 24",ind:9370,  ud:51059},
+    {ym:"2024-12",l:"dec 24",ind:55280, ud:61741}, {ym:"2025-01",l:"jan 25",ind:40743, ud:36266},
+    {ym:"2025-02",l:"feb 25",ind:44045, ud:23298}, {ym:"2025-03",l:"mar 25",ind:29000, ud:37947},
+    {ym:"2025-04",l:"apr 25",ind:14000, ud:23154}, {ym:"2025-05",l:"maj 25",ind:54000, ud:23706},
+    {ym:"2025-06",l:"jun 25",ind:9000,  ud:38418}, {ym:"2025-07",l:"jul 25",ind:41000, ud:22250},
+    {ym:"2025-08",l:"aug 25",ind:19899, ud:39363}, {ym:"2025-09",l:"sep 25",ind:24000, ud:33339},
+    {ym:"2025-10",l:"okt 25",ind:35208, ud:17391}, {ym:"2025-11",l:"nov 25",ind:16000, ud:22776},
+    {ym:"2025-12",l:"dec 25",ind:4891,  ud:33920}, {ym:"2026-01",l:"jan 26",ind:61782, ud:36736},
+    {ym:"2026-02",l:"feb 26",ind:24180, ud:20970}, {ym:"2026-03",l:"mar 26",ind:48,    ud:10755},
+  ],
+  3: [ // Friværdikredit
+    {ym:"2024-08",l:"aug 24",ind:0,     ud:29375}, {ym:"2024-09",l:"sep 24",ind:0,     ud:5111},
+    {ym:"2024-10",l:"okt 24",ind:0,     ud:15000}, {ym:"2024-12",l:"dec 24",ind:0,     ud:42776},
+    {ym:"2025-01",l:"jan 25",ind:0,     ud:44465}, {ym:"2025-02",l:"feb 25",ind:0,     ud:13857},
+    {ym:"2025-03",l:"mar 25",ind:0,     ud:8415},  {ym:"2025-04",l:"apr 25",ind:0,     ud:75000},
+    {ym:"2025-05",l:"maj 25",ind:38601, ud:65000}, {ym:"2025-06",l:"jun 25",ind:0,     ud:49544},
+    {ym:"2025-07",l:"jul 25",ind:0,     ud:7000},  {ym:"2025-08",l:"aug 25",ind:0,     ud:25000},
+    {ym:"2025-09",l:"sep 25",ind:0,     ud:60949}, {ym:"2025-11",l:"nov 25",ind:0,     ud:30000},
+    {ym:"2025-12",l:"dec 25",ind:0,     ud:12108}, {ym:"2026-01",l:"jan 26",ind:0,     ud:20000},
+  ],
+  4: [ // Hustruens konto
+    {ym:"2024-08",l:"aug 24",ind:23313, ud:0},     {ym:"2024-09",l:"sep 24",ind:17612, ud:0},
+    {ym:"2024-10",l:"okt 24",ind:22715, ud:29558}, {ym:"2024-11",l:"nov 24",ind:18155, ud:15310},
+    {ym:"2024-12",l:"dec 24",ind:31279, ud:19895}, {ym:"2025-01",l:"jan 25",ind:5444,  ud:27597},
+    {ym:"2025-02",l:"feb 25",ind:0,     ud:17927}, {ym:"2025-03",l:"mar 25",ind:19378, ud:22522},
+    {ym:"2025-04",l:"apr 25",ind:3573,  ud:20444}, {ym:"2025-05",l:"maj 25",ind:12959, ud:17566},
+    {ym:"2025-06",l:"jun 25",ind:49569, ud:21166}, {ym:"2025-07",l:"jul 25",ind:23859, ud:18348},
+    {ym:"2025-08",l:"aug 25",ind:1211,  ud:21945}, {ym:"2025-09",l:"sep 25",ind:31467, ud:35072},
+    {ym:"2025-10",l:"okt 25",ind:27615, ud:18421}, {ym:"2025-11",l:"nov 25",ind:12563, ud:20377},
+    {ym:"2025-12",l:"dec 25",ind:1709,  ud:15868}, {ym:"2026-01",l:"jan 26",ind:59508, ud:30257},
+    {ym:"2026-02",l:"feb 26",ind:12797, ud:21165}, {ym:"2026-03",l:"mar 26",ind:280,   ud:1489},
+  ]
+};
+
+const VIRK = {
+  0: [ // Driftskonto
+    {ym:"2025-05",l:"maj 25",ind:48481,  ud:860},   {ym:"2025-06",l:"jun 25",ind:58475,  ud:3873},
+    {ym:"2025-07",l:"jul 25",ind:76045,  ud:83836}, {ym:"2025-08",l:"aug 25",ind:95124,  ud:185636},
+    {ym:"2025-09",l:"sep 25",ind:113130, ud:54864}, {ym:"2025-10",l:"okt 25",ind:33375,  ud:76311},
+    {ym:"2025-11",l:"nov 25",ind:112209, ud:52535}, {ym:"2025-12",l:"dec 25",ind:56180,  ud:45000},
+    {ym:"2026-01",l:"jan 26",ind:173659, ud:211885},{ym:"2026-02",l:"feb 26",ind:119112, ud:118813},
+    {ym:"2026-03",l:"mar 26",ind:50812,  ud:30119},
+  ],
+  1: [ // Skattekonto
+    {ym:"2025-08",l:"aug 25",ind:70000,  ud:0},     {ym:"2025-09",l:"sep 25",ind:20000,  ud:11397},
+    {ym:"2025-10",l:"okt 25",ind:15000,  ud:8875},  {ym:"2025-11",l:"nov 25",ind:10000,  ud:0},
+    {ym:"2025-12",l:"dec 25",ind:0,      ud:35000}, {ym:"2026-01",l:"jan 26",ind:50000,  ud:0},
+    {ym:"2026-02",l:"feb 26",ind:45000,  ud:30000}, {ym:"2026-03",l:"mar 26",ind:0,      ud:30000},
+  ],
+  2: [ // Klientkonto
+    {ym:"2025-06",l:"jun 25",ind:17188,  ud:17188}, {ym:"2025-07",l:"jul 25",ind:119247, ud:46045},
+    {ym:"2025-08",l:"aug 25",ind:196775, ud:111614},{ym:"2025-09",l:"sep 25",ind:175791, ud:200416},
+    {ym:"2025-10",l:"okt 25",ind:65875,  ud:37750}, {ym:"2025-11",l:"nov 25",ind:111924, ud:178806},
+    {ym:"2025-12",l:"dec 25",ind:14548,  ud:0},     {ym:"2026-01",l:"jan 26",ind:235858, ud:272705},
+    {ym:"2026-02",l:"feb 26",ind:62455,  ud:72768}, {ym:"2026-03",l:"mar 26",ind:23000,  ud:20812},
+  ]
+};
+
+// Løn: Tom fra virksomhed, Dina fra virksomhed
+const LOEN = {
+  tom:  [
+    {ym:"2025-07",l:"jul 25",v:30000}, {ym:"2025-08",l:"aug 25",v:30000},
+    {ym:"2025-09",l:"sep 25",v:20000}, {ym:"2025-10",l:"okt 25",v:25000},
+    {ym:"2026-01",l:"jan 26",v:50000}, {ym:"2026-02",l:"feb 26",v:25000},
+  ],
+  dina: [
+    {ym:"2025-10",l:"okt 25",v:11172}, {ym:"2026-01",l:"jan 26",v:23487},
+  ]
+};
+
+const SALDO_PRIVAT = {0:6498, 1:231, 2:775, 4:76};
+const SALDO_VIRK   = {0:72873, 1:94728, 2:64557};
+
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
+
+function getPeriod(p) {
+  if (p==='all')  return {from:"2000-01", to:"2099-12", label:"aug 2024 – mar 2026"};
+  if (p==='1m')   return {from:"2026-03", to:"2026-03", label:"mar 2026"};
+  if (p==='3m')   return {from:"2025-12", to:"2026-03", label:"dec 2025 – mar 2026"};
+  if (p==='6m')   return {from:"2025-09", to:"2026-03", label:"sep 2025 – mar 2026"};
+  if (p==='2024') return {from:"2024-01", to:"2024-12", label:"jan – dec 2024"};
+  if (p==='2025') return {from:"2025-01", to:"2025-12", label:"jan – dec 2025"};
+  if (p==='2026') return {from:"2026-01", to:"2026-12", label:"jan – mar 2026"};
+}
+function filterD(data, period) {
+  const {from, to} = getPeriod(period);
+  return data.filter(d => d.ym >= from && d.ym <= to);
+}
+function fmt(n) {
+  return (n<0?'−':'') + Math.abs(n).toLocaleString('da-DK',{maximumFractionDigits:0}) + ' kr.';
+}
+function blip(id) {
+  const el = document.getElementById(id); if (!el) return;
+  el.classList.remove('fade-update'); void el.offsetWidth; el.classList.add('fade-update');
+}
+function setEl(id, val, cls) {
+  const el = document.getElementById(id); if (!el) return;
+  el.textContent = val; if (cls !== undefined) el.className = el.className.replace(/pos|neg|neu/g,'').trim() + ' ' + cls;
+  blip(id);
+}
+
+// ── RENDER BARS ──
+function renderBars(containerId, data, incomeColor) {
+  const el = document.getElementById(containerId); if (!el) return;
+  el.innerHTML = '';
+  if (!data.length) { el.innerHTML='<span style="font-family:\'DM Mono\',monospace;font-size:0.6rem;color:var(--muted)">Ingen data</span>'; return; }
+  const mx = Math.max(...data.map(d=>Math.max(d.ind,d.ud)),1);
+  data.forEach(d=>{
+    const g=document.createElement('div'); g.className='bar-group';
+    if(d.ind>0){const b=document.createElement('div');b.className='bar income';if(incomeColor)b.style.background=incomeColor;b.style.height=(d.ind/mx*100)+'%';b.innerHTML=`<span class="bar-tooltip">${d.l}: +${d.ind.toLocaleString('da-DK')} kr.</span>`;g.appendChild(b);}
+    if(d.ud>0){const b=document.createElement('div');b.className='bar expense';b.style.height=(d.ud/mx*100)+'%';b.innerHTML=`<span class="bar-tooltip">${d.l}: −${d.ud.toLocaleString('da-DK')} kr.</span>`;g.appendChild(b);}
+    if(!d.ind&&!d.ud){const b=document.createElement('div');b.className='bar';b.style.cssText='height:3px;background:var(--line)';g.appendChild(b);}
+    el.appendChild(g);
+  });
+}
+
+// ── RENDER SPARKLINE ──
+function renderSpark(svgId, data) {
+  const svg=document.getElementById(svgId); if(!svg) return;
+  while(svg.firstChild)svg.removeChild(svg.firstChild);
+  if(data.length<2)return;
+  const ns='http://www.w3.org/2000/svg';
+  const nets=data.map(d=>d.ind-d.ud);
+  const mn=Math.min(...nets),mx=Math.max(...nets),rng=mx-mn||1;
+  const W=300,H=38,pd=3;
+  const tx=i=>pd+(i/(nets.length-1))*(W-pd*2);
+  const ty=v=>H-pd-((v-mn)/rng)*(H-pd*2);
+  const zy=Math.min(H-pd,Math.max(pd,ty(0)));
+  const zl=document.createElementNS(ns,'line');
+  [{x1:pd,x2:W-pd,y1:zy,y2:zy,stroke:'#d6d0c4','stroke-width':'0.5'}].forEach(attrs=>Object.entries(attrs).forEach(([k,v])=>zl.setAttribute(k,v)));
+  svg.appendChild(zl);
+  const pts=nets.map((v,i)=>[tx(i),ty(v)]);
+  const area=document.createElementNS(ns,'path');
+  let d=`M${pts[0][0]},${zy}`;pts.forEach(([x,y])=>{d+=` L${x},${y}`;});d+=` L${pts[pts.length-1][0]},${zy}Z`;
+  area.setAttribute('d',d);area.setAttribute('fill','#1e6e42');area.setAttribute('fill-opacity','0.08');svg.appendChild(area);
+  const poly=document.createElementNS(ns,'polyline');
+  poly.setAttribute('points',pts.map(p=>p.join(',')).join(' '));poly.setAttribute('fill','none');poly.setAttribute('stroke','#1e6e42');poly.setAttribute('stroke-width','1.5');poly.setAttribute('stroke-linejoin','round');svg.appendChild(poly);
+  nets.forEach((v,i)=>{if(v===mx||v===mn){const c=document.createElementNS(ns,'circle');Object.entries({cx:pts[i][0],cy:pts[i][1],r:'2.5',fill:v>=0?'#1e6e42':'#c0392b'}).forEach(([k,v2])=>c.setAttribute(k,v2));svg.appendChild(c);}});
+}
+
+// ── RENDER COMBINED CHART ──
+function renderCombined(svgId, labelsId, dataMap, period, incomeColor) {
+  const svg=document.getElementById(svgId),labelsEl=document.getElementById(labelsId);
+  if(!svg||!labelsEl)return;
+  while(svg.firstChild)svg.removeChild(svg.firstChild);
+  labelsEl.innerHTML='';
+  const {from,to}=getPeriod(period);
+  const months={};
+  Object.values(dataMap).forEach(arr=>arr.forEach(d=>{
+    if(d.ym<from||d.ym>to)return;
+    if(!months[d.ym])months[d.ym]={ym:d.ym,l:d.l,ind:0,ud:0};
+    months[d.ym].ind+=d.ind; months[d.ym].ud+=d.ud;
+  }));
+  const data=Object.values(months).sort((a,b)=>a.ym.localeCompare(b.ym));
+  if(!data.length)return;
+  const ns='http://www.w3.org/2000/svg';
+  const W=800,H=200,pdL=36,pdR=10,pdT=10,pdB=10;
+  const drawH=H-pdT-pdB;
+  const n=data.length,barW=(W-pdL-pdR)/n,gap=barW*0.1,bw=(barW-gap*2)/2;
+
+  // Scale: bars use maxBar, netto line uses symmetric scale around zero
+  const nets=data.map(d=>d.ind-d.ud);
+  const maxBar=Math.max(...data.map(d=>Math.max(d.ind,d.ud)),1);
+  const maxNet=Math.max(...nets.map(Math.abs),1);
+  // We allocate top 60% of drawH for positive (bars + positive netto),
+  // bottom 40% for negative netto. Zero line sits at 60% from top.
+  const posH = drawH * 0.60;
+  const negH = drawH * 0.40;
+  const zeroY = pdT + posH; // y-coordinate of zero line
+
+  // Grid lines — positive side
+  [0.25,0.5,0.75,1].forEach(f=>{
+    const y=zeroY - f*posH;
+    const gl=document.createElementNS(ns,'line');
+    Object.entries({x1:pdL,x2:W-pdR,y1:y,y2:y,stroke:'#d6d0c4','stroke-width':'0.4','stroke-dasharray':'3,3'}).forEach(([k,v])=>gl.setAttribute(k,v));
+    svg.appendChild(gl);
+    const lbl=document.createElementNS(ns,'text');
+    lbl.setAttribute('x',pdL-3);lbl.setAttribute('y',y+3);
+    lbl.setAttribute('font-family','DM Mono,monospace');lbl.setAttribute('font-size','7');
+    lbl.setAttribute('fill','#7a7569');lbl.setAttribute('text-anchor','end');
+    lbl.textContent=Math.round(f*maxBar/1000)+'k';
+    svg.appendChild(lbl);
+  });
+
+  // Zero line (solid)
+  const zl=document.createElementNS(ns,'line');
+  Object.entries({x1:pdL,x2:W-pdR,y1:zeroY,y2:zeroY,stroke:'#7a7569','stroke-width':'1'}).forEach(([k,v])=>zl.setAttribute(k,v));
+  svg.appendChild(zl);
+  // "0" label
+  const zLbl=document.createElementNS(ns,'text');
+  zLbl.setAttribute('x',pdL-3);zLbl.setAttribute('y',zeroY+3);
+  zLbl.setAttribute('font-family','DM Mono,monospace');zLbl.setAttribute('font-size','7');
+  zLbl.setAttribute('fill','#7a7569');zLbl.setAttribute('text-anchor','end');
+  zLbl.textContent='0';svg.appendChild(zLbl);
+
+  // Negative grid
+  [-0.5,-1].forEach(f=>{
+    const y=zeroY - f*negH;
+    const gl=document.createElementNS(ns,'line');
+    Object.entries({x1:pdL,x2:W-pdR,y1:y,y2:y,stroke:'#d6d0c4','stroke-width':'0.4','stroke-dasharray':'3,3'}).forEach(([k,v])=>gl.setAttribute(k,v));
+    svg.appendChild(gl);
+    const lbl=document.createElementNS(ns,'text');
+    lbl.setAttribute('x',pdL-3);lbl.setAttribute('y',y+3);
+    lbl.setAttribute('font-family','DM Mono,monospace');lbl.setAttribute('font-size','7');
+    lbl.setAttribute('fill','#c0392b');lbl.setAttribute('text-anchor','end');
+    lbl.textContent='-'+Math.round(Math.abs(f)*maxNet/1000)+'k';
+    svg.appendChild(lbl);
+  });
+
+  // Bars (always above zero line)
+  const iColor=incomeColor||'#1e6e42';
+  data.forEach((d,i)=>{
+    const x=pdL+i*barW+gap;
+    const hI=(d.ind/maxBar)*posH, hU=(d.ud/maxBar)*posH;
+    const rI=document.createElementNS(ns,'rect');
+    Object.entries({x,y:zeroY-hI,width:bw,height:Math.max(hI,0.5),fill:iColor,opacity:'0.65',rx:'1'}).forEach(([k,v])=>rI.setAttribute(k,v));
+    svg.appendChild(rI);
+    const rU=document.createElementNS(ns,'rect');
+    Object.entries({x:x+bw+1,y:zeroY-hU,width:bw,height:Math.max(hU,0.5),fill:'#c0392b',opacity:'0.55',rx:'1'}).forEach(([k,v])=>rU.setAttribute(k,v));
+    svg.appendChild(rU);
+  });
+
+  // Netto line — positive above zeroY, negative below zeroY
+  const netPts=nets.map((v,i)=>{
+    const x=pdL+i*barW+barW/2;
+    const y = v>=0
+      ? zeroY - (v/maxNet)*posH
+      : zeroY + (Math.abs(v)/maxNet)*negH;
+    return [x, Math.max(pdT, Math.min(H-pdB, y))];
+  });
+
+  if(netPts.length>1){
+    // Area fill — split positive/negative
+    nets.forEach((v,i)=>{
+      if(i===0)return;
+      const x0=netPts[i-1][0],y0=netPts[i-1][1];
+      const x1=netPts[i][0],  y1=netPts[i][1];
+      const col=v>=0&&nets[i-1]>=0?'#1e6e42':v<0&&nets[i-1]<0?'#c0392b':null;
+      if(col){
+        const a=document.createElementNS(ns,'polygon');
+        a.setAttribute('points',`${x0},${y0} ${x1},${y1} ${x1},${zeroY} ${x0},${zeroY}`);
+        a.setAttribute('fill',col);a.setAttribute('opacity','0.08');
+        svg.appendChild(a);
+      }
+    });
+    // Line
+    const poly=document.createElementNS(ns,'polyline');
+    poly.setAttribute('points',netPts.map(p=>p.join(',')).join(' '));
+    poly.setAttribute('fill','none');poly.setAttribute('stroke','#c9a84c');
+    poly.setAttribute('stroke-width','2');poly.setAttribute('stroke-linejoin','round');
+    poly.setAttribute('stroke-linecap','round');
+    svg.appendChild(poly);
+    // Dots — colour by sign
+    netPts.forEach(([x,y],i)=>{
+      const c=document.createElementNS(ns,'circle');
+      Object.entries({cx:x,cy:y,r:'2.8',fill:nets[i]>=0?'#c9a84c':'#c0392b'}).forEach(([k,v])=>c.setAttribute(k,v));
+      svg.appendChild(c);
+    });
+  }
+
+  data.forEach(d=>{const s=document.createElement('span');s.className='month-label';s.textContent=d.l;labelsEl.appendChild(s);});
+  return {data, totalInd:data.reduce((s,d)=>s+d.ind,0), totalUd:data.reduce((s,d)=>s+d.ud,0)};
+}
+
+// ── TVÆRSNIT CHARTS ──
+function renderCrossLoen(period) {
+  const {from,to}=getPeriod(period);
+  const svg=document.getElementById('cross-loen-svg');
+  const labelsEl=document.getElementById('cross-loen-labels');
+  while(svg.firstChild)svg.removeChild(svg.firstChild);
+  labelsEl.innerHTML='';
+  const ns='http://www.w3.org/2000/svg';
+  const allMonths={};
+  ['tom','dina'].forEach(k=>LOEN[k].forEach(d=>{
+    if(d.ym<from||d.ym>to)return;
+    if(!allMonths[d.ym])allMonths[d.ym]={ym:d.ym,l:d.l,tom:0,dina:0};
+    allMonths[d.ym][k]+=d.v;
+  }));
+  const data=Object.values(allMonths).sort((a,b)=>a.ym.localeCompare(b.ym));
+  const totalTom=LOEN.tom.filter(d=>d.ym>=from&&d.ym<=to).reduce((s,d)=>s+d.v,0);
+  const totalDina=LOEN.dina.filter(d=>d.ym>=from&&d.ym<=to).reduce((s,d)=>s+d.v,0);
+  const months=data.length||1;
+  setEl('cross-loen-tom',  fmt(totalTom));
+  setEl('cross-loen-dina', fmt(totalDina));
+  setEl('cross-loen-avg',  fmt(Math.round((totalTom+totalDina)/months)));
+  if(!data.length)return;
+  const W=400,H=160,pdL=30,pdR=10,pdT=10,pdB=20;
+  const n=data.length,barW=(W-pdL-pdR)/n,gap=barW*0.1,bw=(barW-gap*2)/2;
+  const mx=Math.max(...data.map(d=>Math.max(d.tom,d.dina)),1);
+  data.forEach((d,i)=>{
+    const x=pdL+i*barW+gap;
+    if(d.tom>0){const r=document.createElementNS(ns,'rect');Object.entries({x,y:H-pdB-(d.tom/mx)*(H-pdT-pdB),width:bw,height:Math.max((d.tom/mx)*(H-pdT-pdB),0.5),fill:'#1e6e42',opacity:'0.7',rx:'1'}).forEach(([k,v])=>r.setAttribute(k,v));svg.appendChild(r);}
+    if(d.dina>0){const r=document.createElementNS(ns,'rect');Object.entries({x:x+bw+1,y:H-pdB-(d.dina/mx)*(H-pdT-pdB),width:bw,height:Math.max((d.dina/mx)*(H-pdT-pdB),0.5),fill:'#1a3a5c',opacity:'0.7',rx:'1'}).forEach(([k,v])=>r.setAttribute(k,v));svg.appendChild(r);}
+  });
+  data.forEach(d=>{const s=document.createElement('span');s.className='month-label';s.textContent=d.l;labelsEl.appendChild(s);});
+}
+
+function renderCrossOmst(period) {
+  const {from,to}=getPeriod(period);
+  const svg=document.getElementById('cross-omst-svg');
+  const labelsEl=document.getElementById('cross-omst-labels');
+  while(svg.firstChild)svg.removeChild(svg.firstChild);
+  labelsEl.innerHTML='';
+  const ns='http://www.w3.org/2000/svg';
+  // Virksomhed driftskonto ind vs. privat (konto 1+2+4) ud — fælles måneder
+  const months={};
+  VIRK[0].forEach(d=>{if(d.ym>=from&&d.ym<=to){if(!months[d.ym])months[d.ym]={ym:d.ym,l:d.l,virk:0,priv:0};months[d.ym].virk+=d.ind;}});
+  [1,2,4].forEach(i=>PRIVAT[i].forEach(d=>{if(d.ym>=from&&d.ym<=to){if(!months[d.ym])months[d.ym]={ym:d.ym,l:d.l,virk:0,priv:0};months[d.ym].priv+=d.ud;}}));
+  const data=Object.values(months).sort((a,b)=>a.ym.localeCompare(b.ym));
+  const n=data.length||1;
+  const avgVirk=Math.round(data.reduce((s,d)=>s+d.virk,0)/n);
+  const avgPriv=Math.round(data.reduce((s,d)=>s+d.priv,0)/n);
+  const ratio=avgPriv>0?Math.round(avgVirk/avgPriv*100):0;
+  setEl('cross-omst-virk',  fmt(avgVirk));
+  setEl('cross-omst-priv',  fmt(avgPriv));
+  setEl('cross-omst-ratio', ratio+'%');
+  if(!data.length)return;
+  const W=400,H=160,pdL=30,pdR=10,pdT=10,pdB=20;
+  const barW=(W-pdL-pdR)/data.length,gap=barW*0.1,bw=(barW-gap*2)/2;
+  const mx=Math.max(...data.map(d=>Math.max(d.virk,d.priv)),1);
+  data.forEach((d,i)=>{
+    const x=pdL+i*barW+gap;
+    if(d.virk>0){const r=document.createElementNS(ns,'rect');Object.entries({x,y:H-pdB-(d.virk/mx)*(H-pdT-pdB),width:bw,height:Math.max((d.virk/mx)*(H-pdT-pdB),0.5),fill:'#1a3a5c',opacity:'0.65',rx:'1'}).forEach(([k,v])=>r.setAttribute(k,v));svg.appendChild(r);}
+    if(d.priv>0){const r=document.createElementNS(ns,'rect');Object.entries({x:x+bw+1,y:H-pdB-(d.priv/mx)*(H-pdT-pdB),width:bw,height:Math.max((d.priv/mx)*(H-pdT-pdB),0.5),fill:'#c0392b',opacity:'0.55',rx:'1'}).forEach(([k,v])=>r.setAttribute(k,v));svg.appendChild(r);}
+  });
+  data.forEach(d=>{const s=document.createElement('span');s.className='month-label';s.textContent=d.l;labelsEl.appendChild(s);});
+}
+
+// ══════════════════════════════════════════════
+// UPDATE
+// ══════════════════════════════════════════════
+
+function updatePrivat(period) {
+  for (let i=0;i<5;i++) {
+    if (!PRIVAT[i]) continue;
+    const data=filterD(PRIVAT[i],period);
+    const totalInd=data.reduce((s,d)=>s+d.ind,0);
+    const totalUd =data.reduce((s,d)=>s+d.ud, 0);
+    const netto   =totalInd-totalUd;
+    renderBars('p-bars-'+i, data);
+    renderSpark('p-spark-'+i, data);
+    if (i!==3) {
+      setEl('p-ind-'+i, fmt(totalInd));
+      setEl('p-ud-'+i,  fmt(totalUd));
+      const ne=document.getElementById('p-net-'+i);
+      if(ne){ne.textContent=fmt(netto);ne.className='stat-val '+(netto>=0?'green':'red');}
+      const saldo=SALDO_PRIVAT[i]??0;
+      const ke=document.getElementById('p-kpi-s-'+i);
+      if(ke){ke.textContent=fmt(saldo);ke.className='kpi-saldo '+(saldo>=0?'pos':'neg');}
+      setEl('p-kpi-sub-'+i, 'netto: '+fmt(netto));
+      setEl('p-kpi-c-'+i, data.length+' mdr.');
+      const avgRow=document.getElementById('p-avg-'+i);
+      if(avgRow){
+        if(data.length>1){
+          avgRow.classList.remove('hidden');
+          const ani=document.getElementById('p-ai-'+i),anu=document.getElementById('p-au-'+i),ann=document.getElementById('p-an-'+i);
+          if(ani)ani.textContent=fmt(Math.round(totalInd/data.length));
+          if(anu)anu.textContent=fmt(Math.round(totalUd/data.length));
+          if(ann){ann.textContent=fmt(Math.round(netto/data.length));ann.className='avg-item '+(netto>=0?'pos':'neg');}
+        } else avgRow.classList.add('hidden');
+      }
+    } else {
+      setEl('p-ind-'+i, fmt(totalInd));
+      setEl('p-ud-'+i,  fmt(totalUd));
+      setEl('p-kpi-c-'+i, data.length+' mdr.');
+    }
+    // KPI bar
+    const maxI=Math.max(...[0,1,2,4].map(j=>PRIVAT[j]?filterD(PRIVAT[j],period).reduce((s,d)=>s+d.ind,0):0),1);
+    [0,1,2,4].forEach(j=>{
+      const ind=PRIVAT[j]?filterD(PRIVAT[j],period).reduce((s,d)=>s+d.ind,0):0;
+      const b=document.getElementById('p-kpi-b-'+j);
+      if(b)setTimeout(()=>{b.style.width=(ind/maxI*75+10)+'%';},50);
+    });
+    setTimeout(()=>{const b=document.getElementById('p-kpi-b-3');if(b)b.style.width='35%';},50);
+  }
+  // Combined
+  const res=renderCombined('p-combined-svg','p-combined-labels',PRIVAT,period,'#1e6e42');
+  if(res){
+    const n=res.data.length||1;
+    setEl('p-ctotal-ind',fmt(res.totalInd));
+    setEl('p-ctotal-ud', fmt(res.totalUd));
+    const ne=document.getElementById('p-ctotal-net');
+    if(ne){ne.textContent=fmt(res.totalInd-res.totalUd);ne.className='combined-total-val '+(res.totalInd>=res.totalUd?'pos':'neg');}
+    setEl('p-ctotal-avg-ind',fmt(Math.round(res.totalInd/n)));
+    setEl('p-ctotal-avg-ud', fmt(Math.round(res.totalUd/n)));
+    const avgNet=Math.round((res.totalInd-res.totalUd)/n);
+    const avgNetEl=document.getElementById('p-ctotal-avg-net');
+    if(avgNetEl){avgNetEl.textContent=fmt(avgNet);avgNetEl.className='combined-total-val '+(avgNet>=0?'pos':'neg');}
+  }
+}
+
+function updateVirk(period) {
+  for (let i=0;i<3;i++) {
+    const data=filterD(VIRK[i],period);
+    const totalInd=data.reduce((s,d)=>s+d.ind,0);
+    const totalUd =data.reduce((s,d)=>s+d.ud, 0);
+    const netto   =totalInd-totalUd;
+    renderBars('v-bars-'+i, data, '#1a3a5c');
+    renderSpark('v-spark-'+i, data);
+    setEl('v-ind-'+i, fmt(totalInd));
+    setEl('v-ud-'+i,  fmt(totalUd));
+    const ne=document.getElementById('v-net-'+i);
+    if(ne){ne.textContent=fmt(netto);ne.className='stat-val '+(netto>=0?'green':'red');}
+    const saldo=SALDO_VIRK[i]??0;
+    const ke=document.getElementById('v-kpi-s-'+i);
+    if(ke){ke.textContent=fmt(saldo);ke.className='kpi-saldo '+(saldo>=0?'pos':'neg');}
+    setEl('v-kpi-sub-'+i,'netto: '+fmt(netto));
+    setEl('v-kpi-c-'+i, data.length+' mdr.');
+    const avgRow=document.getElementById('v-avg-'+i);
+    if(avgRow){
+      if(data.length>1){
+        avgRow.classList.remove('hidden');
+        const ai=document.getElementById('v-ai-'+i),au=document.getElementById('v-au-'+i),an=document.getElementById('v-an-'+i);
+        if(ai)ai.textContent=fmt(Math.round(totalInd/data.length));
+        if(au)au.textContent=fmt(Math.round(totalUd/data.length));
+        if(an){an.textContent=fmt(Math.round(netto/data.length));an.className='avg-item '+(netto>=0?'pos':'neg');}
+      } else avgRow.classList.add('hidden');
+    }
+  }
+  // KPI bars
+  const maxI=Math.max(...[0,1,2].map(i=>filterD(VIRK[i],period).reduce((s,d)=>s+d.ind,0)),1);
+  [0,1,2].forEach(i=>{
+    const ind=filterD(VIRK[i],period).reduce((s,d)=>s+d.ind,0);
+    const b=document.getElementById('v-kpi-b-'+i);
+    if(b)setTimeout(()=>{b.style.width=(ind/maxI*75+10)+'%';},50);
+  });
+  // Combined
+  const res=renderCombined('v-combined-svg','v-combined-labels',{0:VIRK[0]},period,'#1a3a5c');
+  if(res){
+    const n=res.data.length||1;
+    setEl('v-ctotal-ind',fmt(res.totalInd));
+    setEl('v-ctotal-ud', fmt(res.totalUd));
+    const ne=document.getElementById('v-ctotal-net');
+    if(ne){ne.textContent=fmt(res.totalInd-res.totalUd);ne.className='combined-total-val '+(res.totalInd>=res.totalUd?'pos':'neg');}
+    setEl('v-ctotal-avg-ind',fmt(Math.round(res.totalInd/n)));
+    setEl('v-ctotal-avg-ud', fmt(Math.round(res.totalUd/n)));
+  }
+}
+
+function updateTvaer(period) {
+  renderCrossLoen(period);
+  renderCrossOmst(period);
+}
+
+function updateAll(period) {
+  const {label}=getPeriod(period);
+  document.getElementById('period-range-label').textContent=label;
+  updatePrivat(period);
+  updateVirk(period);
+  updateTvaer(period);
+}
+
+// ══════════════════════════════════════════════
+// TABS + PILLS
+// ══════════════════════════════════════════════
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+document.querySelectorAll('.pill').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    updateAll(btn.dataset.period);
+  });
+});
+
+document.addEventListener('DOMContentLoaded',()=>updateAll('all'));
+</script>
+</body>
+</html>
