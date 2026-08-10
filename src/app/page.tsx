@@ -7,6 +7,7 @@ import PillarsSection from "@/components/marketing/PillarsSection";
 import TierJourney from "@/components/marketing/TierJourney";
 import AppShowcase from "@/components/marketing/AppShowcase";
 import ValueSection from "@/components/marketing/ValueSection";
+import WaitlistSection from "@/components/marketing/WaitlistSection";
 import Testimonials from "@/components/marketing/Testimonials";
 import OriginSection from "@/components/marketing/OriginSection";
 import FAQ from "@/components/marketing/FAQ";
@@ -33,12 +34,16 @@ export default function Home() {
         <WorksWith />
         <CrewSection />
         <AdaptivePlaygroundPublic />
+        {/* Pris/value rykket op (Scanfit-teardown): prisankeret og
+            "hvad er det" skal ses uden at scrolle gennem alle seks
+            pillars. */}
+        <ValueSection />
         <PillarsSection />
         <TierJourney />
         <AppShowcase />
-        <ValueSection />
         <Testimonials />
         <OriginSection />
+        <WaitlistSection />
         <FAQ />
       </main>
       <MarketingFooter />

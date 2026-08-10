@@ -19,16 +19,19 @@
       "strapsSuffix": "+ climbing",
       "members": "Active members",
       "membersSuffix": "Closed beta",
-      "programs": "Coaching programs",
-      "programsSuffix": "Available now",
       "madeIn": "Made in",
-      "madeInSuffix": "Copenhagen"
+      "madeInSuffix": "Copenhagen",
+      "formCheck": "Form-check reply",
+      "formCheckValue": "6 SEC",
+      "formCheckSuffix": "AI draft · Munk review 24h"
     },
     "subline": "MakeIt isn't just straps and cuffs.",
-    "subline2": "It's the inner universe for the crew behind it — coaching, community, loyalty and HRV-aware recovery in one place. Built in Copenhagen. Made for athletes who lift heavy.",
+    "subline2": "1:1 coaching, AI-adapted programs, form checks and HRV-aware recovery — in one place, at a fraction of market price. Built in Copenhagen. Made for athletes who lift heavy.",
     "ctaPrimary": "Get access",
     "ctaSecondary": "Learn more",
-    "ctaTertiary": "Try the engine ↓"
+    "ctaTertiary": "Try the engine ↓",
+    "waitlistLink": "No invite code? Join the waitlist",
+    "trustLine": "No lock-in · Cancel anytime · Price locked for beta members"
   },
   "engine": {
     "eyebrow": "02 — Engine",
@@ -78,6 +81,20 @@
   "worksWith": {
     "label": "Works with",
     "note": "Apple Watch via iPhone app"
+  },
+  "waitlist": {
+    "eyebrow": "Waitlist",
+    "heading": "No code? Get in line.",
+    "intro": "The crew is invite-only, and we open spots in small batches. The waitlist is the queue for the next batch of invites — first on the list, first in.",
+    "emailLabel": "Your email",
+    "emailPlaceholder": "you@example.com",
+    "cta": "Put me on the list",
+    "ctaPending": "One moment…",
+    "error": "That didn't seem to work — check the email and try again.",
+    "note": "Invites only · No newsletters · Remove yourself anytime",
+    "doneEyebrow": "You're in the queue",
+    "doneHeading": "We'll write when a spot opens.",
+    "doneBody": "Invites go out in small batches. You'll hear from us by email — and only about that."
   },
   "pillars": {
     "engine": {
@@ -355,6 +372,14 @@
       "title": "Wearable + HRV in the program",
       "body": "Connect WHOOP, Oura or Polar. Your morning RMSSD and 60-day baseline dial in the week's load, and the coach gets a heads-up when your nervous system is shouting three days running.",
       "foot": "Auto-sync · honest numbers, no 0-100 score"
+    },
+    "includesHeading": "The whole system. One membership.",
+    "includes": {
+      "1": "AI program that adapts to your body daily",
+      "2": "Form checks signed by Munk within 24h",
+      "3": "HRV-aware recovery — WHOOP, Oura, Polar",
+      "4": "Crew feed, challenges, buddy & Reps program",
+      "5": "Mind check and the mental engine"
     }
   },
   "testimonials": {
