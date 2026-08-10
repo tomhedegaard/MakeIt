@@ -47,7 +47,7 @@ SEO-parallellen er bevidst ikke adresseret: landingssiden kører
    "Ingen invite-kode? Skriv dig på ventelisten"-link i hero.
    Server action (`src/app/waitlist-actions.ts`): zod-valideret email,
    honeypot, demo-mode no-op, service-role write (ingen anon
-   RLS-policy). Migration `0050_waitlist.sql`; unik pr. email uden at
+   RLS-policy). Migration `0056_waitlist.sql`; unik pr. email uden at
    lække medlemskab af listen; kun coach kan læse. Framet som "køen
    til næste holds invites" så closed beta-eksklusiviteten forstærkes.
 2. **Trust-linje i hero** under CTA'erne: "Ingen binding · Opsig når
