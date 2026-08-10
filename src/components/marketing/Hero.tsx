@@ -52,7 +52,10 @@ export default function Hero() {
   const STATS: Stat[] = [
     { id: "straps", k: t("stats.straps"), to: 50142, s: t("stats.strapsSuffix") },
     { id: "members", k: t("stats.members"), to: 412, s: t("stats.membersSuffix") },
-    { id: "programs", k: t("stats.programs"), to: 7, pad: 2, s: t("stats.programsSuffix") },
+    // Outcome-stat frem for skala-stat (Scanfit-teardown): svartiden
+    // er medlemmets udbytte — tallet matcher app-copyen ("Claude
+    // vurderer på 6 sek.") og FAQ'ens 6-15 sek.
+    { id: "formCheck", k: t("stats.formCheck"), literal: t("stats.formCheckValue"), s: t("stats.formCheckSuffix") },
     { id: "madeIn", k: t("stats.madeIn"), literal: "DK", s: t("stats.madeInSuffix") },
   ];
 
@@ -190,14 +193,25 @@ export default function Hero() {
 
               <motion.div
                 style={{ opacity: ctaOpacity, y: ctaY, scale: ctaScale }}
-                className="md:col-span-6 flex flex-wrap items-center gap-3 md:justify-end"
+                className="md:col-span-6 flex flex-col items-start gap-3 md:items-end"
               >
-                <Link href="/login" className="btn btn-primary">
-                  {t("ctaPrimary")}
-                  <span aria-hidden>→</span>
-                </Link>
-                <a href="#crew" className="btn">{t("ctaSecondary")}</a>
-                <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
+                <div className="flex flex-wrap items-center gap-3 md:justify-end">
+                  <Link href="/login" className="btn btn-primary">
+                    {t("ctaPrimary")}
+                    <span aria-hidden>→</span>
+                  </Link>
+                  <a href="#crew" className="btn">{t("ctaSecondary")}</a>
+                  <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
+                </div>
+                <a
+                  href="#waitlist"
+                  className="text-sm text-fg-dim underline underline-offset-4 hover:text-fg"
+                >
+                  {t("waitlistLink")}
+                </a>
+                <p className="text-[11px] text-fg-faint font-mono uppercase tracking-[0.16em]">
+                  {t("trustLine")}
+                </p>
               </motion.div>
             </div>
 
@@ -268,13 +282,24 @@ function HeroContent({
             <br />
             {t("subline2")}
           </p>
-          <div className="md:col-span-6 flex flex-wrap items-center gap-3 md:justify-end">
-            <Link href="/login" className="btn btn-primary">
-              {t("ctaPrimary")}
-              <span aria-hidden>→</span>
-            </Link>
-            <a href="#crew" className="btn">{t("ctaSecondary")}</a>
-            <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
+          <div className="md:col-span-6 flex flex-col items-start gap-3 md:items-end">
+            <div className="flex flex-wrap items-center gap-3 md:justify-end">
+              <Link href="/login" className="btn btn-primary">
+                {t("ctaPrimary")}
+                <span aria-hidden>→</span>
+              </Link>
+              <a href="#crew" className="btn">{t("ctaSecondary")}</a>
+              <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
+            </div>
+            <a
+              href="#waitlist"
+              className="text-sm text-fg-dim underline underline-offset-4 hover:text-fg"
+            >
+              {t("waitlistLink")}
+            </a>
+            <p className="text-[11px] text-fg-faint font-mono uppercase tracking-[0.16em]">
+              {t("trustLine")}
+            </p>
           </div>
         </div>
 

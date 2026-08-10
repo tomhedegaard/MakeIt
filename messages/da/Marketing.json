@@ -19,16 +19,19 @@
       "strapsSuffix": "+ stigende",
       "members": "Aktive medlemmer",
       "membersSuffix": "Closed beta",
-      "programs": "Coaching-programmer",
-      "programsSuffix": "Tilgængelige nu",
       "madeIn": "Made in",
-      "madeInSuffix": "København"
+      "madeInSuffix": "København",
+      "formCheck": "Form-check svar",
+      "formCheckValue": "6 SEK",
+      "formCheckSuffix": "AI-draft · Munk-review 24t"
     },
     "subline": "MakeIt er ikke bare straps og cuffs.",
-    "subline2": "Det er det interne univers for crewet bag — coaching, community, loyalitet og HRV-aware restitution samlet ét sted. Bygget i København. Lavet til atleter der løfter tungt.",
+    "subline2": "1:1-coaching, AI-tilpassede programmer, form-checks og HRV-styret restitution — samlet ét sted, til en brøkdel af markedsprisen. Bygget i København. Lavet til atleter der løfter tungt.",
     "ctaPrimary": "Få adgang",
     "ctaSecondary": "Læs mere",
-    "ctaTertiary": "Prøv motoren ↓"
+    "ctaTertiary": "Prøv motoren ↓",
+    "waitlistLink": "Ingen invite-kode? Skriv dig på ventelisten",
+    "trustLine": "Ingen binding · Opsig når som helst · Pris låst for beta-medlemmer"
   },
   "engine": {
     "eyebrow": "02 — Motor",
@@ -78,6 +81,20 @@
   "worksWith": {
     "label": "Virker med",
     "note": "Apple Watch via iPhone-appen"
+  },
+  "waitlist": {
+    "eyebrow": "Venteliste",
+    "heading": "Ingen kode? Stil dig i køen.",
+    "intro": "Crewet er invite-only, og vi åbner pladser i små hold. Ventelisten er køen til næste hold invites — først på listen, først ind.",
+    "emailLabel": "Din email",
+    "emailPlaceholder": "dig@eksempel.dk",
+    "cta": "Skriv mig på listen",
+    "ctaPending": "Et øjeblik…",
+    "error": "Det så ikke ud til at virke — tjek emailen og prøv igen.",
+    "note": "Kun invites · Ingen nyhedsbreve · Slet dig når som helst",
+    "doneEyebrow": "Du er i køen",
+    "doneHeading": "Vi skriver når der åbner en plads.",
+    "doneBody": "Invites sendes i små hold. Du hører fra os på email — og kun om det."
   },
   "pillars": {
     "engine": {
@@ -355,6 +372,14 @@
       "title": "Wearable + HRV i programmet",
       "body": "Forbind WHOOP, Oura eller Polar. Din morgen-RMSSD og 60-dages baseline justerer ugens belastning, og coachen får besked når dit nervesystem råber tre dage i træk.",
       "foot": "Auto-sync · ærlige tal, ingen 0-100 score"
+    },
+    "includesHeading": "Hele systemet. Ét medlemskab.",
+    "includes": {
+      "1": "AI-program der tilpasser sig din krop dagligt",
+      "2": "Form-checks med Munks underskrift inden for 24t",
+      "3": "HRV-styret restitution — WHOOP, Oura, Polar",
+      "4": "Crew-feed, challenges, buddy & Reps-program",
+      "5": "Mind-check og mental motor"
     }
   },
   "testimonials": {

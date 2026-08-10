@@ -235,3 +235,25 @@ når fase 2 forhandles.
    aktuel, er arkitekturen givet på forhånd: nyt modul ved siden af
    `src/lib/hrv/wearables/{whoop,oura,polar}.ts` + en migration i stil
    med `0037_hrv_wearables.sql`.
+
+---
+
+## Addendum (2026-08-10) — nye fund efter første exploration
+
+1. **Scanfit har allerede affiliate-infrastruktur.** De kører en
+   offentlig engros/partner-side (`scanfit.dk/pages/engros-salg-partner`),
+   og deres indekserede URL'er indeholder `pa-partnerid`/`pacid`
+   tracking-parametre — dvs. et fungerende partnerprogram med
+   kommissions-tracking. **Fase 1 kræver dermed ingen ny infrastruktur
+   hos dem** — vi kan formentlig onboardes som partner med det samme.
+   Spørgsmål 3 i mødedagsordenen ændres fra "kan I tracke?" til "hvad
+   er jeres eksisterende partner-vilkår?".
+2. **Outreach-udkast klar.** Email til Hans Regel Landbo (via
+   kundeservice@scanfit.dk, att. ham) er udarbejdet — pitcher fase 1
+   (anbefaling + rabat + affiliate) først og stiller de tre
+   datastruktur-spørgsmål (cloud vs. on-device, intern API,
+   partner-endpoint på roadmap). Afventer afsendelse fra Tom.
+3. **Landingsside-teardown udført.** Scanfits konverterings-playbook er
+   analyseret og de overførbare greb (venteliste, risk-reversal i hero,
+   outcome-stats, prisanker tidligere, named bundle) er implementeret på
+   vores landingsside — se `SCANFIT_LANDING_INSPIRATION.md`.

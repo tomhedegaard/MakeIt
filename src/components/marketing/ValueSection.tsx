@@ -60,6 +60,23 @@ export default async function ValueSection() {
                 {pricing.member.currency}/{pricing.member.period}
               </span>
             </div>
+
+            {/* "Named bundle"-greb fra Scanfit-teardown: hele
+                systemet samlet som én liste, ét medlemskab. */}
+            <div className="mt-4 pt-4 border-t hairline">
+              <div className="text-xs font-mono text-fg-faint uppercase tracking-[0.14em] mb-3">
+                {t("includesHeading")}
+              </div>
+              <ul className="space-y-1.5 text-sm text-fg-dim">
+                {(["1", "2", "3", "4", "5"] as const).map((n) => (
+                  <li key={n} className="flex gap-2">
+                    <span aria-hidden className="text-fg-faint">·</span>
+                    {t(`includes.${n}`)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             <div className="mt-4 pt-4 border-t hairline space-y-1.5">
               <div className="flex items-baseline justify-between gap-3 text-sm">
                 <span className="text-fg-dim">{t("marketLabel")}</span>
