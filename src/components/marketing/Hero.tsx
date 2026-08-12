@@ -49,13 +49,13 @@ export default function Hero() {
   const reduced = useReducedMotion();
   const t = useTranslations("Marketing.hero");
 
+  // Kun app-stats (UX-audit C1: straps-salgstallet hørte til shoppen).
+  // Outcome-tal frem for skala-tal — 6 SEK og 05:30 matcher eksisterende
+  // app-copy ("Claude vurderer på 6 sek." / "hver morgen klokken 05:30").
   const STATS: Stat[] = [
-    { id: "straps", k: t("stats.straps"), to: 50142, s: t("stats.strapsSuffix") },
     { id: "members", k: t("stats.members"), to: 412, s: t("stats.membersSuffix") },
-    // Outcome-stat frem for skala-stat (Scanfit-teardown): svartiden
-    // er medlemmets udbytte — tallet matcher app-copyen ("Claude
-    // vurderer på 6 sek.") og FAQ'ens 6-15 sek.
     { id: "formCheck", k: t("stats.formCheck"), literal: t("stats.formCheckValue"), s: t("stats.formCheckSuffix") },
+    { id: "engine", k: t("stats.engine"), literal: t("stats.engineValue"), s: t("stats.engineSuffix") },
     { id: "madeIn", k: t("stats.madeIn"), literal: "DK", s: t("stats.madeInSuffix") },
   ];
 

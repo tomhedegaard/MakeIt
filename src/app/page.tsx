@@ -9,7 +9,6 @@ import AppShowcase from "@/components/marketing/AppShowcase";
 import ValueSection from "@/components/marketing/ValueSection";
 import WaitlistSection from "@/components/marketing/WaitlistSection";
 import Testimonials from "@/components/marketing/Testimonials";
-import OriginSection from "@/components/marketing/OriginSection";
 import FAQ from "@/components/marketing/FAQ";
 import MarketingFooter from "@/components/marketing/Footer";
 import Marquee from "@/components/Marquee";
@@ -20,13 +19,15 @@ export default function Home() {
       <MarketingNav />
       <main className="relative z-10 flex-1">
         <Hero />
+        {/* UX-audit C3: udstyrs-brands ude af marquee'en — landingen
+            sælger platformen, ikke shoppen. */}
         <Marquee
           items={[
-            "STRAPIT",
-            "HOOKIT",
+            "HRV-AWARE",
+            "AI + COACH",
+            "OPEN BRAIN",
             "MADE IN DENMARK",
             "KØBENHAVN",
-            "50.000+ LIFTS",
             "CLOSED BETA",
             "FOR THE CREW",
           ]}
@@ -41,8 +42,9 @@ export default function Home() {
         <PillarsSection />
         <TierJourney />
         <AppShowcase />
+        {/* UX-audit C5: OriginSection (StrapIt-fabrikshistorien) er
+            taget af landingen — den hører til på webshoppen. */}
         <Testimonials />
-        <OriginSection />
         <WaitlistSection />
         <FAQ />
       </main>

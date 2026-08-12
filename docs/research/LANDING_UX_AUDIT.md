@@ -1,6 +1,6 @@
 # Landing-site UX-audit — hele rejsen, som brugeren ser den
 
-**Dato:** 2026-08-11 · **Status:** Audit færdigt · **P1-blokken (A1, A2, A3, A5) er implementeret** — se opgaveskemaet
+**Dato:** 2026-08-11 · **Status:** Audit færdigt · **P1-blokken (A1, A2, A3, A5) og C-blokken (C1–C6) er implementeret** — se opgaveskemaet
 **Metode:** Screenshot-walkthrough af hele scroll-forløbet på desktop (1440×900,
 27 stop) og mobil (390×844, 38 stop) mod lokal build af produktionskoden, plus
 gennemgang af alle marketing-komponenter og copy. Perspektiv: førstegangs-

@@ -42,8 +42,8 @@ export default async function CrewSection() {
                   v: t("items.noNoise.v"),
                 },
                 {
-                  k: t("items.freeOfShop.k"),
-                  v: t("items.freeOfShop.v"),
+                  k: t("items.ownData.k"),
+                  v: t("items.ownData.v"),
                 },
               ].map((it, i) => (
                 <li

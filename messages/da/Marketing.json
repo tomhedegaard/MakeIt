@@ -15,17 +15,18 @@
   "hero": {
     "eyebrow": "Closed Beta · Invite only · est. 2026",
     "stats": {
-      "straps": "Solgte straps",
-      "strapsSuffix": "+ stigende",
       "members": "Aktive medlemmer",
       "membersSuffix": "Closed beta",
       "madeIn": "Made in",
       "madeInSuffix": "København",
       "formCheck": "Form-check svar",
       "formCheckValue": "6 SEK",
-      "formCheckSuffix": "AI-draft · Munk-review 24t"
+      "formCheckSuffix": "AI-draft · Munk-review 24t",
+      "engine": "Motoren kører",
+      "engineValue": "05:30",
+      "engineSuffix": "Hver morgen"
     },
-    "subline": "MakeIt er ikke bare straps og cuffs.",
+    "subline": "Coaching bygget på din krops data.",
     "subline2": "1:1-coaching, AI-tilpassede programmer, form-checks og HRV-styret restitution — samlet ét sted, til en brøkdel af markedsprisen. Bygget i København. Lavet til atleter der løfter tungt.",
     "ctaPrimary": "Få adgang",
     "ctaSecondary": "Læs mere",
@@ -72,9 +73,9 @@
         "k": "Ingen støj",
         "v": "Ingen ads, ingen krav om at performe på Instagram. Bare træning og fællesskab."
       },
-      "freeOfShop": {
-        "k": "Fri af shoppen",
-        "v": "Webshoppen kører videre uberørt — det her er noget for sig."
+      "ownData": {
+        "k": "Dine data, dit valg",
+        "v": "HRV-deling og journal er private som standard. Du vælger hvad coachen ser — og kan trække stikket når som helst."
       }
     }
   },
@@ -406,27 +407,6 @@
       "quote": "Første gang jeg har set en coach vise mig hvorfor han ændrede noget. Jeg kan trække i sliderne og se motoren tænke. Det er ikke et black box-program der beder mig løfte mindre — det er coaching jeg forstår."
     }
   },
-  "origin": {
-    "eyebrow": "05 — Origin",
-    "heading": {
-      "line1": "Syet i",
-      "line2": "København.",
-      "line3": "Brugt overalt."
-    },
-    "body": "StrapIt blev født af én simpel idé: hvis du tager træning seriøst, fortjener dit udstyr at gøre det samme. Vi syr stadig hver eneste strap selv, på Amagerbro, med dansk produceret nylon og kontrolsøm der holder i årtier.",
-    "facts": {
-      "establishedLabel": "Etableret",
-      "establishedValue": "2018",
-      "locationLabel": "Sted",
-      "locationFallback": "København, Danmark",
-      "madeInLabel": "Made in",
-      "madeInValue": "Denmark",
-      "soldAtLabel": "Sælges hos",
-      "soldAtValue": "PureGym, SDU, Fitness Engros m.fl.",
-      "warrantyLabel": "Garanti",
-      "warrantyValue": "100 dages retur"
-    }
-  },
   "faq": {
     "eyebrow": "08 — FAQ",
     "heading": "Spørgsmål?",
@@ -508,8 +488,8 @@
     }
   },
   "footer": {
-    "blurbBefore": "{product} er det interne univers for vores crew, atleter og coaches. Webshoppen",
-    "blurbAfter": "kører som altid — det her er noget for sig.",
+    "blurbBefore": "{product} er det interne univers for vores crew, atleter og coaches. Udstyr:",
+    "blurbAfter": "",
     "universeLabel": "Univers",
     "universeCrew": "Crew",
     "universeCoaching": "Coaching",

@@ -15,17 +15,18 @@
   "hero": {
     "eyebrow": "Closed Beta · Invite only · est. 2026",
     "stats": {
-      "straps": "Straps sold",
-      "strapsSuffix": "+ climbing",
       "members": "Active members",
       "membersSuffix": "Closed beta",
       "madeIn": "Made in",
       "madeInSuffix": "Copenhagen",
       "formCheck": "Form-check reply",
       "formCheckValue": "6 SEC",
-      "formCheckSuffix": "AI draft · Munk review 24h"
+      "formCheckSuffix": "AI draft · Munk review 24h",
+      "engine": "Engine runs",
+      "engineValue": "05:30",
+      "engineSuffix": "Every morning"
     },
-    "subline": "MakeIt isn't just straps and cuffs.",
+    "subline": "Coaching built on your body's data.",
     "subline2": "1:1 coaching, AI-adapted programs, form checks and HRV-aware recovery — in one place, at a fraction of market price. Built in Copenhagen. Made for athletes who lift heavy.",
     "ctaPrimary": "Get access",
     "ctaSecondary": "Learn more",
@@ -72,9 +73,9 @@
         "k": "No noise",
         "v": "No ads, no pressure to perform on Instagram. Just training and community."
       },
-      "freeOfShop": {
-        "k": "Separate from the shop",
-        "v": "The webshop keeps running untouched — this is its own thing."
+      "ownData": {
+        "k": "Your data, your call",
+        "v": "HRV sharing and your journal are private by default. You choose what the coach sees — and can pull the plug anytime."
       }
     }
   },
@@ -406,27 +407,6 @@
       "quote": "The crew is where I post, not Instagram. Quiet, precise, and in Danish. No ads, no demands. Just people who lift."
     }
   },
-  "origin": {
-    "eyebrow": "05 — Origin",
-    "heading": {
-      "line1": "Sewn in",
-      "line2": "Copenhagen.",
-      "line3": "Used everywhere."
-    },
-    "body": "StrapIt was born from one simple idea: if you take training seriously, your gear deserves to do the same. We still sew every single strap ourselves, in Amagerbro, with Danish-made nylon and control stitching that holds for decades.",
-    "facts": {
-      "establishedLabel": "Established",
-      "establishedValue": "2018",
-      "locationLabel": "Location",
-      "locationFallback": "Copenhagen, Denmark",
-      "madeInLabel": "Made in",
-      "madeInValue": "Denmark",
-      "soldAtLabel": "Sold at",
-      "soldAtValue": "PureGym, SDU, Fitness Engros and more",
-      "warrantyLabel": "Warranty",
-      "warrantyValue": "100-day returns"
-    }
-  },
   "faq": {
     "eyebrow": "08 — FAQ",
     "heading": "Questions?",
@@ -508,8 +488,8 @@
     }
   },
   "footer": {
-    "blurbBefore": "{product} is the inner universe for our crew, athletes and coaches. The webshop",
-    "blurbAfter": "runs as always — this is its own thing.",
+    "blurbBefore": "{product} is the inner universe for our crew, athletes and coaches. Gear:",
+    "blurbAfter": "",
     "universeLabel": "Universe",
     "universeCrew": "Crew",
     "universeCoaching": "Coaching",
