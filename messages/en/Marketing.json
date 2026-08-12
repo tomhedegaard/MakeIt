@@ -380,12 +380,15 @@
       "3": "HRV-aware recovery — WHOOP, Oura, Polar",
       "4": "Crew feed, challenges, buddy & Reps program",
       "5": "Mind check and the mental engine"
-    }
+    },
+    "betaValue": "Beta",
+    "betaSuffix": "invite only",
+    "marketFraction": "A fraction of the market average for personal coaching."
   },
   "testimonials": {
     "eyebrow": "07 — The Crew",
     "heading": "What they say.",
-    "intro": "Three from the crew on how it feels to train here. No ambassador deals, no discount codes. Just members who've put in the time.",
+    "intro": "Four from the crew on how it feels to train here. No ambassador deals, no discount codes. Just members who've put in the time.",
     "kasper": {
       "cred": "Powerbuilding · 162.5 kg squat single",
       "quote": "The first program I've actually run from start to finish. Mikael's form checks catch things the AI misses, and the volume of notes he writes per video is insane."

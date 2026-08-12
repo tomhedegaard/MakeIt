@@ -1,6 +1,6 @@
 # Landing-site UX-audit — hele rejsen, som brugeren ser den
 
-**Dato:** 2026-08-11 · **Status:** Audit færdigt, opgaver ikke påbegyndt
+**Dato:** 2026-08-11 · **Status:** Audit færdigt · **P1-blokken (A1, A2, A3, A5) er implementeret** — se opgaveskemaet
 **Metode:** Screenshot-walkthrough af hele scroll-forløbet på desktop (1440×900,
 27 stop) og mobil (390×844, 38 stop) mod lokal build af produktionskoden, plus
 gennemgang af alle marketing-komponenter og copy. Perspektiv: førstegangs-
@@ -35,6 +35,11 @@ hamburger-triggeren (som ligger efter den i DOM'en) er helt ude af viewporten.
 Mobilbrugere kan reelt ikke åbne menuen. Sprogvælgeren (Dansk/English som to
 fulde knapper) stjæler pladsen — kollaps den til ét ikon på mobil.
 (`MarketingNav`.)
+*Fix-fund:* Under implementeringen viste bug'en sig dybere: headerens
+`backdrop-blur` gør den til containing block for det fixed-positionerede
+menu-sheet, så `top-14 bottom-0` kollapsede sheetet til højde 0 — menuen var
+usynlig i produktion selv hvor hamburgeren kunne rammes. Løst med eksplicit
+højde (`h-[calc(100dvh-3.5rem)]`); sprogvælgeren er flyttet ned i sheetet.
 
 **A3 · Cookie-banneret dækker kritisk indhold.**
 På mobil dækker banneret ~45 % af viewporten — inkl. hero-CTA'erne — på hele

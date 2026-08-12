@@ -380,12 +380,15 @@
       "3": "HRV-styret restitution — WHOOP, Oura, Polar",
       "4": "Crew-feed, challenges, buddy & Reps-program",
       "5": "Mind-check og mental motor"
-    }
+    },
+    "betaValue": "Beta",
+    "betaSuffix": "invite only",
+    "marketFraction": "En brøkdel af markedssnittet for personlig coaching."
   },
   "testimonials": {
     "eyebrow": "07 — Crewet",
     "heading": "Hvad de siger.",
-    "intro": "Tre fra crewet om hvordan det føles at træne her. Ingen ambassadør-deals, ingen rabat-koder. Bare medlemmer der har sat tid på.",
+    "intro": "Fire fra crewet om hvordan det føles at træne her. Ingen ambassadør-deals, ingen rabat-koder. Bare medlemmer der har sat tid på.",
     "kasper": {
       "cred": "Powerbuilding · 162.5 kg squat single",
       "quote": "Det første program jeg faktisk har kørt fra ende til anden. Mikaels form-checks fanger ting AI&apos;en misser, og mængden af noter han skriver pr. video er sygt."

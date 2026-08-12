@@ -81,7 +81,12 @@ export default function MarketingNav() {
             <span className="hidden sm:flex items-center gap-2 text-[10px] tracking-[0.18em] uppercase font-mono text-fg-dim">
               <span className="pulse-dot" /> {t("closedBeta")}
             </span>
-            <LanguageSelector />
+            {/* UX-audit A2: den fulde sprogvælger overflowede headeren
+                på små skærme og skubbede hamburgeren ud af viewporten —
+                på mobil bor den i stedet nederst i menu-sheetet. */}
+            <div className="hidden md:block">
+              <LanguageSelector />
+            </div>
             <Link href="/login" className="btn btn-sm btn-primary">
               {t("login")}
             </Link>
@@ -106,7 +111,11 @@ export default function MarketingNav() {
       {open ? (
         <div
           id="marketing-nav-sheet"
-          className="md:hidden fixed left-0 right-0 top-14 bottom-0 z-30 bg-[rgba(10,10,11,0.92)] backdrop-blur-lg overflow-y-auto"
+          // Headerens backdrop-blur gør den til containing block for
+          // fixed-positionerede børn, så `top-14 bottom-0` beregnes mod
+          // den 56px høje header og kollapser til højde 0 (menuen var
+          // usynlig i produktion). Eksplicit højde omgår det.
+          className="md:hidden fixed left-0 right-0 top-full h-[calc(100dvh-3.5rem)] z-30 bg-[rgba(10,10,11,0.92)] backdrop-blur-lg overflow-y-auto"
           onClick={(e) => {
             // Close when tapping the backdrop directly (but not its
             // children — let link clicks bubble first).
@@ -132,6 +141,9 @@ export default function MarketingNav() {
                 ))}
               </ul>
             </nav>
+            <div className="mt-8">
+              <LanguageSelector />
+            </div>
           </Container>
         </div>
       ) : null}
