@@ -485,7 +485,8 @@
         "q": "What do I do if I eat something that's not in the meal plan?",
         "a": "Tap 'I ate something else' in the Nutrition feed, briefly describe what you ate, and it's logged as an off-plan meal. No penalty, no scolding — just data. The coach sees it in weekly signals so next week's planning gets more realistic instead of ignoring reality."
       }
-    }
+    },
+    "showAll": "Show all questions"
   },
   "footer": {
     "blurbBefore": "{product} is the inner universe for our crew, athletes and coaches. Gear:",

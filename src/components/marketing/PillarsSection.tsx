@@ -108,11 +108,14 @@ export default async function PillarsSection() {
           id={p.id}
           className={`relative border-t hairline ${idx === pillars.length - 1 ? "border-b" : ""}`}
         >
-          <Container className="py-20 md:py-32">
+          <Container className="py-16 md:py-24">
             <div className="grid gap-12 md:grid-cols-12 items-start">
-              <div className="md:col-span-5" data-reveal>
+              {/* UX-audit A6: lange danske ord ("REGNESTYKKET.") løb
+                  ind i højre kolonne ved ~1440px. Bredere kolonne,
+                  lavere clamp-loft og orddeling som sikkerhedsnet. */}
+              <div className="md:col-span-6" data-reveal>
                 <div className="eyebrow mb-6">{p.label}</div>
-                <h3 className="font-display text-[clamp(2rem,5.2vw,4.5rem)] leading-[0.95]">
+                <h3 className="font-display text-[clamp(1.9rem,4.2vw,3.6rem)] leading-[0.95] [overflow-wrap:break-word]">
                   {p.title}
                 </h3>
               </div>

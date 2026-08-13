@@ -115,7 +115,7 @@ export default function TierJourney() {
   ];
 
   return (
-    <section id="tiers" className="relative py-32 md:py-48">
+    <section id="tiers" className="relative py-20 md:py-32">
       <Container>
         <div className="max-w-2xl mb-20">
           <div className="eyebrow mb-3">{t("eyebrow")}</div>

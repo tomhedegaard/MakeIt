@@ -5,7 +5,7 @@ export default async function CrewSection() {
   const t = await getTranslations("Marketing.crew");
 
   return (
-    <section id="crew" className="relative py-24 md:py-40">
+    <section id="crew" className="relative py-20 md:py-28">
       <Container>
         <div className="grid gap-16 md:grid-cols-12">
           <div className="md:col-span-4" data-reveal>

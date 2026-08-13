@@ -41,7 +41,7 @@ export default async function ValueSection() {
   ];
 
   return (
-    <section id="how" className="relative border-t hairline py-24 md:py-40">
+    <section id="how" className="relative border-t hairline py-20 md:py-28">
       <Container>
         {/* Hook + price */}
         <div className="grid gap-12 md:grid-cols-12 items-end mb-16 md:mb-24">

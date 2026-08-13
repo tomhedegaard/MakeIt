@@ -1,6 +1,7 @@
 # Landing-site UX-audit — hele rejsen, som brugeren ser den
 
-**Dato:** 2026-08-11 · **Status:** Audit færdigt · **P1-blokken (A1, A2, A3, A5) og C-blokken (C1–C6) er implementeret** — se opgaveskemaet
+**Dato:** 2026-08-11 · **Status:** Audit færdigt · **P1 (A1–A5), C (C1–C6) og
+P2 (A4, A6, A7, B6 + B1-light) er implementeret** — se opgaveskemaet
 **Metode:** Screenshot-walkthrough af hele scroll-forløbet på desktop (1440×900,
 27 stop) og mobil (390×844, 38 stop) mod lokal build af produktionskoden, plus
 gennemgang af alle marketing-komponenter og copy. Perspektiv: førstegangs-
@@ -58,6 +59,26 @@ Copy-fejl i testimonials-introen (fjerde citat blev tilføjet senere).
 **A6 · Headline kolliderer med tekst i Mind-sektionen.**
 Ved 1440 px løber "REGNESTYKKET." ind i højre kolonnes afsnit. Clamp-værdien
 er for aggressiv for de lange danske ord. (`PillarsSection`, mind-pillar.)
+
+**A8 · Hero-CTA'erne var usynlige — altid. KRITISK (fundet under P2).**
+`Få adgang`, ventelistelinket og trust-linjen sad i en `motion.div` hvis
+opacity blev drevet af scroll-progress. Den motion-value opdaterede aldrig:
+inline-stilen stod på `opacity: 0` ved *enhver* scroll-position, mens
+transform-værdierne på samme element opdaterede korrekt. Sidens primære
+konverteringsknap har altså aldrig været synlig i produktion — det forklarer
+også, hvorfor CTA'erne manglede i alle screenshots i den oprindelige
+gennemgang. Løst ved at afkoble indholdets synlighed fra scroll helt:
+subline og CTA-blok animeres nu ind ved mount (`initial`/`animate`), samme
+mønster som eyebrow og headline, der beviseligt virkede. Pin'et beholder
+sit parallax/dissolve-udtryk via glød og exit-fade.
+
+**A9 · Hero-stats lå uden for skærmen bag exit-dissolven (fundet under P2).**
+Stats-rækken lå inde i det 100vh-høje sticky-lag med `overflow-hidden`.
+Hero-indholdet er højere end 900 px, så rækken lå under fold'en og nåede
+først ind i viewporten, efter exit-dissolven havde tonet hero ned til 15 %
+opacity. Løst ved at flytte rækken ud af pin'et som selvstændigt bånd
+(`StatsBand`) plus et lavere clamp-loft på headline, så resten af
+hero-indholdet faktisk kan være på én skærm.
 
 **A7 · Pinned hero holder samme billede i 2-3 skærmes scroll.**
 Headline står alene i næsten hele pin-forløbet; subline, CTA'er og stats
@@ -144,13 +165,19 @@ M = 1-2 dage · L = uge+.
 | A4 | Blødere subline-reveal (ord-for-ord i stedet for clip) | `Hero` | P2 | S |
 | A6 | Mind-headline clamp/ombrydning ved 1440px | `PillarsSection` | P2 | S |
 | A7 | Kortere hero-pin, tidligere CTA-reveal | `Hero` | P2 | S |
-| B1 | Skær sidelængde 30-40 % (pillars-sammenlægning, FAQ-fold, sektionsafstande) | `page.tsx` m.fl. | P2 | M |
+| B1 | Skær sidelængde (FAQ-fold til 8 + "vis alle", strammere sektionsrytme, Origin fjernet) — **delvist: 19.954 → 16.708 px desktop (−16 %)** | `FaqList`, sektions-padding | P2 | M |
+| B1b | **Rest af B1: slå de 6 pillars sammen til 3-4** — sletter indhold, kræver redaktionel beslutning (hvilke lægges sammen?) | `PillarsSection` + i18n | P2 | M |
 | B6 | Konsekvent dansk i CTA'er | i18n | P2 | S |
 | B3 | 1-2 nye interaktive demoer (HRV-graf eller form-check-demo) | nye komponenter | P3 | M-L |
 | B2/B4 | Foto/video-lag: crew-fotos, form-check-klip → tier-kort + phones | asset-produktion + komponenter | P3 | L |
 | B5 | Rigtige ansigter i testimonials | assets + `Testimonials` | P3 | M |
 
-**Anbefalt rækkefølge:** P1-blokken samlet (én dag, inkl. deploy), C-blokken
-som selvstændig "af-strapificering"-PR, derefter B1. B2/B3 planlægges når
-foto-assets findes — det er den investering der flytter "flot typografi" til
-"grib den nysgerrige besøgende".
+**Status:** P1, C og P2 er kørt i den rækkefølge. Tilbage står **B1b**
+(pillar-sammenlægning — redaktionel beslutning) og **P3** (B2/B3/B5), der
+kræver foto-/video-assets. Det er den investering der flytter sitet fra
+"flot typografi" til "grib den nysgerrige besøgende".
+
+**Læring på tværs af blokkene:** tre af de alvorligste fejl (mobilmenuen med
+højde 0, CTA'er med opacity 0, stats bag dissolven) var alle *usynlige i
+koden* og fandtes kun ved at køre siden og måle den faktiske DOM i en
+browser. Kør den slags måling som fast led, når hero/nav-laget røres.

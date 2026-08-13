@@ -193,10 +193,10 @@
       "line2": "til Legend."
     },
     "intro": "Hver gennemført session, form-check og PR fylder Reps-balancen. Tiers er ikke titler — det er bevis på arbejdet bag. Hvert niveau låser nye perks op: form-check-prioritet, IRL-meets, eksklusivt udstyr, 1:1-coaching.",
-    "cta": "Start din journey →",
+    "cta": "Kom i gang →",
     "ctaSecondary": "Se motoren der driver det →",
     "ctaNote": "Closed beta · invite kræves",
-    "locked": "Locked",
+    "locked": "Låst",
     "promotionFooter": "Reps tjenes for sessioner, form-checks, lifestyle-logs, og — fra Beast og op — for kvaliteten af din feedback til andre medlemmer. Tier-promotionen sker automatisk via Reps-ledgeren.",
     "lifter": {
       "description": "Indgangen. Du har samlet dine første reps og er i gang med at lære systemet — første session ligger i appen, programmet er tilpasset dit niveau.",
@@ -485,7 +485,8 @@
         "q": "Hvad sker hvis jeg ikke vil have AI-tilpasninger?",
         "a": "Du har altid kontrollen. Du kan deaktivere adaptive tilpasninger fra HRV-indstillingerne (programmet kører så som planlagt uden daglige justeringer), og selv hvis du har dem slået til kan du afvise hver enkelt tilpasning med 'Behold original' direkte i sessionen. Motoren er en mening, ikke en kommando."
       }
-    }
+    },
+    "showAll": "Vis alle spørgsmål"
   },
   "footer": {
     "blurbBefore": "{product} er det interne univers for vores crew, atleter og coaches. Udstyr:",
