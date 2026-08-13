@@ -1,7 +1,10 @@
 # Landing-site UX-audit — hele rejsen, som brugeren ser den
 
-**Dato:** 2026-08-11 · **Status:** Audit færdigt · **P1 (A1–A5), C (C1–C6) og
-P2 (A4, A6, A7, B6 + B1-light) er implementeret** — se opgaveskemaet
+**Dato:** 2026-08-11 · **Status:** Audit færdigt · **P1 (A1–A5), C (C1–C6),
+P2 (A4, A6, A7, B6), B1+B1b og den kode-bare del af P3 (B2a, B3, B4) er
+implementeret.** Kun foto-/video-afhængige punkter (B2b, B5) udestår — se
+asset-brief i §5.
+
 **Metode:** Screenshot-walkthrough af hele scroll-forløbet på desktop (1440×900,
 27 stop) og mobil (390×844, 38 stop) mod lokal build af produktionskoden, plus
 gennemgang af alle marketing-komponenter og copy. Perspektiv: førstegangs-
@@ -166,16 +169,34 @@ M = 1-2 dage · L = uge+.
 | A6 | Mind-headline clamp/ombrydning ved 1440px | `PillarsSection` | P2 | S |
 | A7 | Kortere hero-pin, tidligere CTA-reveal | `Hero` | P2 | S |
 | B1 | Skær sidelængde (FAQ-fold til 8 + "vis alle", strammere sektionsrytme, Origin fjernet) — **delvist: 19.954 → 16.708 px desktop (−16 %)** | `FaqList`, sektions-padding | P2 | M |
-| B1b | **Rest af B1: slå de 6 pillars sammen til 3-4** — sletter indhold, kræver redaktionel beslutning (hvilke lægges sammen?) | `PillarsSection` + i18n | P2 | M |
+| B1b | **Gjort:** 5 pillars → 3. Motor + Åben hjerne lagt sammen (samme historie: motoren justerer OG viser hvorfor); Munk-multiplikator + Crew-pyramide lagt sammen (begge om hvordan coaching skalerer); Mental motor står alene som differentiator | `PillarsSection` + i18n | P2 | M |
 | B6 | Konsekvent dansk i CTA'er | i18n | P2 | S |
-| B3 | 1-2 nye interaktive demoer (HRV-graf eller form-check-demo) | nye komponenter | P3 | M-L |
-| B2/B4 | Foto/video-lag: crew-fotos, form-check-klip → tier-kort + phones | asset-produktion + komponenter | P3 | L |
-| B5 | Rigtige ansigter i testimonials | assets + `Testimonials` | P3 | M |
+| B3 | **Gjort:** Reps-simulator i tier-sektionen (steppere → reps/md + tid til hver tier) + hover-aflæsning på HRV-grafen. Sidens interaktive elementer: 1 → 3 | `RepsSimulator`, `HrvTrendVisual` | P3 | M |
+| B4 | **Gjort:** de to store tomme flader er fyldt — tier-sektionens højre kolonne (simulator, sticky) og motor-pillarens venstre kolonne (HRV-graf) | `TierJourney`, `PillarsSection` | P3 | M |
+| B2a | **Gjort (kode-genereret del):** rigtig HRV-trendgraf — 30 dage, 7-dages middel, baseline-bånd, crosshair. Geometrien kommer fra `buildTrendChartModel`, samme rene funktion som in-app-fladen | `HrvTrendVisual` | P3 | M |
+| B2b | **Kan ikke kodes:** crew-fotos og form-check-klip kræver optagelse — se asset-brief nedenfor | asset-produktion | P3 | L |
+| B5 | **Kan ikke kodes:** rigtige ansigter i testimonials kræver fotos af rigtige medlemmer. Fabrikerede portrætter ville være vildledende og er bevidst fravalgt | assets + `Testimonials` | P3 | M |
 
-**Status:** P1, C og P2 er kørt i den rækkefølge. Tilbage står **B1b**
-(pillar-sammenlægning — redaktionel beslutning) og **P3** (B2/B3/B5), der
-kræver foto-/video-assets. Det er den investering der flytter sitet fra
-"flot typografi" til "grib den nysgerrige besøgende".
+**Status:** P1, C, P2, B1b og den kode-bare del af P3 er kørt. Sidelængden er
+undervejs faldet fra 19.954 til 15.739 px på desktop (−21 %) — trods at der er
+*kommet* to nye indholdsblokke til.
+
+## 5. Asset-brief — det eneste der mangler for at lukke P3
+
+Fotografi og video kan ikke frembringes i kode, og fabrikerede portrætter af
+"medlemmer" ville være vildledende. Det er derfor bevidst ikke gjort. For at
+lukke B2b og B5 skal der produceres:
+
+1. **6-8 crew-fotos, Amagerbro-loftet.** Monokrome/duotone, høj kontrast,
+   ægte medlemmer under løft — ikke stockfotos. Bruges i tier-kortene og
+   som brud mellem pillars. Liggende 3:2, min. 2000 px bred.
+2. **Ét form-check-klip, 8-12 sekunder.** Ét løft, gerne med den AI-verdict
+   der faktisk blev givet lagt over. Skal kunne loope lydløst. Vertikal 9:16.
+3. **3-4 portrætter til testimonials**, af de medlemmer der allerede er
+   citeret, med deres accept. Kvadratiske, min. 800 px.
+
+Alle tre kræver én optagedag. Når de findes, er det ~1 dags kodearbejde at
+sætte dem ind — komponenterne har allerede pladsen.
 
 **Læring på tværs af blokkene:** tre af de alvorligste fejl (mobilmenuen med
 højde 0, CTA'er med opacity 0, stats bag dissolven) var alle *usynlige i

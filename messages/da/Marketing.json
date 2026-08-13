@@ -99,46 +99,29 @@
   },
   "pillars": {
     "engine": {
-      "label": "02 — Motor",
-      "title": "Programmet rewriter sig selv. På din krops præmisser.",
-      "body": "Hver morgen kl. 05:30 læser motoren din HRV, din søvn, sidste sessions RPE og dine seneste form-checks. Den justerer dagens session — eller lader være — og fortæller dig hvorfor. Munk ser eskaleringen før du gør.",
+      "label": "02 — Motor & åben hjerne",
+      "title": "Programmet rewriter sig selv. Og viser dig hvorfor.",
+      "body": "Hver morgen kl. 05:30 læser motoren din HRV, din søvn, sidste sessions RPE og dine seneste form-checks. Den justerer dagens session — eller lader være — og viser hele kæden bag beslutningen: råsignaler → regel → Claudes refinement → handling → udfald. Munk ser eskaleringen før du gør.",
       "bullet1": "Topsæt-reduktion, accessory-cut, øvelsesbytte — eller no_change. Aldrig mere end én ændring pr. session.",
       "bullet2": "HRV very_low → session pauset, mobilitet + gåtur, Munk får besked",
-      "bullet3": "Du kan altid sige \"behold original\" — intet sker bag din ryg",
-      "statLabel": "actions",
-      "demoHook": "Træk i sliderne"
-    },
-    "openBrain": {
-      "label": "03 — Åben hjerne",
-      "title": "Coaching, der ikke gemmer regnemaskinen.",
-      "body": "Hver beslutning viser hele kæden: råsignaler → regel → Claudes refinement → handling → udfald. Du kan inspicere de seneste 30 dages tilpasninger og se hvordan din krop og din træning hænger sammen.",
-      "bullet1": "30-dages adaptation history med outcome-tracking",
-      "bullet2": "Counterfactual-sliders: \"Hvad hvis jeg havde sovet 7t?\" — beregnes live i din browser",
-      "bullet3": "Reason codes på dansk — ingen black box",
+      "bullet3": "30 dages historik med counterfactual-sliders: \"Hvad hvis jeg havde sovet 7t?\" — beregnes live i din browser",
       "statLabel": "dage historik",
-      "demoHook": "Se motoren igen"
+      "demoHook": "Træk i sliderne",
+      "bullet4": "Reason codes på dansk, og du kan altid sige \"behold original\" — ingen black box, intet sker bag din ryg"
     },
     "munkMultiplier": {
-      "label": "04 — Munk-multiplikator",
+      "label": "03 — Coaching der skalerer",
       "title": "Én coach. 5× kapacitet. Stadig ham.",
-      "body": "AI udkaster form-check-svar, kohort-mønstre og morgenrapporter — Munk redigerer i 30 sekunder eller skriver om. Du får aldrig et AI-svar uden hans underskrift.",
+      "body": "AI udkaster form-check-svar, kohort-mønstre og morgenrapporter — Munk redigerer i 30 sekunder eller skriver om. Du får aldrig et AI-svar uden hans underskrift. Og rammer du Beast-tier, åbner Coach School: du lærer at svare selv, med Munk som senior.",
       "bullet1": "AI-drafted form-check-svar, signeret af Munk inden afsendelse",
-      "bullet2": "Daglig morgenrapport: prioriteret kø af medlemmer Munk skal skrive til",
-      "bullet3": "Kohort-mønstre: AI ser når 3+ atleter har samme problem i samme uge",
-      "statLabel": "form-check"
-    },
-    "crewPyramid": {
-      "label": "05 — Crew-pyramide",
-      "title": "Beasts bliver til co-coaches.",
-      "body": "Når du rammer Beast-tier, åbner Coach School: kuraterede lektioner, sandbox-cases du øver på, og — hvis du består — live-medlemmer du co-coacher med Munk som senior. Reps belønner det arbejde, ikke kun dine egne PR'er.",
-      "bullet1": "AI buddy-pairing: træningsniveau + lokation + timing matcher dig med en partner",
-      "bullet2": "Coach School: lektioner → sandbox → live, med safety-moderation på alle udgående beskeder",
-      "bullet3": "Reps for medlems-feedback, ikke kun for dine egne reps",
-      "statLabel": "tiers",
+      "bullet2": "Kohort-mønstre: AI ser når 3+ atleter har samme problem i samme uge",
+      "bullet3": "Coach School: lektioner → sandbox-cases → live-medlemmer, med safety-moderation på alt udgående",
+      "statLabel": "form-check",
+      "bullet4": "AI buddy-pairing på niveau, lokation og tidspunkt — og Reps for din feedback til andre, ikke kun for egne reps",
       "demoHook": "Se stigen"
     },
     "mind": {
-      "label": "06 — Mental motor",
+      "label": "04 — Mental motor",
       "title": "Hovedet med i regnestykket. Ikke som tilbehør.",
       "body": "Ægte sundhed er fysisk OG psykisk. En 60-sekunders mind-check hver dag bygger en mental graf parallelt med din HRV. Når dine mind-check viser belastning i 3 dage, skruer Adaptive Engine ned uden at vente på at HRV bryder sammen — fordi hovedet ofte mærker det først. Privat journaling, AI-coach skrevet til din uge, og — når du rykker tier — crew-deling så du ikke skal gå alene.",
       "bullet1": "Mind-check × HRV × træning — Adaptive Engine bruger alle tre. Ingen anden app fusionerer dem.",
@@ -146,44 +129,6 @@
       "bullet3": "Privacy som progression: Lifter privat, Athlete åbner buddy-deling, Beast åbner cirkler. Din journal er altid din.",
       "statLabel": "sek/dag",
       "demoHook": "Se mind-modulet"
-    },
-    "coaching": {
-      "label": "02 — Coaching",
-      "title": "Programmer der virker. Coaches der løfter selv.",
-      "body": "1:1 sessioner, 12-ugers strength- og hypertrofi-blokke, formchecks via video. Kurateret af Mikael Munk og crewets head coaches. Ikke generisk app-content.",
-      "bullet1": "Strength · Hypertrophy · Powerbuilding",
-      "bullet2": "Video form-check inden for 24 timer",
-      "bullet3": "Personlige PR-tracks og deload-uger",
-      "bullet4": "Coachen ser røde flag i din HRV før du gør — og skriver først",
-      "statLabel": "Programmer live"
-    },
-    "community": {
-      "label": "03 — Community",
-      "title": "Et feed bygget til løft — ikke til scroll.",
-      "body": "Del PR'er, optagelser og tanker med folk der faktisk forstår forskellen mellem en RPE 8 og en 9. Ugentlige challenges, leaderboards pr. gym, og IRL-meets på Amagerbro.",
-      "bullet1": "PR-feed med video og kommentarer",
-      "bullet2": "Månedlige challenges & leaderboards",
-      "bullet3": "IRL-meets, åbent hus & co-labs",
-      "statLabel": "Aktive medlemmer"
-    },
-    "reps": {
-      "label": "04 — Reps Program",
-      "title": "Dit arbejde belønner sig.",
-      "body": "Tjen Reps for køb, programmer du gennemfører, PR'er du poster, og folk du inviterer ind. Bytt dem til limited drops, custom-strap-farver, early access og 1:1 tid med Mikael Munk.",
-      "bullet1": "Tier: Lifter → Athlete → Beast → Legend",
-      "bullet2": "Limited drops kun for medlemmer",
-      "bullet3": "Reps konverteres aldrig til kontanter — kun til ægte ting",
-      "statLabel": "Tiers"
-    },
-    "restitution": {
-      "label": "05 — Restitution",
-      "title": "Din krop bestemmer ugens belastning.",
-      "body": "Forbind WHOOP, Oura eller Polar. Hver morgen synker dit RMSSD ind sammen med din 60-dages baseline, og programmet ved hvornår du skal presse — og hvornår en deload-uge giver dig mere end et tungt sæt. Søndag aften skriver coachen en kort observation om din uge; aldrig diagnoser, aldrig opfundne tal.",
-      "bullet1": "Wearable-first — WHOOP · Oura · Polar (Apple Watch følger med iPhone-appen)",
-      "bullet2": "5-bucket readiness ladder · ingen falsk 0-100 score",
-      "bullet3": "Ugentlig indsigt på dansk · ærlige korrelationer (alkohol, søvn)",
-      "bullet4": "Lifestyle-log + readiness-nudge på dine workout-dage",
-      "statLabel": "Wearables"
     }
   },
   "tiers": {
@@ -237,6 +182,23 @@
         "3": "Reps for medlems-feedback, ikke kun egne reps",
         "4": "Permanent stol i Amagerbro-loftet"
       }
+    },
+    "sim": {
+      "eyebrow": "Reps-simulator",
+      "heading": "Hvor hurtigt rykker du?",
+      "fields": {
+        "weeks": "Fuldførte programuger pr. md.",
+        "prs": "PR'er du logger med video",
+        "invites": "Venner du inviterer ind",
+        "challenges": "Challenges du vinder"
+      },
+      "repsEach": "reps stk.",
+      "perMonth": "reps pr. måned",
+      "months": "{n} md.",
+      "withinMonth": "Første md.",
+      "note": "Samme satser som Reps-programmet i appen · Reps udløber aldrig",
+      "increase": "Tilføj én — {label}",
+      "decrease": "Fjern én — {label}"
     }
   },
   "app": {
@@ -502,5 +464,12 @@
     "privacy": "Privacy",
     "terms": "Vilkår",
     "madeIn": "Made in DK · Closed Beta · v0.1"
+  },
+  "hrvChart": {
+    "title": "HRV — 30 dage",
+    "exampleData": "Eksempeldata",
+    "belowBaseline": "Under baseline",
+    "withinBaseline": "Inden for baseline",
+    "aria": "Graf: 30 dages HRV-aflæsninger i millisekunder RMSSD, fra {low} til {high} ms, med 7-dages gennemsnit og et baseline-bånd som referenceområde."
   }
 }

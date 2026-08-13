@@ -1,18 +1,23 @@
+import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import HrvTrendVisual from "@/components/marketing/HrvTrendVisual";
 
 /**
  * WAUW-1 — the 4 søjler section.
  *
  * Spec: .claude/plans/for-at-have-wauw-humble-naur.md §"Ny PillarsSection"
  *
- * Replaces the v0 generic "Coaching/Community/Reps/Restitution"
- * pillars with the four wauw-plan søjler that are actually shipped:
+ * Tre pillars, ikke fem (UX-audit B1b). De fem søjler fortalte
+ * parvis den samme historie og kostede to skærmes scroll uden ny
+ * information, så de er lagt sammen hvor de hører sammen:
  *
- *   02 — Motor              (Søjle 1: Adaptive Engine)
- *   03 — Åben hjerne        (Søjle 2: Open Brain UI)
- *   04 — Munk-multiplikator (Søjle 3: Munk Multiplier)
- *   05 — Crew-pyramide      (Søjle 4: Crew Coaching Pyramid)
+ *   02 — Motor & åben hjerne   (Søjle 1 + 2: motoren justerer OG
+ *                               viser hele beslutningskæden)
+ *   03 — Coaching der skalerer (Søjle 3 + 4: AI udkaster, Munk
+ *                               signerer, Beasts bliver co-coaches)
+ *   04 — Mental motor          (Søjle 5 — står alene, den er
+ *                               differentiatoren)
  *
  * Layout grammar is intentionally identical to v0 — eyebrow + display
  * heading left, body + numbered bullets + big stat right, alternating
@@ -29,7 +34,16 @@ import Container from "@/components/Container";
 export default async function PillarsSection() {
   const t = await getTranslations("Marketing.pillars");
 
-  const pillars = [
+  const pillars: {
+    id: string;
+    label: string;
+    title: string;
+    body: string;
+    bullets: string[];
+    stat: { v: string; k: string };
+    demoHook: { href: string; label: string } | null;
+    visual?: ReactNode;
+  }[] = [
     {
       // Prefix with "pillar-" so #engine on the page resolves to the
       // standalone playground (AdaptivePlaygroundPublic) and never
@@ -42,22 +56,11 @@ export default async function PillarsSection() {
         t("engine.bullet1"),
         t("engine.bullet2"),
         t("engine.bullet3"),
+        t("engine.bullet4"),
       ],
-      stat: { v: "8", k: t("engine.statLabel") },
+      stat: { v: "30", k: t("engine.statLabel") },
       demoHook: { href: "#engine", label: t("engine.demoHook") },
-    },
-    {
-      id: "pillar-open-brain",
-      label: t("openBrain.label"),
-      title: t("openBrain.title"),
-      body: t("openBrain.body"),
-      bullets: [
-        t("openBrain.bullet1"),
-        t("openBrain.bullet2"),
-        t("openBrain.bullet3"),
-      ],
-      stat: { v: "30", k: t("openBrain.statLabel") },
-      demoHook: { href: "#engine", label: t("openBrain.demoHook") },
+      visual: <HrvTrendVisual />,
     },
     {
       id: "pillar-munk-multiplier",
@@ -68,22 +71,10 @@ export default async function PillarsSection() {
         t("munkMultiplier.bullet1"),
         t("munkMultiplier.bullet2"),
         t("munkMultiplier.bullet3"),
+        t("munkMultiplier.bullet4"),
       ],
       stat: { v: "24t", k: t("munkMultiplier.statLabel") },
-      demoHook: null,
-    },
-    {
-      id: "pillar-crew-pyramid",
-      label: t("crewPyramid.label"),
-      title: t("crewPyramid.title"),
-      body: t("crewPyramid.body"),
-      bullets: [
-        t("crewPyramid.bullet1"),
-        t("crewPyramid.bullet2"),
-        t("crewPyramid.bullet3"),
-      ],
-      stat: { v: "4", k: t("crewPyramid.statLabel") },
-      demoHook: { href: "#tiers", label: t("crewPyramid.demoHook") },
+      demoHook: { href: "#tiers", label: t("munkMultiplier.demoHook") },
     },
     {
       id: "pillar-mind",
@@ -118,6 +109,12 @@ export default async function PillarsSection() {
                 <h3 className="font-display text-[clamp(1.9rem,4.2vw,3.6rem)] leading-[0.95] [overflow-wrap:break-word]">
                   {p.title}
                 </h3>
+
+                {/* UX-audit B2/B4: venstre kolonne stod tom under
+                    overskriften. Motor-pillaren viser nu den faktiske
+                    graf medlemmet ser — bygget af samme rene funktion
+                    som in-app-fladen. */}
+                {p.visual ? <div className="mt-10">{p.visual}</div> : null}
               </div>
 
               <div className="md:col-span-6 md:col-start-7 space-y-8">
