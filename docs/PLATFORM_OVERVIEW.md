@@ -301,31 +301,59 @@ Rå `*.vercel.app`-URL'er ligger bag Deployment Protection (401).
 vercel promote <preview-url> --yes
 ```
 
-### 7.1 Faktisk branch-tilstand pr. 2026-08-29 (efter `git fetch`)
+### 7.1 Branch-tilstand pr. 2026-08-29
 
-| Branch | Head | Forhold |
+Divergensen er konsolideret på branchen **`chore/branch-consolidation`**
+(`origin/main` + produktionsbranchen XF2UE merget sammen, commit `10c8166`).
+
+Udgangspunktet var en tre-vejs-divergens:
+
+| Branch | Head | Forhold før konsolidering |
 |---|---|---|
-| `origin/main` | `b068a50` (PR #27, science) | 30 commits **foran** produktionsbranchen |
-| `origin/claude/makeit-online-platform-XF2UE` | `3537533` | Vercel-produktionsbranch — 11 commits foran main, 30 bagud |
+| `origin/main` | `b068a50` | 30 commits foran produktionsbranchen |
+| `origin/claude/makeit-online-platform-XF2UE` | `3537533` | Vercel-produktionsbranch — 11 foran main, 30 bagud |
 | `claude/module-subscription-model` (kun lokal) | `c4da56b` | 17 foran main, 1 bagud |
-| lokal `XF2UE` (arbejdstræet) | `9320aeb` | **5 commits bagud** for origin |
-| lokal `main` | `c3db984` | **bagud** for origin/main |
 
-**Konsekvens — dette er den vigtigste tekniske gæld i projektet lige nu:**
-produktionsbranchen mangler funktionalitet der ligger på `main`:
-domænefarvesystemet (PR #22), science-sektionen (PR #27), øvelsesbibliotek-udvidelsen
-(PR #26), samt hele PWA/bro/native-shell-arbejdet (PR #23–25).
-Verificeret ved fil-tilstedeværelse: `src/lib/science/run.ts`, `src/lib/platform.ts`,
-`ios/App/App/Info.plist`, `docs/DOMAIN_COLOR_SYSTEM.md` findes på `main`, **ikke** på XF2UE.
+Produktionen manglede domænefarver (PR #22), science (PR #27),
+øvelsesudvidelsen (PR #26) og hele PWA/bro/native-shell-arbejdet (PR #23–25).
+XF2UE havde til gengæld landing-waitlist, Scanfit-research og
+landing-konverteringsarbejdet, som main manglede.
 
-Omvendt har XF2UE 11 commits der ikke er på main: landing-waitlist
-(`0056_waitlist.sql`, `src/app/waitlist-actions.ts`), Scanfit-research og
-landing-konverteringsarbejde.
+**Konflikter og hvordan de blev løst** (4 filer, alle på landingssiden — begge
+sider havde ændret den samme flade):
 
-**Migrationsnummer-kollision i vente:** `0055_module_entitlements` findes på både XF2UE
-og modul-branchen; `0056_waitlist` findes kun på XF2UE; `main` stopper ved `0054`.
-Enhver konsolidering skal gennemgå migrationsnumrene manuelt — det er sket før
-(science `0050` → `0054`, waitlist `0050` → `0056`).
+| Fil | Konflikt | Løsning |
+|---|---|---|
+| `PillarsSection.tsx` | main: 5 søjler med domænefarver · XF2UE: 3 søjler (UX-audit B1b) + `HrvTrendVisual` | XF2UE's 3-søjle-struktur (nyere produktbeslutning) med main's domænebehandling lagt tilbage ovenpå: `t.rich` + `domainTags`, `data-domain="mind"`, `eyebrow-domain` |
+| `Hero.tsx` | main: `t.rich(subline2, domainTags)` · XF2UE: ny typografi + waitlist-link + trust-linje | XF2UE's struktur, `t.rich` genindsat begge steder |
+| `messages/{da,en}/Marketing.json` | main's copy havde `<heart>/<mind>/<body>`-tags; XF2UE's nyere copy havde ikke | XF2UE's copy, domænetags genanvendt på de samme ord (HRV/søvn/RPE/mind-check) |
+
+**Fælde der blev fanget:** `git checkout --theirs <fil>` erstatter *hele* filen,
+ikke kun konfliktblokkene. Det tabte 87 nøgler fra main i `Marketing.json` —
+hvoraf 22 (`domainIndex.*`, "Farvekoden"-sektionen) er **live** og blev
+genindsat på main's plads mellem `tiers` og `app`. De øvrige 65 var døde
+legacy-nøgler (`origin.*` fra den slettede `OriginSection`, de gamle
+`pillars.coaching/community/reps/restitution/openBrain/crewPyramid`) —
+verificeret uden referencer i `src/`.
+
+**Verificeret efter merge:** `npm test` 597 passerende + 3 skipped (48 filer,
+op fra 583/46 fordi science-testene kom med) · `npm run build` exit 0, alle ruter
+inkl. `/science` · `npx eslint` rent på de rørte filer · migrationer `0001`–`0056`
+uden nummerdubletter · `vercel.json` merget til 16 crons + AASA-headeren.
+
+**Udestår (kræver Toms beslutning):**
+1. Push `chore/branch-consolidation` og merge den til `main`.
+2. Sæt Vercels production-branch til `main` i dashboardet — så forsvinder
+   den manuelle `vercel promote`-kvirk permanent.
+3. Rebase `claude/module-subscription-model` oven på den nye `main`
+   (`0055` er identisk på begge sider; branchen mangler kun `0056`).
+4. Verificér om `0055`/`0056` er kørt mod live DB før modul-arbejdet genoptages.
+
+> **Bemærk:** `0055_module_entitlements.sql` ligger i main-linjen uden den kode
+> der bruger den (`lib/modules.ts` m.v. lever kun på modul-branchen). Det er arvet
+> fra XF2UE's `chore(db): sync`-commits og er harmløst — migrationen udvider en
+> CHECK-constraint og tilføjer en ubrugt tabel. Fjern den ikke; modul-branchens
+> nummerering afhænger af den.
 
 ### 7.2 Migrationsdisciplin
 
@@ -362,11 +390,11 @@ ingen bearer (401), forkert bearer (401), korrekt bearer (happy path).
 
 | # | Item | Type | Note |
 |---|---|---|---|
-| 1 | Tre-vejs branch-divergens (§7.1) | **Blokerende** | Produktion kører bagud for `main` |
-| 2 | Vercel production-branch ≠ `main` | **Blokerende** | Enhver "deploy" kræver manuel promote |
+| 1 | ~~Tre-vejs branch-divergens~~ | **Løst lokalt** | Konsolideret på `chore/branch-consolidation`; mangler push + merge (§7.1) |
+| 2 | Vercel production-branch ≠ `main` | **Blokerende** | Enhver "deploy" kræver manuel promote. Skift indstillingen når konsolideringen er merget |
 | 3 | Priser er placeholders | Forretning | Blokerer alle betalinger; venter på Munk |
 | 4 | Migrationer `0055`/`0056` ikke kørt mod live DB | Drift | Verificér før modul-arbejde |
-| 5 | `MoveKit/` (468 MB, 206 klip) er **ikke** i `.gitignore` | **Risiko** | 468 MB kan committes ved et uheld |
+| 5 | ~~`MoveKit/` ikke i `.gitignore`~~ | **Løst** | `main` havde allerede `/MoveKit/`; hullet fandtes kun på produktionsbranchen og lukkes af konsolideringen |
 | 6 | `mindDb()` untyped wrapper | Gæld | Typer er regenereret; wrapperen kan fjernes |
 | 7 | Adaptive engine ↔ mental-wiring ikke aktiveret | Produkt | Pure helpers + 23 tests findes i `src/lib/mind/snapshot-contribution.ts`; `buildEngineInput` kalder dem ikke. Afventer ~2 ugers live mind-check-data |
 | 8 | Voice-retning for mentale sessioner | Produkt | `audio_url`-kolonne + `AudioPlayer` klar; ingen lydfiler. Munk-optagelser vs. ElevenLabs |
