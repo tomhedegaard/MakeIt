@@ -293,18 +293,21 @@ Produktionsdomæne **`makeit.tomhedegaard.dk`** (+ alias `make-it-alpha.vercel.a
 Rå `*.vercel.app`-URL'er ligger bag Deployment Protection (401).
 `nowmakeit.eu` er **ikke** platformen — det er Shopify-shoppen.
 
-**Kvirken:** projektets production-branch i Vercel er **ikke `main`** — den er
-`claude/makeit-online-platform-XF2UE`. Merge til `main` giver derfor kun et
-*preview*-deploy. Produktion kræver manuel promote:
+**Deploy-flowet (siden 2026-08-29):** production-branch er `main`, og GitHubs
+default branch er `main`. Merge til `main` udløser automatisk et production-deploy.
+Der er ikke længere behov for manuel `vercel promote`.
 
-```bash
-vercel promote <preview-url> --yes
-```
+> **Historisk kvirk — nu væk.** Indtil 2026-08-29 var production-branch
+> `claude/makeit-online-platform-XF2UE`, og GitHubs default branch pegede samme
+> sted. Merge til `main` gav derfor kun et *preview*-deploy, og produktion krævede
+> `vercel promote <preview-url> --yes`. Det var mekanikken bag den branch-divergens
+> §7.1 beskriver: nye PR'er fik automatisk den gamle branch som base. Støder du på
+> ældre noter eller commit-beskeder der beskriver promote-flowet, er de forældede.
 
-### 7.1 Branch-tilstand pr. 2026-08-29
+### 7.1 Branch-konsolideringen (afsluttet 2026-08-29)
 
-Divergensen er konsolideret på branchen **`chore/branch-consolidation`**
-(`origin/main` + produktionsbranchen XF2UE merget sammen, commit `10c8166`).
+Divergensen er lukket. `main` indeholder nu både sider, produktionen kører fra
+`main`, og de tre indstillinger der holdt sporene adskilt er rettet.
 
 Udgangspunktet var en tre-vejs-divergens:
 
@@ -312,46 +315,55 @@ Udgangspunktet var en tre-vejs-divergens:
 |---|---|---|
 | `origin/main` | `b068a50` | 30 commits foran produktionsbranchen |
 | `origin/claude/makeit-online-platform-XF2UE` | `3537533` | Vercel-produktionsbranch — 11 foran main, 30 bagud |
-| `claude/module-subscription-model` (kun lokal) | `c4da56b` | 17 foran main, 1 bagud |
+| `claude/module-subscription-model` (kun lokal) | `c4da56b` | 17 foran main |
 
-Produktionen manglede domænefarver (PR #22), science (PR #27),
-øvelsesudvidelsen (PR #26) og hele PWA/bro/native-shell-arbejdet (PR #23–25).
-XF2UE havde til gengæld landing-waitlist, Scanfit-research og
-landing-konverteringsarbejdet, som main manglede.
+Produktionen manglede domænefarver (PR #22), science (PR #27), øvelsesudvidelsen
+(PR #26) og hele PWA/bro/native-shell-arbejdet (PR #23–25). `main` manglede
+omvendt landing-waitlist, Scanfit-research og landing-konverteringsarbejdet.
 
-**Konflikter og hvordan de blev løst** (4 filer, alle på landingssiden — begge
-sider havde ændret den samme flade):
+**Konflikter og hvordan de blev løst** (PR #29 — 4 filer, alle på landingssiden,
+fordi begge sider havde bygget om på den samme flade):
 
 | Fil | Konflikt | Løsning |
 |---|---|---|
 | `PillarsSection.tsx` | main: 5 søjler med domænefarver · XF2UE: 3 søjler (UX-audit B1b) + `HrvTrendVisual` | XF2UE's 3-søjle-struktur (nyere produktbeslutning) med main's domænebehandling lagt tilbage ovenpå: `t.rich` + `domainTags`, `data-domain="mind"`, `eyebrow-domain` |
 | `Hero.tsx` | main: `t.rich(subline2, domainTags)` · XF2UE: ny typografi + waitlist-link + trust-linje | XF2UE's struktur, `t.rich` genindsat begge steder |
-| `messages/{da,en}/Marketing.json` | main's copy havde `<heart>/<mind>/<body>`-tags; XF2UE's nyere copy havde ikke | XF2UE's copy, domænetags genanvendt på de samme ord (HRV/søvn/RPE/mind-check) |
+| `messages/{da,en}/Marketing.json` | main's copy havde `<heart>/<mind>/<body>`-tags; XF2UE's nyere copy havde ikke | XF2UE's copy, domænetags genanvendt på de samme ord (HRV / søvn / RPE / mind-check) |
 
-**Fælde der blev fanget:** `git checkout --theirs <fil>` erstatter *hele* filen,
+**Fælde værd at huske:** `git checkout --theirs <fil>` erstatter *hele* filen,
 ikke kun konfliktblokkene. Det tabte 87 nøgler fra main i `Marketing.json` —
-hvoraf 22 (`domainIndex.*`, "Farvekoden"-sektionen) er **live** og blev
-genindsat på main's plads mellem `tiers` og `app`. De øvrige 65 var døde
-legacy-nøgler (`origin.*` fra den slettede `OriginSection`, de gamle
+hvoraf 22 (`domainIndex.*`, "Farvekoden"-sektionen) er live og blev genindsat på
+main's plads mellem `tiers` og `app`. De øvrige 65 var døde legacy-nøgler
+(`origin.*` fra den slettede `OriginSection`, de gamle
 `pillars.coaching/community/reps/restitution/openBrain/crewPyramid`) —
 verificeret uden referencer i `src/`.
 
-**Verificeret efter merge:** `npm test` 597 passerende + 3 skipped (48 filer,
-op fra 583/46 fordi science-testene kom med) · `npm run build` exit 0, alle ruter
-inkl. `/science` · `npx eslint` rent på de rørte filer · migrationer `0001`–`0056`
-uden nummerdubletter · `vercel.json` merget til 16 crons + AASA-headeren.
+**Tre indstillinger rettet — det var dem der genskabte divergensen:**
 
-**Udestår (kræver Toms beslutning):**
-1. Push `chore/branch-consolidation` og merge den til `main`.
-2. Sæt Vercels production-branch til `main` i dashboardet — så forsvinder
-   den manuelle `vercel promote`-kvirk permanent.
-3. Rebase `claude/module-subscription-model` oven på den nye `main`
-   (`0055` er identisk på begge sider; branchen mangler kun `0056`).
-4. Verificér om `0055`/`0056` er kørt mod live DB før modul-arbejdet genoptages.
+1. Vercel production-branch: `claude/makeit-online-platform-XF2UE` → **`main`**
+   (Settings → Environments → Production → Branch Tracking)
+2. GitHub default branch: samme gamle branch → **`main`**. Dette var
+   grundårsagen: hver ny PR fik automatisk den gamle branch som base.
+3. `claude/module-subscription-model` rebaset på ny `main` (16 commits, nul
+   konflikter — `0055` blev sprunget over som allerede anvendt, fordi filen lå
+   identisk på begge sider).
+
+**Verificeret i produktion** (deploy `b0f86fa0` fra `main`, readyState READY):
+landingssiden HTTP 200 med 6 domænefarvede spans, 3 søjler, Farvekoden og
+waitlist-sektionen · `/science/feed.json` + `/science/feed.xml` HTTP 200 ·
+`/.well-known/apple-app-site-association` serveret som `application/json`
+(AASA-headeren fra `vercel.json`) · `/manifest.webmanifest` HTTP 200.
+Lokalt: 597 tests på `main`, 614 på modul-branchen, build exit 0 begge steder,
+migrationer `0001`–`0056` uden nummerdubletter.
+
+**Udestår:** modul-branchen er rebaset lokalt men aldrig pushet. Og det er
+uafklaret om `0054`–`0056` er kørt mod live DB — science-feedet svarer korrekt,
+men med `items: []`, hvilket både kan betyde "tabellen mangler" og "cron har ikke
+kørt endnu". Verificér før modul-arbejdet genoptages.
 
 > **Bemærk:** `0055_module_entitlements.sql` ligger i main-linjen uden den kode
-> der bruger den (`lib/modules.ts` m.v. lever kun på modul-branchen). Det er arvet
-> fra XF2UE's `chore(db): sync`-commits og er harmløst — migrationen udvider en
+> der bruger den (`lib/modules.ts` m.v. lever kun på modul-branchen). Arvet fra
+> XF2UE's `chore(db): sync`-commits og harmløst — migrationen udvider en
 > CHECK-constraint og tilføjer en ubrugt tabel. Fjern den ikke; modul-branchens
 > nummerering afhænger af den.
 
@@ -390,10 +402,10 @@ ingen bearer (401), forkert bearer (401), korrekt bearer (happy path).
 
 | # | Item | Type | Note |
 |---|---|---|---|
-| 1 | ~~Tre-vejs branch-divergens~~ | **Løst lokalt** | Konsolideret på `chore/branch-consolidation`; mangler push + merge (§7.1) |
-| 2 | Vercel production-branch ≠ `main` | **Blokerende** | Enhver "deploy" kræver manuel promote. Skift indstillingen når konsolideringen er merget |
+| 1 | ~~Tre-vejs branch-divergens~~ | **Løst** | Merget via PR #29; produktionen kører fra `main` (§7.1) |
+| 2 | ~~Vercel production-branch ≠ `main`~~ | **Løst** | Både Vercel production-branch og GitHub default branch er nu `main`; ingen manuel promote |
 | 3 | Priser er placeholders | Forretning | Blokerer alle betalinger; venter på Munk |
-| 4 | Migrationer `0055`/`0056` ikke kørt mod live DB | Drift | Verificér før modul-arbejde |
+| 4 | Uafklaret om `0054`–`0056` er kørt mod live DB | Drift | Verificér før modul-arbejde og før science-feedet forventes at fylde |
 | 5 | ~~`MoveKit/` ikke i `.gitignore`~~ | **Løst** | `main` havde allerede `/MoveKit/`; hullet fandtes kun på produktionsbranchen og lukkes af konsolideringen |
 | 6 | `mindDb()` untyped wrapper | Gæld | Typer er regenereret; wrapperen kan fjernes |
 | 7 | Adaptive engine ↔ mental-wiring ikke aktiveret | Produkt | Pure helpers + 23 tests findes i `src/lib/mind/snapshot-contribution.ts`; `buildEngineInput` kalder dem ikke. Afventer ~2 ugers live mind-check-data |
@@ -401,7 +413,7 @@ ingen bearer (401), forkert bearer (401), korrekt bearer (happy path).
 | 9 | `front-squat` mangler demovideo | Indhold | Eneste hul i 20 kerneøvelser; MoveKit er et lukket katalog |
 | 10 | 188 nye øvelser er `is_published=false` | Indhold | Venter på Munk-review |
 | 11 | Android-shell aldrig bygget | Native | Ingen Android Studio/JDK på maskinen |
-| 12 | Modul-model Fase B–D | Produkt | Se §5 |
+| 12 | Modul-model Fase B–D | Produkt | Se §5. Fase A er rebaset på ny `main`, men branchen er aldrig pushet |
 | 13 | `SUPABASE_DB_PASSWORD` har været eksporteret i shell | Sikkerhed | Overvej rotation |
 
 ---
