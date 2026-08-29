@@ -5,6 +5,7 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import Container from "@/components/Container";
+import RepsSimulator from "@/components/marketing/RepsSimulator";
 
 /**
  * Tier journey — scroll-driven visualization of the Reps tier
@@ -115,7 +116,7 @@ export default function TierJourney() {
   ];
 
   return (
-    <section id="tiers" className="relative py-32 md:py-48">
+    <section id="tiers" className="relative py-20 md:py-32">
       <Container>
         <div className="max-w-2xl mb-20">
           <div className="eyebrow mb-3">{t("eyebrow")}</div>
@@ -129,20 +130,29 @@ export default function TierJourney() {
           </p>
         </div>
 
-        <div className="relative">
-          {/* Vertical connector line — sits behind the tier cards.
-              We don't try to make it scroll-fill in v1; visual
-              continuity is enough without the extra scroll math. */}
-          <div
-            aria-hidden
-            className="absolute left-[18px] md:left-[28px] top-2 bottom-2 w-px bg-line"
-          />
+        {/* UX-audit B3/B4: højre kolonne stod tom på desktop, og siden
+            havde kun ét interaktivt element. Simulatoren følger med
+            ned langs stigen (sticky) mens man læser tierne. */}
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16 items-start">
+          <div className="relative lg:col-span-7">
+            {/* Vertical connector line — sits behind the tier cards.
+                We don't try to make it scroll-fill in v1; visual
+                continuity is enough without the extra scroll math. */}
+            <div
+              aria-hidden
+              className="absolute left-[18px] md:left-[28px] top-2 bottom-2 w-px bg-line"
+            />
 
-          <ul className="space-y-12 md:space-y-20">
-            {TIERS.map((tier, i) => (
-              <TierRow key={tier.num} tier={tier} isLast={i === TIERS.length - 1} />
-            ))}
-          </ul>
+            <ul className="space-y-12 md:space-y-20">
+              {TIERS.map((tier, i) => (
+                <TierRow key={tier.num} tier={tier} isLast={i === TIERS.length - 1} />
+              ))}
+            </ul>
+          </div>
+
+          <div className="lg:col-span-5 lg:sticky lg:top-24">
+            <RepsSimulator />
+          </div>
         </div>
 
         {/* Promotion-path footer + ctas */}

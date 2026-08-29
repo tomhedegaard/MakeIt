@@ -6,6 +6,10 @@ import { domainTags } from "@/components/marketing/domainTags";
 export default async function ValueSection() {
   const t = await getTranslations("Marketing.value");
 
+  // pricing.ts bruger "[XX]"-placeholders indtil prisen er låst —
+  // de må aldrig nå en besøgende (UX-audit A1).
+  const priceIsSet = !pricing.member.amount.includes("[");
+
   const PILLARS = [
     {
       n: "01",
@@ -38,7 +42,7 @@ export default async function ValueSection() {
   ];
 
   return (
-    <section id="how" className="relative border-t hairline py-24 md:py-40">
+    <section id="how" className="relative border-t hairline py-20 md:py-28">
       <Container>
         {/* Hook + price */}
         <div className="grid gap-12 md:grid-cols-12 items-end mb-16 md:mb-24">
@@ -55,19 +59,53 @@ export default async function ValueSection() {
             style={{ transitionDelay: "120ms" }}
           >
             <div className="eyebrow mb-3">{t("priceLabel")}</div>
-            <div className="flex items-baseline gap-2">
-              <span className="numeric text-5xl md:text-6xl">{pricing.member.amount}</span>
-              <span className="numeric text-fg-dim text-lg">
-                {pricing.member.currency}/{pricing.member.period}
-              </span>
-            </div>
-            <div className="mt-4 pt-4 border-t hairline space-y-1.5">
-              <div className="flex items-baseline justify-between gap-3 text-sm">
-                <span className="text-fg-dim">{t("marketLabel")}</span>
-                <span className="numeric text-fg-faint line-through">
-                  ~{pricing.market.amount} {pricing.market.currency}/{pricing.market.period}
+            {priceIsSet ? (
+              <div className="flex items-baseline gap-2">
+                <span className="numeric text-5xl md:text-6xl">{pricing.member.amount}</span>
+                <span className="numeric text-fg-dim text-lg">
+                  {pricing.member.currency}/{pricing.member.period}
                 </span>
               </div>
+            ) : (
+              // UX-audit A1: vis aldrig "[XX] kr/md"-placeholderen for
+              // besøgende — beta-framing indtil den reelle pris er låst.
+              <div className="flex items-baseline gap-3">
+                <span className="font-display text-5xl md:text-6xl leading-none">
+                  {t("betaValue")}
+                </span>
+                <span className="text-fg-dim text-sm font-mono uppercase tracking-[0.14em]">
+                  {t("betaSuffix")}
+                </span>
+              </div>
+            )}
+
+            {/* "Named bundle"-greb fra Scanfit-teardown: hele
+                systemet samlet som én liste, ét medlemskab. */}
+            <div className="mt-4 pt-4 border-t hairline">
+              <div className="text-xs font-mono text-fg-faint uppercase tracking-[0.14em] mb-3">
+                {t("includesHeading")}
+              </div>
+              <ul className="space-y-1.5 text-sm text-fg-dim">
+                {(["1", "2", "3", "4", "5"] as const).map((n) => (
+                  <li key={n} className="flex gap-2">
+                    <span aria-hidden className="text-fg-faint">·</span>
+                    {t(`includes.${n}`)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-4 pt-4 border-t hairline space-y-1.5">
+              {priceIsSet ? (
+                <div className="flex items-baseline justify-between gap-3 text-sm">
+                  <span className="text-fg-dim">{t("marketLabel")}</span>
+                  <span className="numeric text-fg-faint line-through">
+                    ~{pricing.market.amount} {pricing.market.currency}/{pricing.market.period}
+                  </span>
+                </div>
+              ) : (
+                <p className="text-sm text-fg-dim">{t("marketFraction")}</p>
+              )}
               <p className="text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
                 {t("priceLockNote")}
               </p>

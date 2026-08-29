@@ -16,44 +16,43 @@ type Stat =
   | { id: string; k: string; literal: string; s: string };
 
 /**
- * Pinned hero — the section is 260vh tall, its inner content is
- * position: sticky so it stays glued to the viewport for 1.6vh of
- * scroll while six layers reveal in sequence driven by scroll
- * progress 0→1.
+ * Pinned hero — the section is 170vh tall, its inner content is
+ * position: sticky so it stays glued to the viewport while the
+ * layers reveal in sequence driven by scroll progress 0→1.
  *
- * Performance notes (added after a 60Hz-display jank report):
+ * Everything inside the pin must fit one viewport: the sticky box is
+ * exactly 100vh with overflow-hidden, so anything taller than the
+ * screen is simply clipped away and never seen. That is why the
+ * stats live in `StatsBand` below the pin rather than inside it, and
+ * why the headline clamp caps well under the old 11rem.
  *
- *   - clip-path inset() instead of WebKit mask-image gradient.
- *     mask-image with a linear-gradient regenerates the gradient
- *     string + reparses + repaints per scroll frame. clip-path is
- *     a single percentage interpolation, GPU-accelerated, and
- *     doesn't trigger paint
+ * Performance notes (from a 60Hz-display jank report):
+ *
+ *   - reveals are opacity/transform only — both composited, neither
+ *     triggers layout or paint per scroll frame
  *   - will-change: transform, opacity + translateZ(0) on the
  *     sticky container to promote it to its own GPU compositing
  *     layer, so the dissolve + nested transforms don't repaint
  *     the document below
  *   - useReducedMotion gates the pinning entirely: when the user
- *     has prefers-reduced-motion set, we skip the 260vh outer
+ *     has prefers-reduced-motion set, we skip the tall outer
  *     container + scroll-driven progress entirely and render the
  *     hero at its end state (everything visible, no exit fade).
  *     This also avoids the cumulative scroll-listener cost on
  *     low-power devices
- *
- * The "burn through" feel of the subline reveal loses its soft
- * edge with clip-path (which only does hard clips); the trade was
- * worth it for predictable performance. If the brand wants the
- * soft edge back, the path would be a thin gradient overlay that
- * moves with the clip edge — costs more than it adds.
  */
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const t = useTranslations("Marketing.hero");
 
+  // Kun app-stats (UX-audit C1: straps-salgstallet hørte til shoppen).
+  // Outcome-tal frem for skala-tal — 6 SEK og 05:30 matcher eksisterende
+  // app-copy ("Claude vurderer på 6 sek." / "hver morgen klokken 05:30").
   const STATS: Stat[] = [
-    { id: "straps", k: t("stats.straps"), to: 50142, s: t("stats.strapsSuffix") },
     { id: "members", k: t("stats.members"), to: 412, s: t("stats.membersSuffix") },
-    { id: "programs", k: t("stats.programs"), to: 7, pad: 2, s: t("stats.programsSuffix") },
+    { id: "formCheck", k: t("stats.formCheck"), literal: t("stats.formCheckValue"), s: t("stats.formCheckSuffix") },
+    { id: "engine", k: t("stats.engine"), literal: t("stats.engineValue"), s: t("stats.engineSuffix") },
     { id: "madeIn", k: t("stats.madeIn"), literal: "DK", s: t("stats.madeInSuffix") },
   ];
 
@@ -66,30 +65,6 @@ export default function Hero() {
   const glowY = useTransform(scrollYProgress, [0, 1], [0, -180]);
   const glowOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  // Subline — hard clip from right edge in. Interpolating a single
-  // string with one ${number}% token; framer-motion's useTransform
-  // round-trips the value through requestAnimationFrame so the
-  // string update is batched with the next paint.
-  const sublineClip = useTransform(
-    scrollYProgress,
-    [0.05, 0.32],
-    ["inset(0 100% 0 0)", "inset(0 0% 0 0)"]
-  );
-  const sublineOpacity = useTransform(scrollYProgress, [0.05, 0.12], [0, 1]);
-
-  // CTAs.
-  const ctaY = useTransform(scrollYProgress, [0.28, 0.48], [40, 0]);
-  const ctaOpacity = useTransform(scrollYProgress, [0.28, 0.48], [0, 1]);
-  const ctaScale = useTransform(scrollYProgress, [0.28, 0.48], [0.94, 1]);
-
-  // Stats row — staggered cascade.
-  const stat0 = useTransform(scrollYProgress, [0.50, 0.60], [0, 1]);
-  const stat1 = useTransform(scrollYProgress, [0.56, 0.66], [0, 1]);
-  const stat2 = useTransform(scrollYProgress, [0.62, 0.72], [0, 1]);
-  const stat3 = useTransform(scrollYProgress, [0.68, 0.78], [0, 1]);
-  const statOpacities = [stat0, stat1, stat2, stat3];
-  const statY = useTransform(scrollYProgress, [0.50, 0.85], [24, 0]);
-
   // Exit dissolve.
   const exitOpacity = useTransform(scrollYProgress, [0.92, 1], [1, 0.15]);
 
@@ -97,21 +72,24 @@ export default function Hero() {
   // anything. Everything renders at its end state.
   if (reduced) {
     return (
-      <section
-        ref={sectionRef}
-        className="relative overflow-hidden pt-28 md:pt-40 pb-24 md:pb-40"
-      >
-        <HeroContent
-          // Static end-state — no motion values; just plain styles.
-          staticMode
-          stats={STATS}
-        />
-      </section>
+      <>
+        <section
+          ref={sectionRef}
+          className="relative overflow-hidden pt-28 md:pt-40 pb-16 md:pb-24"
+        >
+          {/* Static end-state — no motion values; just plain styles. */}
+          <HeroContent />
+        </section>
+        <StatsBand stats={STATS} />
+      </>
     );
   }
 
   return (
-    <section ref={sectionRef} className="relative h-[260vh]">
+    <>
+      {/* UX-audit A7: pin'et var 260vh, hvilket holdt headline alene på
+          skærmen i ~2 skærmes scroll før subline/CTA'er dukkede op. */}
+      <section ref={sectionRef} className="relative h-[170vh]">
       <div
         className="sticky top-0 h-screen overflow-hidden flex flex-col"
         style={{
@@ -155,7 +133,7 @@ export default function Hero() {
                 hidden: {},
                 show: { transition: { staggerChildren: 0.09, delayChildren: 0.18 } },
               }}
-              className="font-display text-[clamp(3.4rem,12vw,11rem)] leading-[0.9]"
+              className="font-display text-[clamp(3rem,10.5vw,9rem)] leading-[0.9]"
             >
               {["MADE", "FOR", "THOSE", "WHO", "LIFT."].map((word, i) => (
                 <motion.span
@@ -177,56 +155,95 @@ export default function Hero() {
             </motion.h1>
 
             <div className="mt-12 grid gap-10 md:grid-cols-12 items-end">
-              <motion.p
-                style={{
-                  opacity: sublineOpacity,
-                  clipPath: sublineClip,
-                }}
-                className="md:col-span-6 text-fg-dim text-lg md:text-xl leading-relaxed max-w-xl"
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease, delay: 0.85 }}
+                className="md:col-span-6 max-w-xl"
               >
-                {t("subline")}
-                <br />
-                {t.rich("subline2", domainTags)}
-              </motion.p>
+                <p className="text-fg text-xl md:text-2xl leading-snug">
+                  {t("subline")}
+                </p>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.8, ease, delay: 1.05 }}
+                  className="mt-3 text-fg-dim text-lg md:text-xl leading-relaxed"
+                >
+                  {t.rich("subline2", domainTags)}
+                </motion.p>
+              </motion.div>
 
               <motion.div
-                style={{ opacity: ctaOpacity, y: ctaY, scale: ctaScale }}
-                className="md:col-span-6 flex flex-wrap items-center gap-3 md:justify-end"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease, delay: 1.2 }}
+                className="md:col-span-6"
               >
-                <Link href="/login" className="btn btn-primary">
-                  {t("ctaPrimary")}
-                  <span aria-hidden>→</span>
-                </Link>
-                <a href="#crew" className="btn">{t("ctaSecondary")}</a>
-                <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
+                <div className="flex flex-col items-start gap-3 md:items-end">
+                  <div className="flex flex-wrap items-center gap-3 md:justify-end">
+                    <Link href="/login" className="btn btn-primary">
+                      {t("ctaPrimary")}
+                      <span aria-hidden>→</span>
+                    </Link>
+                    <a href="#crew" className="btn">{t("ctaSecondary")}</a>
+                    <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
+                  </div>
+                  <a
+                    href="#waitlist"
+                    className="text-sm text-fg-dim underline underline-offset-4 hover:text-fg"
+                  >
+                    {t("waitlistLink")}
+                  </a>
+                  <p className="text-[11px] text-fg-faint font-mono uppercase tracking-[0.16em]">
+                    {t("trustLine")}
+                  </p>
+                </div>
               </motion.div>
             </div>
 
-            <motion.div
-              style={{ y: statY }}
-              className="mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline"
-            >
-              {STATS.map((s, i) => (
-                <motion.div
-                  key={s.id}
-                  style={{ opacity: statOpacities[i] }}
-                  className="bg-bg p-6 md:p-8"
-                >
-                  <div className="eyebrow mb-3">{s.k}</div>
-                  <div className="numeric text-3xl md:text-5xl font-medium text-fg">
-                    {"literal" in s ? (
-                      s.literal
-                    ) : (
-                      <CountUp to={s.to} pad={s.pad} duration={1.8} />
-                    )}
-                  </div>
-                  <div className="mt-2 text-xs text-fg-faint font-mono">{s.s}</div>
-                </motion.div>
-              ))}
-            </motion.div>
           </Container>
         </motion.div>
       </div>
+      </section>
+
+      {/* Stats-båndet ligger UDEN for pin'et (UX-audit A7, opfølgende
+          fund): inde i det 100vh-høje sticky-lag lå rækken under
+          fold'en på en 900px-høj skærm og nåede først ind i viewporten
+          efter exit-dissolven havde tonet hero ned til 15% opacity —
+          altså reelt usynlig på en standard laptop. Som selvstændigt
+          bånd ses den altid, i fuld styrke. */}
+      <StatsBand stats={STATS} />
+    </>
+  );
+}
+
+/** Stats-bånd — fælles for motion- og reduced-motion-varianten. */
+function StatsBand({ stats }: { stats: Stat[] }) {
+  return (
+    <section className="relative">
+      <Container>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline">
+          {stats.map((s, i) => (
+            <div
+              key={s.id}
+              className="bg-bg p-6 md:p-8"
+              data-reveal
+              style={{ transitionDelay: `${i * 90}ms` }}
+            >
+              <div className="eyebrow mb-3">{s.k}</div>
+              <div className="numeric text-3xl md:text-5xl font-medium text-fg">
+                {"literal" in s ? (
+                  s.literal
+                ) : (
+                  <CountUp to={s.to} pad={s.pad} duration={1.8} />
+                )}
+              </div>
+              <div className="mt-2 text-xs text-fg-faint font-mono">{s.s}</div>
+            </div>
+          ))}
+        </div>
+      </Container>
     </section>
   );
 }
@@ -236,13 +253,7 @@ export default function Hero() {
  * version's final visual state without any animation wiring.
  * ---------------------------------------------------------------- */
 
-function HeroContent({
-  staticMode: _staticMode,
-  stats,
-}: {
-  staticMode: true;
-  stats: Stat[];
-}) {
+function HeroContent() {
   const t = useTranslations("Marketing.hero");
   return (
     <>
@@ -259,39 +270,38 @@ function HeroContent({
           </span>
         </div>
 
-        <h1 className="font-display text-[clamp(3.4rem,12vw,11rem)] leading-[0.9]">
+        <h1 className="font-display text-[clamp(3rem,10.5vw,9rem)] leading-[0.9]">
           MADE FOR THOSE WHO LIFT.
         </h1>
 
         <div className="mt-12 grid gap-10 md:grid-cols-12 items-end">
-          <p className="md:col-span-6 text-fg-dim text-lg md:text-xl leading-relaxed max-w-xl">
-            {t("subline")}
-            <br />
-            {t.rich("subline2", domainTags)}
-          </p>
-          <div className="md:col-span-6 flex flex-wrap items-center gap-3 md:justify-end">
-            <Link href="/login" className="btn btn-primary">
-              {t("ctaPrimary")}
-              <span aria-hidden>→</span>
-            </Link>
-            <a href="#crew" className="btn">{t("ctaSecondary")}</a>
-            <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
+          <div className="md:col-span-6 max-w-xl">
+            <p className="text-fg text-xl md:text-2xl leading-snug">{t("subline")}</p>
+            <p className="mt-3 text-fg-dim text-lg md:text-xl leading-relaxed">
+              {t.rich("subline2", domainTags)}
+            </p>
+          </div>
+          <div className="md:col-span-6 flex flex-col items-start gap-3 md:items-end">
+            <div className="flex flex-wrap items-center gap-3 md:justify-end">
+              <Link href="/login" className="btn btn-primary">
+                {t("ctaPrimary")}
+                <span aria-hidden>→</span>
+              </Link>
+              <a href="#crew" className="btn">{t("ctaSecondary")}</a>
+              <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
+            </div>
+            <a
+              href="#waitlist"
+              className="text-sm text-fg-dim underline underline-offset-4 hover:text-fg"
+            >
+              {t("waitlistLink")}
+            </a>
+            <p className="text-[11px] text-fg-faint font-mono uppercase tracking-[0.16em]">
+              {t("trustLine")}
+            </p>
           </div>
         </div>
 
-        <div className="mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline">
-          {stats.map((s) => (
-            <div key={s.id} className="bg-bg p-6 md:p-8">
-              <div className="eyebrow mb-3">{s.k}</div>
-              <div className="numeric text-3xl md:text-5xl font-medium text-fg">
-                {"literal" in s ? s.literal : (
-                  <CountUp to={s.to} pad={s.pad} duration={1.8} scramble={false} />
-                )}
-              </div>
-              <div className="mt-2 text-xs text-fg-faint font-mono">{s.s}</div>
-            </div>
-          ))}
-        </div>
       </Container>
     </>
   );
