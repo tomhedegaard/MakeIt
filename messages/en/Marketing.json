@@ -202,9 +202,9 @@
     }
   },
   "domainIndex": {
-    "eyebrow": "The color code",
-    "heading": "Four colors. Four worlds.",
-    "intro": "The base is black and white — we don't touch that. Color means one thing: where in your health you are. The same four colors repeat in the menu, on the cards and in the charts, so you always know what you're looking at.",
+    "eyebrow": "The colour code",
+    "heading": "Four colours. The whole person.",
+    "intro": "Most apps pick one thing: steps, calories or sleep. We take all four — body, food, heart and mind — because they pull on each other. Each gets a colour, and the colour follows you all the way in: in the menu, on the cards, in the graphs. The base stays black and white; colour means one thing only — where in your health you are.",
     "body": {
       "kicker": "Training",
       "title": "Body",
@@ -230,6 +230,34 @@
       "surfaces": "Check-in · Journal · Sessions"
     },
     "note": "Same numbers as the menu — 02, 03, 05, 06. The color follows you all the way in."
+  },
+  "giveForward": {
+    "eyebrow": "The crew pyramid",
+    "heading": {
+      "line1": "You move up.",
+      "line2": "And you lift the ones below you."
+    },
+    "intro": "It's the only platform that grows organically: everyone else stops at your own results. Here you hand what you learn on the way up down to the people standing where you stood — and eventually you coach them.",
+    "receive": {
+      "kicker": "You receive",
+      "title": "You get coached",
+      "body": "The engine adapts your sessions, Munk answers your form checks, and the crew above you shares what they've already learned.",
+      "tier": "Lifter · Athlete"
+    },
+    "handDown": {
+      "kicker": "You hand it down",
+      "title": "You learn to answer",
+      "body": "Coach School opens: lessons, sandbox cases against simulated members, and your first real feedback — always with Munk as senior.",
+      "tier": "Beast"
+    },
+    "coach": {
+      "kicker": "You coach",
+      "title": "You become senior's partner",
+      "body": "You answer form checks for live members and lead a pod of new Lifters. Reps rewards the quality of your feedback — not just your own lifts.",
+      "tier": "Legend"
+    },
+    "cta": "See the full ladder",
+    "note": "Your progress becomes theirs"
   },
   "app": {
     "eyebrow": "06 — The App",

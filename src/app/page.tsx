@@ -6,6 +6,7 @@ import AdaptivePlaygroundPublic from "@/components/marketing/AdaptivePlaygroundP
 import PillarsSection from "@/components/marketing/PillarsSection";
 import TierJourney from "@/components/marketing/TierJourney";
 import DomainIndexSection from "@/components/marketing/DomainIndexSection";
+import GiveForwardSection from "@/components/marketing/GiveForwardSection";
 import AppShowcase from "@/components/marketing/AppShowcase";
 import ValueSection from "@/components/marketing/ValueSection";
 import WaitlistSection from "@/components/marketing/WaitlistSection";
@@ -20,6 +21,16 @@ export default function Home() {
       <MarketingNav />
       <main className="relative z-10 flex-1">
         <Hero />
+        {/* De to sektioner der rammer først, rammer bredest: farvekoden
+            introducerer de fire sundhedsdomæner (krop · mad · hjerte ·
+            sind) med det samme, så den nysgerrige forstår 360-vinklen
+            før noget andet — og crew-pyramiden fortæller hvorfor
+            platformen vokser organisk. Begge betalte sig tidligere først
+            af langt nede: Farvekoden lå mellem TierJourney og
+            AppShowcase, og give-videre-historien fandtes kun som
+            unlocks på Beast/Legend i TierJourney. */}
+        <DomainIndexSection />
+        <GiveForwardSection />
         {/* UX-audit C3: udstyrs-brands ude af marquee'en — landingen
             sælger platformen, ikke shoppen. */}
         <Marquee
@@ -42,7 +53,6 @@ export default function Home() {
         <ValueSection />
         <PillarsSection />
         <TierJourney />
-        <DomainIndexSection />
         <AppShowcase />
         {/* UX-audit C5: OriginSection (StrapIt-fabrikshistorien) er
             taget af landingen — den hører til på webshoppen. */}

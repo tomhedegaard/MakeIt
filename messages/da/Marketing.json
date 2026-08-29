@@ -203,8 +203,8 @@
   },
   "domainIndex": {
     "eyebrow": "Farvekoden",
-    "heading": "Fire farver. Fire verdener.",
-    "intro": "Basen er sort/hvid — det rører vi ikke. Farve betyder ét: hvor i din sundhed du er. De samme fire farver går igen i menuen, på kortene og i graferne, så du altid ved hvad du kigger på.",
+    "heading": "Fire farver. Hele mennesket.",
+    "intro": "De fleste apps tager én ting: skridt, kalorier eller søvn. Vi tager alle fire — krop, mad, hjerte og sind — fordi de trækker i hinanden. Hver får sin farve, og farven følger dig hele vejen ind: i menuen, på kortene, i graferne. Basen er sort/hvid; farve betyder kun ét, nemlig hvor i din sundhed du er.",
     "body": {
       "kicker": "Træning",
       "title": "Krop",
@@ -230,6 +230,34 @@
       "surfaces": "Check-in · Journal · Sessioner"
     },
     "note": "Samme numre som i menuen — 02, 03, 05, 06. Farven følger dig hele vejen ind."
+  },
+  "giveForward": {
+    "eyebrow": "Crew-pyramiden",
+    "heading": {
+      "line1": "Du rykker op.",
+      "line2": "Og du løfter dem under dig."
+    },
+    "intro": "Det er den eneste platform der vokser organisk: alle andre stopper ved dine egne resultater. Her giver du det, du lærer på vej op, videre til dem der står hvor du selv stod — og til sidst coacher du dem.",
+    "receive": {
+      "kicker": "Du får",
+      "title": "Du bliver coachet",
+      "body": "Motoren tilpasser dine pas, Munk svarer på dine form-checks, og crewet over dig deler det de allerede har lært.",
+      "tier": "Lifter · Athlete"
+    },
+    "handDown": {
+      "kicker": "Du giver videre",
+      "title": "Du lærer at svare",
+      "body": "Coach School åbner: lektioner, sandbox-cases mod simulerede medlemmer, og din første rigtige feedback — altid med Munk som senior.",
+      "tier": "Beast"
+    },
+    "coach": {
+      "kicker": "Du coacher",
+      "title": "Du bliver seniors makker",
+      "body": "Du svarer på form-checks for live-medlemmer og leder en pod af nye Lifters. Reps belønner kvaliteten af din feedback — ikke kun dine egne løft.",
+      "tier": "Legend"
+    },
+    "cta": "Se hele stigen",
+    "note": "Din fremgang bliver andres"
   },
   "app": {
     "eyebrow": "06 — Appen",
