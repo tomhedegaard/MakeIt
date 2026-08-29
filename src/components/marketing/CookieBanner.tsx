@@ -38,39 +38,40 @@ export default function CookieBanner() {
 
   if (!hasChecked || choice !== null) return null;
 
+  // UX-audit A3: v1-kortet dækkede ~45% af mobilviewporten og lå oven
+  // på venteliste-formularens submit på desktop. Nu en lav, solid bar
+  // langs bunden — én tekstlinje + knapper, intet der skygger for CTA'er.
   return (
     <div
       role="dialog"
-      aria-labelledby="cookie-title"
-      className="fixed bottom-4 inset-x-4 md:inset-x-auto md:right-6 md:left-auto md:max-w-md z-50 surface-2 rounded-2xl p-5"
-      style={{ borderColor: "var(--line-bright)" }}
+      aria-label={t("title")}
+      className="fixed bottom-0 inset-x-0 z-50 border-t hairline-strong"
+      style={{ background: "var(--bg)" }}
     >
-      <div className="eyebrow mb-2">{t("eyebrow")}</div>
-      <h3 id="cookie-title" className="font-display text-lg leading-snug mb-2">
-        {t("title")}
-      </h3>
-      <p className="text-sm text-fg-dim leading-relaxed mb-4">
-        {t("bodyBefore")}
-        <Link href="/privacy" className="underline hover:text-fg">
-          {t("privacyLink")}
-        </Link>
-        {t("bodyAfter")}
-      </p>
-      <div className="flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          className="btn btn-sm btn-primary"
-          onClick={() => persist("accepted")}
-        >
-          {t("accept")}
-        </button>
-        <button
-          type="button"
-          className="btn btn-sm btn-ghost"
-          onClick={() => persist("essential")}
-        >
-          {t("essential")}
-        </button>
+      <div className="mx-auto max-w-7xl px-4 md:px-6 py-3 flex flex-wrap items-center gap-x-6 gap-y-2">
+        <p className="flex-1 min-w-[240px] text-xs md:text-sm text-fg-dim leading-snug">
+          {t("bodyBefore")}
+          <Link href="/privacy" className="underline hover:text-fg">
+            {t("privacyLink")}
+          </Link>
+          {t("bodyAfter")}
+        </p>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            className="btn btn-sm btn-primary"
+            onClick={() => persist("accepted")}
+          >
+            {t("accept")}
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-ghost"
+            onClick={() => persist("essential")}
+          >
+            {t("essential")}
+          </button>
+        </div>
       </div>
     </div>
   );

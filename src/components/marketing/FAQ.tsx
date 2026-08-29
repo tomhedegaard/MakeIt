@@ -1,11 +1,12 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import FaqList, { type FaqItem } from "@/components/marketing/FaqList";
 import { SUPPORT_MAILTO } from "@/lib/company";
 
 export default async function FAQ() {
   const t = await getTranslations("Marketing.faq");
 
-  const ITEMS: { q: string; a: string }[] = [
+  const ITEMS: FaqItem[] = [
     { q: t("items.advanced.q"),     a: t("items.advanced.a") },
     { q: t("items.oneRm.q"),        a: t("items.oneRm.a") },
     { q: t("items.cancel.q"),       a: t("items.cancel.a") },
@@ -28,7 +29,7 @@ export default async function FAQ() {
   ];
 
   return (
-    <section id="faq" className="relative border-t hairline py-24 md:py-40">
+    <section id="faq" className="relative border-t hairline py-20 md:py-28">
       <Container>
         <div className="grid gap-12 md:grid-cols-12 items-start">
           <div className="md:col-span-5" data-reveal>
@@ -46,39 +47,7 @@ export default async function FAQ() {
             </p>
           </div>
 
-          <ul className="md:col-span-7 border-t hairline">
-            {ITEMS.map((item, i) => (
-              <li
-                key={item.q}
-                data-reveal
-                style={{ transitionDelay: `${i * 60}ms` }}
-                className="border-b hairline"
-              >
-                <details className="group">
-                  <summary
-                    className="flex items-start gap-4 py-5 cursor-pointer list-none touch-app"
-                    style={{ outline: "none" }}
-                  >
-                    <span className="numeric text-[11px] text-fg-faint w-7 shrink-0 mt-1.5">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="flex-1 font-display text-lg md:text-xl leading-snug">
-                      {item.q}
-                    </span>
-                    <span
-                      aria-hidden
-                      className="size-7 rounded-full surface-2 flex items-center justify-center text-fg-dim group-open:rotate-45 transition-transform shrink-0"
-                    >
-                      +
-                    </span>
-                  </summary>
-                  <div className="pl-11 pr-4 pb-5 text-fg-dim text-sm md:text-base leading-relaxed">
-                    {item.a}
-                  </div>
-                </details>
-              </li>
-            ))}
-          </ul>
+          <FaqList items={ITEMS} showAllLabel={t("showAll")} />
         </div>
       </Container>
     </section>

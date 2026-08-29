@@ -15,20 +15,24 @@
   "hero": {
     "eyebrow": "Closed Beta · Invite only · est. 2026",
     "stats": {
-      "straps": "Straps sold",
-      "strapsSuffix": "+ climbing",
       "members": "Active members",
       "membersSuffix": "Closed beta",
-      "programs": "Coaching programs",
-      "programsSuffix": "Available now",
       "madeIn": "Made in",
-      "madeInSuffix": "Copenhagen"
+      "madeInSuffix": "Copenhagen",
+      "formCheck": "Form-check reply",
+      "formCheckValue": "6 SEC",
+      "formCheckSuffix": "AI draft · Munk review 24h",
+      "engine": "Engine runs",
+      "engineValue": "05:30",
+      "engineSuffix": "Every morning"
     },
-    "subline": "MakeIt isn't just straps and cuffs.",
-    "subline2": "It's the inner universe for the crew behind it — coaching, community, loyalty and <heart>HRV-aware recovery</heart> in one place. Built in Copenhagen. Made for athletes who lift heavy.",
+    "subline": "Coaching built on your body's data.",
+    "subline2": "1:1 coaching, AI-adapted programs, form checks and <heart>HRV-aware recovery</heart> — in one place, at a fraction of market price. Built in Copenhagen. Made for athletes who lift heavy.",
     "ctaPrimary": "Get access",
     "ctaSecondary": "Learn more",
-    "ctaTertiary": "Try the engine ↓"
+    "ctaTertiary": "Try the engine ↓",
+    "waitlistLink": "No invite code? Join the waitlist",
+    "trustLine": "No lock-in · Cancel anytime · Price locked for beta members"
   },
   "engine": {
     "eyebrow": "02 — Engine",
@@ -69,9 +73,9 @@
         "k": "No noise",
         "v": "No ads, no pressure to perform on Instagram. Just training and community."
       },
-      "freeOfShop": {
-        "k": "Separate from the shop",
-        "v": "The webshop keeps running untouched — this is its own thing."
+      "ownData": {
+        "k": "Your data, your call",
+        "v": "HRV sharing and your journal are private by default. You choose what the coach sees — and can pull the plug anytime."
       }
     }
   },
@@ -79,48 +83,45 @@
     "label": "Works with",
     "note": "Apple Watch via iPhone app"
   },
+  "waitlist": {
+    "eyebrow": "Waitlist",
+    "heading": "No code? Get in line.",
+    "intro": "The crew is invite-only, and we open spots in small batches. The waitlist is the queue for the next batch of invites — first on the list, first in.",
+    "emailLabel": "Your email",
+    "emailPlaceholder": "you@example.com",
+    "cta": "Put me on the list",
+    "ctaPending": "One moment…",
+    "error": "That didn't seem to work — check the email and try again.",
+    "note": "Invites only · No newsletters · Remove yourself anytime",
+    "doneEyebrow": "You're in the queue",
+    "doneHeading": "We'll write when a spot opens.",
+    "doneBody": "Invites go out in small batches. You'll hear from us by email — and only about that."
+  },
   "pillars": {
     "engine": {
-      "label": "02 — Engine",
-      "title": "The program rewrites itself. On your body's terms.",
-      "body": "Every morning at 05:30 the engine reads your <heart>HRV</heart>, your <mind>sleep</mind>, last session's <body>RPE</body>, and your most recent form-checks. It adjusts today's session — or doesn't — and tells you why. Munk sees the escalation before you do.",
+      "label": "02 — Engine & open brain",
+      "title": "The program rewrites itself. And shows you why.",
+      "body": "Every morning at 05:30 the engine reads your <heart>HRV</heart>, your <mind>sleep</mind>, last session's <body>RPE</body> and your latest form checks. It adjusts today's session — or doesn't — and shows the whole chain behind the call: raw signals → rule → Claude's refinement → action → outcome. Munk sees the escalation before you do.",
       "bullet1": "Top-set reduction, accessory cut, exercise swap — or no_change. Never more than one change per session.",
-      "bullet2": "HRV very_low → session paused, mobility + walk, Munk notified",
-      "bullet3": "You can always say \"keep original\" — nothing happens behind your back",
-      "statLabel": "actions",
-      "demoHook": "Drag the sliders"
-    },
-    "openBrain": {
-      "label": "03 — Open Brain",
-      "title": "Coaching that doesn't hide the calculator.",
-      "body": "Every decision shows the entire chain: raw signals → rule → Claude's refinement → action → outcome. You can inspect the last 30 days of adaptations and see how your body and your training connect.",
-      "bullet1": "30-day adaptation history with outcome tracking",
-      "bullet2": "Counterfactual sliders: \"What if I'd slept 7h?\" — computed live in your browser",
-      "bullet3": "Reason codes in Danish — no black box",
-      "statLabel": "days history",
-      "demoHook": "See the engine again"
+      "bullet2": "HRV very_low → session paused, mobility + walk, Munk gets notified",
+      "bullet3": "30 days of history with counterfactual sliders: \"What if I'd slept 7h?\" — computed live in your browser",
+      "statLabel": "days of history",
+      "demoHook": "Drag the sliders",
+      "bullet4": "Reason codes in plain language, and you can always say \"keep original\" — no black box, nothing happens behind your back"
     },
     "munkMultiplier": {
-      "label": "04 — Munk Multiplier",
+      "label": "03 — Coaching that scales",
       "title": "One coach. 5× capacity. Still him.",
-      "body": "AI drafts form-check replies, cohort patterns, and morning reports — Munk edits in 30 seconds or rewrites. You never get an AI reply without his signature.",
-      "bullet1": "AI-drafted form-check replies, signed by Munk before sending",
-      "bullet2": "Daily morning report: prioritized queue of members Munk needs to write to",
-      "bullet3": "Cohort patterns: AI spots when 3+ athletes have the same problem in the same week",
-      "statLabel": "form-check"
-    },
-    "crewPyramid": {
-      "label": "05 — Crew Pyramid",
-      "title": "Beasts become co-coaches.",
-      "body": "When you hit Beast tier, Coach School unlocks: curated lessons, sandbox cases you practice on, and — if you pass — live members you co-coach with Munk as senior. Reps reward that work, not just your own PRs.",
-      "bullet1": "AI buddy pairing: training level + location + timing matches you with a partner",
-      "bullet2": "Coach School: lessons → sandbox → live, with safety moderation on every outgoing message",
-      "bullet3": "Reps for member feedback, not just for your own reps",
-      "statLabel": "tiers",
+      "body": "AI drafts form-check replies, cohort patterns and morning reports — Munk edits in 30 seconds or rewrites. You never get an AI reply without his signature. And when you hit Beast tier, Coach School opens: you learn to answer yourself, with Munk as senior.",
+      "bullet1": "AI-drafted form-check replies, signed by Munk before they go out",
+      "bullet2": "Cohort patterns: AI spots when 3+ athletes hit the same problem in the same week",
+      "bullet3": "Coach School: lessons → sandbox cases → live members, with safety moderation on everything outgoing",
+      "statLabel": "form check",
+      "bullet4": "AI buddy pairing on level, location and timing — plus Reps for your feedback to others, not just your own reps",
       "demoHook": "See the ladder"
     },
     "mind": {
-      "label": "06 — Mental engine",
+      "label": "04 — Mental engine",
       "title": "The head, in the equation. Not as an accessory.",
       "body": "Real health is physical AND mental. A 60-second <mind>mind-check</mind> daily builds a mental graph parallel to your <heart>HRV</heart>. When mind-checks show strain for 3 days, the Adaptive Engine dials down without waiting for HRV to break — because the head often feels it first. Private journaling, AI coach written for your week, and — when you tier up — crew sharing so you don't go alone.",
       "bullet1": "Mind-check × HRV × training — Adaptive Engine fuses all three. No other app does.",
@@ -128,44 +129,6 @@
       "bullet3": "Privacy as progression: Lifter private, Athlete unlocks buddy share, Beast unlocks circles. Your journal is always yours.",
       "statLabel": "sec/day",
       "demoHook": "See the mind module"
-    },
-    "coaching": {
-      "label": "02 — Coaching",
-      "title": "Programs that work. Coaches who lift themselves.",
-      "body": "1:1 sessions, 12-week strength and hypertrophy blocks, video form checks. Curated by Mikael Munk and the crew's head coaches. Not generic app content.",
-      "bullet1": "Strength · Hypertrophy · Powerbuilding",
-      "bullet2": "Video form check within 24 hours",
-      "bullet3": "Personal PR tracks and deload weeks",
-      "bullet4": "Coach spots red flags in your HRV before you do — and writes first",
-      "statLabel": "Programs live"
-    },
-    "community": {
-      "label": "03 — Community",
-      "title": "A feed built for lifting — not for scrolling.",
-      "body": "Share PRs, footage and thoughts with people who actually get the difference between an RPE 8 and a 9. Weekly challenges, per-gym leaderboards, and IRL meets in Amagerbro.",
-      "bullet1": "PR feed with video and comments",
-      "bullet2": "Monthly challenges & leaderboards",
-      "bullet3": "IRL meets, open house & collabs",
-      "statLabel": "Active members"
-    },
-    "reps": {
-      "label": "04 — Reps Program",
-      "title": "Your work pays off.",
-      "body": "Earn Reps for purchases, programs you finish, PRs you post, and people you invite in. Trade them for limited drops, custom strap colors, early access and 1:1 time with Mikael Munk.",
-      "bullet1": "Tier: Lifter → Athlete → Beast → Legend",
-      "bullet2": "Limited drops, members only",
-      "bullet3": "Reps never convert to cash — only to real gear",
-      "statLabel": "Tiers"
-    },
-    "restitution": {
-      "label": "05 — Recovery",
-      "title": "Your body sets the week's load.",
-      "body": "Connect WHOOP, Oura or Polar. Every morning your RMSSD lands alongside your 60-day baseline, and the program knows when to push — and when a deload week gives you more than a heavy set. Sunday night the coach writes a short observation on your week; never diagnoses, never made-up numbers.",
-      "bullet1": "Wearable-first — WHOOP · Oura · Polar (Apple Watch ships with the iPhone app)",
-      "bullet2": "5-bucket readiness ladder · no fake 0-100 score",
-      "bullet3": "Weekly insight in Danish · honest correlations (alcohol, sleep)",
-      "bullet4": "Lifestyle log + readiness nudge on your workout days",
-      "statLabel": "Wearables"
     }
   },
   "tiers": {
@@ -219,6 +182,23 @@
         "3": "Reps for member feedback, not just your own reps",
         "4": "Permanent seat in the Amagerbro loft"
       }
+    },
+    "sim": {
+      "eyebrow": "Reps simulator",
+      "heading": "How fast do you climb?",
+      "fields": {
+        "weeks": "Program weeks completed / mo.",
+        "prs": "PRs you log with video",
+        "invites": "Friends you invite in",
+        "challenges": "Challenges you win"
+      },
+      "repsEach": "reps each",
+      "perMonth": "reps per month",
+      "months": "{n} mo.",
+      "withinMonth": "First mo.",
+      "note": "Same rates as the Reps program in the app · Reps never expire",
+      "increase": "Add one — {label}",
+      "decrease": "Remove one — {label}"
     }
   },
   "domainIndex": {
@@ -254,7 +234,7 @@
   "app": {
     "eyebrow": "06 — The App",
     "heading": "Here's how it looks.",
-    "intro": "Six screens that define your week — from the first morning tap, to the nudge above the first lift that adapts the day's load to your <heart>HRV</heart>, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
+    "intro": "Six screens that define your week — from the first morning tap, to the nudge above the first lift that adapts the day's load to your HRV, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Today's session, one tap to start",
@@ -364,13 +344,13 @@
     "marketLabel": "market average for personal coaching",
     "pillar1": {
       "eyebrow": "Automated",
-      "title": "AI builds <body>the program</body>",
+      "title": "AI builds the program",
       "body": "Personal strength and hypertrophy programs are generated from your maxes, your history and your goal — and updated week by week based on how you actually lift.",
       "foot": "No waiting · no template PDFs"
     },
     "pillar2": {
       "eyebrow": "Drafted by AI, signed by Munk",
-      "title": "<body>Form-check</body> with Munk's signature",
+      "title": "Form-check with Munk's signature",
       "body": "AI drafts the reply in Munk's voice in seconds, and Munk edits or rewrites in up to 30 seconds. You never get an AI reply without his name on it.",
       "foot": "AI draft + Munk signature · within 24h"
     },
@@ -385,12 +365,23 @@
       "title": "Wearable + HRV in the program",
       "body": "Connect WHOOP, Oura or Polar. Your morning RMSSD and 60-day baseline dial in the week's load, and the coach gets a heads-up when your nervous system is shouting three days running.",
       "foot": "Auto-sync · honest numbers, no 0-100 score"
-    }
+    },
+    "includesHeading": "The whole system. One membership.",
+    "includes": {
+      "1": "AI program that adapts to your body daily",
+      "2": "Form checks signed by Munk within 24h",
+      "3": "HRV-aware recovery — WHOOP, Oura, Polar",
+      "4": "Crew feed, challenges, buddy & Reps program",
+      "5": "Mind check and the mental engine"
+    },
+    "betaValue": "Beta",
+    "betaSuffix": "invite only",
+    "marketFraction": "A fraction of the market average for personal coaching."
   },
   "testimonials": {
     "eyebrow": "07 — The Crew",
     "heading": "What they say.",
-    "intro": "Three from the crew on how it feels to train here. No ambassador deals, no discount codes. Just members who've put in the time.",
+    "intro": "Four from the crew on how it feels to train here. No ambassador deals, no discount codes. Just members who've put in the time.",
     "kasper": {
       "cred": "Powerbuilding · 162.5 kg squat single",
       "quote": "The first program I've actually run from start to finish. Mikael's form checks catch things the AI misses, and the volume of notes he writes per video is insane."
@@ -406,27 +397,6 @@
     "maria": {
       "cred": "Hypertrophy · switching between blocks",
       "quote": "The crew is where I post, not Instagram. Quiet, precise, and in Danish. No ads, no demands. Just people who lift."
-    }
-  },
-  "origin": {
-    "eyebrow": "05 — Origin",
-    "heading": {
-      "line1": "Sewn in",
-      "line2": "Copenhagen.",
-      "line3": "Used everywhere."
-    },
-    "body": "StrapIt was born from one simple idea: if you take training seriously, your gear deserves to do the same. We still sew every single strap ourselves, in Amagerbro, with Danish-made nylon and control stitching that holds for decades.",
-    "facts": {
-      "establishedLabel": "Established",
-      "establishedValue": "2018",
-      "locationLabel": "Location",
-      "locationFallback": "Copenhagen, Denmark",
-      "madeInLabel": "Made in",
-      "madeInValue": "Denmark",
-      "soldAtLabel": "Sold at",
-      "soldAtValue": "PureGym, SDU, Fitness Engros and more",
-      "warrantyLabel": "Warranty",
-      "warrantyValue": "100-day returns"
     }
   },
   "faq": {
@@ -507,11 +477,12 @@
         "q": "What do I do if I eat something that's not in the meal plan?",
         "a": "Tap 'I ate something else' in the Nutrition feed, briefly describe what you ate, and it's logged as an off-plan meal. No penalty, no scolding — just data. The coach sees it in weekly signals so next week's planning gets more realistic instead of ignoring reality."
       }
-    }
+    },
+    "showAll": "Show all questions"
   },
   "footer": {
-    "blurbBefore": "{product} is the inner universe for our crew, athletes and coaches. The webshop",
-    "blurbAfter": "runs as always — this is its own thing.",
+    "blurbBefore": "{product} is the inner universe for our crew, athletes and coaches. Gear:",
+    "blurbAfter": "",
     "universeLabel": "Universe",
     "universeCrew": "Crew",
     "universeCoaching": "Coaching",
@@ -523,5 +494,12 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "madeIn": "Made in DK · Closed Beta · v0.1"
+  },
+  "hrvChart": {
+    "title": "HRV — 30 days",
+    "exampleData": "Example data",
+    "belowBaseline": "Below baseline",
+    "withinBaseline": "Within baseline",
+    "aria": "Chart: 30 days of HRV readings in milliseconds RMSSD, ranging {low} to {high} ms, with a 7-day mean and a baseline band as reference range."
   }
 }

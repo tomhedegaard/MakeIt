@@ -40,7 +40,7 @@ export default async function Testimonials() {
   ];
 
   return (
-    <section id="crew-says" className="relative border-t hairline py-24 md:py-40">
+    <section id="crew-says" className="relative border-t hairline py-20 md:py-28">
       <Container>
         <div className="max-w-2xl mb-12 md:mb-16" data-reveal>
           <div className="eyebrow mb-4">{t("eyebrow")}</div>
