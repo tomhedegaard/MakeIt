@@ -2,9 +2,14 @@ import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 
 /**
- * Farveindeks — standalone section that teaches the domain color
- * system (docs/DOMAIN_COLOR_SYSTEM.md) before AppShowcase shows it
- * in action.
+ * Farveindeks — the landing page's first content section, directly
+ * under the hero. It teaches the domain color system
+ * (docs/DOMAIN_COLOR_SYSTEM.md) as the 360° health argument: four
+ * domains that pull on each other, each with its own hue.
+ *
+ * It used to sit between TierJourney and AppShowcase, which meant a
+ * first-time visitor met the colors only after a long scroll — and
+ * read them as decoration rather than as the product's shape.
  *
  * Four cells, one per health domain, each scoped with data-domain so
  * the section IS the system rather than a mockup of it: the same
