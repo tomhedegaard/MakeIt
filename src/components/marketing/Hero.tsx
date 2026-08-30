@@ -7,7 +7,6 @@ import Container from "@/components/Container";
 import CountUp from "@/components/CountUp";
 import Spotlight from "@/components/Spotlight";
 import Link from "next/link";
-import { domainTags } from "@/components/marketing/domainTags";
 
 const ease = [0.2, 0.7, 0.2, 1] as const;
 
@@ -161,17 +160,7 @@ export default function Hero() {
                 transition={{ duration: 0.8, ease, delay: 0.85 }}
                 className="md:col-span-6 max-w-xl"
               >
-                <p className="text-fg text-xl md:text-2xl leading-snug">
-                  {t("subline")}
-                </p>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.8, ease, delay: 1.05 }}
-                  className="mt-3 text-fg-dim text-lg md:text-xl leading-relaxed"
-                >
-                  {t.rich("subline2", domainTags)}
-                </motion.p>
+                <HeroLead />
               </motion.div>
 
               <motion.div
@@ -180,25 +169,7 @@ export default function Hero() {
                 transition={{ duration: 0.8, ease, delay: 1.2 }}
                 className="md:col-span-6"
               >
-                <div className="flex flex-col items-start gap-3 md:items-end">
-                  <div className="flex flex-wrap items-center gap-3 md:justify-end">
-                    <Link href="/login" className="btn btn-primary">
-                      {t("ctaPrimary")}
-                      <span aria-hidden>→</span>
-                    </Link>
-                    <a href="#crew" className="btn">{t("ctaSecondary")}</a>
-                    <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
-                  </div>
-                  <a
-                    href="#waitlist"
-                    className="text-sm text-fg-dim underline underline-offset-4 hover:text-fg"
-                  >
-                    {t("waitlistLink")}
-                  </a>
-                  <p className="text-[11px] text-fg-faint font-mono uppercase tracking-[0.16em]">
-                    {t("trustLine")}
-                  </p>
-                </div>
+                <HeroActions />
               </motion.div>
             </div>
 
@@ -249,6 +220,70 @@ function StatsBand({ stats }: { stats: Stat[] }) {
 }
 
 /* ---------------------------------------------------------------- *
+ * Shared hero copy — pinned + reduced-motion both render this so the
+ * kicker row, monochrome paragraph and CTA cannot drift.
+ *
+ * Color lives only in the four domain kickers (~10% of the surface).
+ * Headline, subline and body stay monochrome. Domain hue on brødtekst
+ * is forbidden (docs/DOMAIN_COLOR_SYSTEM.md).
+ * ---------------------------------------------------------------- */
+
+const HERO_DOMAINS = ["body", "food", "heart", "mind"] as const;
+
+function HeroLead() {
+  const t = useTranslations("Marketing.hero");
+  return (
+    <>
+      <p className="text-fg text-xl md:text-2xl leading-snug">{t("subline")}</p>
+      <HeroDomainKickers />
+      <p className="mt-4 text-fg-dim text-lg md:text-xl leading-relaxed">
+        {t("subline2")}
+      </p>
+    </>
+  );
+}
+
+function HeroDomainKickers() {
+  const t = useTranslations("Marketing.hero");
+  return (
+    <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+      {HERO_DOMAINS.map((domain) => (
+        <span key={domain} data-domain={domain} className="inline-flex">
+          <span className="eyebrow eyebrow-domain flex items-center gap-2">
+            <span className="size-1.5 rounded-full bg-domain" aria-hidden />
+            {t(`domains.${domain}`)}
+          </span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function HeroActions() {
+  const t = useTranslations("Marketing.hero");
+  return (
+    <div className="flex flex-col items-start gap-3 md:items-end">
+      <div className="flex flex-wrap items-center gap-3 md:justify-end">
+        <Link href="/login" className="btn btn-primary">
+          {t("ctaPrimary")}
+        </Link>
+        <a href="#crew" className="btn">{t("ctaSecondary")}</a>
+        <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
+      </div>
+      <a
+        href="#waitlist"
+        className="text-sm text-fg-dim underline underline-offset-4 hover:text-fg"
+      >
+        {t("waitlistLink")}
+      </a>
+      <p className="text-[11px] text-fg-faint font-mono uppercase tracking-[0.16em]">
+        {t("trustLine")}
+      </p>
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------- *
  * Static end-state for reduced-motion users. Mirrors the motion
  * version's final visual state without any animation wiring.
  * ---------------------------------------------------------------- */
@@ -276,29 +311,10 @@ function HeroContent() {
 
         <div className="mt-12 grid gap-10 md:grid-cols-12 items-end">
           <div className="md:col-span-6 max-w-xl">
-            <p className="text-fg text-xl md:text-2xl leading-snug">{t("subline")}</p>
-            <p className="mt-3 text-fg-dim text-lg md:text-xl leading-relaxed">
-              {t.rich("subline2", domainTags)}
-            </p>
+            <HeroLead />
           </div>
-          <div className="md:col-span-6 flex flex-col items-start gap-3 md:items-end">
-            <div className="flex flex-wrap items-center gap-3 md:justify-end">
-              <Link href="/login" className="btn btn-primary">
-                {t("ctaPrimary")}
-                <span aria-hidden>→</span>
-              </Link>
-              <a href="#crew" className="btn">{t("ctaSecondary")}</a>
-              <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
-            </div>
-            <a
-              href="#waitlist"
-              className="text-sm text-fg-dim underline underline-offset-4 hover:text-fg"
-            >
-              {t("waitlistLink")}
-            </a>
-            <p className="text-[11px] text-fg-faint font-mono uppercase tracking-[0.16em]">
-              {t("trustLine")}
-            </p>
+          <div className="md:col-span-6">
+            <HeroActions />
           </div>
         </div>
 

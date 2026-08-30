@@ -27,7 +27,13 @@
       "engineSuffix": "Hver morgen"
     },
     "subline": "Coaching bygget på din krops data.",
-    "subline2": "1:1-coaching, AI-tilpassede programmer, form-checks og <heart>HRV-styret restitution</heart> — samlet ét sted, til en brøkdel af markedsprisen. Bygget i København. Lavet til atleter der løfter tungt.",
+    "domains": {
+      "body": "Krop",
+      "food": "Mad",
+      "heart": "Hjerte",
+      "mind": "Sind"
+    },
+    "subline2": "Træning og måltider, HRV-restitution og mind-check — 1:1-coaching, AI-tilpassede programmer og form-checks samlet ét sted, til en brøkdel af markedsprisen. Bygget i København. Lavet til atleter der løfter tungt.",
     "ctaPrimary": "Få adgang",
     "ctaSecondary": "Læs mere",
     "ctaTertiary": "Prøv motoren ↓",
