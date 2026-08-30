@@ -38,11 +38,17 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
   const consecutiveDaysLow =
     conditionsMet.sustained_low_readiness?.consecutive_days_low ?? 0;
   const deltaPct = conditionsMet.rhr_spike?.delta_pct ?? null;
+  const lifestyleFlags = conditionsMet.lifestyle_flags ?? {
+    sick: false,
+    stressed: false,
+    short_sleep: false,
+    high_alcohol: false,
+  };
   const lifestyleAny =
-    conditionsMet.lifestyle_flags.sick ||
-    conditionsMet.lifestyle_flags.stressed ||
-    conditionsMet.lifestyle_flags.short_sleep ||
-    conditionsMet.lifestyle_flags.high_alcohol;
+    lifestyleFlags.sick ||
+    lifestyleFlags.stressed ||
+    lifestyleFlags.short_sleep ||
+    lifestyleFlags.high_alcohol;
 
   function sendNote() {
     startTransition(async () => {
@@ -111,13 +117,13 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
       {/* Per-sub-flag truth for lifestyle — render all four, even when
           false, so Munk sees the negative space too. */}
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-mono mb-4">
-        <SubFlag on={conditionsMet.lifestyle_flags.sick}>syg</SubFlag>
+        <SubFlag on={lifestyleFlags.sick}>syg</SubFlag>
         <span className="text-fg-faint">·</span>
-        <SubFlag on={conditionsMet.lifestyle_flags.stressed}>stress</SubFlag>
+        <SubFlag on={lifestyleFlags.stressed}>stress</SubFlag>
         <span className="text-fg-faint">·</span>
-        <SubFlag on={conditionsMet.lifestyle_flags.short_sleep}>søvn</SubFlag>
+        <SubFlag on={lifestyleFlags.short_sleep}>søvn</SubFlag>
         <span className="text-fg-faint">·</span>
-        <SubFlag on={conditionsMet.lifestyle_flags.high_alcohol}>alkohol</SubFlag>
+        <SubFlag on={lifestyleFlags.high_alcohol}>alkohol</SubFlag>
       </div>
 
       <div className="flex flex-wrap items-center justify-end gap-2">

@@ -3,19 +3,27 @@
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { escalateMentalSafetyToCoach } from "@/lib/data/mind";
+import {
+  ESCALATION_SUMMARY_MAX,
+  ESCALATION_SUMMARY_MIN,
+} from "@/lib/mind/escalate";
 
 const Schema = z.object({
-  summary: z.string().min(4).max(1000),
+  summary: z.string().min(ESCALATION_SUMMARY_MIN).max(ESCALATION_SUMMARY_MAX),
 });
 
 /**
  * Member-initiated coach escalation. Always opt-in — we NEVER call
  * this automatically. Submits the member's own summary text; Munk
- * never sees the raw journal.
+ * never sees the raw journal. Success means a durable write only
+ * when `persisted` is true (connected mode + 0057 applied).
  */
 export async function escalateMentalSafetyAction(
   formData: FormData,
-): Promise<{ ok: true; alertId: string } | { error: string }> {
+): Promise<
+  | { ok: true; alertId: string; persisted: boolean }
+  | { error: string }
+> {
   const member = await getSession();
   if (!member) return { error: "not_authed" };
 
@@ -31,8 +39,13 @@ export async function escalateMentalSafetyAction(
   console.info("[mind] mental_safety_escalation_accepted", {
     memberId: member.id,
     alertId: result.alertId,
+    persisted: result.persisted,
     summaryLength: parsed.data.summary.length,
   });
 
-  return { ok: true, alertId: result.alertId };
+  return {
+    ok: true,
+    alertId: result.alertId,
+    persisted: result.persisted,
+  };
 }

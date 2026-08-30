@@ -21,15 +21,23 @@ import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import {
   DEFAULT_MENTAL_SETTINGS,
   type JournalEntry,
+  type MentalSafetyAlert,
+  type MentalSafetyAlertListItem,
   type MentalSettings,
   type MindCheckLog,
 } from "@/lib/mind/types";
 import { mockMentalSettings, mockMindCheckLogs } from "@/lib/mind/mock";
 import { detectCrisisKeywords } from "@/lib/mind/crisis-keywords";
 import {
+  claudeNullReasonFragment,
   combineModerationVerdicts,
-  moderateJournalText,
-} from "@/lib/mind/moderation-claude";
+} from "@/lib/mind/moderation";
+import { moderateJournalText } from "@/lib/mind/moderation-claude";
+import {
+  buildMentalSafetyAlertInsert,
+  classifyEscalationWrite,
+  validateEscalationSummary,
+} from "@/lib/mind/escalate";
 import { awardJournalEntry } from "@/lib/mind/reps";
 
 export const MIND_DISCLAIMER_COOKIE = "mi_mind_disclaimer_ack";
@@ -412,14 +420,26 @@ export async function submitJournalEntry(
   }
 
   const flag = detectCrisisKeywords(trimmedBody);
-  // Claude moderation as second check (~2-3s). Skipped if API key
-  // absent — keyword filter alone is the fallback.
+  // Claude moderation as second check (~2-3s). Null (missing key /
+  // API / parse) is fail-closed via combineModerationVerdicts — never
+  // treated as clean. Users never see a raw AI error.
   const claudeVerdict = await moderateJournalText(trimmedBody);
   const moderation_status: "clean" | "flagged" | "crisis" =
     combineModerationVerdicts(flag.isCrisis, claudeVerdict);
   const moderation_reason_pieces: string[] = [];
   if (flag.isCrisis) moderation_reason_pieces.push(`keyword:${flag.categories.join(",")}`);
-  if (claudeVerdict) moderation_reason_pieces.push(`claude:${claudeVerdict.status}:${claudeVerdict.categories.join(",")}`);
+  if (claudeVerdict) {
+    moderation_reason_pieces.push(
+      `claude:${claudeVerdict.status}:${claudeVerdict.categories.join(",")}`,
+    );
+  } else {
+    moderation_reason_pieces.push(claudeNullReasonFragment());
+    console.info("[mind] moderation_claude_null", {
+      memberId,
+      keywordIsCrisis: flag.isCrisis,
+      combined: moderation_status,
+    });
+  }
   const moderation_reason =
     moderation_reason_pieces.length > 0 ? moderation_reason_pieces.join(" | ") : null;
 
@@ -515,85 +535,111 @@ export async function submitJournalEntry(
   };
 }
 
+export type EscalateMentalSafetyResult =
+  | { ok: true; alertId: string; persisted: boolean }
+  | { ok: false; error: string };
+
 /**
- * Member-initiated coach escalation for mental safety. Creates an
- * hrv_alerts row with conditions_met.source='mental_safety' and the
- * member-written summary as the body. Munk sees it in the existing
- * coach queue; he NEVER sees the raw journal — only what the member
- * chose to write.
+ * Member-initiated coach escalation for mental safety. Writes a
+ * mental_safety_alerts row (member-authored summary only — never the
+ * raw journal). Munk reads it on /coach/safety. No push/mail.
  *
- * Returns the alert id. Idempotent on (member_id, today, 'mental_safety')
- * — calling twice in the same day reuses the open alert if any.
+ * Demo: returns ok with persisted=false so the UI cannot claim a
+ * durable write. No service-role import on this path.
+ *
+ * Same-day reuse of an open row (member can update the summary).
  */
 export async function escalateMentalSafetyToCoach(
   memberId: string,
   args: { summary: string },
-): Promise<{ ok: true; alertId: string } | { ok: false; error: string }> {
-  const summary = args.summary.trim();
-  if (summary.length < 4) return { ok: false, error: "summary_too_short" };
-  if (summary.length > 1000) return { ok: false, error: "summary_too_long" };
+): Promise<EscalateMentalSafetyResult> {
+  const validated = validateEscalationSummary(args.summary);
+  if (!validated.ok) return { ok: false, error: validated.error };
+  const { summary } = validated;
 
   if (!SUPABASE_ENABLED) {
-    console.info("[mind] demo-mode escalateMentalSafetyToCoach", { memberId, summary });
-    return { ok: true, alertId: `demo-mental-${Date.now()}` };
+    const classified = classifyEscalationWrite({
+      supabaseEnabled: false,
+      demoAlertId: `demo-mental-${Date.now()}`,
+    });
+    console.info("[mind] demo-mode escalateMentalSafetyToCoach", {
+      memberId,
+      summaryLength: summary.length,
+      persisted: classified.ok ? classified.persisted : false,
+    });
+    if (classified.ok) {
+      return {
+        ok: true,
+        alertId: classified.alertId,
+        persisted: classified.persisted,
+      };
+    }
+    return { ok: false, error: classified.error };
   }
 
   const supabase = await createClient();
   if (!supabase) return { ok: false, error: "no_supabase_client" };
   const db = mindDb(supabase);
 
-  // Look for an existing open mental_safety alert today — if found,
-  // reuse it (member can update their summary in the same incident).
   const todayStart = new Date();
   todayStart.setUTCHours(0, 0, 0, 0);
 
   const { data: existing } = await db
-    .from("hrv_alerts")
-    .select("id, conditions_met")
+    .from("mental_safety_alerts")
+    .select("id")
     .eq("member_id", memberId)
     .eq("status", "open")
-    .gte("triggered_at", todayStart.toISOString())
-    .order("triggered_at", { ascending: false })
-    .limit(10);
+    .gte("created_at", todayStart.toISOString())
+    .order("created_at", { ascending: false })
+    .limit(1);
 
-  const existingRows = (existing ?? []) as {
-    id: string;
-    conditions_met: { source?: string } | null;
-  }[];
+  const reuseId = ((existing ?? []) as { id: string }[])[0]?.id ?? null;
 
-  const reuse = existingRows.find(
-    (r) => r.conditions_met && r.conditions_met.source === "mental_safety",
-  );
-
-  if (reuse) {
-    await db
-      .from("hrv_alerts")
+  if (reuseId) {
+    const { error: updateErr } = await db
+      .from("mental_safety_alerts")
       .update({
-        conditions_met: { source: "mental_safety", summary, updated_at: new Date().toISOString() },
+        summary,
+        updated_at: new Date().toISOString(),
       })
-      .eq("id", reuse.id);
-    return { ok: true, alertId: reuse.id };
+      .eq("id", reuseId);
+
+    const classified = classifyEscalationWrite({
+      supabaseEnabled: true,
+      reusedId: updateErr ? null : reuseId,
+      writeError: updateErr,
+    });
+    if (!classified.ok) {
+      console.warn("[mind] mental safety escalation update failed", updateErr?.message);
+      return { ok: false, error: classified.error };
+    }
+    return {
+      ok: true,
+      alertId: classified.alertId,
+      persisted: classified.persisted,
+    };
   }
 
   const { data: inserted, error } = await db
-    .from("hrv_alerts")
-    .insert({
-      member_id: memberId,
-      conditions_met: {
-        source: "mental_safety",
-        summary,
-        opened_at: new Date().toISOString(),
-      },
-      status: "open",
-    })
+    .from("mental_safety_alerts")
+    .insert(buildMentalSafetyAlertInsert(memberId, summary))
     .select("id")
     .single();
 
-  if (error) {
-    console.warn("[mind] mental safety escalation failed", error.message);
-    return { ok: false, error: error.message };
+  const classified = classifyEscalationWrite({
+    supabaseEnabled: true,
+    insertedId: (inserted as { id?: string } | null)?.id ?? null,
+    writeError: error,
+  });
+  if (!classified.ok) {
+    console.warn("[mind] mental safety escalation failed", error?.message);
+    return { ok: false, error: classified.error };
   }
-  return { ok: true, alertId: (inserted as unknown as { id: string }).id };
+  return {
+    ok: true,
+    alertId: classified.alertId,
+    persisted: classified.persisted,
+  };
 }
 
 /**
@@ -822,95 +868,91 @@ export async function getBuddyMindSnapshot(
   };
 }
 
-/**
- * Aggregated mental safety metrics for the Munk-only observability
- * surface (/coach/safety). Returns COUNTS only — never journal bodies
- * or moderation reasons. The journal-body privacy rule (RLS hard-deny)
- * extends here: we only query counts via aggregation.
- */
-export async function getMentalSafetyMetrics(days = 7): Promise<{
-  totalEntries: number;
-  cleanCount: number;
-  flaggedCount: number;
-  crisisCount: number;
+export type MentalSafetyMetrics = {
+  journalCoverage: "unavailable" | "demo";
+  totalEntries: number | null;
+  cleanCount: number | null;
+  flaggedCount: number | null;
+  crisisCount: number | null;
   openMentalAlerts: number;
+  openAlerts: MentalSafetyAlertListItem[];
+  alertsReadable: boolean;
   windowDays: number;
-}> {
-  const empty = {
-    totalEntries: 0,
-    cleanCount: 0,
-    flaggedCount: 0,
-    crisisCount: 0,
+};
+
+/**
+ * Coach Safety observability. Journals are owner-only RLS — we do
+ * not query them in connected mode and we do not render fake zeros
+ * as coverage. Open escalations come from mental_safety_alerts
+ * (member-written summaries only).
+ */
+export async function getMentalSafetyMetrics(days = 7): Promise<MentalSafetyMetrics> {
+  const unavailable = (partial?: Partial<MentalSafetyMetrics>): MentalSafetyMetrics => ({
+    journalCoverage: "unavailable",
+    totalEntries: null,
+    cleanCount: null,
+    flaggedCount: null,
+    crisisCount: null,
     openMentalAlerts: 0,
+    openAlerts: [],
+    alertsReadable: false,
     windowDays: days,
-  };
+    ...partial,
+  });
+
   if (!SUPABASE_ENABLED) {
     return {
+      journalCoverage: "demo",
       totalEntries: 12,
       cleanCount: 11,
       flaggedCount: 1,
       crisisCount: 0,
       openMentalAlerts: 0,
+      openAlerts: [],
+      alertsReadable: true,
       windowDays: days,
     };
   }
 
   const supabase = await createClient();
-  if (!supabase) return empty;
+  if (!supabase) return unavailable();
 
-  const since = new Date();
-  since.setUTCHours(0, 0, 0, 0);
-  since.setUTCDate(since.getUTCDate() - days);
-  const sinceIso = since.toISOString().slice(0, 10);
-
-  // We can't directly aggregate counts without SQL functions, so we
-  // select just the moderation_status column (no body) and aggregate
-  // client-side. Munk's RLS allows SELECT — but the body column is
-  // never requested.
-  const { data: entries, error: entriesErr } = await mindDb(supabase)
-    .from("journal_entries")
-    .select("moderation_status")
-    .gte("logged_date", sinceIso);
-
-  if (entriesErr) {
-    console.warn("[mind/safety] journal aggregate read failed", entriesErr.message);
-    return empty;
-  }
-
-  let total = 0;
-  let clean = 0;
-  let flagged = 0;
-  let crisis = 0;
-  for (const row of ((entries ?? []) as { moderation_status: string }[])) {
-    total++;
-    if (row.moderation_status === "clean") clean++;
-    else if (row.moderation_status === "flagged") flagged++;
-    else if (row.moderation_status === "crisis") crisis++;
-  }
-
-  // Open mental_safety alerts in the existing coach queue.
   const { data: alerts, error: alertsErr } = await mindDb(supabase)
-    .from("hrv_alerts")
-    .select("id, conditions_met")
-    .eq("status", "open");
+    .from("mental_safety_alerts")
+    .select("id, member_id, summary, status, created_at, updated_at")
+    .eq("status", "open")
+    .order("created_at", { ascending: false })
+    .limit(50);
 
-  let openMental = 0;
   if (alertsErr) {
-    console.warn("[mind/safety] alerts read failed", alertsErr.message);
-  } else {
-    for (const a of ((alerts ?? []) as { conditions_met: { source?: string } | null }[])) {
-      if (a.conditions_met?.source === "mental_safety") openMental++;
+    console.warn("[mind/safety] mental_safety_alerts read failed", alertsErr.message);
+    return unavailable();
+  }
+
+  const rows = (alerts ?? []) as MentalSafetyAlert[];
+  const memberIds = Array.from(new Set(rows.map((r) => r.member_id)));
+  const handleById = new Map<string, string>();
+
+  if (memberIds.length > 0) {
+    const { data: members } = await supabase
+      .from("members")
+      .select("id, handle")
+      .in("id", memberIds);
+    for (const m of members ?? []) {
+      handleById.set(m.id, m.handle);
     }
   }
 
-  return {
-    totalEntries: total,
-    cleanCount: clean,
-    flaggedCount: flagged,
-    crisisCount: crisis,
-    openMentalAlerts: openMental,
-    windowDays: days,
-  };
+  const openAlerts: MentalSafetyAlertListItem[] = rows.map((r) => ({
+    ...r,
+    member_handle: handleById.get(r.member_id) ?? "—",
+  }));
+
+  return unavailable({
+    openMentalAlerts: openAlerts.length,
+    openAlerts,
+    alertsReadable: true,
+  });
 }
 
 /**
