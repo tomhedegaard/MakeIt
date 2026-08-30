@@ -268,7 +268,7 @@
   "app": {
     "eyebrow": "06 — The App",
     "heading": "Here's how it looks.",
-    "intro": "Seven screens that define your week — from the first morning tap, to today's meal plan, to the nudge above the first lift that adapts the day's load to your HRV, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
+    "intro": "Eight screens that define your week — from the first morning tap, to today's meal plan, to the nudge above the first lift that adapts the day's load to your HRV, to the 60-second check-in and the graph, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Today's session, one tap to start",
@@ -278,6 +278,8 @@
       "nutritionDetail": "Today's plan · 3 meals",
       "readinessLabel": "Readiness",
       "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
+      "mindLabel": "Mind",
+      "mindDetail": "60 sec · check-in + graph",
       "formCheckLabel": "Form check",
       "formCheckDetail": "Claude grades it in 6 sec.",
       "buddyLabel": "Buddy",
@@ -367,6 +369,19 @@
       "slotAften": "Dinner",
       "openPlan": "Open plan",
       "photoBy": "Photo: {names} / Unsplash"
+    },
+    "mind": {
+      "kicker": "Today · check-in",
+      "numeric": "60",
+      "numericUnit": "sec",
+      "checkEyebrow": "60 sec",
+      "energy": "Energy",
+      "stress": "Stress",
+      "focus": "Focus",
+      "score": "{n}/5",
+      "graphLabel": "Graph · 14 d",
+      "graphAria": "Energy, stress and focus over 14 days",
+      "cta": "Check in"
     },
     "formCheck": {
       "eyebrow": "AI form check",
