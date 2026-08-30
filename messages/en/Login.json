@@ -26,7 +26,7 @@
   "mock": {
     "intro": "Enter your invite code to get access. Don't have one? Write to ",
     "inviteCodeLabel": "Invite code",
-    "invalidCode": "· Invalid code — try again",
+    "invalidCode": "Invalid code — try again",
     "submit": "Get access →",
     "testCodesLabel": "Test codes: "
   },
