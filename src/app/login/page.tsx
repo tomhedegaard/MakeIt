@@ -108,11 +108,7 @@ async function MockForm({ err }: { err?: string }) {
           />
         </label>
 
-        {err ? (
-          <p className="text-sm text-fg font-mono uppercase tracking-[0.14em]">
-            {t("invalidCode")}
-          </p>
-        ) : null}
+        {err ? <LoginErrorAlert>{t("invalidCode")}</LoginErrorAlert> : null}
 
         <button type="submit" className="btn btn-primary w-full mt-2">
           {t("submit")}
@@ -151,12 +147,7 @@ async function SupabaseForm({
       <TabBar active={tab} />
 
       {errLabel ? (
-        <p
-          className="mb-4 text-sm font-mono uppercase tracking-[0.14em] text-red-400"
-          role="alert"
-        >
-          · {errLabel}
-        </p>
+        <LoginErrorAlert className="mb-4">{errLabel}</LoginErrorAlert>
       ) : null}
 
       {tab === "password" ? (
@@ -366,6 +357,34 @@ async function OAuthForm() {
         </div>
       </form>
     </>
+  );
+}
+
+function LoginErrorAlert({
+  children,
+  className = "",
+}: {
+  children: string;
+  className?: string;
+}) {
+  return (
+    <p
+      role="alert"
+      className={`flex items-center gap-2 rounded-lg border border-danger/40 bg-danger/15 px-3 py-2 text-sm font-mono uppercase tracking-[0.14em] text-danger ${className}`}
+    >
+      <DangerGlyph />
+      <span>{children}</span>
+    </p>
+  );
+}
+
+function DangerGlyph() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-3.5 shrink-0" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M12 8v5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <circle cx="12" cy="16.2" r="0.9" fill="currentColor" />
+    </svg>
   );
 }
 

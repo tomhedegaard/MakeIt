@@ -26,7 +26,7 @@
   "mock": {
     "intro": "Indtast din invite-kode for at få adgang. Har du ikke en? Skriv til ",
     "inviteCodeLabel": "Invite-kode",
-    "invalidCode": "· Ugyldig kode — prøv igen",
+    "invalidCode": "Ugyldig kode — prøv igen",
     "submit": "Få adgang →",
     "testCodesLabel": "Test-koder: "
   },
