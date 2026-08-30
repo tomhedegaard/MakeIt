@@ -27,7 +27,13 @@
       "engineSuffix": "Every morning"
     },
     "subline": "Coaching built on your body's data.",
-    "subline2": "1:1 coaching, AI-adapted programs, form checks and <heart>HRV-aware recovery</heart> — in one place, at a fraction of market price. Built in Copenhagen. Made for athletes who lift heavy.",
+    "domains": {
+      "body": "Body",
+      "food": "Food",
+      "heart": "Heart",
+      "mind": "Mind"
+    },
+    "subline2": "Training and meals, HRV recovery and a mind check — 1:1 coaching, AI-adapted programs and form checks in one place, at a fraction of market price. Built in Copenhagen. Made for athletes who lift heavy.",
     "ctaPrimary": "Get access",
     "ctaSecondary": "Learn more",
     "ctaTertiary": "Try the engine ↓",
