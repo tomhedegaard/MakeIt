@@ -1,18 +1,16 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { escalateMentalSafetyAction } from "@/app/(app)/mind/journal/escalate-actions";
 
 /**
  * Surfaces when the journal moderation pipeline detects a crisis or
- * flagged entry. Two modes:
+ * flagged entry. Livslinien / 112 always stay visible.
  *
- *  - Resources view (default): emergency numbers + privacy reassurance
- *  - Tell Munk view: member-written summary textarea + submit; the
- *    raw journal is NEVER shared, only what the member chooses to
- *    write here.
- *
- * No automatic escalation. The member chooses.
+ * "Skriv til Munk" stores a member-written summary on
+ * mental_safety_alerts when connected mode actually persists. The UI
+ * never claims Munk was notified. Demo returns persisted=false.
  */
 export default function MentalResourcesModal({
   open: openInitially,
@@ -21,8 +19,10 @@ export default function MentalResourcesModal({
   open: boolean;
   onClose: () => void;
 }) {
+  const t = useTranslations("Mind.safety");
   const [open, setOpen] = useState(openInitially);
   const [mode, setMode] = useState<"resources" | "escalate" | "sent">("resources");
+  const [persisted, setPersisted] = useState(false);
   const [summary, setSummary] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
@@ -32,14 +32,35 @@ export default function MentalResourcesModal({
     onClose();
   }
 
+  function errorCopy(code: string): string {
+    switch (code) {
+      case "not_authed":
+        return t("errorNotAuthed");
+      case "invalid_input":
+        return t("errorInvalid");
+      case "summary_too_short":
+        return t("errorTooShort");
+      case "summary_too_long":
+        return t("errorTooLong");
+      case "rls_denied":
+        return t("errorRls");
+      case "write_failed":
+      case "no_supabase_client":
+        return t("errorWrite");
+      default:
+        return t("errorGeneric");
+    }
+  }
+
   function submitEscalation(formData: FormData) {
     setError(null);
     startTransition(async () => {
       const res = await escalateMentalSafetyAction(formData);
       if (res && "error" in res) {
-        setError(res.error);
+        setError(errorCopy(res.error));
         return;
       }
+      setPersisted(res.persisted);
       setMode("sent");
     });
   }
@@ -57,41 +78,20 @@ export default function MentalResourcesModal({
         {mode === "resources" ? (
           <>
             <div>
-              <div className="eyebrow mb-3">Mind · sikkerhed</div>
+              <div className="eyebrow mb-3">{t("eyebrow")}</div>
               <h2
                 id="mental-resources-title"
                 className="font-display text-2xl md:text-3xl"
               >
-                Vi så et ord der bekymrer os.
+                {t("title")}
               </h2>
             </div>
 
-            <p className="text-fg-dim leading-relaxed">
-              Du skrev noget der lyder som om du har det rigtig svært lige nu.
-              Du behøver ikke gøre noget med os her — det vigtigste er at du
-              taler med et menneske der kan hjælpe.
-            </p>
+            <p className="text-fg-dim leading-relaxed">{t("body")}</p>
 
-            <div className="border-l-2 border-fg/30 pl-5 space-y-1.5">
-              <h3 className="eyebrow mb-2">Hvis det brænder</h3>
-              <p>
-                <a href="tel:70201201" className="underline hover:opacity-80">
-                  Livslinien · 70 201 201
-                </a>{" "}
-                <span className="text-fg-dim text-sm">(døgnet rundt)</span>
-              </p>
-              <p>
-                <a href="tel:112" className="underline hover:opacity-80">
-                  Akut hjælp · 112
-                </a>
-              </p>
-              <p className="text-fg-dim">Din egen læge eller psykiatrisk skadestue</p>
-            </div>
+            <CrisisLines t={t} />
 
-            <p className="text-fg-dim text-sm">
-              Din journal-post er gemt og er stadig kun din. Vi har ikke
-              delt noget med nogen.
-            </p>
+            <p className="text-fg-dim text-sm">{t("privacy")}</p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
@@ -99,14 +99,14 @@ export default function MentalResourcesModal({
                 onClick={() => setMode("escalate")}
                 className="inline-flex items-center justify-center rounded-full border hairline px-5 py-2.5 text-sm font-medium hover:bg-bg/30 transition-colors"
               >
-                Fortæl Munk
+                {t("tellMunk")}
               </button>
               <button
                 type="button"
                 onClick={close}
                 className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
               >
-                Tak — luk
+                {t("close")}
               </button>
             </div>
           </>
@@ -115,15 +115,16 @@ export default function MentalResourcesModal({
         {mode === "escalate" ? (
           <form action={submitEscalation} className="space-y-5">
             <div>
-              <div className="eyebrow mb-3">Mind · fortæl Munk</div>
-              <h2 className="font-display text-2xl md:text-3xl">
-                Skriv selv hvad du vil dele.
+              <div className="eyebrow mb-3">{t("escalateEyebrow")}</div>
+              <h2
+                id="mental-resources-title"
+                className="font-display text-2xl md:text-3xl"
+              >
+                {t("escalateTitle")}
               </h2>
             </div>
-            <p className="text-fg-dim text-sm leading-relaxed">
-              Munk ser KUN det du skriver her. Aldrig din journal. Vær så
-              kort eller udførlig du har lyst til.
-            </p>
+            <p className="text-fg-dim text-sm leading-relaxed">{t("escalateBody")}</p>
+            <CrisisLines t={t} />
             <textarea
               name="summary"
               value={summary}
@@ -132,7 +133,7 @@ export default function MentalResourcesModal({
               maxLength={1000}
               required
               rows={6}
-              placeholder="Fx: 'Jeg har det svært i øjeblikket. Kunne vi tale i denne uge?'"
+              placeholder={t("escalatePlaceholder")}
               className="w-full rounded-xl bg-bg/60 border hairline px-4 py-3 text-base resize-none focus:outline-none focus:border-fg/40"
             />
             <div className="text-fg-dim text-xs text-right tabular-nums">
@@ -149,14 +150,14 @@ export default function MentalResourcesModal({
                 onClick={() => setMode("resources")}
                 className="text-fg-dim text-sm hover:text-fg"
               >
-                Tilbage
+                {t("back")}
               </button>
               <button
                 type="submit"
                 disabled={pending || summary.trim().length < 4}
                 className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
               >
-                {pending ? "Sender..." : "Send til Munk"}
+                {pending ? t("sending") : t("send")}
               </button>
             </div>
           </form>
@@ -165,26 +166,52 @@ export default function MentalResourcesModal({
         {mode === "sent" ? (
           <>
             <div>
-              <div className="eyebrow mb-3">Mind · sendt</div>
-              <h2 className="font-display text-2xl md:text-3xl">
-                Munk får besked.
+              <div className="eyebrow mb-3">{t("sentEyebrow")}</div>
+              <h2
+                id="mental-resources-title"
+                className="font-display text-2xl md:text-3xl"
+              >
+                {persisted ? t("sentTitle") : t("sentDemoTitle")}
               </h2>
             </div>
             <p className="text-fg-dim leading-relaxed">
-              Tak fordi du turde. Munk gennemgår beskeden hurtigst muligt og
-              skriver tilbage. Hvis du har det rigtig svært før han svarer:
-              Livslinien 70 201 201, døgnet rundt.
+              {persisted ? t("sentBody") : t("sentDemoBody")}
             </p>
+            <CrisisLines t={t} />
             <button
               type="button"
               onClick={close}
               className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
             >
-              Luk
+              {t("sentClose")}
             </button>
           </>
         ) : null}
       </div>
+    </div>
+  );
+}
+
+function CrisisLines({
+  t,
+}: {
+  t: ReturnType<typeof useTranslations<"Mind.safety">>;
+}) {
+  return (
+    <div className="border-l-2 border-fg/30 pl-5 space-y-1.5">
+      <h3 className="eyebrow mb-2">{t("ifBurning")}</h3>
+      <p>
+        <a href="tel:70201201" className="underline hover:opacity-80">
+          {t("livslinien")}
+        </a>{" "}
+        <span className="text-fg-dim text-sm">{t("livslinienHours")}</span>
+      </p>
+      <p>
+        <a href="tel:112" className="underline hover:opacity-80">
+          {t("emergency")}
+        </a>
+      </p>
+      <p className="text-fg-dim">{t("doctor")}</p>
     </div>
   );
 }
