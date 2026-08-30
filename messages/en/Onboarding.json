@@ -50,7 +50,7 @@
   "step1": {
     "introEyebrow": "Hey @{handle}",
     "introTitle": "Let's build your program.",
-    "introSub": "We'll ask about your goal, your level and your equipment — then the AI generates a personalized program in 30 seconds.",
+    "introSub": "Three questions: goal, level, equipment. Then you have a program.",
     "errorBanner": "Pick an option in each group.",
     "goalEyebrow": "Goal",
     "goalTitle": "What are you aiming for?",
@@ -77,7 +77,7 @@
     "introSub": "Injuries, mobility issues or things you'd like to work around. Totally optional.",
     "injuriesLabel": "Injuries / notes",
     "injuriesPlaceholder": "E.g. Slightly strained right shoulder — avoid behind-the-neck press.",
-    "footnote": "When you hit Done, we generate your program and drop the first session onto your Today screen."
+    "footnote": "After this, the first session is on Today."
   },
   "summary": {
     "goal": "Goal",
@@ -87,7 +87,7 @@
   },
   "nav": {
     "back": "Back",
-    "next": "Next →",
-    "submit": "Generate my program →"
+    "next": "Next",
+    "submit": "Done"
   }
 }

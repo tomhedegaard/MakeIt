@@ -27,7 +27,7 @@
     "intro": "Indtast din invite-kode for at få adgang. Har du ikke en? Skriv til ",
     "inviteCodeLabel": "Invite-kode",
     "invalidCode": "Ugyldig kode — prøv igen",
-    "submit": "Få adgang →",
+    "submit": "Få adgang",
     "testCodesLabel": "Test-koder: "
   },
   "tabs": {
@@ -40,7 +40,7 @@
     "emailLabel": "Email",
     "emailPlaceholder": "dig@email.com",
     "inviteCodeLabel": "Invite-kode",
-    "submit": "Send login-link →"
+    "submit": "Send login-link"
   },
   "password": {
     "introSignup": "Opret en konto med email + password. Invite-kode kræves.",
@@ -50,8 +50,8 @@
     "passwordLabel": "Password",
     "passwordPlaceholder": "Mindst 8 tegn",
     "inviteCodeLabel": "Invite-kode",
-    "submitSignup": "Opret konto →",
-    "submitSignin": "Log ind →",
+    "submitSignup": "Opret konto",
+    "submitSignin": "Log ind",
     "hasAccount": "Har du allerede en konto?",
     "signinLink": "Log ind",
     "newHere": "Ny her?",

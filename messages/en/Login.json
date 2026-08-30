@@ -27,7 +27,7 @@
     "intro": "Enter your invite code to get access. Don't have one? Write to ",
     "inviteCodeLabel": "Invite code",
     "invalidCode": "Invalid code — try again",
-    "submit": "Get access →",
+    "submit": "Get access",
     "testCodesLabel": "Test codes: "
   },
   "tabs": {
@@ -40,7 +40,7 @@
     "emailLabel": "Email",
     "emailPlaceholder": "you@email.com",
     "inviteCodeLabel": "Invite code",
-    "submit": "Send login link →"
+    "submit": "Send login link"
   },
   "password": {
     "introSignup": "Create an account with email + password. Invite code required.",
@@ -50,8 +50,8 @@
     "passwordLabel": "Password",
     "passwordPlaceholder": "At least 8 characters",
     "inviteCodeLabel": "Invite code",
-    "submitSignup": "Create account →",
-    "submitSignin": "Sign in →",
+    "submitSignup": "Create account",
+    "submitSignin": "Sign in",
     "hasAccount": "Already have an account?",
     "signinLink": "Sign in",
     "newHere": "New here?",
