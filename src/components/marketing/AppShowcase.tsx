@@ -1,31 +1,19 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { domainTags } from "@/components/marketing/domainTags";
+import { getShowcaseNutritionDay } from "@/lib/marketing/nutrition-showcase";
 
 /**
- * WAUW-2 — section showing what the platform looks like across SIX
- * surfaces (v1 had four). The two new mini-screens — Buddy and
- * Coach School — surface Søjle 4 (Crew Coaching Pyramid) features
- * that were invisible on the v1 landing.
+ * Seven mini-phones: Today, Session, Kost, Readiness, Form-check,
+ * Buddy, Coach School. Kost sits third so the four-domain story
+ * reads body → food → heart across the first row on `lg`.
  *
- * Spec: .claude/plans/for-at-have-wauw-humble-naur.md §"AppShowcase"
- *
- * Implementation note (deviation from plan): the plan called for
- * hand-curated WebP screenshots replacing the v1 hand-coded mini-
- * screens. After reading v1 we observed the mini-screens ARE
- * marketing-grade and design-token-consistent — they're not the
- * "placeholder phones" the plan brief assumed. Replacing them with
- * real-screen WebPs requires a Munk-anonymization review per shot
- * and is correctly deferred to a follow-up commit. The pragmatic
- * win in this pass is EXPANDING the v1 grid with two new søjle-4
- * surfaces; that's the wauw delta versus the v1 landing without
- * blocking on screenshot capture.
- *
- * Layout: 2-column grid on `md`, 3-column on `lg+`, capping at 6
- * cells. On mobile each phone stacks full-width with its callout.
+ * Layout: `md:grid-cols-2 lg:grid-cols-3` — a 3+3+1 wrap is fine.
+ * Buddy and Coach School stay; they are not replaced by food.
  */
 export default async function AppShowcase() {
   const t = await getTranslations("Marketing.app");
+  const nutrition = getShowcaseNutritionDay();
 
   return (
     <section id="app" className="relative border-t hairline py-20 md:py-28">
@@ -47,16 +35,25 @@ export default async function AppShowcase() {
           <Phone label={t("phone.sessionLabel")} detail={t("phone.sessionDetail")} delay={120} domain="body">
             <SessionScreen />
           </Phone>
-          <Phone label={t("phone.readinessLabel")} detail={t("phone.readinessDetail")} delay={240} domain="heart">
+          <Phone
+            label={t("phone.nutritionLabel")}
+            detail={t("phone.nutritionDetail")}
+            photoBy={t("nutrition.photoBy", { names: nutrition.photographers.join(", ") })}
+            delay={240}
+            domain="food"
+          >
+            <NutritionScreen />
+          </Phone>
+          <Phone label={t("phone.readinessLabel")} detail={t("phone.readinessDetail")} delay={360} domain="heart">
             <ReadinessScreen />
           </Phone>
-          <Phone label={t("phone.formCheckLabel")} detail={t("phone.formCheckDetail")} delay={360} domain="body">
+          <Phone label={t("phone.formCheckLabel")} detail={t("phone.formCheckDetail")} delay={480} domain="body">
             <FormCheckScreen />
           </Phone>
-          <Phone label={t("phone.buddyLabel")} detail={t("phone.buddyDetail")} delay={480}>
+          <Phone label={t("phone.buddyLabel")} detail={t("phone.buddyDetail")} delay={600}>
             <BuddyScreen />
           </Phone>
-          <Phone label={t("phone.coachSchoolLabel")} detail={t("phone.coachSchoolDetail")} delay={600}>
+          <Phone label={t("phone.coachSchoolLabel")} detail={t("phone.coachSchoolDetail")} delay={720}>
             <CoachSchoolScreen />
           </Phone>
         </div>
@@ -73,12 +70,14 @@ function Phone({
   children,
   label,
   detail,
+  photoBy,
   delay,
   domain,
 }: {
   children: React.ReactNode;
   label: string;
   detail: string;
+  photoBy?: string;
   delay: number;
   /** Optional domain hue for the callout (docs/DOMAIN_COLOR_SYSTEM.md) */
   domain?: "heart" | "food" | "body" | "mind";
@@ -114,6 +113,9 @@ function Phone({
           {label}
         </div>
         <div className="text-xs text-fg-dim font-mono">{detail}</div>
+        {photoBy ? (
+          <div className="mt-1 text-[9px] text-fg-faint font-mono">{photoBy}</div>
+        ) : null}
       </div>
     </div>
   );
@@ -168,6 +170,75 @@ async function TodayScreen() {
           style={{ background: "var(--fg)", color: "var(--bg)" }}
         >
           {t("startSession")}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+async function NutritionScreen() {
+  const t = await getTranslations("Marketing.app.nutrition");
+  const { meals } = getShowcaseNutritionDay();
+  const todayKcal = meals.reduce((sum, m) => sum + m.estKcal, 0);
+  const todayProtein = meals.reduce((sum, m) => sum + m.estProteinG, 0);
+
+  return (
+    <div className="flex flex-col h-full text-[10px]" data-domain="food">
+      <div className="flex items-end justify-between mb-2">
+        <div>
+          <div className="text-[8px] tracking-[0.18em] uppercase font-mono eyebrow-domain mb-1">
+            {t("kicker")}
+          </div>
+          <span className="domain-stroke" aria-hidden />
+        </div>
+        <div className="text-right">
+          <div className="numeric text-base leading-none">{todayKcal}</div>
+          <div className="text-[7px] tracking-[0.18em] uppercase text-fg-faint font-mono">
+            {t("kcal")} · {t("proteinUnit", { protein: todayProtein })}
+          </div>
+        </div>
+      </div>
+
+      <div className="surface-2 rounded-xl p-2 flex-1 flex flex-col">
+        <ul className="divide-y hairline flex-1">
+          {meals.map((meal) => (
+            <li key={meal.slot} className="flex items-center gap-2 py-1.5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={meal.imageSrc}
+                alt=""
+                width={36}
+                height={36}
+                className="size-9 rounded-md object-cover shrink-0 hairline border"
+              />
+              <div className="flex-1 min-w-0">
+                <div className="text-[7px] tracking-[0.16em] uppercase text-fg-dim font-mono">
+                  {meal.slot === "frokost"
+                    ? t("slotFrokost")
+                    : meal.slot === "aften"
+                      ? t("slotAften")
+                      : t("slotMorgen")}
+                </div>
+                <div className="font-display text-[11px] leading-tight truncate">
+                  {meal.title}
+                </div>
+                <div className="text-[8px] font-mono text-fg-faint">
+                  {t("macros", {
+                    kcal: meal.estKcal,
+                    protein: meal.estProteinG,
+                    min: meal.prepMinutes,
+                  })}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div
+          className="mt-auto rounded-full text-center py-2 font-mono text-[9px] tracking-[0.18em] uppercase font-medium"
+          style={{ background: "var(--fg)", color: "var(--bg)" }}
+        >
+          {t("openPlan")}
         </div>
       </div>
     </div>
