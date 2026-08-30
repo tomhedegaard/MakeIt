@@ -248,13 +248,11 @@ function HeroDomainKickers() {
   return (
     <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
       {HERO_DOMAINS.map((domain) => (
-        <span
-          key={domain}
-          data-domain={domain}
-          className="eyebrow eyebrow-domain flex items-center gap-2"
-        >
-          <span className="size-1.5 rounded-full bg-domain" aria-hidden />
-          {t(`domains.${domain}`)}
+        <span key={domain} data-domain={domain} className="inline-flex">
+          <span className="eyebrow eyebrow-domain flex items-center gap-2">
+            <span className="size-1.5 rounded-full bg-domain" aria-hidden />
+            {t(`domains.${domain}`)}
+          </span>
         </span>
       ))}
     </div>
