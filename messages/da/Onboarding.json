@@ -50,7 +50,7 @@
   "step1": {
     "introEyebrow": "Hej @{handle}",
     "introTitle": "Lad os bygge dit program.",
-    "introSub": "Vi spørger ind til dit mål, dit niveau og dit udstyr — så genererer AI'en et personligt program på 30 sekunder.",
+    "introSub": "Tre spørgsmål: mål, niveau, udstyr. Så har du et program.",
     "errorBanner": "Vælg en option i hver gruppe.",
     "goalEyebrow": "Mål",
     "goalTitle": "Hvad sigter du efter?",
@@ -77,7 +77,7 @@
     "introSub": "Skader, mobilitetsproblemer eller ting du gerne vil arbejde rundt om. Helt valgfrit.",
     "injuriesLabel": "Skader / noter",
     "injuriesPlaceholder": "F.eks. Lidt anstrengt højre skulder — undgå behind-the-neck press.",
-    "footnote": "Når du trykker Færdig, genererer vi dit program og lægger første session ind på din Today-skærm."
+    "footnote": "Bagefter ligger første session på Today."
   },
   "summary": {
     "goal": "Mål",
@@ -87,7 +87,7 @@
   },
   "nav": {
     "back": "Tilbage",
-    "next": "Næste →",
-    "submit": "Generér mit program →"
+    "next": "Næste",
+    "submit": "Færdig"
   }
 }

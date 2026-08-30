@@ -31,18 +31,18 @@
   "tour": {
     "skip": "Spring over",
     "back": "Tilbage",
-    "next": "Næste →",
-    "begin": "Begynd →",
+    "next": "Næste",
+    "begin": "Begynd",
     "steps": {
       "welcome": {
         "eyebrow": "Velkommen",
         "title": "Du er inde i crewet.",
-        "body": "Hurtig rundtur — så ved du hvor alt ligger. 4 skærme, 30 sekunder."
+        "body": "Fire skærme — så ved du hvor alt ligger."
       },
       "today": {
         "eyebrow": "01 · Today",
         "title": "Dagens session ligger her.",
-        "body": "Hver morgen åbner du Today. Tap det store \"Start session →\"-kort og du er i gang. AI'en har allerede valgt vægte ud fra dine 1RM'er."
+        "body": "Hver morgen åbner du Today. Tap det store \"Start session\"-kort og du er i gang. Vægtene er sat ud fra dine 1RM'er."
       },
       "tabs": {
         "eyebrow": "02 · Træn / Crew / Reps / Mig",

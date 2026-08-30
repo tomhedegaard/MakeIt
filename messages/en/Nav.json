@@ -31,18 +31,18 @@
   "tour": {
     "skip": "Skip",
     "back": "Back",
-    "next": "Next →",
-    "begin": "Let's go →",
+    "next": "Next",
+    "begin": "Begin",
     "steps": {
       "welcome": {
         "eyebrow": "Welcome",
         "title": "You're in the crew.",
-        "body": "Quick tour — so you know where everything lives. 4 screens, 30 seconds."
+        "body": "Four screens — then you know where everything lives."
       },
       "today": {
         "eyebrow": "01 · Today",
         "title": "Today's session lives here.",
-        "body": "Every morning you open Today. Tap the big \"Start session →\" card and you're off. The AI has already picked weights based on your 1RMs."
+        "body": "Every morning you open Today. Tap the big \"Start session\" card and you're off. Weights are set from your 1RMs."
       },
       "tabs": {
         "eyebrow": "02 · Train / Crew / Reps / Me",
