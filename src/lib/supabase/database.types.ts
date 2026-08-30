@@ -2052,6 +2052,48 @@ export type Database = {
         }
         Relationships: []
       }
+      mental_safety_alerts: {
+        Row: {
+          created_at: string
+          id: string
+          member_id: string
+          status: string
+          summary: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          member_id: string
+          status?: string
+          summary: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          member_id?: string
+          status?: string
+          summary?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mental_safety_alerts_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "mental_safety_alerts_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mental_settings: {
         Row: {
           ai_coach_enabled: boolean
