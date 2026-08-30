@@ -8,8 +8,9 @@
  * Claude catches harder cases (oblique language, mixed signals, sarcasm
  * that looks like crisis but isn't, etc.).
  *
- * Returns null on any failure — the caller treats absence as "no
- * additional info beyond keyword filter" and proceeds.
+ * Returns null on any failure. The caller combines that with the
+ * keyword pre-filter via combineModerationVerdicts — Claude-null is
+ * fail-closed (flagged), never treated as clean.
  *
  * Conservative principle: when in doubt, lean toward "flagged". False
  * positives surface the resources modal (helpful); false negatives are
@@ -20,6 +21,8 @@ import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
+
+export { combineModerationVerdicts } from "./moderation";
 
 export const MODERATION_MODEL_ID = "claude-haiku-4-5-20251001";
 
@@ -63,8 +66,8 @@ Output kun strukturen.`;
 
 /**
  * Moderate a member-written body of text (typically a journal entry).
- * Returns null on any API failure so the caller falls through to the
- * keyword-filter result alone.
+ * Returns null on any API failure. The caller must run
+ * combineModerationVerdicts — do not treat null as clean.
  */
 export async function moderateJournalText(
   body: string,
@@ -118,17 +121,3 @@ export async function moderateJournalText(
   }
 }
 
-/**
- * Resolve a final moderation status by combining the keyword pre-filter
- * with the Claude verdict. Conservative: any flag wins.
- */
-export function combineModerationVerdicts(
-  keywordIsCrisis: boolean,
-  claude: ModerationResult | null,
-): "clean" | "flagged" | "crisis" {
-  if (keywordIsCrisis) return "crisis";
-  if (!claude) return "clean";
-  if (claude.status === "crisis") return "crisis";
-  if (claude.status === "flagged") return "flagged";
-  return "clean";
-}

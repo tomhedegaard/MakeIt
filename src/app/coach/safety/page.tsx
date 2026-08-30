@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import Container from "@/components/Container";
 import { getSession } from "@/lib/auth";
@@ -11,14 +10,9 @@ export const metadata = {
 /**
  * `/coach/safety` — Munk-only mental safety observability.
  *
- * Surfaces COUNTS ONLY. Never journal bodies. Never moderation reasons
- * tied to specific members. The point is: Munk can see whether the
- * pipeline is firing too often (false-positive tuning) or whether
- * he has open escalations needing attention.
- *
- * Bodies remain hard-private (RLS owner-only). The escalation flow
- * surfaces a member-WRITTEN summary in /coach/queue (hrv_alerts.
- * conditions_met.summary) — that's the only thing Munk ever sees.
+ * Journals are owner-only RLS. We do not query them here and we do
+ * not render zeros as if they were coverage. Open rows are
+ * member-written summaries from mental_safety_alerts.
  */
 export default async function CoachSafetyPage() {
   const member = await getSession();
@@ -26,16 +20,6 @@ export default async function CoachSafetyPage() {
   if (!member.isAdmin) redirect("/coach");
 
   const week = await getMentalSafetyMetrics(7);
-  const month = await getMentalSafetyMetrics(30);
-
-  const flaggedRate7d =
-    week.totalEntries > 0
-      ? Math.round(((week.flaggedCount + week.crisisCount) / week.totalEntries) * 100)
-      : 0;
-  const flaggedRate30d =
-    month.totalEntries > 0
-      ? Math.round(((month.flaggedCount + month.crisisCount) / month.totalEntries) * 100)
-      : 0;
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
@@ -45,82 +29,109 @@ export default async function CoachSafetyPage() {
           Safety.
         </h1>
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-          Mental moderation pipeline — tællere kun. Du ser ALDRIG en
-          journal-tekst herfra. Eskaleringer ankommer i din normale form-check kø
-          med en medlems-skrevet summary.
+          En styrkecoach er ikke en krisevagt. Livslinien 70 201 201 og 112
+          er det rigtige ved akut krise. Her ser du kun det medlemmet selv
+          har valgt at skrive — aldrig journal-tekst.
         </p>
       </header>
 
       <section>
         <h2 className="font-display text-xl mb-4">Åbne eskaleringer</h2>
-        <div className="rounded-2xl border-2 border-fg/40 bg-bg-2/30 p-6 space-y-2">
-          <div className="font-display text-5xl tabular-nums">
-            {week.openMentalAlerts}
+        {!week.alertsReadable ? (
+          <div className="rounded-2xl border hairline bg-bg-2/30 p-6 space-y-2">
+            <p className="text-fg-dim text-sm leading-relaxed">
+              <code className="text-fg">mental_safety_alerts</code> kan ikke
+              læses. Enten mangler migration 0057, eller RLS blokerede
+              læsningen. Det er ikke det samme som &laquo;nul sager&raquo;.
+            </p>
           </div>
-          <p className="text-fg-dim text-sm">
-            Mental-safety alerts venter i køen.{" "}
-            {week.openMentalAlerts > 0 ? (
-              <Link href="/coach/queue" className="text-fg underline hover:opacity-80">
-                Til kø →
-              </Link>
-            ) : null}
-          </p>
-        </div>
+        ) : week.openAlerts.length === 0 ? (
+          <div className="rounded-2xl border hairline bg-bg-2/30 p-6 space-y-2">
+            <div className="font-display text-5xl tabular-nums">0</div>
+            <p className="text-fg-dim text-sm">
+              Ingen åbne medlems-skrevne summaries. Munk får ikke push — åbn
+              denne side for at se nye.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-fg-dim text-sm">
+              <span className="tabular-nums font-medium text-fg">
+                {week.openMentalAlerts}
+              </span>{" "}
+              åbne. Kun medlems-skrevet tekst.
+            </p>
+            <ul className="space-y-3">
+              {week.openAlerts.map((alert) => (
+                <li
+                  key={alert.id}
+                  className="rounded-2xl border hairline bg-bg-2/30 p-5 space-y-2"
+                >
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-sm">@{alert.member_handle}</span>
+                    <span className="text-fg-dim text-xs tabular-nums">
+                      {alert.created_at.slice(0, 10)}
+                    </span>
+                  </div>
+                  <p className="text-fg leading-relaxed whitespace-pre-wrap">
+                    {alert.summary}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
 
       <section>
-        <h2 className="font-display text-xl mb-4">Sidste 7 dage</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline rounded-xl overflow-hidden">
-          <KPI label="Journal entries" value={week.totalEntries} />
-          <KPI label="Clean" value={week.cleanCount} accent="emerald" />
-          <KPI label="Flagged" value={week.flaggedCount} accent="yellow" />
-          <KPI label="Crisis" value={week.crisisCount} accent="red" />
-        </div>
-        <p className="mt-3 text-fg-dim text-xs">
-          Flag-rate i ugen: <span className="tabular-nums">{flaggedRate7d}%</span>
-          {flaggedRate7d > 15 ? (
-            <span className="ml-2 text-yellow-300">
-              (højt — overvej at tune crisis-keywords eller Claude moderation-prompt)
-            </span>
-          ) : null}
-        </p>
-      </section>
-
-      <section>
-        <h2 className="font-display text-xl mb-4">Sidste 30 dage</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline rounded-xl overflow-hidden">
-          <KPI label="Journal entries" value={month.totalEntries} />
-          <KPI label="Clean" value={month.cleanCount} accent="emerald" />
-          <KPI label="Flagged" value={month.flaggedCount} accent="yellow" />
-          <KPI label="Crisis" value={month.crisisCount} accent="red" />
-        </div>
-        <p className="mt-3 text-fg-dim text-xs">
-          Flag-rate i månaden: <span className="tabular-nums">{flaggedRate30d}%</span>
-        </p>
+        <h2 className="font-display text-xl mb-4">Journal-volumen</h2>
+        {week.journalCoverage === "demo" ? (
+          <div className="space-y-3">
+            <p className="text-fg-dim text-xs">
+              Demo-tal — ikke live dækning. I connected mode kan coaches
+              ikke aggregere andres journals (RLS owner-only).
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline rounded-xl overflow-hidden">
+              <KPI label="Journal entries" value={week.totalEntries ?? 0} />
+              <KPI label="Clean" value={week.cleanCount ?? 0} />
+              <KPI label="Flagged" value={week.flaggedCount ?? 0} />
+              <KPI label="Crisis" value={week.crisisCount ?? 0} />
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-2xl border hairline bg-bg-2/30 p-6">
+            <p className="text-fg-dim text-sm leading-relaxed">
+              Journal-tal vises ikke. <code className="text-fg">journal_entries</code>{" "}
+              er owner-only — Munk kan ikke se andres poster, og et 0-0-0-0
+              her ville være falsk dækning. Claude-nulls tælles i logs som{" "}
+              <code className="text-fg">[mind] moderation_claude_null</code>.
+            </p>
+          </div>
+        )}
       </section>
 
       <section>
         <h2 className="font-display text-xl mb-4">Sådan virker pipelinen</h2>
         <ol className="space-y-2 text-fg-dim text-sm leading-relaxed list-decimal pl-5">
           <li>
-            <strong className="text-fg">Keyword pre-filter:</strong> hurtig regex over
-            entry-body (selvmord, selvskade, alvorlig håbløshed, substansbrug).
-            Synkron. Conservative &mdash; false-positives OK.
+            <strong className="text-fg">Keyword pre-filter:</strong> hurtig regex
+            over entry-body. Conservative — false-positives OK.
           </li>
           <li>
-            <strong className="text-fg">Claude moderation (Haiku):</strong> anden
-            check der fanger oblique sprog keyword&apos;erne missede. ~2-3s pr. entry.
+            <strong className="text-fg">Claude moderation (Haiku):</strong> fanger
+            oblique sprog. Hvis Claude er nede eller returnerer null, er
+            verdictet <em>ikke</em> clean — Livslinien-modal vises.
           </li>
           <li>
-            <strong className="text-fg">Resources-modal:</strong> hvis nogen af de
-            to flager → medlem ser Livslinien + 112 + læge-ressourcer.
+            <strong className="text-fg">Resources-modal:</strong> Livslinien + 112
+            vises altid ved flagged/crisis. En styrkecoach er ikke en
+            krisevagt.
           </li>
           <li>
-            <strong className="text-fg">Consent-gated coach-eskalering:</strong>
-            medlem TRYKKER &laquo;fortæl Munk&raquo; + skriver deres egen summary →
-            havner i din kø som <code className="text-fg">hrv_alerts</code> med
-            <code className="text-fg"> conditions_met.source = &#39;mental_safety&#39;</code>.
-            Du ser ALDRIG den rå journal — kun medlems-summary.
+            <strong className="text-fg">Consent-gated write:</strong> medlem
+            skriver selv en summary →{" "}
+            <code className="text-fg">mental_safety_alerts</code>. Ingen
+            push/mail. Du ser aldrig den rå journal.
           </li>
         </ol>
       </section>
@@ -128,25 +139,11 @@ export default async function CoachSafetyPage() {
   );
 }
 
-type KPIProps = {
-  label: string;
-  value: number;
-  accent?: "emerald" | "yellow" | "red";
-};
-
-function KPI({ label, value, accent }: KPIProps) {
-  const color =
-    accent === "emerald"
-      ? "text-emerald-300"
-      : accent === "yellow"
-        ? "text-yellow-300"
-        : accent === "red"
-          ? "text-red-300"
-          : "text-fg";
+function KPI({ label, value }: { label: string; value: number }) {
   return (
     <div className="bg-bg-2/40 p-5">
       <div className="eyebrow text-xs mb-2">{label}</div>
-      <div className={`font-display text-3xl tabular-nums ${color}`}>{value}</div>
+      <div className="font-display text-3xl tabular-nums text-fg">{value}</div>
     </div>
   );
 }

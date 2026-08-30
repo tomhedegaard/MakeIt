@@ -493,9 +493,9 @@ export async function getOpenHrvAlerts(limit = 30): Promise<HrvAlertRow[]> {
   const supabase = await createClient();
   if (!supabase) return [];
 
-  // Fetch all open alerts and filter out adaptive-engine ones in TS —
-  // PostgREST's jsonb operator syntax is fiddly and the alert table is
-  // small. The dedicated `getOpenAdaptiveAlerts` surfaces those.
+  // Fetch all open alerts and filter out adaptive-engine + leftover
+  // mental_safety payloads in TS. Mental safety no longer writes
+  // hrv_alerts (0057); the filter is defense against any leftover rows.
   const { data } = await supabase
     .from("hrv_alerts")
     .select("id, triggered_at, conditions_met, member:members!inner(id, handle)")
@@ -507,7 +507,7 @@ export async function getOpenHrvAlerts(limit = 30): Promise<HrvAlertRow[]> {
   return data
     .filter((a) => {
       const cm = a.conditions_met as { source?: string } | null;
-      return cm?.source !== "adaptive_v0";
+      return cm?.source !== "adaptive_v0" && cm?.source !== "mental_safety";
     })
     .map((a) => {
       const m = Array.isArray(a.member) ? a.member[0] : a.member;
