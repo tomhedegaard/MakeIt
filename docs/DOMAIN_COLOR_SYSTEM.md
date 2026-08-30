@@ -1,7 +1,7 @@
 # Domænefarver — tertiært farvesystem oven på monokrom base
 
-> Status: UDKAST til beslutning. Designprincip + tokens + faseplan for indførelse af
-> fire domænefarver i MakeIt's ellers sort/hvide "strength editorial"-design.
+> Status: Vedtaget 2026-08-30. Designprincip + tokens + faseplan for de fire
+> domænefarver i MakeIt's ellers sort/hvide "strength editorial"-design.
 
 ## 1. Princip
 
@@ -56,11 +56,11 @@ Tilføjes efter de eksisterende accent-tokens (~linje 25):
 --body-line:  color-mix(in oklab, var(--body) 32%, transparent);
 --mind-line:  color-mix(in oklab, var(--mind) 32%, transparent);
 
-/* Status — adskilt fra domæner, kun til alerts/validering (§5) */
+/* Status — adskilt fra domæner, kun til alerts/validering (§5).
+   Info er altid monokrom (--line-bright + ikon). Ingen --info-token. */
 --ok:     #4ADE80;
 --warn:   #FACC15;
 --danger: #F87171;
---info:   #60A5FA;
 ```
 
 Og i `@theme inline`-blokken:
@@ -70,7 +70,7 @@ Og i `@theme inline`-blokken:
 --color-food:  var(--food);   --color-food-tint:  var(--food-tint);   --color-food-line:  var(--food-line);
 --color-body:  var(--body);   --color-body-tint:  var(--body-tint);   --color-body-line:  var(--body-line);
 --color-mind:  var(--mind);   --color-mind-tint:  var(--mind-tint);   --color-mind-line:  var(--mind-line);
---color-ok: var(--ok); --color-warn: var(--warn); --color-danger: var(--danger); --color-info: var(--info);
+--color-ok: var(--ok); --color-warn: var(--warn); --color-danger: var(--danger);
 ```
 
 Det giver Tailwind-utilities: `text-heart`, `bg-food-tint`, `border-mind-line` osv.
@@ -106,7 +106,7 @@ fire farver, nul props.
 - Sub-nav (fx `HrvSubNav.tsx`): aktiv underline/indikator i domænefarve
 - `pulse-dot` (globals.css) → ny variant der bruger `var(--domain)`
 - Kort: forbliver monokrome surfaces — kun kicker + evt. dot farves.
-  Dashboard-tiles er undtagelsen: kort 24×2px accent-streg øverst.
+  Dashboard-tiles er undtagelsen: 24×2px accent-streg øverst + domæne-kicker.
 
 ### Charts (alle egne SVG'er)
 - Grid, akser, labels: monokrome som nu (`currentColor` + opacity)
@@ -128,7 +128,7 @@ med domænets badge-stil (`bg-(--domain-tint)` + `text-(--domain)`).
 - Alle knapper (`.btn`, `.btn-primary`, `.btn-ghost`) og pills' aktive tilstand
   (hvid invertering) — farve må aldrig konkurrere med "klik her"
 - `/session/[id]` (immersivt live-pas): forbliver 100 % monokromt — fokus-tilstand
-- Coach-flader (`/coach/*`): ingen domænefarver i v1 (kan mappes senere)
+- Coach-flader (`/coach/*`): 100 % monokrome i v1 — beslutning, ikke et hul (§8)
 - Community, Profil, Beskeder
 
 ## 5. Status- vs. domænefarver (konflikthåndtering)
@@ -140,7 +140,7 @@ Nuværende ad-hoc brug af `red-400/green-400/blue-400` ryddes op:
 | `SkipDaysCard.tsx` | `red-400` warning | `--danger` (status, uændret udtryk) |
 | `MindCheckForm.tsx` | `red-500` fejlramme | `--danger` |
 | `LogWeightCard.tsx` | `green-400` vægttab | `--food` (det ER kost-domænet — harmonisk) |
-| `nutrition/page.tsx` | `blue-400` infoboks | monokrom (`--line-bright` + ikon) eller `--info` |
+| `nutrition/page.tsx` | `blue-400` infoboks | monokrom (`--line-bright` + ikon) |
 | `AudioRecorder.tsx` | `bg-red-500` REC-dot | `--danger` (konvention for optagelse) |
 
 **Disambiguerings-regel:** Statusfarver optræder altid i en fyldt alert/badge
@@ -168,7 +168,10 @@ Hver fase er selvstændigt shipbar; fase 1 er forudsætning for resten.
 Browser-verify-protokollen (kendt fra Søjle 4) køres pr. fase: alle fire
 domæneflader + dashboard screenshotes og tjekkes for kontrast og dosering.
 
-## 8. Åbne beslutninger
-1. Skal coach-flader (`/coach/*`) have domænefarver i v1? (Anbefaling: nej)
-2. Accent-streg på dashboard-tiles vs. kun kicker? (Anbefaling: begge — stregen er det eneste sted)
-3. Skal `--info`-statusfarven overhovedet findes, eller er info altid monokrom? (Anbefaling: monokrom, drop den)
+## 8. Lukkede beslutninger (2026-08-30)
+
+Tom (CEO) lukkede de tre åbne punkter. De kører allerede i produktet og genåbnes ikke.
+
+1. **Coach-flader (`/coach/*`)** får ingen domænefarver i v1. De forbliver 100 % monokrome. Det er en beslutning, ikke et hul.
+2. **Dashboard-tiles** får både 24×2px accent-streg og domæne-kicker.
+3. **`--info` droppes.** Info er altid monokrom (`--line-bright` + ikon). Tokenet findes ikke i `src/app/globals.css` og tilføjes ikke.
