@@ -262,12 +262,14 @@
   "app": {
     "eyebrow": "06 — The App",
     "heading": "Here's how it looks.",
-    "intro": "Six screens that define your week — from the first morning tap, to the nudge above the first lift that adapts the day's load to your HRV, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
+    "intro": "Seven screens that define your week — from the first morning tap, to today's meal plan, to the nudge above the first lift that adapts the day's load to your HRV, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Today's session, one tap to start",
       "sessionLabel": "Session · HRV-aware",
       "sessionDetail": "Nudge above the first lift on low days",
+      "nutritionLabel": "Food",
+      "nutritionDetail": "Today's plan · 3 meals",
       "readinessLabel": "Readiness",
       "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
       "formCheckLabel": "Form check",
@@ -349,6 +351,17 @@
       "mini7d": "7-d",
       "mini60d": "60-d"
     },
+    "nutrition": {
+      "kicker": "Today · plan",
+      "kcal": "kcal",
+      "proteinUnit": "{protein}g P",
+      "macros": "{kcal} kcal · {protein}g P · {min}m",
+      "slotMorgen": "Morning",
+      "slotFrokost": "Lunch",
+      "slotAften": "Dinner",
+      "openPlan": "Open plan",
+      "photoBy": "Photo: {names} / Unsplash"
+    },
     "formCheck": {
       "eyebrow": "AI form check",
       "verdict": "Solid set — slight knee valgus",
@@ -400,7 +413,8 @@
       "2": "Form checks signed by Munk within 24h",
       "3": "HRV-aware recovery — WHOOP, Oura, Polar",
       "4": "Crew feed, challenges, buddy & Reps program",
-      "5": "Mind check and the mental engine"
+      "5": "Mind check and the mental engine",
+      "6": "Meal plan and shopping list"
     },
     "betaValue": "Beta",
     "betaSuffix": "invite only",

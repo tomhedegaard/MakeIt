@@ -262,12 +262,14 @@
   "app": {
     "eyebrow": "06 — Appen",
     "heading": "Sådan ser det ud.",
-    "intro": "Seks skærme der definerer din uge — fra morgenens første tap, til nudgen over første øvelse der tilpasser dagens belastning efter din HRV, til din buddy's daglige readiness og den sandbox-case du øver på som Beast.",
+    "intro": "Syv skærme der definerer din uge — fra morgenens første tap, til dagens måltidsplan, til nudgen over første øvelse der tilpasser dagens belastning efter din HRV, til din buddy's daglige readiness og den sandbox-case du øver på som Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Dagens session, ét tap til start",
       "sessionLabel": "Session · HRV-aware",
       "sessionDetail": "Nudge over første øvelse på lave dage",
+      "nutritionLabel": "Kost",
+      "nutritionDetail": "Dagens plan · 3 måltider",
       "readinessLabel": "Readiness",
       "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
       "formCheckLabel": "Form-check",
@@ -349,6 +351,17 @@
       "mini7d": "7-d",
       "mini60d": "60-d"
     },
+    "nutrition": {
+      "kicker": "I dag · plan",
+      "kcal": "kcal",
+      "proteinUnit": "{protein}g P",
+      "macros": "{kcal} kcal · {protein}g P · {min}m",
+      "slotMorgen": "Morgen",
+      "slotFrokost": "Frokost",
+      "slotAften": "Aften",
+      "openPlan": "Åbn planen",
+      "photoBy": "Foto: {names} / Unsplash"
+    },
     "formCheck": {
       "eyebrow": "AI form-check",
       "verdict": "Solid sæt — let knæ-valgus",
@@ -400,7 +413,8 @@
       "2": "Form-checks med Munks underskrift inden for 24t",
       "3": "HRV-styret restitution — WHOOP, Oura, Polar",
       "4": "Crew-feed, challenges, buddy & Reps-program",
-      "5": "Mind-check og mental motor"
+      "5": "Mind-check og mental motor",
+      "6": "Måltidsplan og indkøbsliste"
     },
     "betaValue": "Beta",
     "betaSuffix": "invite only",

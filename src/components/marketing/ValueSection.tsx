@@ -86,7 +86,7 @@ export default async function ValueSection() {
                 {t("includesHeading")}
               </div>
               <ul className="space-y-1.5 text-sm text-fg-dim">
-                {(["1", "2", "3", "4", "5"] as const).map((n) => (
+                {(["1", "2", "3", "4", "5", "6"] as const).map((n) => (
                   <li key={n} className="flex gap-2">
                     <span aria-hidden className="text-fg-faint">·</span>
                     {t(`includes.${n}`)}
