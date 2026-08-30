@@ -34,7 +34,7 @@ export default async function MindSessionRunnerPage({
   }
 
   const [session, completedIds] = await Promise.all([
-    getSessionBySlug(slug),
+    getSessionBySlug(slug, member.id),
     getCompletedSessionIds(member.id),
   ]);
 

@@ -39,6 +39,10 @@ import {
   validateEscalationSummary,
 } from "@/lib/mind/escalate";
 import { awardJournalEntry } from "@/lib/mind/reps";
+import {
+  canAuthenticatedReadMentalSession,
+  personalSessionSlug,
+} from "@/lib/mind/session-privacy";
 
 export const MIND_DISCLAIMER_COOKIE = "mi_mind_disclaimer_ack";
 
@@ -1300,8 +1304,7 @@ export async function getTodayJournalEntry(memberId: string): Promise<JournalEnt
 }
 
 /**
- * Personal daily session for a member — slug pattern:
- *   personal-<memberId>-<YYYY-MM-DD>
+ * Personal daily session for a member — slug via `personalSessionSlug`.
  *
  * Returns existing session if already generated for today, else null
  * (caller generates via Claude + persists).
@@ -1323,7 +1326,7 @@ export async function getTodayPersonalSession(memberId: string): Promise<{
   if (!supabase) return null;
 
   const today = new Date().toISOString().slice(0, 10);
-  const slug = `personal-${memberId}-${today}`;
+  const slug = personalSessionSlug(memberId, today);
 
   const { data, error } = await mindDb(supabase)
     .from("mental_sessions")
@@ -1358,7 +1361,7 @@ export async function persistPersonalSession(args: {
   const supabase = await createClient();
   if (!supabase) return null;
 
-  const slug = `personal-${args.memberId}-${args.forDate}`;
+  const slug = personalSessionSlug(args.memberId, args.forDate);
 
   const { data, error } = await mindDb(supabase)
     .from("mental_sessions")
@@ -1516,11 +1519,18 @@ export async function getHeroSessions(locale: "da" | "en" = "da"): Promise<
 }
 
 /**
- * Single hero session by slug. Used by the runner page.
+ * Single catalog session by slug. Used by the library runner.
+ * Personal slugs are denied unless `viewerMemberId` owns them
+ * (`canAuthenticatedReadMentalSession`); RLS 0058 is the DB source of truth.
  */
 export async function getSessionBySlug(
   slug: string,
+  viewerMemberId: string,
 ): Promise<import("@/lib/mind/types").MentalSession | null> {
+  if (!canAuthenticatedReadMentalSession({ slug, viewerId: viewerMemberId })) {
+    return null;
+  }
+
   if (!SUPABASE_ENABLED) {
     const { mockHeroSessions } = await import("@/lib/mind/mock");
     return mockHeroSessions().find((s) => s.slug === slug) ?? null;

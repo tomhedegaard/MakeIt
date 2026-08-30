@@ -18,6 +18,7 @@ import { generatePersonalSession } from "@/lib/mind/session-generator-claude";
 import { buildFallbackSession } from "@/lib/mind/session-fallback";
 import { generateMentalCoachOutput } from "@/lib/mind/coach-claude";
 import { buildFallbackCoachOutput } from "@/lib/mind/coach-fallback";
+import { personalSessionSlug } from "@/lib/mind/session-privacy";
 
 export const metadata = {
   title: "I dag · Mind · MakeIt",
@@ -92,7 +93,7 @@ export default async function MindTodayPage() {
     session = persisted
       ? {
           id: persisted.id,
-          slug: `personal-${member.id}-${today}`,
+          slug: personalSessionSlug(member.id, today),
           title: script.title,
           subtitle: script.subtitle,
           body_md: script.body_md,
