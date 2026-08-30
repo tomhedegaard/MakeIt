@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { escalateMentalSafetyAction } from "@/app/(app)/mind/journal/escalate-actions";
 
@@ -13,22 +13,28 @@ import { escalateMentalSafetyAction } from "@/app/(app)/mind/journal/escalate-ac
  * never claims Munk was notified. Demo returns persisted=false.
  */
 export default function MentalResourcesModal({
-  open: openInitially,
+  open,
   onClose,
 }: {
   open: boolean;
   onClose: () => void;
 }) {
   const t = useTranslations("Mind.safety");
-  const [open, setOpen] = useState(openInitially);
   const [mode, setMode] = useState<"resources" | "escalate" | "sent">("resources");
   const [persisted, setPersisted] = useState(false);
   const [summary, setSummary] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
+  useEffect(() => {
+    if (!open) return;
+    setMode("resources");
+    setPersisted(false);
+    setSummary("");
+    setError(null);
+  }, [open]);
+
   function close() {
-    setOpen(false);
     onClose();
   }
 

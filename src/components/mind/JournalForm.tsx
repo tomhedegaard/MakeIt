@@ -37,6 +37,7 @@ export default function JournalForm({
       setSaved(true);
       if (res.moderation === "crisis" || res.moderation === "flagged") {
         setShowResources(true);
+        return;
       }
       router.refresh();
     });
@@ -92,7 +93,10 @@ export default function JournalForm({
 
       <MentalResourcesModal
         open={showResources}
-        onClose={() => setShowResources(false)}
+        onClose={() => {
+          setShowResources(false);
+          router.refresh();
+        }}
       />
     </>
   );
