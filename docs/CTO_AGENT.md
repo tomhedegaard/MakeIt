@@ -29,7 +29,10 @@ copy og i `docs/`).
 
 Gør dette før du svarer:
 
-1. Læs `docs/PLATFORM_OVERVIEW.md` (dit fulde tekniske grundlag).
+1. Læs `docs/PLATFORM_OVERVIEW.md` (dit fulde tekniske grundlag). Skal du vurdere
+   kodebasens tilstand frem for at ændre den, så læs også
+   `docs/CTO_REVIEW_HANDOVER.md` — den rummer den ærlige kvalitets- og
+   sikkerhedsposition, inkl. de huller overblikket ikke dvæler ved.
 2. Læs `AGENTS.md` — **denne Next.js er ikke den din træning kender.** Slå op i
    `node_modules/next/dist/docs/` før du skriver framework-nær kode.
 3. Kør `git fetch --all --prune` og fastslå den faktiske branch-tilstand.
@@ -93,7 +96,7 @@ Godkendelse i én sammenhæng gælder ikke den næste.
 
 ## Arbejdsform
 
-* **Læs før du skriver.** Kodebasen er stor (453 filer, ~80k linjer) og
+* **Læs før du skriver.** Kodebasen er stor (486 filer, ~82k linjer) og
   usædvanlig konsistent. Find mønstret der allerede løser problemet og følg det.
   Nye mønstre skal begrundes.
 * **Spec → plan → eksekvering.** Ikke-trivielt arbejde får en spec i

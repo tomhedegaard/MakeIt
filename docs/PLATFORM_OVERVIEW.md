@@ -63,9 +63,15 @@ webshoppen `nowmakeit.eu`** (Shopify, straps) — de to systemer deler intet kod
 > **AGENTS.md-reglen gælder:** dette er ikke den Next.js din træning kender.
 > Læs `node_modules/next/dist/docs/` før du skriver framework-nær kode.
 
-**Målt størrelse (arbejdstræ):** 453 `.ts`/`.tsx`-filer, ~79.500 linjer i `src/`.
-**Testsuite:** 46 filer, **583 passerende + 3 skipped**, kørselstid ~2,8 s (`npm test`, 2026-08-29).
-**Migrationer:** 56 filer, `0001` → `0056` (nummer `0031` er sprunget over — ikke en fejl).
+**Målt størrelse (`main`, 2026-08-30):** 486 `.ts`/`.tsx`-filer, 82.298 linjer i `src/`.
+**Testsuite:** 48 filer, **597 passerende + 3 skipped**, kørselstid ~2,8 s.
+**Migrationer:** 55 filer, `0001` → `0056` (nummer `0031` er sprunget over — ikke en fejl).
+
+> **Kvalitetsporten er svagere end tallene antyder.** Der findes ingen CI: testene
+> kører kun når nogen husker det, og PR-checks er udelukkende Vercels build.
+> `npm run lint` rapporterer ~707 fejl, men 698 stammer fra `.worktrees/`, som er
+> gitignoreret men ikke eslint-ignoreret — brug `npx eslint src` (5 reelle fejl).
+> Se `docs/CTO_REVIEW_HANDOVER.md` §6 for den fulde, ærlige kvalitetsposition.
 
 ---
 
@@ -449,3 +455,4 @@ Testen før enhver ny opgave:
 | Scanfit-partnerskab | `docs/research/SCANFIT_*.md` |
 | Migrations-runbook | `docs/migrations/2026-06-mental-health-runbook.md` |
 | Specs + planer | `docs/superpowers/specs/`, `docs/superpowers/plans/` |
+| Overlevering til eksternt review | `docs/CTO_REVIEW_HANDOVER.md` |
