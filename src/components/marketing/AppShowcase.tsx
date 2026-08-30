@@ -1,15 +1,23 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { domainTags } from "@/components/marketing/domainTags";
+import {
+  SHOWCASE_SPARK_LAYOUT,
+  getShowcaseMindDay,
+  sparkPath,
+  sparkX,
+  sparkY,
+} from "@/lib/marketing/mind-showcase";
 import { getShowcaseNutritionDay } from "@/lib/marketing/nutrition-showcase";
 
 /**
- * Seven mini-phones: Today, Session, Kost, Readiness, Form-check,
- * Buddy, Coach School. Kost sits third so the four-domain story
- * reads body → food → heart across the first row on `lg`.
+ * Eight mini-phones: Today, Session, Kost, Readiness, Sind,
+ * Form-check, Buddy, Coach School. Domain phones sit Session → Kost →
+ * Readiness → Sind so the four-domain story reads body → food →
+ * heart → mind. On `lg` that is row 1 …body/food and row 2 heart/mind.
  *
- * Layout: `md:grid-cols-2 lg:grid-cols-3` — a 3+3+1 wrap is fine.
- * Buddy and Coach School stay; they are not replaced by food.
+ * Layout: `md:grid-cols-2 lg:grid-cols-3` — a 3+3+2 wrap is fine.
+ * Buddy and Coach School stay; they are not replaced by food or mind.
  */
 export default async function AppShowcase() {
   const t = await getTranslations("Marketing.app");
@@ -47,13 +55,16 @@ export default async function AppShowcase() {
           <Phone label={t("phone.readinessLabel")} detail={t("phone.readinessDetail")} delay={360} domain="heart">
             <ReadinessScreen />
           </Phone>
-          <Phone label={t("phone.formCheckLabel")} detail={t("phone.formCheckDetail")} delay={480} domain="body">
+          <Phone label={t("phone.mindLabel")} detail={t("phone.mindDetail")} delay={480} domain="mind">
+            <MindScreen />
+          </Phone>
+          <Phone label={t("phone.formCheckLabel")} detail={t("phone.formCheckDetail")} delay={600} domain="body">
             <FormCheckScreen />
           </Phone>
-          <Phone label={t("phone.buddyLabel")} detail={t("phone.buddyDetail")} delay={600}>
+          <Phone label={t("phone.buddyLabel")} detail={t("phone.buddyDetail")} delay={720}>
             <BuddyScreen />
           </Phone>
-          <Phone label={t("phone.coachSchoolLabel")} detail={t("phone.coachSchoolDetail")} delay={720}>
+          <Phone label={t("phone.coachSchoolLabel")} detail={t("phone.coachSchoolDetail")} delay={840}>
             <CoachSchoolScreen />
           </Phone>
         </div>
@@ -377,6 +388,148 @@ async function ReadinessScreen() {
           <Mini v="62" k={t("miniMs")} />
           <Mini v="58" k={t("mini7d")} />
           <Mini v="55" k={t("mini60d")} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+async function MindScreen() {
+  const t = await getTranslations("Marketing.app.mind");
+  const { today, series } = getShowcaseMindDay();
+  const layout = SHOWCASE_SPARK_LAYOUT;
+  const energy = series.map((p) => p.energy);
+  const stress = series.map((p) => p.stress);
+  const focus = series.map((p) => p.focus);
+  const last = series.length - 1;
+  const checks = [
+    { key: "energy" as const, label: t("energy"), value: today.energy, token: "var(--mind-energy)" },
+    { key: "stress" as const, label: t("stress"), value: today.stress, token: "var(--mind-stress)" },
+    { key: "focus" as const, label: t("focus"), value: today.focus, token: "var(--mind-focus)" },
+  ];
+
+  return (
+    <div className="flex flex-col h-full text-[10px]" data-domain="mind">
+      <div className="flex items-end justify-between mb-2">
+        <div>
+          <div className="text-[8px] tracking-[0.18em] uppercase font-mono eyebrow-domain mb-1">
+            {t("kicker")}
+          </div>
+          <span className="domain-stroke" aria-hidden />
+        </div>
+        <div className="text-right">
+          <div className="numeric text-base leading-none">{t("numeric")}</div>
+          <div className="text-[7px] tracking-[0.18em] uppercase text-fg-faint font-mono">
+            {t("numericUnit")}
+          </div>
+        </div>
+      </div>
+
+      <div className="surface-2 rounded-xl p-2 flex-1 flex flex-col">
+        <div className="text-[7px] tracking-[0.16em] uppercase text-fg-dim font-mono mb-1.5">
+          {t("checkEyebrow")}
+        </div>
+        <div className="grid grid-cols-3 gap-1 mb-2">
+          {checks.map((c) => (
+            <div key={c.key} className="text-center">
+              <div className="flex items-center justify-center gap-1 mb-0.5">
+                <span
+                  className="rounded-full shrink-0"
+                  style={{ width: 6, height: 6, background: c.token }}
+                  aria-hidden
+                />
+                <span className="text-[7px] tracking-[0.12em] uppercase text-fg-dim font-mono">
+                  {c.label}
+                </span>
+              </div>
+              <div className="numeric text-[11px] leading-none text-fg">
+                {t("score", { n: c.value })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-[7px] tracking-[0.16em] uppercase text-fg-dim font-mono mb-1">
+          {t("graphLabel")}
+        </div>
+        <svg
+          viewBox={`0 0 ${layout.w} ${layout.h}`}
+          className="w-full flex-1 min-h-0"
+          role="img"
+          aria-label={t("graphAria")}
+        >
+          {[1, 3, 5].map((v) => (
+            <g key={v}>
+              <line
+                x1={layout.padL}
+                x2={layout.w - layout.padR}
+                y1={sparkY(v, layout)}
+                y2={sparkY(v, layout)}
+                stroke="currentColor"
+                strokeOpacity={0.08}
+                strokeDasharray="2 4"
+              />
+              <text
+                x={layout.padL - 3}
+                y={sparkY(v, layout) + 2.5}
+                fontSize={7}
+                textAnchor="end"
+                fill="currentColor"
+                opacity={0.4}
+              >
+                {v}
+              </text>
+            </g>
+          ))}
+          <path
+            d={sparkPath(stress, layout, true)}
+            fill="none"
+            stroke="var(--mind-stress)"
+            strokeWidth={1.4}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+          <path
+            d={sparkPath(focus, layout)}
+            fill="none"
+            stroke="var(--mind-focus)"
+            strokeWidth={1.4}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+          <path
+            d={sparkPath(energy, layout)}
+            fill="none"
+            stroke="var(--mind-energy)"
+            strokeWidth={1.4}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+          <circle
+            cx={sparkX(last, series.length, layout)}
+            cy={sparkY(stress[last], layout, true)}
+            r={2}
+            fill="var(--mind-stress)"
+          />
+          <circle
+            cx={sparkX(last, series.length, layout)}
+            cy={sparkY(focus[last], layout)}
+            r={2}
+            fill="var(--mind-focus)"
+          />
+          <circle
+            cx={sparkX(last, series.length, layout)}
+            cy={sparkY(energy[last], layout)}
+            r={2}
+            fill="var(--mind-energy)"
+          />
+        </svg>
+
+        <div
+          className="mt-auto rounded-full text-center py-2 font-mono text-[9px] tracking-[0.18em] uppercase font-medium"
+          style={{ background: "var(--fg)", color: "var(--bg)" }}
+        >
+          {t("cta")}
         </div>
       </div>
     </div>

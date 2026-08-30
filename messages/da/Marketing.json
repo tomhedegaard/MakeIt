@@ -262,7 +262,7 @@
   "app": {
     "eyebrow": "06 — Appen",
     "heading": "Sådan ser det ud.",
-    "intro": "Syv skærme der definerer din uge — fra morgenens første tap, til dagens måltidsplan, til nudgen over første øvelse der tilpasser dagens belastning efter din HRV, til din buddy's daglige readiness og den sandbox-case du øver på som Beast.",
+    "intro": "Otte skærme der definerer din uge — fra morgenens første tap, til dagens måltidsplan, til nudgen over første øvelse der tilpasser dagens belastning efter din HRV, til 60-sekunders check-in og grafen, til din buddy's daglige readiness og den sandbox-case du øver på som Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Dagens session, ét tap til start",
@@ -272,6 +272,8 @@
       "nutritionDetail": "Dagens plan · 3 måltider",
       "readinessLabel": "Readiness",
       "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
+      "mindLabel": "Sind",
+      "mindDetail": "60 sek · check-in + graf",
       "formCheckLabel": "Form-check",
       "formCheckDetail": "Claude vurderer på 6 sek.",
       "buddyLabel": "Buddy",
@@ -361,6 +363,19 @@
       "slotAften": "Aften",
       "openPlan": "Åbn planen",
       "photoBy": "Foto: {names} / Unsplash"
+    },
+    "mind": {
+      "kicker": "I dag · check-in",
+      "numeric": "60",
+      "numericUnit": "sek",
+      "checkEyebrow": "60 sek",
+      "energy": "Energi",
+      "stress": "Stress",
+      "focus": "Fokus",
+      "score": "{n}/5",
+      "graphLabel": "Graf · 14 d",
+      "graphAria": "Energi, stress og fokus over 14 dage",
+      "cta": "Tjek ind"
     },
     "formCheck": {
       "eyebrow": "AI form-check",
