@@ -3,7 +3,7 @@
     "metaTitle": "Privacy Policy — {product}",
     "eyebrow": "Privacy Policy",
     "title": "What we store.",
-    "introUpdated": "Last updated: May 2026 · Data controller: ",
+    "introUpdated": "Last updated: August 2026 · Data controller: ",
     "introCvrFallback": "CVR — contact",
     "s01": {
       "eyebrow": "01",
@@ -24,7 +24,35 @@
         },
         "wearable": {
           "k": "Wearable data",
-          "v": "If you connect a wearable (e.g. Whoop): recovery, sleep, strain/workout, cycle and basic profile data — only with your explicit consent. See section 08."
+          "v": "If you connect a wearable (e.g. Whoop): recovery, sleep, strain/workout, cycle and basic profile data — only with your explicit consent. See section 09."
+        },
+        "journal": {
+          "k": "Journal",
+          "v": "The text you write in your journal (pillar 5). Munk, coaches and other members cannot read it. An excerpt may be sent to Anthropic (Claude Haiku) for crisis-text moderation."
+        },
+        "mindCheck": {
+          "k": "Mind-check",
+          "v": "Daily signal: energy, stress, focus, and an optional note. The note may be included in the daily mental coach (Anthropic Claude Sonnet)."
+        },
+        "mentalCoach": {
+          "k": "Mental coach",
+          "v": "AI-generated daily reflections, session completions, and your mental settings. Output is stored so you can re-read it."
+        },
+        "cirkler": {
+          "k": "Circles",
+          "v": "Posts and reactions in mental circles, if you share. Visible only to circle members."
+        },
+        "nutrition": {
+          "k": "Nutrition",
+          "v": "Nutrition profile, meal plans, logs and skip-days — health data (art. 9)."
+        },
+        "messages": {
+          "k": "Messages",
+          "v": "1:1 threads with a coach (text and media paths)."
+        },
+        "weight": {
+          "k": "Weight",
+          "v": "Weight logs you enter yourself."
         },
         "social": {
           "k": "Social",
@@ -47,7 +75,7 @@
       "items": {
         "deliver": {
           "k": "Deliver the service",
-          "v": "Personalized program, form-check feedback, community feed, Reps loyalty."
+          "v": "Personalized program, form-check, nutrition, HRV, mind-check, journal moderation, daily mental coach, community feed, Reps loyalty."
         },
         "notify": {
           "k": "Send notifications",
@@ -82,7 +110,7 @@
         },
         "anthropic": {
           "k": "Anthropic (Claude)",
-          "v": "AI program generation and form-check assessment. Anthropic does not store prompts/output beyond the request lifecycle on their business tier."
+          "v": "AI program generation, form-check assessment, crisis-text moderation of journal excerpts (Haiku), and the daily mental coach from your mind-check including optional note (Sonnet). Anthropic is a processor. On their business tier, prompts/output are not stored beyond the request lifecycle."
         }
       },
       "outro": "We never sell your data. We don't share it for marketing without explicit consent."
@@ -93,7 +121,7 @@
       "items": {
         "access": {
           "k": "Access + portability",
-          "v": "Export all your data as JSON from Settings → Data."
+          "v": "Export your own member rows as JSON from Settings → Data (GDPR art. 20)."
         },
         "rectify": {
           "k": "Rectification",
@@ -131,6 +159,55 @@
       "eyebrow": "07",
       "title": "Changes",
       "body": "We update this policy when functionality changes. Material changes are announced by email to registered members at least 14 days before they take effect."
+    },
+    "s08": {
+      "eyebrow": "08",
+      "title": "Special categories (GDPR art. 9)",
+      "intro": "Journal, mind-check, mental coach, circles, HRV/biometrics and nutrition are health data. We process them only when you use those modules.",
+      "items": {
+        "category": {
+          "k": "Category",
+          "v": "Health data (art. 9) — text about mental health, biometric HRV readings, nutrition and weight data."
+        },
+        "basis": {
+          "k": "Legal basis",
+          "v": "Explicit consent (art. 9(2)(a)): the Mind onboarding acknowledgement, and for wearables the provider OAuth. There is no separate per-category consent checkbox in this version."
+        },
+        "stop": {
+          "k": "Stop",
+          "v": "Stop processing by stopping use of the module and deleting your account. A wearable connection can be disconnected under Settings (see section 09)."
+        }
+      }
+    },
+    "s09": {
+      "eyebrow": "09",
+      "title": "Wearable integrations",
+      "intro": "{product} can connect to your wearable so training can adapt to your recovery. The integration is voluntary and only starts after you explicitly consent in the provider's OAuth flow.",
+      "whoopLead": "Whoop: When you connect your Whoop account, we fetch the following on your behalf via Whoop's API:",
+      "items": {
+        "recovery": {
+          "k": "Recovery",
+          "v": "Daily recovery score, resting heart rate, HRV."
+        },
+        "sleep": {
+          "k": "Sleep",
+          "v": "Sleep duration, sleep stages, sleep performance."
+        },
+        "strain": {
+          "k": "Strain & workouts",
+          "v": "Daily strain and recorded workouts."
+        },
+        "cycle": {
+          "k": "Cycle",
+          "v": "Whoop's physiological circadian-cycle data."
+        },
+        "profile": {
+          "k": "Profile",
+          "v": "Name and basic profile data from your Whoop account."
+        }
+      },
+      "use": "These data are used to personalise your program and form feedback inside {product}. They are stored in the EU (Supabase, Frankfurt) and never sold.",
+      "disconnect": "You can disconnect at any time under Settings. When you do, the connection is set to revoked and we stop using our Whoop access token. Already fetched readings and connection metadata are not deleted automatically — they are kept until you delete your {product} account. There is no 30-day deletion job on disconnect. You can also revoke access directly in your Whoop account."
     }
   },
   "terms": {

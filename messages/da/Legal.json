@@ -3,7 +3,7 @@
     "metaTitle": "Privacy Policy — {product}",
     "eyebrow": "Privacy Policy",
     "title": "Hvad vi gemmer.",
-    "introUpdated": "Senest opdateret: maj 2026 · Dataansvarlig: ",
+    "introUpdated": "Senest opdateret: august 2026 · Dataansvarlig: ",
     "introCvrFallback": "CVR — kontakt",
     "s01": {
       "eyebrow": "01",
@@ -24,7 +24,35 @@
         },
         "wearable": {
           "k": "Wearable-data",
-          "v": "Hvis du forbinder en wearable (fx Whoop): recovery, søvn, strain/workout, cyklus og basale profildata — kun efter dit samtykke. Se sektion 08."
+          "v": "Hvis du forbinder en wearable (fx Whoop): recovery, søvn, strain/workout, cyklus og basale profildata — kun efter dit samtykke. Se sektion 09."
+        },
+        "journal": {
+          "k": "Journal",
+          "v": "Den tekst du skriver i din journal (søjle 5). Munk, coaches og andre medlemmer kan ikke læse den. Et uddrag kan sendes til Anthropic (Claude Haiku) for krise-tekstmoderering."
+        },
+        "mindCheck": {
+          "k": "Mind-check",
+          "v": "Dagligt signal: energi, stress, fokus, og en valgfri note. Noten kan indgå i den daglige mental-coach (Anthropic Claude Sonnet)."
+        },
+        "mentalCoach": {
+          "k": "Mental coach",
+          "v": "AI-genererede daglige refleksioner, session-gennemførsler, og dine mental-indstillinger. Output gemmes så du kan læse det igen."
+        },
+        "cirkler": {
+          "k": "Cirkler",
+          "v": "Opslag og reaktioner i mentale cirkler, hvis du deler. Kun synlige for cirkel-medlemmer."
+        },
+        "nutrition": {
+          "k": "Ernæring",
+          "v": "Ernæringsprofil, måltidsplaner, logs og skip-dage — sundhedsdata (art. 9)."
+        },
+        "messages": {
+          "k": "Beskeder",
+          "v": "1:1-tråde med coach (tekst og media-stier)."
+        },
+        "weight": {
+          "k": "Vægt",
+          "v": "Vægtlogs du selv indtaster."
         },
         "social": {
           "k": "Social",
@@ -47,7 +75,7 @@
       "items": {
         "deliver": {
           "k": "Levere tjenesten",
-          "v": "Personligt program, form-check feedback, fællesskabs-feed, Reps-loyalty."
+          "v": "Personligt program, form-check, ernæring, HRV, mind-check, journal-moderering, daglig mental coach, fællesskabs-feed, Reps-loyalty."
         },
         "notify": {
           "k": "Sende notifikationer",
@@ -82,7 +110,7 @@
         },
         "anthropic": {
           "k": "Anthropic (Claude)",
-          "v": "AI-program-generation og form-check-vurdering. Anthropic gemmer ikke prompts/output udover request-livscyklus i deres business-tier."
+          "v": "AI-program-generation, form-check-vurdering, krise-tekstmoderering af journaluddrag (Haiku), og den daglige mental-coach ud fra mind-check inkl. valgfri note (Sonnet). Anthropic er databehandler. I deres business-tier gemmes prompts/output ikke udover request-livscyklussen."
         }
       },
       "outro": "Vi sælger aldrig dine data. Vi deler dem ikke til markedsføring uden eksplicit samtykke."
@@ -93,7 +121,7 @@
       "items": {
         "access": {
           "k": "Indsigt + portabilitet",
-          "v": "Eksportér alle dine data som JSON fra Indstillinger → Data."
+          "v": "Eksportér dine egne medlemsrækker som JSON fra Indstillinger → Data (GDPR art. 20)."
         },
         "rectify": {
           "k": "Berigtigelse",
@@ -131,6 +159,55 @@
       "eyebrow": "07",
       "title": "Ændringer",
       "body": "Vi opdaterer denne politik når funktionalitet ændrer sig. Materielle ændringer varsles på email til registrerede medlemmer mindst 14 dage før de træder i kraft."
+    },
+    "s08": {
+      "eyebrow": "08",
+      "title": "Særlige kategorier (GDPR art. 9)",
+      "intro": "Journal, mind-check, mental coach, cirkler, HRV/biometri og ernæring er sundhedsdata. Vi behandler dem kun når du bruger de moduler.",
+      "items": {
+        "category": {
+          "k": "Kategori",
+          "v": "Helbredsoplysninger (art. 9) — tekst om mentalt helbred, biometriske HRV-målinger, ernærings- og vægtdata."
+        },
+        "basis": {
+          "k": "Retsgrundlag",
+          "v": "Udtrykkeligt samtykke (art. 9, stk. 2, litra a): Mind-onboarding-disclaimeret, og for wearables OAuth hos udbyderen. Der er ikke en separat samtykke-checkbox pr. datakategori i denne version."
+        },
+        "stop": {
+          "k": "Stop",
+          "v": "Stop behandlingen ved at holde op med at bruge modulet og slette din konto. Wearable-forbindelse kan afbrydes under Indstillinger (se sektion 09)."
+        }
+      }
+    },
+    "s09": {
+      "eyebrow": "09",
+      "title": "Wearable-integrationer",
+      "intro": "{product} kan forbindes med din wearable, så din træning kan tilpasses din restitution. Integrationen er frivillig og sker først efter du udtrykkeligt giver samtykke i et OAuth-flow hos udbyderen.",
+      "whoopLead": "Whoop: Når du forbinder din Whoop-konto, henter vi via Whoops API følgende på dine vegne:",
+      "items": {
+        "recovery": {
+          "k": "Recovery",
+          "v": "Daglig recovery-score, hvilepuls, HRV."
+        },
+        "sleep": {
+          "k": "Søvn",
+          "v": "Søvnvarighed, søvnfaser, søvn-performance."
+        },
+        "strain": {
+          "k": "Strain & workouts",
+          "v": "Dagligt strain samt registrerede træningspas."
+        },
+        "cycle": {
+          "k": "Cyklus",
+          "v": "Whoops fysiologiske døgncyklus-data."
+        },
+        "profile": {
+          "k": "Profil",
+          "v": "Navn og basale profildata fra din Whoop-konto."
+        }
+      },
+      "use": "Disse data bruges til at personalisere dit program og din form-feedback inde i {product}. De gemmes i EU (Supabase, Frankfurt) og sælges aldrig.",
+      "disconnect": "Du kan til enhver tid afbryde forbindelsen under Indstillinger. Når du gør det, sættes forbindelsen til revoked, og vores adgangstoken hos Whoop bruges ikke mere. Allerede hentede aflæsninger og forbindelses-metadata slettes ikke automatisk — de gemmes indtil du sletter din {product}-konto. Der kører ikke et 30-dages slettejob ved afbrydelse. Du kan også tilbagekalde adgangen direkte i din Whoop-konto."
     }
   },
   "terms": {
