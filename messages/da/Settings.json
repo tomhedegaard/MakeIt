@@ -46,8 +46,11 @@
   },
   "data": {
     "eyebrow": "Data",
-    "title": "Eksportér alt vi har om dig",
-    "description": "Download en JSON-fil med din profil, dine sessioner og logs, dine posts og kommentarer, dine Reps-transaktioner og form-checks. GDPR Art. 20.",
+    "title": "Eksportér dine egne rækker",
+    "description": "Download en JSON-fil med de medlemsrækker vi kan læse under dit login: profil, træning, journal, mind-check, mental coach, HRV, ernæring, beskeder, vægt, community, Reps og form-checks. Ikke «alt i universet» — dine egne rækker. GDPR art. 20.",
+    "exportNoteConnected": "Personlig dataeksport fra {product}. Indeholder dine egne medlemsrækker vi kan læse under dit login (RLS). Kontakt {email} hvis noget mangler eller ser forkert ud.",
+    "exportNoteDemo": "Demo-mode har ingen connected database. Denne fil er tom for medlemsrækker. Art. 20-eksport af dine rigtige rækker kræver connected mode.",
+    "exportOmitted": "Disse tabeller kunne ikke læses i denne eksport: {tables}.",
     "export": "Eksportér mine data ↓"
   },
   "danger": {
