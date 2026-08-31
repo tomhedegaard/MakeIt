@@ -1,90 +1,74 @@
 import { NextResponse } from "next/server";
+import { getTranslations } from "next-intl/server";
+import { getSession } from "@/lib/auth";
+import { COMPANY } from "@/lib/company";
+import { fetchMemberExport } from "@/lib/data/export";
+import { buildExportPayload } from "@/lib/privacy/export";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
-import { COMPANY } from "@/lib/company";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * GDPR Art. 20 — data portability. Returns a single JSON file with
- * everything the authenticated member has on the platform. RLS scopes
- * the SELECTs to own data, so the response naturally only contains
- * the caller's records.
+ * GDPR Art. 20 — data portability. Returns a JSON file with the
+ * member-owned rows the authenticated caller can read under RLS.
+ * Demo mode returns the same shape with empty collections and an
+ * honest note — it must not crash.
+ *
+ * Never uses the service-role client.
  */
 export async function GET() {
+  const session = await getSession();
+  if (!session) return NextResponse.json({ error: "Auth" }, { status: 401 });
+
+  const t = await getTranslations("Settings.data");
+  const exportedAt = new Date().toISOString();
+  const filename = `makeit-hq-export-${session.id.slice(0, 8)}.json`;
+
   if (!SUPABASE_ENABLED) {
-    return NextResponse.json(
-      { error: "Data export only available in connected mode." },
-      { status: 503 }
-    );
+    const payload = buildExportPayload({
+      exportedAt,
+      mode: "demo",
+      note: t("exportNoteDemo"),
+      member: null,
+    });
+    return exportFile(payload, filename);
   }
 
   const supabase = await createClient();
   if (!supabase) return NextResponse.json({ error: "Auth" }, { status: 401 });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Auth" }, { status: 401 });
+  const { member, collections, omitted } = await fetchMemberExport(
+    supabase,
+    session.id,
+  );
 
-  const [
+  let note = t("exportNoteConnected", {
+    product: COMPANY.product,
+    email: COMPANY.emails.support,
+  });
+  if (omitted.length > 0) {
+    note = `${note} ${t("exportOmitted", { tables: omitted.join(", ") })}`;
+  }
+
+  const payload = buildExportPayload({
+    exportedAt,
+    mode: "connected",
+    note,
     member,
-    sessions,
-    posts,
-    comments,
-    reactions,
-    repsTx,
-    redemptions,
-    formChecks,
-    programAssignments,
-    tierEvents,
-    challengeParticipations,
-  ] = await Promise.all([
-    supabase.from("members").select("*").eq("id", user.id).maybeSingle(),
-    supabase
-      .from("sessions")
-      .select(`
-        *,
-        exercises:session_exercises(
-          *,
-          sets:session_sets(*)
-        )
-      `)
-      .eq("member_id", user.id),
-    supabase.from("posts").select("*").eq("member_id", user.id),
-    supabase.from("post_comments").select("*").eq("member_id", user.id),
-    supabase.from("post_reactions").select("*").eq("member_id", user.id),
-    supabase.from("reps_transactions").select("*").eq("member_id", user.id),
-    supabase.from("reward_redemptions").select("*").eq("member_id", user.id),
-    supabase.from("form_checks").select("*").eq("member_id", user.id),
-    supabase.from("program_assignments").select("*").eq("member_id", user.id),
-    supabase.from("tier_events").select("*").eq("member_id", user.id),
-    supabase.from("challenge_participants").select("*").eq("member_id", user.id),
-  ]);
+    collections,
+    omitted,
+  });
+  return exportFile(payload, filename);
+}
 
-  const payload = {
-    exportedAt: new Date().toISOString(),
-    note:
-      `Personlig dataeksport fra ${COMPANY.product}. Indeholder alt vi gemmer der er dit. Kontakt ${COMPANY.emails.support} hvis noget mangler eller ser forkert ud.`,
-    member: member.data ?? null,
-    program_assignments: programAssignments.data ?? [],
-    sessions: sessions.data ?? [],
-    posts: posts.data ?? [],
-    post_comments: comments.data ?? [],
-    post_reactions: reactions.data ?? [],
-    reps_transactions: repsTx.data ?? [],
-    reward_redemptions: redemptions.data ?? [],
-    form_checks: formChecks.data ?? [],
-    tier_events: tierEvents.data ?? [],
-    challenge_participations: challengeParticipations.data ?? [],
-  };
-
+function exportFile(payload: unknown, filename: string) {
   return new NextResponse(JSON.stringify(payload, null, 2), {
     status: 200,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Content-Disposition": `attachment; filename="makeit-hq-export-${user.id.slice(0, 8)}.json"`,
+      "Content-Disposition": `attachment; filename="${filename}"`,
       "Cache-Control": "no-store",
     },
   });
