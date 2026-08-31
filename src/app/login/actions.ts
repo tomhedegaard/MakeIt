@@ -5,6 +5,15 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { isValidMockInvite, SESSION_COOKIE } from "@/lib/auth";
+import {
+  admitInviteConsume,
+  admitInviteValidation,
+  hasMinimumInviteShape,
+} from "@/lib/invite-gate";
+import {
+  consumeInviteForUser,
+  fetchInviteValidity,
+} from "@/lib/data/invites";
 
 /* ---------------------------------------------------------------- *
  * Helpers
@@ -33,20 +42,11 @@ async function baseUrl() {
   return `${proto}://${host}`;
 }
 
-/** Consume an invite code under the currently authed user. Idempotent
- *  via the `is null` guard on used_by — replays don't double-mark. */
-async function consumeInvite(code: string, userId: string) {
-  const supabase = await createClient();
-  if (!supabase) return;
-  await supabase
-    .from("invite_codes")
-    .update({
-      used_by: userId,
-      used_at: new Date().toISOString(),
-      uses_count: 1,
-    })
-    .eq("code", code.toUpperCase())
-    .is("used_by", null);
+/** Connected-mode gate. Length is not enough — admit only RPC true. */
+async function requireValidConnectedInvite(code: string) {
+  if (!hasMinimumInviteShape(code)) redirect("/login?err=invite");
+  const result = await fetchInviteValidity(code);
+  if (!admitInviteValidation(result)) redirect("/login?err=invite");
 }
 
 /* ---------------------------------------------------------------- *
@@ -77,7 +77,7 @@ export async function magicLinkAction(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const code = String(formData.get("code") ?? "").trim().toUpperCase();
   if (!email || !code) redirect("/login?err=missing");
-  if (code.length < 4) redirect("/login?err=invite");
+  await requireValidConnectedInvite(code);
 
   const base = await baseUrl();
   const { error } = await supabase.auth.signInWithOtp({
@@ -145,7 +145,7 @@ export async function passwordAction(formData: FormData) {
   if (password.length < 8) redirect("/login?err=pw_short");
 
   if (mode === "signup") {
-    if (code.length < 4) redirect("/login?err=invite");
+    await requireValidConnectedInvite(code);
 
     const base = await baseUrl();
     const { data, error } = await supabase.auth.signUp({
@@ -166,9 +166,13 @@ export async function passwordAction(formData: FormData) {
     }
 
     // If email-confirmation is OFF, signUp returns a session straight
-    // away. Consume the invite synchronously and land them.
+    // away. Consume via service-role (RLS denies user-scoped UPDATE).
     if (data.session && data.user) {
-      await consumeInvite(code, data.user.id);
+      const consumed = await consumeInviteForUser(code, data.user.id);
+      if (!admitInviteConsume(consumed)) {
+        await supabase.auth.signOut();
+        redirect("/login?err=invite");
+      }
       redirect("/dashboard");
     }
 
@@ -196,9 +200,10 @@ export async function passwordAction(formData: FormData) {
  *
  * Sign-in vs sign-up: OAuth doesn't distinguish. If the user already
  * exists, they sign in. If not, the Supabase `on_auth_user_created`
- * trigger creates a public.members row. Invite code is required for
- * BOTH paths — we treat it as a closed-beta gate, not a one-time
- * signup token.
+ * trigger creates a public.members row. A currently valid invite is
+ * required for BOTH paths (closed-beta gate via is_invite_valid).
+ * Consume happens only for newly created users in /auth/callback
+ * so returning logins do not burn multi-use codes.
  * ---------------------------------------------------------------- */
 
 export async function oauthAction(formData: FormData) {
@@ -211,7 +216,7 @@ export async function oauthAction(formData: FormData) {
   if (provider !== "google" && provider !== "apple") {
     redirect("/login?err=provider");
   }
-  if (code.length < 4) redirect("/login?err=invite");
+  await requireValidConnectedInvite(code);
 
   // Stash the invite for /auth/callback to read after the round-trip.
   await setPendingInvite(code);
