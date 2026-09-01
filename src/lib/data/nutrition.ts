@@ -220,12 +220,63 @@ export async function saveNutritionProfile(
 }
 
 /* ---------------------------------------------------------------- *
+ * Demo-mode plan — same in-memory shape generatePlan already used.
+ * getPlanForWeek used to return null without Supabase, which sent
+ * /nutrition into the setup wizard on every visit (profileFresh).
+ * Dual-mode reviewers and store screenshots need the mock week.
+ * Meal images stay null — do not invent Unsplash thumbs.
+ * ---------------------------------------------------------------- */
+
+function buildDemoPlan(
+  memberId: string,
+  weekStart: string,
+  profile: Pick<
+    NutritionProfile,
+    | "diet"
+    | "allergies"
+    | "dislikes"
+    | "preferences"
+    | "fishPerWeek"
+    | "cookingLevel"
+    | "goal"
+    | "dailyKcalTarget"
+    | "dailyProteinGTarget"
+  >,
+): Plan {
+  const planShape = generateMockPlan({ profile, weekStart });
+  return {
+    id: `demo-${weekStart}`,
+    memberId,
+    weekStart,
+    dailyKcal: planShape.targets.kcal,
+    dailyProteinG: planShape.targets.proteinG,
+    dailyCarbsG: planShape.targets.carbsG,
+    dailyFatG: planShape.targets.fatG,
+    generator: "mock",
+    generatorModel: null,
+    notes: planShape.notes,
+    generatedAt: new Date().toISOString(),
+    meals: planShape.meals.map((m, i) => ({
+      ...m,
+      id: `demo-meal-${i}`,
+      planId: `demo-${weekStart}`,
+      imageUrl: null,
+      imageThumbUrl: null,
+      imageAttributionName: null,
+      imageAttributionUrl: null,
+    })),
+  };
+}
+
+/* ---------------------------------------------------------------- *
  * Plan getters
  * ---------------------------------------------------------------- */
 
 export async function getPlanForWeek(memberId: string, weekStart: string): Promise<Plan | null> {
   const supabase = await createClient();
-  if (!supabase) return null;
+  if (!supabase) {
+    return buildDemoPlan(memberId, weekStart, DEFAULT_PROFILE);
+  }
 
   const { data: plan } = await supabase
     .from("nutrition_plans")
@@ -262,38 +313,16 @@ export async function generatePlan(
   weekStart: string,
   profile: NutritionProfile
 ): Promise<Plan> {
+  const supabase = await createClient();
+  if (!supabase) {
+    return buildDemoPlan(memberId, weekStart, profile);
+  }
+
   // Build the plan shape (ingredients, steps, macros) from the mock
   // generator. The real Claude generator (commit 3) will replace
   // this call with a Sonnet-4.6 round-trip when ANTHROPIC_API_KEY is
   // present, falling back to the same mock on miss/error.
   const planShape = generateMockPlan({ profile, weekStart });
-
-  const supabase = await createClient();
-  if (!supabase) {
-    // Demo mode: synthesize an in-memory plan with stable ids.
-    return {
-      id: `demo-${weekStart}`,
-      memberId,
-      weekStart,
-      dailyKcal: planShape.targets.kcal,
-      dailyProteinG: planShape.targets.proteinG,
-      dailyCarbsG: planShape.targets.carbsG,
-      dailyFatG: planShape.targets.fatG,
-      generator: "mock",
-      generatorModel: null,
-      notes: planShape.notes,
-      generatedAt: new Date().toISOString(),
-      meals: planShape.meals.map((m, i) => ({
-        ...m,
-        id: `demo-meal-${i}`,
-        planId: `demo-${weekStart}`,
-        imageUrl: null,
-        imageThumbUrl: null,
-        imageAttributionName: null,
-        imageAttributionUrl: null,
-      })),
-    };
-  }
 
   // Archive any existing plan for this week so the new one wins.
   await supabase
