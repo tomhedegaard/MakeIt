@@ -1,18 +1,45 @@
 import type { MindCheckLog } from "@/lib/mind/types";
 import { utcDateNDaysAgo } from "@/lib/mind/streak";
+import { smoothAreaPath, smoothLinePath } from "@/lib/svg/smooth-path";
 
 /**
- * 30-day mental graph — three lines (energy, stress inverted so up=good,
- * focus). Pure SVG, server-renderable. Uses logged_date as x-axis.
+ * 30-day mental graph — three overlapping area+stroke series
+ * (energy, stress inverted so up=good, focus). Pure SVG, server-
+ * renderable. Uses logged_date as x-axis.
  *
- * Stress is inverted (5 - stress) so all three lines read "higher = good".
- * Otherwise the graph would zig-zag against the user's mental model.
+ * Stress is inverted (5 - stress) so all three lines read "higher =
+ * good". Otherwise the graph would zig-zag against the user's mental
+ * model.
  *
- * Series colors are the mind-domain chart tokens (--mind-energy/-stress/
- * -focus) — a cool violet/blue/cyan family so the graph reads as one
- * domain while the three series stay distinguishable. Axes stay
- * monochrome. See docs/DOMAIN_COLOR_SYSTEM.md.
+ * Series colors are the mind-domain chart tokens (--mind-energy/
+ * -stress/-focus) — a cool violet/blue/cyan family so the graph
+ * reads as one domain while the three series stay distinguishable.
+ * Axes stay monochrome. Fills are low-opacity stacked dosage so
+ * overlap mixes additively — not mix-blend-mode. See
+ * docs/DOMAIN_COLOR_SYSTEM.md.
  */
+
+const SERIES = [
+  {
+    key: "stress" as const,
+    invert: true,
+    token: "var(--mind-stress)",
+    gradId: "mental-graph-fill-stress",
+  },
+  {
+    key: "focus" as const,
+    invert: false,
+    token: "var(--mind-focus)",
+    gradId: "mental-graph-fill-focus",
+  },
+  {
+    key: "energy" as const,
+    invert: false,
+    token: "var(--mind-energy)",
+    gradId: "mental-graph-fill-energy",
+  },
+];
+
 export default function MentalGraph({
   logs,
   days = 30,
@@ -41,24 +68,15 @@ export default function MentalGraph({
 
   const xStep = (w - padL - padR) / Math.max(1, days - 1);
   const y = (v: number) => padT + ((5 - v) / 4) * (h - padT - padB);
+  const baselineY = h - padB;
 
-  const path = (key: "energy" | "stress" | "focus", invert = false) => {
-    let d = "";
-    let started = false;
-    for (const p of points) {
-      if (!p.log) {
-        started = false;
-        continue;
-      }
+  const seriesPoints = (key: "energy" | "stress" | "focus", invert = false) =>
+    points.map((p) => {
+      if (!p.log) return null;
       const raw = p.log[key];
       const v = invert ? 6 - raw : raw;
-      const px = padL + p.i * xStep;
-      const py = y(v);
-      d += started ? ` L ${px.toFixed(1)} ${py.toFixed(1)}` : `M ${px.toFixed(1)} ${py.toFixed(1)}`;
-      started = true;
-    }
-    return d;
-  };
+      return { x: padL + p.i * xStep, y: y(v) };
+    });
 
   const energyDots = points
     .filter((p) => p.log)
@@ -93,6 +111,22 @@ export default function MentalGraph({
           role="img"
           aria-label="Mental graf — energi, ro, fokus de seneste 30 dage"
         >
+          <defs>
+            {SERIES.map((s) => (
+              <linearGradient
+                key={s.gradId}
+                id={s.gradId}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop offset="0%" stopColor={s.token} stopOpacity={0.3} />
+                <stop offset="100%" stopColor={s.token} stopOpacity={0} />
+              </linearGradient>
+            ))}
+          </defs>
+
           {/* gridlines at 1, 3, 5 */}
           {[1, 3, 5].map((v) => (
             <g key={v}>
@@ -118,12 +152,40 @@ export default function MentalGraph({
             </g>
           ))}
 
-          <path d={path("stress", true)} fill="none" stroke="var(--mind-stress)" strokeWidth={1.5} />
-          <path d={path("focus")} fill="none" stroke="var(--mind-focus)" strokeWidth={1.5} />
-          <path d={path("energy")} fill="none" stroke="var(--mind-energy)" strokeWidth={1.5} />
+          {SERIES.map((s) => {
+            const pts = seriesPoints(s.key, s.invert);
+            return (
+              <path
+                key={`${s.key}-fill`}
+                d={smoothAreaPath(pts, baselineY)}
+                fill={`url(#${s.gradId})`}
+                fillOpacity={0.85}
+                stroke="none"
+              />
+            );
+          })}
+
+          {SERIES.map((s) => (
+            <path
+              key={`${s.key}-stroke`}
+              d={smoothLinePath(seriesPoints(s.key, s.invert))}
+              fill="none"
+              stroke={s.token}
+              strokeWidth={1.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          ))}
 
           {energyDots.map((p, i) => (
-            <circle key={i} cx={p.cx} cy={p.cy} r={2} fill="var(--mind-energy)" />
+            <circle
+              key={i}
+              cx={p.cx}
+              cy={p.cy}
+              r={1.2}
+              fill="var(--mind-energy)"
+              fillOpacity={0.5}
+            />
           ))}
         </svg>
       </div>

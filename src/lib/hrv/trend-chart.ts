@@ -1,3 +1,4 @@
+import { smoothLinePath } from "@/lib/svg/smooth-path";
 import type { ReadinessBucket } from "./types";
 
 /** A single reading prepared for the trend chart. */
@@ -108,19 +109,13 @@ export function buildTrendChartModel(
   }));
 
   // --- Mean line path (skip null vertices, segment gracefully) ---
-  let meanLinePath = "";
-  let penDown = false;
-  readings.forEach((r, i) => {
-    if (r.rolling7dMeanLnRmssd == null) {
-      penDown = false;
-      return;
-    }
-    const x = xFor(i);
-    const y = yFor(r.rolling7dMeanLnRmssd);
-    meanLinePath += `${penDown ? "L" : "M"} ${x} ${y} `;
-    penDown = true;
-  });
-  meanLinePath = meanLinePath.trim();
+  const meanLinePath = smoothLinePath(
+    readings.map((r, i) =>
+      r.rolling7dMeanLnRmssd == null
+        ? null
+        : { x: xFor(i), y: yFor(r.rolling7dMeanLnRmssd) },
+    ),
+  );
 
   // --- Baseline band (flat band from the most recent reading) ---
   let baselineBand: TrendChartModel["baselineBand"] = null;

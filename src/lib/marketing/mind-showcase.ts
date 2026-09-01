@@ -5,6 +5,8 @@
  * raw; the sparkline inverts it (up = rolig) the same way the app does.
  */
 
+import { smoothAreaPath, smoothLinePath } from "@/lib/svg/smooth-path";
+
 export type ShowcaseMindPoint = {
   energy: number;
   stress: number;
@@ -86,16 +88,33 @@ export function sparkX(i: number, n: number, layout: SparklineLayout): number {
   return padL + i * xStep;
 }
 
+export function sparkPoints(
+  values: number[],
+  layout: SparklineLayout,
+  invert = false,
+) {
+  return values.map((v, i) => ({
+    x: sparkX(i, values.length, layout),
+    y: sparkY(v, layout, invert),
+  }));
+}
+
 export function sparkPath(
   values: number[],
   layout: SparklineLayout,
   invert = false,
 ): string {
-  return values
-    .map((v, i) => {
-      const x = sparkX(i, values.length, layout);
-      const y = sparkY(v, layout, invert);
-      return `${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`;
-    })
-    .join(" ");
+  return smoothLinePath(sparkPoints(values, layout, invert));
+}
+
+/** Area under the sparkline, dropped to the plot baseline. */
+export function sparkAreaPath(
+  values: number[],
+  layout: SparklineLayout,
+  invert = false,
+): string {
+  return smoothAreaPath(
+    sparkPoints(values, layout, invert),
+    layout.h - layout.padB,
+  );
 }
