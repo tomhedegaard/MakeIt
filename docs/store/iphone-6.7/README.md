@@ -10,7 +10,7 @@ no paywall.
 |---|-----|--------|
 | 1 | `01-today.png` | Today / dashboard — BodyMap-figuren med alle fire ankre tændt |
 | 2 | `02-body.png` | Træning (`/coaching`) — uge + dagens pas. Prisblokken ligger under folden og kommer **ikke** med |
-| 3 | `03-food.png` | Kost (`/nutrition`) — demo-ugeplan |
+| 3 | `03-food.png` | Kost — demo-mode har ingen persisted ugeplan, så `/nutrition` lander på setup-wizard'en. Det er den holdbare food-frame |
 | 4 | `04-heart.png` | HRV (`/hrv`) — demo uden wearable = connect-state. Svag som enkelt-frame, men det er hjertets hjem; figuren lever på Today |
 | 5 | `05-mind.png` | Mind-check + mental graf |
 

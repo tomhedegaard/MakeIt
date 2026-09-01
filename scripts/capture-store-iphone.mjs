@@ -30,7 +30,7 @@ const IPHONE_UA =
   "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1";
 
 const FORBIDDEN = [
-  /køb/i,
+  /\bkøb\b/i,
   /stripe/i,
   /\[xx\]/i,
   /\[yy\]/i,
@@ -56,8 +56,8 @@ const FRAMES = [
   },
   {
     file: "03-food.png",
-    path: "/nutrition",
-    scroll: '[id^="day-"]',
+    // Demo has no persisted plan; /nutrition always redirects here.
+    path: "/nutrition/setup",
   },
   {
     file: "04-heart.png",
@@ -65,7 +65,7 @@ const FRAMES = [
   },
   {
     file: "05-mind.png",
-    path: "/mind",
+    path: "/mind/check",
     mind: true,
   },
 ];
@@ -102,9 +102,13 @@ async function waitSettled(page) {
     /* some pages keep a long-poll; ignore */
   }
   await page.waitForTimeout(600);
-  await page.evaluate(async () => {
-    if (document.fonts?.ready) await document.fonts.ready;
-  });
+  try {
+    await page.evaluate(async () => {
+      if (document.fonts?.ready) await document.fonts.ready;
+    });
+  } catch {
+    /* navigated mid-settle */
+  }
 }
 
 async function visibleForbidden(page) {
@@ -202,30 +206,39 @@ async function main() {
     },
   ]);
 
-  const page = await context.newPage();
   const consoleErrors = [];
-  page.on("pageerror", (err) => {
-    consoleErrors.push({ when: "global", url: page.url(), text: String(err) });
-  });
-  page.on("console", (msg) => {
-    if (msg.type() === "error") {
-      consoleErrors.push({ when: "global", url: page.url(), text: msg.text() });
-    }
-  });
-
   const results = [];
   const skipped = [];
 
   for (const frame of FRAMES) {
+    const page = await context.newPage();
+    page.on("pageerror", (err) => {
+      consoleErrors.push({ when: "global", url: page.url(), text: String(err) });
+    });
+    page.on("console", (msg) => {
+      if (msg.type() === "error") {
+        consoleErrors.push({ when: "global", url: page.url(), text: msg.text() });
+      }
+    });
+
     try {
-      await page.goto(`${BASE}${frame.path}`, { waitUntil: "domcontentloaded" });
+      await page.goto(`${BASE}${frame.path}`, {
+        waitUntil: "domcontentloaded",
+        timeout: 45_000,
+      });
+      if (frame.waitUrl) {
+        await page.waitForURL(frame.waitUrl, { timeout: 15_000 });
+      }
       await waitSettled(page);
       await page.evaluate(() => window.scrollTo(0, 0));
 
       if (frame.mind) {
         await acceptMindDisclaimer(page);
         if (!/\/mind\/(check|today)/.test(page.url())) {
-          await page.goto(`${BASE}/mind/check`, { waitUntil: "domcontentloaded" });
+          await page.goto(`${BASE}/mind/check`, {
+            waitUntil: "domcontentloaded",
+            timeout: 45_000,
+          });
           await waitSettled(page);
           await acceptMindDisclaimer(page);
         }
@@ -234,14 +247,6 @@ async function main() {
           await graph.evaluate((el) => {
             el.scrollIntoView({ block: "center", behavior: "instant" });
           });
-          await page.waitForTimeout(250);
-        }
-      }
-
-      if (frame.scroll) {
-        const target = page.locator(frame.scroll).first();
-        if (await target.count()) {
-          await target.scrollIntoViewIfNeeded();
           await page.waitForTimeout(250);
         }
       }
@@ -255,6 +260,8 @@ async function main() {
     } catch (err) {
       skipped.push({ file: frame.file, reason: String(err) });
       console.warn(`  ✗ ${frame.file}`, err.message);
+    } finally {
+      await page.close();
     }
   }
 

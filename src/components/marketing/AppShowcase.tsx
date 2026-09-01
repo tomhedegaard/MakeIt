@@ -31,14 +31,25 @@ export default async function AppShowcase() {
   return (
     <section id="app" className="relative border-t hairline py-20 md:py-28">
       <Container>
-        <div className="max-w-2xl mb-16" data-reveal>
-          <div className="eyebrow mb-4">{t("eyebrow")}</div>
-          <h2 className="font-display text-[clamp(2.4rem,7vw,5.5rem)] leading-[0.92] mb-5">
-            {t("heading")}
-          </h2>
-          <p className="text-lg md:text-xl text-fg-dim leading-relaxed max-w-xl">
-            {t.rich("intro", domainTags)}
-          </p>
+        <div
+          className="mb-16 grid gap-10 md:grid-cols-12 md:items-center"
+          data-reveal
+        >
+          <div className="md:col-span-8 max-w-2xl">
+            <div className="eyebrow mb-4">{t("eyebrow")}</div>
+            <h2 className="font-display text-[clamp(2.4rem,7vw,5.5rem)] leading-[0.92] mb-5">
+              {t("heading")}
+            </h2>
+            <p className="text-lg md:text-xl text-fg-dim leading-relaxed max-w-xl">
+              {t.rich("intro", domainTags)}
+            </p>
+          </div>
+          <div className="md:col-span-4 flex justify-start md:justify-end">
+            <MarketingFigure
+              ariaLabel={t("figureAria")}
+              className="h-44 md:h-56 w-auto"
+            />
+          </div>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">

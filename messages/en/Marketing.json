@@ -269,6 +269,7 @@
   "app": {
     "eyebrow": "06 — The App",
     "heading": "Here's how it looks.",
+    "figureAria": "Body map — mind, heart, body and food",
     "intro": "Eight screens that define your week — from the first morning tap, to today's meal plan, to the nudge above the first lift that adapts the day's load to your HRV, to the 60-second check-in and the graph, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
     "phone": {
       "todayLabel": "Today",

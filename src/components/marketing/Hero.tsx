@@ -10,7 +10,6 @@ import Link from "next/link";
 import {
   HERO_DOMAINS,
   MarketingDomainKicker,
-  MarketingFigure,
 } from "@/components/marketing/FigureLanguage";
 
 const ease = [0.2, 0.7, 0.2, 1] as const;
@@ -226,11 +225,14 @@ function StatsBand({ stats }: { stats: Stat[] }) {
 
 /* ---------------------------------------------------------------- *
  * Shared hero copy — pinned + reduced-motion both render this so the
- * figure, DomainMark kickers, monochrome paragraph and CTA cannot drift.
+ * DomainMark kickers, monochrome paragraph and CTA cannot drift.
  *
- * Color lives only in the figure anchors and the four DomainMarks
- * (~10% of the surface). Headline, subline and body stay monochrome.
- * Domain hue on brødtekst is forbidden (docs/DOMAIN_COLOR_SYSTEM.md).
+ * Color lives only in the four DomainMarks (~10% of the surface).
+ * Headline, subline and body stay monochrome. Domain hue on brødtekst
+ * is forbidden (docs/DOMAIN_COLOR_SYSTEM.md).
+ *
+ * The MakeItFigure does not live here: the 100vh pin + display
+ * headline clips any editorial body-map. It sits in AppShowcase.
  * ---------------------------------------------------------------- */
 
 function HeroLead() {
@@ -238,7 +240,7 @@ function HeroLead() {
   return (
     <>
       <p className="text-fg text-xl md:text-2xl leading-snug">{t("subline")}</p>
-      <HeroWorlds />
+      <HeroDomainKickers />
       <p className="mt-4 text-fg-dim text-lg md:text-xl leading-relaxed">
         {t("subline2")}
       </p>
@@ -246,28 +248,17 @@ function HeroLead() {
   );
 }
 
-/**
- * Editorial body-map next to the four domain kickers. Compact so the
- * 100vh pin does not clip; charcoal figure, all four anchors lit,
- * DomainMarks instead of generic dots.
- */
-function HeroWorlds() {
+function HeroDomainKickers() {
   const t = useTranslations("Marketing.hero");
   return (
-    <div className="mt-5 flex items-center gap-5">
-      <MarketingFigure
-        ariaLabel={t("figureAria")}
-        className="h-28 md:h-36 w-auto shrink-0"
-      />
-      <div className="flex min-w-0 flex-col gap-2">
-        {HERO_DOMAINS.map((domain) => (
-          <MarketingDomainKicker
-            key={domain}
-            domain={domain}
-            label={t(`domains.${domain}`)}
-          />
-        ))}
-      </div>
+    <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+      {HERO_DOMAINS.map((domain) => (
+        <MarketingDomainKicker
+          key={domain}
+          domain={domain}
+          label={t(`domains.${domain}`)}
+        />
+      ))}
     </div>
   );
 }
