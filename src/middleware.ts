@@ -1,24 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE } from "@/lib/auth";
+import { needsAuth } from "@/lib/auth/public-paths";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { updateSupabaseSession } from "@/lib/supabase/middleware";
 
-const PROTECTED = [
-  "/dashboard",
-  "/coaching",
-  "/community",
-  "/reps",
-  "/profile",
-  "/session",
-  "/onboarding",
-  "/coach",
-  "/billing",
-  "/settings",
-  "/train",
-];
-
-function needsAuth(pathname: string) {
-  return PROTECTED.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+function redirectToLogin(req: NextRequest, pathname: string) {
+  const url = req.nextUrl.clone();
+  url.pathname = "/login";
+  url.searchParams.set("next", pathname);
+  return NextResponse.redirect(url);
 }
 
 export async function middleware(req: NextRequest) {
@@ -27,31 +17,24 @@ export async function middleware(req: NextRequest) {
   if (SUPABASE_ENABLED) {
     const { response, user } = await updateSupabaseSession(req);
     if (needsAuth(pathname) && !user) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/login";
-      url.searchParams.set("next", pathname);
-      return NextResponse.redirect(url);
+      return redirectToLogin(req, pathname);
     }
     return response;
   }
 
-  // Demo mode — cookie-based mock
+  // Demo mode — cookie-based mock. Public paths stay open;
+  // everything else requires mi_session (MUNK-01 still works).
   if (!needsAuth(pathname)) return NextResponse.next();
   const session = req.cookies.get(SESSION_COOKIE)?.value;
-  if (!session) {
-    const url = req.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("next", pathname);
-    return NextResponse.redirect(url);
-  }
+  if (!session) return redirectToLogin(req, pathname);
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    // Run on everything except static, API routes (incl. Stripe webhook),
-    // and image assets. Supabase needs to refresh cookies on every
-    // matched request.
+    // Run on everything except static, API routes (incl. Stripe webhook
+    // and /api/settings/export — those self-auth), and image assets.
+    // Supabase needs to refresh cookies on every matched request.
     "/((?!_next/static|_next/image|favicon.ico|api/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)).*)",
   ],
 };

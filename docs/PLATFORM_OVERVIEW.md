@@ -96,10 +96,11 @@ individuelt tilbage til no-op/rule-based når deres nøgler mangler.
   dashboardet, ikke i env). Callback: `src/app/auth/callback`.
 * Profiltabellen er `public.members` (`is_coach`, `is_admin`, `tier`, `handle`, …).
   `handle = 'Munk'` / `munk@nowmakeit.eu` promoveres automatisk til coach i `0004`.
-* `src/middleware.ts` beskytter en eksplicit liste: `/dashboard`, `/coaching`,
-  `/community`, `/reps`, `/profile`, `/session`, `/onboarding`, `/coach`, `/billing`,
-  `/settings`, `/train`. Matcheren springer `api/`, `_next/*` og billeder over —
-  **cron- og webhook-ruter auther sig selv**.
+* `src/middleware.ts` er default-deny: en public allowlist (`/`, `/login`,
+  `/privacy`, `/terms`, waitlist på landingen, `/science/feed.*`, `/auth/callback`,
+  PWA/AASA) — alt andet i matcheren kræver session. Matcheren springer `api/`,
+  `_next/static`, `_next/image` og billeder over — **cron- og webhook-ruter auther
+  sig selv**. `/api` er bevidst *ikke* public. Demo mode bruger stadig `mi_session`.
 * I DB håndhæves adgang af RLS + SQL-helpers: `is_current_user_coach()`,
   `is_current_user_admin()`, `is_current_user_munk()`, `mind_check_visible_to()`.
 
