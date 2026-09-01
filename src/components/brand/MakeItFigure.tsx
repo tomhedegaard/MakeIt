@@ -68,7 +68,7 @@ export default function MakeItFigure({
       <path
         d={outline}
         className="makeit-figure-outline"
-        fill="none"
+        fill="#1a1a1c"
         stroke={CHARCOAL}
         strokeWidth="1.5"
         vectorEffect="non-scaling-stroke"

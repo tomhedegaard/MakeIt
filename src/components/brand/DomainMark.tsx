@@ -25,13 +25,17 @@ const STROKE = {
 function MindMark() {
   return (
     <>
-      {/* Head — no face, no bulb */}
+      {/* Front head + chin — shoulders keep it from reading as a bulb */}
       <path
-        d="M12 3.2c-3.15 0-5.5 2.35-5.5 5.25 0 2.15 1.15 3.7 2.25 4.5v2.15c0 .7.55 1.25 1.25 1.25h4c.7 0 1.25-.55 1.25-1.25V12.95c1.1-.8 2.25-2.35 2.25-4.5C17.5 5.55 15.15 3.2 12 3.2z"
+        d="M7.4 8.1c0-2.7 2-4.8 4.6-4.8s4.6 2.1 4.6 4.8c0 1.85-.9 3.15-2 3.85"
         fill="none"
         {...STROKE}
       />
-      <path d="M9.7 16.7v1.9c0 .7.5 1.25 1.2 1.25h2.2c.7 0 1.2-.55 1.2-1.25v-1.9" fill="none" {...STROKE} />
+      <path d="M7.4 8.1c.15 2.05 1.15 3.55 2.55 4.35" fill="none" {...STROKE} />
+      <path d="M9.2 12.9c.7 1.15 1.7 1.7 2.8 1.7s2.1-.55 2.8-1.7" fill="none" {...STROKE} />
+      <path d="M10.15 14.6v1.7" fill="none" {...STROKE} />
+      <path d="M13.85 14.6v1.7" fill="none" {...STROKE} />
+      <path d="M7.1 17.6c1.2-1.15 2.6-1.5 4.9-1.5s3.7.35 4.9 1.5" fill="none" {...STROKE} />
     </>
   );
 }
@@ -70,20 +74,26 @@ function BodyMark() {
 function FoodMark() {
   return (
     <>
-      {/* Stomach pouch (J-shape) */}
+      {/* Esophagus — the cue that this is a tract, not a bowl */}
+      <path d="M10.4 3.3v3.1" fill="none" {...STROKE} />
+      {/* Stomach (J-pouch) */}
       <path
-        d="M8.4 6.4c0-1.25 1-2.2 2.4-2.2h2.1c1.85 0 3.25 1.5 3.25 3.4 0 2.45-1.4 3.7-3.25 4.5-1.4.6-2.25.4-2.85-.35"
+        d="M9.1 6.8c0-1.05.85-1.5 1.9-1.5h1.7c2.05 0 3.5 1.65 3.5 3.7 0 2.7-1.65 4.15-3.7 4.95-1.65.65-2.7.2-3.3-.85"
         fill="none"
         {...STROKE}
       />
-      <path d="M8.4 7.35c.1 1.65.6 2.9 1.85 3.75" fill="none" {...STROKE} />
-      {/* Duodenum + small-intestine coil */}
+      <path d="M9.1 8c.2 1.85.85 3.3 2.25 4.15" fill="none" {...STROKE} />
+      {/* Small-intestine coils */}
       <path
-        d="M14.7 12.15c2.05.85 2.85 2.65 1.85 4.3-1 1.65-3.25 1.9-4.5.6"
+        d="M13.9 14c2.2.45 3.05 2.25 2.05 3.7-1.15 1.65-3.45 1.45-4.25-.05"
         fill="none"
         {...STROKE}
       />
-      <path d="M12 16.95c1.45.85 1.65 2.5.2 3.5" fill="none" {...STROKE} />
+      <path
+        d="M11.7 17.65c-1.45.25-2.25 1.65-1.2 2.85 1.05 1.2 2.85.8 3.25-.45"
+        fill="none"
+        {...STROKE}
+      />
     </>
   );
 }
