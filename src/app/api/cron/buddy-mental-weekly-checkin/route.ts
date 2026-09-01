@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { assertCronAuth } from "@/lib/cron/auth";
 import { createServiceClient } from "@/lib/supabase/service";
 import { mindDb } from "@/lib/data/mind";
 import { sendPushToMember } from "@/lib/push";
@@ -25,10 +26,8 @@ export const maxDuration = 60;
  * means a manual rerun the same day still only fires when truly needed.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const auth = request.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("unauthorized", { status: 401 });
-  }
+  const unauthorized = assertCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   const svc = createServiceClient();
   const db = mindDb(svc);

@@ -14,6 +14,7 @@
  */
 import { NextResponse } from "next/server";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
+import { assertCronAuth } from "@/lib/cron/auth";
 import { SUPABASE_URL } from "@/lib/supabase/env";
 import { computeStreak, COOKING_MILESTONES } from "@/lib/data/nutrition-checkin";
 import { sendPushToMemberWithClient } from "@/lib/push";
@@ -38,11 +39,8 @@ function copenhagenDate(offsetDays = 0): string {
 }
 
 export async function GET(request: Request) {
-  const auth = request.headers.get("authorization");
-  const expected = process.env.CRON_SECRET;
-  if (!expected || auth !== `Bearer ${expected}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const unauthorized = assertCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!SUPABASE_URL || !serviceKey) {

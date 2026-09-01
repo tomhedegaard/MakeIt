@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { assertCronAuth } from "@/lib/cron/auth";
 import { createServiceClient } from "@/lib/supabase/service";
 import { runScienceFeed } from "@/lib/science/run";
 
@@ -25,10 +26,8 @@ export const maxDuration = 60;
  * Vercel signs the request with `Authorization: Bearer <CRON_SECRET>`.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const auth = request.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("unauthorized", { status: 401 });
-  }
+  const unauthorized = assertCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   try {
     const svc = createServiceClient();
