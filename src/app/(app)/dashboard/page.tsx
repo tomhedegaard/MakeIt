@@ -25,6 +25,8 @@ import FirstTimeTour from "@/components/app/FirstTimeTour";
 import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
 import MindTile from "@/components/mind/MindTile";
+import BodyMap from "@/components/brand/BodyMap";
+import DomainMark from "@/components/brand/DomainMark";
 import {
   getOrCreateMentalSettings,
   getTodayMentalCoachOutput,
@@ -189,6 +191,8 @@ export default async function TodayPage() {
           <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">{t("greeting.streakUnit")}</div>
         </div>
       </header>
+
+      <BodyMap />
 
       {promotion ? (
         <TierBanner
@@ -458,6 +462,7 @@ function HrvChip({ hrv }: { hrv: HrvChipData | null }) {
       className="block surface-2 rounded-lg px-5 py-4 lift group"
     >
       <div className="flex items-center gap-4">
+        <DomainMark domain="heart" className="size-6 text-domain shrink-0" />
         <div className="flex-1 min-w-0">
           <div className="eyebrow eyebrow-domain mb-1.5">HRV readiness</div>
           {hrv ? (

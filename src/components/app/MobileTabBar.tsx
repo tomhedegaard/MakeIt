@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import DomainMark from "@/components/brand/DomainMark";
 
 type Tab = { href: string; labelKey: string; icon: React.ReactNode; domain?: string };
 
@@ -12,15 +13,7 @@ const Icon = {
       <path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   ),
-  train: (
-    <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
-      <rect x="2" y="9" width="3" height="6" rx="0.5" stroke="currentColor" strokeWidth="1.6" />
-      <rect x="19" y="9" width="3" height="6" rx="0.5" stroke="currentColor" strokeWidth="1.6" />
-      <rect x="6" y="7" width="2" height="10" rx="0.5" stroke="currentColor" strokeWidth="1.6" />
-      <rect x="16" y="7" width="2" height="10" rx="0.5" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M9 12h6" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  ),
+  train: <DomainMark domain="body" className="tab-icon" />,
   crew: (
     <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
       <circle cx="9" cy="9" r="3" stroke="currentColor" strokeWidth="1.6" />
@@ -39,12 +32,7 @@ const Icon = {
       <path d="M4 20c0-3.5 3.6-6 8-6s8 2.5 8 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   ),
-  food: (
-    <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
-      <path d="M3 12h18a9 9 0 0 1-18 0z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-      <path d="M9 7c0 1 1 1.5 1 3M14 6c0 1.2 1 1.8 1 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  ),
+  food: <DomainMark domain="food" className="tab-icon" />,
   chat: (
     <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
       <path
@@ -55,18 +43,7 @@ const Icon = {
       />
     </svg>
   ),
-  mind: (
-    <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
-      <path
-        d="M12 4c-3.5 0-6 2.5-6 5.5 0 2 1 3.5 2 4.5v3a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-3c1-1 2-2.5 2-4.5 0-3-2.5-5.5-6-5.5z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path d="M10 19h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      <path d="M12 11v3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  ),
+  mind: <DomainMark domain="mind" className="tab-icon" />,
   science: (
     <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
       <path

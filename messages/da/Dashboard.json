@@ -7,6 +7,14 @@
     "streakLabel": "Streak",
     "streakUnit": "dage"
   },
+  "figure": {
+    "ariaLabel": "Kropskort — sind, hjerte, krop og kost",
+    "eyebrow": "Kropskort",
+    "mind": "Sind",
+    "heart": "Hjerte",
+    "body": "Krop",
+    "food": "Kost"
+  },
   "formChecks": {
     "answeredBefore": "Mikael Munk har besvaret",
     "answeredCount": "{count, plural, one {# form-check} other {# form-checks}}",
