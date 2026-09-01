@@ -9,22 +9,22 @@ Small atomic commits. Danish conventional prefixes.
 
 ## Commit 1 — docs
 
-- [ ] Spec + this plan
+- [x] Spec + this plan
 
 ## Commit 2 — helper + tests
 
-- [ ] `src/lib/auth/public-paths.ts` — `isPublicPath` / `needsAuth` (pure)
-- [ ] `src/lib/auth/public-paths.test.ts` — listed paths + `(app)` filesystem walk
+- [x] `src/lib/auth/public-paths.ts` — `isPublicPath` / `needsAuth` (pure)
+- [x] `src/lib/auth/public-paths.test.ts` — listed paths + `(app)` filesystem walk
 
 ## Commit 3 — wire middleware
 
-- [ ] `src/middleware.ts` uses the helper; matcher still skips `api/`
-- [ ] Demo cookie session unchanged (`mi_session`)
-- [ ] `docs/PLATFORM_OVERVIEW.md` §3.2 matches the invert
+- [x] `src/middleware.ts` uses the helper; matcher still skips `api/`
+- [x] Demo cookie session unchanged (`mi_session`)
+- [x] `docs/PLATFORM_OVERVIEW.md` §3.2 matches the invert
 
 ## Verify
 
-- [ ] `npm test`
-- [ ] Unauthenticated `/mind` → `/login`; `/` and `/login` stay 200
-- [ ] Demo `MUNK-01` still reaches `/dashboard`
-- [ ] No `db:push`, no merge to `main`, no secret rotation
+- [x] `npm test` — 696 passed | 3 skipped
+- [x] Unauthenticated `/mind` → 307 `/login?next=/mind`; `/` and `/login` stay 200
+- [x] Demo `mi_session=MUNK-01` reaches `/dashboard` 200; `/science/feed.json` 200; `/api/settings/export` 401 (own auth)
+- [x] No `db:push`, no merge to `main`, no secret rotation
