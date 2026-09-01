@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import CoachShell from "@/components/coach/CoachShell";
-import { getSession } from "@/lib/auth";
+import { getSession, signOutLeftoverAuthUser } from "@/lib/auth";
 import { COMPANY } from "@/lib/company";
 
 export const metadata = {
@@ -13,7 +13,10 @@ export default async function CoachLayout({
   children: React.ReactNode;
 }) {
   const member = await getSession();
-  if (!member) redirect("/login");
+  if (!member) {
+    const leftover = await signOutLeftoverAuthUser();
+    redirect(leftover ? "/login?err=invite" : "/login");
+  }
   if (!member.isCoach) redirect("/dashboard");
   return <CoachShell member={member}>{children}</CoachShell>;
 }

@@ -1,7 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
-import { consumeInviteForUser } from "@/lib/data/invites";
+import {
+  consumeInviteForUser,
+  fetchInviteAdmitted,
+} from "@/lib/data/invites";
 import {
   admitInviteConsume,
   decideInviteConsume,
@@ -63,10 +66,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL("/login?err=callback", url));
   }
 
+  const alreadyAdmitted = await fetchInviteAdmitted();
   const decision = decideInviteConsume({
     invite,
     userCreatedAt: user.created_at,
     nowMs: Date.now(),
+    alreadyAdmitted,
   });
 
   if (decision.action === "reject") {

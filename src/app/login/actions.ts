@@ -152,9 +152,10 @@ export async function passwordAction(formData: FormData) {
       email,
       password,
       options: {
-        // Used when email-confirmation is on (prod). Includes the
-        // invite so the callback can consume it after the user
-        // clicks the confirm link.
+        // raw_user_meta_data.invite lets handle_new_user (0059)
+        // consume atomically. emailRedirectTo keeps the confirm
+        // callback working if the trigger did not (pre-push).
+        data: { invite: code },
         emailRedirectTo: `${base}/auth/callback?invite=${encodeURIComponent(code)}`,
       },
     });
@@ -166,7 +167,8 @@ export async function passwordAction(formData: FormData) {
     }
 
     // If email-confirmation is OFF, signUp returns a session straight
-    // away. Consume via service-role (RLS denies user-scoped UPDATE).
+    // away. Consume via consume_invite RPC (service-role fallback
+    // until 0059 is applied).
     if (data.session && data.user) {
       const consumed = await consumeInviteForUser(code, data.user.id);
       if (!admitInviteConsume(consumed)) {
@@ -181,11 +183,31 @@ export async function passwordAction(formData: FormData) {
   }
 
   // mode = signin
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
   if (error) {
     const reason = /credentials/i.test(error.message) ? "creds" : "signin";
     redirect(`/login?err=${reason}`);
   }
+
+  // After 0059, restrictive RLS hides an un-admitted members row.
+  // Pre-0059 the select still returns the row (residual until Tom
+  // applies the migration). Same client as the sign-in so cookies
+  // are already on the request.
+  if (data.user) {
+    const { data: member } = await supabase
+      .from("members")
+      .select("id")
+      .eq("id", data.user.id)
+      .maybeSingle();
+    if (!member) {
+      await supabase.auth.signOut();
+      redirect("/login?err=invite");
+    }
+  }
+
   redirect("/dashboard");
 }
 
@@ -199,10 +221,10 @@ export async function passwordAction(formData: FormData) {
  *      /auth/callback where the code is exchanged + cookie consumed.
  *
  * Sign-in vs sign-up: OAuth doesn't distinguish. If the user already
- * exists, they sign in. If not, the Supabase `on_auth_user_created`
- * trigger creates a public.members row. A currently valid invite is
- * required for BOTH paths (closed-beta gate via is_invite_valid).
- * Consume happens only for newly created users in /auth/callback
+ * exists, they sign in. If not, `handle_new_user` creates an
+ * un-admitted members row; /auth/callback consumes the invite.
+ * A currently valid invite is required for BOTH paths
+ * (`is_invite_valid`). Consume only for users not yet admitted
  * so returning logins do not burn multi-use codes.
  * ---------------------------------------------------------------- */
 

@@ -64,18 +64,32 @@ export type InviteConsumeDecision =
   | { action: "reject" };
 
 /**
- * After a session exists: new users must present an invite and
- * consume it. Existing members already passed the form-level RPC
- * check (or used password sign-in); do not burn another use.
+ * After a session exists: un-admitted users must present an invite
+ * and consume it. Already-admitted members (flag or pre-migration
+ * 7-day window) skip consume so returning logins do not burn codes.
  */
 export function decideInviteConsume(args: {
   invite: string | null;
   userCreatedAt: string | null | undefined;
   nowMs: number;
+  /**
+   * `true`  — members.invite_consumed_at is set (or RPC said so).
+   * `false` — probed and not admitted; ignore the 7-day window.
+   * `null` / omitted — probe unavailable (migration not applied,
+   *           RPC down). Fall back to created_at window.
+   */
+  alreadyAdmitted?: boolean | null;
 }): InviteConsumeDecision {
-  const isNew = isNewlyCreatedAuthUser(args.userCreatedAt, args.nowMs);
   const invite = args.invite ? normalizeInviteCode(args.invite) : "";
 
+  if (args.alreadyAdmitted === true) return { action: "allow" };
+
+  if (args.alreadyAdmitted === false) {
+    if (!invite) return { action: "reject" };
+    return { action: "consume", invite };
+  }
+
+  const isNew = isNewlyCreatedAuthUser(args.userCreatedAt, args.nowMs);
   if (!isNew) return { action: "allow" };
   if (!invite) return { action: "reject" };
   return { action: "consume", invite };
