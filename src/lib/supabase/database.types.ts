@@ -1627,6 +1627,7 @@ export type Database = {
           goal_focus: string | null
           handle: string
           id: string
+          invite_consumed_at: string | null
           is_admin: boolean
           is_coach: boolean
           joined_at: string
@@ -1660,6 +1661,7 @@ export type Database = {
           goal_focus?: string | null
           handle: string
           id: string
+          invite_consumed_at?: string | null
           is_admin?: boolean
           is_coach?: boolean
           joined_at?: string
@@ -1693,6 +1695,7 @@ export type Database = {
           goal_focus?: string | null
           handle?: string
           id?: string
+          invite_consumed_at?: string | null
           is_admin?: boolean
           is_coach?: boolean
           joined_at?: string
@@ -3623,8 +3626,10 @@ export type Database = {
         Args: { p_member_id: string }
         Returns: number
       }
+      consume_invite: { Args: { p_code: string }; Returns: boolean }
       is_current_user_admin: { Args: never; Returns: boolean }
       is_current_user_coach: { Args: never; Returns: boolean }
+      is_current_user_invite_admitted: { Args: never; Returns: boolean }
       is_current_user_munk: { Args: never; Returns: boolean }
       is_invite_valid: { Args: { p_code: string }; Returns: boolean }
       mind_check_visible_to: {
