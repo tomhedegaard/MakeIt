@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -34,13 +35,14 @@ export default async function MindSettingsPage() {
 
   const buddyEligible = isBuddyShareEligible(member.tier, !!buddy);
   const cirkelEligible = member.tier === "Beast" || member.tier === "Legend";
+  const t = await getTranslations("Mind.settingsPage");
 
   return (
     <>
       <PageHeader
-        eyebrow="Mind · Indstillinger"
-        title="Privatliv + notifikationer."
-        subtitle="Din journal er altid privat. Resten kan du tænde og slukke for."
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        subtitle={t("subtitle")}
       />
       <Container size="narrow" className="py-10 md:py-14 space-y-12">
         <section>

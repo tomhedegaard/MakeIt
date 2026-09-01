@@ -46,8 +46,11 @@
   },
   "data": {
     "eyebrow": "Data",
-    "title": "Export everything we have on you",
-    "description": "Download a JSON file with your profile, your sessions and logs, your posts and comments, your Reps transactions and form checks. GDPR Art. 20.",
+    "title": "Export your own rows",
+    "description": "Download a JSON file with the member-owned rows we can read under your login: profile, training, journal, mind-check, mental coach, HRV, nutrition, messages, weight, community, Reps and form checks. Not “everything in the universe” — your own rows. GDPR art. 20.",
+    "exportNoteConnected": "Personal data export from {product}. Contains your own member rows we can read under your login (RLS). Contact {email} if something is missing or looks wrong.",
+    "exportNoteDemo": "Demo mode has no connected database. This file is empty of member rows. Art. 20 export of your real rows requires connected mode.",
+    "exportOmitted": "These tables could not be read in this export: {tables}.",
     "export": "Export my data ↓"
   },
   "danger": {

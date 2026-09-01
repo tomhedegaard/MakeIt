@@ -18,9 +18,9 @@
     "resources_emergency": "Akut hjælp · 112",
     "resources_doctor": "Din egen læge eller psykiatrisk skadestue",
     "privacy_title": "Sådan håndterer vi dine data",
-    "privacy_journal": "Din journal er ALTID privat. Hverken Munk, coaches eller andre medlemmer kan læse den. Aldrig.",
-    "privacy_mind_check": "Dit mind-check er privat som default. Når du rykker tier, kan du vælge at dele dit signal med din buddy. Begge skal sige ja.",
-    "privacy_ai": "AI-coach læser dit mind-check, HRV og træningsuge — ikke din journal — for at skrive dig en daglig refleksion. Output gemmes så du kan læse den igen.",
+    "privacy_journal": "Munk, coaches og andre medlemmer kan ikke læse din journal (kun du i appen). Et uddrag kan sendes til Anthropic (Claude) for krise-tekstmoderering. Det er en databehandler — ikke en coach.",
+    "privacy_mind_check": "Dit mind-check er privat som default. Når du rykker tier, kan du vælge at dele dit signal med din buddy. Begge skal sige ja. En valgfri note kan indgå i den daglige mental-coach hos Anthropic.",
+    "privacy_ai": "AI-coach (Anthropic) læser dit mind-check inkl. valgfri note, HRV og træningsuge — ikke din journal-brødtekst — for at skrive dig en daglig refleksion. Output gemmes så du kan læse den igen.",
     "accept": "Jeg har forstået — fortsæt",
     "accepted": "Tak — modulet er åbnet."
   },
@@ -33,7 +33,7 @@
     "livslinienHours": "(døgnet rundt)",
     "emergency": "Akut hjælp · 112",
     "doctor": "Din egen læge eller psykiatrisk skadestue",
-    "privacy": "Din journal-post er gemt og er stadig kun din. Vi har ikke delt noget med nogen.",
+    "privacy": "Din journal-post er gemt. Munk og coaches ser den ikke. Et uddrag kan være sendt til Anthropic til moderering — ikke til coaching.",
     "tellMunk": "Skriv til Munk",
     "close": "Tak — luk",
     "escalateEyebrow": "Mind · skriv til Munk",
@@ -56,5 +56,25 @@
     "errorRls": "Beskeden kunne ikke gemmes. Ring til Livslinien hvis du har brug for hjælp nu.",
     "errorWrite": "Beskeden kunne ikke gemmes. Prøv igen, eller ring til Livslinien.",
     "errorGeneric": "Beskeden kunne ikke gemmes. Prøv igen, eller ring til Livslinien."
+  },
+  "journal": {
+    "eyebrow": "Mind · Journal",
+    "titleNew": "Journal — privat.",
+    "titleUpdate": "Journal — opdater.",
+    "subtitleNew": "Tre ord eller tre afsnit. Munk og coaches ser den ikke. Anthropic kan se et uddrag til krise-tekstmoderering.",
+    "subtitleUpdate": "Du har skrevet i dag. Du kan opdatere indtil midnat.",
+    "promptEyebrow": "Dagens prompt",
+    "placeholder": "Skriv frit. Munk og coaches ser det ikke.",
+    "helper": "Din journal er ikke synlig for Munk, coaches eller andre medlemmer. En databehandler (Anthropic) kan se et uddrag til moderering.",
+    "saving": "Gemmer...",
+    "update": "Opdater",
+    "save": "Gem post",
+    "saved": "Gemt — Munk og coaches ser den ikke.",
+    "history": "Tidligere poster"
+  },
+  "settingsPage": {
+    "eyebrow": "Mind · Indstillinger",
+    "title": "Privatliv + notifikationer.",
+    "subtitle": "Munk og coaches ser ikke din journal-brødtekst. Anthropic kan se et uddrag til moderering. Resten kan du tænde og slukke for."
   }
 }
