@@ -64,9 +64,9 @@ export type InviteConsumeDecision =
   | { action: "reject" };
 
 /**
- * After a session exists: new users must present an invite and
- * consume it. Existing members already passed the form-level RPC
- * check (or used password sign-in); do not burn another use.
+ * After a session exists: un-admitted users must present an invite
+ * and consume it. Already-admitted members (flag or pre-migration
+ * 7-day window) skip consume so returning logins do not burn codes.
  */
 export function decideInviteConsume(args: {
   invite: string | null;

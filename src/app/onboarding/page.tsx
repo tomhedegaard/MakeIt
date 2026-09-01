@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { getSession, type Member } from "@/lib/auth";
+import { getSession, signOutLeftoverAuthUser, type Member } from "@/lib/auth";
 import OnboardingClient from "./OnboardingClient";
 
 export async function generateMetadata() {
@@ -14,7 +14,10 @@ export default async function OnboardingPage({
   searchParams: Promise<{ err?: string }>;
 }) {
   const member = await getSession();
-  if (!member) redirect("/login");
+  if (!member) {
+    const leftover = await signOutLeftoverAuthUser();
+    redirect(leftover ? "/login?err=invite" : "/login");
+  }
 
   // Connected mode: if already onboarded, go straight to dashboard.
   // (Demo mode lets you replay the flow at /onboarding for design QA.)
