@@ -9,20 +9,20 @@ Small atomic commits. Danish conventional prefixes.
 
 ## Commit 1 — docs
 
-- [ ] Spec + this plan
+- [x] Spec + this plan
 
 ## Commit 2 — helper + tests
 
-- `src/lib/cron/auth.ts` — `isCronAuthorized` (pure) + `assertCronAuth` (401 | null)
-- `src/lib/cron/auth.test.ts` — missing, empty, wrong bearer, correct bearer
+- [x] `src/lib/cron/auth.ts` — `isCronAuthorized` (pure) + `assertCronAuth` (401 | null)
+- [x] `src/lib/cron/auth.test.ts` — missing, empty, wrong bearer, correct bearer
 
 ## Commit 3 — wire all 16 routes
 
-- Every `src/app/api/cron/*/route.ts` calls `assertCronAuth(request)` and returns the 401 if present
-- Includes `coach-digest` and `streak-milestone-nudge` (already fail-closed; switch so there is one path)
-- Do not change schedules, work bodies, or service-role usage
+- [x] Every `src/app/api/cron/*/route.ts` calls `assertCronAuth(request)` and returns the 401 if present
+- [x] Includes `coach-digest` and `streak-milestone-nudge` (already fail-closed; switch so there is one path)
+- [x] Do not change schedules, work bodies, or service-role usage
 
 ## Verify
 
-- `npm test`
-- No `db:push`, no merge to `main`, no secret rotation
+- [x] `npm test` — 665 passed | 3 skipped (includes 10 new cron-auth tests)
+- [x] No `db:push`, no merge to `main`, no secret rotation
