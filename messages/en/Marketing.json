@@ -27,6 +27,7 @@
       "engineSuffix": "Every morning"
     },
     "subline": "Coaching built on your body's data.",
+    "figureAria": "Body map — mind, heart, body and food",
     "domains": {
       "body": "Body",
       "food": "Food",
@@ -317,6 +318,7 @@
     },
     "today": {
       "greeting": "Good morning",
+      "figureAria": "Body map — mind, heart, body and food",
       "streak": "Streak",
       "week": "STR-12 · week 4",
       "day": "Day A — Squat",

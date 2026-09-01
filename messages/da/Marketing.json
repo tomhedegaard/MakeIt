@@ -27,6 +27,7 @@
       "engineSuffix": "Hver morgen"
     },
     "subline": "Coaching bygget på din krops data.",
+    "figureAria": "Kropskort — sind, hjerte, krop og kost",
     "domains": {
       "body": "Krop",
       "food": "Mad",
@@ -317,6 +318,7 @@
     },
     "today": {
       "greeting": "God morgen",
+      "figureAria": "Kropskort — sind, hjerte, krop og kost",
       "streak": "Streak",
       "week": "STR-12 · uge 4",
       "day": "Dag A — Squat",
