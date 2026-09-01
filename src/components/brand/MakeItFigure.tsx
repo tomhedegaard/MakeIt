@@ -3,6 +3,8 @@ import {
   OUTLINES,
   PARTS,
   VIEWBOX,
+  type RnbhBodyPart,
+  type RnbhSlug,
 } from "@/lib/data/anatomy/paths";
 import type { Domain } from "./DomainMark";
 
@@ -14,18 +16,42 @@ import type { Domain } from "./DomainMark";
  * a 1px low-opacity --food halo around the whole silhouette (dosage,
  * never a filled green cloud). See docs/MAKEIT_FIGURE.md.
  *
+ * Body lights AnatomyFigure muscle parts (the kinetic chain), not
+ * overlay stroke segments. Head / hair stay mind; abs / obliques stay
+ * clear so the food gut can read.
+ *
  * No 3D. No photo. No mascot face. Coach stays type.
  */
 
-const CHARCOAL = "#3a3a3e";
 const HEAD_PATHS = PARTS.male.front.find((p) => p.slug === "head")?.path.common ?? [];
+
+/** Kinetic-chain musculature on the front silhouette. */
+const BODY_SLUGS = new Set<RnbhSlug>([
+  "neck",
+  "trapezius",
+  "deltoids",
+  "chest",
+  "biceps",
+  "triceps",
+  "forearm",
+  "quadriceps",
+  "adductors",
+  "tibialis",
+  "calves",
+]);
+
+const BODY_PARTS = PARTS.male.front.filter((p) => BODY_SLUGS.has(p.slug));
+
+function partPaths(part: RnbhBodyPart): string[] {
+  return [
+    ...(part.path.common ?? []),
+    ...(part.path.left ?? []),
+    ...(part.path.right ?? []),
+  ];
+}
 
 function isOn(list: readonly Domain[], domain: Domain) {
   return list.includes(domain);
-}
-
-function regionStroke(on: boolean, token: string) {
-  return on ? `var(${token})` : CHARCOAL;
 }
 
 export default function MakeItFigure({
@@ -68,11 +94,33 @@ export default function MakeItFigure({
       <path
         d={outline}
         className="makeit-figure-outline"
-        fill="#1a1a1c"
-        stroke={CHARCOAL}
+        fill="var(--steel)"
+        stroke="var(--fg-faint)"
         strokeWidth="1.5"
         vectorEffect="non-scaling-stroke"
       />
+
+      {/* Body first so heart / gut sit on top of chest and torso fills. */}
+      <g
+        className={cn("makeit-figure-anchor", bodyOn && "is-lit")}
+        data-domain="body"
+        data-lit={bodyOn || undefined}
+      >
+        {bodyOn
+          ? BODY_PARTS.map((part) => (
+              <g key={part.slug} data-muscle={part.slug}>
+                {partPaths(part).map((d, i) => (
+                  <path
+                    key={i}
+                    d={d}
+                    fill="var(--body)"
+                    fillOpacity={0.18}
+                  />
+                ))}
+              </g>
+            ))
+          : null}
+      </g>
 
       {/* Mind = head. Traced from AnatomyFigure's head part. */}
       <g
@@ -86,7 +134,7 @@ export default function MakeItFigure({
             d={d}
             fill={mindOn ? "var(--mind)" : "none"}
             fillOpacity={mindOn ? 0.18 : 0}
-            stroke={regionStroke(mindOn, "--mind")}
+            stroke={mindOn ? "var(--mind)" : "var(--fg-faint)"}
             strokeWidth="1.4"
             opacity={mindOn ? 0.85 : 0.42}
             vectorEffect="non-scaling-stroke"
@@ -104,32 +152,11 @@ export default function MakeItFigure({
           d="M388 412c-3.4-2.8-17.2-14.2-17.2-24.6 0-7.6 5.2-12.8 12-12.8 3.6 0 6 1.7 5.2 4 0-2.3 1.6-4 5.2-4 6.8 0 12 5.2 12 12.8 0 10.4-13.8 21.8-17.2 24.6z"
           fill={heartOn ? "var(--heart)" : "none"}
           fillOpacity={heartOn ? 0.2 : 0}
-          stroke={regionStroke(heartOn, "--heart")}
+          stroke={heartOn ? "var(--heart)" : "var(--fg-faint)"}
           strokeWidth="1.4"
           opacity={heartOn ? 0.9 : 0.42}
           vectorEffect="non-scaling-stroke"
         />
-      </g>
-
-      {/* Body = kinetic chain, stroke only — never a large orange fill. */}
-      <g
-        className={cn("makeit-figure-anchor", bodyOn && "is-lit")}
-        data-domain="body"
-        data-lit={bodyOn || undefined}
-        fill="none"
-        stroke={regionStroke(bodyOn, "--body")}
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity={bodyOn ? 0.85 : 0.38}
-      >
-        <path d="M362 248 L362 708" vectorEffect="non-scaling-stroke" />
-        <path d="M248 308 L476 308" vectorEffect="non-scaling-stroke" />
-        <path d="M248 308 C200 420 150 560 80 742" vectorEffect="non-scaling-stroke" />
-        <path d="M476 308 C524 420 574 560 644 742" vectorEffect="non-scaling-stroke" />
-        <path d="M286 708 L438 708" vectorEffect="non-scaling-stroke" />
-        <path d="M310 708 C290 900 270 1100 258 1328" vectorEffect="non-scaling-stroke" />
-        <path d="M414 708 C434 900 454 1100 466 1328" vectorEffect="non-scaling-stroke" />
       </g>
 
       {/* Food = stomach / gut as the anchor. Halo is drawn above. */}
@@ -142,7 +169,7 @@ export default function MakeItFigure({
           d="M338 488c0-22 20-38 46-38h10c32 0 54 26 50 56-4 28-22 46-50 58-22 10-36 4-42-12"
           fill={foodOn ? "var(--food)" : "none"}
           fillOpacity={foodOn ? 0.16 : 0}
-          stroke={regionStroke(foodOn, "--food")}
+          stroke={foodOn ? "var(--food)" : "var(--fg-faint)"}
           strokeWidth="1.4"
           opacity={foodOn ? 0.85 : 0.42}
           vectorEffect="non-scaling-stroke"
@@ -150,7 +177,7 @@ export default function MakeItFigure({
         <path
           d="M338 502c4 26 14 44 34 56"
           fill="none"
-          stroke={regionStroke(foodOn, "--food")}
+          stroke={foodOn ? "var(--food)" : "var(--fg-faint)"}
           strokeWidth="1.4"
           opacity={foodOn ? 0.85 : 0.42}
           vectorEffect="non-scaling-stroke"
@@ -158,7 +185,7 @@ export default function MakeItFigure({
         <path
           d="M394 564c34 14 46 40 28 64-18 24-54 26-70 4"
           fill="none"
-          stroke={regionStroke(foodOn, "--food")}
+          stroke={foodOn ? "var(--food)" : "var(--fg-faint)"}
           strokeWidth="1.4"
           opacity={foodOn ? 0.85 : 0.42}
           vectorEffect="non-scaling-stroke"
@@ -166,7 +193,7 @@ export default function MakeItFigure({
         <path
           d="M352 632c-8 20 8 42 34 48"
           fill="none"
-          stroke={regionStroke(foodOn, "--food")}
+          stroke={foodOn ? "var(--food)" : "var(--fg-faint)"}
           strokeWidth="1.4"
           opacity={foodOn ? 0.85 : 0.42}
           vectorEffect="non-scaling-stroke"

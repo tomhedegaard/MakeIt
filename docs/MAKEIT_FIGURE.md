@@ -56,8 +56,8 @@ Farve på figuren er anker + halo. Ikke fyld. Ikke sky.
 - kun det matchende område får domænefarven
 - fill, hvis den bruges, er lav opacity på selve organet (mave, hjerte) —
   ikke på torsoen, ikke på baggrunden
-- resten af omridset forbliver charcoal (`#3a3a3e`, samme kant som
-  `AnatomyFigure`)
+- resten af omridset forbliver charcoal via tokens: fill `var(--steel)`,
+  kant `var(--fg-faint)` (`src/app/globals.css`)
 
 **Må ikke:**
 
@@ -74,19 +74,23 @@ Hypotesen holdt: `src/components/anatomy/AnatomyFigure.tsx` er det rigtige
 omrids at forlænge — ikke en ny krop.
 
 `MakeItFigure` genbruger `OUTLINES.male.front` + `VIEWBOX.male.front`
-(`0 0 724 1448`) fra `src/lib/data/anatomy/paths.ts`. Det er samme
-charcoal-kant (`#3a3a3e`) som træningsfiguren. Female-omridset droppes
-her, fordi det bærer hår og dermed køn; brandfiguren er androgyn og
-uden ansigt.
+(`0 0 724 1448`) fra `src/lib/data/anatomy/paths.ts`. Kant og fyld er
+tokens (`--fg-faint`, `--steel`), ikke hardcoded hex. Female-omridset
+droppes her, fordi det bærer hår og dermed køn; brandfiguren er androgyn
+og uden ansigt.
 
-AnatomyFigure selv (fyldte muskler, primary/secondary/tertiary, 3D-spike)
-bliver på øvelsesfladerne. Brandfiguren er et charcoal-omrids med fire
-anker-regioner — samme krop, anden opgave.
+AnatomyFigure selv (primary/secondary/tertiary, 3D-spike) bliver på
+øvelsesfladerne. Brandfiguren er samme krop, anden opgave.
 
-Sind-ankeret sporer `PARTS.male.front` head-path, så hovedet ikke bliver
-et andet sprog. Hjerte og fordøjelse findes ikke i muscle-taxonomien og
-tegnes som organ-glyffer inde i samme viewBox. Krop er den kinetiske
-kæde (skulder → hofte → knæ) som streg, ikke et orange muskel-fyld.
+Sind-ankeret sporer `PARTS.male.front` head-path. Hjerte og fordøjelse
+findes ikke i muscle-taxonomien og tegnes som organ-glyffer i samme
+viewBox. Krop tænder AnatomyFigure-muskelpathene (kinetisk kæde) som
+lav-opacity fill — ikke syv streg-segmenter ovenpå silhuetten. Abs og
+obliques holdes fri, så food-ankeret (mave/tarm) kan læses.
+
+Dashboard (I dag) viser undervisningstilstanden: alle fire domæner tændt
+på én gang ved ~0.16–0.2 fill-opacity og food-halo 0.28. Det er fase 1,
+ikke Today-as-figure (kun det der er off).
 
 ---
 
@@ -100,7 +104,8 @@ Shipbart nu:
    `currentColor`). Ikke generiske Lucide-håndvægte/skåle/pærer.
 3. `MakeItFigure` — charcoal-omrids + `highlightedDomains`.
 4. Figuren synlig ét sted: dashboard/today-headeren som kompakt
-   editorial kropskort over de eksisterende tiles. Tiles og data bliver.
+   editorial kropskort over de eksisterende tiles, med alle fire ankre
+   tændt (undervisning). Tiles og data bliver.
 5. Tests for `DomainMark` og `MakeItFigure` (render + `data-domain` /
    domain-class).
 

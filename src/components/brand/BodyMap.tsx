@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import DomainMark, { type Domain } from "./DomainMark";
+import DomainMark, { DOMAINS, type Domain } from "./DomainMark";
 import MakeItFigure from "./MakeItFigure";
 
 /**
  * Compact editorial body-map for the dashboard/today header.
- * Figure stays charcoal in v1 (highlights land with Today-as-figure).
- * Four DomainMark kickers teach the locked mapping.
+ * Teaching state: all four anchors lit at rest (low-opacity fills +
+ * food halo). Today-as-figure (off-only lighting) is a later phase.
  * Existing dashboard tiles and data stay below.
  */
 
@@ -28,6 +28,7 @@ export default async function BodyMap() {
       <MakeItFigure
         className="h-36 md:h-48 w-auto shrink-0"
         ariaLabel={t("ariaLabel")}
+        highlightedDomains={DOMAINS}
       />
       <div className="min-w-0 flex-1">
         <div className="eyebrow mb-3">{t("eyebrow")}</div>

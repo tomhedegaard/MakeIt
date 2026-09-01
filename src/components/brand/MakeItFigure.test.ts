@@ -55,4 +55,28 @@ describe("MakeItFigure", () => {
       expect(html).toContain(`data-domain="${domain}"`);
     }
   });
+
+  it("lights body via AnatomyFigure muscle parts, not overlay stick-man segments", () => {
+    const html = render(["body"]);
+    expect(html).toContain('data-muscle="quadriceps"');
+    expect(html).toContain('data-muscle="deltoids"');
+    expect(html).toContain('data-muscle="chest"');
+    expect(html).not.toContain("M362 248");
+    expect(html).not.toContain('data-muscle="abs"');
+    expect(html).not.toContain('data-muscle="head"');
+  });
+
+  it("teaching state lights all four anchors and the food halo", () => {
+    const html = render(["mind", "heart", "body", "food"]);
+    expect(html).toContain('data-highlighted="mind heart body food"');
+    expect(html).toContain("makeit-figure-halo");
+    expect(html).toMatch(/data-domain="mind"[^>]*data-lit="true"/);
+    expect(html).toMatch(/data-domain="heart"[^>]*data-lit="true"/);
+    expect(html).toMatch(/data-domain="body"[^>]*data-lit="true"/);
+    expect(html).toMatch(/data-domain="food"[^>]*data-lit="true"/);
+    expect(html).toContain("var(--steel)");
+    expect(html).toContain("var(--fg-faint)");
+    expect(html).not.toContain("#3a3a3e");
+    expect(html).not.toContain("#1a1a1c");
+  });
 });
