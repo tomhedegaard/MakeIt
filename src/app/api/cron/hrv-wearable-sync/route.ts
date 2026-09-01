@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { assertCronAuth } from "@/lib/cron/auth";
 import { createServiceClient } from "@/lib/supabase/service";
 import { getProvider } from "@/lib/hrv/wearables/registry";
 import { encryptToken, decryptToken } from "@/lib/hrv/wearables/crypto";
@@ -20,11 +21,8 @@ export const dynamic = "force-dynamic";
  * persisted; auth failures flip the connection to `needs_reauth`.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  // --- Step 1: verify the Vercel Cron bearer secret. ---
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("unauthorized", { status: 401 });
-  }
+  const unauthorized = assertCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   const encKey = process.env.HRV_TOKEN_ENC_KEY;
   if (!encKey) {

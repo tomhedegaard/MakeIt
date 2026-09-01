@@ -6,6 +6,7 @@ import {
   type VoiceSample,
   type VoiceTone,
 } from "@/lib/coach/draft-reply";
+import { assertCronAuth } from "@/lib/cron/auth";
 import { createServiceClient } from "@/lib/supabase/service";
 
 export const runtime = "nodejs";
@@ -34,10 +35,8 @@ export const dynamic = "force-dynamic";
  * Returns a JSON summary for the ops view.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("unauthorized", { status: 401 });
-  }
+  const unauthorized = assertCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   const supabase = createServiceClient();
 

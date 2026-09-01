@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { buildEngineInput, loadEligibleMemberIds } from "@/lib/adaptive/data";
+import { assertCronAuth } from "@/lib/cron/auth";
 import { evaluateAdaptation } from "@/lib/adaptive/engine";
 import { persistAdaptation } from "@/lib/adaptive/persist";
 import { createServiceClient } from "@/lib/supabase/service";
@@ -31,11 +32,8 @@ export const dynamic = "force-dynamic";
  * Returns a JSON summary used by the ops dashboard.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  // Verify the Vercel Cron bearer secret.
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("unauthorized", { status: 401 });
-  }
+  const unauthorized = assertCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   const supabase = createServiceClient();
   const now = new Date();
