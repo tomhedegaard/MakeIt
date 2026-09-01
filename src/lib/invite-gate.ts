@@ -72,10 +72,24 @@ export function decideInviteConsume(args: {
   invite: string | null;
   userCreatedAt: string | null | undefined;
   nowMs: number;
+  /**
+   * `true`  — members.invite_consumed_at is set (or RPC said so).
+   * `false` — probed and not admitted; ignore the 7-day window.
+   * `null` / omitted — probe unavailable (migration not applied,
+   *           RPC down). Fall back to created_at window.
+   */
+  alreadyAdmitted?: boolean | null;
 }): InviteConsumeDecision {
-  const isNew = isNewlyCreatedAuthUser(args.userCreatedAt, args.nowMs);
   const invite = args.invite ? normalizeInviteCode(args.invite) : "";
 
+  if (args.alreadyAdmitted === true) return { action: "allow" };
+
+  if (args.alreadyAdmitted === false) {
+    if (!invite) return { action: "reject" };
+    return { action: "consume", invite };
+  }
+
+  const isNew = isNewlyCreatedAuthUser(args.userCreatedAt, args.nowMs);
   if (!isNew) return { action: "allow" };
   if (!invite) return { action: "reject" };
   return { action: "consume", invite };

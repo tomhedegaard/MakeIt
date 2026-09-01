@@ -128,4 +128,52 @@ describe("decideInviteConsume", () => {
       }),
     ).toEqual({ action: "allow" });
   });
+
+  it("allows an already-admitted user with no invite (confirm after trigger consume)", () => {
+    const created = new Date(NOW - 1000).toISOString();
+    expect(
+      decideInviteConsume({
+        invite: null,
+        userCreatedAt: created,
+        nowMs: NOW,
+        alreadyAdmitted: true,
+      }),
+    ).toEqual({ action: "allow" });
+  });
+
+  it("requires consume for an un-admitted user even after the 7-day window", () => {
+    const created = new Date(NOW - NEW_AUTH_USER_WINDOW_MS - 1).toISOString();
+    expect(
+      decideInviteConsume({
+        invite: "  makeit-crew  ",
+        userCreatedAt: created,
+        nowMs: NOW,
+        alreadyAdmitted: false,
+      }),
+    ).toEqual({ action: "consume", invite: "MAKEIT-CREW" });
+  });
+
+  it("rejects an un-admitted user with no invite even after the 7-day window", () => {
+    const created = new Date(NOW - NEW_AUTH_USER_WINDOW_MS - 1).toISOString();
+    expect(
+      decideInviteConsume({
+        invite: null,
+        userCreatedAt: created,
+        nowMs: NOW,
+        alreadyAdmitted: false,
+      }),
+    ).toEqual({ action: "reject" });
+  });
+
+  it("treats alreadyAdmitted null like the 7-day window (pre-migration)", () => {
+    const created = new Date(NOW - NEW_AUTH_USER_WINDOW_MS - 1).toISOString();
+    expect(
+      decideInviteConsume({
+        invite: null,
+        userCreatedAt: created,
+        nowMs: NOW,
+        alreadyAdmitted: null,
+      }),
+    ).toEqual({ action: "allow" });
+  });
 });
