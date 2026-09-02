@@ -7,6 +7,10 @@ import Container from "@/components/Container";
 import CountUp from "@/components/CountUp";
 import Spotlight from "@/components/Spotlight";
 import Link from "next/link";
+import {
+  HERO_DOMAINS,
+  MarketingDomainKicker,
+} from "@/components/marketing/FigureLanguage";
 
 const ease = [0.2, 0.7, 0.2, 1] as const;
 
@@ -221,14 +225,15 @@ function StatsBand({ stats }: { stats: Stat[] }) {
 
 /* ---------------------------------------------------------------- *
  * Shared hero copy — pinned + reduced-motion both render this so the
- * kicker row, monochrome paragraph and CTA cannot drift.
+ * DomainMark kickers, monochrome paragraph and CTA cannot drift.
  *
- * Color lives only in the four domain kickers (~10% of the surface).
+ * Color lives only in the four DomainMarks (~10% of the surface).
  * Headline, subline and body stay monochrome. Domain hue on brødtekst
  * is forbidden (docs/DOMAIN_COLOR_SYSTEM.md).
+ *
+ * The MakeItFigure does not live here: the 100vh pin + display
+ * headline clips any editorial body-map. It sits in AppShowcase.
  * ---------------------------------------------------------------- */
-
-const HERO_DOMAINS = ["body", "food", "heart", "mind"] as const;
 
 function HeroLead() {
   const t = useTranslations("Marketing.hero");
@@ -248,12 +253,11 @@ function HeroDomainKickers() {
   return (
     <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
       {HERO_DOMAINS.map((domain) => (
-        <span key={domain} data-domain={domain} className="inline-flex">
-          <span className="eyebrow eyebrow-domain flex items-center gap-2">
-            <span className="size-1.5 rounded-full bg-domain" aria-hidden />
-            {t(`domains.${domain}`)}
-          </span>
-        </span>
+        <MarketingDomainKicker
+          key={domain}
+          domain={domain}
+          label={t(`domains.${domain}`)}
+        />
       ))}
     </div>
   );

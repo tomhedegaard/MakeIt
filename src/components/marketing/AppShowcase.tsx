@@ -2,6 +2,11 @@ import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { domainTags } from "@/components/marketing/domainTags";
 import {
+  MarketingDomainKicker,
+  MarketingFigure,
+} from "@/components/marketing/FigureLanguage";
+import type { Domain } from "@/components/brand/DomainMark";
+import {
   SHOWCASE_SPARK_LAYOUT,
   getShowcaseMindDay,
   sparkPath,
@@ -26,14 +31,25 @@ export default async function AppShowcase() {
   return (
     <section id="app" className="relative border-t hairline py-20 md:py-28">
       <Container>
-        <div className="max-w-2xl mb-16" data-reveal>
-          <div className="eyebrow mb-4">{t("eyebrow")}</div>
-          <h2 className="font-display text-[clamp(2.4rem,7vw,5.5rem)] leading-[0.92] mb-5">
-            {t("heading")}
-          </h2>
-          <p className="text-lg md:text-xl text-fg-dim leading-relaxed max-w-xl">
-            {t.rich("intro", domainTags)}
-          </p>
+        <div
+          className="mb-16 grid gap-10 md:grid-cols-12 md:items-center"
+          data-reveal
+        >
+          <div className="md:col-span-8 max-w-2xl">
+            <div className="eyebrow mb-4">{t("eyebrow")}</div>
+            <h2 className="font-display text-[clamp(2.4rem,7vw,5.5rem)] leading-[0.92] mb-5">
+              {t("heading")}
+            </h2>
+            <p className="text-lg md:text-xl text-fg-dim leading-relaxed max-w-xl">
+              {t.rich("intro", domainTags)}
+            </p>
+          </div>
+          <div className="md:col-span-4 flex justify-start md:justify-end">
+            <MarketingFigure
+              ariaLabel={t("figureAria")}
+              className="h-44 md:h-56 w-auto"
+            />
+          </div>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -91,7 +107,7 @@ function Phone({
   photoBy?: string;
   delay: number;
   /** Optional domain hue for the callout (docs/DOMAIN_COLOR_SYSTEM.md) */
-  domain?: "heart" | "food" | "body" | "mind";
+  domain?: Domain;
 }) {
   return (
     <div
@@ -117,12 +133,15 @@ function Phone({
         </div>
       </div>
       <div className="mt-5 text-center">
-        <div className="eyebrow eyebrow-domain mb-1 flex items-center justify-center gap-2">
-          {domain ? (
-            <span className="size-1.5 rounded-full bg-domain" aria-hidden />
-          ) : null}
-          {label}
-        </div>
+        {domain ? (
+          <MarketingDomainKicker
+            domain={domain}
+            label={label}
+            className="mb-1 justify-center"
+          />
+        ) : (
+          <div className="eyebrow mb-1">{label}</div>
+        )}
         <div className="text-xs text-fg-dim font-mono">{detail}</div>
         {photoBy ? (
           <div className="mt-1 text-[9px] text-fg-faint font-mono">{photoBy}</div>
@@ -151,6 +170,13 @@ async function TodayScreen() {
         </div>
       </div>
 
+      <div className="flex items-center justify-center mb-2">
+        <MarketingFigure
+          ariaLabel={t("figureAria")}
+          className="h-[4.5rem] w-auto"
+        />
+      </div>
+
       <div className="surface-2 rounded-xl p-3 flex-1 flex flex-col">
         <div className="flex items-center gap-1.5 mb-2">
           <span className="size-1.5 rounded-full bg-fg" />
@@ -172,8 +198,6 @@ async function TodayScreen() {
         <ul className="text-[9px] divide-y hairline mb-3">
           <Row>Back Squat</Row>
           <Row>Romanian DL</Row>
-          <Row>Walking Lunge</Row>
-          <Row>Knee Raise</Row>
         </ul>
 
         <div

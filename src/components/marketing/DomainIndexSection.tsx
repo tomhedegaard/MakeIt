@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import DomainMark from "@/components/brand/DomainMark";
 
 /**
  * Farveindeks — the landing page's first content section, directly
@@ -55,7 +56,11 @@ export default async function DomainIndexSection() {
               className="bg-bg-2 p-6 md:p-8"
             >
               <span className="domain-stroke mb-5" aria-hidden />
-              <div className="flex items-baseline gap-2">
+              <div className="flex items-center gap-2">
+                <DomainMark
+                  domain={d.domain}
+                  className="size-5 text-domain shrink-0"
+                />
                 <span className="numeric text-[11px] text-domain">{d.num}</span>
                 <span className="eyebrow eyebrow-domain">
                   {t(`${d.key}.kicker`)}
