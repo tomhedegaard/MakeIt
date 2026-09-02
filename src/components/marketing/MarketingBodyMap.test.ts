@@ -48,6 +48,9 @@ describe("MarketingBodyMap", () => {
       "mind heart body food",
     );
     expect(host.querySelector(".makeit-figure-halo")).not.toBeNull();
+    expect(host.querySelector(".makeit-figure-halo-glow")).not.toBeNull();
+    expect(figure?.className).toContain("h-[22rem]");
+    expect(figure?.className).toContain("lg:h-[36rem]");
     expect(host.querySelector("[data-body-map-kicker]")).not.toBeNull();
     expect(host.textContent).toContain("figure.whole.body");
   });

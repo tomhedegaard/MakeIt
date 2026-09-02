@@ -1,6 +1,7 @@
 # MakeIt-figuren — brandets kropskort
 
 > Status: Vedtaget 2026-09-01 (Tom/CDO). Mappingen er låst. Ikke et UDKAST.
+> Craft: v2 (2026-09-02) — større organer, synlig food-halo + blød glow.
 > Tokens: `src/app/globals.css`. Farveprincip: `docs/DOMAIN_COLOR_SYSTEM.md`.
 
 Strength editorial bliver. Basen er monokrom. Farve er retning — max ~10 %
@@ -44,18 +45,51 @@ forbliver 100 % monokrome i v1 (`docs/DOMAIN_COLOR_SYSTEM.md` §8).
 
 Farve på figuren er anker + halo. Ikke fyld. Ikke sky.
 
-**Halo (kun kost, og kun når kost er tændt):**
+**Halo + glow (kun kost, og kun når kost er tændt) — v2-recept:**
 
-- 1px streg rundt om silhuetten
-- lav opacity (ca. 28 %)
-- `stroke: var(--food)` — aldrig en fyldt grøn sky
-- `vector-effect: non-scaling-stroke` så 1px forbliver 1px i alle størrelser
+To lag omkring `OUTLINES.male.front`. Aldrig fill på silhuetten.
+Aldrig en fyldt grøn sky. Skal læses som aura på `--bg` (#0A0A0B).
+
+1. **Skarp 1px-halo** (`.makeit-figure-halo`)
+   - `fill: none`
+   - `stroke: var(--food)`
+   - `stroke-width: 1`
+   - `opacity: 0.32` (vindue 0.28–0.35)
+   - `vector-effect: non-scaling-stroke` så 1px forbliver 1px i alle størrelser
+
+2. **Blød ydre glow** (`.makeit-figure-halo-glow`)
+   - anden kopi af samme omrids
+   - `fill: none`
+   - `stroke: var(--food)`
+   - `stroke-width: 22` i user-units (≈ 8–10 px ved landing `lg:h-[36rem]`;
+     skalerer ned på dashboard `h-36` / `h-48` så den ikke bliver en klat)
+   - `opacity: 0.10` (vindue 0.08–0.12)
+   - `filter: feGaussianBlur` med `stdDeviation="12"` (user-units) på
+     glow-laget — ikke på den skarpe 1px-streg
+   - **ingen** `non-scaling-stroke` på glow: den skal skalere med figuren
+
+**Organ-skala (v2):**
+
+- Hjerte: v1-glyffen scalet `1.85×` omkring sit visuelle centrum, rykket
+  mod personens venstre (seers højre) så det læses som bryst-organ ved
+  landing-størrelse — ikke en prik. `data-heart-scale="1.85"`.
+- Fordøjelse: lidt større, tydeligere J-mave (`data-gut="stomach"`) +
+  tre tarmslynger (`data-gut="coil"`) så `--food` holder på afstand.
+- Sind: samme AnatomyFigure-hovedpath; tændt = stærkere streg (1.7) +
+  blød fill (0.24).
+- Krop: AnatomyFigure-`PARTS` (kinetisk kæde) med lav-opacity fill **og**
+  1px non-scaling streg, så kæden ikke forsvinder i charcoal-fyldet.
+  Abs/obliques holdes fri. Ingen stick-man-overlay.
+- Slukket anker: charcoal med synlig tilstedeværelse (opacity ≈ 0.5 /
+  fill 0.04–0.05) — ikke usynligt. Undervisningstilstanden skal kunne
+  læses før hover.
 
 **Ankre når de er tændt:**
 
 - kun det matchende område får domænefarven
-- fill, hvis den bruges, er lav opacity på selve organet (mave, hjerte) —
-  ikke på torsoen, ikke på baggrunden
+- fill, hvis den bruges, er lav opacity på selve organet (mave, hjerte)
+  eller muskelpartiet (krop) — ikke på torsoen som flade, ikke på
+  baggrunden
 - resten af omridset forbliver charcoal via tokens: fill `var(--steel)`,
   kant `var(--fg-faint)` (`src/app/globals.css`)
 
@@ -89,8 +123,10 @@ lav-opacity fill — ikke syv streg-segmenter ovenpå silhuetten. Abs og
 obliques holdes fri, så food-ankeret (mave/tarm) kan læses.
 
 Dashboard (I dag) viser undervisningstilstanden: alle fire domæner tændt
-på én gang ved ~0.16–0.2 fill-opacity og food-halo 0.28. Det er fase 1,
-ikke Today-as-figure (kun det der er off).
+på én gang ved ~0.16–0.24 fill-opacity, food-halo 0.32 og food-glow 0.10.
+Det er fase 1, ikke Today-as-figure (kun det der er off). Landing
+(`MarketingBodyMap` `lg:h-[36rem]`) og dashboard (`BodyMap` `h-36 md:h-48`)
+arver v2 automatisk via `MakeItFigure` — størrelsesklasserne røres ikke.
 
 ---
 
@@ -135,7 +171,7 @@ De er **senere**, ikke huller i fase 1.
 | Fil | Rolle |
 |-----|--------|
 | `src/components/brand/DomainMark.tsx` | 24px streg-mærke. `domain` prop. `data-domain` + `domain-mark domain-mark--{domain}`. |
-| `src/components/brand/MakeItFigure.tsx` | Silhuet. `highlightedDomains?: Domain[]`. Food-highlight = gut + 1px halo. |
+| `src/components/brand/MakeItFigure.tsx` | Silhuet. `highlightedDomains?: Domain[]`. Food-highlight = gut + 1px halo + blød glow (§2). |
 | `src/components/brand/BodyMap.tsx` | Kompakt editorial slot: figur + fire DomainMark-kickers. |
 | `src/components/app/MobileTabBar.tsx` | Train/food/mind bruger DomainMark. Øvrige tabs urørt. |
 | Dashboard `HrvChip` | Heart-fladen får DomainMark. |

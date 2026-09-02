@@ -1,6 +1,7 @@
 /**
  * MakeItFigure is the brand body-map. Tests lock the AnatomyFigure
- * silhouette, data-domain anchors, and the food-only 1px halo rule.
+ * silhouette, data-domain anchors, v2 organ scale, and the food-only
+ * 1px halo + soft glow recipe (docs/MAKEIT_FIGURE.md §2).
  */
 
 import { createElement } from "react";
@@ -27,6 +28,7 @@ describe("MakeItFigure", () => {
     expect(html).toContain(OUTLINES.male.front.slice(0, 24));
     expect(html).toContain("makeit-figure-outline");
     expect(html).not.toContain("makeit-figure-halo");
+    expect(html).not.toContain("makeit-figure-halo-glow");
     expect(html).not.toContain("data-highlighted");
   });
 
@@ -38,11 +40,17 @@ describe("MakeItFigure", () => {
     expect(html).toContain('data-domain="food"');
   });
 
-  it("lights only the food gut and a 1px halo when food is highlighted", () => {
+  it("lights only the food gut and a 1px halo plus soft glow when food is highlighted", () => {
     const html = render(["food"]);
     expect(html).toContain('data-highlighted="food"');
+    expect(html).toContain("makeit-figure-food-aura");
     expect(html).toContain("makeit-figure-halo");
+    expect(html).toContain("makeit-figure-halo-glow");
+    expect(html).toContain("feGaussianBlur");
     expect(html).toMatch(/stroke-width="1"|strokeWidth="1"/);
+    expect(html).toMatch(/stroke-width="22"|strokeWidth="22"/);
+    expect(html).toContain('data-gut="stomach"');
+    expect(html).toContain('data-gut="coil"');
     expect(html).toContain('data-lit="true"');
     expect(html).not.toMatch(/data-domain="mind"[^>]*data-lit/);
   });
@@ -52,6 +60,7 @@ describe("MakeItFigure", () => {
       const html = render([domain]);
       expect(html).toContain(`data-highlighted="${domain}"`);
       expect(html).not.toContain("makeit-figure-halo");
+      expect(html).not.toContain("makeit-figure-halo-glow");
       expect(html).toContain(`data-domain="${domain}"`);
     }
   });
@@ -64,6 +73,19 @@ describe("MakeItFigure", () => {
     expect(html).not.toContain("M362 248");
     expect(html).not.toContain('data-muscle="abs"');
     expect(html).not.toContain('data-muscle="head"');
+  });
+
+  it("keeps the kinetic chain faintly present when body is unlit", () => {
+    const html = render(["food"]);
+    expect(html).toContain('data-muscle="quadriceps"');
+    expect(html).toContain('data-muscle="chest"');
+    expect(html).not.toMatch(/data-domain="body"[^>]*data-lit/);
+  });
+
+  it("scales the heart ~1.85× so it reads as a chest organ", () => {
+    const html = render(["heart"]);
+    expect(html).toContain('data-heart-scale="1.85"');
+    expect(html).toContain("scale(1.85)");
   });
 
   it("adds SVG hot-zones only when onDomainHover is provided", () => {
@@ -83,12 +105,15 @@ describe("MakeItFigure", () => {
     expect(html).toContain('data-hotzone="food"');
     expect(html).toContain('data-hotzone="heart"');
     expect(html).toContain('data-hotzone="mind"');
+    expect(html).toMatch(/data-hotzone="heart"[^>]*rx="72"/);
+    expect(html).toMatch(/data-hotzone="food"[^>]*rx="108"/);
   });
 
   it("teaching state lights all four anchors and the food halo", () => {
     const html = render(["mind", "heart", "body", "food"]);
     expect(html).toContain('data-highlighted="mind heart body food"');
     expect(html).toContain("makeit-figure-halo");
+    expect(html).toContain("makeit-figure-halo-glow");
     expect(html).toMatch(/data-domain="mind"[^>]*data-lit="true"/);
     expect(html).toMatch(/data-domain="heart"[^>]*data-lit="true"/);
     expect(html).toMatch(/data-domain="body"[^>]*data-lit="true"/);

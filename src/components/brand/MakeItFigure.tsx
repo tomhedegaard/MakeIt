@@ -13,12 +13,12 @@ import type { Domain } from "./DomainMark";
  * (OUTLINES.male.front) so we do not introduce a second body language.
  *
  * highlightedDomains lights only the matching anchor. Food also draws
- * a 1px low-opacity --food halo around the whole silhouette (dosage,
- * never a filled green cloud). See docs/MAKEIT_FIGURE.md.
+ * a 1px --food halo plus a soft outer glow around the whole silhouette
+ * (dosage: aura, never a filled green cloud). See docs/MAKEIT_FIGURE.md §2.
  *
  * Body lights AnatomyFigure muscle parts (the kinetic chain), not
  * overlay stroke segments. Head / hair stay mind; abs / obliques stay
- * clear so the food gut can read.
+ * clear so the food gut can read. Unlit anchors stay faintly visible.
  *
  * No 3D. No photo. No mascot face. Coach stays type.
  */
@@ -41,6 +41,28 @@ const BODY_SLUGS = new Set<RnbhSlug>([
 ]);
 
 const BODY_PARTS = PARTS.male.front.filter((p) => BODY_SLUGS.has(p.slug));
+
+/**
+ * v1 heart glyph, scaled ~1.85× around its visual center and nudged
+ * toward the person's left (viewer's right) so it reads as a chest
+ * organ at landing sizes (h-80 / 36rem). Locked in MAKEIT_FIGURE.md §2.
+ */
+const HEART_PATH =
+  "M388 412c-3.4-2.8-17.2-14.2-17.2-24.6 0-7.6 5.2-12.8 12-12.8 3.6 0 6 1.7 5.2 4 0-2.3 1.6-4 5.2-4 6.8 0 12 5.2 12 12.8 0 10.4-13.8 21.8-17.2 24.6z";
+const HEART_ORIGIN = { x: 388, y: 394 };
+const HEART_ANCHOR = { x: 398, y: 400 };
+export const HEART_SCALE = 1.85;
+
+/** J-stomach + intestinal coils — slightly larger than v1 so --food reads at distance. */
+const GUT_STOMACH =
+  "M322 500c0-28 26-50 58-50h14c40 0 68 32 62 70-6 36-30 58-64 72-28 12-50 2-56-18";
+const GUT_COILS = [
+  "M328 522c8 36 24 60 52 76",
+  "M388 596c48 18 64 54 36 84-28 30-80 32-98 2",
+  "M336 668c-12 26 14 52 46 58",
+] as const;
+
+const FOOD_GLOW_FILTER_ID = "makeit-figure-food-glow";
 
 function partPaths(part: RnbhBodyPart): string[] {
   return [
@@ -82,16 +104,41 @@ export default function MakeItFigure({
       overflow="visible"
     >
       {foodOn ? (
-        <path
-          d={outline}
-          className="makeit-figure-halo"
-          data-domain="food"
-          fill="none"
-          stroke="var(--food)"
-          strokeWidth="1"
-          opacity="0.28"
-          vectorEffect="non-scaling-stroke"
-        />
+        <g className="makeit-figure-food-aura" data-domain="food" aria-hidden>
+          <defs>
+            <filter
+              id={FOOD_GLOW_FILTER_ID}
+              x="-16%"
+              y="-8%"
+              width="132%"
+              height="116%"
+              colorInterpolationFilters="sRGB"
+            >
+              <feGaussianBlur in="SourceGraphic" stdDeviation="12" />
+            </filter>
+          </defs>
+          {/* Soft outer glow — user-space stroke so it scales with the
+              figure (≈8–10px at landing 36rem). Never a filled cloud. */}
+          <path
+            d={outline}
+            className="makeit-figure-halo-glow"
+            fill="none"
+            stroke="var(--food)"
+            strokeWidth="22"
+            opacity="0.10"
+            filter={`url(#${FOOD_GLOW_FILTER_ID})`}
+          />
+          {/* Crisp 1px halo — non-scaling so 1px stays 1px at every size. */}
+          <path
+            d={outline}
+            className="makeit-figure-halo"
+            fill="none"
+            stroke="var(--food)"
+            strokeWidth="1"
+            opacity="0.32"
+            vectorEffect="non-scaling-stroke"
+          />
+        </g>
       ) : null}
 
       <path
@@ -103,26 +150,29 @@ export default function MakeItFigure({
         vectorEffect="non-scaling-stroke"
       />
 
-      {/* Body first so heart / gut sit on top of chest and torso fills. */}
+      {/* Body first so heart / gut sit on top of chest and torso fills.
+          Always drawn: unlit = charcoal presence; lit = --body dosage. */}
       <g
         className={cn("makeit-figure-anchor", bodyOn && "is-lit")}
         data-domain="body"
         data-lit={bodyOn || undefined}
       >
-        {bodyOn
-          ? BODY_PARTS.map((part) => (
-              <g key={part.slug} data-muscle={part.slug}>
-                {partPaths(part).map((d, i) => (
-                  <path
-                    key={i}
-                    d={d}
-                    fill="var(--body)"
-                    fillOpacity={0.18}
-                  />
-                ))}
-              </g>
-            ))
-          : null}
+        {BODY_PARTS.map((part) => (
+          <g key={part.slug} data-muscle={part.slug}>
+            {partPaths(part).map((d, i) => (
+              <path
+                key={i}
+                d={d}
+                fill={bodyOn ? "var(--body)" : "var(--fg-faint)"}
+                fillOpacity={bodyOn ? 0.22 : 0.05}
+                stroke={bodyOn ? "var(--body)" : "var(--fg-faint)"}
+                strokeWidth="1"
+                strokeOpacity={bodyOn ? 0.48 : 0.22}
+                vectorEffect="non-scaling-stroke"
+              />
+            ))}
+          </g>
+        ))}
       </g>
 
       {/* Mind = head. Traced from AnatomyFigure's head part. */}
@@ -135,72 +185,63 @@ export default function MakeItFigure({
           <path
             key={i}
             d={d}
-            fill={mindOn ? "var(--mind)" : "none"}
-            fillOpacity={mindOn ? 0.18 : 0}
+            fill={mindOn ? "var(--mind)" : "var(--fg-faint)"}
+            fillOpacity={mindOn ? 0.24 : 0.04}
             stroke={mindOn ? "var(--mind)" : "var(--fg-faint)"}
-            strokeWidth="1.4"
-            opacity={mindOn ? 0.85 : 0.42}
+            strokeWidth={mindOn ? 1.7 : 1.35}
+            opacity={mindOn ? 0.94 : 0.5}
             vectorEffect="non-scaling-stroke"
           />
         ))}
       </g>
 
-      {/* Heart = heart in the chest (person's left / viewer's right). */}
+      {/* Heart = chest organ, person's left / viewer's right. */}
       <g
         className={cn("makeit-figure-anchor", heartOn && "is-lit")}
         data-domain="heart"
         data-lit={heartOn || undefined}
+        data-heart-scale={HEART_SCALE}
+        transform={`translate(${HEART_ANCHOR.x} ${HEART_ANCHOR.y}) scale(${HEART_SCALE}) translate(${-HEART_ORIGIN.x} ${-HEART_ORIGIN.y})`}
       >
         <path
-          d="M388 412c-3.4-2.8-17.2-14.2-17.2-24.6 0-7.6 5.2-12.8 12-12.8 3.6 0 6 1.7 5.2 4 0-2.3 1.6-4 5.2-4 6.8 0 12 5.2 12 12.8 0 10.4-13.8 21.8-17.2 24.6z"
+          d={HEART_PATH}
           fill={heartOn ? "var(--heart)" : "none"}
-          fillOpacity={heartOn ? 0.2 : 0}
+          fillOpacity={heartOn ? 0.22 : 0}
           stroke={heartOn ? "var(--heart)" : "var(--fg-faint)"}
-          strokeWidth="1.4"
-          opacity={heartOn ? 0.9 : 0.42}
+          strokeWidth="1.5"
+          opacity={heartOn ? 0.95 : 0.5}
           vectorEffect="non-scaling-stroke"
         />
       </g>
 
-      {/* Food = stomach / gut as the anchor. Halo is drawn above. */}
+      {/* Food = J-stomach / coils as the anchor. Halo + glow drawn above. */}
       <g
         className={cn("makeit-figure-anchor", foodOn && "is-lit")}
         data-domain="food"
         data-lit={foodOn || undefined}
       >
         <path
-          d="M338 488c0-22 20-38 46-38h10c32 0 54 26 50 56-4 28-22 46-50 58-22 10-36 4-42-12"
+          d={GUT_STOMACH}
+          data-gut="stomach"
           fill={foodOn ? "var(--food)" : "none"}
           fillOpacity={foodOn ? 0.16 : 0}
           stroke={foodOn ? "var(--food)" : "var(--fg-faint)"}
-          strokeWidth="1.4"
-          opacity={foodOn ? 0.85 : 0.42}
+          strokeWidth="1.5"
+          opacity={foodOn ? 0.9 : 0.5}
           vectorEffect="non-scaling-stroke"
         />
-        <path
-          d="M338 502c4 26 14 44 34 56"
-          fill="none"
-          stroke={foodOn ? "var(--food)" : "var(--fg-faint)"}
-          strokeWidth="1.4"
-          opacity={foodOn ? 0.85 : 0.42}
-          vectorEffect="non-scaling-stroke"
-        />
-        <path
-          d="M394 564c34 14 46 40 28 64-18 24-54 26-70 4"
-          fill="none"
-          stroke={foodOn ? "var(--food)" : "var(--fg-faint)"}
-          strokeWidth="1.4"
-          opacity={foodOn ? 0.85 : 0.42}
-          vectorEffect="non-scaling-stroke"
-        />
-        <path
-          d="M352 632c-8 20 8 42 34 48"
-          fill="none"
-          stroke={foodOn ? "var(--food)" : "var(--fg-faint)"}
-          strokeWidth="1.4"
-          opacity={foodOn ? 0.85 : 0.42}
-          vectorEffect="non-scaling-stroke"
-        />
+        {GUT_COILS.map((d, i) => (
+          <path
+            key={i}
+            d={d}
+            data-gut="coil"
+            fill="none"
+            stroke={foodOn ? "var(--food)" : "var(--fg-faint)"}
+            strokeWidth="1.5"
+            opacity={foodOn ? 0.9 : 0.5}
+            vectorEffect="non-scaling-stroke"
+          />
+        ))}
       </g>
 
       {/* Same silhouette — transparent hit areas only. Body is the
@@ -217,20 +258,20 @@ export default function MakeItFigure({
           />
           <ellipse
             data-hotzone="food"
-            cx="380"
-            cy="545"
-            rx="88"
-            ry="118"
+            cx="382"
+            cy="558"
+            rx="108"
+            ry="142"
             fill="transparent"
             className="cursor-pointer"
             onPointerEnter={() => onDomainHover("food")}
           />
           <ellipse
             data-hotzone="heart"
-            cx="388"
+            cx="398"
             cy="400"
-            rx="48"
-            ry="52"
+            rx="72"
+            ry="80"
             fill="transparent"
             className="cursor-pointer"
             onPointerEnter={() => onDomainHover("heart")}
