@@ -34,7 +34,7 @@
       "heart": "Heart",
       "mind": "Mind"
     },
-    "subline2": "Body, food, heart and mind are one system — not four products. 1:1 coaching, AI-adapted programs and form checks in one place, at a fraction of market price. Built in Copenhagen. Made for athletes who lift heavy.",
+    "subline2": "The week lives in one body. Closed beta — invite only.",
     "ctaPrimary": "Get access",
     "ctaSecondary": "Learn more",
     "ctaTertiary": "Try the engine ↓",
@@ -104,10 +104,58 @@
     "doneHeading": "We'll write when a spot opens.",
     "doneBody": "Invites go out in small batches. You'll hear from us by email — and only about that."
   },
+  "loop": {
+    "program": {
+      "eyebrow": "01 — Program",
+      "heading": "The week rewrites itself.",
+      "body": "HRV below the band. Sleep short. The engine cut the top set — before you reached the hall.",
+      "proof": {
+        "week": "STR-12 · week 4",
+        "exercise": "Back squat",
+        "beforeLabel": "Planned",
+        "beforeValue": "150 kg · 3 @ RPE 8",
+        "afterLabel": "After 05:30",
+        "afterValue": "135 kg · 3 @ RPE 8",
+        "shift": "−10% top set",
+        "reasonHrv": "HRV below your norm",
+        "reasonSleep": "5.2 h sleep",
+        "reasonMind": "Tired at check-in",
+        "note": "Same rule engine as the app. Never more than one change.",
+        "days": {
+          "mon": "Mon",
+          "tue": "Tue",
+          "wed": "Wed",
+          "thu": "Thu",
+          "fri": "Fri",
+          "sat": "Sat"
+        }
+      }
+    },
+    "formCheck": {
+      "eyebrow": "02 — Form-check",
+      "heading": "You film. Munk writes. The next session moves.",
+      "body": "Not chat theater. A note in his hand — and the session changes.",
+      "proof": {
+        "step1Label": "The film",
+        "step1Value": "Squat · set 3",
+        "step2Label": "Munk's note",
+        "step2Value": "Right knee drops at the bottom. Spread the floor.",
+        "step2Signed": "Mikael Munk",
+        "step3Label": "Next session",
+        "step3Value": "Pause in the hole. 3×3.",
+        "note": "AI drafts. He signs. You lift differently."
+      }
+    },
+    "helhed": {
+      "eyebrow": "03 — The whole",
+      "heading": "Four systems. One body.",
+      "body": "When one pulls, the others move. The engine reads all four every morning."
+    }
+  },
   "pillars": {
     "engine": {
       "label": "02 — Engine & open brain",
-      "title": "The program rewrites itself. And shows you why.",
+      "title": "And it shows you why.",
       "body": "Every morning at 05:30 the engine reads your <heart>HRV</heart>, your <mind>sleep</mind>, last session's <body>RPE</body> and your latest form checks. It adjusts today's session — or doesn't — and shows the whole chain behind the call: raw signals → rule → Claude's refinement → action → outcome. Munk sees the escalation before you do. It's one body-map, not four dashboards.",
       "bullet1": "Top-set reduction, accessory cut, exercise swap — or no_change. Never more than one change per session.",
       "bullet2": "HRV very_low → session paused, mobility + walk, Munk gets notified",
@@ -267,8 +315,8 @@
     "note": "Your progress becomes theirs"
   },
   "app": {
-    "eyebrow": "06 — The App",
-    "heading": "Here's how it looks.",
+    "eyebrow": "In the same body",
+    "heading": "Eight screens, one body.",
     "figureAria": "Body map — mind, heart, body and food",
     "figure": {
       "holistic": "Four systems. One body.",
@@ -293,7 +341,7 @@
         "body": "60 seconds. Check-in and the mental graph. When the head feels it first, the engine dials down before HRV breaks."
       }
     },
-    "intro": "The week lives in one body — four systems, not four apps. Eight screens below: Today, the session, the meal plan, readiness, the 60-second check-in, form-check, your buddy, and the sandbox case you practice as a Beast.",
+    "intro": "Today, the session, food, readiness, check-in, form-check, buddy and Coach School. Evidence — not the story.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Today's session, one tap to start",

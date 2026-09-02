@@ -34,7 +34,7 @@
       "heart": "Hjerte",
       "mind": "Sind"
     },
-    "subline2": "Krop, mad, hjerte og sind er ét system — ikke fire produkter. 1:1-coaching, AI-tilpassede programmer og form-checks samlet ét sted, til en brøkdel af markedsprisen. Bygget i København. Lavet til atleter der løfter tungt.",
+    "subline2": "Ugen bor i én krop. Closed beta — kun med invite.",
     "ctaPrimary": "Få adgang",
     "ctaSecondary": "Læs mere",
     "ctaTertiary": "Prøv motoren ↓",
@@ -104,10 +104,58 @@
     "doneHeading": "Vi skriver når der åbner en plads.",
     "doneBody": "Invites sendes i små hold. Du hører fra os på email — og kun om det."
   },
+  "loop": {
+    "program": {
+      "eyebrow": "01 — Program",
+      "heading": "Ugen skriver sig om.",
+      "body": "HRV under bånd. Søvn kort. Motoren skar topsættet — før du nåede i hallen.",
+      "proof": {
+        "week": "STR-12 · uge 4",
+        "exercise": "Back squat",
+        "beforeLabel": "Planlagt",
+        "beforeValue": "150 kg · 3 @ RPE 8",
+        "afterLabel": "Efter 05:30",
+        "afterValue": "135 kg · 3 @ RPE 8",
+        "shift": "−10 % topsæt",
+        "reasonHrv": "HRV under din norm",
+        "reasonSleep": "5,2 t søvn",
+        "reasonMind": "Træt i check-in",
+        "note": "Samme regel-motor som i appen. Aldrig mere end én ændring.",
+        "days": {
+          "mon": "Man",
+          "tue": "Tir",
+          "wed": "Ons",
+          "thu": "Tor",
+          "fri": "Fre",
+          "sat": "Lør"
+        }
+      }
+    },
+    "formCheck": {
+      "eyebrow": "02 — Form-check",
+      "heading": "Du filmer. Munk skriver. Næste pas flytter.",
+      "body": "Ikke et chat-teater. En note i hans hånd — og sessionen ændrer sig.",
+      "proof": {
+        "step1Label": "Filmen",
+        "step1Value": "Squat · sæt 3",
+        "step2Label": "Munks note",
+        "step2Value": "Højre knæ falder i bunden. Spread the floor.",
+        "step2Signed": "Mikael Munk",
+        "step3Label": "Næste pas",
+        "step3Value": "Pause i hullet. 3×3.",
+        "note": "AI udkaster. Han underskriver. Du løfter anderledes."
+      }
+    },
+    "helhed": {
+      "eyebrow": "03 — Helhed",
+      "heading": "Fire systemer. Én krop.",
+      "body": "Når ét trækker, flytter de andre med. Motoren læser alle fire hver morgen."
+    }
+  },
   "pillars": {
     "engine": {
       "label": "02 — Motor & åben hjerne",
-      "title": "Programmet rewriter sig selv. Og viser dig hvorfor.",
+      "title": "Og den viser dig hvorfor.",
       "body": "Hver morgen kl. 05:30 læser motoren din <heart>HRV</heart>, din <mind>søvn</mind>, sidste sessions <body>RPE</body> og dine seneste form-checks. Den justerer dagens session — eller lader være — og viser hele kæden bag beslutningen: råsignaler → regel → Claudes refinement → handling → udfald. Munk ser eskaleringen før du gør. Det er ét kropskort, ikke fire dashboards.",
       "bullet1": "Topsæt-reduktion, accessory-cut, øvelsesbytte — eller no_change. Aldrig mere end én ændring pr. session.",
       "bullet2": "HRV very_low → session pauset, mobilitet + gåtur, Munk får besked",
@@ -267,8 +315,8 @@
     "note": "Din fremgang bliver andres"
   },
   "app": {
-    "eyebrow": "06 — Appen",
-    "heading": "Sådan ser det ud.",
+    "eyebrow": "I samme krop",
+    "heading": "Otte skærme i samme krop.",
     "figureAria": "Kropskort — sind, hjerte, krop og kost",
     "figure": {
       "holistic": "Fire systemer. Én krop.",
@@ -293,7 +341,7 @@
         "body": "60 sekunder. Check-in og den mentale graf. Når hovedet mærker det først, skruer motoren ned før HRV knækker."
       }
     },
-    "intro": "Ugen bor i én krop — fire systemer, ikke fire apps. Otte skærme herunder: Today, sessionen, måltidsplanen, readiness, 60-sekunders check-in, form-check, din buddy og den sandbox-case du øver som Beast.",
+    "intro": "Today, sessionen, kosten, readiness, check-in, form-check, buddy og Coach School. Bevis — ikke historien.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Dagens session, ét tap til start",

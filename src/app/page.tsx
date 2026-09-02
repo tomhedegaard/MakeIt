@@ -7,6 +7,7 @@ import PillarsSection from "@/components/marketing/PillarsSection";
 import TierJourney from "@/components/marketing/TierJourney";
 import DomainIndexSection from "@/components/marketing/DomainIndexSection";
 import GiveForwardSection from "@/components/marketing/GiveForwardSection";
+import LandingLoop from "@/components/marketing/LandingLoop";
 import AppShowcase from "@/components/marketing/AppShowcase";
 import ValueSection from "@/components/marketing/ValueSection";
 import WaitlistSection from "@/components/marketing/WaitlistSection";
@@ -53,6 +54,10 @@ export default function Home() {
         <ValueSection />
         <PillarsSection />
         <TierJourney />
+        {/* Three-beat product loop: Program → Form-check, then
+            AppShowcase opens on Helhed (MarketingBodyMap) and keeps
+            the eight phones as a quieter evidence gallery. */}
+        <LandingLoop />
         <AppShowcase />
         {/* UX-audit C5: OriginSection (StrapIt-fabrikshistorien) er
             taget af landingen — den hører til på webshoppen. */}
