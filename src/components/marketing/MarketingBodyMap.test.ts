@@ -49,8 +49,8 @@ describe("MarketingBodyMap", () => {
     );
     expect(host.querySelector(".makeit-figure-halo")).not.toBeNull();
     expect(host.querySelector(".makeit-figure-halo-glow")).not.toBeNull();
-    expect(figure?.className).toContain("h-[22rem]");
-    expect(figure?.className).toContain("lg:h-[36rem]");
+    expect(figure?.getAttribute("class")).toContain("h-[22rem]");
+    expect(figure?.getAttribute("class")).toContain("lg:h-[36rem]");
     expect(host.querySelector("[data-body-map-kicker]")).not.toBeNull();
     expect(host.textContent).toContain("figure.whole.body");
   });
