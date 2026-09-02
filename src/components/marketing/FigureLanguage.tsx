@@ -12,6 +12,13 @@ import { cn } from "@/lib/utils";
 
 export const HERO_DOMAINS = ["body", "food", "heart", "mind"] as const;
 
+/** Teaching state lights all four. A selection lights only that domain. */
+export function highlightsForActive(
+  active: Domain | null,
+): readonly Domain[] {
+  return active ? [active] : DOMAINS;
+}
+
 export function MarketingDomainKicker({
   domain,
   label,

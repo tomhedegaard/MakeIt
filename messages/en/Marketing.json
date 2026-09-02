@@ -34,7 +34,7 @@
       "heart": "Heart",
       "mind": "Mind"
     },
-    "subline2": "Training and meals, HRV recovery and a mind check — 1:1 coaching, AI-adapted programs and form checks in one place, at a fraction of market price. Built in Copenhagen. Made for athletes who lift heavy.",
+    "subline2": "Body, food, heart and mind are one system — not four products. 1:1 coaching, AI-adapted programs and form checks in one place, at a fraction of market price. Built in Copenhagen. Made for athletes who lift heavy.",
     "ctaPrimary": "Get access",
     "ctaSecondary": "Learn more",
     "ctaTertiary": "Try the engine ↓",
@@ -108,7 +108,7 @@
     "engine": {
       "label": "02 — Engine & open brain",
       "title": "The program rewrites itself. And shows you why.",
-      "body": "Every morning at 05:30 the engine reads your <heart>HRV</heart>, your <mind>sleep</mind>, last session's <body>RPE</body> and your latest form checks. It adjusts today's session — or doesn't — and shows the whole chain behind the call: raw signals → rule → Claude's refinement → action → outcome. Munk sees the escalation before you do.",
+      "body": "Every morning at 05:30 the engine reads your <heart>HRV</heart>, your <mind>sleep</mind>, last session's <body>RPE</body> and your latest form checks. It adjusts today's session — or doesn't — and shows the whole chain behind the call: raw signals → rule → Claude's refinement → action → outcome. Munk sees the escalation before you do. It's one body-map, not four dashboards.",
       "bullet1": "Top-set reduction, accessory cut, exercise swap — or no_change. Never more than one change per session.",
       "bullet2": "HRV very_low → session paused, mobility + walk, Munk gets notified",
       "bullet3": "30 days of history with counterfactual sliders: \"What if I'd slept 7h?\" — computed live in your browser",
@@ -119,7 +119,7 @@
     "munkMultiplier": {
       "label": "03 — Coaching that scales",
       "title": "One coach. 5× capacity. Still him.",
-      "body": "AI drafts form-check replies, cohort patterns and morning reports — Munk edits in 30 seconds or rewrites. You never get an AI reply without his signature. And when you hit Beast tier, Coach School opens: you learn to answer yourself, with Munk as senior.",
+      "body": "AI drafts form-check replies, cohort patterns and morning reports — Munk edits in 30 seconds or rewrites. You never get an AI reply without his signature. And when you hit Beast tier, Coach School opens: you learn to answer yourself, with Munk as senior. Form-check, buddy and Coach School sit on the same body-map as the session.",
       "bullet1": "AI-drafted form-check replies, signed by Munk before they go out",
       "bullet2": "Cohort patterns: AI spots when 3+ athletes hit the same problem in the same week",
       "bullet3": "Coach School: lessons → sandbox cases → live members, with safety moderation on everything outgoing",
@@ -270,7 +270,30 @@
     "eyebrow": "06 — The App",
     "heading": "Here's how it looks.",
     "figureAria": "Body map — mind, heart, body and food",
-    "intro": "Eight screens that define your week — from the first morning tap, to today's meal plan, to the nudge above the first lift that adapts the day's load to your HRV, to the 60-second check-in and the graph, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
+    "figure": {
+      "holistic": "Four systems. One body.",
+      "whole": {
+        "title": "The whole",
+        "body": "The Adaptive Engine reads all four every morning at 05:30 — session, food, HRV and the check-in — and writes one program. When one pulls, the others move."
+      },
+      "body": {
+        "title": "Body",
+        "body": "Session, form-check and adaptive load. The engine turns today's session from what the rest of the body is saying."
+      },
+      "food": {
+        "title": "Food",
+        "body": "Meal plan and macros for the week you actually lift. The anchor sits in the gut — food pulls on the whole system."
+      },
+      "heart": {
+        "title": "Heart",
+        "body": "HRV readiness and the engine. Morning RMSSD sets the pace — your own band, not a 0–100 score."
+      },
+      "mind": {
+        "title": "Mind",
+        "body": "60 seconds. Check-in and the mental graph. When the head feels it first, the engine dials down before HRV breaks."
+      }
+    },
+    "intro": "The week lives in one body — four systems, not four apps. Eight screens below: Today, the session, the meal plan, readiness, the 60-second check-in, form-check, your buddy, and the sandbox case you practice as a Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Today's session, one tap to start",
