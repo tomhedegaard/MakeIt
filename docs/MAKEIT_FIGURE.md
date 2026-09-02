@@ -54,25 +54,25 @@ Aldrig en fyldt grøn sky. Skal læses som aura på `--bg` (#0A0A0B).
    - `fill: none`
    - `stroke: var(--food)`
    - `stroke-width: 1`
-   - `opacity: 0.32` (vindue 0.28–0.35)
+   - `opacity: 0.35` (vindue 0.28–0.35)
    - `vector-effect: non-scaling-stroke` så 1px forbliver 1px i alle størrelser
 
 2. **Blød ydre glow** (`.makeit-figure-halo-glow`)
    - anden kopi af samme omrids
    - `fill: none`
    - `stroke: var(--food)`
-   - `stroke-width: 22` i user-units (≈ 8–10 px ved landing `lg:h-[36rem]`;
-     skalerer ned på dashboard `h-36` / `h-48` så den ikke bliver en klat)
-   - `opacity: 0.10` (vindue 0.08–0.12)
+   - `stroke-width: 8` med `vector-effect: non-scaling-stroke` (8 css-px
+     i alle størrelser — synlig gennem landing-grain på `--bg` #0A0A0B)
+   - `opacity: 0.12` (vindue 0.08–0.12)
    - `filter: feGaussianBlur` med `stdDeviation="12"` (user-units) på
      glow-laget — ikke på den skarpe 1px-streg
-   - **ingen** `non-scaling-stroke` på glow: den skal skalere med figuren
+   - to lag, ingen fill: aura, ikke en fyldt grøn sky
 
 **Organ-skala (v2):**
 
-- Hjerte: v1-glyffen scalet `1.85×` omkring sit visuelle centrum, rykket
+- Hjerte: v1-glyffen scalet `2×` omkring sit visuelle centrum, rykket
   mod personens venstre (seers højre) så det læses som bryst-organ ved
-  landing-størrelse — ikke en prik. `data-heart-scale="1.85"`.
+  landing-størrelse — ikke en prik. `data-heart-scale="2"`.
 - Fordøjelse: lidt større, tydeligere J-mave (`data-gut="stomach"`) +
   tre tarmslynger (`data-gut="coil"`) så `--food` holder på afstand.
 - Sind: samme AnatomyFigure-hovedpath; tændt = stærkere streg (1.7) +
@@ -123,7 +123,7 @@ lav-opacity fill — ikke syv streg-segmenter ovenpå silhuetten. Abs og
 obliques holdes fri, så food-ankeret (mave/tarm) kan læses.
 
 Dashboard (I dag) viser undervisningstilstanden: alle fire domæner tændt
-på én gang ved ~0.16–0.24 fill-opacity, food-halo 0.32 og food-glow 0.10.
+på én gang ved ~0.16–0.24 fill-opacity, food-halo 0.35 og food-glow 0.12.
 Det er fase 1, ikke Today-as-figure (kun det der er off). Landing
 (`MarketingBodyMap` `lg:h-[36rem]`) og dashboard (`BodyMap` `h-36 md:h-48`)
 arver v2 automatisk via `MakeItFigure` — størrelsesklasserne røres ikke.

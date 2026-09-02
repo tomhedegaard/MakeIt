@@ -48,7 +48,7 @@ describe("MakeItFigure", () => {
     expect(html).toContain("makeit-figure-halo-glow");
     expect(html).toContain("feGaussianBlur");
     expect(html).toMatch(/stroke-width="1"|strokeWidth="1"/);
-    expect(html).toMatch(/stroke-width="22"|strokeWidth="22"/);
+    expect(html).toMatch(/stroke-width="8"|strokeWidth="8"/);
     expect(html).toContain('data-gut="stomach"');
     expect(html).toContain('data-gut="coil"');
     expect(html).toContain('data-lit="true"');
@@ -82,10 +82,10 @@ describe("MakeItFigure", () => {
     expect(html).not.toMatch(/data-domain="body"[^>]*data-lit/);
   });
 
-  it("scales the heart ~1.85× so it reads as a chest organ", () => {
+  it("scales the heart 2× so it reads as a chest organ", () => {
     const html = render(["heart"]);
-    expect(html).toContain('data-heart-scale="1.85"');
-    expect(html).toContain("scale(1.85)");
+    expect(html).toContain('data-heart-scale="2"');
+    expect(html).toContain("scale(2)");
   });
 
   it("adds SVG hot-zones only when onDomainHover is provided", () => {
@@ -105,7 +105,7 @@ describe("MakeItFigure", () => {
     expect(html).toContain('data-hotzone="food"');
     expect(html).toContain('data-hotzone="heart"');
     expect(html).toContain('data-hotzone="mind"');
-    expect(html).toMatch(/data-hotzone="heart"[^>]*rx="72"/);
+    expect(html).toMatch(/data-hotzone="heart"[^>]*rx="80"/);
     expect(html).toMatch(/data-hotzone="food"[^>]*rx="108"/);
   });
 

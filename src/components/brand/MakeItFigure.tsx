@@ -43,15 +43,15 @@ const BODY_SLUGS = new Set<RnbhSlug>([
 const BODY_PARTS = PARTS.male.front.filter((p) => BODY_SLUGS.has(p.slug));
 
 /**
- * v1 heart glyph, scaled ~1.85× around its visual center and nudged
+ * v1 heart glyph, scaled 2× around its visual center and nudged
  * toward the person's left (viewer's right) so it reads as a chest
  * organ at landing sizes (h-80 / 36rem). Locked in MAKEIT_FIGURE.md §2.
  */
 const HEART_PATH =
   "M388 412c-3.4-2.8-17.2-14.2-17.2-24.6 0-7.6 5.2-12.8 12-12.8 3.6 0 6 1.7 5.2 4 0-2.3 1.6-4 5.2-4 6.8 0 12 5.2 12 12.8 0 10.4-13.8 21.8-17.2 24.6z";
 const HEART_ORIGIN = { x: 388, y: 394 };
-const HEART_ANCHOR = { x: 398, y: 400 };
-export const HEART_SCALE = 1.85;
+const HEART_ANCHOR = { x: 400, y: 398 };
+export const HEART_SCALE = 2;
 
 /** J-stomach + intestinal coils — slightly larger than v1 so --food reads at distance. */
 const GUT_STOMACH =
@@ -117,15 +117,16 @@ export default function MakeItFigure({
               <feGaussianBlur in="SourceGraphic" stdDeviation="12" />
             </filter>
           </defs>
-          {/* Soft outer glow — user-space stroke so it scales with the
-              figure (≈8–10px at landing 36rem). Never a filled cloud. */}
+          {/* Soft outer glow — 8px non-scaling stroke so the aura reads
+              through landing grain, plus a light blur. Never a filled cloud. */}
           <path
             d={outline}
             className="makeit-figure-halo-glow"
             fill="none"
             stroke="var(--food)"
-            strokeWidth="22"
-            opacity="0.10"
+            strokeWidth="8"
+            opacity="0.12"
+            vectorEffect="non-scaling-stroke"
             filter={`url(#${FOOD_GLOW_FILTER_ID})`}
           />
           {/* Crisp 1px halo — non-scaling so 1px stays 1px at every size. */}
@@ -135,7 +136,7 @@ export default function MakeItFigure({
             fill="none"
             stroke="var(--food)"
             strokeWidth="1"
-            opacity="0.32"
+            opacity="0.35"
             vectorEffect="non-scaling-stroke"
           />
         </g>
@@ -206,10 +207,10 @@ export default function MakeItFigure({
         <path
           d={HEART_PATH}
           fill={heartOn ? "var(--heart)" : "none"}
-          fillOpacity={heartOn ? 0.22 : 0}
+          fillOpacity={heartOn ? 0.28 : 0}
           stroke={heartOn ? "var(--heart)" : "var(--fg-faint)"}
-          strokeWidth="1.5"
-          opacity={heartOn ? 0.95 : 0.5}
+          strokeWidth="1.8"
+          opacity={heartOn ? 0.96 : 0.52}
           vectorEffect="non-scaling-stroke"
         />
       </g>
@@ -268,10 +269,10 @@ export default function MakeItFigure({
           />
           <ellipse
             data-hotzone="heart"
-            cx="398"
-            cy="400"
-            rx="72"
-            ry="80"
+            cx="400"
+            cy="398"
+            rx="80"
+            ry="88"
             fill="transparent"
             className="cursor-pointer"
             onPointerEnter={() => onDomainHover("heart")}
