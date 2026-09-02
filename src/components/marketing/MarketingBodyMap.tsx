@@ -27,18 +27,18 @@ export default function MarketingBodyMap() {
 
   return (
     <div className="mb-16" data-reveal>
-      <div className="mb-10 max-w-2xl">
-        <div className="eyebrow mb-4">{t("eyebrow")}</div>
-        <h2 className="font-display text-[clamp(2.4rem,7vw,5.5rem)] leading-[0.92]">
-          {t("heading")}
-        </h2>
-      </div>
-
       <div
-        className="grid items-center gap-8 lg:grid-cols-12 lg:gap-x-12"
+        className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-x-12"
         onPointerLeave={() => setActive(null)}
       >
-        <div className="flex flex-col items-center lg:col-span-6 lg:items-start">
+        <div className="order-1 lg:order-2 lg:col-span-6 lg:col-start-7">
+          <div className="eyebrow mb-4">{t("eyebrow")}</div>
+          <h2 className="font-display text-[clamp(2rem,4.6vw,3.6rem)] leading-[0.92]">
+            {t("heading")}
+          </h2>
+        </div>
+
+        <div className="order-2 flex flex-col items-center lg:order-1 lg:col-span-6 lg:row-span-2 lg:row-start-1 lg:items-start">
           <MakeItFigure
             highlightedDomains={highlighted}
             onDomainHover={setActive}
@@ -50,7 +50,7 @@ export default function MarketingBodyMap() {
           </p>
         </div>
 
-        <div className="lg:col-span-6">
+        <div className="order-3 lg:order-2 lg:col-span-6 lg:col-start-7">
           <ul className="flex flex-col gap-3">
             {HERO_DOMAINS.map((domain) => {
               const selected = active === domain;
