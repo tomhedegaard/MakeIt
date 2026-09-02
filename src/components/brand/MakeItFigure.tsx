@@ -204,6 +204,15 @@ export default function MakeItFigure({
         data-heart-scale={HEART_SCALE}
         transform={`translate(${HEART_ANCHOR.x} ${HEART_ANCHOR.y}) scale(${HEART_SCALE}) translate(${-HEART_ORIGIN.x} ${-HEART_ORIGIN.y})`}
       >
+        {/* Dark under-stroke so the organ punches out of orange pec fills. */}
+        <path
+          d={HEART_PATH}
+          fill="none"
+          stroke="var(--bg)"
+          strokeWidth="4"
+          opacity={heartOn ? 0.9 : 0.45}
+          vectorEffect="non-scaling-stroke"
+        />
         <path
           d={HEART_PATH}
           fill={heartOn ? "var(--heart)" : "none"}

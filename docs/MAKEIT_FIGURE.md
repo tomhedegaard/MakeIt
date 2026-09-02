@@ -72,7 +72,8 @@ Aldrig en fyldt grøn sky. Skal læses som aura på `--bg` (#0A0A0B).
 
 - Hjerte: v1-glyffen scalet `2×` omkring sit visuelle centrum, rykket
   mod personens venstre (seers højre) så det læses som bryst-organ ved
-  landing-størrelse — ikke en prik. `data-heart-scale="2"`.
+  landing-størrelse — ikke en prik. `data-heart-scale="2"`. En 4px
+  `--bg`-understreg holder organet fri af de orange pec-fills.
 - Fordøjelse: lidt større, tydeligere J-mave (`data-gut="stomach"`) +
   tre tarmslynger (`data-gut="coil"`) så `--food` holder på afstand.
 - Sind: samme AnatomyFigure-hovedpath; tændt = stærkere streg (1.7) +
