@@ -53,6 +53,7 @@ describe("MarketingFigure", () => {
     expect(html).toContain("makeit-figure");
     expect(html).toContain('data-highlighted="mind heart body food"');
     expect(html).toContain("makeit-figure-halo");
+    expect(html).toContain("makeit-figure-halo-glow");
     expect(html).toContain('aria-label="body-map"');
     for (const domain of DOMAINS) {
       expect(html).toMatch(
