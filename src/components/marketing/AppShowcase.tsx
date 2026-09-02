@@ -17,9 +17,8 @@ import {
 import { getShowcaseNutritionDay } from "@/lib/marketing/nutrition-showcase";
 
 /**
- * App section: interactive body-map intro (MarketingBodyMap teaches
- * the four systems as one body) then eight mini-phones — Today,
- * Session, Kost, Readiness, Sind, Form-check, Buddy, Coach School.
+ * App section: Helhed (MarketingBodyMap as Beat C) then eight
+ * mini-phones as a quieter evidence gallery — not the landing story.
  * Domain phones sit Session → Kost → Readiness → Sind so the
  * four-domain story reads body → food → heart → mind.
  */
@@ -31,6 +30,16 @@ export default async function AppShowcase() {
     <section id="app" className="relative border-t hairline py-20 md:py-28">
       <Container>
         <MarketingBodyMap />
+
+        <div className="mb-12 max-w-2xl" data-reveal data-landing-gallery>
+          <div className="eyebrow mb-4">{t("eyebrow")}</div>
+          <h2 className="font-display text-[clamp(1.7rem,3.6vw,2.6rem)] leading-[0.95]">
+            {t("heading")}
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-fg-dim md:text-lg">
+            {t("intro")}
+          </p>
+        </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           <Phone label={t("phone.todayLabel")} detail={t("phone.todayDetail")} delay={0}>

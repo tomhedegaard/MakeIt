@@ -12,7 +12,7 @@ import {
 } from "@/components/marketing/FigureLanguage";
 
 /**
- * Landing #app intro — the figure teaches the holistic body-map.
+ * Landing Beat C — Helhed. The figure teaches the holistic body-map.
  * Default (rest) lights all four anchors. Hover or focus on a
  * DomainMark kicker or an SVG hot-zone lights only that domain
  * and swaps the helhed caption for how MakeIt serves that system.
@@ -21,21 +21,25 @@ import {
  */
 export default function MarketingBodyMap() {
   const t = useTranslations("Marketing.app");
+  const helhed = useTranslations("Marketing.loop.helhed");
   const [active, setActive] = useState<Domain | null>(null);
   const highlighted = highlightsForActive(active);
   const detailKey = active ?? "whole";
 
   return (
-    <div className="mb-16" data-reveal>
+    <div className="mb-16" data-reveal data-landing-beat="helhed">
       <div
         className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-x-12"
         onPointerLeave={() => setActive(null)}
       >
         <div className="order-1 lg:order-2 lg:col-span-6 lg:col-start-7">
-          <div className="eyebrow mb-4">{t("eyebrow")}</div>
+          <div className="eyebrow mb-4">{helhed("eyebrow")}</div>
           <h2 className="font-display text-[clamp(2rem,4.6vw,3.6rem)] leading-[0.92]">
-            {t("heading")}
+            {helhed("heading")}
           </h2>
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-fg-dim md:text-xl">
+            {helhed("body")}
+          </p>
         </div>
 
         <div className="order-2 flex flex-col items-center lg:order-1 lg:col-span-6 lg:row-span-2 lg:row-start-1 lg:items-start">
@@ -105,10 +109,6 @@ export default function MarketingBodyMap() {
           </div>
         </div>
       </div>
-
-      <p className="mt-10 max-w-2xl text-lg leading-relaxed text-fg-dim md:text-xl">
-        {t("intro")}
-      </p>
     </div>
   );
 }

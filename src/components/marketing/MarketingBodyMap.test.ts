@@ -52,7 +52,10 @@ describe("MarketingBodyMap", () => {
     expect(figure?.getAttribute("class")).toContain("h-[22rem]");
     expect(figure?.getAttribute("class")).toContain("lg:h-[36rem]");
     expect(host.querySelector("[data-body-map-kicker]")).not.toBeNull();
+    expect(host.querySelector("[data-landing-beat='helhed']")).not.toBeNull();
     expect(host.textContent).toContain("figure.whole.body");
+    expect(host.textContent).toContain("heading");
+    expect(host.textContent).not.toContain("intro");
   });
 
   it("selecting a domain kicker lights only that domain", () => {
