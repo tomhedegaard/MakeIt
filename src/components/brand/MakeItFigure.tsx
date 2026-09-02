@@ -58,10 +58,13 @@ export default function MakeItFigure({
   highlightedDomains = [],
   className,
   ariaLabel,
+  onDomainHover,
 }: {
   highlightedDomains?: readonly Domain[];
   className?: string;
   ariaLabel?: string;
+  /** When set, invisible SVG hot-zones teach each domain on pointer. */
+  onDomainHover?: (domain: Domain | null) => void;
 }) {
   const mindOn = isOn(highlightedDomains, "mind");
   const heartOn = isOn(highlightedDomains, "heart");
@@ -199,6 +202,51 @@ export default function MakeItFigure({
           vectorEffect="non-scaling-stroke"
         />
       </g>
+
+      {/* Same silhouette — transparent hit areas only. Body is the
+          full outline; organ zones sit on top so head / heart / gut
+          win. No second body language. */}
+      {onDomainHover ? (
+        <g className="makeit-figure-hotzones" aria-hidden>
+          <path
+            d={outline}
+            data-hotzone="body"
+            fill="transparent"
+            className="cursor-pointer"
+            onPointerEnter={() => onDomainHover("body")}
+          />
+          <ellipse
+            data-hotzone="food"
+            cx="380"
+            cy="545"
+            rx="88"
+            ry="118"
+            fill="transparent"
+            className="cursor-pointer"
+            onPointerEnter={() => onDomainHover("food")}
+          />
+          <ellipse
+            data-hotzone="heart"
+            cx="388"
+            cy="400"
+            rx="48"
+            ry="52"
+            fill="transparent"
+            className="cursor-pointer"
+            onPointerEnter={() => onDomainHover("heart")}
+          />
+          {HEAD_PATHS.map((d, i) => (
+            <path
+              key={i}
+              d={d}
+              data-hotzone="mind"
+              fill="transparent"
+              className="cursor-pointer"
+              onPointerEnter={() => onDomainHover("mind")}
+            />
+          ))}
+        </g>
+      ) : null}
     </svg>
   );
 }

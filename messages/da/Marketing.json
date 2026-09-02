@@ -34,7 +34,7 @@
       "heart": "Hjerte",
       "mind": "Sind"
     },
-    "subline2": "Træning og måltider, HRV-restitution og mind-check — 1:1-coaching, AI-tilpassede programmer og form-checks samlet ét sted, til en brøkdel af markedsprisen. Bygget i København. Lavet til atleter der løfter tungt.",
+    "subline2": "Krop, mad, hjerte og sind er ét system — ikke fire produkter. 1:1-coaching, AI-tilpassede programmer og form-checks samlet ét sted, til en brøkdel af markedsprisen. Bygget i København. Lavet til atleter der løfter tungt.",
     "ctaPrimary": "Få adgang",
     "ctaSecondary": "Læs mere",
     "ctaTertiary": "Prøv motoren ↓",
@@ -108,7 +108,7 @@
     "engine": {
       "label": "02 — Motor & åben hjerne",
       "title": "Programmet rewriter sig selv. Og viser dig hvorfor.",
-      "body": "Hver morgen kl. 05:30 læser motoren din <heart>HRV</heart>, din <mind>søvn</mind>, sidste sessions <body>RPE</body> og dine seneste form-checks. Den justerer dagens session — eller lader være — og viser hele kæden bag beslutningen: råsignaler → regel → Claudes refinement → handling → udfald. Munk ser eskaleringen før du gør.",
+      "body": "Hver morgen kl. 05:30 læser motoren din <heart>HRV</heart>, din <mind>søvn</mind>, sidste sessions <body>RPE</body> og dine seneste form-checks. Den justerer dagens session — eller lader være — og viser hele kæden bag beslutningen: råsignaler → regel → Claudes refinement → handling → udfald. Munk ser eskaleringen før du gør. Det er ét kropskort, ikke fire dashboards.",
       "bullet1": "Topsæt-reduktion, accessory-cut, øvelsesbytte — eller no_change. Aldrig mere end én ændring pr. session.",
       "bullet2": "HRV very_low → session pauset, mobilitet + gåtur, Munk får besked",
       "bullet3": "30 dages historik med counterfactual-sliders: \"Hvad hvis jeg havde sovet 7t?\" — beregnes live i din browser",
@@ -119,7 +119,7 @@
     "munkMultiplier": {
       "label": "03 — Coaching der skalerer",
       "title": "Én coach. 5× kapacitet. Stadig ham.",
-      "body": "AI udkaster form-check-svar, kohort-mønstre og morgenrapporter — Munk redigerer i 30 sekunder eller skriver om. Du får aldrig et AI-svar uden hans underskrift. Og rammer du Beast-tier, åbner Coach School: du lærer at svare selv, med Munk som senior.",
+      "body": "AI udkaster form-check-svar, kohort-mønstre og morgenrapporter — Munk redigerer i 30 sekunder eller skriver om. Du får aldrig et AI-svar uden hans underskrift. Og rammer du Beast-tier, åbner Coach School: du lærer at svare selv, med Munk som senior. Form-check, buddy og Coach School sidder på samme kropskort som sessionen.",
       "bullet1": "AI-drafted form-check-svar, signeret af Munk inden afsendelse",
       "bullet2": "Kohort-mønstre: AI ser når 3+ atleter har samme problem i samme uge",
       "bullet3": "Coach School: lektioner → sandbox-cases → live-medlemmer, med safety-moderation på alt udgående",
@@ -270,7 +270,30 @@
     "eyebrow": "06 — Appen",
     "heading": "Sådan ser det ud.",
     "figureAria": "Kropskort — sind, hjerte, krop og kost",
-    "intro": "Otte skærme der definerer din uge — fra morgenens første tap, til dagens måltidsplan, til nudgen over første øvelse der tilpasser dagens belastning efter din HRV, til 60-sekunders check-in og grafen, til din buddy's daglige readiness og den sandbox-case du øver på som Beast.",
+    "figure": {
+      "holistic": "Fire systemer. Én krop.",
+      "whole": {
+        "title": "Helhed",
+        "body": "Adaptive Engine læser alle fire hver morgen kl. 05:30 — session, kost, HRV og check-in — og skriver ét program. Når ét trækker, flytter de andre med."
+      },
+      "body": {
+        "title": "Krop",
+        "body": "Session, form-check og adaptiv belastning. Motoren skruer i dagens pas efter det resten af kroppen fortæller."
+      },
+      "food": {
+        "title": "Mad",
+        "body": "Måltidsplan og makroer til den uge du faktisk løfter. Ankeret sidder i maven — maden trækker i hele systemet."
+      },
+      "heart": {
+        "title": "Hjerte",
+        "body": "HRV-readiness og motoren. Morgenens RMSSD sætter tempoet — dit eget bånd, ikke et 0–100-tal."
+      },
+      "mind": {
+        "title": "Sind",
+        "body": "60 sekunder. Check-in og den mentale graf. Når hovedet mærker det først, skruer motoren ned før HRV knækker."
+      }
+    },
+    "intro": "Ugen bor i én krop — fire systemer, ikke fire apps. Otte skærme herunder: Today, sessionen, måltidsplanen, readiness, 60-sekunders check-in, form-check, din buddy og den sandbox-case du øver som Beast.",
     "phone": {
       "todayLabel": "Today",
       "todayDetail": "Dagens session, ét tap til start",

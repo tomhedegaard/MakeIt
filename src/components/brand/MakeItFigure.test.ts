@@ -66,6 +66,25 @@ describe("MakeItFigure", () => {
     expect(html).not.toContain('data-muscle="head"');
   });
 
+  it("adds SVG hot-zones only when onDomainHover is provided", () => {
+    const idle = render();
+    expect(idle).not.toContain("makeit-figure-hotzones");
+    expect(idle).not.toContain("data-hotzone");
+
+    const html = renderToStaticMarkup(
+      createElement(MakeItFigure, {
+        highlightedDomains: ["mind", "heart", "body", "food"],
+        ariaLabel: "body-map",
+        onDomainHover: () => {},
+      }),
+    );
+    expect(html).toContain("makeit-figure-hotzones");
+    expect(html).toContain('data-hotzone="body"');
+    expect(html).toContain('data-hotzone="food"');
+    expect(html).toContain('data-hotzone="heart"');
+    expect(html).toContain('data-hotzone="mind"');
+  });
+
   it("teaching state lights all four anchors and the food halo", () => {
     const html = render(["mind", "heart", "body", "food"]);
     expect(html).toContain('data-highlighted="mind heart body food"');

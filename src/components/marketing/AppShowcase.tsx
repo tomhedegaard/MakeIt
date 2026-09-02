@@ -1,10 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
-import { domainTags } from "@/components/marketing/domainTags";
 import {
   MarketingDomainKicker,
   MarketingFigure,
 } from "@/components/marketing/FigureLanguage";
+import MarketingBodyMap from "@/components/marketing/MarketingBodyMap";
 import type { Domain } from "@/components/brand/DomainMark";
 import {
   SHOWCASE_SPARK_LAYOUT,
@@ -17,13 +17,11 @@ import {
 import { getShowcaseNutritionDay } from "@/lib/marketing/nutrition-showcase";
 
 /**
- * Eight mini-phones: Today, Session, Kost, Readiness, Sind,
- * Form-check, Buddy, Coach School. Domain phones sit Session → Kost →
- * Readiness → Sind so the four-domain story reads body → food →
- * heart → mind. On `lg` that is row 1 …body/food and row 2 heart/mind.
- *
- * Layout: `md:grid-cols-2 lg:grid-cols-3` — a 3+3+2 wrap is fine.
- * Buddy and Coach School stay; they are not replaced by food or mind.
+ * App section: interactive body-map intro (MarketingBodyMap teaches
+ * the four systems as one body) then eight mini-phones — Today,
+ * Session, Kost, Readiness, Sind, Form-check, Buddy, Coach School.
+ * Domain phones sit Session → Kost → Readiness → Sind so the
+ * four-domain story reads body → food → heart → mind.
  */
 export default async function AppShowcase() {
   const t = await getTranslations("Marketing.app");
@@ -32,26 +30,7 @@ export default async function AppShowcase() {
   return (
     <section id="app" className="relative border-t hairline py-20 md:py-28">
       <Container>
-        <div
-          className="mb-16 grid gap-10 md:grid-cols-12 md:items-center"
-          data-reveal
-        >
-          <div className="md:col-span-8 max-w-2xl">
-            <div className="eyebrow mb-4">{t("eyebrow")}</div>
-            <h2 className="font-display text-[clamp(2.4rem,7vw,5.5rem)] leading-[0.92] mb-5">
-              {t("heading")}
-            </h2>
-            <p className="text-lg md:text-xl text-fg-dim leading-relaxed max-w-xl">
-              {t.rich("intro", domainTags)}
-            </p>
-          </div>
-          <div className="md:col-span-4 flex justify-start md:justify-end">
-            <MarketingFigure
-              ariaLabel={t("figureAria")}
-              className="h-44 md:h-56 w-auto"
-            />
-          </div>
-        </div>
+        <MarketingBodyMap />
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           <Phone label={t("phone.todayLabel")} detail={t("phone.todayDetail")} delay={0}>

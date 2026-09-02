@@ -13,6 +13,7 @@ import {
   HERO_DOMAINS,
   MarketingDomainKicker,
   MarketingFigure,
+  highlightsForActive,
 } from "./FigureLanguage";
 
 function renderKicker(domain: (typeof HERO_DOMAINS)[number]) {
@@ -69,5 +70,15 @@ describe("MarketingFigure", () => {
     const kicker = renderKicker("body");
     expect(kicker).toContain("domain-mark--body");
     expect(mark).toContain("domain-mark--body");
+  });
+});
+
+describe("highlightsForActive", () => {
+  it("defaults to the four-domain teaching state", () => {
+    expect(highlightsForActive(null)).toEqual(DOMAINS);
+  });
+
+  it.each(HERO_DOMAINS)("selecting %s lights only that domain", (domain) => {
+    expect(highlightsForActive(domain)).toEqual([domain]);
   });
 });
