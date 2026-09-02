@@ -3,6 +3,7 @@ import {
   SHOWCASE_MIND_SERIES,
   SHOWCASE_SPARK_LAYOUT,
   getShowcaseMindDay,
+  sparkAreaPath,
   sparkPath,
   sparkY,
 } from "./mind-showcase";
@@ -32,12 +33,15 @@ describe("getShowcaseMindDay", () => {
 });
 
 describe("sparkPath", () => {
-  it("builds a 14-point path and inverts stress so low sits high", () => {
+  it("builds a smooth 14-point cubic and inverts stress so low sits high", () => {
     const energy = SHOWCASE_MIND_SERIES.map((p) => p.energy);
     const stress = SHOWCASE_MIND_SERIES.map((p) => p.stress);
     const d = sparkPath(energy, SHOWCASE_SPARK_LAYOUT);
     expect(d.startsWith("M ")).toBe(true);
-    expect(d.split(" L ")).toHaveLength(14);
+    expect(d).toContain("C ");
+    expect(d).toContain("S ");
+    expect(d).not.toMatch(/ L /);
+    expect((d.match(/ S /g) ?? []).length).toBe(12);
 
     const rawLow = sparkY(2, SHOWCASE_SPARK_LAYOUT);
     const invertedLow = sparkY(2, SHOWCASE_SPARK_LAYOUT, true);
@@ -48,5 +52,15 @@ describe("sparkPath", () => {
 
     const inverted = sparkPath(stress, SHOWCASE_SPARK_LAYOUT, true);
     expect(inverted).not.toBe(sparkPath(stress, SHOWCASE_SPARK_LAYOUT));
+  });
+
+  it("drops a closed area to the sparkline baseline", () => {
+    const energy = SHOWCASE_MIND_SERIES.map((p) => p.energy);
+    const area = sparkAreaPath(energy, SHOWCASE_SPARK_LAYOUT);
+    const baseline = SHOWCASE_SPARK_LAYOUT.h - SHOWCASE_SPARK_LAYOUT.padB;
+    expect(area).toContain("C ");
+    expect(area.endsWith(" Z")).toBe(true);
+    expect(area).toContain(` ${baseline.toFixed(1)} Z`);
+    expect(area).not.toMatch(/NaN/);
   });
 });

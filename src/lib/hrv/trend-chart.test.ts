@@ -59,4 +59,22 @@ describe("buildTrendChartModel", () => {
       expect(t.label).toMatch(/ms$/);
     }
   });
+
+  it("smooths the 7-day mean with cubics and breaks on a null mean", () => {
+    const readings = [
+      reading(1, 3.4),
+      reading(2, 3.5),
+      reading(3, 3.6),
+      reading(4, 3.5, { rolling7dMeanLnRmssd: null }),
+      reading(5, 3.7),
+      reading(6, 3.6),
+      reading(7, 3.8),
+    ];
+    const m = buildTrendChartModel(readings, { width: 600, height: 200 });
+    expect(m.meanLinePath).toContain("C ");
+    expect(m.meanLinePath).toContain("S ");
+    expect(m.meanLinePath.match(/M /g) ?? []).toHaveLength(2);
+    expect(m.meanLinePath).not.toMatch(/ L /);
+    expect(m.meanLinePath).not.toMatch(/NaN/);
+  });
 });

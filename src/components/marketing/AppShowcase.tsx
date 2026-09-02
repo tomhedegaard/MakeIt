@@ -9,6 +9,7 @@ import type { Domain } from "@/components/brand/DomainMark";
 import {
   SHOWCASE_SPARK_LAYOUT,
   getShowcaseMindDay,
+  sparkAreaPath,
   sparkPath,
   sparkX,
   sparkY,
@@ -482,6 +483,20 @@ async function MindScreen() {
           role="img"
           aria-label={t("graphAria")}
         >
+          <defs>
+            <linearGradient id="mind-showcase-fill-stress" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--mind-stress)" stopOpacity={0.28} />
+              <stop offset="100%" stopColor="var(--mind-stress)" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="mind-showcase-fill-focus" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--mind-focus)" stopOpacity={0.28} />
+              <stop offset="100%" stopColor="var(--mind-focus)" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="mind-showcase-fill-energy" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--mind-energy)" stopOpacity={0.28} />
+              <stop offset="100%" stopColor="var(--mind-energy)" stopOpacity={0} />
+            </linearGradient>
+          </defs>
           {[1, 3, 5].map((v) => (
             <g key={v}>
               <line
@@ -505,6 +520,24 @@ async function MindScreen() {
               </text>
             </g>
           ))}
+          <path
+            d={sparkAreaPath(stress, layout, true)}
+            fill="url(#mind-showcase-fill-stress)"
+            fillOpacity={0.85}
+            stroke="none"
+          />
+          <path
+            d={sparkAreaPath(focus, layout)}
+            fill="url(#mind-showcase-fill-focus)"
+            fillOpacity={0.85}
+            stroke="none"
+          />
+          <path
+            d={sparkAreaPath(energy, layout)}
+            fill="url(#mind-showcase-fill-energy)"
+            fillOpacity={0.85}
+            stroke="none"
+          />
           <path
             d={sparkPath(stress, layout, true)}
             fill="none"
@@ -532,20 +565,23 @@ async function MindScreen() {
           <circle
             cx={sparkX(last, series.length, layout)}
             cy={sparkY(stress[last], layout, true)}
-            r={2}
+            r={1.4}
             fill="var(--mind-stress)"
+            fillOpacity={0.7}
           />
           <circle
             cx={sparkX(last, series.length, layout)}
             cy={sparkY(focus[last], layout)}
-            r={2}
+            r={1.4}
             fill="var(--mind-focus)"
+            fillOpacity={0.7}
           />
           <circle
             cx={sparkX(last, series.length, layout)}
             cy={sparkY(energy[last], layout)}
-            r={2}
+            r={1.4}
             fill="var(--mind-energy)"
+            fillOpacity={0.7}
           />
         </svg>
 
