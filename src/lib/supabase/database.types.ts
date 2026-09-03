@@ -664,6 +664,36 @@ export type Database = {
           },
         ]
       }
+      cron_run_log: {
+        Row: {
+          candidates: number
+          cron: string
+          failed: number
+          generated: number
+          id: string
+          ok: boolean
+          ran_at: string
+        }
+        Insert: {
+          candidates?: number
+          cron: string
+          failed?: number
+          generated?: number
+          id?: string
+          ok: boolean
+          ran_at?: string
+        }
+        Update: {
+          candidates?: number
+          cron?: string
+          failed?: number
+          generated?: number
+          id?: string
+          ok?: boolean
+          ran_at?: string
+        }
+        Relationships: []
+      }
       exercise_variant_map: {
         Row: {
           created_at: string
