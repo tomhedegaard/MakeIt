@@ -47,12 +47,9 @@ export default function DualStreamMessages({
         className="surface-2 rounded-2xl overflow-hidden flex flex-col min-h-[280px]"
       >
         <header className="px-5 py-4 border-b hairline flex items-center gap-3">
-          <MunkMark />
-          <div className="min-w-0">
-            <div className="text-sm leading-tight">{copy.munkTitle}</div>
-            <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-              {copy.munkSub}
-            </div>
+          <MunkMark name={copy.munkTitle} />
+          <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint min-w-0">
+            {copy.munkSub}
           </div>
         </header>
         <ol className="flex-1 px-4 py-4 space-y-3">
