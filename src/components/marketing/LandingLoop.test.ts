@@ -21,14 +21,17 @@ const t = (key: string) => key;
 describe("LandingBeat", () => {
   it("uses Everfit rhythm: eyebrow, heading, one sentence, one visual", () => {
     const html = renderToStaticMarkup(
-      createElement(LandingBeat, {
-        beat: "program",
-        domain: "body",
-        eyebrow: "01 — Program",
-        heading: "Ugen skriver sig om.",
-        body: "Motoren skar topsættet.",
-        children: createElement("div", { "data-proof": "yes" }, "proof"),
-      }),
+      createElement(
+        LandingBeat,
+        {
+          beat: "program",
+          domain: "body",
+          eyebrow: "01 — Program",
+          heading: "Ugen skriver sig om.",
+          body: "Motoren skar topsættet.",
+        },
+        createElement("div", { "data-proof": "yes" }, "proof"),
+      ),
     );
     expect(html).toContain('data-landing-beat="program"');
     expect(html).toContain('data-domain="body"');
@@ -77,23 +80,29 @@ describe("FormCheckProof", () => {
 describe("LandingLoop composition", () => {
   it("keeps Helhed and phones out of the Program / Form-check section", () => {
     const program = renderToStaticMarkup(
-      createElement(LandingBeat, {
-        beat: "program",
-        domain: "body",
-        eyebrow: "01",
-        heading: "Program",
-        body: "Rewrite.",
-        children: createElement(ProgramProof, { t }),
-      }),
+      createElement(
+        LandingBeat,
+        {
+          beat: "program",
+          domain: "body",
+          eyebrow: "01",
+          heading: "Program",
+          body: "Rewrite.",
+        },
+        createElement(ProgramProof, { t }),
+      ),
     );
     const form = renderToStaticMarkup(
-      createElement(LandingBeat, {
-        beat: "form-check",
-        eyebrow: "02",
-        heading: "Form-check",
-        body: "Note.",
-        children: createElement(FormCheckProof, { t }),
-      }),
+      createElement(
+        LandingBeat,
+        {
+          beat: "form-check",
+          eyebrow: "02",
+          heading: "Form-check",
+          body: "Note.",
+        },
+        createElement(FormCheckProof, { t }),
+      ),
     );
     const html = program + form;
     expect(html).toContain('data-landing-beat="program"');

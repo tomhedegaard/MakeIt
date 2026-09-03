@@ -95,7 +95,11 @@ export default function PhaseAnimator({
       </div>
 
       {/* Progress bar — CSS transition drives the smooth fill */}
-      <ProgressBar idx={idx} durationMs={phase.duration_ms} playing={playing} />
+      <ProgressBar
+        key={`${idx}-${playing}`}
+        durationMs={phase.duration_ms}
+        playing={playing}
+      />
 
       {/* Phase pips, sized proportional to their duration */}
       <div className="flex gap-1 w-full" aria-hidden>
@@ -114,27 +118,24 @@ export default function PhaseAnimator({
 }
 
 function ProgressBar({
-  idx,
   durationMs,
   playing,
 }: {
-  idx: number;
   durationMs: number;
   playing: boolean;
 }) {
-  // Reset to 0, then on the next paint set to 100 so the CSS
-  // transition animates the fill linearly across `durationMs`.
+  // Mounts fresh on phase/play change (parent keys this). Start at 0,
+  // then on the next paint set to 100 so the CSS transition animates
+  // the fill linearly across `durationMs`.
   const [filled, setFilled] = useState(false);
 
   useEffect(() => {
-    setFilled(false);
     if (!playing) return;
-    // Wait one paint so the transition catches the change.
     const t = requestAnimationFrame(() => {
       requestAnimationFrame(() => setFilled(true));
     });
     return () => cancelAnimationFrame(t);
-  }, [idx, playing]);
+  }, [playing]);
 
   return (
     <div className="h-px w-full bg-bg-3 overflow-hidden">

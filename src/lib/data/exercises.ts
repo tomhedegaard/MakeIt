@@ -227,7 +227,10 @@ export function dominantView(ex: Exercise): "front" | "back" {
   const all = [...ex.primaryMuscles, ...ex.secondaryMuscles];
   let front = 0;
   let back = 0;
-  for (const m of all) (FRONT.has(m) ? front++ : back++);
+  for (const m of all) {
+    if (FRONT.has(m)) front++;
+    else back++;
+  }
   return back >= front ? "back" : "front";
 }
 

@@ -51,7 +51,7 @@ export default function StreakCelebration({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="eyebrow text-fg-faint mb-6">
-              MakeIt <span className="mx-1">//</span> {t("brand")}
+              MakeIt <span className="mx-1">{"//"}</span> {t("brand")}
             </div>
 
             {/* Typographic stamp */}

@@ -81,7 +81,6 @@ const decision: CandidateDecision = {
 describe.skipIf(!RUN)("refineWithClaude — real SDK smoke", () => {
   it("returns a non-null refinement for the canonical low-HRV scenario", async () => {
     const result = await refineWithClaude(decision, baseline);
-    // eslint-disable-next-line no-console
     console.log("[smoke] refinement:", JSON.stringify(result, null, 2));
     expect(result).not.toBeNull();
     expect(result?.explanationDa.length).toBeGreaterThan(10);
