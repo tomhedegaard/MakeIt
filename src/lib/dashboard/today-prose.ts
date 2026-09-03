@@ -211,6 +211,16 @@ export function buildTodayProse(input: TodayProseInput): TodayProseModel {
   };
 }
 
+/** Europe/Copenhagen calendar day — matches the coaching week-strip. */
+export function copenhagenTodayIso(now: Date = new Date()): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Copenhagen",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+}
+
 /**
  * Demo fixture — same sources the dashboard chip / session card /
  * hasMindCheckToday already use. Locked so MUNK-01 prose stays honest.

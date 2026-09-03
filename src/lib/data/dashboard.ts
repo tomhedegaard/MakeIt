@@ -1,4 +1,10 @@
+import {
+  copenhagenTodayIso,
+  type TodayProseSession,
+  type TodaySessionState,
+} from "@/lib/dashboard/today-prose";
 import { createClient } from "@/lib/supabase/server";
+import type { SessionStatus } from "@/lib/workout";
 
 /**
  * Data fetchers for the Today / dashboard view.
@@ -74,6 +80,50 @@ type SessionRow = {
 function unwrapProgram(p: SessionRow["program"]) {
   if (!p) return null;
   return Array.isArray(p) ? p[0] ?? null : p;
+}
+
+function sessionStateFromStatus(status: SessionStatus): TodaySessionState {
+  if (status === "completed") return "done";
+  if (status === "skipped") return "skipped";
+  return "assigned";
+}
+
+/**
+ * Today's session as a prose signal. Unlike getTodayCard this is
+ * Copenhagen-today only: no row → rest. Demo / no client → null
+ * (composer uses TODAY_SESSION). Query errors → null (unknown).
+ */
+export async function getTodaySessionSignal(
+  memberId: string,
+  now: Date = new Date(),
+): Promise<TodayProseSession | null> {
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const today = copenhagenTodayIso(now);
+  const { data, error } = await supabase
+    .from("sessions")
+    .select("status, day_label, title")
+    .eq("member_id", memberId)
+    .eq("scheduled_for", today)
+    .order("scheduled_for", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.warn("[dashboard] today session signal failed", error.message);
+    return null;
+  }
+  if (!data) {
+    return { state: "rest", dayLabel: null };
+  }
+
+  const status = (data.status ?? "scheduled") as SessionStatus;
+  const dayLabel = (data.day_label as string | null) ?? (data.title as string | null);
+  return {
+    state: sessionStateFromStatus(status),
+    dayLabel,
+  };
 }
 
 export async function getTodayCard(memberId: string): Promise<TodayCard | null> {
