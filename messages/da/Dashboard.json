@@ -28,7 +28,11 @@
     "sets": "Sæt",
     "estTime": "Est. tid",
     "setCountSuffix": "× sæt",
-    "start": "Start session →"
+    "start": "Start session →",
+    "emptyEyebrow": "Dagens session",
+    "emptyTitle": "Intet pas endnu",
+    "emptyBody": "Når du vælger et program, lander dagens session her. Ingen demo-pas.",
+    "emptyCta": "Vælg program →"
   },
   "stats": {
     "volume": "Volumen",

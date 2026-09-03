@@ -28,7 +28,11 @@
     "sets": "Sets",
     "estTime": "Est. time",
     "setCountSuffix": "× sets",
-    "start": "Start session →"
+    "start": "Start session →",
+    "emptyEyebrow": "Today's session",
+    "emptyTitle": "No session yet",
+    "emptyBody": "When you pick a program, today's session lands here. No demo workout.",
+    "emptyCta": "Choose a program →"
   },
   "stats": {
     "volume": "Volume",

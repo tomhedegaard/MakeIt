@@ -71,6 +71,31 @@ describe("buildTodayInsightStream", () => {
     expect(cards.every(cardGrammarOk)).toBe(true);
   });
 
+  it("stays empty on a connected first-run with no session and no HRV", () => {
+    const cards = buildTodayInsightStream({
+      sessionHref: "/coaching",
+      hasHrv: false,
+      qualitative: null,
+      outOfBand: false,
+      mindCheckedToday: true,
+      hasSession: false,
+    });
+    expect(cards).toEqual([]);
+  });
+
+  it("does not invent squat-day / pas-venter cards without a session", () => {
+    const cards = buildTodayInsightStream({
+      sessionHref: "/coaching",
+      hasHrv: false,
+      qualitative: null,
+      outOfBand: false,
+      mindCheckedToday: false,
+      hasSession: false,
+    });
+    expect(cards.some((c) => c.id === "body_food_session")).toBe(false);
+    expect(cards.some((c) => c.id === "mind_body_check")).toBe(false);
+  });
+
   it("demo stream is Heart-first and routes the more-chip to an existing surface", () => {
     const cards = demoInsightStream(SESSION);
     expect(cards[0].id).toBe("heart_body_low");
