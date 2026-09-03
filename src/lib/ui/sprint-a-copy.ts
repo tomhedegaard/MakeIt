@@ -96,6 +96,7 @@ export async function loadDotsCopy(): Promise<DotsCopy> {
     moreAbout: t("moreAbout"),
     dismiss: t("dismiss"),
     snooze: t("snooze"),
+    motorAttribution: t("motorAttribution"),
     domains,
     cards,
   };

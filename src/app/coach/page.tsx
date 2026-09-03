@@ -4,16 +4,22 @@ import Container from "@/components/Container";
 import {
   getCoachOverview,
   getMembersSummary,
+  getNeedsAttentionModel,
   getPendingFormChecks,
 } from "@/lib/data/coach";
 import SendDigestButton from "@/components/coach/SendDigestButton";
+import NeedsAttentionStrip from "@/components/coach/NeedsAttentionStrip";
+import { loadNeedsAttentionCopy } from "@/lib/ui/sprint-b-copy";
+import { liftLabel } from "@/lib/form-queue/queue";
 
 export default async function CoachOverviewPage() {
   const t = await getTranslations("Coach.overview");
-  const [overview, members, pending] = await Promise.all([
+  const [overview, members, pending, needs, needsCopy] = await Promise.all([
     getCoachOverview(),
     getMembersSummary(),
     getPendingFormChecks(5),
+    getNeedsAttentionModel(),
+    loadNeedsAttentionCopy(),
   ]);
 
   // Recent activity = most recent member sessions (mock-ish ordering by lastSessionDate)
@@ -36,6 +42,8 @@ export default async function CoachOverviewPage() {
         </div>
         <SendDigestButton />
       </header>
+
+      <NeedsAttentionStrip model={needs} copy={needsCopy} />
 
       {/* KPI row */}
       <section className="grid grid-cols-2 md:grid-cols-5 gap-px bg-line border hairline rounded-lg overflow-hidden">
@@ -115,7 +123,7 @@ export default async function CoachOverviewPage() {
                     </span>
                   </div>
                   <div className="text-fg-dim text-xs truncate">
-                    {f.exerciseName ?? t("formCheckFallback")}
+                    {liftLabel(f)}
                   </div>
                 </li>
               ))}

@@ -1,5 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
 import type { AlertConditionsMet } from "@/lib/hrv/alert";
+import {
+  demoFormQueueItems,
+  pendingFormQueue,
+  type FormQueueItem,
+} from "@/lib/form-queue/queue";
+import {
+  buildNeedsAttention,
+  demoNeedsAttention,
+  type NeedsAttentionModel,
+} from "@/lib/coach/needs-attention";
 
 /* ---------------------------------------------------------------- *
  * Types
@@ -48,23 +58,7 @@ export type RepsTx = {
   createdAt: string;
 };
 
-export type FormCheckRow = {
-  id: string;
-  memberId: string;
-  memberHandle: string;
-  exerciseName: string | null;
-  aiScore: number | null;
-  aiHeadline: string | null;
-  aiPos: string[];
-  aiNeg: string[];
-  aiFix: string | null;
-  aiDraftedReply: string | null; // Claude's pre-staged reply in Munk's voice (null = Munk writes from scratch)
-  reviewedAt: string | null;
-  reviewedBy: string | null;
-  coachNotes: string | null;
-  videoUrl: string | null;       // Time-limited signed playback URL (1h)
-  createdAt: string;
-};
+export type FormCheckRow = FormQueueItem;
 
 export interface HrvAlertRow {
   id: string;
@@ -135,7 +129,7 @@ export type MemberDetail = {
 const MOCK_OVERVIEW: CoachOverview = {
   totalMembers: 412,
   activeAssignments: 188,
-  pendingFormChecks: 4,
+    pendingFormChecks: pendingFormQueue(MOCK_FORM_CHECKS).length,
   sessionsThisWeek: 642,
   pendingRedemptions: 3,
 };
@@ -157,54 +151,53 @@ const MOCK_MEMBERS: MemberSummary[] = [
   { id: "m-anders",   handle: "anders",     tier: "Lifter",  programCode: null,     programWeek: null, lastSessionDate: null },
 ];
 
-const MOCK_FORM_CHECKS: FormCheckRow[] = [
+const MOCK_FORM_CHECKS: FormCheckRow[] = demoFormQueueItems();
+
+const MOCK_HRV_ALERTS: HrvAlertRow[] = [
   {
-    id: "fc-1", memberId: "m-nina", memberHandle: "nina_dl",
-    exerciseName: "Conventional Deadlift",
-    aiScore: 79,
-    aiHeadline: "Stærkt løft — hyperekstension på toppen",
-    aiPos: ["Bar holder kontakt med kroppen hele vejen op", "Lats engageret fra setup", "God pace — ingen tøven ved knæene"],
-    aiNeg: ["Hyperextension i lock-out (læn 5° tilbage)", "Hofte stiger marginalt før skuldrene"],
-    aiFix: "Lås ud med squeeze i baller, ikke ved at læne tilbage. Tænk \"stå op\" frem for \"læn tilbage\".",
-    aiDraftedReply: "Stærkt løft, Nina — baren holder kontakt hele vejen op. Du låner lidt for langt tilbage i toppen; lås ud ved at knibe ballerne, ikke ved at læne dig bagud. Tænk \"stå op\" frem for \"læn tilbage\". Tag det med på næste deadlift-dag.",
-    reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
-    createdAt: new Date(Date.now() - 1000 * 60 * 32).toISOString(),
+    id: "hrv-nina",
+    memberId: "m-nina",
+    memberHandle: "nina_dl",
+    triggeredAt: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
+    conditionsMet: {
+      warm_up_active: false,
+      sustained_low_readiness: { consecutive_days_low: 3 },
+      rhr_spike: null,
+      lifestyle_flags: {
+        sick: false,
+        stressed: true,
+        short_sleep: true,
+        high_alcohol: false,
+      },
+    },
+  },
+];
+
+const MOCK_ADAPTIVE_ALERTS: AdaptiveAlertRow[] = [
+  {
+    alertId: "eng-nina",
+    modifierId: "mod-nina",
+    memberId: "m-nina",
+    memberHandle: "nina_dl",
+    triggeredAt: new Date(Date.now() - 1000 * 60 * 80).toISOString(),
+    action: "top_set_reduction",
+    confidence: 0.78,
+    reasons: ["hrv_low", "low_feeling"],
+    explanationDa:
+      "Nattens HRV ligger under båndet — Motoren letter dagens topsæt.",
+    sessionId: "sess-2026-05-05",
   },
   {
-    id: "fc-2", memberId: "m-maria", memberHandle: "maria.lift",
-    exerciseName: "Paused Bench",
-    aiScore: 87,
-    aiHeadline: "Solid pause-bench — kontroller ekscentrisk lidt mere",
-    aiPos: ["Solid pause i bunden", "Ben i gulvet hele sættet", "Lige bar-path"],
-    aiNeg: ["Lidt for hurtig på vej ned — accelerer i stedet for at kontrollere"],
-    aiFix: "Tæl 3 sek på vej ned næste gang. Brug mindre vægt hvis nødvendigt — kvaliteten betyder mere.",
-    aiDraftedReply: "Flot pause-bench, Maria — solid pause og ben plantet hele sættet. Du falder lige lovlig hurtigt ned; styr det og tæl tre på vej ned. Tag evt. lidt vægt af, så kvaliteten holder. Kør det sådan næste gang.",
-    reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-  },
-  {
-    id: "fc-3", memberId: "m-kasper", memberHandle: "kasper_s",
-    exerciseName: "Back Squat",
-    aiScore: 84,
-    aiHeadline: "Solid sæt — let knæ-valgus i hullet",
-    aiPos: ["Bardepth ramt på alle 3 reps", "Konsistent bar-path", "God spinal kontrol"],
-    aiNeg: ["Højre knæ kollapser let indad på rep 2 og 3"],
-    aiFix: "Driv knæene aktivt udad i bunden (\"spread the floor\"). Hold 1 sek pause i bunden næste sæt.",
-    aiDraftedReply: "Solidt sæt, Kasper — dybde ramt på alle tre reps. Højre knæ falder lidt indad på de sidste to; driv knæene aktivt udad i bunden. Tænk \"spread the floor\". Hold en sekunds pause i bunden på næste sæt.",
-    reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
-  },
-  {
-    id: "fc-4", memberId: "m-frederik", memberHandle: "frederik",
-    exerciseName: "Romanian Deadlift",
-    aiScore: 72,
-    aiHeadline: "Godt forsøg — manglende hofte-engagement",
-    aiPos: ["Ryggen flad", "God ROM"],
-    aiNeg: ["Bevæger sig mest fra knæene — RDL skal være hofte-dominant", "Bar drifter en smule fremad"],
-    aiFix: "Tænk \"skub bagdelen mod væggen\" frem for \"bøj knæene\". Hofterne bagud — knæene holder kun en let bøjning.",
-    aiDraftedReply: "Godt forsøg, Frederik — ryggen er flad og ROM ser fin ud. Du bevæger dig mest fra knæene; en RDL skal være hofte-domineret. Skub bagdelen mod væggen og hold knæene næsten låste. Prøv det med lettere vægt næste gang.",
-    reviewedAt: null, reviewedBy: null, coachNotes: null, videoUrl: null,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 18).toISOString(),
+    alertId: "eng-kasper",
+    modifierId: "mod-kasper",
+    memberId: "m-kasper",
+    memberHandle: "kasper_s",
+    triggeredAt: new Date(Date.now() - 1000 * 60 * 50).toISOString(),
+    action: "escalate_to_coach",
+    confidence: 0.71,
+    reasons: ["rpe_drift_rising"],
+    explanationDa: "RPE er steget over tre pas — stall-flag til Munk.",
+    sessionId: null,
   },
 ];
 
@@ -238,7 +231,9 @@ function memberDetailMock(id: string): MemberDetail | null {
       { id: "t1", delta: 250, reason: "Session completed",   createdAt: "2026-05-04T18:32:00Z" },
       { id: "t2", delta: 250, reason: "Session completed",   createdAt: "2026-05-02T18:10:00Z" },
     ],
-    formChecks: MOCK_FORM_CHECKS.filter((f) => f.memberId === id),
+    formChecks: MOCK_FORM_CHECKS.filter(
+      (f) => f.memberId === id || (id === "mock-munk" && f.memberId === "mock-munk"),
+    ),
   };
 }
 
@@ -423,29 +418,31 @@ export async function getMemberDetail(memberId: string): Promise<MemberDetail | 
     recentTx: (txRes.data ?? []).map((t) => ({
       id: t.id, delta: t.delta, reason: t.reason, createdAt: t.created_at,
     })),
-    formChecks: (fcRes.data ?? []).map((f) => ({
-      id: f.id,
-      memberId,
-      memberHandle: m.handle,
-      exerciseName: f.exercise_name,
-      aiScore: f.ai_score,
-      aiHeadline: f.ai_headline,
-      aiPos: Array.isArray(f.ai_pos) ? (f.ai_pos as string[]) : [],
-      aiNeg: Array.isArray(f.ai_neg) ? (f.ai_neg as string[]) : [],
-      aiFix: f.ai_fix,
-      aiDraftedReply: f.ai_drafted_reply,
-      reviewedAt: f.coach_reviewed_at,
-      reviewedBy: f.coach_reviewed_by,
-      coachNotes: f.coach_notes,
-      videoUrl: f.video_url ? signedByPath.get(f.video_url) ?? null : null,
-      createdAt: f.created_at,
-    })),
+    formChecks: (fcRes.data ?? []).map((f) =>
+      toFormCheckRow({
+        id: f.id,
+        memberId,
+        memberHandle: m.handle,
+        exerciseName: f.exercise_name,
+        aiScore: f.ai_score,
+        aiHeadline: f.ai_headline,
+        aiPos: Array.isArray(f.ai_pos) ? (f.ai_pos as string[]) : [],
+        aiNeg: Array.isArray(f.ai_neg) ? (f.ai_neg as string[]) : [],
+        aiFix: f.ai_fix,
+        aiDraftedReply: f.ai_drafted_reply,
+        reviewedAt: f.coach_reviewed_at,
+        reviewedBy: f.coach_reviewed_by,
+        coachNotes: f.coach_notes,
+        videoUrl: f.video_url ? signedByPath.get(f.video_url) ?? null : null,
+        createdAt: f.created_at,
+      }),
+    ),
   };
 }
 
 export async function getPendingFormChecks(limit = 30): Promise<FormCheckRow[]> {
   const supabase = await createClient();
-  if (!supabase) return MOCK_FORM_CHECKS;
+  if (!supabase) return pendingFormQueue(MOCK_FORM_CHECKS);
 
   const { data } = await supabase
     .from("form_checks")
@@ -469,7 +466,7 @@ export async function getPendingFormChecks(limit = 30): Promise<FormCheckRow[]> 
 
   return data.map((f) => {
     const m = Array.isArray(f.member) ? f.member[0] : f.member;
-    return {
+    return toFormCheckRow({
       id: f.id,
       memberId: m?.id ?? "",
       memberHandle: m?.handle ?? "—",
@@ -485,13 +482,13 @@ export async function getPendingFormChecks(limit = 30): Promise<FormCheckRow[]> 
       coachNotes: f.coach_notes,
       videoUrl: f.video_url ? signedByPath.get(f.video_url) ?? null : null,
       createdAt: f.created_at,
-    };
+    });
   });
 }
 
 export async function getOpenHrvAlerts(limit = 30): Promise<HrvAlertRow[]> {
   const supabase = await createClient();
-  if (!supabase) return [];
+  if (!supabase) return MOCK_HRV_ALERTS;
 
   // Fetch all open alerts and filter out adaptive-engine + leftover
   // mental_safety payloads in TS. Mental safety no longer writes
@@ -539,7 +536,7 @@ export async function getOpenAdaptiveAlerts(
   limit = 30
 ): Promise<AdaptiveAlertRow[]> {
   const supabase = await createClient();
-  if (!supabase) return [];
+  if (!supabase) return MOCK_ADAPTIVE_ALERTS;
 
   // Two-step fetch — PostgREST struggles to infer the alert→modifier
   // join shape (the FK lives on hrv_alerts but the relationship
@@ -656,6 +653,134 @@ async function batchSignVideoUrls(
     }
   }
   return result;
+}
+
+export async function getNeedsAttentionModel(): Promise<NeedsAttentionModel> {
+  const supabase = await createClient();
+  if (!supabase) return demoNeedsAttention();
+
+  const [pending, adaptive, hrv, skipped] = await Promise.all([
+    getPendingFormChecks(50),
+    getOpenAdaptiveAlerts(50),
+    getOpenHrvAlerts(50),
+    getRecentSkippedSessions(20),
+  ]);
+
+  return buildNeedsAttention({
+    skipped,
+    pendingForm: pending.map((f) => ({
+      id: f.id,
+      memberId: f.memberId,
+      memberHandle: f.memberHandle,
+      exerciseName: f.exerciseName,
+      setIndex: f.setIndex,
+    })),
+    engineFlags: [
+      ...adaptive.map((a) => ({
+        id: a.alertId,
+        memberId: a.memberId,
+        memberHandle: a.memberHandle,
+        lift: null,
+        detail: a.action.replace(/_/g, " "),
+        href: `/coach/queue#engine-${a.alertId}`,
+      })),
+      ...hrv.map((a) => ({
+        id: a.id,
+        memberId: a.memberId,
+        memberHandle: a.memberHandle,
+        lift: null,
+        detail: a.conditionsMet.sustained_low_readiness
+          ? `HRV · ${a.conditionsMet.sustained_low_readiness.consecutive_days_low} dage lav`
+          : "HRV-flag",
+        href: `/coach/queue#engine-${a.id}`,
+      })),
+    ],
+  });
+}
+
+export async function getRecentSkippedSessions(limit = 20): Promise<
+  Array<{
+    id: string;
+    memberId: string;
+    memberHandle: string;
+    lift?: string | null;
+    detail: string;
+  }>
+> {
+  const supabase = await createClient();
+  if (!supabase) return [];
+
+  const { data } = await supabase
+    .from("sessions")
+    .select("id, day_label, member:members!inner(id, handle)")
+    .eq("status", "skipped")
+    .order("scheduled_for", { ascending: false })
+    .limit(limit);
+
+  if (!data) return [];
+  return data.map((s) => {
+    const m = Array.isArray(s.member) ? s.member[0] : s.member;
+    return {
+      id: s.id as string,
+      memberId: m?.id ?? "",
+      memberHandle: m?.handle ?? "—",
+      lift: (s.day_label as string | null) ?? null,
+      detail: (s.day_label as string | null) ?? "sprunget pas",
+    };
+  });
+}
+
+function parseSetIndex(exerciseName: string | null): {
+  name: string;
+  setIndex: number;
+} {
+  const raw = exerciseName ?? "Form-check";
+  const match = raw.match(/^(.*?)(?:\s*·\s*sæt\s+(\d+))$/i);
+  if (!match) return { name: raw, setIndex: 0 };
+  return { name: match[1].trim(), setIndex: Number(match[2]) };
+}
+
+function toFormCheckRow(input: {
+  id: string;
+  memberId: string;
+  memberHandle: string;
+  exerciseName: string | null;
+  aiScore: number | null;
+  aiHeadline: string | null;
+  aiPos: string[];
+  aiNeg: string[];
+  aiFix: string | null;
+  aiDraftedReply: string | null;
+  reviewedAt: string | null;
+  reviewedBy: string | null;
+  coachNotes: string | null;
+  videoUrl: string | null;
+  createdAt: string;
+}): FormCheckRow {
+  const parsed = parseSetIndex(input.exerciseName);
+  return {
+    id: input.id,
+    type: "form_check",
+    memberId: input.memberId,
+    memberHandle: input.memberHandle,
+    exerciseName: parsed.name,
+    setIndex: parsed.setIndex,
+    sessionId: null,
+    status: input.reviewedAt ? "reviewed" : "pending",
+    reviewedAt: input.reviewedAt,
+    reviewedBy: input.reviewedBy,
+    coachNotes: input.coachNotes,
+    voiceNoteUrl: null,
+    voiceNoteDurationSec: null,
+    aiScore: input.aiScore,
+    aiHeadline: input.aiHeadline,
+    aiPos: input.aiPos,
+    aiNeg: input.aiNeg,
+    aiFix: input.aiFix,
+    aiDraftedReply: input.aiDraftedReply,
+    videoUrl: input.videoUrl,
+    createdAt: input.createdAt,
+  };
 }
 
 /* ---------------------------------------------------------------- */

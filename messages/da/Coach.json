@@ -47,6 +47,25 @@
     "formCheckFallback": "Form-check",
     "openQueue": "Åbn køen →"
   },
+  "needsAttention": {
+    "eyebrow": "Kræver dig",
+    "title": "Needs Attention",
+    "open": "Åbn",
+    "buckets": {
+      "sprunget": {
+        "label": "Sprunget",
+        "empty": "Ingen sprunget pas."
+      },
+      "afventer_form": {
+        "label": "Afventer form",
+        "empty": "Ingen film venter."
+      },
+      "engine": {
+        "label": "Engine",
+        "empty": "Ingen flag fra motoren."
+      }
+    }
+  },
   "analytics": {
     "metaTitle": "Coach · Analytics",
     "eyebrow": "Coach console · Member health",
@@ -181,6 +200,9 @@
     "sending": "Sender…",
     "submit": "Godkend & send",
     "submitDraft": "Send til @{handle}",
+    "voiceLabel": "Lydbesked til @{handle}",
+    "voiceHint": "Valgfri — Munks stemme i tråden under løftet.",
+    "voiceReady": "Lydbesked klar ({sec}s)",
     "footnote": "Markerer form-checken som reviewed og sender notes til medlemmet."
   },
   "digest": {

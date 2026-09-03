@@ -9,6 +9,10 @@ import {
   analyzeFormCheckAction,
   attachFormCheckVideoAction,
 } from "@/app/(app)/form-check/actions";
+import {
+  createFormQueueItem,
+  type FormQueueItem,
+} from "@/lib/form-queue/queue";
 import { createClient as createBrowserSupabase } from "@/lib/supabase/client";
 import { describeReset, type FormCheckQuota } from "@/lib/data/form-check-quota";
 
@@ -42,6 +46,11 @@ export type FormCheckExerciseContext = {
   exerciseId?: string;
   cues?: string[];
   mistakes?: { title: string; body: string }[];
+  sessionId?: string;
+  setIndex?: number;
+  setId?: string;
+  memberId?: string;
+  memberHandle?: string;
 };
 
 export default function FormCheckSheet({
@@ -50,12 +59,14 @@ export default function FormCheckSheet({
   exerciseName,
   context,
   quota,
+  onQueued,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   exerciseName?: string;
   context?: FormCheckExerciseContext;
   quota?: FormCheckQuota;
+  onQueued?: (item: FormQueueItem) => void;
 }) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -66,6 +77,7 @@ export default function FormCheckSheet({
           context={context}
           quota={quota}
           onClose={() => onOpenChange(false)}
+          onQueued={onQueued}
         />
       ) : null}
     </Sheet>
@@ -77,11 +89,13 @@ function FormCheckBody({
   context,
   quota,
   onClose,
+  onQueued,
 }: {
   exerciseName?: string;
   context?: FormCheckExerciseContext;
   quota?: FormCheckQuota;
   onClose: () => void;
+  onQueued?: (item: FormQueueItem) => void;
 }) {
   const t = useTranslations("FormCheck");
   const [step, setStep] = useState<Step>("choose");
@@ -97,6 +111,24 @@ function FormCheckBody({
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   /** Build a localized demo verdict for the given exercise name. */
+  function enqueue(verdict: AIVerdict) {
+    if (!onQueued) return;
+    onQueued(
+      createFormQueueItem({
+        memberId: context?.memberId ?? "mock-munk",
+        memberHandle: context?.memberHandle ?? "Munk",
+        exerciseName: exerciseName ?? "Form-check",
+        setIndex: context?.setIndex ?? 1,
+        sessionId: context?.sessionId ?? null,
+        aiScore: verdict.score,
+        aiHeadline: verdict.headline,
+        aiPos: verdict.pos,
+        aiNeg: verdict.neg,
+        aiFix: verdict.fix,
+      }),
+    );
+  }
+
   function pickVerdict(name?: string): AIVerdict {
     const key = pickVerdictKey(name);
     return {
@@ -150,7 +182,9 @@ function FormCheckBody({
     } catch (err) {
       console.warn("[form-check] extraction failed:", err);
       setIsMockResult(true);
-      setVerdict(pickVerdict(exerciseName));
+      const fallback = pickVerdict(exerciseName);
+      setVerdict(fallback);
+      enqueue(fallback);
       setStep("result");
       return;
     }
@@ -165,6 +199,8 @@ function FormCheckBody({
         frames,
         exerciseName,
         exerciseId: context?.exerciseId,
+        setIndex: context?.setIndex,
+        sessionId: context?.sessionId,
         context:
           context?.cues || context?.mistakes
             ? { cues: context.cues, mistakes: context.mistakes }
@@ -172,13 +208,15 @@ function FormCheckBody({
       });
       if (res.ok && res.verdict) {
         setIsMockResult(false);
-        setVerdict({
+        const next = {
           score: res.verdict.score,
           headline: res.verdict.headline,
           pos: res.verdict.pos,
           neg: res.verdict.neg,
           fix: res.verdict.fix,
-        });
+        };
+        setVerdict(next);
+        enqueue(next);
         setStep("result");
         formCheckId = res.formCheckId;
       } else if (res.quotaExceeded) {
@@ -188,13 +226,17 @@ function FormCheckBody({
         setStep("choose");
       } else {
         setIsMockResult(true);
-        setVerdict(pickVerdict(exerciseName));
+        const fallback = pickVerdict(exerciseName);
+        setVerdict(fallback);
+        enqueue(fallback);
         setStep("result");
       }
     } catch (err) {
       console.warn("[form-check] action failed:", err);
       setIsMockResult(true);
-      setVerdict(pickVerdict(exerciseName));
+      const fallback = pickVerdict(exerciseName);
+      setVerdict(fallback);
+      enqueue(fallback);
       setStep("result");
     }
 
@@ -220,7 +262,9 @@ function FormCheckBody({
       setStep("analyzing");
     }, 700);
     window.setTimeout(() => {
-      setVerdict(pickVerdict(exerciseName));
+      const fallback = pickVerdict(exerciseName);
+      setVerdict(fallback);
+      enqueue(fallback);
       setStep("result");
     }, 2200);
   }
@@ -239,6 +283,7 @@ function FormCheckBody({
                 : exerciseName
                 ? t("choose.descriptionExercise", {
                     exercise: exerciseName.toLowerCase(),
+                    set: context?.setIndex ?? 1,
                   })
                 : t("choose.descriptionDefault")}
             </p>
