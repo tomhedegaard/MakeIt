@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import MotorGlyph from "@/components/adaptive/MotorGlyph";
 import DomainMark, { type Domain } from "@/components/brand/DomainMark";
@@ -25,27 +25,56 @@ const STORAGE_KEY = "mi-adapt-dots";
 
 type Stored = { hidden: string[]; snoozedUntil: Record<string, string> };
 
+const EMPTY_STORE: Stored = { hidden: [], snoozedUntil: {} };
+const storeListeners = new Set<() => void>();
+
+function subscribeStore(cb: () => void) {
+  storeListeners.add(cb);
+  return () => {
+    storeListeners.delete(cb);
+  };
+}
+
+function emitStore() {
+  for (const cb of storeListeners) cb();
+}
+
 function todayIso(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
+let cachedRaw: string | null = null;
+let cachedStore: Stored = EMPTY_STORE;
+
 function readStore(): Stored {
-  if (typeof window === "undefined") return { hidden: [], snoozedUntil: {} };
+  if (typeof window === "undefined") return EMPTY_STORE;
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { hidden: [], snoozedUntil: {} };
+    if (raw === cachedRaw) return cachedStore;
+    cachedRaw = raw;
+    if (!raw) {
+      cachedStore = EMPTY_STORE;
+      return cachedStore;
+    }
     const parsed = JSON.parse(raw) as Stored;
-    return {
+    cachedStore = {
       hidden: Array.isArray(parsed.hidden) ? parsed.hidden : [],
       snoozedUntil: parsed.snoozedUntil ?? {},
     };
+    return cachedStore;
   } catch {
-    return { hidden: [], snoozedUntil: {} };
+    cachedRaw = null;
+    cachedStore = EMPTY_STORE;
+    return cachedStore;
   }
 }
 
 function writeStore(next: Stored) {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  const raw = JSON.stringify(next);
+  window.localStorage.setItem(STORAGE_KEY, raw);
+  cachedRaw = raw;
+  cachedStore = next;
+  emitStore();
 }
 
 function isVisible(card: InsightCardModel, store: Stored): boolean {
@@ -65,29 +94,23 @@ export default function ConnectDotsStream({
   cards: InsightCardModel[];
   copy: DotsCopy;
 }) {
-  const [store, setStore] = useState<Stored>({ hidden: [], snoozedUntil: {} });
-  const [ready, setReady] = useState(false);
+  const store = useSyncExternalStore(
+    subscribeStore,
+    readStore,
+    () => EMPTY_STORE,
+  );
 
-  useEffect(() => {
-    setStore(readStore());
-    setReady(true);
-  }, []);
-
-  const visible = ready ? cards.filter((c) => isVisible(c, store)) : cards;
+  const visible = cards.filter((c) => isVisible(c, store));
 
   function hide(id: string) {
-    const next = { ...store, hidden: [...store.hidden, id] };
-    setStore(next);
-    writeStore(next);
+    writeStore({ ...store, hidden: [...store.hidden, id] });
   }
 
   function snooze(id: string) {
-    const next = {
+    writeStore({
       ...store,
       snoozedUntil: { ...store.snoozedUntil, [id]: todayIso() },
-    };
-    setStore(next);
-    writeStore(next);
+    });
   }
 
   if (visible.length === 0) return null;
