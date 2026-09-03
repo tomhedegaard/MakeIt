@@ -6,13 +6,11 @@ import { useTranslations } from "next-intl";
 import Container from "@/components/Container";
 import CountUp from "@/components/CountUp";
 import Spotlight from "@/components/Spotlight";
-import Link from "next/link";
 import {
   HERO_DOMAINS,
   MarketingDomainKicker,
 } from "@/components/marketing/FigureLanguage";
-
-const ease = [0.2, 0.7, 0.2, 1] as const;
+import { PUBLIC_ACCESS_HREF } from "@/lib/marketing/public-cta";
 
 type Stat =
   | { id: string; k: string; to: number; pad?: number; s: string }
@@ -51,7 +49,7 @@ export default function Hero() {
 
   // Kun app-stats (UX-audit C1: straps-salgstallet hørte til shoppen).
   // Outcome-tal frem for skala-tal — 6 SEK og 05:30 matcher eksisterende
-  // app-copy ("Claude vurderer på 6 sek." / "hver morgen klokken 05:30").
+  // app-copy ("AI-draft på 6 sek." / "hver morgen klokken 05:30").
   const STATS: Stat[] = [
     { id: "members", k: t("stats.members"), to: 412, s: t("stats.membersSuffix") },
     { id: "formCheck", k: t("stats.formCheck"), literal: t("stats.formCheckValue"), s: t("stats.formCheckSuffix") },
@@ -64,12 +62,10 @@ export default function Hero() {
     offset: ["start start", "end end"],
   });
 
-  // Background glow drift.
+  // Background glow drift — decorative only. Hero copy never fades
+  // with scroll (a 0.15 dissolve left body text at ~15% contrast).
   const glowY = useTransform(scrollYProgress, [0, 1], [0, -180]);
   const glowOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
-  // Exit dissolve.
-  const exitOpacity = useTransform(scrollYProgress, [0.92, 1], [1, 0.15]);
 
   // Reduced-motion mode: short section, no pin, no scroll-driven
   // anything. Everything renders at its end state.
@@ -102,10 +98,7 @@ export default function Hero() {
           transform: "translateZ(0)",
         }}
       >
-        <motion.div
-          style={{ opacity: exitOpacity }}
-          className="relative flex-1 flex flex-col justify-center pt-28 md:pt-40 pb-12"
-        >
+        <div className="relative flex-1 flex flex-col justify-center pt-28 md:pt-40 pb-12">
           <motion.div
             style={{ y: glowY, opacity: glowOpacity }}
             className="pointer-events-none absolute inset-0 z-0"
@@ -117,68 +110,28 @@ export default function Hero() {
           <Spotlight />
 
           <Container className="relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease }}
-              className="flex items-center gap-3 mb-10"
-            >
+            <div className="flex items-center gap-3 mb-10">
               <span className="pulse-dot" />
               <span className="eyebrow">
                 MakeIt <span className="text-fg-faint">{"//"}</span> HQ &nbsp;·&nbsp; {t("eyebrow")}
               </span>
-            </motion.div>
+            </div>
 
-            <motion.h1
-              initial="hidden"
-              animate="show"
-              variants={{
-                hidden: {},
-                show: { transition: { staggerChildren: 0.09, delayChildren: 0.18 } },
-              }}
-              className="font-display text-[clamp(3rem,10.5vw,9rem)] leading-[0.9]"
-            >
-              {["MADE", "FOR", "THOSE", "WHO", "LIFT."].map((word, i) => (
-                <motion.span
-                  key={i}
-                  variants={{
-                    hidden: { y: "110%", opacity: 0, rotate: 1.2 },
-                    show: {
-                      y: 0,
-                      opacity: 1,
-                      rotate: 0,
-                      transition: { duration: 1.05, ease },
-                    },
-                  }}
-                  className="inline-block overflow-hidden mr-[0.18em] last:mr-0"
-                >
-                  <span className="block">{word}</span>
-                </motion.span>
-              ))}
-            </motion.h1>
+            <h1 className="font-display text-[clamp(3rem,10.5vw,9rem)] leading-[0.9]">
+              MADE FOR THOSE WHO LIFT.
+            </h1>
 
             <div className="mt-12 grid gap-10 md:grid-cols-12 items-end">
-              <motion.div
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease, delay: 0.85 }}
-                className="md:col-span-6 max-w-xl"
-              >
+              <div className="md:col-span-6 max-w-xl">
                 <HeroLead />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease, delay: 1.2 }}
-                className="md:col-span-6"
-              >
+              </div>
+              <div className="md:col-span-6">
                 <HeroActions />
-              </motion.div>
+              </div>
             </div>
 
           </Container>
-        </motion.div>
+        </div>
       </div>
       </section>
 
@@ -268,14 +221,14 @@ function HeroActions() {
   return (
     <div className="flex flex-col items-start gap-3 md:items-end">
       <div className="flex flex-wrap items-center gap-3 md:justify-end">
-        <Link href="/login" className="btn btn-primary">
+        <a href={PUBLIC_ACCESS_HREF} className="btn btn-primary">
           {t("ctaPrimary")}
-        </Link>
+        </a>
         <a href="#crew" className="btn">{t("ctaSecondary")}</a>
         <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
       </div>
       <a
-        href="#waitlist"
+        href={PUBLIC_ACCESS_HREF}
         className="text-sm text-fg-dim underline underline-offset-4 hover:text-fg"
       >
         {t("waitlistLink")}

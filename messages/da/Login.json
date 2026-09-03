@@ -23,6 +23,8 @@
   },
   "statusConnected": "Connected · ",
   "statusDemo": "Demo mode · ingen backend tilkoblet",
+  "waitlistHint": "Ingen invite-kode?",
+  "waitlistLink": "Skriv dig på ventelisten",
   "mock": {
     "intro": "Indtast din invite-kode for at få adgang. Har du ikke en? Skriv til ",
     "inviteCodeLabel": "Invite-kode",

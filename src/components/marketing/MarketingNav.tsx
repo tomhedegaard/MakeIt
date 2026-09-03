@@ -6,6 +6,7 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
 import LanguageSelector from "@/components/LanguageSelector";
+import { MEMBER_LOGIN_HREF } from "@/lib/marketing/public-cta";
 
 /**
  * WAUW-4 — adds a mobile hamburger sheet. The v1 nav was
@@ -87,7 +88,7 @@ export default function MarketingNav() {
             <div className="hidden md:block">
               <LanguageSelector />
             </div>
-            <Link href="/login" className="btn btn-sm btn-primary">
+            <Link href={MEMBER_LOGIN_HREF} className="btn btn-sm btn-primary">
               {t("login")}
             </Link>
 
@@ -115,7 +116,7 @@ export default function MarketingNav() {
           // fixed-positionerede børn, så `top-14 bottom-0` beregnes mod
           // den 56px høje header og kollapser til højde 0 (menuen var
           // usynlig i produktion). Eksplicit højde omgår det.
-          className="md:hidden fixed left-0 right-0 top-full h-[calc(100dvh-3.5rem)] z-30 bg-[rgba(10,10,11,0.92)] backdrop-blur-lg overflow-y-auto"
+          className="marketing-nav-sheet md:hidden fixed left-0 right-0 top-full h-[calc(100dvh-3.5rem)] z-30 overflow-y-auto"
           onClick={(e) => {
             // Close when tapping the backdrop directly (but not its
             // children — let link clicks bubble first).
