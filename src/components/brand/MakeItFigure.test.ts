@@ -1,6 +1,6 @@
 /**
  * MakeItFigure is the brand body-map. Tests lock the AnatomyFigure
- * silhouette, data-domain anchors, v3A organ craft, teaching hierarchy,
+ * silhouette, data-domain anchors, v3A.2 organ glyphs, teaching hierarchy,
  * and the food-only full halo (docs/MAKEIT_FIGURE.md §2).
  */
 
@@ -35,7 +35,7 @@ describe("MakeItFigure", () => {
     expect(html).toContain(`viewBox="${VIEWBOX.male.front}"`);
     expect(html).toContain(OUTLINES.male.front.slice(0, 24));
     expect(html).toContain("makeit-figure-outline");
-    expect(html).toContain('data-craft="v3a"');
+    expect(html).toContain('data-craft="v3a.2"');
     expect(html).not.toContain("makeit-figure-halo");
     expect(html).not.toContain("makeit-figure-halo-glow");
     expect(html).not.toContain("data-highlighted");
@@ -101,12 +101,14 @@ describe("MakeItFigure", () => {
     expect(html).toContain('data-heart-layer="volume"');
     expect(html).toContain('data-heart-layer="chamber"');
     expect(html).toContain('data-heart-layer="sulcus"');
-    expect(html).toContain('data-heart-layer="vessel"');
-    expect(html).toMatch(/makeit-figure-heart-volume/);
+    expect(html).toContain('data-heart-layer="aorta"');
+    expect(html).toContain('data-heart-layer="pulm"');
     expect(html).toContain(HEART_VOLUME.slice(0, 24));
+    expect(html).not.toContain("makeit-figure-heart-volume");
     expect(html).not.toContain('data-heart-scale');
     expect(html).not.toContain("scale(2)");
     expect(html).not.toContain("M388 412c-3.4-2.8");
+    expect(html).not.toContain("M380 360C368 364");
   });
 
   it("keeps J-stomach + coils inside the abdomen (no groin escape)", () => {
@@ -114,11 +116,14 @@ describe("MakeItFigure", () => {
       const ys = pathAbsoluteYs(d);
       expect(ys.length).toBeGreaterThan(0);
       expect(Math.max(...ys)).toBeLessThanOrEqual(GUT_Y_MAX);
-      expect(Math.min(...ys)).toBeGreaterThanOrEqual(450);
+      expect(Math.min(...ys)).toBeGreaterThanOrEqual(440);
     }
     const html = render(["food"]);
+    expect(html).toContain('data-gut="esophagus"');
     expect(html).toContain('data-gut="stomach"');
+    expect(html).toContain('data-gut="fundus"');
     expect(html).toContain('data-gut="coil"');
+    expect(html).not.toContain("M370 506C370 476");
   });
 
   it("adds SVG hot-zones only when onDomainHover is provided", () => {

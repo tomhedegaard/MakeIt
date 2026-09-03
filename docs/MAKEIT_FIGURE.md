@@ -1,7 +1,8 @@
 # MakeIt-figuren — brandets kropskort
 
 > Status: Vedtaget 2026-09-01 (Tom/CDO). Mappingen er låst. Ikke et UDKAST.
-> Craft: v3A (2026-09-03) — organ-håndværk på eksisterende omrids.
+> Craft: v3A.2 (2026-09-03) — glyf-sprog: anatomisk hjerte + J-mave.
+>   v3A.1 var dosering/stater; Tom: «fersken» / «ballon i snor».
 >   v3B = custom editorial silhuet (se `docs/briefs/MAKEIT_FIGURE_V3B_ILLUSTRATOR.md`).
 > Tokens: `src/app/globals.css`. Farveprincip: `docs/DOMAIN_COLOR_SYSTEM.md`.
 
@@ -50,7 +51,7 @@ v3A løfter håndværket **på det eksisterende omrids** (`OUTLINES.male.front`
 fra react-native-body-highlighter). Omrids-pathen røres ikke. Custom
 silhuet er v3B.
 
-To visuelle modi på `MakeItFigure` (`data-mode`, `data-craft="v3a"`):
+To visuelle modi på `MakeItFigure` (`data-mode`, `data-craft="v3a.2"`):
 
 | Mode | Hvornår | Læs |
 |------|---------|-----|
@@ -90,18 +91,22 @@ figuren ikke er i teaching. Teaching skal ikke se food-ejet ud.
 til stede som ghost-organ (`data-food-aura="ghost"`, fill ≈ 0.08,
 streg ≈ 0.55) — ikke en grøn rand om hele kroppen.
 
-### Organ-craft (v3A)
+### Organ-craft (v3A.2 glyffer)
 
-- **Hjerte:** anatomisk organ/region — blødt volumen (lag + radial
-  gradient i `--heart`), ikke valentine/emoji. Personens venstre /
-  seers højre. `data-heart="organ"`. Lag: understreg (`--bg`), volume,
-  chamber, sulcus, vessel-stub. Skal læses ved `lg:h-[36rem]`. Ingen
-  `scale(2)` på en cartoon-glyf.
-- **Fordøjelse:** tydeligere J-mave (`data-gut="stomach"`) med fundus
-  på personens venstre + tre tarmslynger (`data-gut="coil"`) der
-  **bliver i abdomen**. Alle Y-værdier ≤ `GUT_Y_MAX` (650) i viewBox
-  `0 0 724 1448`. Lysken sidder ~748 — slyngerne må ikke løbe derned.
-  Soft `--food` fill (0.14 i focus, 0.08 i teaching).
+v3A.1 ændrede dosering, ikke glyf-sproget. Tom (CEO): hjertet læste
+som en fersken, mave-tarm som en ballon i snor. v3A.2 tegner organerne
+om på samme omrids.
+
+- **Hjerte:** anatomisk knytnæve — bred base, spids apex ned-højre
+  (personens venstre / seers højre). To kar-stubs (aorta + pulmonal),
+  ikke én stilk. Septum/kammer som streg, ikke fill-sky. Stroke +
+  lav `fillOpacity` i `--heart`. `data-heart="organ"`. Lag: under,
+  volume, chamber, sulcus, aorta, pulm. Thorax: ikke hals, ikke abs.
+- **Fordøjelse:** åben J-mave (`data-gut="stomach"`) + øsofagus
+  (`data-gut="esophagus"`) + fundus-volumen (`data-gut="fundus"`) +
+  tre tarmslynger med bredde (`data-gut="coil"`) **i abdomen**.
+  Alle Y ≤ `GUT_Y_MAX` (650). Ikke en cirkel med hale. Soft `--food`
+  fill kun på fundus (0.14 i focus, 0.08 i teaching).
 - **Sind:** samme AnatomyFigure-hovedpath. Focus = fill 0.18 / streg
   1.45. Teaching = blødere (fill 0.10 / streg 1.2 / opacity 0.55) så
   den blå kant ikke vinder hele figuren.

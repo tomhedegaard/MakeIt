@@ -13,8 +13,9 @@ import type { Domain } from "./DomainMark";
  * Brand body-map. Charcoal outline traced from AnatomyFigure
  * (OUTLINES.male.front) so we do not introduce a second body language.
  *
- * v3A craft-pass (docs/MAKEIT_FIGURE.md §2): lift organ craft on the
- * existing silhouette. Do not replace OUTLINES.male.front — that is v3B.
+ * v3A.2 glyph-pass (docs/MAKEIT_FIGURE.md §2): anatomical heart +
+ * J-stomach/coils on the existing silhouette. Do not replace
+ * OUTLINES.male.front — that is v3B.
  *
  * highlightedDomains lights only the matching anchor. Food draws the
  * 1px --food halo + soft glow only when food is the focused highlight
@@ -54,41 +55,62 @@ export const ALL_DOMAINS: readonly Domain[] = ["mind", "heart", "body", "food"];
 export const GUT_Y_MAX = 650;
 
 const FOOD_GLOW_FILTER_BASE = "makeit-figure-food-glow";
-const HEART_VOLUME_GRAD_BASE = "makeit-figure-heart-volume";
 
 /**
- * Anatomical heart / region — person's left, viewer's right.
- * Tilted organ: wider base, apex down-right (person's left). Not a
- * valentine (no cleft, no symmetric lobes). Absolute M/C for tests.
+ * Anatomical heart — person's left / viewer's right, thorax.
+ * Wide base + pointed apex down-right. Two great-vessel stubs, not
+ * a peach stem. Absolute M/C so tests can lock placement.
+ *
+ * v3A.1 blob+stem read as a peach. This outline is fist-like:
+ * steeper right border (RA/RV), convex LV, apex at the point.
  */
 export const HEART_VOLUME =
-  "M380 360C368 364 362 378 366 396C370 416 380 432 396 442C410 450 426 450 436 438C446 426 448 408 442 390C436 372 420 358 402 354C394 352 386 354 380 360Z";
+  "M362 378C354 390 352 412 360 432C368 448 388 458 412 456L436 442C446 428 444 400 428 378C414 360 392 352 374 360C366 364 362 370 362 378Z";
 
-/** Inner chamber — left-ventricle volume, slightly inset toward the apex. */
+/** LV cavity hint — editorial stroke, not a second fruit. */
 export const HEART_CHAMBER =
-  "M398 380C390 384 386 396 390 410C394 422 406 432 418 428C428 424 432 410 426 396C422 384 410 376 398 380Z";
+  "M398 386C392 396 392 412 400 424C408 436 424 438 434 428";
 
-/** Anterior interventricular groove — diagonal toward the apex, not a cleft. */
-export const HEART_SULCUS = "M394 370C404 392 416 414 430 430";
+/** Septum / anterior groove — diagonal to the apex, not a cleft. */
+export const HEART_SULCUS = "M386 376C398 400 414 426 436 444";
 
-/** Short ascending-vessel stem at the base — a tube, not a loop. */
-export const HEART_VESSEL = "M396 356C396 344 400 336 406 336";
+/** Ascending aorta — rises and arches. A T of vessels, not a fruit stem. */
+export const HEART_AORTA = "M394 358L394 332C394 322 408 318 422 324";
+
+/** Pulmonary stub — shorter, left of the aorta. */
+export const HEART_PULM = "M380 360L372 338C368 330 356 328 348 334";
 
 /**
- * J-stomach in the upper abdomen, fundus on the person's left
- * (viewer's right). Closed path for a soft --food fill.
+ * J-stomach: open pouch — fundus under the left ribs (viewer's
+ * right), body, antrum hooking toward the midline. Not a circle
+ * with a tail. Esophagus marks it as a tract.
  */
-export const GUT_STOMACH =
-  "M370 506C370 476 396 456 424 458C452 460 470 482 464 510C458 538 436 556 408 566C386 574 366 564 364 544C362 528 368 514 370 506Z";
+export const GUT_ESOPHAGUS = "M372 448L372 470";
 
-/** Intestinal coils — stay inside the abdomen (Y ≤ GUT_Y_MAX). */
+/** Open J: fundus right, pylorus hooks left toward the midline. */
+export const GUT_STOMACH =
+  "M368 470C368 452 392 442 424 444C448 446 468 460 466 482C464 504 448 522 420 532C396 540 372 534 358 518C350 508 354 496 366 494";
+
+/** Soft fundus volume — the bag of the J, offset right. */
+export const GUT_FUNDUS =
+  "M412 452C436 448 458 462 458 484C458 504 440 520 418 522C400 524 390 510 394 490C398 470 400 456 412 452Z";
+
+/**
+ * Horizontal bowel loops filling the abdominal cavity — not a
+ * vertical string of coils. Y ≤ GUT_Y_MAX.
+ */
 export const GUT_COILS = [
-  "M358 552C370 576 394 592 420 586",
-  "M418 590C444 602 440 628 414 634C390 640 366 624 374 606",
-  "M378 622C366 636 386 648 408 644",
+  "M356 520C340 528 336 548 352 560C368 572 400 574 424 562",
+  "M428 566C452 574 456 598 436 610C416 622 380 624 358 608C336 592 348 570 376 566C400 562 420 564 428 566",
+  "M364 612C340 620 338 638 360 644C382 650 418 646 430 630C442 614 418 606 390 610C374 612 366 612 364 612",
 ] as const;
 
-export const GUT_PATHS = [GUT_STOMACH, ...GUT_COILS] as const;
+export const GUT_PATHS = [
+  GUT_ESOPHAGUS,
+  GUT_STOMACH,
+  GUT_FUNDUS,
+  ...GUT_COILS,
+] as const;
 
 export type FigureMode = "idle" | "teaching" | "focus";
 
@@ -252,7 +274,6 @@ export default function MakeItFigure({
 }) {
   const uid = useId().replace(/:/g, "");
   const foodGlowFilterId = `${FOOD_GLOW_FILTER_BASE}-${uid}`;
-  const heartVolumeGradId = `${HEART_VOLUME_GRAD_BASE}-${uid}`;
   const mindOn = isOn(highlightedDomains, "mind");
   const heartOn = isOn(highlightedDomains, "heart");
   const bodyOn = isOn(highlightedDomains, "body");
@@ -273,20 +294,10 @@ export default function MakeItFigure({
       aria-label={ariaLabel}
       data-highlighted={highlightedDomains.join(" ") || undefined}
       data-mode={mode === "idle" ? undefined : mode}
-      data-craft="v3a"
+      data-craft="v3a.2"
       overflow="visible"
     >
       <defs>
-        <radialGradient
-          id={heartVolumeGradId}
-          cx="42%"
-          cy="40%"
-          r="68%"
-        >
-          <stop offset="0%" stopColor="var(--heart)" stopOpacity="0.85" />
-          <stop offset="70%" stopColor="var(--heart)" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="var(--heart)" stopOpacity="0.08" />
-        </radialGradient>
         {showFoodAura ? (
           <filter
             id={foodGlowFilterId}
@@ -403,19 +414,21 @@ export default function MakeItFigure({
         <path
           d={HEART_VOLUME}
           data-heart-layer="volume"
-          fill={heartOn ? `url(#${heartVolumeGradId})` : "none"}
+          fill={heartOn ? "var(--heart)" : "none"}
           fillOpacity={heartOn ? heart.volumeOpacity : 0}
           stroke={heart.stroke}
-          strokeWidth="1.45"
+          strokeWidth="1.55"
           strokeOpacity={heart.strokeOpacity}
           vectorEffect="non-scaling-stroke"
         />
         <path
           d={HEART_CHAMBER}
           data-heart-layer="chamber"
-          fill={heartOn ? "var(--heart)" : "none"}
-          fillOpacity={heart.chamberOpacity}
-          stroke="none"
+          fill="none"
+          stroke={heart.stroke}
+          strokeWidth="1.05"
+          strokeOpacity={heart.strokeOpacity * 0.45}
+          vectorEffect="non-scaling-stroke"
         />
         <path
           d={HEART_SULCUS}
@@ -427,12 +440,22 @@ export default function MakeItFigure({
           vectorEffect="non-scaling-stroke"
         />
         <path
-          d={HEART_VESSEL}
-          data-heart-layer="vessel"
+          d={HEART_AORTA}
+          data-heart-layer="aorta"
           fill="none"
           stroke={heart.stroke}
-          strokeWidth="2.2"
+          strokeWidth="2.1"
           strokeOpacity={heart.vesselOpacity}
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+        />
+        <path
+          d={HEART_PULM}
+          data-heart-layer="pulm"
+          fill="none"
+          stroke={heart.stroke}
+          strokeWidth="1.7"
+          strokeOpacity={heart.vesselOpacity * 0.85}
           strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
         />
@@ -446,13 +469,30 @@ export default function MakeItFigure({
         data-food-aura={showFoodAura ? "full" : foodOn ? "ghost" : undefined}
       >
         <path
-          d={GUT_STOMACH}
-          data-gut="stomach"
+          d={GUT_ESOPHAGUS}
+          data-gut="esophagus"
+          fill="none"
+          stroke={food.stroke}
+          strokeWidth="1.6"
+          opacity={food.opacity}
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+        />
+        <path
+          d={GUT_FUNDUS}
+          data-gut="fundus"
           fill={food.fill}
           fillOpacity={food.fillOpacity}
+          stroke="none"
+        />
+        <path
+          d={GUT_STOMACH}
+          data-gut="stomach"
+          fill="none"
           stroke={food.stroke}
-          strokeWidth="1.4"
+          strokeWidth="1.7"
           opacity={food.opacity}
+          strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
         />
         {GUT_COILS.map((d, i) => (
@@ -462,8 +502,9 @@ export default function MakeItFigure({
             data-gut="coil"
             fill="none"
             stroke={food.stroke}
-            strokeWidth="1.4"
+            strokeWidth="1.7"
             opacity={food.opacity}
+            strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
           />
         ))}
