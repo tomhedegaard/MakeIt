@@ -28,7 +28,8 @@
   "overview": {
     "eyebrow": "Coach console",
     "title": "Overview.",
-    "intro": "The whole crew's activity in one place — from the form-check queue to who's waiting on a new program.",
+    "intro": "Who needs you today — then the crew's activity.",
+    "inboxOpen": "Open the full inbox →",
     "kpiMembers": "Members",
     "kpiActivePrograms": "Active programs",
     "kpiPendingFormChecks": "Form-checks in queue",
@@ -46,6 +47,28 @@
     "queueEmpty": "The queue is empty.",
     "formCheckFallback": "Form-check",
     "openQueue": "Open the queue →"
+  },
+  "inbox": {
+    "metaTitle": "Inbox · Coach",
+    "eyebrow": "Coach console",
+    "title": "Inbox.",
+    "intro": "One queue: who needs a human now. AI already did the generic work.",
+    "sectionEyebrow": "Today",
+    "sectionTitle": "Who needs you",
+    "count": "{count, plural, one {# waiting} other {# waiting}}",
+    "emptyTitle": "Quiet.",
+    "emptyBody": "Nothing is open. Form-checks, HRV, the engine and Safety are empty — and nobody has been quiet for 15 days.",
+    "emptyDemoHint": "Demo — the list is empty because no mock signals are open.",
+    "safetyUnreadable": "The Safety table cannot be read (migration 0057 or RLS). That is not the same as zero cases.",
+    "chipMentalSafety": "Safety",
+    "chipHrv": "HRV",
+    "chipAdaptive": "Engine",
+    "chipFormCheck": "{exercise}",
+    "chipFormCheckFallback": "Form-check",
+    "chipStale": "{days} days",
+    "chipStaleNever": "Never trained",
+    "openItem": "Open case for @{handle}",
+    "backToOverview": "← Overview"
   },
   "analytics": {
     "metaTitle": "Coach · Analytics",
