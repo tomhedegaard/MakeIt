@@ -8,6 +8,7 @@ import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import {
   getTodayCard,
   getMemberStats,
+  type TodayCard,
 } from "@/lib/data/dashboard";
 import {
   emptyWeekStrip,
