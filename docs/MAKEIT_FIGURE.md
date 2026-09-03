@@ -1,7 +1,8 @@
 # MakeIt-figuren — brandets kropskort
 
 > Status: Vedtaget 2026-09-01 (Tom/CDO). Mappingen er låst. Ikke et UDKAST.
-> Craft: v2 (2026-09-02) — større organer, synlig food-halo + blød glow.
+> Craft: v3A (2026-09-03) — organ-håndværk på eksisterende omrids.
+>   v3B = custom editorial silhuet (se `docs/briefs/MAKEIT_FIGURE_V3B_ILLUSTRATOR.md`).
 > Tokens: `src/app/globals.css`. Farveprincip: `docs/DOMAIN_COLOR_SYSTEM.md`.
 
 Strength editorial bliver. Basen er monokrom. Farve er retning — max ~10 %
@@ -41,14 +42,31 @@ forbliver 100 % monokrome i v1 (`docs/DOMAIN_COLOR_SYSTEM.md` §8).
 
 ---
 
-## 2. Dosering
+## 2. Dosering + craft v3A
 
-Farve på figuren er anker + halo. Ikke fyld. Ikke sky.
+Farve på figuren er anker + (når det er rigtigt) halo. Ikke fyld. Ikke sky.
 
-**Halo + glow (kun kost, og kun når kost er tændt) — v2-recept:**
+v3A løfter håndværket **på det eksisterende omrids** (`OUTLINES.male.front`
+fra react-native-body-highlighter). Omrids-pathen røres ikke. Custom
+silhuet er v3B.
+
+To visuelle modi på `MakeItFigure` (`data-mode`, `data-craft="v3a"`):
+
+| Mode | Hvornår | Læs |
+|------|---------|-----|
+| `teaching` | `highlightedDomains` har alle fire | Ét balanceret billede. Organer som bløde ankre. Krop er den stilleeste (ghost). Ingen domæne ejer silhuetten via glow. |
+| `focus` | ét (eller få) aktive domæner — typisk hover | Det aktive domæne er dominant. De andre charcoal/ghost. |
+
+Dashboard (I dag) og landing-rest bruger `teaching`. Landing-hover
+(`MarketingBodyMap`) skifter til `focus` på ét domæne.
+
+### Halo + glow (kun kost, og kun i food-focus)
 
 To lag omkring `OUTLINES.male.front`. Aldrig fill på silhuetten.
 Aldrig en fyldt grøn sky. Skal læses som aura på `--bg` (#0A0A0B).
+
+**Fuld aura** (`data-food-aura="full"`) kun når food er tændt **og**
+figuren ikke er i teaching. Teaching skal ikke se food-ejet ud.
 
 1. **Skarp 1px-halo** (`.makeit-figure-halo`)
    - `fill: none`
@@ -68,22 +86,36 @@ Aldrig en fyldt grøn sky. Skal læses som aura på `--bg` (#0A0A0B).
      glow-laget — ikke på den skarpe 1px-streg
    - to lag, ingen fill: aura, ikke en fyldt grøn sky
 
-**Organ-skala (v2):**
+**Teaching (alle fire):** ingen halo, ingen glow. Fordøjelsen er
+til stede som ghost-organ (`data-food-aura="ghost"`, fill ≈ 0.08,
+streg ≈ 0.55) — ikke en grøn rand om hele kroppen.
 
-- Hjerte: v1-glyffen scalet `2×` omkring sit visuelle centrum, rykket
-  mod personens venstre (seers højre) så det læses som bryst-organ ved
-  landing-størrelse — ikke en prik. `data-heart-scale="2"`. En 4px
-  `--bg`-understreg holder organet fri af de orange pec-fills.
-- Fordøjelse: lidt større, tydeligere J-mave (`data-gut="stomach"`) +
-  tre tarmslynger (`data-gut="coil"`) så `--food` holder på afstand.
-- Sind: samme AnatomyFigure-hovedpath; tændt = stærkere streg (1.7) +
-  blød fill (0.24).
-- Krop: AnatomyFigure-`PARTS` (kinetisk kæde) med lav-opacity fill **og**
-  1px non-scaling streg, så kæden ikke forsvinder i charcoal-fyldet.
-  Abs/obliques holdes fri. Ingen stick-man-overlay.
+### Organ-craft (v3A)
+
+- **Hjerte:** anatomisk organ/region — blødt volumen (lag + radial
+  gradient i `--heart`), ikke valentine/emoji. Personens venstre /
+  seers højre. `data-heart="organ"`. Lag: understreg (`--bg`), volume,
+  chamber, sulcus, vessel-stub. Skal læses ved `lg:h-[36rem]`. Ingen
+  `scale(2)` på en cartoon-glyf.
+- **Fordøjelse:** tydeligere J-mave (`data-gut="stomach"`) med fundus
+  på personens venstre + tre tarmslynger (`data-gut="coil"`) der
+  **bliver i abdomen**. Alle Y-værdier ≤ `GUT_Y_MAX` (650) i viewBox
+  `0 0 724 1448`. Lysken sidder ~748 — slyngerne må ikke løbe derned.
+  Soft `--food` fill (0.14 i focus, 0.08 i teaching).
+- **Sind:** samme AnatomyFigure-hovedpath. Focus = fill 0.18 / streg
+  1.45. Teaching = blødere (fill 0.10 / streg 1.2 / opacity 0.55) så
+  den blå kant ikke vinder hele figuren.
+- **Krop:** AnatomyFigure-`PARTS` (kinetisk kæde). Abs/obliques holdes
+  fri. Ingen stick-man-overlay. Focus = stille relief (fill 0.10,
+  blød kant 0.20) — ikke dekorative orange striber. Teaching = den
+  stilleeste af de fire (fill 0.055 / stroke 0.12), ghost, ikke
+  orange festival.
+- **Hænder/fødder:** v3A rører ikke omrids-pathen. Mitten-hænder og
+  flade fødder er et silhuet-problem og hører til v3B (custom
+  editorial charcoal). Ingen finger-overrides oven på library-omridset
+  — det bliver støj, ikke craft.
 - Slukket anker: charcoal med synlig tilstedeværelse (opacity ≈ 0.5 /
-  fill 0.04–0.05) — ikke usynligt. Undervisningstilstanden skal kunne
-  læses før hover.
+  fill 0.04) — ikke usynligt.
 
 **Ankre når de er tændt:**
 
@@ -96,10 +128,12 @@ Aldrig en fyldt grøn sky. Skal læses som aura på `--bg` (#0A0A0B).
 
 **Må ikke:**
 
-- store farvede flader eller gradients
+- store farvede flader (organ-volumen-gradient på hjertet er undtagelsen
+  — den er anker, ikke flade)
 - farvet brødtekst
 - 3D, foto, maskot-ansigt
-- en anden krop end AnatomyFigure-silhuetten
+- en anden krop end AnatomyFigure-silhuetten i v3A
+- fuld food-halo i teaching
 
 ---
 
@@ -123,11 +157,13 @@ viewBox. Krop tænder AnatomyFigure-muskelpathene (kinetisk kæde) som
 lav-opacity fill — ikke syv streg-segmenter ovenpå silhuetten. Abs og
 obliques holdes fri, så food-ankeret (mave/tarm) kan læses.
 
-Dashboard (I dag) viser undervisningstilstanden: alle fire domæner tændt
-på én gang ved ~0.16–0.24 fill-opacity, food-halo 0.35 og food-glow 0.12.
-Det er fase 1, ikke Today-as-figure (kun det der er off). Landing
-(`MarketingBodyMap` `lg:h-[36rem]`) og dashboard (`BodyMap` `h-36 md:h-48`)
-arver v2 automatisk via `MakeItFigure` — størrelsesklasserne røres ikke.
+Dashboard (I dag) viser undervisningstilstanden: alle fire ankre tændt
+som ét balanceret read (`data-mode="teaching"`). Organer som bløde
+ankre, krop ghost, ingen food-halo. Det er fase 1, ikke Today-as-figure
+(kun det der er off). Landing (`MarketingBodyMap` `lg:h-[36rem]`) og
+dashboard (`BodyMap` `h-36 md:h-48`) arver v3A automatisk via
+`MakeItFigure` — størrelsesklasserne røres ikke. Hover på landing
+skifter til `focus` på ét domæne (food-hover = fuld 1px+glow).
 
 ---
 
@@ -172,7 +208,7 @@ De er **senere**, ikke huller i fase 1.
 | Fil | Rolle |
 |-----|--------|
 | `src/components/brand/DomainMark.tsx` | 24px streg-mærke. `domain` prop. `data-domain` + `domain-mark domain-mark--{domain}`. |
-| `src/components/brand/MakeItFigure.tsx` | Silhuet. `highlightedDomains?: Domain[]`. Food-highlight = gut + 1px halo + blød glow (§2). |
+| `src/components/brand/MakeItFigure.tsx` | Silhuet. `highlightedDomains?: Domain[]`. Teaching = balanceret ghost. Food-focus = gut + 1px halo + blød glow (§2). |
 | `src/components/brand/BodyMap.tsx` | Kompakt editorial slot: figur + fire DomainMark-kickers. |
 | `src/components/app/MobileTabBar.tsx` | Train/food/mind bruger DomainMark. Øvrige tabs urørt. |
 | Dashboard `HrvChip` | Heart-fladen får DomainMark. |

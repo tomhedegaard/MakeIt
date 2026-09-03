@@ -1,14 +1,22 @@
 /**
  * MakeItFigure is the brand body-map. Tests lock the AnatomyFigure
- * silhouette, data-domain anchors, v2 organ scale, and the food-only
- * 1px halo + soft glow recipe (docs/MAKEIT_FIGURE.md §2).
+ * silhouette, data-domain anchors, v3A organ craft, teaching hierarchy,
+ * and the food-only full halo (docs/MAKEIT_FIGURE.md §2).
  */
 
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import MakeItFigure from "./MakeItFigure";
+import MakeItFigure, {
+  ALL_DOMAINS,
+  GUT_PATHS,
+  GUT_Y_MAX,
+  HEART_VOLUME,
+  foodAuraFull,
+  figureMode,
+  pathAbsoluteYs,
+} from "./MakeItFigure";
 import { OUTLINES, VIEWBOX } from "@/lib/data/anatomy/paths";
 
 function render(highlightedDomains: Array<"mind" | "heart" | "body" | "food"> = []) {
@@ -27,9 +35,11 @@ describe("MakeItFigure", () => {
     expect(html).toContain(`viewBox="${VIEWBOX.male.front}"`);
     expect(html).toContain(OUTLINES.male.front.slice(0, 24));
     expect(html).toContain("makeit-figure-outline");
+    expect(html).toContain('data-craft="v3a"');
     expect(html).not.toContain("makeit-figure-halo");
     expect(html).not.toContain("makeit-figure-halo-glow");
     expect(html).not.toContain("data-highlighted");
+    expect(html).not.toContain('data-mode=');
   });
 
   it("scopes each anchor with data-domain", () => {
@@ -40,10 +50,12 @@ describe("MakeItFigure", () => {
     expect(html).toContain('data-domain="food"');
   });
 
-  it("lights only the food gut and a 1px halo plus soft glow when food is highlighted", () => {
+  it("lights only the food gut and a 1px halo plus soft glow when food is the focused highlight", () => {
     const html = render(["food"]);
     expect(html).toContain('data-highlighted="food"');
+    expect(html).toContain('data-mode="focus"');
     expect(html).toContain("makeit-figure-food-aura");
+    expect(html).toContain('data-food-aura="full"');
     expect(html).toContain("makeit-figure-halo");
     expect(html).toContain("makeit-figure-halo-glow");
     expect(html).toContain("feGaussianBlur");
@@ -59,6 +71,7 @@ describe("MakeItFigure", () => {
     for (const domain of ["mind", "heart", "body"] as const) {
       const html = render([domain]);
       expect(html).toContain(`data-highlighted="${domain}"`);
+      expect(html).toContain('data-mode="focus"');
       expect(html).not.toContain("makeit-figure-halo");
       expect(html).not.toContain("makeit-figure-halo-glow");
       expect(html).toContain(`data-domain="${domain}"`);
@@ -82,10 +95,29 @@ describe("MakeItFigure", () => {
     expect(html).not.toMatch(/data-domain="body"[^>]*data-lit/);
   });
 
-  it("scales the heart 2× so it reads as a chest organ", () => {
+  it("draws an anatomical heart organ — not a valentine glyph or 2× scale", () => {
     const html = render(["heart"]);
-    expect(html).toContain('data-heart-scale="2"');
-    expect(html).toContain("scale(2)");
+    expect(html).toContain('data-heart="organ"');
+    expect(html).toContain('data-heart-layer="volume"');
+    expect(html).toContain('data-heart-layer="chamber"');
+    expect(html).toContain('data-heart-layer="sulcus"');
+    expect(html).toContain("makeit-figure-heart-volume");
+    expect(html).toContain(HEART_VOLUME.slice(0, 24));
+    expect(html).not.toContain('data-heart-scale');
+    expect(html).not.toContain("scale(2)");
+    expect(html).not.toContain("M388 412c-3.4-2.8");
+  });
+
+  it("keeps J-stomach + coils inside the abdomen (no groin escape)", () => {
+    for (const d of GUT_PATHS) {
+      const ys = pathAbsoluteYs(d);
+      expect(ys.length).toBeGreaterThan(0);
+      expect(Math.max(...ys)).toBeLessThanOrEqual(GUT_Y_MAX);
+      expect(Math.min(...ys)).toBeGreaterThanOrEqual(450);
+    }
+    const html = render(["food"]);
+    expect(html).toContain('data-gut="stomach"');
+    expect(html).toContain('data-gut="coil"');
   });
 
   it("adds SVG hot-zones only when onDomainHover is provided", () => {
@@ -106,14 +138,17 @@ describe("MakeItFigure", () => {
     expect(html).toContain('data-hotzone="heart"');
     expect(html).toContain('data-hotzone="mind"');
     expect(html).toMatch(/data-hotzone="heart"[^>]*rx="80"/);
-    expect(html).toMatch(/data-hotzone="food"[^>]*rx="108"/);
+    expect(html).toMatch(/data-hotzone="food"[^>]*rx="92"/);
   });
 
-  it("teaching state lights all four anchors and the food halo", () => {
+  it("teaching state lights all four as a balanced read — ghost food, no full green rim", () => {
     const html = render(["mind", "heart", "body", "food"]);
     expect(html).toContain('data-highlighted="mind heart body food"');
-    expect(html).toContain("makeit-figure-halo");
-    expect(html).toContain("makeit-figure-halo-glow");
+    expect(html).toContain('data-mode="teaching"');
+    expect(html).toContain('data-food-aura="ghost"');
+    expect(html).not.toContain("makeit-figure-halo");
+    expect(html).not.toContain("makeit-figure-halo-glow");
+    expect(html).not.toContain("makeit-figure-food-aura");
     expect(html).toMatch(/data-domain="mind"[^>]*data-lit="true"/);
     expect(html).toMatch(/data-domain="heart"[^>]*data-lit="true"/);
     expect(html).toMatch(/data-domain="body"[^>]*data-lit="true"/);
@@ -122,5 +157,29 @@ describe("MakeItFigure", () => {
     expect(html).toContain("var(--fg-faint)");
     expect(html).not.toContain("#3a3a3e");
     expect(html).not.toContain("#1a1a1c");
+  });
+
+  it("teaching body is the quietest fill — ghost, not an orange festival", () => {
+    const teaching = render(["mind", "heart", "body", "food"]);
+    const bodyFocus = render(["body"]);
+    expect(teaching).toContain('fill-opacity="0.055"');
+    expect(bodyFocus).toContain('fill-opacity="0.1"');
+    expect(teaching).not.toContain('fill-opacity="0.22"');
+  });
+});
+
+describe("figureMode / foodAuraFull", () => {
+  it("maps empty / all-four / single to idle / teaching / focus", () => {
+    expect(figureMode([])).toBe("idle");
+    expect(figureMode(ALL_DOMAINS)).toBe("teaching");
+    expect(figureMode(["food"])).toBe("focus");
+    expect(figureMode(["mind", "heart"])).toBe("focus");
+  });
+
+  it("gives full food aura only when food is on and the figure is not teaching", () => {
+    expect(foodAuraFull(["food"])).toBe(true);
+    expect(foodAuraFull(ALL_DOMAINS)).toBe(false);
+    expect(foodAuraFull(["mind"])).toBe(false);
+    expect(foodAuraFull([])).toBe(false);
   });
 });

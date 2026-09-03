@@ -5,8 +5,9 @@ import { cn } from "@/lib/utils";
 /**
  * Shared figure + DomainMark language for public marketing surfaces.
  * Same silhouette and marks as the dashboard BodyMap — no second
- * icon set. Teaching state: all four anchors lit. Dosage stays in
- * the marks and anchors, never in body copy.
+ * icon set. Teaching state: all four anchors lit as a balanced
+ * read (no food-owned halo). Dosage stays in the marks and
+ * anchors, never in body copy.
  * See docs/MAKEIT_FIGURE.md.
  */
 

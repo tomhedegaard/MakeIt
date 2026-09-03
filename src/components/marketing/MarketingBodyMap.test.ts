@@ -47,8 +47,9 @@ describe("MarketingBodyMap", () => {
     expect(figure?.getAttribute("data-highlighted")).toBe(
       "mind heart body food",
     );
-    expect(host.querySelector(".makeit-figure-halo")).not.toBeNull();
-    expect(host.querySelector(".makeit-figure-halo-glow")).not.toBeNull();
+    expect(figure?.getAttribute("data-mode")).toBe("teaching");
+    expect(host.querySelector(".makeit-figure-halo")).toBeNull();
+    expect(host.querySelector(".makeit-figure-halo-glow")).toBeNull();
     expect(figure?.getAttribute("class")).toContain("h-[22rem]");
     expect(figure?.getAttribute("class")).toContain("lg:h-[36rem]");
     expect(host.querySelector("[data-body-map-kicker]")).not.toBeNull();
@@ -70,7 +71,9 @@ describe("MarketingBodyMap", () => {
 
     const figure = host.querySelector(".makeit-figure");
     expect(figure?.getAttribute("data-highlighted")).toBe("food");
+    expect(figure?.getAttribute("data-mode")).toBe("focus");
     expect(host.querySelector(".makeit-figure-halo")).not.toBeNull();
+    expect(host.querySelector(".makeit-figure-halo-glow")).not.toBeNull();
     expect(host.textContent).toContain("figure.food.body");
     expect(host.textContent).not.toContain("figure.whole.body");
   });
