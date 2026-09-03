@@ -403,9 +403,7 @@ function CronHealthCard({
             <dd className="numeric">{last.failed}</dd>
           </div>
         </dl>
-      ) : (
-        <p className="mt-3 text-xs font-mono text-fg-dim">{t("cronsStatusNone")}</p>
-      )}
+      ) : null}
     </li>
   );
 }

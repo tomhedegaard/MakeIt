@@ -38,5 +38,5 @@ Små atomare commits. Danske conventional prefixes.
 ## Verify
 
 - [x] `npm test` — 820 passed | 3 skipped
-- [ ] Dual mode: `/coach/system` viser ærlig demo-tom, ingen spam-alert
+- [x] Dual mode: `/coach/system` viser ærlig demo-tom, ingen spam-alert
 - [x] Ingen `db:push`, ingen merge til `main`, ingen secret-rotation
