@@ -53,7 +53,13 @@ export default function MarketingNav() {
   ];
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b hairline backdrop-blur-md bg-[rgba(10,10,11,0.6)]">
+    <header
+      className={
+        open
+          ? "fixed inset-x-0 top-0 z-40 border-b hairline bg-bg"
+          : "fixed inset-x-0 top-0 z-40 border-b hairline backdrop-blur-md bg-[rgba(10,10,11,0.6)]"
+      }
+    >
       <Container>
         <div className="flex h-14 items-center justify-between">
           <Link

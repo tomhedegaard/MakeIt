@@ -290,7 +290,7 @@ html.cursor-custom * {
 @media (min-width: 64rem) {
   .marketing-sticky-card {
     position: sticky;
-    top: calc(var(--header-h) + 1.25rem);
+    top: calc(var(--header-h) + 1.75rem);
     z-index: 10;
   }
 }

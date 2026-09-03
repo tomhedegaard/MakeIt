@@ -72,7 +72,7 @@ describe("public landing honesty", () => {
     expect(css).toMatch(/\[data-reveal\]\.reveal-pending:not\(\.is-visible\)/);
     expect(css).toMatch(/prefers-reduced-motion:\s*reduce/);
     expect(css).toMatch(/\.marketing-nav-sheet \{[\s\S]*?background:\s*var\(--bg\)/);
-    expect(css).toMatch(/\.marketing-sticky-card \{[\s\S]*?top:\s*calc\(var\(--header-h\)/);
+    expect(css).toMatch(/\.marketing-sticky-card \{[\s\S]*?top:\s*calc\(var\(--header-h\) \+ 1\.75rem\)/);
   });
 
   it("points login visitors without a code to the waitlist", () => {
