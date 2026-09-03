@@ -21,8 +21,9 @@
     "line1": "Welcome",
     "line2": "to the crew."
   },
-  "statusConnected": "Connected · ",
+  "statusConnected": "Connected",
   "statusDemo": "Demo mode · no backend connected",
+  "memberOnlyHint": "The page you tried to open is for members only. Sign in with your invite code.",
   "mock": {
     "intro": "Enter your invite code to get access. Don't have one? Write to ",
     "inviteCodeLabel": "Invite code",

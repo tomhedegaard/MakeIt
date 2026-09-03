@@ -56,7 +56,8 @@
     "reasoningHeading": "Hvorfor",
     "previousLabel": "Før du rørte den",
     "disclaimer": "Samme rene regel-motor som app'en. Ingen API, ingen spinner — kører i din browser.",
-    "ctaHowItWorks": "Se hele tankegangen →"
+    "ctaHowItWorks": "Se hele tankegangen →",
+    "ctaMembersOnly": "Kun for medlemmer — log ind med invite."
   },
   "crew": {
     "eyebrow": "01 — Crewet",

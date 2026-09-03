@@ -117,12 +117,17 @@ export default async function AdaptivePlaygroundPublic() {
           <p className="text-xs font-mono text-fg-faint max-w-md">
             {t("disclaimer")}
           </p>
-          <a
-            href="/hrv/learn/adaptive"
-            className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg lift inline-flex items-center gap-1"
-          >
-            {t("ctaHowItWorks")}
-          </a>
+          <div className="flex flex-col items-start sm:items-end gap-1">
+            <a
+              href="/login?next=/hrv/learn/adaptive"
+              className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg lift inline-flex items-center gap-1"
+            >
+              {t("ctaHowItWorks")}
+            </a>
+            <p className="text-[11px] text-fg-faint font-mono uppercase tracking-[0.14em]">
+              {t("ctaMembersOnly")}
+            </p>
+          </div>
         </footer>
       </Container>
     </section>

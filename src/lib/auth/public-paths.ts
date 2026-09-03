@@ -23,6 +23,18 @@ const PUBLIC_EXACT = new Set([
   "/favicon.ico",
 ]);
 
+/**
+ * Guessed marketing URLs that must not dump visitors on `/login?next=…`.
+ * Each path is a thin public redirect (see `src/app/{waitlist,join,signup,legal}`),
+ * not an app surface. Exact-match only — `/waitlist/foo` stays default-deny.
+ */
+export const PUBLIC_REDIRECTS: Record<string, string> = {
+  "/waitlist": "/#waitlist",
+  "/join": "/login",
+  "/signup": "/login",
+  "/legal": "/privacy",
+};
+
 const PUBLIC_PREFIXES = [
   "/login",
   "/privacy",
@@ -43,9 +55,15 @@ function matchesPrefix(path: string, prefix: string): boolean {
   return path === prefix || path.startsWith(`${prefix}/`);
 }
 
+export function publicRedirectFor(pathname: string): string | null {
+  const path = normalizePathname(pathname);
+  return PUBLIC_REDIRECTS[path] ?? null;
+}
+
 export function isPublicPath(pathname: string): boolean {
   const path = normalizePathname(pathname);
   if (PUBLIC_EXACT.has(path)) return true;
+  if (path in PUBLIC_REDIRECTS) return true;
   return PUBLIC_PREFIXES.some((prefix) => matchesPrefix(path, prefix));
 }
 
