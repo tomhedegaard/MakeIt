@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import DomainMark, { type Domain } from "@/components/brand/DomainMark";
 import type {
@@ -42,8 +42,36 @@ function readStore(): Stored {
   }
 }
 
+const EMPTY_STORE: Stored = { hidden: [], snoozedUntil: {} };
+
 function writeStore(next: Stored) {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+}
+
+/** Same-tab localStorage store — no mount setState (eslint react-hooks). */
+let cached: Stored | null = null;
+const listeners = new Set<() => void>();
+
+function getClientSnapshot(): Stored {
+  if (!cached) cached = readStore();
+  return cached;
+}
+
+function getServerSnapshot(): Stored {
+  return EMPTY_STORE;
+}
+
+function subscribe(onChange: () => void) {
+  listeners.add(onChange);
+  return () => {
+    listeners.delete(onChange);
+  };
+}
+
+function commit(next: Stored) {
+  cached = next;
+  writeStore(next);
+  listeners.forEach((fn) => fn());
 }
 
 function isVisible(card: InsightCardModel, store: Stored): boolean {
@@ -63,29 +91,22 @@ export default function ConnectDotsStream({
   cards: InsightCardModel[];
   copy: DotsCopy;
 }) {
-  const [store, setStore] = useState<Stored>({ hidden: [], snoozedUntil: {} });
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    setStore(readStore());
-    setReady(true);
-  }, []);
-
-  const visible = ready ? cards.filter((c) => isVisible(c, store)) : cards;
+  const store = useSyncExternalStore(
+    subscribe,
+    getClientSnapshot,
+    getServerSnapshot,
+  );
+  const visible = cards.filter((c) => isVisible(c, store));
 
   function hide(id: string) {
-    const next = { ...store, hidden: [...store.hidden, id] };
-    setStore(next);
-    writeStore(next);
+    commit({ ...store, hidden: [...store.hidden, id] });
   }
 
   function snooze(id: string) {
-    const next = {
+    commit({
       ...store,
       snoozedUntil: { ...store.snoozedUntil, [id]: todayIso() },
-    };
-    setStore(next);
-    writeStore(next);
+    });
   }
 
   if (visible.length === 0) return null;
