@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import MarketingNav from "@/components/marketing/MarketingNav";
 import Hero from "@/components/marketing/Hero";
 import WorksWith from "@/components/marketing/WorksWith";
@@ -13,10 +14,13 @@ import ValueSection from "@/components/marketing/ValueSection";
 import WaitlistSection from "@/components/marketing/WaitlistSection";
 import Testimonials from "@/components/marketing/Testimonials";
 import FAQ from "@/components/marketing/FAQ";
+import MunkSection from "@/components/marketing/MunkSection";
 import MarketingFooter from "@/components/marketing/Footer";
 import Marquee from "@/components/Marquee";
 
-export default function Home() {
+export default async function Home() {
+  const marquee = await getTranslations("Marketing.marquee");
+
   return (
     <>
       <MarketingNav />
@@ -34,19 +38,20 @@ export default function Home() {
         <GiveForwardSection />
         {/* UX-audit C3: udstyrs-brands ude af marquee'en — landingen
             sælger platformen, ikke shoppen. */}
-        <Marquee
-          items={[
-            "HRV-AWARE",
-            "AI + COACH",
-            "OPEN BRAIN",
-            "MADE IN DENMARK",
-            "KØBENHAVN",
-            "CLOSED BETA",
-            "FOR THE CREW",
-          ]}
-        />
         <WorksWith />
         <CrewSection />
+        <MunkSection />
+        <Marquee
+          items={[
+            marquee("hrvAware"),
+            marquee("aiCoach"),
+            marquee("openBrain"),
+            marquee("madeIn"),
+            marquee("city"),
+            marquee("closedBeta"),
+            marquee("forTheCrew"),
+          ]}
+        />
         <AdaptivePlaygroundPublic />
         {/* Pris/value rykket op (Scanfit-teardown): prisankeret og
             "hvad er det" skal ses uden at scrolle gennem alle seks

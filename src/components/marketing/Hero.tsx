@@ -11,6 +11,10 @@ import {
   HERO_DOMAINS,
   MarketingDomainKicker,
 } from "@/components/marketing/FigureLanguage";
+import {
+  PUBLIC_LEARN_HREF,
+  PUBLIC_WAITLIST_HREF,
+} from "@/lib/marketing/public-cta";
 
 const ease = [0.2, 0.7, 0.2, 1] as const;
 
@@ -51,7 +55,7 @@ export default function Hero() {
 
   // Kun app-stats (UX-audit C1: straps-salgstallet hørte til shoppen).
   // Outcome-tal frem for skala-tal — 6 SEK og 05:30 matcher eksisterende
-  // app-copy ("Claude vurderer på 6 sek." / "hver morgen klokken 05:30").
+  // app-copy (AI-draft på 6 sek. / morgenkørsel klokken 05:30).
   const STATS: Stat[] = [
     { id: "members", k: t("stats.members"), to: 412, s: t("stats.membersSuffix") },
     { id: "formCheck", k: t("stats.formCheck"), literal: t("stats.formCheckValue"), s: t("stats.formCheckSuffix") },
@@ -268,18 +272,11 @@ function HeroActions() {
   return (
     <div className="flex flex-col items-start gap-3 md:items-end">
       <div className="flex flex-wrap items-center gap-3 md:justify-end">
-        <Link href="/login" className="btn btn-primary">
+        <Link href={PUBLIC_WAITLIST_HREF} className="btn btn-primary">
           {t("ctaPrimary")}
         </Link>
-        <a href="#crew" className="btn">{t("ctaSecondary")}</a>
-        <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
+        <a href={PUBLIC_LEARN_HREF} className="btn">{t("ctaSecondary")}</a>
       </div>
-      <a
-        href="#waitlist"
-        className="text-sm text-fg-dim underline underline-offset-4 hover:text-fg"
-      >
-        {t("waitlistLink")}
-      </a>
       <p className="text-[11px] text-fg-faint font-mono uppercase tracking-[0.16em]">
         {t("trustLine")}
       </p>

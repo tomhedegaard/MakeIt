@@ -2,31 +2,15 @@ import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import FaqList, { type FaqItem } from "@/components/marketing/FaqList";
 import { SUPPORT_MAILTO } from "@/lib/company";
+import { FAQ_ITEM_KEYS } from "@/lib/marketing/faq-items";
 
 export default async function FAQ() {
   const t = await getTranslations("Marketing.faq");
 
-  const ITEMS: FaqItem[] = [
-    { q: t("items.advanced.q"),     a: t("items.advanced.a") },
-    { q: t("items.oneRm.q"),        a: t("items.oneRm.a") },
-    { q: t("items.cancel.q"),       a: t("items.cancel.a") },
-    { q: t("items.vacation.q"),     a: t("items.vacation.a") },
-    { q: t("items.responseTime.q"), a: t("items.responseTime.a") },
-    { q: t("items.pause.q"),        a: t("items.pause.a") },
-    { q: t("items.irl.q"),          a: t("items.irl.a") },
-    { q: t("items.cheaper.q"),      a: t("items.cheaper.a") },
-    { q: t("items.wearables.q"),    a: t("items.wearables.a") },
-    { q: t("items.hrvScore.q"),     a: t("items.hrvScore.a") },
-    { q: t("items.weeklyInsight.q"),    a: t("items.weeklyInsight.a") },
-    { q: t("items.hrvPrivacy.q"),   a: t("items.hrvPrivacy.a") },
-    { q: t("items.dataDirection.q"),    a: t("items.dataDirection.a") },
-    { q: t("items.offPlanNutrition.q"), a: t("items.offPlanNutrition.a") },
-    // WAUW-3: new søjle-aware FAQ entries
-    { q: t("items.openBrainWhy.q"),    a: t("items.openBrainWhy.a") },
-    { q: t("items.coCoach.q"),         a: t("items.coCoach.a") },
-    { q: t("items.hrvSharing.q"),      a: t("items.hrvSharing.a") },
-    { q: t("items.optOutAdaptive.q"),  a: t("items.optOutAdaptive.a") },
-  ];
+  const ITEMS: FaqItem[] = FAQ_ITEM_KEYS.map((key) => ({
+    q: t(`items.${key}.q`),
+    a: t(`items.${key}.a`),
+  }));
 
   return (
     <section id="faq" className="relative border-t hairline py-20 md:py-28">
@@ -47,7 +31,10 @@ export default async function FAQ() {
             </p>
           </div>
 
-          <FaqList items={ITEMS} showAllLabel={t("showAll")} />
+          <FaqList
+            items={ITEMS}
+            showAllLabel={t("showAll", { count: ITEMS.length })}
+          />
         </div>
       </Container>
     </section>

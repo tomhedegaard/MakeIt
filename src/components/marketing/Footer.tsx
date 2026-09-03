@@ -4,6 +4,7 @@ import Logo from "@/components/Logo";
 import Link from "next/link";
 import { COMPANY } from "@/lib/company";
 import LanguageSelector from "@/components/LanguageSelector";
+import { PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
 
 export default async function MarketingFooter() {
   const t = await getTranslations("Marketing.footer");
@@ -49,7 +50,7 @@ export default async function MarketingFooter() {
               ) : null}
             </ul>
 
-            <Link href="/login" className="btn btn-sm mt-6 inline-flex">{t("getAccess")}</Link>
+            <Link href={PUBLIC_WAITLIST_HREF} className="btn btn-sm mt-6 inline-flex">{t("getAccess")}</Link>
           </div>
         </div>
 

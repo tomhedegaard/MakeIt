@@ -23,6 +23,7 @@
   },
   "statusConnected": "Connected · ",
   "statusDemo": "Demo mode · no backend connected",
+  "waitlistLink": "No invite code? Join the waitlist",
   "mock": {
     "intro": "Enter your invite code to get access. Don't have one? Write to ",
     "inviteCodeLabel": "Invite code",

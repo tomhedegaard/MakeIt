@@ -63,6 +63,15 @@ export default async function LoginPage({
           <MockForm err={err} />
         )}
 
+        <p className="mt-8 text-sm text-fg-dim leading-relaxed">
+          <a
+            href="/#waitlist"
+            className="underline underline-offset-4 hover:text-fg"
+          >
+            {t("waitlistLink")}
+          </a>
+        </p>
+
         <p className="mt-10 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
           {SUPABASE_ENABLED ? (
             <>
