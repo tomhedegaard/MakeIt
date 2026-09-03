@@ -25,10 +25,12 @@ const NAV = [
 export default function AppShell({
   member,
   unreadMessages = 0,
+  demoMode = false,
   children,
 }: {
   member: Member;
   unreadMessages?: number;
+  demoMode?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -170,7 +172,17 @@ export default function AppShell({
           </div>
         </header>
 
-        <main className="flex-1 pb-tabbar lg:pb-0">{children}</main>
+        <main className="flex-1 pb-tabbar lg:pb-0">
+          {demoMode ? (
+            <div
+              role="status"
+              className="px-5 py-2 border-b hairline text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint"
+            >
+              {t("shell.demoBanner")}
+            </div>
+          ) : null}
+          {children}
+        </main>
       </div>
 
       {/* Mobile tab-bar */}

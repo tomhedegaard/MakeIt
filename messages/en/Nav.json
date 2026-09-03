@@ -16,6 +16,7 @@
     "coachBadge": "Coach",
     "coachConsole": "Console",
     "tier": "Tier",
+    "demoBanner": "Demo · sample data — not your personal crew",
     "logout": "Log out",
     "myProfile": "My profile",
     "unread": "{count} unread",
@@ -51,8 +52,8 @@
       },
       "formCheck": {
         "eyebrow": "03 · Form check",
-        "title": "AI rates your technique.",
-        "body": "Tap \"Form check with AI\" inside a session. Record or upload — you get an answer within seconds. Mikael personally signs off within 24 hours."
+        "title": "Technique gets a check.",
+        "body": "Tap \"Form check\" inside a session. Record or upload. The Motor gives a first pass; Munk signs off within 24 hours."
       },
       "reps": {
         "eyebrow": "04 · Reps",

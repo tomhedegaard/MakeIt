@@ -31,6 +31,21 @@ describe("buildEngineStrip", () => {
     expect(strip.munkNote).toBe("");
   });
 
+  it("returns no steps when a new member has no signals", () => {
+    const strip = buildEngineStrip({
+      latestReading: null,
+      lifestyle: {
+        sleepHoursAvg2d: null,
+        alcoholLast2d: false,
+        feelingLast3d: null,
+      },
+      nextSession: null,
+      recentSessions: [],
+      reasons: [],
+    });
+    expect(strip.steps).toEqual([]);
+  });
+
   it("demo fixture looks real: five steps, Heart first, empty Munk slot", () => {
     const demo = demoEngineStrip();
     expect(demo.steps).toHaveLength(5);

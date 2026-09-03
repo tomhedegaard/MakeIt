@@ -10,7 +10,7 @@
   "disclaimer": {
     "eyebrow": "Mind · Søjle 5",
     "title": "Mental sundhed — vores 5. søjle.",
-    "intro": "Ægte sundhed er fysisk OG psykisk. /mind er din daglige mentale check-in, dit private journal, dit sessions-bibliotek og din AI-coach for hovedet.",
+    "intro": "Ægte sundhed er fysisk OG psykisk. /mind er din daglige mentale check-in, dit private journal, dit sessions-bibliotek og en daglig refleksion skrevet af Motoren.",
     "important_title": "Vigtigt — læs én gang.",
     "important_body": "MakeIt's Mind-modul er IKKE klinisk behandling. Det er træning af mentale vaner — sammenlignelig med vejrtrækning, journaling og refleksion, ikke med terapi eller medicin. Hvis du har det meget skidt, eller hvis du tænker på at gøre skade på dig selv eller andre, så tal med et menneske der kan hjælpe nu.",
     "resources_title": "Hvis det brænder",
@@ -20,7 +20,10 @@
     "privacy_title": "Sådan håndterer vi dine data",
     "privacy_journal": "Munk, coaches og andre medlemmer kan ikke læse din journal (kun du i appen). Et uddrag kan sendes til Anthropic (Claude) for krise-tekstmoderering. Det er en databehandler — ikke en coach.",
     "privacy_mind_check": "Dit mind-check er privat som default. Når du rykker tier, kan du vælge at dele dit signal med din buddy. Begge skal sige ja. En valgfri note kan indgå i den daglige mental-coach hos Anthropic.",
-    "privacy_ai": "AI-coach (Anthropic) læser dit mind-check inkl. valgfri note, HRV og træningsuge — ikke din journal-brødtekst — for at skrive dig en daglig refleksion. Output gemmes så du kan læse den igen.",
+    "privacy_journal_label": "Journal",
+    "privacy_mind_check_label": "Mind-check",
+    "privacy_ai_label": "Motoren",
+    "privacy_ai": "Motoren (databehandler: Anthropic) læser dit mind-check inkl. valgfri note, HRV og træningsuge — ikke din journal-brødtekst — for at skrive dig en daglig refleksion. Output gemmes så du kan læse den igen. Anthropic er processor, ikke en coach.",
     "accept": "Jeg har forstået — fortsæt",
     "accepted": "Tak — modulet er åbnet."
   },
@@ -76,5 +79,45 @@
     "eyebrow": "Mind · Indstillinger",
     "title": "Privatliv + notifikationer.",
     "subtitle": "Munk og coaches ser ikke din journal-brødtekst. Anthropic kan se et uddrag til moderering. Resten kan du tænde og slukke for."
+  },
+  "tile": {
+    "waitingTitle": "Mind-check venter",
+    "waitingSub": "60 sek. Tre sliders. Det tager kortere tid end at vente på næste sæt.",
+    "waitingCta": "Start nu",
+    "readyTitle": "Dagens refleksion klar",
+    "readySub": "Motoren har skrevet ud fra dit signal i dag.",
+    "readyCta": "Læs",
+    "streakTitle": "Stribe: {days} dage",
+    "streakSub": "Bliv på den. Næste milestone er +20 Reps ved 7 dage.",
+    "streakCta": "Til Mind"
+  },
+  "check": {
+    "metaTitle": "Mind-check · MakeIt",
+    "eyebrow": "Mind · Søjle 5",
+    "titleNew": "Mind-check — 60 sek.",
+    "titleUpdate": "Mind-check — opdater.",
+    "subtitleNew": "Tre sliders. Én sætning hvis du har lyst. Det tager kortere tid end at vente på din næste sæt.",
+    "subtitleUpdate": "Du har tjekket ind i dag. Du kan opdatere indtil midnat.",
+    "energy": "Energi",
+    "energyLow": "udmattet",
+    "energyHigh": "opladt",
+    "stress": "Stress",
+    "stressLow": "rolig",
+    "stressHigh": "pumpet",
+    "focus": "Fokus",
+    "focusLow": "spredt",
+    "focusHigh": "laserskarp",
+    "noteLabel": "En sætning",
+    "noteOptional": "(valgfri)",
+    "notePlaceholder": "Hvad præger dig lige nu?",
+    "save": "Gem mind-check",
+    "update": "Opdater",
+    "saving": "Gemmer...",
+    "savedHint": "Tjekket ind i dag — du kan opdatere senere."
+  },
+  "redirect": {
+    "eyebrow": "Mind",
+    "title": "Åbner Mind…",
+    "body": "Tjekker om du har sagt ja til disclaimer — så sender vi dig videre."
   }
 }

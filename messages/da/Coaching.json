@@ -2,7 +2,7 @@
   "header": {
     "eyebrow": "02 — Træn",
     "title": "Din uge.",
-    "subtitle": "Alt automatisk planlagt af AI'en, justeret af din coach, og tilpasset dig."
+    "subtitle": "Motoren planlægger vægtene. Munk skriver under når det kræver et menneske."
   },
   "week": {
     "ariaLabel": "Ugeoversigt",
@@ -14,7 +14,10 @@
     "exercises": "Øvelser",
     "sets": "Sæt",
     "estTime": "Est. tid",
-    "start": "Start session →"
+    "start": "Start session →",
+    "emptyEyebrow": "I dag",
+    "emptyTitle": "Ingen session i dag endnu.",
+    "emptyBody": "Når Motoren har lagt ugen, ligger passet her."
   },
   "active": {
     "eyebrow": "Aktivt program",
@@ -27,7 +30,7 @@
     "eyebrow": "Programmer",
     "activeBadge": "Aktiv · uge {week}",
     "coach": "Coach",
-    "coachFallback": "AI + team",
+    "coachFallback": "Motoren",
     "level": "Niveau",
     "levelFallback": "—",
     "continue": "Fortsæt →",

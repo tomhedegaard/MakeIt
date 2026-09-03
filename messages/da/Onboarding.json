@@ -77,7 +77,26 @@
     "introSub": "Skader, mobilitetsproblemer eller ting du gerne vil arbejde rundt om. Helt valgfrit.",
     "injuriesLabel": "Skader / noter",
     "injuriesPlaceholder": "F.eks. Lidt anstrengt højre skulder — undgå behind-the-neck press.",
-    "footnote": "Bagefter ligger første session på Today."
+    "footnote": "Bagefter ligger første session på I dag.",
+    "submitTiming": "Tager 10–20 sek · Motoren bygger din første uge",
+    "errorSave": "Vi kunne ikke gemme din profil. Prøv igen.",
+    "errorAuth": "Din session udløb. Log ind og prøv igen.",
+    "errorGen": "Programmet blev ikke bygget. Prøv Færdig igen — din profil er gemt.",
+    "errorFreq": "Vælg hvor ofte du træner."
+  },
+  "programOverlay": {
+    "stage1": "Gemmer din profil",
+    "stage2": "Læser mål, niveau og udstyr",
+    "stage3": "Bygger uge 1-sessioner",
+    "stage4": "Skriver sæt og vægte",
+    "stage5": "Lægger passene i kalenderen",
+    "stage6": "Næsten klar — sidste tjek",
+    "eyebrow": "Bygger program",
+    "title": "Motoren lægger din første uge.",
+    "stageProgress": "{label}…",
+    "elapsed": "{elapsed}s · forventet 10–20 sek",
+    "overtime": "Tager lidt længere end normalt — bliv på siden",
+    "stayOnPage": "Bliv på siden — vi sender dig til I dag, når programmet findes"
   },
   "summary": {
     "goal": "Mål",
@@ -88,6 +107,7 @@
   "nav": {
     "back": "Tilbage",
     "next": "Næste",
-    "submit": "Færdig"
+    "submit": "Færdig",
+    "submitting": "Bygger dit program…"
   }
 }

@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "title": "Today"
+    "title": "I dag"
   },
   "greeting": {
     "eyebrow": "God morgen",
-    "streakLabel": "Streak",
+    "streakLabel": "Stribe",
     "streakUnit": "dage"
   },
   "figure": {
@@ -28,7 +28,11 @@
     "sets": "Sæt",
     "estTime": "Est. tid",
     "setCountSuffix": "× sæt",
-    "start": "Start session →"
+    "start": "Start session →",
+    "emptyEyebrow": "Dagens session",
+    "emptyTitle": "Ingen session i dag endnu.",
+    "emptyBody": "Når Motoren har lagt din uge, ligger første pas her. Indtil da er tallene tomme — ikke opdigtede.",
+    "emptyCta": "Se træning →"
   },
   "stats": {
     "volume": "Volumen",
@@ -58,6 +62,7 @@
     "seeFeed": "Se feed →",
     "empty": "Crewet er stille lige nu — vær den første til at dele.",
     "share": "+ Del",
+    "prBadge": "★ PR",
     "mock": {
       "ninaWhat": "+2.5kg PR · Deadlift 175 kg",
       "ninaWhen": "lige nu",
@@ -91,7 +96,7 @@
     "quiet": "Stille start. Når signalerne lander, skriver vi her."
   },
   "hrvChip": {
-    "eyebrow": "HRV readiness",
+    "eyebrow": "HRV-klarhed",
     "connect": "Forbind wearable"
   },
   "installHint": {

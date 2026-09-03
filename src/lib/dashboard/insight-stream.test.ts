@@ -71,6 +71,20 @@ describe("buildTodayInsightStream", () => {
     expect(cards.every(cardGrammarOk)).toBe(true);
   });
 
+  it("does not invent a food/session card when there is no session", () => {
+    const cards = buildTodayInsightStream({
+      sessionHref: SESSION,
+      hasHrv: false,
+      qualitative: null,
+      outOfBand: false,
+      mindCheckedToday: false,
+      hasSession: false,
+    });
+    expect(cards.every((c) => c.id !== "body_food_session")).toBe(true);
+    expect(cards.every((c) => c.id !== "heart_body_low")).toBe(true);
+    expect(cards.every(cardGrammarOk)).toBe(true);
+  });
+
   it("demo stream is Heart-first and routes the more-chip to an existing surface", () => {
     const cards = demoInsightStream(SESSION);
     expect(cards[0].id).toBe("heart_body_low");

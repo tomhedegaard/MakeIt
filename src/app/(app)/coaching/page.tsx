@@ -22,7 +22,7 @@ import {
 } from "@/lib/data/coaching";
 import StartProgramButton from "./StartProgramButton";
 import AdaptiveReasonStrip from "@/components/adaptive/AdaptiveReasonStrip";
-import { demoEngineStrip } from "@/lib/adaptive/engine-strip";
+import { getTodayEngineStrip } from "@/lib/data/today-engine-strip";
 import { loadStripCopy } from "@/lib/ui/sprint-a-copy";
 
 export default async function TrainPage() {
@@ -30,7 +30,9 @@ export default async function TrainPage() {
   const memberId = member?.id ?? null;
   const t = await getTranslations("Coaching");
   const stripCopy = await loadStripCopy();
-  const engineStrip = demoEngineStrip();
+  const engineStrip = memberId
+    ? await getTodayEngineStrip(memberId)
+    : { steps: [], munkNote: "" };
 
   const [todayCardDb, weekDb, activeDb, libraryDb, statsDb, streakDb] =
     SUPABASE_ENABLED && memberId
@@ -44,11 +46,17 @@ export default async function TrainPage() {
         ])
       : ([null, null, null, null, null, 0] as const);
 
-  const today: TodayCard = todayCardDb ?? todayCardFromMock();
+  const today: TodayCard | null = SUPABASE_ENABLED
+    ? todayCardDb
+    : (todayCardDb ?? todayCardFromMock());
   const week: WeekDay[] = weekDb ?? mockWeekStrip();
   const active: ActiveProgram | null = activeDb;
   const library: ProgramListing[] = libraryDb ?? mockLibrary();
-  const sets = today.setCount > 0 ? today.setCount : totalSets(TODAY_SESSION);
+  const sets = today
+    ? today.setCount > 0
+      ? today.setCount
+      : totalSets(TODAY_SESSION)
+    : 0;
 
   const volumeKg = statsDb?.volumeKg ?? 0;
   const volumeKgPrev = statsDb?.volumeKgPrev ?? 0;
@@ -132,6 +140,7 @@ export default async function TrainPage() {
       </section>
 
       {/* Today's session — flagship CTA */}
+      {today ? (
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 pt-5 pb-4 border-b hairline">
           <div className="flex items-center gap-2 mb-3">
@@ -167,6 +176,19 @@ export default async function TrainPage() {
           </Link>
         </div>
       </section>
+      ) : (
+      <section className="surface-2 rounded-2xl overflow-hidden">
+        <div className="px-5 pt-5 pb-6">
+          <div className="eyebrow mb-3">{t("today.emptyEyebrow")}</div>
+          <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
+            {t("today.emptyTitle")}
+          </h2>
+          <p className="text-fg-dim text-sm md:text-base max-w-md">
+            {t("today.emptyBody")}
+          </p>
+        </div>
+      </section>
+      )}
 
       {/* Active program progress */}
       {active ? (
@@ -267,7 +289,7 @@ export default async function TrainPage() {
                 <div className="flex items-center gap-2">
                   {p.active ? (
                     <Link
-                      href={`/session/${today.id}`}
+                      href={today ? `/session/${today.id}` : "/dashboard"}
                       className="btn btn-primary btn-sm flex-1"
                     >
                       {t("library.continue")}

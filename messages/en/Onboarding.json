@@ -77,7 +77,26 @@
     "introSub": "Injuries, mobility issues or things you'd like to work around. Totally optional.",
     "injuriesLabel": "Injuries / notes",
     "injuriesPlaceholder": "E.g. Slightly strained right shoulder — avoid behind-the-neck press.",
-    "footnote": "After this, the first session is on Today."
+    "footnote": "After this, the first session is on Today.",
+    "submitTiming": "Takes 10–20 sec · the Motor builds your first week",
+    "errorSave": "We could not save your profile. Try again.",
+    "errorAuth": "Your session expired. Sign in and try again.",
+    "errorGen": "The program was not built. Tap Done again — your profile is saved.",
+    "errorFreq": "Pick how often you train."
+  },
+  "programOverlay": {
+    "stage1": "Saving your profile",
+    "stage2": "Reading goal, level and equipment",
+    "stage3": "Building week 1 sessions",
+    "stage4": "Writing sets and weights",
+    "stage5": "Placing sessions on the calendar",
+    "stage6": "Almost ready — last check",
+    "eyebrow": "Building program",
+    "title": "The Motor is laying out your first week.",
+    "stageProgress": "{label}…",
+    "elapsed": "{elapsed}s · expected 10–20 sec",
+    "overtime": "Taking a little longer than usual — stay on the page",
+    "stayOnPage": "Stay on the page — we send you to Today when the program exists"
   },
   "summary": {
     "goal": "Goal",
@@ -88,6 +107,7 @@
   "nav": {
     "back": "Back",
     "next": "Next",
-    "submit": "Done"
+    "submit": "Done",
+    "submitting": "Building your program…"
   }
 }

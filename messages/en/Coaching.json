@@ -2,7 +2,7 @@
   "header": {
     "eyebrow": "02 — Train",
     "title": "Your week.",
-    "subtitle": "All planned automatically by the AI, tuned by your coach, and dialed in for you."
+    "subtitle": "The Motor plans the weights. Munk signs off when it needs a human."
   },
   "week": {
     "ariaLabel": "Week overview",
@@ -14,7 +14,10 @@
     "exercises": "Exercises",
     "sets": "Sets",
     "estTime": "Est. time",
-    "start": "Start session →"
+    "start": "Start session →",
+    "emptyEyebrow": "Today",
+    "emptyTitle": "No session today yet.",
+    "emptyBody": "When the Motor has laid out the week, the session lands here."
   },
   "active": {
     "eyebrow": "Active program",
@@ -27,7 +30,7 @@
     "eyebrow": "Programs",
     "activeBadge": "Active · week {week}",
     "coach": "Coach",
-    "coachFallback": "AI + team",
+    "coachFallback": "The Motor",
     "level": "Level",
     "levelFallback": "—",
     "continue": "Continue →",

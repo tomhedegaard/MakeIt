@@ -8,7 +8,13 @@
     "home": "Back to home"
   },
   "loading": {
-    "label": "Loading"
+    "label": "Loading",
+    "redirectEyebrow": "One moment",
+    "redirectTitle": "Sending you on…",
+    "nutritionTitle": "Opening food…",
+    "nutritionBody": "Checking whether you have a plan — otherwise we send you to setup.",
+    "mindTitle": "Opening Mind…",
+    "mindBody": "Checking the disclaimer — then we send you on."
   },
   "cookieBanner": {
     "eyebrow": "Cookies",

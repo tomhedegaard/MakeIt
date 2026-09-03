@@ -8,7 +8,13 @@
     "home": "Til forsiden"
   },
   "loading": {
-    "label": "Loader"
+    "label": "Loader",
+    "redirectEyebrow": "Et øjeblik",
+    "redirectTitle": "Sender dig videre…",
+    "nutritionTitle": "Åbner kost…",
+    "nutritionBody": "Tjekker om du har en plan — ellers sender vi dig til opsætning.",
+    "mindTitle": "Åbner Mind…",
+    "mindBody": "Tjekker disclaimer — så sender vi dig videre."
   },
   "cookieBanner": {
     "eyebrow": "Cookies",

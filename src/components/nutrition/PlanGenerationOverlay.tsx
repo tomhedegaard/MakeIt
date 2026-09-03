@@ -33,19 +33,27 @@ const STAGES: Stage[] = [
   { labelKey: "stage6", afterSec: 35 },
 ];
 
+type OverlayNamespace = "Nutrition.planOverlay" | "Onboarding.programOverlay";
+
 export default function PlanGenerationOverlay({
   pending,
+  namespace = "Nutrition.planOverlay",
 }: {
   pending: boolean;
+  namespace?: OverlayNamespace;
 }) {
   // Unmount when idle so elapsed resets on the next run without a
   // setState-in-effect (react-hooks/set-state-in-effect).
   if (!pending) return null;
-  return <PlanGenerationOverlayActive />;
+  return <PlanGenerationOverlayActive namespace={namespace} />;
 }
 
-function PlanGenerationOverlayActive() {
-  const t = useTranslations("Nutrition.planOverlay");
+function PlanGenerationOverlayActive({
+  namespace,
+}: {
+  namespace: OverlayNamespace;
+}) {
+  const t = useTranslations(namespace);
   const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {

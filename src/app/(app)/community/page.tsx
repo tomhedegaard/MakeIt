@@ -91,7 +91,9 @@ export default async function CrewPage() {
         />
       </header>
 
-      {/* Story strip — who trained today */}
+      {/* Story strip — demo fixture only. Connected members see an
+          honest empty line until we have a real trained-today query. */}
+      {!SUPABASE_ENABLED ? (
       <section
         aria-label={t("storiesAria")}
         className="-mx-6 md:mx-0 px-6 md:px-0 overflow-x-auto"
@@ -121,8 +123,14 @@ export default async function CrewPage() {
           ))}
         </ol>
       </section>
+      ) : (
+      <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+        {t("storiesEmpty")}
+      </p>
+      )}
 
-      {/* Monthly challenge hero */}
+      {/* Monthly challenge — invented 68.4/100K is demo-only. */}
+      {!SUPABASE_ENABLED ? (
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 pt-5 pb-3">
           <div className="flex items-center justify-between mb-3">
@@ -160,6 +168,15 @@ export default async function CrewPage() {
           </button>
         </div>
       </section>
+      ) : (
+      <section className="surface-2 rounded-2xl overflow-hidden px-5 py-6">
+        <div className="eyebrow mb-2">{t("challengeEmptyEyebrow")}</div>
+        <h2 className="font-display text-2xl md:text-3xl leading-[1] mb-2">
+          {t("challengeEmptyTitle")}
+        </h2>
+        <p className="text-fg-dim text-sm max-w-md">{t("challengeEmptyBody")}</p>
+      </section>
+      )}
 
       {/* Feed */}
       <section>
@@ -197,7 +214,8 @@ export default async function CrewPage() {
         )}
       </section>
 
-      {/* Leaderboard */}
+      {/* Leaderboard — invented totals are demo-only. */}
+      {!SUPABASE_ENABLED ? (
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 py-4 border-b hairline flex items-center justify-between">
           <div>
@@ -225,6 +243,12 @@ export default async function CrewPage() {
           ))}
         </ul>
       </section>
+      ) : (
+      <section className="surface-2 rounded-2xl overflow-hidden px-5 py-5">
+        <div className="eyebrow mb-1">{t("leaderboardEyebrow")}</div>
+        <p className="text-sm text-fg-dim">{t("leaderboardEmpty")}</p>
+      </section>
+      )}
 
       {/* IRL meet */}
       <section className="surface-2 rounded-2xl p-5">

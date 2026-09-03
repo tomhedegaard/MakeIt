@@ -71,10 +71,10 @@ function uniqueSteps(steps: EngineStripStep[]): EngineStripStep[] {
  * fired (or an empty list when the Motor only *read* signals).
  */
 export function buildEngineStrip(
-  input: Pick<
-    EngineInput,
-    "latestReading" | "lifestyle" | "nextSession" | "recentSessions"
-  > & { reasons?: Array<RuleReasonCode | string> },
+  input: Pick<EngineInput, "latestReading" | "lifestyle" | "recentSessions"> & {
+    nextSession?: EngineInput["nextSession"] | null;
+    reasons?: Array<RuleReasonCode | string>;
+  },
   munkNote = "",
 ): EngineStripModel {
   const steps: EngineStripStep[] = [];
@@ -117,6 +117,19 @@ export function buildEngineStrip(
 
   const filled = uniqueSteps(steps);
 
+  const hasAnySignal =
+    !!input.latestReading ||
+    !!input.nextSession ||
+    input.lifestyle.sleepHoursAvg2d != null ||
+    input.lifestyle.alcoholLast2d ||
+    input.lifestyle.feelingLast3d != null ||
+    reasons.length > 0;
+
+  // Empty new member: hide the strip. Do not invent a WHY narrative.
+  if (!hasAnySignal) {
+    return { steps: [], munkNote };
+  }
+
   // Pad to the 3-step floor with honest "what was read" fallbacks so the
   // strip never looks empty when the Motor ran.
   if (filled.length < MIN_STEPS) {
@@ -126,7 +139,14 @@ export function buildEngineStrip(
     if (input.nextSession && !filled.some((s) => s.key === "sessionToday")) {
       filled.push({ domain: "body", key: "sessionToday" });
     }
-    if (!input.lifestyle.alcoholLast2d && !filled.some((s) => s.domain === "food")) {
+    // Only claim "no alcohol" when lifestyle was actually observed
+    // (sleep logged). An empty new member has alcoholLast2d=false by
+    // default — that is absence of data, not a food signal.
+    if (
+      !input.lifestyle.alcoholLast2d &&
+      input.lifestyle.sleepHoursAvg2d != null &&
+      !filled.some((s) => s.domain === "food")
+    ) {
       filled.push({ domain: "food", key: "noAlcohol" });
     }
     if (!filled.some((s) => s.domain === "mind")) {

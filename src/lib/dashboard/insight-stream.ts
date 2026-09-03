@@ -33,6 +33,8 @@ export type InsightStreamInput = {
   qualitative: QualitativeBand | null;
   outOfBand: boolean;
   mindCheckedToday: boolean;
+  /** When false, skip the body↔food card (no invented squat-day copy). */
+  hasSession?: boolean;
 };
 
 const CARD_GRAMMAR_MIN_DOMAINS = 2;
@@ -105,13 +107,15 @@ export function buildTodayInsightStream(
     });
   }
 
-  cards.push({
-    id: "body_food_session",
-    domains: ["body", "food"],
-    moreAbout: "food",
-    ctaHref: "/nutrition?q=squat-dag",
-    moreHref: "/nutrition",
-  });
+  if (input.hasSession !== false) {
+    cards.push({
+      id: "body_food_session",
+      domains: ["body", "food"],
+      moreAbout: "food",
+      ctaHref: "/nutrition?q=pas",
+      moreHref: "/nutrition",
+    });
+  }
 
   return cards.filter(cardGrammarOk);
 }

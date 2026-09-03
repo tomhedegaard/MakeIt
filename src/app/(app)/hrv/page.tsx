@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -172,6 +173,7 @@ function providerName(provider: string | null): string {
 export default async function HrvPage() {
   const member = await getSession();
   if (!member) redirect("/login");
+  const tPage = await getTranslations("Hrv.page");
 
   const series = SUPABASE_ENABLED
     ? await getHrvReadingSeries(member.id)
@@ -226,9 +228,9 @@ export default async function HrvPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Recovery"
-        title="HRV"
-        subtitle="Din hjerterytmevariabilitet — et dagligt mål for, hvor klar din krop er til at træne."
+        eyebrow={tPage("eyebrow")}
+        title={tPage("title")}
+        subtitle={tPage("subtitle")}
       />
       <Container className="py-8 lg:py-12 space-y-8">
         <HrvSubNav />
@@ -280,7 +282,7 @@ export default async function HrvPage() {
         {!SUPABASE_ENABLED || band.state !== "empty" ? (
           <HrvBandHero view={band} copy={bandCopy} />
         ) : !state.connected ? (
-          <StateNotConnected />
+          <StateNotConnected t={tPage} />
         ) : state.latest && state.latest.warmUpState !== "active" ? (
           <StateWarmingUp
             rmssdMs={state.latest.rmssdMs}
@@ -309,46 +311,35 @@ export default async function HrvPage() {
 /* State A — no active wearable connection                          */
 /* ---------------------------------------------------------------- */
 
-function StateNotConnected() {
+function StateNotConnected({
+  t,
+}: {
+  t: Awaited<ReturnType<typeof getTranslations<"Hrv.page">>>;
+}) {
   return (
     <section className="surface-2 rounded-2xl overflow-hidden">
       <div className="px-6 py-7 md:px-8 md:py-10 border-b hairline">
-        <div className="eyebrow mb-3">Kom i gang</div>
+        <div className="eyebrow mb-3">{t("connectEyebrow")}</div>
         <h2 className="font-display text-3xl md:text-4xl leading-[1.02] mb-3">
-          Lad din HRV køre i baggrunden.
+          {t("connectTitle")}
         </h2>
         <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-xl">
-          HRV — hjerterytmevariabilitet — fortæller, hvor restitueret du er.
-          Forbind en wearable, så synker MakeIt din HRV automatisk hver
-          morgen. Ingen manuel måling, ingen ekstra rutine — den er der bare,
-          når du vågner.
+          {t("connectBody")}
         </p>
       </div>
 
       <ol className="divide-y hairline">
         {[
-          {
-            n: "01",
-            t: "Forbind dit wearable",
-            d: "Ét tryk — du godkender adgang hos din wearable-udbyder.",
-          },
-          {
-            n: "02",
-            t: "HRV synker hver morgen",
-            d: "MakeIt henter nattens måling automatisk. Du gør ingenting.",
-          },
-          {
-            n: "03",
-            t: "Vi bygger din baseline",
-            d: "De første par uger lærer MakeIt din normal — derefter ser du din readiness.",
-          },
+          { n: "01", title: t("connectStep1Title"), d: t("connectStep1Body") },
+          { n: "02", title: t("connectStep2Title"), d: t("connectStep2Body") },
+          { n: "03", title: t("connectStep3Title"), d: t("connectStep3Body") },
         ].map((row) => (
           <li key={row.n} className="px-6 py-4 md:px-8 flex items-start gap-4">
             <span className="numeric text-fg-faint text-xs w-7 pt-0.5 shrink-0">
               {row.n}
             </span>
             <div className="min-w-0">
-              <div className="text-fg/90 text-sm md:text-base">{row.t}</div>
+              <div className="text-fg/90 text-sm md:text-base">{row.title}</div>
               <div className="text-fg-dim text-xs md:text-sm mt-0.5 leading-relaxed">
                 {row.d}
               </div>
@@ -358,9 +349,9 @@ function StateNotConnected() {
       </ol>
 
       <div className="p-5 md:p-8 space-y-4">
-        <ConnectButton label="Forbind dit wearable" />
+        <ConnectButton label={t("connectCta")} />
         <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint leading-relaxed">
-          Apple Watch-support kommer med MakeIt-appen til iPhone.
+          {t("connectAppleNote")}
         </p>
       </div>
     </section>

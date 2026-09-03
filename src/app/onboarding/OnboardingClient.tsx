@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 import { useTranslations } from "next-intl";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
+import PlanGenerationOverlay from "@/components/nutrition/PlanGenerationOverlay";
 import { cn } from "@/lib/utils";
 import { completeOnboardingAction } from "./actions";
 
@@ -25,7 +27,9 @@ export default function OnboardingClient({
   err?: string;
 }) {
   const t = useTranslations("Onboarding");
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(
+    err === "save" || err === "auth" || err === "gen" || err === "freq" ? 3 : 1,
+  );
   const [goal, setGoal] = useState<Goal | null>(null);
   const [level, setLevel] = useState<Level | null>(null);
   const [freq, setFreq] = useState<number>(4);
@@ -66,7 +70,15 @@ export default function OnboardingClient({
         <input type="hidden" name="equipment" value={equip ?? ""} />
         <input type="hidden" name="frequency" value={freq} />
 
-        <Container size="narrow" className="py-8 lg:py-14 flex-1 space-y-10">
+        <Container size="narrow" className="py-8 lg:py-14 flex-1 space-y-10 pb-28 lg:pb-10">
+          {err === "goal" || err === "level" || err === "equip" ? (
+            <Banner>{t("step1.errorBanner")}</Banner>
+          ) : null}
+          {err === "save" ? <Banner>{t("step3.errorSave")}</Banner> : null}
+          {err === "auth" ? <Banner>{t("step3.errorAuth")}</Banner> : null}
+          {err === "gen" ? <Banner>{t("step3.errorGen")}</Banner> : null}
+          {err === "freq" ? <Banner>{t("step3.errorFreq")}</Banner> : null}
+
           {step === 1 ? (
             <>
               <Intro
@@ -74,10 +86,6 @@ export default function OnboardingClient({
                 title={t("step1.introTitle")}
                 sub={t("step1.introSub")}
               />
-
-              {err === "goal" || err === "level" || err === "equip" ? (
-                <Banner>{t("step1.errorBanner")}</Banner>
-              ) : null}
 
               <Section eyebrow={t("step1.goalEyebrow")} title={t("step1.goalTitle")}>
                 <Grid>
@@ -194,43 +202,96 @@ export default function OnboardingClient({
               <p className="text-xs font-mono text-fg-faint">
                 {t("step3.footnote")}
               </p>
+              <p className="text-xs font-mono text-fg-faint">
+                {t("step3.submitTiming")}
+              </p>
             </>
           ) : null}
         </Container>
 
-        {/* Sticky CTA */}
+        {/* Sticky on mobile so DONE stays tappable; static on desktop so
+            NEXT does not cover GOAL cards. Content has pb-28 on small
+            screens to keep the last cards above the bar. */}
         <div
-          className="sticky bottom-0 z-30 border-t hairline bg-bg/95 backdrop-blur"
+          className="sticky bottom-0 lg:static z-30 border-t hairline bg-bg/95 backdrop-blur"
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
         >
           <Container size="narrow" className="pt-3 flex items-center gap-3">
-            {step > 1 ? (
-              <button
-                type="button"
-                className="btn"
-                onClick={() => setStep(step - 1)}
-              >
-                {t("nav.back")}
-              </button>
-            ) : null}
-            {step < totalSteps ? (
-              <button
-                type="button"
-                className="btn btn-primary btn-xl flex-1"
-                onClick={() => setStep(step + 1)}
-                disabled={(step === 1 && !canNext1) || (step === 2 && !canNext2)}
-              >
-                {t("nav.next")}
-              </button>
-            ) : (
-              <button type="submit" className="btn btn-primary btn-xl flex-1">
-                {t("nav.submit")}
-              </button>
-            )}
+            <OnboardingNav
+              step={step}
+              totalSteps={totalSteps}
+              canNext1={!!canNext1}
+              canNext2={canNext2}
+              onBack={() => setStep(step - 1)}
+              onNext={() => setStep(step + 1)}
+            />
           </Container>
         </div>
       </form>
     </div>
+  );
+}
+
+function OnboardingNav({
+  step,
+  totalSteps,
+  canNext1,
+  canNext2,
+  onBack,
+  onNext,
+}: {
+  step: number;
+  totalSteps: number;
+  canNext1: boolean;
+  canNext2: boolean;
+  onBack: () => void;
+  onNext: () => void;
+}) {
+  const t = useTranslations("Onboarding");
+  const { pending } = useFormStatus();
+
+  return (
+    <>
+      {step > 1 ? (
+        <button
+          type="button"
+          className="btn"
+          onClick={onBack}
+          disabled={pending}
+        >
+          {t("nav.back")}
+        </button>
+      ) : null}
+      {step < totalSteps ? (
+        <button
+          type="button"
+          className="btn btn-primary btn-xl flex-1"
+          onClick={onNext}
+          disabled={pending || (step === 1 && !canNext1) || (step === 2 && !canNext2)}
+        >
+          {t("nav.next")}
+        </button>
+      ) : (
+        <button
+          type="submit"
+          disabled={pending}
+          className="btn btn-primary btn-xl flex-1 disabled:opacity-60"
+        >
+          {pending ? (
+            <>
+              <span className="inline-block size-2 rounded-full bg-current animate-pulse mr-2" />
+              {t("nav.submitting")}
+            </>
+          ) : (
+            t("nav.submit")
+          )}
+        </button>
+      )}
+      <PlanGenerationOverlay
+        pending={pending}
+        namespace="Onboarding.programOverlay"
+      />
+    </>
   );
 }
 

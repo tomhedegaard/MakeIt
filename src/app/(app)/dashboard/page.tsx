@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import InstallHint from "@/components/pwa/InstallHint";
 import { getSession } from "@/lib/auth";
@@ -17,7 +17,6 @@ import {
   type CrewItem,
   type MemberStats,
 } from "@/lib/data/dashboard";
-import { ensureMemberStarter } from "@/lib/data/seed-member";
 import { getMyFormChecks } from "@/lib/data/me";
 import { getLatestUnseenPromotion } from "@/lib/data/tier-events";
 import TierBanner from "@/components/app/TierBanner";
@@ -35,9 +34,9 @@ import {
 import AdaptiveReasonStrip from "@/components/adaptive/AdaptiveReasonStrip";
 import ConnectDotsStream from "@/components/dashboard/ConnectDotsStream";
 import TodayProse from "@/components/dashboard/TodayProse";
-import { demoEngineStrip } from "@/lib/adaptive/engine-strip";
-import { demoInsightStream } from "@/lib/dashboard/insight-stream";
 import { getTodayProse } from "@/lib/data/today-prose";
+import { getTodayEngineStrip } from "@/lib/data/today-engine-strip";
+import { getTodayInsightCards } from "@/lib/data/today-insights";
 import { buildHrvBandView, qualitativeFromBucket } from "@/lib/hrv/band";
 import { demoSteadySeries } from "@/lib/hrv/demo-series";
 import { loadDotsCopy, loadStripCopy } from "@/lib/ui/sprint-a-copy";
@@ -80,7 +79,7 @@ function todayCardFromMock(): TodayCard {
   };
 }
 
-function fmtUpcomingDate(iso: string | null, t: Translator): string {
+function fmtUpcomingDate(iso: string | null, t: Translator, locale: string): string {
   if (!iso) return t("upcoming.soon");
   const d = new Date(iso + "T00:00:00");
   const today = new Date();
@@ -89,7 +88,7 @@ function fmtUpcomingDate(iso: string | null, t: Translator): string {
   tomorrow.setDate(today.getDate() + 1);
   if (d.getTime() === today.getTime()) return t("upcoming.today");
   if (d.getTime() === tomorrow.getTime()) return t("upcoming.tomorrow");
-  return d.toLocaleDateString("da-DK", { weekday: "short" }).replace(".", "");
+  return d.toLocaleDateString(locale === "en" ? "en-GB" : "da-DK", { weekday: "short" }).replace(".", "");
 }
 
 type HrvChipData = {
@@ -136,6 +135,7 @@ async function getHrvChipData(
 
 export default async function TodayPage() {
   const member = (await getSession())!;
+  const locale = await getLocale();
   const t = await getTranslations("Dashboard");
   const tHrv = await getTranslations("Hrv.band.qualitative");
   const chipLabels = {
@@ -147,22 +147,19 @@ export default async function TodayPage() {
     loadStripCopy(),
     loadDotsCopy(),
   ]);
-  const engineStrip = demoEngineStrip();
-
-  let today: TodayCard;
+  let today: TodayCard | null;
   let upcoming: UpcomingSession[] | null = null;
   let feed: CrewItem[] | null = null;
   let stats: MemberStats | null = null;
 
   if (SUPABASE_ENABLED) {
-    await ensureMemberStarter(member.id);
-    const [t, u, f, s] = await Promise.all([
+    const [tCard, u, f, s] = await Promise.all([
       getTodayCard(member.id),
       getUpcomingSessions(member.id, 3),
       getRecentFeed(3),
       getMemberStats(member.id),
     ]);
-    today = t ?? todayCardFromMock();
+    today = tCard;
     upcoming = u;
     feed = f;
     stats = s;
@@ -170,7 +167,10 @@ export default async function TodayPage() {
     today = todayCardFromMock();
   }
 
-  const insightCards = demoInsightStream(`/session/${today.id}`);
+  const [engineStrip, insightCards] = await Promise.all([
+    getTodayEngineStrip(member.id),
+    getTodayInsightCards(member.id, today ? `/session/${today.id}` : null),
+  ]);
 
   // Coach-review notification: surface a banner when there are new
   // form-checks with coach notes the member hasn't seen yet. (No
@@ -211,7 +211,9 @@ export default async function TodayPage() {
         </div>
         <div className="text-right shrink-0">
           <div className="eyebrow mb-1">{t("greeting.streakLabel")}</div>
-          <div className="numeric text-3xl">{stats?.streakDays ?? 12}</div>
+          <div className="numeric text-3xl">
+            {stats?.streakDays ?? (SUPABASE_ENABLED ? 0 : 12)}
+          </div>
           <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">{t("greeting.streakUnit")}</div>
         </div>
       </header>
@@ -270,6 +272,7 @@ export default async function TodayPage() {
       ) : null}
 
       {/* Today's session */}
+      {today ? (
       <section
         aria-label={t("todaySession.ariaLabel")}
         data-domain="body"
@@ -346,13 +349,36 @@ export default async function TodayPage() {
           </Link>
         </div>
       </section>
+      ) : (
+      <section
+        aria-label={t("todaySession.ariaLabel")}
+        data-domain="body"
+        className="surface-2 rounded-2xl overflow-hidden"
+      >
+        <div className="px-5 pt-5 pb-4">
+          <span className="domain-stroke mb-3" aria-hidden />
+          <div className="eyebrow eyebrow-domain mb-3">{t("todaySession.emptyEyebrow")}</div>
+          <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
+            {t("todaySession.emptyTitle")}
+          </h2>
+          <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-md">
+            {t("todaySession.emptyBody")}
+          </p>
+        </div>
+        <div className="p-4 lg:p-5">
+          <Link href="/coaching" className="btn btn-primary btn-xl">
+            {t("todaySession.emptyCta")}
+          </Link>
+        </div>
+      </section>
+      )}
 
       {/* Quick stats */}
       <section className="grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
         <div className="bg-bg p-4 lg:p-5">
           <div className="eyebrow mb-2">{t("stats.volume")}</div>
           <div className="numeric text-2xl lg:text-3xl">
-            {stats ? formatVolume(stats.volumeKg) : "84.2K"}
+            {stats ? formatVolume(stats.volumeKg) : SUPABASE_ENABLED ? "0" : "84.2K"}
           </div>
           <div className="text-[10px] font-mono text-fg-faint mt-1 flex items-center gap-1">
             <span>{t("stats.volumeMeta")}</span>
@@ -364,7 +390,7 @@ export default async function TodayPage() {
         <div className="bg-bg p-4 lg:p-5">
           <div className="eyebrow mb-2">{t("stats.prs")}</div>
           <div className="numeric text-2xl lg:text-3xl">
-            {stats ? String(stats.prs4w).padStart(2, "0") : "03"}
+            {stats ? String(stats.prs4w).padStart(2, "0") : SUPABASE_ENABLED ? "00" : "03"}
           </div>
           <div className="text-[10px] font-mono text-fg-faint mt-1 flex items-center gap-1">
             <span>{t("stats.prsMeta")}</span>
@@ -376,7 +402,7 @@ export default async function TodayPage() {
         <div className="bg-bg p-4 lg:p-5">
           <div className="eyebrow mb-2">{t("stats.reps")}</div>
           <div className="numeric text-2xl lg:text-3xl">
-            {stats ? formatReps(stats.repsBalance) : "1.420"}
+            {stats ? formatReps(stats.repsBalance, locale) : SUPABASE_ENABLED ? "0" : "1.420"}
           </div>
           <div className="text-[10px] font-mono text-fg-faint mt-1">{member.tier}</div>
         </div>
@@ -398,7 +424,7 @@ export default async function TodayPage() {
                   href={`/session/${row.id}`}
                   className="px-4 py-3 flex items-center gap-4 lift"
                 >
-                  <span className="eyebrow w-16 shrink-0">{fmtUpcomingDate(row.scheduledFor, t)}</span>
+                  <span className="eyebrow w-16 shrink-0">{fmtUpcomingDate(row.scheduledFor, t, locale)}</span>
                   <span className="flex-1 text-sm text-fg/90 truncate">{row.title}</span>
                   <span className="numeric text-fg-faint text-xs shrink-0">{row.estimatedMinutes}m</span>
                 </Link>
@@ -433,13 +459,13 @@ export default async function TodayPage() {
         {feed && feed.length > 0 ? (
           <ul className="space-y-2.5">
             {feed.map((row) => (
-              <CrewRow key={row.id} {...row} />
+              <CrewRow key={row.id} {...row} prLabel={t("crew.prBadge")} />
             ))}
           </ul>
         ) : feed === null ? (
           <ul className="space-y-2.5">
             {mockFeed(t).map((row, i) => (
-              <CrewRow key={i} id={String(i)} {...row} />
+              <CrewRow key={i} id={String(i)} {...row} prLabel={t("crew.prBadge")} />
             ))}
           </ul>
         ) : (
@@ -456,8 +482,8 @@ export default async function TodayPage() {
 }
 
 function CrewRow({
-  who, what, when, pr,
-}: Pick<CrewItem, "id" | "who" | "what" | "when" | "pr"> & { tier?: string }) {
+  who, what, when, pr, prLabel,
+}: Pick<CrewItem, "id" | "who" | "what" | "when" | "pr"> & { tier?: string; prLabel: string }) {
   return (
     <li className="surface-2 rounded-lg p-4 flex items-center gap-3">
       <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
@@ -472,7 +498,7 @@ function CrewRow({
       </div>
       {pr ? (
         <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 shrink-0">
-          ★ PR
+          {prLabel}
         </span>
       ) : null}
     </li>
@@ -531,8 +557,8 @@ function formatVolume(kg: number): string {
   return `${(kg / 1000).toFixed(1).replace(".", ",")}K`;
 }
 
-function formatReps(n: number): string {
-  return new Intl.NumberFormat("da-DK").format(n);
+function formatReps(n: number, locale = "da"): string {
+  return new Intl.NumberFormat(locale === "en" ? "en-GB" : "da-DK").format(n);
 }
 
 /**

@@ -1,6 +1,6 @@
 {
   "links": {
-    "today": "Today",
+    "today": "I dag",
     "train": "Træn",
     "food": "Mad",
     "crew": "Crew",
@@ -10,12 +10,13 @@
     "me": "Mig",
     "messages": "Beskeder",
     "chat": "Chat",
-    "science": "Science"
+    "science": "Forskning"
   },
   "shell": {
     "coachBadge": "Coach",
     "coachConsole": "Konsol",
-    "tier": "Tier",
+    "tier": "Niveau",
+    "demoBanner": "Demo · eksempeldata — ikke dit personlige crew",
     "logout": "Log ud",
     "myProfile": "Min profil",
     "unread": "{count} ulæste",
@@ -40,7 +41,7 @@
         "body": "Fire skærme — så ved du hvor alt ligger."
       },
       "today": {
-        "eyebrow": "01 · Today",
+        "eyebrow": "01 · I dag",
         "title": "Dagens session ligger her.",
         "body": "Hver morgen åbner du Today. Tap det store \"Start session\"-kort og du er i gang. Vægtene er sat ud fra dine 1RM'er."
       },
@@ -51,8 +52,8 @@
       },
       "formCheck": {
         "eyebrow": "03 · Form-check",
-        "title": "AI vurderer din teknik.",
-        "body": "Tap \"Form-check med AI\" inde i en session. Optag eller upload — du får svar inden for sekunder. Mikael godkender personligt inden 24 timer."
+        "title": "Teknikken bliver tjekket.",
+        "body": "Tap \"Form-check\" inde i en session. Optag eller upload. Motoren giver et første bud; Munk skriver under inden 24 timer."
       },
       "reps": {
         "eyebrow": "04 · Reps",

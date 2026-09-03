@@ -34,5 +34,28 @@
     "eyebrow": "Recovery",
     "title": "Trend",
     "subtitle": "Your HRV over time — the daily reading, your 7-day mean and your normal range."
+  },
+  "subNav": {
+    "aria": "HRV",
+    "today": "Today",
+    "trends": "Trend",
+    "insights": "Insight",
+    "learn": "Learn"
+  },
+  "page": {
+    "eyebrow": "Heart",
+    "title": "HRV",
+    "subtitle": "Your heart-rate variability — a daily read on how ready your body is to train.",
+    "connectEyebrow": "Get started",
+    "connectTitle": "Let HRV run in the background.",
+    "connectBody": "HRV — heart-rate variability — tells how recovered you are. Connect a wearable and MakeIt syncs your HRV every morning. No manual reading, no extra routine — it is just there when you wake up.",
+    "connectStep1Title": "Connect your wearable",
+    "connectStep1Body": "One tap — you approve access with your wearable provider.",
+    "connectStep2Title": "HRV syncs every morning",
+    "connectStep2Body": "MakeIt fetches last night's reading automatically. You do nothing.",
+    "connectStep3Title": "We build your baseline",
+    "connectStep3Body": "The first couple of weeks MakeIt learns your normal — then you see readiness.",
+    "connectCta": "Connect your wearable",
+    "connectAppleNote": "Apple Watch support arrives with the MakeIt iPhone app."
   }
 }

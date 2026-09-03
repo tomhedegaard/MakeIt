@@ -50,23 +50,33 @@ export default async function NutritionPage({
   const member = (await getSession())!;
   const t = await getTranslations("Nutrition");
   const weekStart = currentIsoMonday();
+  // Cheap first-visit gate before the rest of the page's fetches so
+  // /nutrition → /nutrition/setup is not a multi-second blank.
+  const [profile, plan, latestWeight] = await Promise.all([
+    getOrCreateNutritionProfile(member.id),
+    getCurrentPlan(member.id),
+    getLatestWeight(member.id),
+  ]);
+  const profileFresh =
+    !plan &&
+    !latestWeight &&
+    (!profile?.goal || profile.goal === "maintain") &&
+    !profile?.dailyKcalTarget;
+  if (profileFresh) {
+    redirect("/nutrition/setup");
+  }
+
   const [
-    profile,
-    plan,
     checkin,
     intake,
-    latestWeight,
     weightTrend,
     planLimit,
     swapLimit,
     skipDayIndices,
     kcalAdjustGate,
   ] = await Promise.all([
-    getOrCreateNutritionProfile(member.id),
-    getCurrentPlan(member.id),
     getDailyCheckIn(member.id),
     getDailyIntake(member.id),
-    getLatestWeight(member.id),
     getWeightTrend(member.id),
     checkLimit(member.id, "plan_regen"),
     checkLimit(member.id, "meal_swap"),
@@ -105,14 +115,6 @@ export default async function NutritionPage({
   // null. The wizard sets the goal explicitly; if it's still at
   // the schema default AND there's no plan AND no weight, we know
   // they've never completed setup.
-  const profileFresh =
-    !plan &&
-    !latestWeight &&
-    (!profile?.goal || profile.goal === "maintain") &&
-    !profile?.dailyKcalTarget;
-  if (profileFresh) {
-    redirect("/nutrition/setup");
-  }
   const todayIndex = todayDayIndex();
 
   return (
