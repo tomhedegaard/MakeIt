@@ -1,0 +1,58 @@
+{
+  "strip": {
+    "why": "Hvorfor",
+    "attribution": "Motor · Adaptive Engine",
+    "munkNoteLabel": "Note fra Munk",
+    "steps": {
+      "hrvLow": "Hjerte — nattens HRV ligger under dit bånd",
+      "hrvVeryLow": "Hjerte — nattens HRV er langt under dit bånd",
+      "hrvInBand": "Hjerte — nattens HRV ligger i dit normalområde",
+      "sessionToday": "Krop — dagens pas er squat, topsæt @ RPE 8",
+      "lowSleep": "Sind — søvn de sidste nætter er kort",
+      "alcohol": "Kost — alkohol logget de sidste to dage",
+      "lowFeeling": "Sind — følelse logget som træt",
+      "rpeOvershoot": "Krop — sidste pas sad over planlagt RPE",
+      "rpeDrift": "Krop — RPE er steget over de sidste pas",
+      "mentalLoad": "Sind — mental belastning over flere dage",
+      "formCheck": "Krop — form-check peger på tilbageskridt",
+      "missed": "Krop — et eller flere pas er sprunget over",
+      "noAlcohol": "Kost — ingen alkohol logget de sidste to dage",
+      "mindUnread": "Sind — intet mind-check i dag endnu"
+    }
+  },
+  "dots": {
+    "eyebrow": "I dag",
+    "title": "Sammenhængene",
+    "moreAbout": "Sig mere om",
+    "dismiss": "Skjul",
+    "snooze": "I morgen",
+    "domains": {
+      "heart": "Hjerte",
+      "body": "Krop",
+      "food": "Kost",
+      "mind": "Sind"
+    },
+    "cards": {
+      "heart_body_low": {
+        "sentence": "Nattens HRV ligger under dit bånd — Motoren letter dagens squat-topsæt.",
+        "cta": "Åbn dagens pas"
+      },
+      "heart_body_ro": {
+        "sentence": "Nattens HRV ligger over dit bånd — kroppen er klar, og dagens pas kører som planlagt.",
+        "cta": "Åbn dagens pas"
+      },
+      "heart_mind_tired": {
+        "sentence": "Lav HRV og intet mind-check endnu — restitutionen mangler det sidste signal.",
+        "cta": "Tag mind-check"
+      },
+      "body_food_session": {
+        "sentence": "Squat-dag og kosten omkring passet: hold måltidet simpelt, så Krop og Kost trækker samme vej.",
+        "cta": "Se kosten"
+      },
+      "mind_body_check": {
+        "sentence": "Sindet er ikke tjekket ind — dagens pas venter på det signal, før Motoren kan justere.",
+        "cta": "Tag mind-check"
+      }
+    }
+  }
+}

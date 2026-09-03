@@ -75,6 +75,19 @@ export default function TrendChart({
           />
         ) : null}
 
+        {/* 1b. Dashed personal average — the centre of the band. */}
+        {model.personalAvg ? (
+          <path
+            d={model.personalAvg.path}
+            fill="none"
+            stroke="var(--domain, currentColor)"
+            strokeWidth={1}
+            strokeDasharray="5 4"
+            strokeOpacity={0.72}
+            strokeLinecap="round"
+          />
+        ) : null}
+
         {/* 2. 7-day mean line — primary data ink. */}
         {model.meanLinePath ? (
           <path

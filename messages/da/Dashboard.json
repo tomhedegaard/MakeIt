@@ -74,6 +74,10 @@
     "up": "Op {pct} procent",
     "down": "Ned {pct} procent"
   },
+  "hrvChip": {
+    "eyebrow": "HRV readiness",
+    "connect": "Forbind wearable"
+  },
   "installHint": {
     "eyebrow": "Få appen",
     "title": "MakeIt på hjemmeskærmen",

@@ -32,6 +32,13 @@ import {
   getTodayMentalCoachOutput,
   hasMindCheckToday,
 } from "@/lib/data/mind";
+import AdaptiveReasonStrip from "@/components/adaptive/AdaptiveReasonStrip";
+import ConnectDotsStream from "@/components/dashboard/ConnectDotsStream";
+import { demoEngineStrip } from "@/lib/adaptive/engine-strip";
+import { demoInsightStream } from "@/lib/dashboard/insight-stream";
+import { buildHrvBandView, qualitativeFromBucket } from "@/lib/hrv/band";
+import { demoSteadySeries } from "@/lib/hrv/demo-series";
+import { loadDotsCopy, loadStripCopy } from "@/lib/ui/sprint-a-copy";
 
 type Translator = Awaited<ReturnType<typeof getTranslations<"Dashboard">>>;
 
@@ -83,27 +90,27 @@ function fmtUpcomingDate(iso: string | null, t: Translator): string {
   return d.toLocaleDateString("da-DK", { weekday: "short" }).replace(".", "");
 }
 
-/** One-word Danish readiness labels for the compact dashboard chip. */
-const HRV_CHIP_LABEL: Record<ReadinessBucket, string> = {
-  very_low: "Lav",
-  low: "Lav",
-  normal: "Normal",
-  high: "Høj",
-  very_high: "Høj",
-};
-
 type HrvChipData = {
   rmssdMs: number;
   readiness: string | null;
 };
 
 /**
- * Latest HRV reading for the dashboard chip. Returns null in demo mode
- * or when the member has no synced readings (no wearable connection /
- * first sync pending) — the chip then shows a "Forbind wearable" CTA.
+ * Latest HRV reading for the dashboard chip. Demo mode uses the
+ * steady fixture so Heart is visible without a wearable.
  */
-async function getHrvChipData(memberId: string): Promise<HrvChipData | null> {
-  if (!SUPABASE_ENABLED) return null;
+async function getHrvChipData(
+  memberId: string,
+  labels: Record<"ro" | "midt" | "lav", string>,
+): Promise<HrvChipData | null> {
+  if (!SUPABASE_ENABLED) {
+    const view = buildHrvBandView(demoSteadySeries());
+    const q = view.qualitative;
+    return {
+      rmssdMs: view.latestMs ?? 0,
+      readiness: q ? labels[q] : null,
+    };
+  }
   const supabase = await createClient();
   if (!supabase) return null;
 
@@ -118,15 +125,27 @@ async function getHrvChipData(memberId: string): Promise<HrvChipData | null> {
   if (!data) return null;
 
   const bucket = (data.readiness_bucket as ReadinessBucket | null) ?? null;
+  const q = qualitativeFromBucket(bucket);
   return {
     rmssdMs: data.rmssd_ms as number,
-    readiness: bucket ? HRV_CHIP_LABEL[bucket] : null,
+    readiness: q ? labels[q] : null,
   };
 }
 
 export default async function TodayPage() {
   const member = (await getSession())!;
   const t = await getTranslations("Dashboard");
+  const tHrv = await getTranslations("Hrv.band.qualitative");
+  const chipLabels = {
+    ro: tHrv("ro"),
+    midt: tHrv("midt"),
+    lav: tHrv("lav"),
+  };
+  const [stripCopy, dotsCopy] = await Promise.all([
+    loadStripCopy(),
+    loadDotsCopy(),
+  ]);
+  const engineStrip = demoEngineStrip();
 
   let today: TodayCard;
   let upcoming: UpcomingSession[] | null = null;
@@ -149,6 +168,8 @@ export default async function TodayPage() {
     today = todayCardFromMock();
   }
 
+  const insightCards = demoInsightStream(`/session/${today.id}`);
+
   // Coach-review notification: surface a banner when there are new
   // form-checks with coach notes the member hasn't seen yet. (No
   // "read" state in v1, so we just show count of reviewed-with-notes.)
@@ -165,7 +186,7 @@ export default async function TodayPage() {
   const promotion = await getLatestUnseenPromotion(member.id);
 
   // HRV readiness chip: latest synced reading, or a connect CTA.
-  const hrv = await getHrvChipData(member.id);
+  const hrv = await getHrvChipData(member.id, chipLabels);
 
   // Mind module tile (B-layer): surface today's state to the dashboard.
   const [mindChecked, coachOutput, mentalSettings] = await Promise.all([
@@ -210,7 +231,9 @@ export default async function TodayPage() {
         currentStreak={mentalSettings.current_streak_days}
       />
 
-      <HrvChip hrv={hrv} />
+      <HrvChip hrv={hrv} eyebrow={t("hrvChip.eyebrow")} connect={t("hrvChip.connect")} />
+
+      <ConnectDotsStream cards={insightCards} copy={dotsCopy} />
 
       <InstallHint />
 
@@ -263,6 +286,8 @@ export default async function TodayPage() {
           </h2>
           <p className="text-fg-dim text-sm md:text-base leading-relaxed">{today.title}</p>
         </div>
+
+        <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
 
         <div className="grid grid-cols-3 gap-px bg-line border-b hairline">
           <div className="bg-bg-2 px-4 py-3">
@@ -454,7 +479,15 @@ function CrewRow({
  * it shows the latest RMSSD + a one-word readiness label; otherwise it
  * surfaces a "Forbind wearable" CTA (demo mode / no connection).
  */
-function HrvChip({ hrv }: { hrv: HrvChipData | null }) {
+function HrvChip({
+  hrv,
+  eyebrow,
+  connect,
+}: {
+  hrv: HrvChipData | null;
+  eyebrow: string;
+  connect: string;
+}) {
   return (
     <Link
       href="/hrv"
@@ -464,7 +497,7 @@ function HrvChip({ hrv }: { hrv: HrvChipData | null }) {
       <div className="flex items-center gap-4">
         <DomainMark domain="heart" className="size-6 text-domain shrink-0" />
         <div className="flex-1 min-w-0">
-          <div className="eyebrow eyebrow-domain mb-1.5">HRV readiness</div>
+          <div className="eyebrow eyebrow-domain mb-1.5">{eyebrow}</div>
           {hrv ? (
             <div className="flex items-baseline gap-2">
               <span className="numeric text-2xl lg:text-3xl">
@@ -476,7 +509,7 @@ function HrvChip({ hrv }: { hrv: HrvChipData | null }) {
               ) : null}
             </div>
           ) : (
-            <div className="text-sm text-fg/90">Forbind wearable</div>
+            <div className="text-sm text-fg/90">{connect}</div>
           )}
         </div>
         <span className="text-fg-dim group-hover:text-fg shrink-0" aria-hidden>

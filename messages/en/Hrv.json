@@ -1,0 +1,38 @@
+{
+  "band": {
+    "eyebrow": "Heart",
+    "latest": "HRV this morning",
+    "unit": "ms",
+    "avg": "Your avg",
+    "qualitative": {
+      "ro": "Calm",
+      "midt": "Mid",
+      "lav": "Low"
+    },
+    "empty": {
+      "title": "Your band is waiting on the first nights",
+      "body": "When the overnight reading lands, we start gathering your personal normal range. No alarm — just an empty track."
+    },
+    "building": {
+      "title": "Building your band",
+      "body": "7 nights build your personal band. No alarm — just data collecting.",
+      "nights": "{count} of {needed} nights"
+    },
+    "steady": {
+      "eyebrow": "Your normal range"
+    },
+    "engine": {
+      "below": "The engine read last night's HRV below your band and eases today's squat top set.",
+      "above": "The engine read last night's HRV above your band — the body is ready; today's session runs as planned."
+    },
+    "disclaimer": "HRV is a recovery signal — not a diagnosis.",
+    "legendBand": "Your band",
+    "legendAvg": "Your avg",
+    "rangeLabel": "Personal normal range"
+  },
+  "trends": {
+    "eyebrow": "Recovery",
+    "title": "Trend",
+    "subtitle": "Your HRV over time — the daily reading, your 7-day mean and your normal range."
+  }
+}

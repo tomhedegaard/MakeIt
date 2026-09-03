@@ -6,7 +6,7 @@ import { getSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { mockListReadings } from "@/lib/hrv/mock";
-import { getTodayLifestyleLogs, getHrvSyncProgress } from "@/lib/data/hrv";
+import { getTodayLifestyleLogs, getHrvSyncProgress, getHrvReadingSeries } from "@/lib/data/hrv";
 import {
   getAdaptiveConsentEligibility,
   getRecentAdaptations,
@@ -16,7 +16,11 @@ import AdaptationHistory from "@/components/adaptive/AdaptationHistory";
 import type { ReadinessBucket, WarmUpState } from "@/lib/hrv/types";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
 import ReadinessLadder from "@/components/hrv/ReadinessLadder";
+import HrvBandHero from "@/components/hrv/HrvBandHero";
 import LifestyleLogCard from "@/components/hrv/LifestyleLogCard";
+import { buildHrvBandView } from "@/lib/hrv/band";
+import { demoSteadySeries } from "@/lib/hrv/demo-series";
+import { loadHrvBandCopy } from "@/lib/ui/sprint-a-copy";
 import { HrvSyncStreakLine } from "@/components/hrv/HrvSyncStreakLine";
 import { HrvMilestoneToast } from "@/components/hrv/HrvMilestoneToast";
 import { HrvWelcomeBonusToast } from "@/components/hrv/HrvWelcomeBonusToast";
@@ -169,14 +173,24 @@ export default async function HrvPage() {
   const member = await getSession();
   if (!member) redirect("/login");
 
+  const series = SUPABASE_ENABLED
+    ? await getHrvReadingSeries(member.id)
+    : demoSteadySeries();
+  const band = buildHrvBandView(series);
+  const bandCopy = await loadHrvBandCopy({
+    count: band.nightsCollected,
+    needed: band.nightsNeeded,
+  });
+
   const state = SUPABASE_ENABLED
     ? await resolveConnectedState(member.id)
     : ({
         connected: false,
         needsReauth: false,
         provider: null,
-        // Demo mode: there's no connection, so this only feeds the
-        // (unused) reading count. Kept consistent for completeness.
+        // Demo mode: fixture series below drives the band hero so Munk
+        // can walk Heart without a wearable. The connect wall stays
+        // available for real empty members.
         readingCount: mockListReadings("demo-member").length,
         latest: null,
       } satisfies HrvState);
@@ -263,7 +277,9 @@ export default async function HrvPage() {
           </div>
         ) : null}
 
-        {!state.connected ? (
+        {!SUPABASE_ENABLED || band.state !== "empty" ? (
+          <HrvBandHero view={band} copy={bandCopy} />
+        ) : !state.connected ? (
           <StateNotConnected />
         ) : state.latest && state.latest.warmUpState !== "active" ? (
           <StateWarmingUp

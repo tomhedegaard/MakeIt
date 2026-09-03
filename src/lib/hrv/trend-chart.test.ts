@@ -60,6 +60,27 @@ describe("buildTrendChartModel", () => {
     }
   });
 
+  it("draws a dashed personal-avg line at the baseline mean", () => {
+    const readings = [reading(1, 3.5), reading(2, 3.6), reading(3, 3.4)];
+    const m = buildTrendChartModel(readings, { width: 600, height: 200 });
+    expect(m.personalAvg).not.toBeNull();
+    expect(m.personalAvg!.path).toMatch(/^M /);
+    expect(m.personalAvg!.path).toMatch(/ L /);
+    expect(m.personalAvg!.y).toBeGreaterThan(0);
+    expect(m.personalAvg!.y).toBeLessThan(200);
+  });
+
+  it("omits the personal-avg line when the series is still building", () => {
+    const readings = [
+      reading(1, 3.5, {
+        baseline60dMeanLnRmssd: null,
+        baseline60dSwc: null,
+      }),
+    ];
+    const m = buildTrendChartModel(readings, { width: 600, height: 200 });
+    expect(m.personalAvg).toBeNull();
+  });
+
   it("smooths the 7-day mean with cubics and breaks on a null mean", () => {
     const readings = [
       reading(1, 3.4),
