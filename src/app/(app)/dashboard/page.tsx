@@ -34,8 +34,10 @@ import {
 } from "@/lib/data/mind";
 import AdaptiveReasonStrip from "@/components/adaptive/AdaptiveReasonStrip";
 import ConnectDotsStream from "@/components/dashboard/ConnectDotsStream";
+import TodayProse from "@/components/dashboard/TodayProse";
 import { demoEngineStrip } from "@/lib/adaptive/engine-strip";
 import { demoInsightStream } from "@/lib/dashboard/insight-stream";
+import { getTodayProse } from "@/lib/data/today-prose";
 import { buildHrvBandView, qualitativeFromBucket } from "@/lib/hrv/band";
 import { demoSteadySeries } from "@/lib/hrv/demo-series";
 import { loadDotsCopy, loadStripCopy } from "@/lib/ui/sprint-a-copy";
@@ -189,10 +191,11 @@ export default async function TodayPage() {
   const hrv = await getHrvChipData(member.id, chipLabels);
 
   // Mind module tile (B-layer): surface today's state to the dashboard.
-  const [mindChecked, coachOutput, mentalSettings] = await Promise.all([
+  const [mindChecked, coachOutput, mentalSettings, prose] = await Promise.all([
     hasMindCheckToday(member.id),
     getTodayMentalCoachOutput(member.id),
     getOrCreateMentalSettings(member.id),
+    getTodayProse(member.id),
   ]);
 
   return (
@@ -212,6 +215,8 @@ export default async function TodayPage() {
           <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">{t("greeting.streakUnit")}</div>
         </div>
       </header>
+
+      <TodayProse model={prose} />
 
       <BodyMap />
 
