@@ -192,6 +192,9 @@ describe("public trust — primary CTA", () => {
     expect(heroSrc).toContain("PUBLIC_LEARN_HREF");
     expect(heroSrc).not.toMatch(/ctaTertiary/);
     expect(heroSrc).not.toMatch(/href=["']\/login["']/);
+    const heroCopy = da.hero as Record<string, unknown>;
+    expect(heroCopy).not.toHaveProperty("ctaTertiary");
+    expect(heroCopy).not.toHaveProperty("waitlistLink");
 
     expect(navSrc).toContain("PUBLIC_WAITLIST_HREF");
     expect(navSrc).toContain("PUBLIC_LOGIN_HREF");
