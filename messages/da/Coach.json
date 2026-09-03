@@ -28,7 +28,8 @@
   "overview": {
     "eyebrow": "Coach console",
     "title": "Overblik.",
-    "intro": "Hele crewets aktivitet samlet — fra form-check-kø til hvem der venter på et nyt program.",
+    "intro": "Hvem der har brug for dig i dag — derefter crewets aktivitet.",
+    "inboxOpen": "Åbn hele indbakken →",
     "kpiMembers": "Medlemmer",
     "kpiActivePrograms": "Aktive programmer",
     "kpiPendingFormChecks": "Form-checks i kø",
@@ -46,6 +47,28 @@
     "queueEmpty": "Køen er tom.",
     "formCheckFallback": "Form-check",
     "openQueue": "Åbn køen →"
+  },
+  "inbox": {
+    "metaTitle": "Indbakke · Coach",
+    "eyebrow": "Coach console",
+    "title": "Indbakke.",
+    "intro": "Én kø: hvem der har brug for et menneske nu. AI har allerede gjort det generiske.",
+    "sectionEyebrow": "I dag",
+    "sectionTitle": "Hvem har brug for dig",
+    "count": "{count, plural, one {# der venter} other {# der venter}}",
+    "emptyTitle": "Stille.",
+    "emptyBody": "Ingen åbne sager. Form-checks, HRV, motoren og Safety er tomme — og ingen er stille i 15 dage.",
+    "emptyDemoHint": "Demo — listen er tom fordi der ikke er mock-signaler åbne.",
+    "safetyUnreadable": "Safety-tabellen kan ikke læses (migration 0057 eller RLS). Det er ikke det samme som nul sager.",
+    "chipMentalSafety": "Safety",
+    "chipHrv": "HRV",
+    "chipAdaptive": "Motor",
+    "chipFormCheck": "{exercise}",
+    "chipFormCheckFallback": "Form-check",
+    "chipStale": "{days} dage",
+    "chipStaleNever": "Aldrig trænet",
+    "openItem": "Åbn sag for @{handle}",
+    "backToOverview": "← Overview"
   },
   "analytics": {
     "metaTitle": "Coach · Analytics",
