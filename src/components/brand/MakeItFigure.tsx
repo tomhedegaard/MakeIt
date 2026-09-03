@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { cn } from "@/lib/utils";
 import {
   OUTLINES,
@@ -52,25 +53,26 @@ export const ALL_DOMAINS: readonly Domain[] = ["mind", "heart", "body", "food"];
 /** Locked abdomen band in viewBox units. Groin / crotch sits ~748. */
 export const GUT_Y_MAX = 650;
 
-const FOOD_GLOW_FILTER_ID = "makeit-figure-food-glow";
-const HEART_VOLUME_GRAD_ID = "makeit-figure-heart-volume";
+const FOOD_GLOW_FILTER_BASE = "makeit-figure-food-glow";
+const HEART_VOLUME_GRAD_BASE = "makeit-figure-heart-volume";
 
 /**
  * Anatomical heart / region — person's left, viewer's right.
- * Layered volume (not a valentine). Absolute M/C so tests can lock Y.
+ * Tilted organ: wider base, apex down-right (person's left). Not a
+ * valentine (no cleft, no symmetric lobes). Absolute M/C for tests.
  */
 export const HEART_VOLUME =
-  "M392 352C378 348 366 354 360 366C354 378 356 396 362 412C368 428 380 440 396 446C412 452 430 448 440 434C450 420 448 400 440 384C432 368 418 354 404 350C400 348 396 350 392 352Z";
+  "M380 360C368 364 362 378 366 396C370 416 380 432 396 442C410 450 426 450 436 438C446 426 448 408 442 390C436 372 420 358 402 354C394 352 386 354 380 360Z";
 
-/** Inner chamber — soft organ volume, slightly inset. */
+/** Inner chamber — left-ventricle volume, slightly inset toward the apex. */
 export const HEART_CHAMBER =
-  "M396 372C386 374 380 384 382 396C384 410 394 422 406 426C418 430 428 422 430 408C432 394 424 378 410 372C404 370 400 370 396 372Z";
+  "M398 380C390 384 386 396 390 410C394 422 406 432 418 428C428 424 432 410 426 396C422 384 410 376 398 380Z";
 
-/** Anterior interventricular groove — reads as organ, not emoji cleft. */
-export const HEART_SULCUS = "M400 368C408 392 418 416 430 432";
+/** Anterior interventricular groove — diagonal toward the apex, not a cleft. */
+export const HEART_SULCUS = "M394 370C404 392 416 414 430 430";
 
-/** Great-vessel stub at the base. Keeps it from reading as a sticker. */
-export const HEART_VESSEL = "M394 354C392 342 400 336 408 340C414 344 412 354 406 358";
+/** Short ascending-vessel stem at the base — a tube, not a loop. */
+export const HEART_VESSEL = "M396 356C396 344 400 336 406 336";
 
 /**
  * J-stomach in the upper abdomen, fundus on the person's left
@@ -248,6 +250,9 @@ export default function MakeItFigure({
   /** When set, invisible SVG hot-zones teach each domain on pointer. */
   onDomainHover?: (domain: Domain | null) => void;
 }) {
+  const uid = useId().replace(/:/g, "");
+  const foodGlowFilterId = `${FOOD_GLOW_FILTER_BASE}-${uid}`;
+  const heartVolumeGradId = `${HEART_VOLUME_GRAD_BASE}-${uid}`;
   const mindOn = isOn(highlightedDomains, "mind");
   const heartOn = isOn(highlightedDomains, "heart");
   const bodyOn = isOn(highlightedDomains, "body");
@@ -273,7 +278,7 @@ export default function MakeItFigure({
     >
       <defs>
         <radialGradient
-          id={HEART_VOLUME_GRAD_ID}
+          id={heartVolumeGradId}
           cx="42%"
           cy="40%"
           r="68%"
@@ -284,7 +289,7 @@ export default function MakeItFigure({
         </radialGradient>
         {showFoodAura ? (
           <filter
-            id={FOOD_GLOW_FILTER_ID}
+            id={foodGlowFilterId}
             x="-16%"
             y="-8%"
             width="132%"
@@ -308,7 +313,7 @@ export default function MakeItFigure({
             strokeWidth="8"
             opacity="0.12"
             vectorEffect="non-scaling-stroke"
-            filter={`url(#${FOOD_GLOW_FILTER_ID})`}
+            filter={`url(#${foodGlowFilterId})`}
           />
           {/* Crisp 1px halo — non-scaling so 1px stays 1px at every size. */}
           <path
@@ -398,7 +403,7 @@ export default function MakeItFigure({
         <path
           d={HEART_VOLUME}
           data-heart-layer="volume"
-          fill={heartOn ? `url(#${HEART_VOLUME_GRAD_ID})` : "none"}
+          fill={heartOn ? `url(#${heartVolumeGradId})` : "none"}
           fillOpacity={heartOn ? heart.volumeOpacity : 0}
           stroke={heart.stroke}
           strokeWidth="1.45"
@@ -426,8 +431,9 @@ export default function MakeItFigure({
           data-heart-layer="vessel"
           fill="none"
           stroke={heart.stroke}
-          strokeWidth="1.2"
+          strokeWidth="2.2"
           strokeOpacity={heart.vesselOpacity}
+          strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
         />
       </g>

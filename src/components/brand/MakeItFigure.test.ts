@@ -101,7 +101,8 @@ describe("MakeItFigure", () => {
     expect(html).toContain('data-heart-layer="volume"');
     expect(html).toContain('data-heart-layer="chamber"');
     expect(html).toContain('data-heart-layer="sulcus"');
-    expect(html).toContain("makeit-figure-heart-volume");
+    expect(html).toContain('data-heart-layer="vessel"');
+    expect(html).toMatch(/makeit-figure-heart-volume/);
     expect(html).toContain(HEART_VOLUME.slice(0, 24));
     expect(html).not.toContain('data-heart-scale');
     expect(html).not.toContain("scale(2)");
