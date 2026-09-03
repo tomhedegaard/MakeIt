@@ -38,21 +38,22 @@ export default function PlanGenerationOverlay({
 }: {
   pending: boolean;
 }) {
+  // Unmount when idle so elapsed resets on the next run without a
+  // setState-in-effect (react-hooks/set-state-in-effect).
+  if (!pending) return null;
+  return <PlanGenerationOverlayActive />;
+}
+
+function PlanGenerationOverlayActive() {
   const t = useTranslations("Nutrition.planOverlay");
   const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
-    if (!pending) {
-      setElapsed(0);
-      return;
-    }
     const id = setInterval(() => {
       setElapsed((e) => e + 1);
     }, 1000);
     return () => clearInterval(id);
-  }, [pending]);
-
-  if (!pending) return null;
+  }, []);
 
   // Find the latest stage whose afterSec threshold has been crossed.
   const currentStage =

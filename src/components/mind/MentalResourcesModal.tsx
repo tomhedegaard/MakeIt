@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { escalateMentalSafetyAction } from "@/app/(app)/mind/journal/escalate-actions";
 
@@ -19,20 +19,19 @@ export default function MentalResourcesModal({
   open: boolean;
   onClose: () => void;
 }) {
+  // Unmount the dialog when closed so the next open starts on
+  // "resources" without a setState-in-effect reset.
+  if (!open) return null;
+  return <MentalResourcesDialog onClose={onClose} />;
+}
+
+function MentalResourcesDialog({ onClose }: { onClose: () => void }) {
   const t = useTranslations("Mind.safety");
   const [mode, setMode] = useState<"resources" | "escalate" | "sent">("resources");
   const [persisted, setPersisted] = useState(false);
   const [summary, setSummary] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
-
-  useEffect(() => {
-    if (!open) return;
-    setMode("resources");
-    setPersisted(false);
-    setSummary("");
-    setError(null);
-  }, [open]);
 
   function close() {
     onClose();

@@ -26,6 +26,8 @@ export default function LogWeightCard({
   const t = useTranslations("Nutrition.logWeight");
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
+  // Snapshot once on mount — react-hooks/purity forbids Date.now() during render.
+  const [now] = useState(() => Date.now());
 
   function submit(formData: FormData) {
     startTransition(async () => {
@@ -36,7 +38,7 @@ export default function LogWeightCard({
 
   const ageDays = latestLoggedAt
     ? Math.floor(
-        (Date.now() - Date.parse(latestLoggedAt)) / (1000 * 60 * 60 * 24),
+        (now - Date.parse(latestLoggedAt)) / (1000 * 60 * 60 * 24),
       )
     : null;
 
