@@ -106,10 +106,14 @@ export function observerOptions(): IntersectionObserverInit {
   return { threshold: 0, rootMargin: "20% 0px 20% 0px" };
 }
 
-export function initReveal(doc: Document, win: Window): () => void {
-  const nodes = collectRevealNodes(doc);
+type RevealWindow = Window &
+  typeof globalThis & {
+    IntersectionObserver: typeof IntersectionObserver;
+  };
+
+export function initReveal(doc: Document, win: RevealWindow): () => void {
   const reduced = prefersReducedMotion(win);
-  const hasIO = "IntersectionObserver" in win;
+  const hasIO = typeof win.IntersectionObserver === "function";
 
   const { showNow, mayAnimate } = planReveal({
     root: doc,
@@ -126,7 +130,7 @@ export function initReveal(doc: Document, win: Window): () => void {
 
   mayAnimate.forEach((el) => el.classList.add(REVEAL_PENDING));
 
-  const io = new win.IntersectionObserver((entries) => {
+  const io = new win.IntersectionObserver((entries: IntersectionObserverEntry[]) => {
     for (const entry of entries) {
       if (!entry.isIntersecting) continue;
       markVisible(entry.target);

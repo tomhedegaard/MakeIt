@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import Container from "@/components/Container";
 import RepsSimulator from "@/components/marketing/RepsSimulator";
 import { PUBLIC_ACCESS_HREF } from "@/lib/marketing/public-cta";
