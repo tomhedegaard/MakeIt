@@ -74,6 +74,22 @@
     "up": "Up {pct} percent",
     "down": "Down {pct} percent"
   },
+  "todayProse": {
+    "ariaLabel": "Today",
+    "eyebrow": "Today",
+    "hrvLav": "HRV is low this morning — take it easy at the top.",
+    "hrvRo": "HRV is settled. Your body is with you today.",
+    "hrvMidt": "HRV sits in your middle band.",
+    "sessionAssigned": "There is a session waiting today.",
+    "sessionAssignedWithLabel": "{label} is waiting.",
+    "sessionDone": "The session is done. Good work.",
+    "sessionDoneWithLabel": "{label} is done. Good work.",
+    "sessionRest": "Today is rest.",
+    "sessionSkipped": "Today's session was skipped. That's okay.",
+    "mindNudge": "A mind-check takes 60 seconds when you are ready.",
+    "mindLogged": "Mind-check is logged.",
+    "quiet": "Quiet start. When the signals land, we write here."
+  },
   "hrvChip": {
     "eyebrow": "HRV readiness",
     "connect": "Connect a wearable"
