@@ -36,7 +36,7 @@
     "eyebrow": "Betaling",
     "title": "Abonnement & betaling",
     "description": "Administrér dit Crew-medlemskab og 1:1 add-on. Sikker checkout via Stripe.",
-    "open": "Åbn billing →"
+    "open": "Åbn betaling →"
   },
   "formChecks": {
     "ariaLabel": "Mine form-checks",
