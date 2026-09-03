@@ -100,7 +100,7 @@ describe("public trust — FAQ count", () => {
 
 describe("public trust — locale lockstep", () => {
   it("keeps da and en Marketing keys in lockstep", () => {
-    expect(keysOf(da)).toEqual(keysOf(en));
+    expect(keysOf(da).sort()).toEqual(keysOf(en).sort());
   });
 });
 
