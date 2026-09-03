@@ -126,10 +126,12 @@ export type MemberDetail = {
  * Demo-mode mocks
  * ---------------------------------------------------------------- */
 
+const MOCK_FORM_CHECKS: FormCheckRow[] = demoFormQueueItems();
+
 const MOCK_OVERVIEW: CoachOverview = {
   totalMembers: 412,
   activeAssignments: 188,
-    pendingFormChecks: pendingFormQueue(MOCK_FORM_CHECKS).length,
+  pendingFormChecks: pendingFormQueue(MOCK_FORM_CHECKS).length,
   sessionsThisWeek: 642,
   pendingRedemptions: 3,
 };
@@ -150,8 +152,6 @@ const MOCK_MEMBERS: MemberSummary[] = [
   { id: "m-tobias",   handle: "tobias",     tier: "Athlete", programCode: "DL-06",  programWeek: 3, lastSessionDate: "2026-05-04" },
   { id: "m-anders",   handle: "anders",     tier: "Lifter",  programCode: null,     programWeek: null, lastSessionDate: null },
 ];
-
-const MOCK_FORM_CHECKS: FormCheckRow[] = demoFormQueueItems();
 
 const MOCK_HRV_ALERTS: HrvAlertRow[] = [
   {
