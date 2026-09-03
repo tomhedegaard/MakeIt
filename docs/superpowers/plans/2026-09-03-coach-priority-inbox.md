@@ -18,10 +18,11 @@
 ## Steps
 
 - [x] Spec
-- [ ] Pure merge + vitest
-- [ ] Data composer `getCoachPriorityInbox()`
-- [ ] i18n da+en
-- [ ] `PriorityInboxList` + Overview section + `/coach/inbox`
-- [ ] `npm test`
-- [ ] Demo verify MUNK-01 (browser)
-- [ ] PR against main — body lists verified vs assumed signals
+- [x] Pure merge + vitest
+- [x] Data composer `getCoachPriorityInbox()`
+- [x] i18n da+en
+- [x] `PriorityInboxList` + Overview section + `/coach/inbox`
+- [x] `npm test` (787 passed, 3 skipped)
+- [x] Demo verify MUNK-01 (browser)
+- [x] PR against main — body lists verified vs assumed signals
+- [x] CI lint: `ConnectDotsStream` setState-in-effect (landed med #54, blokerede denne PR)

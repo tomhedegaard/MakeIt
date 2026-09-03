@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
 import DomainMark, { type Domain } from "@/components/brand/DomainMark";
 import type {
@@ -20,30 +20,56 @@ export type DotsCopy = {
 };
 
 const STORAGE_KEY = "mi-adapt-dots";
+const SAME_TAB_EVENT = "makeit:adapt-dots-changed";
 
 type Stored = { hidden: string[]; snoozedUntil: Record<string, string> };
+
+const EMPTY_STORE: Stored = { hidden: [], snoozedUntil: {} };
+const EMPTY_JSON = JSON.stringify(EMPTY_STORE);
 
 function todayIso(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-function readStore(): Stored {
-  if (typeof window === "undefined") return { hidden: [], snoozedUntil: {} };
+function parseStore(raw: string): Stored {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { hidden: [], snoozedUntil: {} };
     const parsed = JSON.parse(raw) as Stored;
     return {
       hidden: Array.isArray(parsed.hidden) ? parsed.hidden : [],
       snoozedUntil: parsed.snoozedUntil ?? {},
     };
   } catch {
-    return { hidden: [], snoozedUntil: {} };
+    return EMPTY_STORE;
   }
 }
 
-function writeStore(next: Stored) {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+function readSnapshot(): string {
+  if (typeof window === "undefined") return EMPTY_JSON;
+  try {
+    return window.localStorage.getItem(STORAGE_KEY) ?? EMPTY_JSON;
+  } catch {
+    return EMPTY_JSON;
+  }
+}
+
+function subscribeToStorage(callback: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener("storage", callback);
+  window.addEventListener(SAME_TAB_EVENT, callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener(SAME_TAB_EVENT, callback);
+  };
+}
+
+function persist(next: Stored) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    window.dispatchEvent(new Event(SAME_TAB_EVENT));
+  } catch {
+    // localStorage full or disabled — drop silently
+  }
 }
 
 function isVisible(card: InsightCardModel, store: Stored): boolean {
@@ -63,29 +89,23 @@ export default function ConnectDotsStream({
   cards: InsightCardModel[];
   copy: DotsCopy;
 }) {
-  const [store, setStore] = useState<Stored>({ hidden: [], snoozedUntil: {} });
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    setStore(readStore());
-    setReady(true);
-  }, []);
-
-  const visible = ready ? cards.filter((c) => isVisible(c, store)) : cards;
+  const storeJson = useSyncExternalStore(
+    subscribeToStorage,
+    readSnapshot,
+    () => EMPTY_JSON,
+  );
+  const store = useMemo(() => parseStore(storeJson), [storeJson]);
+  const visible = cards.filter((c) => isVisible(c, store));
 
   function hide(id: string) {
-    const next = { ...store, hidden: [...store.hidden, id] };
-    setStore(next);
-    writeStore(next);
+    persist({ ...store, hidden: [...store.hidden, id] });
   }
 
   function snooze(id: string) {
-    const next = {
+    persist({
       ...store,
       snoozedUntil: { ...store.snoozedUntil, [id]: todayIso() },
-    };
-    setStore(next);
-    writeStore(next);
+    });
   }
 
   if (visible.length === 0) return null;
