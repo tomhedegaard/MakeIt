@@ -19,11 +19,11 @@
 
 ## Steps
 
-- [ ] Spec
-- [ ] Plan
-- [ ] Pure builder + vitest (`src/lib/dashboard/today-prose.ts`)
-- [ ] `getTodaySessionSignal` + composer `getTodayProse()`
-- [ ] i18n da+en + `TodayProse` + wire `/dashboard`
-- [ ] `npm test`
-- [ ] Demo verify MUNK-01 (browser)
-- [ ] PR against main — body lists verified vs assumed signals
+- [x] Spec
+- [x] Plan
+- [x] Pure builder + vitest (`src/lib/dashboard/today-prose.ts`)
+- [x] `getTodaySessionSignal` + composer `getTodayProse()`
+- [x] i18n da+en + `TodayProse` + wire `/dashboard`
+- [x] `npm test` (803 passed, 3 skipped)
+- [x] Demo verify MUNK-01 (browser)
+- [x] PR against main — body lists verified vs assumed signals
