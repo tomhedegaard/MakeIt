@@ -21,11 +21,16 @@ import {
   type WeekDay,
 } from "@/lib/data/coaching";
 import StartProgramButton from "./StartProgramButton";
+import AdaptiveReasonStrip from "@/components/adaptive/AdaptiveReasonStrip";
+import { demoEngineStrip } from "@/lib/adaptive/engine-strip";
+import { loadStripCopy } from "@/lib/ui/sprint-a-copy";
 
 export default async function TrainPage() {
   const member = await getSession();
   const memberId = member?.id ?? null;
   const t = await getTranslations("Coaching");
+  const stripCopy = await loadStripCopy();
+  const engineStrip = demoEngineStrip();
 
   const [todayCardDb, weekDb, activeDb, libraryDb, statsDb, streakDb] =
     SUPABASE_ENABLED && memberId
@@ -143,6 +148,8 @@ export default async function TrainPage() {
           </h2>
           <p className="text-fg-dim text-sm md:text-base">{today.title}</p>
         </div>
+
+        <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
 
         <div className="grid grid-cols-3 gap-px bg-line border-b hairline">
           <Mini label={t("today.exercises")} value={today.exerciseCount} />

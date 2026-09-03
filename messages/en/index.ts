@@ -30,6 +30,8 @@ import CoachSchool from "./CoachSchool.json";
 import ProgramDetail from "./ProgramDetail.json";
 import Mind from "./Mind.json";
 import Science from "./Science.json";
+import Hrv from "./Hrv.json";
+import Adaptive from "./Adaptive.json";
 
 const messages = {
   Common,
@@ -61,6 +63,8 @@ const messages = {
   ProgramDetail,
   Mind,
   Science,
+  Hrv,
+  Adaptive,
 };
 
 export default messages;

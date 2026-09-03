@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
@@ -7,6 +8,10 @@ import { getSession } from "@/lib/auth";
 import { getHrvReadingSeries } from "@/lib/data/hrv";
 import type { ChartReading } from "@/lib/hrv/trend-chart";
 import type { ReadinessBucket } from "@/lib/hrv/types";
+import { SUPABASE_ENABLED } from "@/lib/supabase/env";
+import { buildHrvBandView } from "@/lib/hrv/band";
+import { demoSteadySeries } from "@/lib/hrv/demo-series";
+import { loadHrvBandCopy } from "@/lib/ui/sprint-a-copy";
 
 /**
  * `/hrv/trends` — a member's HRV trend chart + readiness-bucket distribution.
@@ -48,7 +53,16 @@ export default async function HrvTrendsPage() {
   const member = await getSession();
   if (!member) redirect("/login");
 
-  const series = await getHrvReadingSeries(member.id);
+  const t = await getTranslations("Hrv.trends");
+  const fetched = await getHrvReadingSeries(member.id);
+  const series = fetched.length === 0 && !SUPABASE_ENABLED
+    ? demoSteadySeries()
+    : fetched;
+  const band = buildHrvBandView(series);
+  const bandCopy = await loadHrvBandCopy({
+    count: band.nightsCollected,
+    needed: band.nightsNeeded,
+  });
 
   const state =
     series.length === 0
@@ -60,19 +74,19 @@ export default async function HrvTrendsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Recovery"
-        title="Forløb"
-        subtitle="Dit HRV-forløb over tid — den daglige måling, dit 7-dages snit og dit normalområde."
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        subtitle={t("subtitle")}
       />
       <Container className="py-8 lg:py-12 space-y-8">
         <HrvSubNav />
 
         {state === "empty" ? (
-          <StateEmpty />
+          <StateEmpty copy={bandCopy} />
         ) : state === "provisional" ? (
-          <StateProvisional series={series} />
+          <StateProvisional series={series} copy={bandCopy} />
         ) : (
-          <StateActive series={series} />
+          <StateActive series={series} copy={bandCopy} />
         )}
       </Container>
     </>
@@ -83,11 +97,11 @@ export default async function HrvTrendsPage() {
 /* Empty — 0 readings                                               */
 /* ---------------------------------------------------------------- */
 
-function StateEmpty() {
+function StateEmpty({ copy }: { copy: Awaited<ReturnType<typeof loadHrvBandCopy>> }) {
   return (
     <section className="surface-2 rounded-2xl overflow-hidden">
       <div className="px-6 py-7 md:px-8 md:py-10">
-        <div className="eyebrow mb-3">Dit forløb</div>
+        <div className="eyebrow eyebrow-domain mb-3">{copy.eyebrow}</div>
         {/* Faint chart-axis scaffold — placeholder for the trend chart. */}
         <div
           aria-hidden
@@ -100,8 +114,10 @@ function StateEmpty() {
           </div>
         </div>
         <p className="text-fg-dim text-sm md:text-base leading-relaxed mt-6 max-w-md">
-          Vi viser dit forløb her, så snart vi har data. Dine målinger ligger
-          trygt gemt.
+          {copy.emptyBody}
+        </p>
+        <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-4">
+          {copy.disclaimer}
         </p>
       </div>
     </section>
@@ -112,17 +128,26 @@ function StateEmpty() {
 /* Provisional — 1–13 readings                                      */
 /* ---------------------------------------------------------------- */
 
-function StateProvisional({ series }: { series: ChartReading[] }) {
+function StateProvisional({
+  series,
+  copy,
+}: {
+  series: ChartReading[];
+  copy: Awaited<ReturnType<typeof loadHrvBandCopy>>;
+}) {
   return (
     <section className="surface-2 rounded-2xl overflow-hidden">
       <div className="px-6 py-5 md:px-8 border-b hairline flex items-center gap-2">
         <span className="pulse-dot" />
-        <span className="eyebrow">Bygger din baseline</span>
+        <span className="eyebrow eyebrow-domain">{copy.buildingTitle}</span>
       </div>
       <div className="px-6 py-7 md:px-8 md:py-9">
         <TrendChart readings={series} />
         <p className="text-fg-dim text-sm md:text-base leading-relaxed mt-6 max-w-md">
-          Vi bygger din baseline. Når den er klar, kommer båndet.
+          {copy.buildingBody}
+        </p>
+        <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-4">
+          {copy.disclaimer}
         </p>
       </div>
     </section>
@@ -133,17 +158,62 @@ function StateProvisional({ series }: { series: ChartReading[] }) {
 /* Active — >= 14 readings                                          */
 /* ---------------------------------------------------------------- */
 
-function StateActive({ series }: { series: ChartReading[] }) {
+function StateActive({
+  series,
+  copy,
+}: {
+  series: ChartReading[];
+  copy: Awaited<ReturnType<typeof loadHrvBandCopy>>;
+}) {
   const dist = bucketDistribution(series);
+  const band = buildHrvBandView(series);
+  const latestMs = band.latestMs;
+  const qualitative = band.qualitative
+    ? copy.qualitative[band.qualitative]
+    : null;
 
   return (
     <div className="space-y-8">
-      <section className="surface-2 rounded-2xl overflow-hidden">
-        <div className="px-6 py-5 md:px-8 border-b hairline flex items-center gap-2">
-          <span className="eyebrow">Dit HRV-forløb</span>
+      <section
+        id="band"
+        className="surface-2 rounded-2xl overflow-hidden"
+      >
+        <div className="px-6 py-5 md:px-8 border-b hairline flex items-center justify-between gap-3 flex-wrap">
+          <span className="eyebrow eyebrow-domain">{copy.steadyEyebrow}</span>
+          {latestMs != null ? (
+            <div className="flex items-baseline gap-2">
+              <span className="numeric text-3xl md:text-4xl leading-none">
+                {latestMs}
+                <span className="text-fg-dim text-sm ml-1">{copy.unit}</span>
+              </span>
+              {qualitative ? (
+                <span
+                  data-qualitative={band.qualitative}
+                  className="font-display text-xl"
+                >
+                  {qualitative}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
         </div>
         <div className="px-6 py-7 md:px-8 md:py-9">
           <TrendChart readings={series} />
+          <div className="flex items-center gap-4 mt-4 text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+            <span>{copy.legendBand}</span>
+            <span>{copy.legendAvg}</span>
+          </div>
+          {band.engineCue ? (
+            <p
+              data-engine-cue={band.engineCue}
+              className="text-sm md:text-base text-fg-dim leading-relaxed mt-5 max-w-lg"
+            >
+              {band.engineCue === "below" ? copy.engineBelow : copy.engineAbove}
+            </p>
+          ) : null}
+          <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-4">
+            {copy.disclaimer}
+          </p>
         </div>
       </section>
 

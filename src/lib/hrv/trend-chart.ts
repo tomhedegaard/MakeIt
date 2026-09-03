@@ -25,6 +25,11 @@ export interface TrendChartModel {
   /** SVG path "d" string through the 7-day mean. */
   meanLinePath: string;
   baselineBand: { topY: number; bottomY: number; path: string } | null;
+  /**
+   * Horizontal dashed personal average (14–28d window, or the persisted
+   * 60d mean when that is what the latest reading carries).
+   */
+  personalAvg: { y: number; path: string } | null;
   yTicks: { y: number; label: string }[];
   xTicks: { x: number; label: string }[];
 }
@@ -56,6 +61,7 @@ export function buildTrendChartModel(
       points: [],
       meanLinePath: "",
       baselineBand: null,
+      personalAvg: null,
       yTicks: [],
       xTicks: [],
     };
@@ -79,6 +85,15 @@ export function buildTrendChartModel(
   if (latest.baseline60dMeanLnRmssd != null && latest.baseline60dSwc != null) {
     yValues.push(latest.baseline60dMeanLnRmssd + latest.baseline60dSwc);
     yValues.push(latest.baseline60dMeanLnRmssd - latest.baseline60dSwc);
+  } else if (readings.length >= 14) {
+    const window = readings.slice(-28);
+    const mean =
+      window.reduce((acc, r) => acc + r.lnRmssd, 0) / window.length;
+    const variance =
+      window.reduce((acc, r) => acc + (r.lnRmssd - mean) ** 2, 0) /
+      Math.max(1, window.length - 1);
+    const swc = 0.5 * Math.sqrt(variance);
+    yValues.push(mean + swc, mean - swc);
   }
 
   let yMin = Math.min(...yValues);
@@ -128,6 +143,40 @@ export function buildTrendChartModel(
       `L ${innerRight} ${bottomY} ` +
       `L ${innerLeft} ${bottomY} Z`;
     baselineBand = { topY, bottomY, path };
+  } else if (readings.length >= 14) {
+    // Personal 14–28d window when the persisted 60d fields are not yet
+    // written (demo fixtures, first steady mornings).
+    const window = readings.slice(-28);
+    const mean =
+      window.reduce((acc, r) => acc + r.lnRmssd, 0) / window.length;
+    const variance =
+      window.reduce((acc, r) => acc + (r.lnRmssd - mean) ** 2, 0) /
+      Math.max(1, window.length - 1);
+    const swc = 0.5 * Math.sqrt(variance);
+    const topY = yFor(mean + swc);
+    const bottomY = yFor(mean - swc);
+    const path =
+      `M ${innerLeft} ${topY} ` +
+      `L ${innerRight} ${topY} ` +
+      `L ${innerRight} ${bottomY} ` +
+      `L ${innerLeft} ${bottomY} Z`;
+    baselineBand = { topY, bottomY, path };
+  }
+
+  // --- Dashed personal average (same mean the band is centred on) ---
+  let personalAvg: TrendChartModel["personalAvg"] = null;
+  const avgLn =
+    latest.baseline60dMeanLnRmssd ??
+    (readings.length >= 14
+      ? readings.slice(-28).reduce((acc, r) => acc + r.lnRmssd, 0) /
+        Math.min(28, readings.length)
+      : null);
+  if (avgLn != null) {
+    const y = yFor(avgLn);
+    personalAvg = {
+      y,
+      path: `M ${innerLeft} ${y} L ${innerRight} ${y}`,
+    };
   }
 
   // --- Y ticks (ms-valued, inverse log) ---
@@ -160,6 +209,7 @@ export function buildTrendChartModel(
     points,
     meanLinePath,
     baselineBand,
+    personalAvg,
     yTicks,
     xTicks,
   };

@@ -74,6 +74,10 @@
     "up": "Up {pct} percent",
     "down": "Down {pct} percent"
   },
+  "hrvChip": {
+    "eyebrow": "HRV readiness",
+    "connect": "Connect a wearable"
+  },
   "installHint": {
     "eyebrow": "Get the app",
     "title": "MakeIt on your home screen",

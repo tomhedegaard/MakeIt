@@ -1,0 +1,38 @@
+{
+  "band": {
+    "eyebrow": "Hjerte",
+    "latest": "HRV i morges",
+    "unit": "ms",
+    "avg": "Dit snit",
+    "qualitative": {
+      "ro": "Ro",
+      "midt": "Midt",
+      "lav": "Lav"
+    },
+    "empty": {
+      "title": "Dit bånd venter på de første nætter",
+      "body": "Når nattens måling lander, begynder vi at samle dit personlige normalområde. Ingen alarm — bare et tomt spor."
+    },
+    "building": {
+      "title": "Bygger dit bånd",
+      "body": "7 nætter bygger dit personlige bånd. Ingen alarm — bare data der samler sig.",
+      "nights": "{count} af {needed} nætter"
+    },
+    "steady": {
+      "eyebrow": "Dit normalområde"
+    },
+    "engine": {
+      "below": "Motoren læste nattens HRV under dit bånd og letter dagens squat-topsæt.",
+      "above": "Motoren læste nattens HRV over dit bånd — kroppen er klar; dagens pas kører som planlagt."
+    },
+    "disclaimer": "HRV er et restitutions-signal — ikke en diagnose.",
+    "legendBand": "Dit bånd",
+    "legendAvg": "Dit snit",
+    "rangeLabel": "Personligt normalområde"
+  },
+  "trends": {
+    "eyebrow": "Recovery",
+    "title": "Forløb",
+    "subtitle": "Dit HRV-forløb over tid — den daglige måling, dit 7-dages snit og dit normalområde."
+  }
+}
