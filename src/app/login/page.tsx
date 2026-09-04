@@ -76,9 +76,9 @@ export default async function LoginPage({
         {!sent ? (
           <p className="mt-6 text-sm text-fg-dim">
             {t("waitlistHint")}{" "}
-            <a href="/#waitlist" className="underline hover:text-fg">
+            <Link href="/#waitlist" className="underline hover:text-fg">
               {t("waitlistLink")}
-            </a>
+            </Link>
           </p>
         ) : null}
 
