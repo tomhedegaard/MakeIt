@@ -43,9 +43,18 @@
     "sets": "sets",
     "openDetails": "Open exercise details",
     "seeFull": "See the full exercise →",
-    "formCheck": "Form check with AI",
+    "formCheck": "Film set {set}",
+    "formCheckSub": "Goes to Munk — bound to {lift}",
     "moreCues": " · {count} more cues",
-    "duration": "~6 sec →"
+    "duration": "Film →",
+    "thread": {
+      "eyebrow": "Thread under this lift",
+      "pending": "Waiting on Munk",
+      "reviewed": "Munk replied",
+      "voice": "Voice note",
+      "youFilmed": "You filmed this set",
+      "munkReply": "Reply from Munk"
+    }
   },
   "restTimer": {
     "ariaLabel": "Rest",

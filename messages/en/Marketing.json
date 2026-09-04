@@ -56,7 +56,8 @@
     "reasoningHeading": "Why",
     "previousLabel": "Before you touched it",
     "disclaimer": "Same pure rule engine the app uses. No API, no spinner — runs in your browser.",
-    "ctaHowItWorks": "See the full reasoning chain →"
+    "ctaHowItWorks": "See the full reasoning chain →",
+    "ctaMembersOnly": "Members only — sign in with an invite."
   },
   "crew": {
     "eyebrow": "01 — The Crew",

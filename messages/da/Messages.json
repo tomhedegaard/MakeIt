@@ -3,7 +3,15 @@
     "eyebrow": "07 — Beskeder",
     "titleWithCoach": "Chat med @{handle}",
     "titleFallback": "Din coach",
-    "subtitle": "Direkte linje til din coach. Send tekst, billeder eller en lydbesked — videoer modtager du."
+    "subtitle": "To spor: Munk (craft) og Motor (Adaptive Engine). De blandes ikke."
+  },
+  "streams": {
+    "munkTitle": "Munk",
+    "munkSub": "Menneskelig craft",
+    "motorTitle": "Motor · Adaptive Engine",
+    "motorSub": "Ingen ansigt · @foreslår",
+    "propose": "@foreslår",
+    "voice": "Lydbesked"
   },
   "thread": {
     "ariaLabel": "Beskeder",

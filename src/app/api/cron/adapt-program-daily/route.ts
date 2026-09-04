@@ -4,6 +4,7 @@ import { buildEngineInput, loadEligibleMemberIds } from "@/lib/adaptive/data";
 import { assertCronAuth } from "@/lib/cron/auth";
 import { evaluateAdaptation } from "@/lib/adaptive/engine";
 import { persistAdaptation } from "@/lib/adaptive/persist";
+import { recordWatchedCronRun } from "@/lib/data/cron-runs";
 import { createServiceClient } from "@/lib/supabase/service";
 
 export const runtime = "nodejs";
@@ -48,7 +49,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 
   if (memberIds.length === 0) {
-    return NextResponse.json({
+    const body = {
       ok: true,
       eligible: 0,
       processed: 0,
@@ -59,7 +60,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       escalated: 0,
       refined: 0,
       failed: 0,
-    });
+    };
+    await recordWatchedCronRun(supabase, "adapt-program-daily", body);
+    return NextResponse.json(body);
   }
 
   let processed = 0;
@@ -137,7 +140,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
   }
 
-  return NextResponse.json({
+  const body = {
     ok: true,
     eligible: memberIds.length,
     processed,
@@ -148,5 +151,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     escalated,
     refined,
     failed,
-  });
+  };
+  await recordWatchedCronRun(supabase, "adapt-program-daily", body);
+  return NextResponse.json(body);
 }

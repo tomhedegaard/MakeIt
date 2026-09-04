@@ -10,6 +10,7 @@ const COPY: DotsCopy = {
   moreAbout: "Sig mere om",
   dismiss: "Skjul",
   snooze: "I morgen",
+  motorAttribution: "Motor · Adaptive Engine",
   domains: { heart: "Hjerte", body: "Krop", food: "Kost", mind: "Sind" },
   cards: {
     heart_body_low: {
@@ -38,5 +39,7 @@ describe("ConnectDotsStream card grammar", () => {
     expect(html).toContain('data-more-about="heart"');
     expect(html).toContain("/hrv/trends#band");
     expect(html).toContain("/session/sess-2026-05-05");
+    expect(html).toContain("data-motor-glyph");
+    expect(html).toContain("Motor · Adaptive Engine");
   });
 });

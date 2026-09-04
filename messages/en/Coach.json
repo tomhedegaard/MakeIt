@@ -28,7 +28,8 @@
   "overview": {
     "eyebrow": "Coach console",
     "title": "Overview.",
-    "intro": "The whole crew's activity in one place — from the form-check queue to who's waiting on a new program.",
+    "intro": "Who needs you today — then the crew's activity.",
+    "inboxOpen": "Open the full inbox →",
     "kpiMembers": "Members",
     "kpiActivePrograms": "Active programs",
     "kpiPendingFormChecks": "Form-checks in queue",
@@ -46,6 +47,47 @@
     "queueEmpty": "The queue is empty.",
     "formCheckFallback": "Form-check",
     "openQueue": "Open the queue →"
+  },
+  "needsAttention": {
+    "eyebrow": "Needs you",
+    "title": "Needs Attention",
+    "open": "Open",
+    "buckets": {
+      "sprunget": {
+        "label": "Skipped",
+        "empty": "No skipped sessions."
+      },
+      "afventer_form": {
+        "label": "Awaiting form",
+        "empty": "No films waiting."
+      },
+      "engine": {
+        "label": "Engine",
+        "empty": "No flags from the Motor."
+      }
+    }
+  },
+  "inbox": {
+    "metaTitle": "Inbox · Coach",
+    "eyebrow": "Coach console",
+    "title": "Inbox.",
+    "intro": "One queue: who needs a human now. AI already did the generic work.",
+    "sectionEyebrow": "Today",
+    "sectionTitle": "Who needs you",
+    "count": "{count, plural, one {# waiting} other {# waiting}}",
+    "emptyTitle": "Quiet.",
+    "emptyBody": "Nothing is open. Form-checks, HRV, the engine and Safety are empty — and nobody has been quiet for 15 days.",
+    "emptyDemoHint": "Demo — the list is empty because no mock signals are open.",
+    "safetyUnreadable": "The Safety table cannot be read (migration 0057 or RLS). That is not the same as zero cases.",
+    "chipMentalSafety": "Safety",
+    "chipHrv": "HRV",
+    "chipAdaptive": "Engine",
+    "chipFormCheck": "{exercise}",
+    "chipFormCheckFallback": "Form-check",
+    "chipStale": "{days} days",
+    "chipStaleNever": "Never trained",
+    "openItem": "Open case for @{handle}",
+    "backToOverview": "← Overview"
   },
   "analytics": {
     "metaTitle": "Coach · Analytics",
@@ -181,6 +223,9 @@
     "sending": "Sending…",
     "submit": "Approve & send",
     "submitDraft": "Send to @{handle}",
+    "voiceLabel": "Voice note to @{handle}",
+    "voiceHint": "Optional — Munk's voice in the thread under the lift.",
+    "voiceReady": "Voice note ready ({sec}s)",
     "footnote": "Marks the form-check as reviewed and sends the notes to the member."
   },
   "digest": {
@@ -236,7 +281,25 @@
     "rowBillingEmail": "Billing email",
     "rowTransactionalFrom": "Transactional FROM",
     "rowReplyTo": "Reply-to",
-    "rowInstagram": "Instagram"
+    "rowInstagram": "Instagram",
+    "cronsEyebrow": "Crons",
+    "cronsTitle": "Background jobs",
+    "cronsSub": "Watched daily crons that write member output. Three empty successes in a row = silent death.",
+    "cronsDemoNote": "Demo — crons do not run. No alert.",
+    "cronsQuietLabel": "Crons quiet",
+    "cronsQuietRunbook": "Three consecutive successes with 0 useful work. Check the Anthropic key, vercel logs, and cron_run_log.",
+    "cronsStatusOk": "ok",
+    "cronsStatusEmpty": "empty",
+    "cronsStatusQuiet": "quiet",
+    "cronsStatusNone": "no runs",
+    "cronsLastRun": "Last run",
+    "cronsGenerated": "useful",
+    "cronsCandidates": "candidates",
+    "cronsFailed": "failed",
+    "cronsNameMentalCoach": "mental-coach-daily",
+    "cronsNameAdapt": "adapt-program-daily",
+    "cronsNameDraft": "draft-form-check-replies",
+    "cronsNameMorning": "coach-morning-report"
   },
   "backlog": {
     "eyebrow": "Backlog",

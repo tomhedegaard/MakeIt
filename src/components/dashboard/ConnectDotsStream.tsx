@@ -1,7 +1,8 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
+import MotorGlyph from "@/components/adaptive/MotorGlyph";
 import DomainMark, { type Domain } from "@/components/brand/DomainMark";
 import type {
   InsightCardId,
@@ -15,63 +16,62 @@ export type DotsCopy = {
   moreAbout: string;
   dismiss: string;
   snooze: string;
+  motorAttribution: string;
   domains: Record<InsightDomain, string>;
   cards: Record<InsightCardId, { sentence: string; cta: string }>;
 };
 
 const STORAGE_KEY = "mi-adapt-dots";
+const SAME_TAB_EVENT = "makeit:adapt-dots-changed";
 
 type Stored = { hidden: string[]; snoozedUntil: Record<string, string> };
+
+const EMPTY_STORE: Stored = { hidden: [], snoozedUntil: {} };
+const EMPTY_JSON = JSON.stringify(EMPTY_STORE);
 
 function todayIso(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-function readStore(): Stored {
-  if (typeof window === "undefined") return { hidden: [], snoozedUntil: {} };
+function parseStore(raw: string): Stored {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { hidden: [], snoozedUntil: {} };
     const parsed = JSON.parse(raw) as Stored;
     return {
       hidden: Array.isArray(parsed.hidden) ? parsed.hidden : [],
       snoozedUntil: parsed.snoozedUntil ?? {},
     };
   } catch {
-    return { hidden: [], snoozedUntil: {} };
+    return EMPTY_STORE;
   }
 }
 
-const EMPTY_STORE: Stored = { hidden: [], snoozedUntil: {} };
-
-function writeStore(next: Stored) {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+function readSnapshot(): string {
+  if (typeof window === "undefined") return EMPTY_JSON;
+  try {
+    return window.localStorage.getItem(STORAGE_KEY) ?? EMPTY_JSON;
+  } catch {
+    return EMPTY_JSON;
+  }
 }
 
-/** Same-tab localStorage store — no mount setState (eslint react-hooks). */
-let cached: Stored | null = null;
-const listeners = new Set<() => void>();
-
-function getClientSnapshot(): Stored {
-  if (!cached) cached = readStore();
-  return cached;
-}
-
-function getServerSnapshot(): Stored {
-  return EMPTY_STORE;
-}
-
-function subscribe(onChange: () => void) {
-  listeners.add(onChange);
+function subscribeToStorage(callback: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener("storage", callback);
+  window.addEventListener(SAME_TAB_EVENT, callback);
   return () => {
-    listeners.delete(onChange);
+    window.removeEventListener("storage", callback);
+    window.removeEventListener(SAME_TAB_EVENT, callback);
   };
 }
 
-function commit(next: Stored) {
-  cached = next;
-  writeStore(next);
-  listeners.forEach((fn) => fn());
+function persist(next: Stored) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    window.dispatchEvent(new Event(SAME_TAB_EVENT));
+  } catch {
+    // localStorage full or disabled — drop silently
+  }
 }
 
 function isVisible(card: InsightCardModel, store: Stored): boolean {
@@ -91,19 +91,20 @@ export default function ConnectDotsStream({
   cards: InsightCardModel[];
   copy: DotsCopy;
 }) {
-  const store = useSyncExternalStore(
-    subscribe,
-    getClientSnapshot,
-    getServerSnapshot,
+  const storeJson = useSyncExternalStore(
+    subscribeToStorage,
+    readSnapshot,
+    () => EMPTY_JSON,
   );
+  const store = useMemo(() => parseStore(storeJson), [storeJson]);
   const visible = cards.filter((c) => isVisible(c, store));
 
   function hide(id: string) {
-    commit({ ...store, hidden: [...store.hidden, id] });
+    persist({ ...store, hidden: [...store.hidden, id] });
   }
 
   function snooze(id: string) {
-    commit({
+    persist({
       ...store,
       snoozedUntil: { ...store.snoozedUntil, [id]: todayIso() },
     });
@@ -131,6 +132,10 @@ export default function ConnectDotsStream({
               className="surface-2 rounded-2xl overflow-hidden"
             >
               <div className="px-5 pt-4 pb-3 space-y-3">
+                <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                  <MotorGlyph className="size-3" />
+                  <span>{copy.motorAttribution}</span>
+                </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   {card.domains.map((domain) => (
                     <span

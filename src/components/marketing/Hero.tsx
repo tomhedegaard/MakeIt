@@ -12,8 +12,6 @@ import {
   MarketingDomainKicker,
 } from "@/components/marketing/FigureLanguage";
 
-const ease = [0.2, 0.7, 0.2, 1] as const;
-
 type Stat =
   | { id: string; k: string; to: number; pad?: number; s: string }
   | { id: string; k: string; literal: string; s: string };
@@ -43,6 +41,9 @@ type Stat =
  *     hero at its end state (everything visible, no exit fade).
  *     This also avoids the cumulative scroll-listener cost on
  *     low-power devices
+ *   - primary headline / lead / CTAs render visible at rest
+ *     (HeroCopy). Entrance opacity-0 is enhancement-only and was
+ *     removed so a failed hydrate cannot leave a black hero
  */
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -116,68 +117,9 @@ export default function Hero() {
 
           <Spotlight />
 
-          <Container className="relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease }}
-              className="flex items-center gap-3 mb-10"
-            >
-              <span className="pulse-dot" />
-              <span className="eyebrow">
-                MakeIt <span className="text-fg-faint">{"//"}</span> HQ &nbsp;·&nbsp; {t("eyebrow")}
-              </span>
-            </motion.div>
-
-            <motion.h1
-              initial="hidden"
-              animate="show"
-              variants={{
-                hidden: {},
-                show: { transition: { staggerChildren: 0.09, delayChildren: 0.18 } },
-              }}
-              className="font-display text-[clamp(3rem,10.5vw,9rem)] leading-[0.9]"
-            >
-              {["MADE", "FOR", "THOSE", "WHO", "LIFT."].map((word, i) => (
-                <motion.span
-                  key={i}
-                  variants={{
-                    hidden: { y: "110%", opacity: 0, rotate: 1.2 },
-                    show: {
-                      y: 0,
-                      opacity: 1,
-                      rotate: 0,
-                      transition: { duration: 1.05, ease },
-                    },
-                  }}
-                  className="inline-block overflow-hidden mr-[0.18em] last:mr-0"
-                >
-                  <span className="block">{word}</span>
-                </motion.span>
-              ))}
-            </motion.h1>
-
-            <div className="mt-12 grid gap-10 md:grid-cols-12 items-end">
-              <motion.div
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease, delay: 0.85 }}
-                className="md:col-span-6 max-w-xl"
-              >
-                <HeroLead />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease, delay: 1.2 }}
-                className="md:col-span-6"
-              >
-                <HeroActions />
-              </motion.div>
-            </div>
-
-          </Container>
+          {/* Primary copy is visible at rest (SSR / no-JS / failed
+              hydration). Glow + exit dissolve stay motion-only. */}
+          <HeroCopy />
         </motion.div>
       </div>
       </section>
@@ -234,6 +176,33 @@ function StatsBand({ stats }: { stats: Stat[] }) {
  * The MakeItFigure does not live here: the 100vh pin + display
  * headline clips any editorial body-map. It sits in AppShowcase.
  * ---------------------------------------------------------------- */
+
+function HeroCopy() {
+  const t = useTranslations("Marketing.hero");
+  return (
+    <Container className="relative z-10">
+      <div className="flex items-center gap-3 mb-10">
+        <span className="pulse-dot" />
+        <span className="eyebrow">
+          MakeIt <span className="text-fg-faint">{"//"}</span> HQ &nbsp;·&nbsp; {t("eyebrow")}
+        </span>
+      </div>
+
+      <h1 className="font-display text-[clamp(3rem,10.5vw,9rem)] leading-[0.9]">
+        MADE FOR THOSE WHO LIFT.
+      </h1>
+
+      <div className="mt-12 grid gap-10 md:grid-cols-12 items-end">
+        <div className="md:col-span-6 max-w-xl">
+          <HeroLead />
+        </div>
+        <div className="md:col-span-6">
+          <HeroActions />
+        </div>
+      </div>
+    </Container>
+  );
+}
 
 function HeroLead() {
   const t = useTranslations("Marketing.hero");
@@ -293,7 +262,6 @@ function HeroActions() {
  * ---------------------------------------------------------------- */
 
 function HeroContent() {
-  const t = useTranslations("Marketing.hero");
   return (
     <>
       <div className="pointer-events-none absolute inset-0 z-0">
@@ -301,28 +269,7 @@ function HeroContent() {
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-line-strong to-transparent" />
       </div>
 
-      <Container className="relative z-10">
-        <div className="flex items-center gap-3 mb-10">
-          <span className="pulse-dot" />
-          <span className="eyebrow">
-            MakeIt <span className="text-fg-faint">{"//"}</span> HQ &nbsp;·&nbsp; {t("eyebrow")}
-          </span>
-        </div>
-
-        <h1 className="font-display text-[clamp(3rem,10.5vw,9rem)] leading-[0.9]">
-          MADE FOR THOSE WHO LIFT.
-        </h1>
-
-        <div className="mt-12 grid gap-10 md:grid-cols-12 items-end">
-          <div className="md:col-span-6 max-w-xl">
-            <HeroLead />
-          </div>
-          <div className="md:col-span-6">
-            <HeroActions />
-          </div>
-        </div>
-
-      </Container>
+      <HeroCopy />
     </>
   );
 }

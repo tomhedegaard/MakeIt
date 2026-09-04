@@ -4,7 +4,7 @@
     "eyebrow": "Privacy Policy",
     "title": "Hvad vi gemmer.",
     "introUpdated": "Senest opdateret: august 2026 · Dataansvarlig: ",
-    "introCvrFallback": "CVR — kontakt",
+    "introCvrFallback": "CVR er endnu ikke offentliggjort — selskabet er under registrering. Kontakt",
     "s01": {
       "eyebrow": "01",
       "title": "Hvad vi indsamler",
@@ -220,7 +220,7 @@
       "title": "Tjenesten",
       "bodyBefore": "{product} er en lukket coaching-platform leveret af {entity}",
       "cvr": " (CVR {cvr})",
-      "cvrFallback": " (CVR — kontakt)",
+      "cvrFallback": " (CVR er endnu ikke offentliggjort — selskabet er under registrering)",
       "bodyAfter": ". Vi giver adgang til AI-genererede styrketrænings-programmer, video-baseret form-feedback, et community af crew-medlemmer, og et Reps-loyalty program. Adgang kræver invite-kode og aktivt medlemskab."
     },
     "s02": {

@@ -13,6 +13,12 @@ import RpeSelect from "@/components/ui/RpeSelect";
 import RestTimer from "@/components/ui/RestTimer";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
+import FormCheckThread from "@/components/form-check/FormCheckThread";
+import {
+  demoFormQueueItems,
+  threadsForLift,
+  type FormQueueItem,
+} from "@/lib/form-queue/queue";
 import Container from "@/components/Container";
 import HrvReadinessNudge from "@/components/hrv/HrvReadinessNudge";
 import AdaptationCard from "@/components/adaptive/AdaptationCard";
@@ -87,6 +93,7 @@ export default function SessionClient({
   const [doneOpen, setDoneOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
   const [formCheckOpen, setFormCheckOpen] = useState(false);
+  const [queued, setQueued] = useState<FormQueueItem[]>([]);
   const [repsAwarded, setRepsAwarded] = useState<number>(250);
   const [, startTransition] = useTransition();
 
@@ -248,6 +255,15 @@ export default function SessionClient({
           exIdx={exIdx}
           setIdx={setIdx}
           totalExercises={session.exercises.length}
+          threads={mergeThreads(ex.name, queued)}
+          threadCopy={{
+            eyebrow: t("exercise.thread.eyebrow"),
+            pending: t("exercise.thread.pending"),
+            reviewed: t("exercise.thread.reviewed"),
+            voice: t("exercise.thread.voice"),
+            youFilmed: t("exercise.thread.youFilmed"),
+            munkReply: t("exercise.thread.munkReply"),
+          }}
           onOpenFormCheck={() => setFormCheckOpen(true)}
         />
 
@@ -460,14 +476,16 @@ export default function SessionClient({
         open={formCheckOpen}
         onOpenChange={setFormCheckOpen}
         exerciseName={ex.name}
-        context={
-          ex.library
-            ? {
-                exerciseId: ex.library.exerciseId,
-                cues: ex.library.cues,
-                mistakes: ex.library.mistakes,
-              }
-            : undefined
+        context={{
+          exerciseId: ex.library?.exerciseId,
+          cues: ex.library?.cues,
+          mistakes: ex.library?.mistakes,
+          sessionId: session.id,
+          setIndex: setIdx + 1,
+          setId: set.id,
+        }}
+        onQueued={(item) =>
+          setQueued((prev) => [item, ...prev.filter((p) => p.id !== item.id)])
         }
         quota={formCheckQuota}
       />
@@ -486,17 +504,39 @@ export default function SessionClient({
  * When library is null (coach typed a free-text exercise), we fall
  * back to the legacy single-cue display so nothing breaks.
  */
+function mergeThreads(exerciseName: string, extra: FormQueueItem[]) {
+  const seeded = threadsForLift(demoFormQueueItems(), exerciseName);
+  const byId = new Map<string, FormQueueItem>();
+  for (const item of [...seeded, ...threadsForLift(extra, exerciseName)]) {
+    byId.set(item.id, item);
+  }
+  return Array.from(byId.values()).sort((a, b) =>
+    b.createdAt.localeCompare(a.createdAt),
+  );
+}
+
 function ExerciseSection({
   ex,
   exIdx,
   setIdx,
   totalExercises,
+  threads,
+  threadCopy,
   onOpenFormCheck,
 }: {
   ex: Exercise;
   exIdx: number;
   setIdx: number;
   totalExercises: number;
+  threads: FormQueueItem[];
+  threadCopy: {
+    eyebrow: string;
+    pending: string;
+    reviewed: string;
+    voice: string;
+    youFilmed: string;
+    munkReply: string;
+  };
   onOpenFormCheck: () => void;
 }) {
   const t = useTranslations("Session.exercise");
@@ -577,26 +617,33 @@ function ExerciseSection({
 
       <button
         type="button"
+        data-form-film-cta=""
+        data-form-set={setIdx + 1}
         onClick={onOpenFormCheck}
-        className="mt-4 w-full text-left flex items-center justify-between gap-3 surface rounded-xl px-4 py-3 lift touch-app"
+        className="mt-4 w-full text-left flex items-center justify-between gap-3 btn btn-primary rounded-xl px-4 py-3 lift touch-app"
       >
         <span className="flex items-center gap-3">
-          <svg viewBox="0 0 24 24" className="size-4 text-fg-dim" fill="none" aria-hidden>
+          <svg viewBox="0 0 24 24" className="size-4" fill="none" aria-hidden>
             <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
             <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
             <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
           </svg>
           <span className="text-sm">
-            {t("formCheck")}
+            <span className="block">{t("formCheck", { set: setIdx + 1 })}</span>
+            <span className="block text-[10px] font-mono uppercase tracking-[0.14em] opacity-70 mt-0.5">
+              {t("formCheckSub", { lift: ex.name })}
+            </span>
             {overflowCues > 0 ? (
-              <span className="text-fg-faint">{t("moreCues", { count: overflowCues })}</span>
+              <span className="opacity-60">{t("moreCues", { count: overflowCues })}</span>
             ) : null}
           </span>
         </span>
-        <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+        <span className="text-[10px] font-mono uppercase tracking-[0.14em] shrink-0">
           {t("duration")}
         </span>
       </button>
+
+      <FormCheckThread items={threads} copy={threadCopy} />
     </section>
   );
 }
