@@ -27,7 +27,7 @@ export default async function AppShowcase() {
   const nutrition = getShowcaseNutritionDay();
 
   return (
-    <section id="app" className="relative border-t hairline py-20 md:py-28">
+    <section id="app" className="relative border-t hairline py-20 md:py-28 scroll-mt-20">
       <Container>
         <MarketingBodyMap />
 

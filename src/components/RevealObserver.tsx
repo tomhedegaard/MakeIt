@@ -5,10 +5,15 @@ import { useEffect } from "react";
 export default function RevealObserver() {
   useEffect(() => {
     const els = document.querySelectorAll<HTMLElement>("[data-reveal]");
-    if (!("IntersectionObserver" in window)) {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reduceMotion || !("IntersectionObserver" in window)) {
       els.forEach((el) => el.classList.add("is-visible"));
       return;
     }
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -18,10 +23,21 @@ export default function RevealObserver() {
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -10% 0px" }
+      { threshold: 0.12, rootMargin: "0px 0px -10% 0px" },
     );
     els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+
+    // Enable hide-until-visible only after the first observer flush so
+    // in-viewport nodes (hero stats, first sections) stay visible.
+    const enable = requestAnimationFrame(() => {
+      document.documentElement.classList.add("reveal-js");
+    });
+
+    return () => {
+      cancelAnimationFrame(enable);
+      document.documentElement.classList.remove("reveal-js");
+      io.disconnect();
+    };
   }, []);
   return null;
 }

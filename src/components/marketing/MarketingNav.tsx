@@ -44,7 +44,7 @@ export default function MarketingNav() {
   const links: { href: string; key: string }[] = [
     { href: "#crew",          key: "crew" },
     { href: "#engine",        key: "engine" },
-    { href: "#pillar-engine", key: "coaching" },
+    { href: "#pillar-munk-multiplier", key: "coaching" },
     { href: "#tiers",         key: "tiers" },
     { href: "#app",           key: "app" },
     { href: "#how",           key: "price" },
