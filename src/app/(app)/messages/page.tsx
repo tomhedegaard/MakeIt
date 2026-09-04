@@ -9,6 +9,11 @@ import {
 } from "@/lib/data/messages";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import MessagesView from "@/components/chat/MessagesView";
+import DualStreamMessages from "@/components/chat/DualStreamMessages";
+import { demoDualStream } from "@/lib/data/message-streams";
+import { demoEngineStrip } from "@/lib/adaptive/engine-strip";
+import { loadDualStreamCopy } from "@/lib/ui/sprint-b-copy";
+import { loadStripCopy } from "@/lib/ui/sprint-a-copy";
 
 /**
  * Member-side chat. One thread with the head coach. Coaches reach
@@ -50,6 +55,11 @@ export default async function MessagesPage() {
   }
 
   const t = await getTranslations("Messages.page");
+  const [streamCopy, stripCopy] = await Promise.all([
+    loadDualStreamCopy(),
+    loadStripCopy(),
+  ]);
+  const demo = demoDualStream();
 
   return (
     <Container className="py-6 lg:py-12">
@@ -65,17 +75,22 @@ export default async function MessagesPage() {
         </p>
       </header>
 
-      <div
-        className="surface-2 rounded-2xl overflow-hidden flex flex-col"
-        style={{ minHeight: "60vh", maxHeight: "calc(100vh - 220px)" }}
+      <DualStreamMessages
+        munk={SUPABASE_ENABLED ? [] : demo.munk}
+        motor={demo.motor}
+        copy={streamCopy}
+        strip={demoEngineStrip()}
+        stripCopy={stripCopy}
       >
-        <MessagesView
-          conversationId={conversationId}
-          initialMessages={initialMessages}
-          myMemberId={member.id}
-          canSendVideo={false}
-        />
-      </div>
+        {SUPABASE_ENABLED ? (
+          <MessagesView
+            conversationId={conversationId}
+            initialMessages={initialMessages}
+            myMemberId={member.id}
+            canSendVideo={false}
+          />
+        ) : null}
+      </DualStreamMessages>
     </Container>
   );
 }

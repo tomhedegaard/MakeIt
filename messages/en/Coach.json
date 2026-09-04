@@ -48,6 +48,25 @@
     "formCheckFallback": "Form-check",
     "openQueue": "Open the queue →"
   },
+  "needsAttention": {
+    "eyebrow": "Needs you",
+    "title": "Needs Attention",
+    "open": "Open",
+    "buckets": {
+      "sprunget": {
+        "label": "Skipped",
+        "empty": "No skipped sessions."
+      },
+      "afventer_form": {
+        "label": "Awaiting form",
+        "empty": "No films waiting."
+      },
+      "engine": {
+        "label": "Engine",
+        "empty": "No flags from the Motor."
+      }
+    }
+  },
   "inbox": {
     "metaTitle": "Inbox · Coach",
     "eyebrow": "Coach console",
@@ -204,6 +223,9 @@
     "sending": "Sending…",
     "submit": "Approve & send",
     "submitDraft": "Send to @{handle}",
+    "voiceLabel": "Voice note to @{handle}",
+    "voiceHint": "Optional — Munk's voice in the thread under the lift.",
+    "voiceReady": "Voice note ready ({sec}s)",
     "footnote": "Marks the form-check as reviewed and sends the notes to the member."
   },
   "digest": {

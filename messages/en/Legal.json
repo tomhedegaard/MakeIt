@@ -4,7 +4,7 @@
     "eyebrow": "Privacy Policy",
     "title": "What we store.",
     "introUpdated": "Last updated: August 2026 · Data controller: ",
-    "introCvrFallback": "CVR — contact",
+    "introCvrFallback": "CVR is not yet published — the company is being registered. Contact",
     "s01": {
       "eyebrow": "01",
       "title": "What we collect",
@@ -220,7 +220,7 @@
       "title": "The service",
       "bodyBefore": "{product} is a closed coaching platform provided by {entity}",
       "cvr": " (CVR {cvr})",
-      "cvrFallback": " (CVR — contact)",
+      "cvrFallback": " (CVR is not yet published — the company is being registered)",
       "bodyAfter": ". We give access to AI-generated strength training programs, video-based form feedback, a community of crew members, and a Reps loyalty program. Access requires an invite code and active membership."
     },
     "s02": {

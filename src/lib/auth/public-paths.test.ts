@@ -2,12 +2,27 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { isPublicPath, needsAuth, normalizePathname } from "./public-paths";
+import {
+  isPublicPath,
+  needsAuth,
+  normalizePathname,
+  publicRedirectFor,
+} from "./public-paths";
 
 const APP_DIR = fileURLToPath(new URL("../../app", import.meta.url));
 
-/** Marketing / legal / login pages that are allowed to be public. */
-const PUBLIC_PAGE_PATHS = new Set(["/", "/login", "/privacy", "/terms"]);
+/** Marketing / legal / login pages that are allowed to be public.
+ *  Redirect aliases are public *as redirects*, not app surfaces. */
+const PUBLIC_PAGE_PATHS = new Set([
+  "/",
+  "/login",
+  "/privacy",
+  "/terms",
+  "/waitlist",
+  "/join",
+  "/signup",
+  "/legal",
+]);
 
 describe("normalizePathname", () => {
   it("strips query, hash, and a trailing slash", () => {
@@ -36,6 +51,11 @@ describe("isPublicPath", () => {
     "/manifest.webmanifest",
     "/sw.js",
     "/offline.html",
+    "/waitlist",
+    "/join",
+    "/signup",
+    "/legal",
+    "/waitlist/",
   ])("admits %s", (path) => {
     expect(isPublicPath(path)).toBe(true);
     expect(needsAuth(path)).toBe(false);
@@ -44,6 +64,26 @@ describe("isPublicPath", () => {
   it("does not treat `/` as a prefix of member routes", () => {
     expect(isPublicPath("/mind")).toBe(false);
     expect(isPublicPath("/hrv")).toBe(false);
+  });
+
+  it("does not treat redirect aliases as prefixes of member routes", () => {
+    expect(isPublicPath("/waitlist/admin")).toBe(false);
+    expect(isPublicPath("/join/crew")).toBe(false);
+    expect(isPublicPath("/legal/export")).toBe(false);
+  });
+});
+
+describe("publicRedirectFor", () => {
+  it("maps guessed marketing URLs to existing public surfaces", () => {
+    expect(publicRedirectFor("/waitlist")).toBe("/#waitlist");
+    expect(publicRedirectFor("/join")).toBe("/login");
+    expect(publicRedirectFor("/signup")).toBe("/login");
+    expect(publicRedirectFor("/legal")).toBe("/privacy");
+  });
+
+  it("does not invent destinations for member routes", () => {
+    expect(publicRedirectFor("/hrv/learn/adaptive")).toBeNull();
+    expect(publicRedirectFor("/dashboard")).toBeNull();
   });
 });
 

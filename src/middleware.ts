@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE } from "@/lib/auth";
-import { needsAuth } from "@/lib/auth/public-paths";
+import { needsAuth, publicRedirectFor } from "@/lib/auth/public-paths";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { updateSupabaseSession } from "@/lib/supabase/middleware";
 
@@ -11,8 +11,17 @@ function redirectToLogin(req: NextRequest, pathname: string) {
   return NextResponse.redirect(url);
 }
 
+function redirectPublicAlias(req: NextRequest) {
+  const dest = publicRedirectFor(req.nextUrl.pathname);
+  if (!dest) return null;
+  return NextResponse.redirect(new URL(dest, req.url));
+}
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  const alias = redirectPublicAlias(req);
+  if (alias) return alias;
 
   if (SUPABASE_ENABLED) {
     const { response, user } = await updateSupabaseSession(req);

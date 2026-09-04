@@ -11,6 +11,7 @@ import {
   type TodayCard,
 } from "@/lib/data/dashboard";
 import {
+  emptyWeekStrip,
   getActiveProgram,
   getProgramLibrary,
   getSessionStreak,
@@ -22,18 +23,27 @@ import {
 } from "@/lib/data/coaching";
 import StartProgramButton from "./StartProgramButton";
 import AdaptiveReasonStrip from "@/components/adaptive/AdaptiveReasonStrip";
-import { demoEngineStrip } from "@/lib/adaptive/engine-strip";
+import {
+  demoEngineStrip,
+  emptyEngineStrip,
+} from "@/lib/adaptive/engine-strip";
 import { loadStripCopy } from "@/lib/ui/sprint-a-copy";
+import {
+  libraryForSurface,
+  todayCardForSurface,
+  weekStripForSurface,
+} from "@/lib/trust/connected-first-run";
 
 export default async function TrainPage() {
   const member = await getSession();
   const memberId = member?.id ?? null;
   const t = await getTranslations("Coaching");
   const stripCopy = await loadStripCopy();
-  const engineStrip = demoEngineStrip();
+  const connected = Boolean(SUPABASE_ENABLED && memberId);
+  const engineStrip = connected ? emptyEngineStrip() : demoEngineStrip();
 
   const [todayCardDb, weekDb, activeDb, libraryDb, statsDb, streakDb] =
-    SUPABASE_ENABLED && memberId
+    connected && memberId
       ? await Promise.all([
           getTodayCard(memberId),
           getWeekStrip(memberId),
@@ -44,11 +54,28 @@ export default async function TrainPage() {
         ])
       : ([null, null, null, null, null, 0] as const);
 
-  const today: TodayCard = todayCardDb ?? todayCardFromMock();
-  const week: WeekDay[] = weekDb ?? mockWeekStrip();
+  const today = todayCardForSurface({
+    connected,
+    fromDb: todayCardDb,
+    demo: todayCardFromMock(),
+  });
+  const week: WeekDay[] = weekStripForSurface({
+    connected,
+    fromDb: weekDb,
+    demo: mockWeekStrip(),
+    empty: emptyWeekStrip(),
+  });
   const active: ActiveProgram | null = activeDb;
-  const library: ProgramListing[] = libraryDb ?? mockLibrary();
-  const sets = today.setCount > 0 ? today.setCount : totalSets(TODAY_SESSION);
+  const library: ProgramListing[] = libraryForSurface({
+    connected,
+    fromDb: libraryDb,
+    demo: mockLibrary(),
+  });
+  const sets = today
+    ? today.setCount > 0
+      ? today.setCount
+      : totalSets(TODAY_SESSION)
+    : 0;
 
   const volumeKg = statsDb?.volumeKg ?? 0;
   const volumeKgPrev = statsDb?.volumeKgPrev ?? 0;
@@ -131,7 +158,8 @@ export default async function TrainPage() {
         </ol>
       </section>
 
-      {/* Today's session — flagship CTA */}
+      {/* Today's session — flagship CTA, or honest empty in connected mode */}
+      {today ? (
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 pt-5 pb-4 border-b hairline">
           <div className="flex items-center gap-2 mb-3">
@@ -167,6 +195,26 @@ export default async function TrainPage() {
           </Link>
         </div>
       </section>
+      ) : (
+      <section
+        data-today-empty=""
+        className="surface-2 rounded-2xl overflow-hidden"
+      >
+        <div className="px-5 pt-5 pb-4">
+          <div className="eyebrow mb-3">{t("today.emptyEyebrow")}</div>
+          <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
+            {t("today.emptyTitle")}
+          </h2>
+          <p className="text-fg-dim text-sm md:text-base">{t("today.emptyBody")}</p>
+        </div>
+        <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
+        <div className="p-4 lg:p-5">
+          <a href="#programs" className="btn btn-primary btn-xl">
+            {t("today.emptyCta")}
+          </a>
+        </div>
+      </section>
+      )}
 
       {/* Active program progress */}
       {active ? (
@@ -212,7 +260,7 @@ export default async function TrainPage() {
       ) : null}
 
       {/* Programs library */}
-      <section>
+      <section id="programs">
         <div className="flex items-end justify-between mb-3">
           <div className="eyebrow">{t("library.eyebrow")}</div>
           <span className="text-xs font-mono text-fg-faint">{library.length}</span>
@@ -266,12 +314,21 @@ export default async function TrainPage() {
 
                 <div className="flex items-center gap-2">
                   {p.active ? (
+                    today ? (
                     <Link
                       href={`/session/${today.id}`}
                       className="btn btn-primary btn-sm flex-1"
                     >
                       {t("library.continue")}
                     </Link>
+                    ) : (
+                    <Link
+                      href={`/program/${p.code}`}
+                      className="btn btn-primary btn-sm flex-1"
+                    >
+                      {t("library.details")}
+                    </Link>
+                    )
                   ) : (
                     <StartProgramButton
                       programId={p.id}

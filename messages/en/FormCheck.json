@@ -1,10 +1,11 @@
 {
   "eyebrow": "Form check",
   "choose": {
-    "title": "Record or upload your video.",
+    "title": "Film this set.",
     "titleBlocked": "You're out of form checks.",
     "descriptionDefault": "Our AI checks depth, bar path and movement quality on your exercise.",
-    "descriptionExercise": "Our AI checks depth, bar path and movement quality on {exercise} — and a head coach reviews everything weekly.",
+    "descriptionExercise": "Film set {set} on {exercise}. Munk's queue gets the athlete and the lift — not a general inbox.",
+    "descriptionSet": "Bound to {lift} · set {set}. Munk replies in the thread under the lift — text or voice.",
     "descriptionBlocked": "AI form check is an Athlete-tier perk and up. Upgrade to get more.",
     "recordNow": "Record now",
     "recordNowSub": "Use the camera to film your next set.",
@@ -43,7 +44,7 @@
     "coachTip": "Coach tip",
     "newRecording": "New recording",
     "done": "Done",
-    "coachReviewNote": "Also sent to your coach for the weekly review."
+    "coachReviewNote": "In Munk's queue as a form-check — bound to this set."
   },
   "verdicts": {
     "back squat": {

@@ -112,6 +112,28 @@ export function mockWeekStrip(): WeekDay[] {
   });
 }
 
+/**
+ * Honest calendar week — real dates, no invented Squat/Push sessions.
+ * Used when connected mode has no week fetch (should be rare).
+ */
+export function emptyWeekStrip(): WeekDay[] {
+  const monday = currentIsoMonday();
+  const today = todayIso();
+  return DA_DAYS.map((label, i) => {
+    const iso = isoPlusDays(monday, i);
+    return {
+      label,
+      date: Number(iso.slice(8, 10)),
+      iso,
+      sessionLabel: "Hvile",
+      sessionId: null,
+      done: false,
+      today: iso === today,
+      rest: true,
+    };
+  });
+}
+
 /* ================================================================ *
  * Active program (the assignment + program join)
  * ================================================================ */

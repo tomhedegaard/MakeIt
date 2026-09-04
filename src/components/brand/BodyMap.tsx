@@ -5,8 +5,9 @@ import MakeItFigure from "./MakeItFigure";
 
 /**
  * Compact editorial body-map for the dashboard/today header.
- * Teaching state: all four anchors lit at rest (low-opacity fills +
- * food halo). Today-as-figure (off-only lighting) is a later phase.
+ * Teaching state: all four anchors lit at rest as a balanced read
+ * (organs soft, body ghost, no food halo). Today-as-figure
+ * (off-only lighting) is a later phase.
  * Existing dashboard tiles and data stay below.
  */
 

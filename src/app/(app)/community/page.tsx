@@ -5,6 +5,7 @@ import PostCard from "@/components/community/PostCard";
 import RealtimeIndicator from "@/components/community/RealtimeIndicator";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getFeedPosts, type FeedPost } from "@/lib/data/community";
+import { communityChallengeProgress } from "@/lib/community/challenge-progress";
 
 const STORIES = [
   { who: "@Munk",      tier: "Legend",  trained: true },
@@ -66,6 +67,7 @@ export default async function CrewPage() {
   const useReal = SUPABASE_ENABLED && realFeed !== null;
   const feed = useReal ? realFeed : MOCK_FEED;
   const isEmpty = useReal && feed.length === 0;
+  const challenge = communityChallengeProgress(useReal ? "connected" : "demo");
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
@@ -91,7 +93,8 @@ export default async function CrewPage() {
         />
       </header>
 
-      {/* Story strip — who trained today */}
+      {/* Story strip — demo only. Connected has no live "trained today" feed. */}
+      {!useReal ? (
       <section
         aria-label={t("storiesAria")}
         className="-mx-6 md:mx-0 px-6 md:px-0 overflow-x-auto"
@@ -121,6 +124,7 @@ export default async function CrewPage() {
           ))}
         </ol>
       </section>
+      ) : null}
 
       {/* Monthly challenge hero */}
       <section className="surface-2 rounded-2xl overflow-hidden">
@@ -128,7 +132,7 @@ export default async function CrewPage() {
           <div className="flex items-center justify-between mb-3">
             <div className="eyebrow">{t("challengeEyebrow")}</div>
             <span className="numeric text-xs text-fg-dim">
-              {t("challengeParticipants")}
+              {t("challengeParticipants", { count: challenge.participantCount })}
             </span>
           </div>
           <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-3">
@@ -140,13 +144,17 @@ export default async function CrewPage() {
         </div>
         <div className="px-5 pb-3">
           <div className="flex items-baseline justify-between mb-2">
-            <span className="numeric text-2xl">68.4 / 100K</span>
+            <span className="numeric text-2xl">{challenge.currentLabel}</span>
             <span className="text-xs font-mono text-fg-dim">
-              {t("challengeProgress")}
+              {t("challengeProgress", { pct: challenge.youPercent })}
             </span>
           </div>
           <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
-            <div className="h-full bg-fg" style={{ width: "68.4%" }} />
+            <div
+              className="h-full bg-fg"
+              style={{ width: `${challenge.barPercent}%` }}
+              data-challenge-bar=""
+            />
           </div>
         </div>
         <div className="border-t hairline grid grid-cols-2">
@@ -156,7 +164,11 @@ export default async function CrewPage() {
           </button>
           <button type="button" className="px-5 py-4 text-left hover:bg-bg-3">
             <div className="eyebrow mb-1">{t("challengeStatusLabel")}</div>
-            <div className="text-sm">{t("challengeStatusValue")}</div>
+            <div className="text-sm">
+              {challenge.enrolled
+                ? t("challengeStatusValue")
+                : t("challengeStatusEmpty")}
+            </div>
           </button>
         </div>
       </section>
@@ -197,7 +209,8 @@ export default async function CrewPage() {
         )}
       </section>
 
-      {/* Leaderboard */}
+      {/* Leaderboard — demo only. No live aggregate in connected mode. */}
+      {!useReal ? (
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 py-4 border-b hairline flex items-center justify-between">
           <div>
@@ -225,6 +238,7 @@ export default async function CrewPage() {
           ))}
         </ul>
       </section>
+      ) : null}
 
       {/* IRL meet */}
       <section className="surface-2 rounded-2xl p-5">
