@@ -5,8 +5,8 @@
     "subtitle": "Profil, notifikationer, data og konto-sletning. Alt under dine egne fingre."
   },
   "errors": {
-    "handle_invalid": "Handle skal starte med et bogstav (a-z) og være 2-31 tegn (a-z, 0-9, _, ., -).",
-    "handle_taken": "Handle er allerede taget — prøv et andet.",
+    "handle_invalid": "Kaldenavn skal starte med et bogstav (a-z) og være 2-31 tegn (a-z, 0-9, _, ., -).",
+    "handle_taken": "Kaldenavn er allerede taget — prøv et andet.",
     "auth": "Du er ikke logget ind.",
     "unknown": "Noget gik galt — prøv igen.",
     "service_key_missing": "Konto-sletning kræver server-konfiguration der ikke er sat op.",
@@ -15,8 +15,8 @@
   "profile": {
     "eyebrow": "Profil",
     "title": "Hvordan crewet ser dig",
-    "handleLabel": "Handle",
-    "displayNameLabel": "Display navn",
+    "handleLabel": "Kaldenavn",
+    "displayNameLabel": "Vist navn",
     "displayNamePlaceholder": "Mikael Munk",
     "bioLabel": "Bio",
     "bioPlaceholder": "Hvad løfter du for? Hvor er du på rejsen?",
@@ -54,7 +54,7 @@
     "export": "Eksportér mine data ↓"
   },
   "danger": {
-    "eyebrow": "Danger zone",
+    "eyebrow": "Farezone",
     "title": "Slet din konto",
     "description": "Permanent og uigenkaldelig. Alle sessioner, posts, Reps og form-checks slettes. Eventuelt aktivt Stripe-abonnement skal opsiges separat fra billing-siden inden.",
     "delete": "Slet min konto",

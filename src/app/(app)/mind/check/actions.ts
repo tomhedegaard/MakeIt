@@ -52,6 +52,7 @@ export async function submitMindCheckAction(
     focus: parsed.data.focus,
   });
 
+  revalidatePath("/mind");
   revalidatePath("/mind/check");
   revalidatePath("/dashboard");
   return { ok: true };
