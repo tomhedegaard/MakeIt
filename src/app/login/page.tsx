@@ -10,6 +10,7 @@ import {
   passwordAction,
   oauthAction,
 } from "./actions";
+import { PUBLIC_ACCESS_HREF } from "@/lib/marketing/public-cta";
 
 export async function generateMetadata() {
   const t = await getTranslations("Login");
@@ -72,6 +73,15 @@ export default async function LoginPage({
         ) : (
           <MockForm err={err} />
         )}
+
+        {!sent ? (
+          <p className="mt-6 text-sm text-fg-dim">
+            {t("waitlistHint")}{" "}
+            <a href={PUBLIC_ACCESS_HREF} className="underline hover:text-fg">
+              {t("waitlistLink")}
+            </a>
+          </p>
+        ) : null}
 
         <p className="mt-10 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
           {SUPABASE_ENABLED ? t("statusConnected") : t("statusDemo")}

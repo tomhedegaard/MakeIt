@@ -3,9 +3,9 @@
 import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import Container from "@/components/Container";
 import RepsSimulator from "@/components/marketing/RepsSimulator";
+import { PUBLIC_ACCESS_HREF } from "@/lib/marketing/public-cta";
 
 /**
  * Tier journey — scroll-driven visualization of the Reps tier
@@ -116,7 +116,7 @@ export default function TierJourney() {
   ];
 
   return (
-    <section id="tiers" className="relative py-20 md:py-32 scroll-mt-20">
+    <section id="tiers" className="relative py-20 md:py-32 scroll-mt-[calc(var(--header-h)+1rem)]">
       <Container>
         <div className="max-w-2xl mb-20">
           <div className="eyebrow mb-3">{t("eyebrow")}</div>
@@ -150,7 +150,7 @@ export default function TierJourney() {
             </ul>
           </div>
 
-          <div className="lg:col-span-5 lg:sticky lg:top-24">
+          <div className="lg:col-span-5 marketing-sticky-card">
             <RepsSimulator />
           </div>
         </div>
@@ -161,9 +161,9 @@ export default function TierJourney() {
         </p>
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <Link href="/login" className="btn btn-primary">
+          <a href={PUBLIC_ACCESS_HREF} className="btn btn-primary">
             {t("cta")}
-          </Link>
+          </a>
           <a href="#engine" className="btn btn-ghost">
             {t("ctaSecondary")}
           </a>

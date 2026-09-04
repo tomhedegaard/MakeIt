@@ -157,7 +157,7 @@
     "engine": {
       "label": "02 — Engine & open brain",
       "title": "And it shows you why.",
-      "body": "Every morning at 05:30 the engine reads your <heart>HRV</heart>, your <mind>sleep</mind>, last session's <body>RPE</body> and your latest form checks. It adjusts today's session — or doesn't — and shows the whole chain behind the call: raw signals → rule → Claude's refinement → action → outcome. Munk sees the escalation before you do. It's one body-map, not four dashboards.",
+      "body": "Every morning at 05:30 the engine reads your <heart>HRV</heart>, your <mind>sleep</mind>, last session's <body>RPE</body> and your latest form checks. It adjusts today's session — or doesn't — and shows the whole chain behind the call: raw signals → rule → AI refinement → action → outcome. Munk sees the escalation before you do. It's one body-map, not four dashboards.",
       "bullet1": "Top-set reduction, accessory cut, exercise swap — or no_change. Never more than one change per session.",
       "bullet2": "HRV very_low → session paused, mobility + walk, Munk gets notified",
       "bullet3": "30 days of history with counterfactual sliders: \"What if I'd slept 7h?\" — computed live in your browser",
@@ -223,7 +223,7 @@
       "description": "The volume block. You know how your body responds under heavy load, and you work recovery deliberately. Coach feedback gets finer and more surgical.",
       "quote": "The volume block was the hardest, physically and mentally — but that's where I learned what I can really handle.",
       "unlocks": {
-        "1": "Coach School unlocked — lessons with Claude evaluation",
+        "1": "Coach School unlocked — lessons with AI evaluation",
         "2": "Sandbox cases: practice against simulated members",
         "3": "1:1 30-min with Munk per quarter",
         "4": "Limited drops before everyone else"
@@ -355,7 +355,7 @@
       "mindLabel": "Mind",
       "mindDetail": "60 sec · check-in + graph",
       "formCheckLabel": "Form check",
-      "formCheckDetail": "Claude grades it in 6 sec.",
+      "formCheckDetail": "AI draft in 6 sec.",
       "buddyLabel": "Buddy",
       "buddyDetail": "AI-paired · weekly rematch",
       "coachSchoolLabel": "Coach School",
@@ -477,7 +477,7 @@
     "priceLockNote": "Final price locked before launch",
     "positioningEyebrow": "How we keep coaching accessible",
     "positioningHeadline": "AI does the generic. People do what matters.",
-    "positioningSub": "We automate what can be automated — program building, form checks, progression — and use people where it actually counts: 1:1, milestones and community. The result is coaching that costs a fraction of the market, without feeling cheap.",
+    "positioningSub": "We automate what can be automated — program building, form checks, progression — and use people where it actually counts: 1:1, milestones and community. Closed beta is invite-only. The price is not public yet.",
     "marketLabel": "market average for personal coaching",
     "pillar1": {
       "eyebrow": "Automated",
@@ -514,7 +514,8 @@
     },
     "betaValue": "Beta",
     "betaSuffix": "invite only",
-    "marketFraction": "A fraction of the market average for personal coaching."
+    "betaNext": "No public price during closed beta. Join the waitlist — we write when a spot opens.",
+    "betaCta": "Join the waitlist"
   },
   "testimonials": {
     "eyebrow": "07 — The Crew",
@@ -572,8 +573,8 @@
         "a": "For 95% of lifters: yes. AI form check + weekly coach review catches most of it. For those who want more — the 1:1 add-on gives you direct Signal access to Mikael and a weekly 30-min video session. Limited to 8 spots at a time."
       },
       "cheaper": {
-        "q": "Why is it cheaper than traditional coaching?",
-        "a": "Because AI handles the generic stuff — program generation, progression, instant form feedback. Mikael and the crew then spend their time on what actually moves the needle: 1:1, milestones, and keeping you accountable. You pay for what counts."
+        "q": "What does it cost?",
+        "a": "Closed beta is invite-only, and the public price is not locked yet. Join the waitlist — we write when a spot opens. Already have a code? Sign in."
       },
       "wearables": {
         "q": "Which wearables does the HRV module support?",

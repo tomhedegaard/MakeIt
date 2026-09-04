@@ -26,7 +26,7 @@ export default function WaitlistSection() {
   }
 
   return (
-    <section id="waitlist" className="relative border-t hairline py-20 md:py-28 scroll-mt-20">
+    <section id="waitlist" className="relative border-t hairline py-20 md:py-28 scroll-mt-[calc(var(--header-h)+1rem)]">
       <Container>
         <div className="grid gap-12 md:grid-cols-12 items-center">
           <div className="md:col-span-6" data-reveal>

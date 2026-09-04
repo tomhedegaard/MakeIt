@@ -157,7 +157,7 @@
     "engine": {
       "label": "02 — Motor & åben hjerne",
       "title": "Og den viser dig hvorfor.",
-      "body": "Hver morgen kl. 05:30 læser motoren din <heart>HRV</heart>, din <mind>søvn</mind>, sidste sessions <body>RPE</body> og dine seneste form-checks. Den justerer dagens session — eller lader være — og viser hele kæden bag beslutningen: råsignaler → regel → Claudes refinement → handling → udfald. Munk ser eskaleringen før du gør. Det er ét kropskort, ikke fire dashboards.",
+      "body": "Hver morgen kl. 05:30 læser motoren din <heart>HRV</heart>, din <mind>søvn</mind>, sidste sessions <body>RPE</body> og dine seneste form-checks. Den justerer dagens session — eller lader være — og viser hele kæden bag beslutningen: råsignaler → regel → AI-refinement → handling → udfald. Munk ser eskaleringen før du gør. Det er ét kropskort, ikke fire dashboards.",
       "bullet1": "Topsæt-reduktion, accessory-cut, øvelsesbytte — eller no_change. Aldrig mere end én ændring pr. session.",
       "bullet2": "HRV very_low → session pauset, mobilitet + gåtur, Munk får besked",
       "bullet3": "30 dages historik med counterfactual-sliders: \"Hvad hvis jeg havde sovet 7t?\" — beregnes live i din browser",
@@ -223,7 +223,7 @@
       "description": "Volumen-blokken. Du kender din krops respons under tung belastning, og du arbejder bevidst med restitution. Coach-feedback bliver finere og mere kirurgisk.",
       "quote": "Volumen-blokken var den sværeste fysisk og mentalt — men det er der jeg lærte hvad jeg virkelig kan klare.",
       "unlocks": {
-        "1": "Coach School låst op — lektioner med Claude-evaluering",
+        "1": "Coach School låst op — lektioner med AI-evaluering",
         "2": "Sandbox-cases: du øver mod simulerede medlemmer",
         "3": "1:1 30-min med Munk pr. kvartal",
         "4": "Limited drops før alle andre"
@@ -355,7 +355,7 @@
       "mindLabel": "Sind",
       "mindDetail": "60 sek · check-in + graf",
       "formCheckLabel": "Form-check",
-      "formCheckDetail": "Claude vurderer på 6 sek.",
+      "formCheckDetail": "AI-draft på 6 sek.",
       "buddyLabel": "Buddy",
       "buddyDetail": "AI-paired · ugentlig rematch",
       "coachSchoolLabel": "Coach School",
@@ -477,7 +477,7 @@
     "priceLockNote": "Endelig pris låses inden launch",
     "positioningEyebrow": "Sådan holder vi coaching tilgængelig",
     "positioningHeadline": "AI gør det generiske. Mennesker gør det vigtige.",
-    "positioningSub": "Vi automatiserer det der kan automatiseres — programopbygning, form-tjek, progression — og bruger mennesker dér hvor det faktisk batter: 1:1, milepæle og fællesskab. Resultatet er coaching der koster en brøkdel af markedet, uden at føles billigt.",
+    "positioningSub": "Vi automatiserer det der kan automatiseres — programopbygning, form-tjek, progression — og bruger mennesker dér hvor det faktisk batter: 1:1, milepæle og fællesskab. Closed beta er invite-only. Prisen er ikke offentlig endnu.",
     "marketLabel": "markedssnit for personlig coaching",
     "pillar1": {
       "eyebrow": "Automatiseret",
@@ -514,7 +514,8 @@
     },
     "betaValue": "Beta",
     "betaSuffix": "invite only",
-    "marketFraction": "En brøkdel af markedssnittet for personlig coaching."
+    "betaNext": "Ingen offentlig pris i closed beta. Stil dig i køen — vi skriver når der åbner en plads.",
+    "betaCta": "Skriv dig på ventelisten"
   },
   "testimonials": {
     "eyebrow": "07 — Crewet",
@@ -572,8 +573,8 @@
         "a": "For 95% af lifters: ja. AI form-check + ugentlig coach review fanger det meste. For dem der vil have noget mere — 1:1 add-on'en giver dig direkte Signal-adgang til Mikael og en ugentlig 30-min videosession. Begrænset til 8 pladser ad gangen."
       },
       "cheaper": {
-        "q": "Hvorfor er det billigere end traditionel coaching?",
-        "a": "Fordi AI håndterer det generiske — programgenerering, progression, øjeblikkelig form-feedback. Mikael og crewet bruger så tiden på det der faktisk batter: 1:1, milepæle, og at holde dig ansvarlig. Du betaler for det der tæller."
+        "q": "Hvad koster det?",
+        "a": "Closed beta er invite-only, og den offentlige pris er ikke låst endnu. Stil dig i køen — vi skriver når der åbner en plads. Har du allerede en kode, log ind."
       },
       "wearables": {
         "q": "Hvilke wearables understøtter HRV-modulet?",

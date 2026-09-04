@@ -6,11 +6,11 @@ import { useTranslations } from "next-intl";
 import Container from "@/components/Container";
 import CountUp from "@/components/CountUp";
 import Spotlight from "@/components/Spotlight";
-import Link from "next/link";
 import {
   HERO_DOMAINS,
   MarketingDomainKicker,
 } from "@/components/marketing/FigureLanguage";
+import { PUBLIC_ACCESS_HREF } from "@/lib/marketing/public-cta";
 
 type Stat =
   | { id: string; k: string; to: number; pad?: number; s: string }
@@ -52,7 +52,7 @@ export default function Hero() {
 
   // Kun app-stats (UX-audit C1: straps-salgstallet hørte til shoppen).
   // Outcome-tal frem for skala-tal — 6 SEK og 05:30 matcher eksisterende
-  // app-copy ("Claude vurderer på 6 sek." / "hver morgen klokken 05:30").
+  // app-copy ("AI-draft på 6 sek." / "hver morgen klokken 05:30").
   const STATS: Stat[] = [
     { id: "members", k: t("stats.members"), to: 412, s: t("stats.membersSuffix") },
     { id: "formCheck", k: t("stats.formCheck"), literal: t("stats.formCheckValue"), s: t("stats.formCheckSuffix") },
@@ -65,12 +65,10 @@ export default function Hero() {
     offset: ["start start", "end end"],
   });
 
-  // Background glow drift.
+  // Background glow drift — decorative only. Hero copy never fades
+  // with scroll (a 0.15 dissolve left body text at ~15% contrast).
   const glowY = useTransform(scrollYProgress, [0, 1], [0, -180]);
   const glowOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
-  // Exit dissolve.
-  const exitOpacity = useTransform(scrollYProgress, [0.92, 1], [1, 0.15]);
 
   // Reduced-motion mode: short section, no pin, no scroll-driven
   // anything. Everything renders at its end state.
@@ -103,10 +101,7 @@ export default function Hero() {
           transform: "translateZ(0)",
         }}
       >
-        <motion.div
-          style={{ opacity: exitOpacity }}
-          className="relative flex-1 flex flex-col justify-center pt-28 md:pt-40 pb-12"
-        >
+        <div className="relative flex-1 flex flex-col justify-center pt-28 md:pt-40 pb-12">
           <motion.div
             style={{ y: glowY, opacity: glowOpacity }}
             className="pointer-events-none absolute inset-0 z-0"
@@ -120,7 +115,7 @@ export default function Hero() {
           {/* Primary copy is visible at rest (SSR / no-JS / failed
               hydration). Glow + exit dissolve stay motion-only. */}
           <HeroCopy />
-        </motion.div>
+        </div>
       </div>
       </section>
 
@@ -237,14 +232,14 @@ function HeroActions() {
   return (
     <div className="flex flex-col items-start gap-3 md:items-end">
       <div className="flex flex-wrap items-center gap-3 md:justify-end">
-        <Link href="/login" className="btn btn-primary">
+        <a href={PUBLIC_ACCESS_HREF} className="btn btn-primary">
           {t("ctaPrimary")}
-        </Link>
+        </a>
         <a href="#crew" className="btn">{t("ctaSecondary")}</a>
         <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
       </div>
       <a
-        href="#waitlist"
+        href={PUBLIC_ACCESS_HREF}
         className="text-sm text-fg-dim underline underline-offset-4 hover:text-fg"
       >
         {t("waitlistLink")}

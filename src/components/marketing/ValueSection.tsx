@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { pricing } from "@/lib/pricing";
 import { domainTags } from "@/components/marketing/domainTags";
+import { PUBLIC_ACCESS_HREF } from "@/lib/marketing/public-cta";
 
 export default async function ValueSection() {
   const t = await getTranslations("Marketing.value");
@@ -42,7 +43,7 @@ export default async function ValueSection() {
   ];
 
   return (
-    <section id="how" className="relative border-t hairline py-20 md:py-28 scroll-mt-20">
+    <section id="how" className="relative border-t hairline py-20 md:py-28 scroll-mt-[calc(var(--header-h)+1rem)]">
       <Container>
         {/* Hook + price */}
         <div className="grid gap-12 md:grid-cols-12 items-end mb-16 md:mb-24">
@@ -104,11 +105,19 @@ export default async function ValueSection() {
                   </span>
                 </div>
               ) : (
-                <p className="text-sm text-fg-dim">{t("marketFraction")}</p>
+                <p className="text-sm text-fg-dim">{t("betaNext")}</p>
               )}
               <p className="text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
                 {t("priceLockNote")}
               </p>
+              {!priceIsSet ? (
+                <a
+                  href={PUBLIC_ACCESS_HREF}
+                  className="inline-block mt-3 text-sm text-fg underline underline-offset-4 hover:text-fg-dim"
+                >
+                  {t("betaCta")}
+                </a>
+              ) : null}
             </div>
           </div>
         </div>
