@@ -6,7 +6,10 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
 import LanguageSelector from "@/components/LanguageSelector";
-import { MEMBER_LOGIN_HREF } from "@/lib/marketing/public-cta";
+import {
+  PUBLIC_LOGIN_HREF,
+  PUBLIC_WAITLIST_HREF,
+} from "@/lib/marketing/public-cta";
 
 /**
  * WAUW-4 — adds a mobile hamburger sheet. The v1 nav was
@@ -42,11 +45,12 @@ export default function MarketingNav() {
     };
   }, [open]);
 
-  const links: { href: string; key: string }[] = [
+  const links: { href: string; key: string; titleKey?: string }[] = [
     { href: "#crew",          key: "crew" },
-    { href: "#engine",        key: "engine" },
+    { href: "#munk",          key: "munk" },
+    { href: "#engine",        key: "engine", titleKey: "engineTitle" },
     { href: "#pillar-munk-multiplier", key: "coaching" },
-    { href: "#tiers",         key: "tiers" },
+    { href: "#tiers",         key: "tiers", titleKey: "tiersTitle" },
     { href: "#app",           key: "app" },
     { href: "#how",           key: "price" },
     { href: "#faq",           key: "faq" },
@@ -77,6 +81,7 @@ export default function MarketingNav() {
               <a
                 key={l.href}
                 href={l.href}
+                title={l.titleKey ? t(l.titleKey) : undefined}
                 className="hover:text-fg transition-colors"
               >
                 {t(l.key)}
@@ -94,8 +99,14 @@ export default function MarketingNav() {
             <div className="hidden md:block">
               <LanguageSelector />
             </div>
-            <Link href={MEMBER_LOGIN_HREF} className="btn btn-sm btn-primary">
+            <Link
+              href={PUBLIC_LOGIN_HREF}
+              className="hidden sm:inline-flex text-[12px] tracking-[0.18em] uppercase text-fg-dim font-mono hover:text-fg"
+            >
               {t("login")}
+            </Link>
+            <Link href={PUBLIC_WAITLIST_HREF} className="btn btn-sm btn-primary">
+              {t("getAccess")}
             </Link>
 
             {/* Mobile hamburger trigger */}
@@ -136,6 +147,7 @@ export default function MarketingNav() {
                   <li key={l.href}>
                     <a
                       href={l.href}
+                      title={l.titleKey ? t(l.titleKey) : undefined}
                       onClick={() => setOpen(false)}
                       className="block py-4 border-b hairline text-fg/90 text-sm font-mono uppercase tracking-[0.16em] hover:text-fg"
                     >
@@ -148,6 +160,22 @@ export default function MarketingNav() {
                 ))}
               </ul>
             </nav>
+            <div className="mt-8 flex flex-col gap-3">
+              <Link
+                href={PUBLIC_WAITLIST_HREF}
+                onClick={() => setOpen(false)}
+                className="btn btn-primary w-full"
+              >
+                {t("getAccess")}
+              </Link>
+              <Link
+                href={PUBLIC_LOGIN_HREF}
+                onClick={() => setOpen(false)}
+                className="btn btn-ghost w-full"
+              >
+                {t("login")}
+              </Link>
+            </div>
             <div className="mt-8">
               <LanguageSelector />
             </div>

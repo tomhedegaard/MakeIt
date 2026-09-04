@@ -10,7 +10,10 @@ import {
   HERO_DOMAINS,
   MarketingDomainKicker,
 } from "@/components/marketing/FigureLanguage";
-import { PUBLIC_ACCESS_HREF } from "@/lib/marketing/public-cta";
+import {
+  PUBLIC_LEARN_HREF,
+  PUBLIC_WAITLIST_HREF,
+} from "@/lib/marketing/public-cta";
 
 type Stat =
   | { id: string; k: string; to: number; pad?: number; s: string }
@@ -232,18 +235,11 @@ function HeroActions() {
   return (
     <div className="flex flex-col items-start gap-3 md:items-end">
       <div className="flex flex-wrap items-center gap-3 md:justify-end">
-        <a href={PUBLIC_ACCESS_HREF} className="btn btn-primary">
+        <a href={PUBLIC_WAITLIST_HREF} className="btn btn-primary">
           {t("ctaPrimary")}
         </a>
-        <a href="#crew" className="btn">{t("ctaSecondary")}</a>
-        <a href="#engine" className="btn btn-ghost">{t("ctaTertiary")}</a>
+        <a href={PUBLIC_LEARN_HREF} className="btn">{t("ctaSecondary")}</a>
       </div>
-      <a
-        href={PUBLIC_ACCESS_HREF}
-        className="text-sm text-fg-dim underline underline-offset-4 hover:text-fg"
-      >
-        {t("waitlistLink")}
-      </a>
       <p className="text-[11px] text-fg-faint font-mono uppercase tracking-[0.16em]">
         {t("trustLine")}
       </p>

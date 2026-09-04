@@ -209,7 +209,7 @@ function describeClaudeRefinement(
   reasoning: ReasoningOutputForPanel
 ): string {
   if (rule.action !== reasoning.finalAction) {
-    return `Reglen foreslog ${labelForAction(rule.action)}; Claude justerede til ${labelForAction(reasoning.finalAction)}.`;
+    return `Reglen foreslog ${labelForAction(rule.action)}; AI justerede til ${labelForAction(reasoning.finalAction)}.`;
   }
   const confDelta = reasoning.confidence - rule.confidence;
   if (Math.abs(confDelta) >= 0.05) {

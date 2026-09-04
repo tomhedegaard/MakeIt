@@ -10,7 +10,6 @@ import {
   passwordAction,
   oauthAction,
 } from "./actions";
-import { PUBLIC_ACCESS_HREF } from "@/lib/marketing/public-cta";
 
 export async function generateMetadata() {
   const t = await getTranslations("Login");
@@ -77,7 +76,7 @@ export default async function LoginPage({
         {!sent ? (
           <p className="mt-6 text-sm text-fg-dim">
             {t("waitlistHint")}{" "}
-            <a href={PUBLIC_ACCESS_HREF} className="underline hover:text-fg">
+            <a href="/#waitlist" className="underline hover:text-fg">
               {t("waitlistLink")}
             </a>
           </p>

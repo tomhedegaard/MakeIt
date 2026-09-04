@@ -95,7 +95,7 @@ export default async function MindSettingsPage() {
               field="ai_coach_enabled"
               initialValue={settings.ai_coach_enabled}
               title="AI-coach daglige refleksion"
-              description="Claude læser din mind-check, HRV og uge — skriver en kort daglig refleksion. Ingen adgang til din journal."
+              description="AI læser din mind-check, HRV og uge — skriver en kort daglig refleksion. Ingen adgang til din journal."
             />
           </div>
         </section>

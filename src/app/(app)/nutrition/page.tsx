@@ -518,7 +518,7 @@ function PlanView({
         <LogMealButton dateIso={isoToday()} />
         <span className="text-[11px] font-mono text-fg-faint ml-auto">
           {plan.generator === "claude"
-            ? t("page.generatedByClaude", { model: plan.generatorModel ?? "claude" })
+            ? t("page.generatedByClaude")
             : t("page.generatedLocally")}
         </span>
       </section>

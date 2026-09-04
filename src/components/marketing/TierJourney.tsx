@@ -5,7 +5,7 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Container from "@/components/Container";
 import RepsSimulator from "@/components/marketing/RepsSimulator";
-import { PUBLIC_ACCESS_HREF } from "@/lib/marketing/public-cta";
+import { PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
 
 /**
  * Tier journey — scroll-driven visualization of the Reps tier
@@ -34,9 +34,8 @@ import { PUBLIC_ACCESS_HREF } from "@/lib/marketing/public-cta";
  * simulerede medlemmer)") that connect the Reps balance to a real
  * member capability.
  *
- * The bottom CTAs are now two: primary "Start din journey → /login"
- * (unchanged) and ghost "Se motoren der driver det → #engine" which
- * sends curious tier-scrollers back to the playground.
+ * The bottom CTAs are two: primary waitlist (honest access for
+ * invite-less visitors) and ghost "Se motoren" as learn-more.
  */
 type Tier = {
   num: string;
@@ -161,7 +160,7 @@ export default function TierJourney() {
         </p>
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <a href={PUBLIC_ACCESS_HREF} className="btn btn-primary">
+          <a href={PUBLIC_WAITLIST_HREF} className="btn btn-primary">
             {t("cta")}
           </a>
           <a href="#engine" className="btn btn-ghost">
