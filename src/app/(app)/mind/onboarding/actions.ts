@@ -5,7 +5,7 @@ import { getSession } from "@/lib/auth";
 import { acknowledgeMentalDisclaimer } from "@/lib/data/mind";
 
 /**
- * Records the disclaimer acknowledgement, then forwards to /mind/check.
+ * Records the disclaimer acknowledgement, then forwards to /mind.
  * Demo mode writes a cookie; connected mode updates the members row.
  */
 export async function acknowledgeMentalDisclaimerAction() {
@@ -16,5 +16,5 @@ export async function acknowledgeMentalDisclaimerAction() {
 
   console.info("[mind] disclaimer acknowledged", { memberId: member.id });
 
-  redirect("/mind/check");
+  redirect("/mind");
 }

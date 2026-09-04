@@ -31,6 +31,7 @@ import DailyIntakeCard from "@/components/nutrition/DailyIntakeCard";
 import OffPlanLogButton from "./OffPlanLogButton";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
 import { getDailyIntake } from "@/lib/data/nutrition-intake";
+import { isNutritionProfileFresh } from "@/lib/nutrition/profile-fresh";
 
 export async function generateMetadata() {
   const t = await getTranslations("Nutrition");
@@ -57,12 +58,7 @@ export default async function NutritionPage({
     getCurrentPlan(member.id),
     getLatestWeight(member.id),
   ]);
-  const profileFresh =
-    !plan &&
-    !latestWeight &&
-    (!profile?.goal || profile.goal === "maintain") &&
-    !profile?.dailyKcalTarget;
-  if (profileFresh) {
+  if (isNutritionProfileFresh({ plan, latestWeight, profile })) {
     redirect("/nutrition/setup");
   }
 

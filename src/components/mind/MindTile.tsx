@@ -9,8 +9,8 @@ import { getTranslations } from "next-intl/server";
  *  - reflection ready if today's Motor output is ready, OR
  *  - streak fallback
  *
- * Always links to /mind (which routes to onboarding if not yet
- * acknowledged, else /mind/check).
+ * Always links to /mind (onboarding if the disclaimer is not
+ * acknowledged, else the daily check).
  */
 export default async function MindTile({
   hasMindCheckToday,

@@ -100,7 +100,7 @@ export function buildTodayInsightStream(
       domains: ["heart", "mind"],
       moreAbout: "mind",
       ctaHref: "/mind?q=hrv+restitution",
-      moreHref: "/mind/check",
+      moreHref: "/mind",
     });
   } else if (hasSession && !input.mindCheckedToday) {
     cards.push({
@@ -108,7 +108,7 @@ export function buildTodayInsightStream(
       domains: ["mind", "body"],
       moreAbout: "mind",
       ctaHref: "/mind?q=dagens+pas",
-      moreHref: "/mind/check",
+      moreHref: "/mind",
     });
   }
 

@@ -16,14 +16,14 @@ export async function generateMetadata() {
  *
  * Explicit: "this is NOT clinical treatment". Surfaces resources for
  * crisis paths. Once accepted, stamps members.acknowledged_mental_
- * disclaimer_at (or a cookie in demo mode) and forwards to /mind/check.
+ * disclaimer_at (or a cookie in demo mode) and forwards to /mind.
  */
 export default async function MindOnboardingPage() {
   const member = await getSession();
   if (!member) redirect("/login");
 
   if (await hasAcknowledgedMentalDisclaimer(member.id)) {
-    redirect("/mind/check");
+    redirect("/mind");
   }
 
   const t = await getTranslations("Mind.disclaimer");

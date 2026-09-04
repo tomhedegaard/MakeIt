@@ -393,13 +393,13 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 :root {
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top:    env(safe-area-inset-top, 0px);
-  --tabbar-h:    60px;
+  --tabbar-h:    72px;
   --header-h:    3.5rem; /* marketing + app fixed header (h-14) */
 }
 
 .h-dvh   { height: 100dvh; }
 .minh-dvh { min-height: 100dvh; }
-.pb-tabbar { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 20px); }
+.pb-tabbar { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 28px); }
 
 /* ---------------------------------------------------------------- *
  * Stepper (weight / reps quick input)
@@ -512,7 +512,7 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-top: 1px solid var(--line);
-  padding: 0 4px calc(var(--safe-bottom));
+  padding: 6px 4px calc(6px + var(--safe-bottom));
   z-index: 50;
 }
 .tabbar-row {
@@ -522,7 +522,8 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
    * repeat(5, 1fr) wrapped the last two tabs out of the fixed height. */
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
-  height: var(--tabbar-h);
+  min-height: var(--tabbar-h);
+  height: auto;
 }
 .tab {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -531,9 +532,16 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   font-family: var(--font-mono), monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.06em;
+  line-height: 1.1;
+  text-align: center;
   text-transform: uppercase;
   -webkit-tap-highlight-color: transparent;
   position: relative;
+  min-width: 0;
+}
+.tab > span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 .tab[data-active="true"] { color: var(--fg); }
 .tab[data-active="true"]::before {
