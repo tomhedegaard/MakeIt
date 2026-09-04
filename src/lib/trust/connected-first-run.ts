@@ -14,6 +14,7 @@ import type {
   UpcomingSession,
 } from "@/lib/data/dashboard";
 import type { ProgramListing, WeekDay } from "@/lib/data/coaching";
+import { excludeSyntheticPrograms } from "@/lib/programs/synthetic";
 
 export function emptyMemberStats(): MemberStats {
   return {
@@ -74,8 +75,10 @@ export function libraryForSurface(opts: {
   fromDb: ProgramListing[] | null;
   demo: ProgramListing[];
 }): ProgramListing[] {
-  if (!opts.connected) return opts.fromDb ?? opts.demo;
-  return opts.fromDb ?? [];
+  const list = opts.connected
+    ? (opts.fromDb ?? [])
+    : (opts.fromDb ?? opts.demo);
+  return excludeSyntheticPrograms(list);
 }
 
 export function engineStripForSurface(opts: {
