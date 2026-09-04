@@ -13,6 +13,7 @@ import MentalGraph from "@/components/mind/MentalGraph";
 import StreakBadge from "@/components/mind/StreakBadge";
 import MindFirstTimeTour from "@/components/mind/MindFirstTimeTour";
 import MindCelebration from "@/components/mind/MindCelebration";
+import MindDisclaimer from "@/components/mind/MindDisclaimer";
 import { currentStreak, longestStreak } from "@/lib/mind/streak";
 
 export async function generateMetadata() {
@@ -31,7 +32,7 @@ export default async function MindCheckPage() {
   if (!member) redirect("/login");
 
   if (!(await hasAcknowledgedMentalDisclaimer(member.id))) {
-    redirect("/mind/onboarding");
+    return <MindDisclaimer />;
   }
 
   const t = await getTranslations("Mind.check");

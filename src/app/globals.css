@@ -401,6 +401,19 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 .minh-dvh { min-height: 100dvh; }
 .pb-tabbar { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 28px); }
 
+/* Cookie bar sits on the tab-bar on first visit unless lifted. */
+.cookie-bar {
+  bottom: 0;
+}
+@media (max-width: 1023px) {
+  body:has(.tabbar) .cookie-bar {
+    bottom: calc(var(--tabbar-h) + var(--safe-bottom));
+  }
+  body:has(.tabbar):has(.cookie-bar) .pb-tabbar {
+    padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 28px + 5.5rem);
+  }
+}
+
 /* ---------------------------------------------------------------- *
  * Stepper (weight / reps quick input)
  * ---------------------------------------------------------------- */

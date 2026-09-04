@@ -12,7 +12,9 @@ describe("leftover first-run surfaces after #66", () => {
     expect(existsSync(join(here, "nutrition/loading.tsx"))).toBe(false);
     const mind = readFileSync(join(here, "mind/page.tsx"), "utf8");
     expect(mind).toContain("MindCheckForm");
+    expect(mind).toContain("MindDisclaimer");
     expect(mind).not.toContain('redirect("/mind/check")');
+    expect(mind).not.toContain('redirect("/mind/onboarding")');
     const nutrition = readFileSync(join(here, "nutrition/page.tsx"), "utf8");
     expect(nutrition).toContain("isNutritionProfileFresh");
   });
@@ -43,5 +45,6 @@ describe("leftover first-run surfaces after #66", () => {
       /padding-bottom:\s*calc\(var\(--tabbar-h\) \+ var\(--safe-bottom\) \+ 28px\)/,
     );
     expect(css).toContain("padding: 6px 4px calc(6px + var(--safe-bottom))");
+    expect(css).toContain("body:has(.tabbar) .cookie-bar");
   });
 });
