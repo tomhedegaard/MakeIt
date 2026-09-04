@@ -34,7 +34,10 @@
     "meetTitle": "Open House — Amagerbro",
     "meetDescription": "Saturday 24/05 · Copenhagen · Training, coffee, and a sneak peek at new products.",
     "meetRsvp": "RSVP",
-    "meetReadMore": "Read more"
+    "meetReadMore": "Read more",
+    "meetEmptyEyebrow": "IRL meet",
+    "meetEmptyTitle": "No meetup scheduled.",
+    "meetEmptyBody": "When the crew meets in person, it shows here. We do not invent events."
   },
   "post": {
     "prBadge": "★ PR",

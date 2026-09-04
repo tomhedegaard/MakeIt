@@ -18,18 +18,17 @@ describe("community connected first-run", () => {
     expect(page).toContain("Leaderboard — demo only");
   });
 
-  it("does not render challenge hero or IRL meet in connected mode", () => {
+  it("does not render May challenge or Open House as live when connected", () => {
     expect(page).toContain("Monthly challenge hero — demo only");
-    expect(page).toContain("IRL meet — demo only");
+    expect(page).toContain("IRL meet — demo fixture only");
     expect(page).toMatch(
-      /\{\/\* Monthly challenge hero — demo only[\s\S]*?\{\!useReal \? \(/,
+      /\{\/\* Monthly challenge hero — demo only[\s\S]*?\{\!SUPABASE_ENABLED \? \(/,
     );
     expect(page).toMatch(
-      /\{\/\* IRL meet — demo only[\s\S]*?\{\!useReal \? \(/,
+      /\{\/\* IRL meet — demo fixture only[\s\S]*?\{\!SUPABASE_ENABLED \? \(/,
     );
-    // No connected-mode placeholder chrome for May fixture copy.
-    expect(page).not.toContain("challengeEmptyTitle");
-    expect(page).not.toContain("challengeEmptyEyebrow");
-    expect(page).not.toMatch(/\{\!SUPABASE_ENABLED \? \(/);
+    expect(page).toContain("challengeEmptyTitle");
+    expect(page).toContain("meetEmptyTitle");
+    expect(page).toContain("meetEmptyBody");
   });
 });

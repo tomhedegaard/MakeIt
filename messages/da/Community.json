@@ -34,7 +34,10 @@
     "meetTitle": "Open House — Amagerbro",
     "meetDescription": "Lørdag 24/05 · København · Træning, kaffe, og en sneak peek af nye produkter.",
     "meetRsvp": "RSVP",
-    "meetReadMore": "Læs mere"
+    "meetReadMore": "Læs mere",
+    "meetEmptyEyebrow": "IRL-meet",
+    "meetEmptyTitle": "Ingen planlagt meet.",
+    "meetEmptyBody": "Når crewet mødes IRL, vises det her. Vi finder ikke på events."
   },
   "post": {
     "prBadge": "★ PR",

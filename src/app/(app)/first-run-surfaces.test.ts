@@ -17,6 +17,16 @@ describe("leftover first-run surfaces after #66", () => {
     expect(nutrition).toContain("isNutritionProfileFresh");
   });
 
+  it("keeps May challenge and Open House behind demo on Crew", () => {
+    const page = readFileSync(join(here, "community/page.tsx"), "utf8");
+    expect(page).toContain("challengeEmptyTitle");
+    expect(page).toContain("meetEmptyTitle");
+    expect(page).toMatch(
+      /Monthly challenge hero — demo only[\s\S]*!SUPABASE_ENABLED/,
+    );
+    expect(page).toMatch(/IRL meet — demo fixture only[\s\S]*!SUPABASE_ENABLED/);
+  });
+
   it("uses Danish settings labels instead of leftover English", () => {
     const da = readFileSync(join(root, "messages/da/Settings.json"), "utf8");
     expect(da).toContain('"handleLabel": "Kaldenavn"');
