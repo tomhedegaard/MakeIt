@@ -28,7 +28,11 @@
     "sets": "Sæt",
     "estTime": "Est. tid",
     "setCountSuffix": "× sæt",
-    "start": "Start session →"
+    "start": "Start session →",
+    "emptyEyebrow": "Dagens session",
+    "emptyTitle": "Intet pas endnu",
+    "emptyBody": "Når du vælger et program, lander dagens session her. Ingen demo-pas.",
+    "emptyCta": "Vælg program →"
   },
   "stats": {
     "volume": "Volumen",
@@ -73,6 +77,22 @@
     "stable": "Stabil",
     "up": "Op {pct} procent",
     "down": "Ned {pct} procent"
+  },
+  "todayProse": {
+    "ariaLabel": "I dag",
+    "eyebrow": "I dag",
+    "hrvLav": "HRV er lav i morges — tag det roligt i toppen.",
+    "hrvRo": "HRV er i ro. Kroppen er med dig i dag.",
+    "hrvMidt": "HRV ligger i dit midterste bånd.",
+    "sessionAssigned": "Der står et pas klar i dag.",
+    "sessionAssignedWithLabel": "{label} venter.",
+    "sessionDone": "Passet er kørt. Godt arbejde.",
+    "sessionDoneWithLabel": "{label} er kørt. Godt arbejde.",
+    "sessionRest": "I dag er hvile.",
+    "sessionSkipped": "Dagens pas blev sprunget over. Det er okay.",
+    "mindNudge": "Mind-check tager 60 sekunder, når du er klar.",
+    "mindLogged": "Mind-check er logget.",
+    "quiet": "Stille start. Når signalerne lander, skriver vi her."
   },
   "hrvChip": {
     "eyebrow": "HRV readiness",

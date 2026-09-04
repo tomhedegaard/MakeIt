@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import AdaptiveReasonStrip, {
   type AdaptiveStripCopy,
 } from "./AdaptiveReasonStrip";
-import { demoEngineStrip } from "@/lib/adaptive/engine-strip";
+import { demoEngineStrip, emptyEngineStrip } from "@/lib/adaptive/engine-strip";
 
 const COPY: AdaptiveStripCopy = {
   why: "Hvorfor",
@@ -50,6 +50,16 @@ describe("AdaptiveReasonStrip", () => {
     expect(html).not.toContain("token");
     expect(html).not.toContain("sparkle");
     expect(html.toLowerCase()).not.toContain("smiley");
+  });
+
+  it("renders nothing when the strip has no steps", () => {
+    const html = renderToStaticMarkup(
+      createElement(AdaptiveReasonStrip, {
+        model: emptyEngineStrip(),
+        copy: COPY,
+      }),
+    );
+    expect(html).toBe("");
   });
 
   it("surfaces an optional Munk note when provided", () => {

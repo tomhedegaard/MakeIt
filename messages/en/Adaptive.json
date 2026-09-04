@@ -7,7 +7,7 @@
       "hrvLow": "Heart — last night's HRV sits below your band",
       "hrvVeryLow": "Heart — last night's HRV is well below your band",
       "hrvInBand": "Heart — last night's HRV sits in your normal range",
-      "sessionToday": "Body — today's session is squat, top set @ RPE 8",
+      "sessionToday": "Body — there is a session today",
       "lowSleep": "Mind — sleep the last nights has been short",
       "alcohol": "Food — alcohol logged in the last two days",
       "lowFeeling": "Mind — feeling logged as tired",
@@ -35,7 +35,7 @@
     },
     "cards": {
       "heart_body_low": {
-        "sentence": "Last night's HRV sits below your band — the Motor eases today's squat top set.",
+        "sentence": "Last night's HRV sits below your band — the Motor eases today's top set.",
         "cta": "Open today's session"
       },
       "heart_body_ro": {
@@ -47,7 +47,7 @@
         "cta": "Do the mind-check"
       },
       "body_food_session": {
-        "sentence": "Squat day and the food around the session: keep the meal simple so Body and Food pull the same way.",
+        "sentence": "The food around the session: keep the meal simple so Body and Food pull the same way.",
         "cta": "See nutrition"
       },
       "mind_body_check": {

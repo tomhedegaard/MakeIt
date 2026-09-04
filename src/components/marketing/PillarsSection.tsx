@@ -107,7 +107,7 @@ export default async function PillarsSection() {
           key={p.id}
           id={p.id}
           data-domain={p.domain}
-          className={`relative border-t hairline ${idx === pillars.length - 1 ? "border-b" : ""}`}
+          className={`relative border-t hairline scroll-mt-20 ${idx === pillars.length - 1 ? "border-b" : ""}`}
         >
           <Container className="py-16 md:py-24">
             <div className="grid gap-12 md:grid-cols-12 items-start">
