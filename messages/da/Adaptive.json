@@ -7,7 +7,7 @@
       "hrvLow": "Hjerte — nattens HRV ligger under dit bånd",
       "hrvVeryLow": "Hjerte — nattens HRV er langt under dit bånd",
       "hrvInBand": "Hjerte — nattens HRV ligger i dit normalområde",
-      "sessionToday": "Krop — der ligger et pas i dag",
+      "sessionToday": "Krop — der står et pas i dag",
       "lowSleep": "Sind — søvn de sidste nætter er kort",
       "alcohol": "Kost — alkohol logget de sidste to dage",
       "lowFeeling": "Sind — følelse logget som træt",
@@ -26,6 +26,7 @@
     "moreAbout": "Sig mere om",
     "dismiss": "Skjul",
     "snooze": "I morgen",
+    "motorAttribution": "Motor · Adaptive Engine",
     "domains": {
       "heart": "Hjerte",
       "body": "Krop",
@@ -34,7 +35,7 @@
     },
     "cards": {
       "heart_body_low": {
-        "sentence": "Nattens HRV ligger under dit bånd — Motoren letter dagens squat-topsæt.",
+        "sentence": "Nattens HRV ligger under dit bånd — Motoren letter dagens topsæt.",
         "cta": "Åbn dagens pas"
       },
       "heart_body_ro": {
@@ -46,7 +47,7 @@
         "cta": "Tag mind-check"
       },
       "body_food_session": {
-        "sentence": "Der ligger et pas i dag — hold måltidet simpelt, så Krop og Kost trækker samme vej.",
+        "sentence": "Kosten omkring passet: hold måltidet simpelt, så Krop og Kost trækker samme vej.",
         "cta": "Se kosten"
       },
       "mind_body_check": {

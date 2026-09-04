@@ -21,8 +21,11 @@
     "line1": "Velkommen",
     "line2": "til crewet."
   },
-  "statusConnected": "Connected · ",
-  "statusDemo": "Demo mode · ingen backend tilkoblet",
+  "statusConnected": "Forbundet",
+  "statusDemo": "Demo-tilstand · ingen backend tilkoblet",
+  "memberOnlyHint": "Den side du prøvede at åbne er kun for medlemmer. Log ind med din invite-kode.",
+  "waitlistHint": "Ingen invite-kode?",
+  "waitlistLink": "Skriv dig på ventelisten",
   "mock": {
     "intro": "Indtast din invite-kode for at få adgang. Har du ikke en? Skriv til ",
     "inviteCodeLabel": "Invite-kode",

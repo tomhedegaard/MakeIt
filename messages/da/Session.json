@@ -43,9 +43,18 @@
     "sets": "sæt",
     "openDetails": "Åbn øvelsens detaljer",
     "seeFull": "Se hele øvelsen →",
-    "formCheck": "Form-check med AI",
+    "formCheck": "Film sæt {set}",
+    "formCheckSub": "Sendes til Munk — bundet til {lift}",
     "moreCues": " · {count} cues mere",
-    "duration": "~6 sek →"
+    "duration": "Film →",
+    "thread": {
+      "eyebrow": "Tråd under løftet",
+      "pending": "Afventer Munk",
+      "reviewed": "Munk har svaret",
+      "voice": "Lydbesked",
+      "youFilmed": "Du filmede dette sæt",
+      "munkReply": "Svar fra Munk"
+    }
   },
   "restTimer": {
     "ariaLabel": "Hvile",

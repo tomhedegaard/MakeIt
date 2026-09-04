@@ -532,7 +532,7 @@ export async function submitLessonAction(input: {
       quizScore: 1.0,
       practiceEvalScore: "on_track",
       practiceFeedback:
-        "Demo mode — det ser fint ud. Ægte Claude-eval kører i prod.",
+        "Demo mode — det ser fint ud. Ægte AI-evaluering kører i prod.",
     };
   }
 

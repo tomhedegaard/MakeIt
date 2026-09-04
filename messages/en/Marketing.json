@@ -1,14 +1,18 @@
 {
   "nav": {
     "crew": "Crew",
+    "munk": "Munk",
     "engine": "Engine",
+    "engineTitle": "Engine — rule layer that adapts today's session",
     "coaching": "Coaching",
     "tiers": "Tiers",
+    "tiersTitle": "Tiers — levels you earn",
     "app": "The App",
     "price": "Pricing",
     "faq": "FAQ",
     "closedBeta": "Closed Beta",
     "login": "Log in",
+    "getAccess": "Get access",
     "menuOpen": "Open menu",
     "menuClose": "Close menu"
   },
@@ -24,7 +28,7 @@
       "formCheckSuffix": "AI draft · Munk review 24h",
       "engine": "Engine runs",
       "engineValue": "05:30",
-      "engineSuffix": "Every morning"
+      "engineSuffix": "Rule layer · adapts today's session"
     },
     "subline": "Coaching built on your body's data.",
     "figureAria": "Body map — mind, heart, body and food",
@@ -37,8 +41,6 @@
     "subline2": "The week lives in one body. Closed beta — invite only.",
     "ctaPrimary": "Get access",
     "ctaSecondary": "Learn more",
-    "ctaTertiary": "Try the engine ↓",
-    "waitlistLink": "No invite code? Join the waitlist",
     "trustLine": "No lock-in · Cancel anytime · Price locked for beta members"
   },
   "engine": {
@@ -56,7 +58,8 @@
     "reasoningHeading": "Why",
     "previousLabel": "Before you touched it",
     "disclaimer": "Same pure rule engine the app uses. No API, no spinner — runs in your browser.",
-    "ctaHowItWorks": "See the full reasoning chain →"
+    "ctaHowItWorks": "See the full reasoning chain →",
+    "ctaMembersOnly": "Members only — sign in with an invite."
   },
   "crew": {
     "eyebrow": "01 — The Crew",
@@ -74,7 +77,7 @@
       },
       "internal": {
         "k": "Open brain",
-        "v": "We show you how the engine thinks — and give you the knobs to move it. Every decision, every adjustment, every counterfactual is open."
+        "v": "Open brain: we show you how the engine thinks — and give you the knobs to move it. Every decision, every adjustment, every counterfactual is open."
       },
       "noNoise": {
         "k": "No noise",
@@ -85,6 +88,38 @@
         "v": "HRV sharing and your journal are private by default. You choose what the coach sees — and can pull the plug anytime."
       }
     }
+  },
+  "munk": {
+    "eyebrow": "Head coach",
+    "name": "Mikael Munk",
+    "role": "Head coach in the crew",
+    "body": "Mikael reviews form-checks in person. AI can draft a reply — it does not go out without his name.",
+    "facts": {
+      "formCheck": {
+        "k": "Form-check",
+        "v": "Personal review within 24 hours on weekdays."
+      },
+      "signature": {
+        "k": "Signature",
+        "v": "AI draft. Munk's name on what goes out."
+      },
+      "access": {
+        "k": "Access",
+        "v": "Invite code from him or an existing crew member."
+      }
+    },
+    "write": "Write to {email}",
+    "photoPending": "Portrait not published",
+    "photoPendingNote": "We do not show an invented photo."
+  },
+  "marquee": {
+    "hrvAware": "HRV-AWARE",
+    "aiCoach": "AI + COACH",
+    "openBrain": "OPEN BRAIN",
+    "madeIn": "MADE IN DENMARK",
+    "city": "COPENHAGEN",
+    "closedBeta": "CLOSED BETA",
+    "forTheCrew": "FOR THE CREW"
   },
   "worksWith": {
     "label": "Works with",
@@ -156,7 +191,7 @@
     "engine": {
       "label": "02 — Engine & open brain",
       "title": "And it shows you why.",
-      "body": "Every morning at 05:30 the engine reads your <heart>HRV</heart>, your <mind>sleep</mind>, last session's <body>RPE</body> and your latest form checks. It adjusts today's session — or doesn't — and shows the whole chain behind the call: raw signals → rule → Claude's refinement → action → outcome. Munk sees the escalation before you do. It's one body-map, not four dashboards.",
+      "body": "Every morning at 05:30 the engine reads your <heart>HRV</heart>, your <mind>sleep</mind>, last session's <body>RPE</body> and your latest form checks. It adjusts today's session — or doesn't — and shows the whole chain behind the call: raw signals → rule → AI refinement → action → outcome. Munk sees the escalation before you do. It's one body-map, not four dashboards.",
       "bullet1": "Top-set reduction, accessory cut, exercise swap — or no_change. Never more than one change per session.",
       "bullet2": "HRV very_low → session paused, mobility + walk, Munk gets notified",
       "bullet3": "30 days of history with counterfactual sliders: \"What if I'd slept 7h?\" — computed live in your browser",
@@ -204,7 +239,7 @@
       "unlocks": {
         "1": "Adaptive engine runs from day 1",
         "2": "AI form-check with 24-hour Munk review",
-        "3": "Buddy pairing activates after 14 days",
+        "3": "Buddy — a training partner in the crew — activates after 14 days",
         "4": "1 IRL meet per quarter"
       }
     },
@@ -213,8 +248,8 @@
       "quote": "Three months in and I've hit PRs on all three big lifts. The Reps system keeps me accountable every single day.",
       "unlocks": {
         "1": "Form-check priority in Munk's queue",
-        "2": "Lifestyle-log patterns in your Open Brain",
-        "3": "Buddy pod (3 people)",
+        "2": "Lifestyle-log patterns in your open brain — you can see why the engine decided",
+        "3": "Buddy pod — a fixed group of 3",
         "4": "Custom strap colour unlocked"
       }
     },
@@ -222,7 +257,7 @@
       "description": "The volume block. You know how your body responds under heavy load, and you work recovery deliberately. Coach feedback gets finer and more surgical.",
       "quote": "The volume block was the hardest, physically and mentally — but that's where I learned what I can really handle.",
       "unlocks": {
-        "1": "Coach School unlocked — lessons with Claude evaluation",
+        "1": "Coach School unlocked — lessons with AI evaluation",
         "2": "Sandbox cases: practice against simulated members",
         "3": "1:1 30-min with Munk per quarter",
         "4": "Limited drops before everyone else"
@@ -275,7 +310,7 @@
     "heart": {
       "kicker": "Pulse & HRV",
       "title": "Heart",
-      "body": "Readiness, baseline and 60-day trend. Red is the engine that sets the pace.",
+      "body": "Readiness, baseline and 60-day trend. Red is the pulse that sets the pace.",
       "surfaces": "Readiness · Trends · Insights"
     },
     "mind": {
@@ -292,11 +327,11 @@
       "line1": "You move up.",
       "line2": "And you lift the ones below you."
     },
-    "intro": "It's the only platform that grows organically: everyone else stops at your own results. Here you hand what you learn on the way up down to the people standing where you stood — and eventually you coach them.",
+    "intro": "Tiers are levels you earn — not titles you buy. It's the only platform that grows organically: everyone else stops at your own results. Here you hand what you learn on the way up down to the people standing where you stood — and eventually you coach them.",
     "receive": {
       "kicker": "You receive",
       "title": "You get coached",
-      "body": "The engine adapts your sessions, Munk answers your form checks, and the crew above you shares what they've already learned.",
+      "body": "The engine — the rule layer that adapts today's session each morning — adjusts your sessions, Munk answers your form checks, and the crew above you shares what they've already learned.",
       "tier": "Lifter · Athlete"
     },
     "handDown": {
@@ -308,7 +343,7 @@
     "coach": {
       "kicker": "You coach",
       "title": "You become senior's partner",
-      "body": "You answer form checks for live members and lead a pod of new Lifters. Reps rewards the quality of your feedback — not just your own lifts.",
+      "body": "You answer form checks for live members and lead a pod — a small group — of new Lifters. Reps — points you earn for work in the app — reward the quality of your feedback, not just your own lifts.",
       "tier": "Legend"
     },
     "cta": "See the full ladder",
@@ -354,7 +389,7 @@
       "mindLabel": "Mind",
       "mindDetail": "60 sec · check-in + graph",
       "formCheckLabel": "Form check",
-      "formCheckDetail": "Claude grades it in 6 sec.",
+      "formCheckDetail": "AI draft in 6 sec.",
       "buddyLabel": "Buddy",
       "buddyDetail": "AI-paired · weekly rematch",
       "coachSchoolLabel": "Coach School",
@@ -476,7 +511,7 @@
     "priceLockNote": "Final price locked before launch",
     "positioningEyebrow": "How we keep coaching accessible",
     "positioningHeadline": "AI does the generic. People do what matters.",
-    "positioningSub": "We automate what can be automated — program building, form checks, progression — and use people where it actually counts: 1:1, milestones and community. The result is coaching that costs a fraction of the market, without feeling cheap.",
+    "positioningSub": "We automate what can be automated — program building, form checks, progression — and use people where it actually counts: 1:1, milestones and community. Closed beta is invite-only. The price is not public yet.",
     "marketLabel": "market average for personal coaching",
     "pillar1": {
       "eyebrow": "Automated",
@@ -513,7 +548,8 @@
     },
     "betaValue": "Beta",
     "betaSuffix": "invite only",
-    "marketFraction": "A fraction of the market average for personal coaching."
+    "betaNext": "No public price during closed beta. Join the waitlist — we write when a spot opens.",
+    "betaCta": "Join the waitlist"
   },
   "testimonials": {
     "eyebrow": "07 — The Crew",
@@ -571,8 +607,8 @@
         "a": "For 95% of lifters: yes. AI form check + weekly coach review catches most of it. For those who want more — the 1:1 add-on gives you direct Signal access to Mikael and a weekly 30-min video session. Limited to 8 spots at a time."
       },
       "cheaper": {
-        "q": "Why is it cheaper than traditional coaching?",
-        "a": "Because AI handles the generic stuff — program generation, progression, instant form feedback. Mikael and the crew then spend their time on what actually moves the needle: 1:1, milestones, and keeping you accountable. You pay for what counts."
+        "q": "What does it cost?",
+        "a": "Closed beta is invite-only, and the public price is not locked yet. Join the waitlist — we write when a spot opens. Already have a code? Sign in."
       },
       "wearables": {
         "q": "Which wearables does the HRV module support?",
@@ -615,7 +651,7 @@
         "a": "Tap 'I ate something else' in the Nutrition feed, briefly describe what you ate, and it's logged as an off-plan meal. No penalty, no scolding — just data. The coach sees it in weekly signals so next week's planning gets more realistic instead of ignoring reality."
       }
     },
-    "showAll": "Show all questions"
+    "showAll": "Show all questions ({count})"
   },
   "footer": {
     "blurbBefore": "{product} is the inner universe for our crew, athletes and coaches. Gear:",

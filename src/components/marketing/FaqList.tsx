@@ -27,7 +27,7 @@ export default function FaqList({
 }) {
   const [expanded, setExpanded] = useState(false);
   const visible = expanded ? items : items.slice(0, initialCount);
-  const hiddenCount = items.length - initialCount;
+  const hasMore = items.length > initialCount;
 
   return (
     <div className="md:col-span-7">
@@ -70,13 +70,13 @@ export default function FaqList({
         ))}
       </ul>
 
-      {!expanded && hiddenCount > 0 ? (
+      {!expanded && hasMore ? (
         <button
           type="button"
           onClick={() => setExpanded(true)}
           className="mt-6 btn btn-sm"
         >
-          {showAllLabel} ({hiddenCount})
+          {showAllLabel}
         </button>
       ) : null}
     </div>

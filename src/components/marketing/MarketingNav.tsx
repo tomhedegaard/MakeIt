@@ -6,6 +6,10 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
 import LanguageSelector from "@/components/LanguageSelector";
+import {
+  PUBLIC_LOGIN_HREF,
+  PUBLIC_WAITLIST_HREF,
+} from "@/lib/marketing/public-cta";
 
 /**
  * WAUW-4 — adds a mobile hamburger sheet. The v1 nav was
@@ -41,18 +45,25 @@ export default function MarketingNav() {
     };
   }, [open]);
 
-  const links: { href: string; key: string }[] = [
+  const links: { href: string; key: string; titleKey?: string }[] = [
     { href: "#crew",          key: "crew" },
-    { href: "#engine",        key: "engine" },
-    { href: "#pillar-engine", key: "coaching" },
-    { href: "#tiers",         key: "tiers" },
+    { href: "#munk",          key: "munk" },
+    { href: "#engine",        key: "engine", titleKey: "engineTitle" },
+    { href: "#pillar-munk-multiplier", key: "coaching" },
+    { href: "#tiers",         key: "tiers", titleKey: "tiersTitle" },
     { href: "#app",           key: "app" },
     { href: "#how",           key: "price" },
     { href: "#faq",           key: "faq" },
   ];
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b hairline backdrop-blur-md bg-[rgba(10,10,11,0.6)]">
+    <header
+      className={
+        open
+          ? "fixed inset-x-0 top-0 z-40 border-b hairline bg-bg"
+          : "fixed inset-x-0 top-0 z-40 border-b hairline backdrop-blur-md bg-[rgba(10,10,11,0.6)]"
+      }
+    >
       <Container>
         <div className="flex h-14 items-center justify-between">
           <Link
@@ -70,6 +81,7 @@ export default function MarketingNav() {
               <a
                 key={l.href}
                 href={l.href}
+                title={l.titleKey ? t(l.titleKey) : undefined}
                 className="hover:text-fg transition-colors"
               >
                 {t(l.key)}
@@ -87,8 +99,14 @@ export default function MarketingNav() {
             <div className="hidden md:block">
               <LanguageSelector />
             </div>
-            <Link href="/login" className="btn btn-sm btn-primary">
+            <Link
+              href={PUBLIC_LOGIN_HREF}
+              className="hidden sm:inline-flex text-[12px] tracking-[0.18em] uppercase text-fg-dim font-mono hover:text-fg"
+            >
               {t("login")}
+            </Link>
+            <Link href={PUBLIC_WAITLIST_HREF} className="btn btn-sm btn-primary">
+              {t("getAccess")}
             </Link>
 
             {/* Mobile hamburger trigger */}
@@ -115,7 +133,7 @@ export default function MarketingNav() {
           // fixed-positionerede børn, så `top-14 bottom-0` beregnes mod
           // den 56px høje header og kollapser til højde 0 (menuen var
           // usynlig i produktion). Eksplicit højde omgår det.
-          className="md:hidden fixed left-0 right-0 top-full h-[calc(100dvh-3.5rem)] z-30 bg-[rgba(10,10,11,0.92)] backdrop-blur-lg overflow-y-auto"
+          className="marketing-nav-sheet md:hidden fixed left-0 right-0 top-full h-[calc(100dvh-3.5rem)] z-30 overflow-y-auto"
           onClick={(e) => {
             // Close when tapping the backdrop directly (but not its
             // children — let link clicks bubble first).
@@ -129,6 +147,7 @@ export default function MarketingNav() {
                   <li key={l.href}>
                     <a
                       href={l.href}
+                      title={l.titleKey ? t(l.titleKey) : undefined}
                       onClick={() => setOpen(false)}
                       className="block py-4 border-b hairline text-fg/90 text-sm font-mono uppercase tracking-[0.16em] hover:text-fg"
                     >
@@ -141,6 +160,22 @@ export default function MarketingNav() {
                 ))}
               </ul>
             </nav>
+            <div className="mt-8 flex flex-col gap-3">
+              <Link
+                href={PUBLIC_WAITLIST_HREF}
+                onClick={() => setOpen(false)}
+                className="btn btn-primary w-full"
+              >
+                {t("getAccess")}
+              </Link>
+              <Link
+                href={PUBLIC_LOGIN_HREF}
+                onClick={() => setOpen(false)}
+                className="btn btn-ghost w-full"
+              >
+                {t("login")}
+              </Link>
+            </div>
             <div className="mt-8">
               <LanguageSelector />
             </div>

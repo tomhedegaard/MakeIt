@@ -26,6 +26,7 @@
     "moreAbout": "Tell me more about",
     "dismiss": "Hide",
     "snooze": "Tomorrow",
+    "motorAttribution": "Motor · Adaptive Engine",
     "domains": {
       "heart": "Heart",
       "body": "Body",
@@ -34,7 +35,7 @@
     },
     "cards": {
       "heart_body_low": {
-        "sentence": "Last night's HRV sits below your band — the Motor eases today's squat top set.",
+        "sentence": "Last night's HRV sits below your band — the Motor eases today's top set.",
         "cta": "Open today's session"
       },
       "heart_body_ro": {
@@ -46,7 +47,7 @@
         "cta": "Do the mind-check"
       },
       "body_food_session": {
-        "sentence": "There is a session today — keep the meal simple so Body and Food pull the same way.",
+        "sentence": "The food around the session: keep the meal simple so Body and Food pull the same way.",
         "cta": "See nutrition"
       },
       "mind_body_check": {

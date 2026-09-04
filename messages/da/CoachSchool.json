@@ -46,7 +46,7 @@
   "tree": {
     "eyebrow": "Coach School",
     "title": "Lær at coache som Munk",
-    "subtitle": "Lektioner låses op af din tier. Hver lektion: kort video, 3 quiz-spørgsmål, og en praksis-scenarie hvor Claude evaluerer dit svar mod Munks rubrikker.",
+    "subtitle": "Lektioner låses op af din tier. Hver lektion: kort video, 3 quiz-spørgsmål, og en praksis-scenarie hvor AI evaluerer dit svar mod Munks rubrikker.",
     "empty": "Ingen lektioner er udgivet endnu. Munk optager den første kohorte i M5.",
     "tierHeader": {
       "athlete": "Athlete",
@@ -67,18 +67,18 @@
     "recordedBy": "Optaget af Mikael Munk",
     "quizHeader": "Quiz · 3 spørgsmål",
     "quizQuestionLabel": "Spørgsmål {n}",
-    "practiceHeader": "Praksis-scenarie · Claude evaluerer dit svar",
+    "practiceHeader": "Praksis-scenarie · AI evaluerer dit svar",
     "practicePlaceholder": "Skriv dit coach-svar her. Hold det kort og konkret — som du ville sende til en lærling.",
     "submitButton": "Send og evaluér",
     "resultHeader": "Resultat",
     "quizResultLine": "{correct}/{total} rigtige",
-    "evalHeader": "Claudes vurdering",
+    "evalHeader": "AI-evaluering",
     "evalScore": {
       "strong": "Solid",
       "on_track": "På rette spor",
       "needs_work": "Brug for justering"
     },
-    "evalUnavailable": "Claude kunne ikke evaluere lige nu — dit svar er gemt; prøv igen senere.",
+    "evalUnavailable": "AI kunne ikke evaluere lige nu — dit svar er gemt; prøv igen senere.",
     "completedFootnote": "Gennemført. {reps} Reps lander når CC-10 går live."
   }
 }

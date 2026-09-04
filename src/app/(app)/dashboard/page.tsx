@@ -13,9 +13,7 @@ import {
   getRecentFeed,
   getMemberStats,
   type TodayCard,
-  type UpcomingSession,
   type CrewItem,
-  type MemberStats,
 } from "@/lib/data/dashboard";
 import { getMyFormChecks } from "@/lib/data/me";
 import { getLatestUnseenPromotion } from "@/lib/data/tier-events";
@@ -34,12 +32,24 @@ import {
 import AdaptiveReasonStrip from "@/components/adaptive/AdaptiveReasonStrip";
 import ConnectDotsStream from "@/components/dashboard/ConnectDotsStream";
 import TodayProse from "@/components/dashboard/TodayProse";
+import {
+  demoEngineStrip,
+  stripFromAvailableSignals,
+} from "@/lib/adaptive/engine-strip";
+import {
+  buildTodayInsightStream,
+  demoInsightStream,
+} from "@/lib/dashboard/insight-stream";
 import { getTodayProse } from "@/lib/data/today-prose";
-import { getTodayEngineStrip } from "@/lib/data/today-engine-strip";
-import { getTodayInsightCards } from "@/lib/data/today-insights";
-import { buildHrvBandView, qualitativeFromBucket } from "@/lib/hrv/band";
+import { buildHrvBandView, isOutOfBand, qualitativeFromBucket } from "@/lib/hrv/band";
 import { demoSteadySeries } from "@/lib/hrv/demo-series";
 import { loadDotsCopy, loadStripCopy } from "@/lib/ui/sprint-a-copy";
+import {
+  feedForSurface,
+  statsForSurface,
+  todayCardForSurface,
+  upcomingForSurface,
+} from "@/lib/trust/connected-first-run";
 
 type Translator = Awaited<ReturnType<typeof getTranslations<"Dashboard">>>;
 
@@ -94,6 +104,7 @@ function fmtUpcomingDate(iso: string | null, t: Translator, locale: string): str
 type HrvChipData = {
   rmssdMs: number;
   readiness: string | null;
+  bucket: ReadinessBucket | null;
 };
 
 /**
@@ -110,6 +121,7 @@ async function getHrvChipData(
     return {
       rmssdMs: view.latestMs ?? 0,
       readiness: q ? labels[q] : null,
+      bucket: view.qualitative === "lav" ? "low" : view.qualitative === "ro" ? "high" : "normal",
     };
   }
   const supabase = await createClient();
@@ -130,6 +142,7 @@ async function getHrvChipData(
   return {
     rmssdMs: data.rmssd_ms as number,
     readiness: q ? labels[q] : null,
+    bucket,
   };
 }
 
@@ -147,30 +160,24 @@ export default async function TodayPage() {
     loadStripCopy(),
     loadDotsCopy(),
   ]);
-  let today: TodayCard | null;
-  let upcoming: UpcomingSession[] | null = null;
-  let feed: CrewItem[] | null = null;
-  let stats: MemberStats | null = null;
+  const connected = SUPABASE_ENABLED;
+  const [todayDb, upcomingDb, feedDb, statsDb] = connected
+    ? await Promise.all([
+        getTodayCard(member.id),
+        getUpcomingSessions(member.id, 3),
+        getRecentFeed(3),
+        getMemberStats(member.id),
+      ])
+    : ([null, null, null, null] as const);
 
-  if (SUPABASE_ENABLED) {
-    const [tCard, u, f, s] = await Promise.all([
-      getTodayCard(member.id),
-      getUpcomingSessions(member.id, 3),
-      getRecentFeed(3),
-      getMemberStats(member.id),
-    ]);
-    today = tCard;
-    upcoming = u;
-    feed = f;
-    stats = s;
-  } else {
-    today = todayCardFromMock();
-  }
-
-  const [engineStrip, insightCards] = await Promise.all([
-    getTodayEngineStrip(member.id),
-    getTodayInsightCards(member.id, today ? `/session/${today.id}` : null),
-  ]);
+  const today = todayCardForSurface({
+    connected,
+    fromDb: todayDb,
+    demo: todayCardFromMock(),
+  });
+  const upcoming = upcomingForSurface({ connected, fromDb: upcomingDb });
+  const feed = feedForSurface({ connected, fromDb: feedDb });
+  const stats = statsForSurface({ connected, fromDb: statsDb });
 
   // Coach-review notification: surface a banner when there are new
   // form-checks with coach notes the member hasn't seen yet. (No
@@ -198,6 +205,25 @@ export default async function TodayPage() {
     getTodayProse(member.id),
   ]);
 
+  const engineStrip = connected
+    ? stripFromAvailableSignals({
+        hasHrv: hrv != null,
+        readinessBucket: hrv?.bucket ?? null,
+        hasSession: today != null,
+      })
+    : demoEngineStrip();
+
+  const insightCards = connected
+    ? buildTodayInsightStream({
+        sessionHref: today ? `/session/${today.id}` : "/coaching",
+        hasHrv: hrv != null,
+        qualitative: qualitativeFromBucket(hrv?.bucket ?? null),
+        outOfBand: isOutOfBand(hrv?.bucket ?? null),
+        mindCheckedToday: mindChecked,
+        hasSession: today != null,
+      })
+    : demoInsightStream(`/session/${todayCardFromMock().id}`);
+
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       <FirstTimeTour />
@@ -211,9 +237,7 @@ export default async function TodayPage() {
         </div>
         <div className="text-right shrink-0">
           <div className="eyebrow mb-1">{t("greeting.streakLabel")}</div>
-          <div className="numeric text-3xl">
-            {stats?.streakDays ?? (SUPABASE_ENABLED ? 0 : 12)}
-          </div>
+          <div className="numeric text-3xl">{stats?.streakDays ?? (connected ? 0 : 12)}</div>
           <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">{t("greeting.streakUnit")}</div>
         </div>
       </header>
@@ -353,6 +377,7 @@ export default async function TodayPage() {
       <section
         aria-label={t("todaySession.ariaLabel")}
         data-domain="body"
+        data-today-empty=""
         className="surface-2 rounded-2xl overflow-hidden"
       >
         <div className="px-5 pt-5 pb-4">
@@ -361,10 +386,11 @@ export default async function TodayPage() {
           <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
             {t("todaySession.emptyTitle")}
           </h2>
-          <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-md">
+          <p className="text-fg-dim text-sm md:text-base leading-relaxed">
             {t("todaySession.emptyBody")}
           </p>
         </div>
+        <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
         <div className="p-4 lg:p-5">
           <Link href="/coaching" className="btn btn-primary btn-xl">
             {t("todaySession.emptyCta")}
@@ -378,7 +404,7 @@ export default async function TodayPage() {
         <div className="bg-bg p-4 lg:p-5">
           <div className="eyebrow mb-2">{t("stats.volume")}</div>
           <div className="numeric text-2xl lg:text-3xl">
-            {stats ? formatVolume(stats.volumeKg) : SUPABASE_ENABLED ? "0" : "84.2K"}
+            {stats ? formatVolume(stats.volumeKg) : connected ? "0" : "84.2K"}
           </div>
           <div className="text-[10px] font-mono text-fg-faint mt-1 flex items-center gap-1">
             <span>{t("stats.volumeMeta")}</span>
@@ -390,7 +416,7 @@ export default async function TodayPage() {
         <div className="bg-bg p-4 lg:p-5">
           <div className="eyebrow mb-2">{t("stats.prs")}</div>
           <div className="numeric text-2xl lg:text-3xl">
-            {stats ? String(stats.prs4w).padStart(2, "0") : SUPABASE_ENABLED ? "00" : "03"}
+            {stats ? String(stats.prs4w).padStart(2, "0") : connected ? "00" : "03"}
           </div>
           <div className="text-[10px] font-mono text-fg-faint mt-1 flex items-center gap-1">
             <span>{t("stats.prsMeta")}</span>
@@ -402,7 +428,7 @@ export default async function TodayPage() {
         <div className="bg-bg p-4 lg:p-5">
           <div className="eyebrow mb-2">{t("stats.reps")}</div>
           <div className="numeric text-2xl lg:text-3xl">
-            {stats ? formatReps(stats.repsBalance, locale) : SUPABASE_ENABLED ? "0" : "1.420"}
+            {stats ? formatReps(stats.repsBalance, locale) : connected ? "0" : "1.420"}
           </div>
           <div className="text-[10px] font-mono text-fg-faint mt-1">{member.tier}</div>
         </div>

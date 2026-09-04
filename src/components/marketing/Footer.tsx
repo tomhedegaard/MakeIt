@@ -4,6 +4,7 @@ import Logo from "@/components/Logo";
 import Link from "next/link";
 import { COMPANY } from "@/lib/company";
 import LanguageSelector from "@/components/LanguageSelector";
+import { PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
 
 export default async function MarketingFooter() {
   const t = await getTranslations("Marketing.footer");
@@ -27,9 +28,9 @@ export default async function MarketingFooter() {
             <div className="eyebrow mb-4">{t("universeLabel")}</div>
             <ul className="space-y-2.5 text-fg/85 text-sm">
               <li><a href="#crew">{t("universeCrew")}</a></li>
-              <li><a href="#coaching">{t("universeCoaching")}</a></li>
-              <li><a href="#community">{t("universeCommunity")}</a></li>
-              <li><a href="#reps">{t("universeReps")}</a></li>
+              <li><a href="#pillar-munk-multiplier">{t("universeCoaching")}</a></li>
+              <li><a href="#crew">{t("universeCommunity")}</a></li>
+              <li><a href="#tiers">{t("universeReps")}</a></li>
             </ul>
           </div>
 
@@ -49,7 +50,7 @@ export default async function MarketingFooter() {
               ) : null}
             </ul>
 
-            <Link href="/login" className="btn btn-sm mt-6 inline-flex">{t("getAccess")}</Link>
+            <Link href={PUBLIC_WAITLIST_HREF} className="btn btn-sm mt-6 inline-flex">{t("getAccess")}</Link>
           </div>
         </div>
 

@@ -1,5 +1,6 @@
 import MotorGlyph from "@/components/adaptive/MotorGlyph";
 import DomainMark, { type Domain } from "@/components/brand/DomainMark";
+import MunkMark from "@/components/brand/MunkMark";
 import type {
   EngineStripModel,
   StripStepKey,
@@ -56,7 +57,10 @@ export default function AdaptiveReasonStrip({
             data-munk-note=""
             className="text-sm text-fg-dim leading-relaxed"
           >
-            <span className="eyebrow block mb-1">{copy.munkNoteLabel}</span>
+            <span className="flex items-center gap-2 mb-1">
+              <MunkMark />
+              <span className="eyebrow">{copy.munkNoteLabel}</span>
+            </span>
             {model.munkNote}
           </p>
         ) : null}

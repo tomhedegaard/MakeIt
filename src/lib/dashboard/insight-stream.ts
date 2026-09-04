@@ -33,7 +33,11 @@ export type InsightStreamInput = {
   qualitative: QualitativeBand | null;
   outOfBand: boolean;
   mindCheckedToday: boolean;
-  /** When false, skip the body↔food card (no invented squat-day copy). */
+  /**
+   * A real session is assigned today. Default true keeps demo /
+   * existing callers unchanged. Connected first-run passes false
+   * so we do not invent squat-day / "pas venter" cards.
+   */
   hasSession?: boolean;
 };
 
@@ -62,8 +66,9 @@ export function buildTodayInsightStream(
   input: InsightStreamInput,
 ): InsightCardModel[] {
   const cards: InsightCardModel[] = [];
+  const hasSession = input.hasSession !== false;
 
-  if (input.hasHrv && input.outOfBand && input.qualitative === "lav") {
+  if (hasSession && input.hasHrv && input.outOfBand && input.qualitative === "lav") {
     cards.push({
       id: "heart_body_low",
       domains: ["heart", "body"],
@@ -71,7 +76,7 @@ export function buildTodayInsightStream(
       ctaHref: input.sessionHref,
       moreHref: "/hrv/trends#band",
     });
-  } else if (input.hasHrv && input.qualitative === "ro") {
+  } else if (hasSession && input.hasHrv && input.qualitative === "ro") {
     cards.push({
       id: "heart_body_ro",
       domains: ["heart", "body"],
@@ -79,7 +84,7 @@ export function buildTodayInsightStream(
       ctaHref: input.sessionHref,
       moreHref: "/hrv/trends#band",
     });
-  } else if (input.hasHrv) {
+  } else if (hasSession && input.hasHrv) {
     cards.push({
       id: "heart_body_low",
       domains: ["heart", "body"],
@@ -97,7 +102,7 @@ export function buildTodayInsightStream(
       ctaHref: "/mind?q=hrv+restitution",
       moreHref: "/mind/check",
     });
-  } else if (!input.mindCheckedToday) {
+  } else if (hasSession && !input.mindCheckedToday) {
     cards.push({
       id: "mind_body_check",
       domains: ["mind", "body"],
@@ -107,7 +112,7 @@ export function buildTodayInsightStream(
     });
   }
 
-  if (input.hasSession !== false) {
+  if (hasSession) {
     cards.push({
       id: "body_food_session",
       domains: ["body", "food"],

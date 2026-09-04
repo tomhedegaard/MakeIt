@@ -1,14 +1,18 @@
 {
   "nav": {
     "crew": "Crew",
+    "munk": "Munk",
     "engine": "Motor",
+    "engineTitle": "Motor — regel-lag der tilpasser dagens pas",
     "coaching": "Coaching",
     "tiers": "Tiers",
+    "tiersTitle": "Tiers — niveauer du tjener",
     "app": "Appen",
     "price": "Pris",
     "faq": "FAQ",
     "closedBeta": "Closed Beta",
     "login": "Log ind",
+    "getAccess": "Få adgang",
     "menuOpen": "Åbn menu",
     "menuClose": "Luk menu"
   },
@@ -24,7 +28,7 @@
       "formCheckSuffix": "AI-draft · Munk-review 24t",
       "engine": "Motoren kører",
       "engineValue": "05:30",
-      "engineSuffix": "Hver morgen"
+      "engineSuffix": "Regel-lag · tilpasser dagens pas"
     },
     "subline": "Coaching bygget på din krops data.",
     "figureAria": "Kropskort — sind, hjerte, krop og kost",
@@ -37,8 +41,6 @@
     "subline2": "Ugen bor i én krop. Closed beta — kun med invite.",
     "ctaPrimary": "Få adgang",
     "ctaSecondary": "Læs mere",
-    "ctaTertiary": "Prøv motoren ↓",
-    "waitlistLink": "Ingen invite-kode? Skriv dig på ventelisten",
     "trustLine": "Ingen binding · Opsig når som helst · Pris låst for beta-medlemmer"
   },
   "engine": {
@@ -56,7 +58,8 @@
     "reasoningHeading": "Hvorfor",
     "previousLabel": "Før du rørte den",
     "disclaimer": "Samme rene regel-motor som app'en. Ingen API, ingen spinner — kører i din browser.",
-    "ctaHowItWorks": "Se hele tankegangen →"
+    "ctaHowItWorks": "Se hele tankegangen →",
+    "ctaMembersOnly": "Kun for medlemmer — log ind med invite."
   },
   "crew": {
     "eyebrow": "01 — Crewet",
@@ -74,7 +77,7 @@
       },
       "internal": {
         "k": "Åben hjerne",
-        "v": "Vi viser jer hvordan motoren tænker — og giver jer skruerne til at flytte den. Hver beslutning, hver tilpasning, hver counterfactual er åben."
+        "v": "Åben hjerne: vi viser jer hvordan motoren tænker — og giver jer skruerne til at flytte den. Hver beslutning, hver tilpasning, hver counterfactual er åben."
       },
       "noNoise": {
         "k": "Ingen støj",
@@ -85,6 +88,38 @@
         "v": "HRV-deling og journal er private som standard. Du vælger hvad coachen ser — og kan trække stikket når som helst."
       }
     }
+  },
+  "munk": {
+    "eyebrow": "Head coach",
+    "name": "Mikael Munk",
+    "role": "Head coach i crewet",
+    "body": "Mikael gennemgår form-checks personligt. AI kan udkaste et svar — det går ikke ud uden hans navn.",
+    "facts": {
+      "formCheck": {
+        "k": "Form-check",
+        "v": "Personligt review inden for 24 timer på hverdage."
+      },
+      "signature": {
+        "k": "Signatur",
+        "v": "AI-udkast. Munks navn på det der sendes."
+      },
+      "access": {
+        "k": "Adgang",
+        "v": "Invite-kode fra ham eller et eksisterende crew-medlem."
+      }
+    },
+    "write": "Skriv til {email}",
+    "photoPending": "Portræt ikke offentliggjort",
+    "photoPendingNote": "Vi viser ikke et opfundet foto."
+  },
+  "marquee": {
+    "hrvAware": "HRV-AWARE",
+    "aiCoach": "AI + COACH",
+    "openBrain": "ÅBEN HJERNE",
+    "madeIn": "MADE IN DENMARK",
+    "city": "KØBENHAVN",
+    "closedBeta": "CLOSED BETA",
+    "forTheCrew": "FOR THE CREW"
   },
   "worksWith": {
     "label": "Virker med",
@@ -156,7 +191,7 @@
     "engine": {
       "label": "02 — Motor & åben hjerne",
       "title": "Og den viser dig hvorfor.",
-      "body": "Hver morgen kl. 05:30 læser motoren din <heart>HRV</heart>, din <mind>søvn</mind>, sidste sessions <body>RPE</body> og dine seneste form-checks. Den justerer dagens session — eller lader være — og viser hele kæden bag beslutningen: råsignaler → regel → Claudes refinement → handling → udfald. Munk ser eskaleringen før du gør. Det er ét kropskort, ikke fire dashboards.",
+      "body": "Hver morgen kl. 05:30 læser motoren din <heart>HRV</heart>, din <mind>søvn</mind>, sidste sessions <body>RPE</body> og dine seneste form-checks. Den justerer dagens session — eller lader være — og viser hele kæden bag beslutningen: råsignaler → regel → AI-refinement → handling → udfald. Munk ser eskaleringen før du gør. Det er ét kropskort, ikke fire dashboards.",
       "bullet1": "Topsæt-reduktion, accessory-cut, øvelsesbytte — eller no_change. Aldrig mere end én ændring pr. session.",
       "bullet2": "HRV very_low → session pauset, mobilitet + gåtur, Munk får besked",
       "bullet3": "30 dages historik med counterfactual-sliders: \"Hvad hvis jeg havde sovet 7t?\" — beregnes live i din browser",
@@ -204,7 +239,7 @@
       "unlocks": {
         "1": "Adaptive engine kører fra dag 1",
         "2": "AI form-check med 24-timers Munk-review",
-        "3": "Buddy-pairing slås til efter 14 dage",
+        "3": "Buddy — en træningsmakker i crewet — slås til efter 14 dage",
         "4": "1 IRL-meet pr. kvartal"
       }
     },
@@ -213,8 +248,8 @@
       "quote": "Tre måneder ind og jeg har slået PR på alle tre big lifts. Reps-systemet holder mig accountable hver eneste dag.",
       "unlocks": {
         "1": "Form-check-prioritet i Munks kø",
-        "2": "Lifestyle-log-mønstre i din Open Brain",
-        "3": "Buddy-pod (3 personer)",
+        "2": "Lifestyle-log-mønstre i din åbne hjerne — du kan se hvorfor motoren besluttede",
+        "3": "Buddy-pod — fast gruppe på 3",
         "4": "Custom-strap-farve unlocked"
       }
     },
@@ -222,7 +257,7 @@
       "description": "Volumen-blokken. Du kender din krops respons under tung belastning, og du arbejder bevidst med restitution. Coach-feedback bliver finere og mere kirurgisk.",
       "quote": "Volumen-blokken var den sværeste fysisk og mentalt — men det er der jeg lærte hvad jeg virkelig kan klare.",
       "unlocks": {
-        "1": "Coach School låst op — lektioner med Claude-evaluering",
+        "1": "Coach School låst op — lektioner med AI-evaluering",
         "2": "Sandbox-cases: du øver mod simulerede medlemmer",
         "3": "1:1 30-min med Munk pr. kvartal",
         "4": "Limited drops før alle andre"
@@ -275,7 +310,7 @@
     "heart": {
       "kicker": "Puls & HRV",
       "title": "Hjerte",
-      "body": "Readiness, baseline og 60-dages tendens. Rød er motoren, der sætter tempoet.",
+      "body": "Readiness, baseline og 60-dages tendens. Rød er pulsen, der sætter tempoet.",
       "surfaces": "Readiness · Forløb · Indsigt"
     },
     "mind": {
@@ -292,11 +327,11 @@
       "line1": "Du rykker op.",
       "line2": "Og du løfter dem under dig."
     },
-    "intro": "Det er den eneste platform der vokser organisk: alle andre stopper ved dine egne resultater. Her giver du det, du lærer på vej op, videre til dem der står hvor du selv stod — og til sidst coacher du dem.",
+    "intro": "Tiers er niveauer du tjener — ikke titler du køber. Det er den eneste platform der vokser organisk: alle andre stopper ved dine egne resultater. Her giver du det, du lærer på vej op, videre til dem der står hvor du selv stod — og til sidst coacher du dem.",
     "receive": {
       "kicker": "Du får",
       "title": "Du bliver coachet",
-      "body": "Motoren tilpasser dine pas, Munk svarer på dine form-checks, og crewet over dig deler det de allerede har lært.",
+      "body": "Motoren — regel-laget der hver morgen tilpasser dagens pas — justerer dine sessioner, Munk svarer på dine form-checks, og crewet over dig deler det de allerede har lært.",
       "tier": "Lifter · Athlete"
     },
     "handDown": {
@@ -308,7 +343,7 @@
     "coach": {
       "kicker": "Du coacher",
       "title": "Du bliver seniors makker",
-      "body": "Du svarer på form-checks for live-medlemmer og leder en pod af nye Lifters. Reps belønner kvaliteten af din feedback — ikke kun dine egne løft.",
+      "body": "Du svarer på form-checks for live-medlemmer og leder en pod — en lille gruppe — af nye Lifters. Reps — point du tjener for arbejde i appen — belønner kvaliteten af din feedback, ikke kun dine egne løft.",
       "tier": "Legend"
     },
     "cta": "Se hele stigen",
@@ -354,7 +389,7 @@
       "mindLabel": "Sind",
       "mindDetail": "60 sek · check-in + graf",
       "formCheckLabel": "Form-check",
-      "formCheckDetail": "Claude vurderer på 6 sek.",
+      "formCheckDetail": "AI-draft på 6 sek.",
       "buddyLabel": "Buddy",
       "buddyDetail": "AI-paired · ugentlig rematch",
       "coachSchoolLabel": "Coach School",
@@ -476,7 +511,7 @@
     "priceLockNote": "Endelig pris låses inden launch",
     "positioningEyebrow": "Sådan holder vi coaching tilgængelig",
     "positioningHeadline": "AI gør det generiske. Mennesker gør det vigtige.",
-    "positioningSub": "Vi automatiserer det der kan automatiseres — programopbygning, form-tjek, progression — og bruger mennesker dér hvor det faktisk batter: 1:1, milepæle og fællesskab. Resultatet er coaching der koster en brøkdel af markedet, uden at føles billigt.",
+    "positioningSub": "Vi automatiserer det der kan automatiseres — programopbygning, form-tjek, progression — og bruger mennesker dér hvor det faktisk batter: 1:1, milepæle og fællesskab. Closed beta er invite-only. Prisen er ikke offentlig endnu.",
     "marketLabel": "markedssnit for personlig coaching",
     "pillar1": {
       "eyebrow": "Automatiseret",
@@ -513,7 +548,8 @@
     },
     "betaValue": "Beta",
     "betaSuffix": "invite only",
-    "marketFraction": "En brøkdel af markedssnittet for personlig coaching."
+    "betaNext": "Ingen offentlig pris i closed beta. Stil dig i køen — vi skriver når der åbner en plads.",
+    "betaCta": "Skriv dig på ventelisten"
   },
   "testimonials": {
     "eyebrow": "07 — Crewet",
@@ -571,8 +607,8 @@
         "a": "For 95% af lifters: ja. AI form-check + ugentlig coach review fanger det meste. For dem der vil have noget mere — 1:1 add-on'en giver dig direkte Signal-adgang til Mikael og en ugentlig 30-min videosession. Begrænset til 8 pladser ad gangen."
       },
       "cheaper": {
-        "q": "Hvorfor er det billigere end traditionel coaching?",
-        "a": "Fordi AI håndterer det generiske — programgenerering, progression, øjeblikkelig form-feedback. Mikael og crewet bruger så tiden på det der faktisk batter: 1:1, milepæle, og at holde dig ansvarlig. Du betaler for det der tæller."
+        "q": "Hvad koster det?",
+        "a": "Closed beta er invite-only, og den offentlige pris er ikke låst endnu. Stil dig i køen — vi skriver når der åbner en plads. Har du allerede en kode, log ind."
       },
       "wearables": {
         "q": "Hvilke wearables understøtter HRV-modulet?",
@@ -615,7 +651,7 @@
         "a": "Du har altid kontrollen. Du kan deaktivere adaptive tilpasninger fra HRV-indstillingerne (programmet kører så som planlagt uden daglige justeringer), og selv hvis du har dem slået til kan du afvise hver enkelt tilpasning med 'Behold original' direkte i sessionen. Motoren er en mening, ikke en kommando."
       }
     },
-    "showAll": "Vis alle spørgsmål"
+    "showAll": "Vis alle spørgsmål ({count})"
   },
   "footer": {
     "blurbBefore": "{product} er det interne univers for vores crew, atleter og coaches. Udstyr:",

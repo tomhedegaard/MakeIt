@@ -34,6 +34,7 @@ import type {
 } from "@/lib/hrv/types";
 import type { Database } from "@/lib/supabase/database.types";
 
+import { formCheckReadableByEngine } from "@/lib/form-queue/queue";
 import type {
   EngineInput,
   LifestyleAggregate,
@@ -463,6 +464,12 @@ export async function buildEngineInput(
   if (fcErr) throw new Error(`buildEngineInput form checks: ${fcErr.message}`);
   const recentFormChecks: RecentFormCheck[] = (formCheckRows ?? [])
     .filter((r) => r.exercise_id !== null && r.ai_score !== null)
+    .filter((r) =>
+      formCheckReadableByEngine({
+        status: r.coach_reviewed_at ? "reviewed" : "pending",
+        reviewedAt: r.coach_reviewed_at,
+      }),
+    )
     .map((r) => ({
       exerciseId: r.exercise_id as string,
       score: r.ai_score as number,

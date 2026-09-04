@@ -16,8 +16,9 @@
     "estTime": "Est. tid",
     "start": "Start session →",
     "emptyEyebrow": "I dag",
-    "emptyTitle": "Ingen session i dag endnu.",
-    "emptyBody": "Når Motoren har lagt ugen, ligger passet her."
+    "emptyTitle": "Vælg et program",
+    "emptyBody": "Start her — så bygger vi ugen. Ingen demo-pas.",
+    "emptyCta": "Se programmer"
   },
   "active": {
     "eyebrow": "Aktivt program",

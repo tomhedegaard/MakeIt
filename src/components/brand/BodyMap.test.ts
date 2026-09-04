@@ -1,6 +1,6 @@
 /**
  * Dashboard BodyMap inherits MakeItFigure. Lock the compact sizes so
- * the v2 organ/halo upgrade does not regress the Today header.
+ * the v3A craft-pass does not regress the Today header sizes.
  */
 
 import { readFileSync } from "node:fs";

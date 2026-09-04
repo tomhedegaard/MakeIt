@@ -31,6 +31,6 @@ export const positioning = {
   sub:
     "Vi automatiserer det der kan automatiseres — programopbygning, form-tjek, " +
     "progression — og bruger mennesker dér hvor det faktisk batter: 1:1, " +
-    "milepæle og fællesskab. Resultatet er coaching der koster en brøkdel " +
-    "af markedet, uden at føles billigt.",
+    "milepæle og fællesskab. Closed beta er invite-only. Prisen er ikke " +
+    "offentlig endnu.",
 } as const;

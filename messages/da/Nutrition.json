@@ -37,7 +37,7 @@
     "supplementUseful": "Nyttig",
     "supplementConsider": "Overvej",
     "regenerate": "Regenerér ugeplan",
-    "generatedByClaude": "Genereret af {model}",
+    "generatedByClaude": "AI-udkast",
     "generatedLocally": "Genereret lokalt (mock)"
   },
   "dayLabels": {
@@ -197,7 +197,7 @@
     "weightSub": "Vi bruger det til at sigte rigtigt på kalorier + protein. Du kan opdatere ugentligt på dashboardet.",
     "weightFieldLabel": "Bodyweight",
     "weightTiming": "Bedste timing: morgen, fastet, efter toilet",
-    "submitTiming": "Tager 5-10 sek · Claude bygger ugen",
+    "submitTiming": "Tager 5-10 sek · AI bygger ugen",
     "submitting": "Genererer plan…",
     "submit": "Generér min plan →"
   },
