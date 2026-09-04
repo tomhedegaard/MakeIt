@@ -58,7 +58,8 @@
     "reasoningHeading": "Why",
     "previousLabel": "Before you touched it",
     "disclaimer": "Same pure rule engine the app uses. No API, no spinner — runs in your browser.",
-    "ctaHowItWorks": "See the full reasoning chain →"
+    "ctaHowItWorks": "See the full reasoning chain →",
+    "ctaMembersOnly": "Members only — sign in with an invite."
   },
   "crew": {
     "eyebrow": "01 — The Crew",
@@ -388,7 +389,7 @@
       "mindLabel": "Mind",
       "mindDetail": "60 sec · check-in + graph",
       "formCheckLabel": "Form check",
-      "formCheckDetail": "AI grades it in 6 sec.",
+      "formCheckDetail": "AI draft in 6 sec.",
       "buddyLabel": "Buddy",
       "buddyDetail": "AI-paired · weekly rematch",
       "coachSchoolLabel": "Coach School",
@@ -510,7 +511,7 @@
     "priceLockNote": "Final price locked before launch",
     "positioningEyebrow": "How we keep coaching accessible",
     "positioningHeadline": "AI does the generic. People do what matters.",
-    "positioningSub": "We automate what can be automated — program building, form checks, progression — and use people where it actually counts: 1:1, milestones and community. The result is coaching that costs a fraction of the market, without feeling cheap.",
+    "positioningSub": "We automate what can be automated — program building, form checks, progression — and use people where it actually counts: 1:1, milestones and community. Closed beta is invite-only. The price is not public yet.",
     "marketLabel": "market average for personal coaching",
     "pillar1": {
       "eyebrow": "Automated",
@@ -547,7 +548,8 @@
     },
     "betaValue": "Beta",
     "betaSuffix": "invite only",
-    "marketFraction": "A fraction of the market average for personal coaching."
+    "betaNext": "No public price during closed beta. Join the waitlist — we write when a spot opens.",
+    "betaCta": "Join the waitlist"
   },
   "testimonials": {
     "eyebrow": "07 — The Crew",
@@ -605,8 +607,8 @@
         "a": "For 95% of lifters: yes. AI form check + weekly coach review catches most of it. For those who want more — the 1:1 add-on gives you direct Signal access to Mikael and a weekly 30-min video session. Limited to 8 spots at a time."
       },
       "cheaper": {
-        "q": "Why is it cheaper than traditional coaching?",
-        "a": "Because AI handles the generic stuff — program generation, progression, instant form feedback. Mikael and the crew then spend their time on what actually moves the needle: 1:1, milestones, and keeping you accountable. You pay for what counts."
+        "q": "What does it cost?",
+        "a": "Closed beta is invite-only, and the public price is not locked yet. Join the waitlist — we write when a spot opens. Already have a code? Sign in."
       },
       "wearables": {
         "q": "Which wearables does the HRV module support?",

@@ -13,7 +13,7 @@ export default async function FAQ() {
   }));
 
   return (
-    <section id="faq" className="relative border-t hairline py-20 md:py-28">
+    <section id="faq" className="relative border-t hairline py-20 md:py-28 scroll-mt-20">
       <Container>
         <div className="grid gap-12 md:grid-cols-12 items-start">
           <div className="md:col-span-5" data-reveal>

@@ -2,6 +2,7 @@
 
 import { useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
+import MotorGlyph from "@/components/adaptive/MotorGlyph";
 import DomainMark, { type Domain } from "@/components/brand/DomainMark";
 import type {
   InsightCardId,
@@ -15,6 +16,7 @@ export type DotsCopy = {
   moreAbout: string;
   dismiss: string;
   snooze: string;
+  motorAttribution: string;
   domains: Record<InsightDomain, string>;
   cards: Record<InsightCardId, { sentence: string; cta: string }>;
 };
@@ -130,6 +132,10 @@ export default function ConnectDotsStream({
               className="surface-2 rounded-2xl overflow-hidden"
             >
               <div className="px-5 pt-4 pb-3 space-y-3">
+                <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                  <MotorGlyph className="size-3" />
+                  <span>{copy.motorAttribution}</span>
+                </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   {card.domains.map((domain) => (
                     <span

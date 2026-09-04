@@ -1,11 +1,17 @@
 /**
  * Adaptive Engine reason strip — the "Hvorfor" steps on today's session.
  *
- * Pure: turns the signals the Motor actually read into 3–6 attributed
- * steps. No face, no personality label, no token/cost. Copy keys are
- * resolved in the UI via messages/{da,en}/Adaptive.json.
+ * Pure: turns the signals the Motor actually read into attributed steps.
+ * Fail closed: absent HRV / mind / RPE / alcohol is empty, not invented
+ * "no alcohol" or "mind unread" padding. Demo mode uses `demoEngineStrip`.
+ * Copy keys are resolved in the UI via messages/{da,en}/Adaptive.json.
  */
-import type { EngineInput, RuleReasonCode } from "./types";
+import type { ReadinessBucket } from "@/lib/hrv/types";
+import type {
+  EngineInput,
+  LifestyleAggregate,
+  RuleReasonCode,
+} from "./types";
 
 export type StripDomain = "mind" | "heart" | "body" | "food";
 
@@ -51,8 +57,13 @@ const REASON_TO_STEP: Partial<
   missed_sessions: { domain: "body", key: "missed" },
 };
 
-const MIN_STEPS = 3;
 const MAX_STEPS = 6;
+
+const EMPTY_LIFESTYLE: LifestyleAggregate = {
+  sleepHoursAvg2d: null,
+  alcoholLast2d: false,
+  feelingLast3d: null,
+};
 
 function uniqueSteps(steps: EngineStripStep[]): EngineStripStep[] {
   const seen = new Set<string>();
@@ -67,8 +78,9 @@ function uniqueSteps(steps: EngineStripStep[]): EngineStripStep[] {
 }
 
 /**
- * Build 3–6 reason steps from an engine input + the reason codes that
- * fired (or an empty list when the Motor only *read* signals).
+ * Build reason steps from an engine input + the reason codes that
+ * fired. Absent signals stay absent — no padding that claims
+ * HRV / mind / RPE / alcohol when those were never observed.
  */
 export function buildEngineStrip(
   input: Pick<
@@ -115,29 +127,48 @@ export function buildEngineStrip(
     steps.push({ domain: "mind", key: "lowFeeling" });
   }
 
-  const filled = uniqueSteps(steps);
-
-  // Pad to the 3-step floor with honest "what was read" fallbacks so the
-  // strip never looks empty when the Motor ran.
-  if (filled.length < MIN_STEPS) {
-    if (input.latestReading && !filled.some((s) => s.domain === "heart")) {
-      filled.push({ domain: "heart", key: "hrvInBand" });
-    }
-    if (input.nextSession && !filled.some((s) => s.key === "sessionToday")) {
-      filled.push({ domain: "body", key: "sessionToday" });
-    }
-    if (!input.lifestyle.alcoholLast2d && !filled.some((s) => s.domain === "food")) {
-      filled.push({ domain: "food", key: "noAlcohol" });
-    }
-    if (!filled.some((s) => s.domain === "mind")) {
-      filled.push({ domain: "mind", key: "mindUnread" });
-    }
-  }
-
   return {
-    steps: filled.slice(0, MAX_STEPS),
+    steps: uniqueSteps(steps).slice(0, MAX_STEPS),
     munkNote,
   };
+}
+
+/** Connected first-run / no-signal strip — AdaptiveReasonStrip hides. */
+export function emptyEngineStrip(): EngineStripModel {
+  return { steps: [], munkNote: "" };
+}
+
+/**
+ * Honest strip from signals the Today / Træn surfaces already have.
+ * Does not invent lifestyle, RPE, or mind drivers.
+ */
+export function stripFromAvailableSignals(opts: {
+  hasHrv: boolean;
+  readinessBucket: ReadinessBucket | null;
+  hasSession: boolean;
+}): EngineStripModel {
+  return buildEngineStrip({
+    latestReading: opts.hasHrv
+      ? {
+          measuredAt: "",
+          warmUpState: "active",
+          readinessBucket: opts.readinessBucket ?? null,
+          isSick: false,
+        }
+      : null,
+    lifestyle: EMPTY_LIFESTYLE,
+    nextSession: opts.hasSession
+      ? {
+          sessionId: "available",
+          scheduledFor: "",
+          title: "",
+          week: null,
+          exercises: [],
+        }
+      : null,
+    recentSessions: [],
+    reasons: [],
+  });
 }
 
 /**

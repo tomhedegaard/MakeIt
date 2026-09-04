@@ -3,7 +3,15 @@
     "eyebrow": "07 — Messages",
     "titleWithCoach": "Chat with @{handle}",
     "titleFallback": "Your coach",
-    "subtitle": "A direct line to your coach. Send text, images or a voice message — videos you receive."
+    "subtitle": "Two streams: Munk (craft) and Motor (Adaptive Engine). They do not mix."
+  },
+  "streams": {
+    "munkTitle": "Munk",
+    "munkSub": "Human craft",
+    "motorTitle": "Motor · Adaptive Engine",
+    "motorSub": "No face · @propose",
+    "propose": "@propose",
+    "voice": "Voice note"
   },
   "thread": {
     "ariaLabel": "Messages",

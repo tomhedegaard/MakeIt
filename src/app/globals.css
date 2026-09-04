@@ -226,6 +226,12 @@ html.cursor-custom * {
 
 @media (prefers-reduced-motion: reduce) {
   .grain::before { animation: none; }
+  [data-reveal],
+  html.reveal-js [data-reveal]:not(.is-visible) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 .vignette::after {
@@ -256,15 +262,48 @@ html.cursor-custom * {
   border-radius: 4px;
 }
 
-/* Reveal-on-scroll */
+/* Reveal-on-scroll — progressive enhancement.
+ * Nodes are readable by default (opacity 1). JS may add
+ * .reveal-pending only to off-screen nodes after it has marked
+ * in-view / hash / reduced-motion content as .is-visible.
+ * Never leave normal copy at ~15% contrast. */
 [data-reveal] {
+  opacity: 1;
+  transform: none;
+  transition: opacity 900ms cubic-bezier(.2,.7,.2,1), transform 900ms cubic-bezier(.2,.7,.2,1);
+}
+[data-reveal].reveal-pending:not(.is-visible) {
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 900ms cubic-bezier(.2,.7,.2,1), transform 900ms cubic-bezier(.2,.7,.2,1);
 }
 [data-reveal].is-visible {
   opacity: 1;
   transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal].reveal-pending:not(.is-visible) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Marketing sticky card — clears the fixed h-14 header.
+ * Sticky only from the lg breakpoint (same as the two-column tiers
+ * layout) so the card stays in document flow on phones. */
+@media (min-width: 64rem) {
+  .marketing-sticky-card {
+    position: sticky;
+    top: calc(var(--header-h) + 1.75rem);
+    z-index: 10;
+  }
+}
+
+/* Solid marketing nav sheet — page content must not bleed through. */
+.marketing-nav-sheet {
+  background: var(--bg);
 }
 
 /* Buttons */
@@ -355,6 +394,7 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top:    env(safe-area-inset-top, 0px);
   --tabbar-h:    64px;
+  --header-h:    3.5rem; /* marketing + app fixed header (h-14) */
 }
 
 .h-dvh   { height: 100dvh; }

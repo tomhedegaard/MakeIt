@@ -1,10 +1,11 @@
 {
   "eyebrow": "Form-check",
   "choose": {
-    "title": "Optag eller upload din video.",
+    "title": "Film dette sæt.",
     "titleBlocked": "Du er løbet tør for form-checks.",
     "descriptionDefault": "Vores AI tjekker dybde, bar-path og bevægelseskvalitet på din øvelse.",
-    "descriptionExercise": "Vores AI tjekker dybde, bar-path og bevægelseskvalitet på {exercise} — og en head coach gennemgår alt ugentligt.",
+    "descriptionExercise": "Film sæt {set} på {exercise}. Køen hos Munk får atleten og løftet — ikke en generel indbakke.",
+    "descriptionSet": "Bundet til {lift} · sæt {set}. Munk svarer i tråden under løftet — tekst eller lyd.",
     "descriptionBlocked": "AI form-check er en Athlete-tier perk og opefter. Upgradér for at få flere.",
     "recordNow": "Optag nu",
     "recordNowSub": "Brug kameraet til at filme dit næste sæt.",
@@ -43,7 +44,7 @@
     "coachTip": "Coach-tip",
     "newRecording": "Ny optagelse",
     "done": "Færdig",
-    "coachReviewNote": "Sendes også til din coach for ugentlig review."
+    "coachReviewNote": "I køen hos Munk som form-check — bundet til dette sæt."
   },
   "verdicts": {
     "back squat": {

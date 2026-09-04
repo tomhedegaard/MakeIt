@@ -49,7 +49,7 @@ export default function MarketingNav() {
     { href: "#crew",          key: "crew" },
     { href: "#munk",          key: "munk" },
     { href: "#engine",        key: "engine", titleKey: "engineTitle" },
-    { href: "#pillar-engine", key: "coaching" },
+    { href: "#pillar-munk-multiplier", key: "coaching" },
     { href: "#tiers",         key: "tiers", titleKey: "tiersTitle" },
     { href: "#app",           key: "app" },
     { href: "#how",           key: "price" },
@@ -57,7 +57,13 @@ export default function MarketingNav() {
   ];
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b hairline backdrop-blur-md bg-[rgba(10,10,11,0.6)]">
+    <header
+      className={
+        open
+          ? "fixed inset-x-0 top-0 z-40 border-b hairline bg-bg"
+          : "fixed inset-x-0 top-0 z-40 border-b hairline backdrop-blur-md bg-[rgba(10,10,11,0.6)]"
+      }
+    >
       <Container>
         <div className="flex h-14 items-center justify-between">
           <Link
@@ -127,7 +133,7 @@ export default function MarketingNav() {
           // fixed-positionerede børn, så `top-14 bottom-0` beregnes mod
           // den 56px høje header og kollapser til højde 0 (menuen var
           // usynlig i produktion). Eksplicit højde omgår det.
-          className="md:hidden fixed left-0 right-0 top-full h-[calc(100dvh-3.5rem)] z-30 bg-[rgba(10,10,11,0.92)] backdrop-blur-lg overflow-y-auto"
+          className="marketing-nav-sheet md:hidden fixed left-0 right-0 top-full h-[calc(100dvh-3.5rem)] z-30 overflow-y-auto"
           onClick={(e) => {
             // Close when tapping the backdrop directly (but not its
             // children — let link clicks bubble first).

@@ -28,9 +28,9 @@ export default async function MarketingFooter() {
             <div className="eyebrow mb-4">{t("universeLabel")}</div>
             <ul className="space-y-2.5 text-fg/85 text-sm">
               <li><a href="#crew">{t("universeCrew")}</a></li>
-              <li><a href="#coaching">{t("universeCoaching")}</a></li>
-              <li><a href="#community">{t("universeCommunity")}</a></li>
-              <li><a href="#reps">{t("universeReps")}</a></li>
+              <li><a href="#pillar-munk-multiplier">{t("universeCoaching")}</a></li>
+              <li><a href="#crew">{t("universeCommunity")}</a></li>
+              <li><a href="#tiers">{t("universeReps")}</a></li>
             </ul>
           </div>
 

@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { explainerScenarioInput } from "./mock-scenarios";
-import { buildEngineStrip, demoEngineStrip } from "./engine-strip";
+import {
+  buildEngineStrip,
+  demoEngineStrip,
+  emptyEngineStrip,
+  stripFromAvailableSignals,
+} from "./engine-strip";
 
 describe("buildEngineStrip", () => {
   it("emits 3–6 steps that name domain signals", () => {
@@ -17,18 +22,54 @@ describe("buildEngineStrip", () => {
     expect(domains.has("mind")).toBe(true);
   });
 
-  it("pads to three honest read-steps when few reasons fire", () => {
+  it("does not invent alcohol / mind / RPE when those signals are absent", () => {
+    const strip = buildEngineStrip({
+      latestReading: null,
+      lifestyle: {
+        sleepHoursAvg2d: null,
+        alcoholLast2d: false,
+        feelingLast3d: null,
+      },
+      nextSession: null,
+      recentSessions: [],
+      reasons: [],
+    });
+    expect(strip).toEqual(emptyEngineStrip());
+    expect(strip.steps.some((s) => s.key === "noAlcohol")).toBe(false);
+    expect(strip.steps.some((s) => s.key === "alcohol")).toBe(false);
+    expect(strip.steps.some((s) => s.key === "lowFeeling")).toBe(false);
+    expect(strip.steps.some((s) => s.key === "rpeOvershoot")).toBe(false);
+    expect(strip.steps.some((s) => s.key === "rpeDrift")).toBe(false);
+    expect(strip.steps.some((s) => s.key === "hrvLow")).toBe(false);
+    expect(strip.munkNote).toBe("");
+  });
+
+  it("does not claim no-alcohol just because alcoholLast2d is false", () => {
     const input = explainerScenarioInput();
     const strip = buildEngineStrip({
       ...input,
-      latestReading: {
-        ...input.latestReading!,
-        readinessBucket: "normal",
+      latestReading: null,
+      lifestyle: {
+        sleepHoursAvg2d: null,
+        alcoholLast2d: false,
+        feelingLast3d: null,
       },
       reasons: [],
     });
-    expect(strip.steps.length).toBeGreaterThanOrEqual(3);
-    expect(strip.munkNote).toBe("");
+    expect(strip.steps.some((s) => s.key === "noAlcohol" || s.key === "alcohol")).toBe(
+      false,
+    );
+    expect(strip.steps.some((s) => s.key === "sessionToday")).toBe(true);
+  });
+
+  it("stripFromAvailableSignals stays empty without HRV or a session", () => {
+    expect(
+      stripFromAvailableSignals({
+        hasHrv: false,
+        readinessBucket: null,
+        hasSession: false,
+      }),
+    ).toEqual(emptyEngineStrip());
   });
 
   it("demo fixture looks real: five steps, Heart first, empty Munk slot", () => {

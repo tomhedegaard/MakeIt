@@ -18,6 +18,11 @@ export async function generateMetadata() {
 
 type Tab = "magic" | "password" | "oauth";
 
+/** Safe display gate: only show the members-only hint for in-app paths. */
+function isMemberNext(next: string | undefined): boolean {
+  return Boolean(next && next.startsWith("/") && !next.startsWith("//"));
+}
+
 export default async function LoginPage({
   searchParams,
 }: {
@@ -27,9 +32,10 @@ export default async function LoginPage({
     email?: string;
     tab?: Tab;
     mode?: string;
+    next?: string;
   }>;
 }) {
-  const { err, sent, email, tab = "magic", mode = "signin" } = await searchParams;
+  const { err, sent, email, tab = "magic", mode = "signin", next } = await searchParams;
   const t = await getTranslations("Login");
 
   return (
@@ -55,6 +61,10 @@ export default async function LoginPage({
           <br /> {t("headline.line2")}
         </h1>
 
+        {isMemberNext(next) ? (
+          <p className="mb-8 text-sm text-fg-dim leading-relaxed">{t("memberOnlyHint")}</p>
+        ) : null}
+
         {sent ? (
           <SentState email={email} />
         ) : SUPABASE_ENABLED ? (
@@ -63,24 +73,17 @@ export default async function LoginPage({
           <MockForm err={err} />
         )}
 
-        <p className="mt-8 text-sm text-fg-dim leading-relaxed">
-          <Link
-            href="/#waitlist"
-            className="underline underline-offset-4 hover:text-fg"
-          >
-            {t("waitlistLink")}
-          </Link>
-        </p>
+        {!sent ? (
+          <p className="mt-6 text-sm text-fg-dim">
+            {t("waitlistHint")}{" "}
+            <a href="/#waitlist" className="underline hover:text-fg">
+              {t("waitlistLink")}
+            </a>
+          </p>
+        ) : null}
 
         <p className="mt-10 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
-          {SUPABASE_ENABLED ? (
-            <>
-              {t("statusConnected")}
-              {process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/^https?:\/\//, "").split(".")[0]}
-            </>
-          ) : (
-            <>{t("statusDemo")}</>
-          )}
+          {SUPABASE_ENABLED ? t("statusConnected") : t("statusDemo")}
         </p>
       </div>
     </main>

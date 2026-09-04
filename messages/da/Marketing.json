@@ -58,7 +58,8 @@
     "reasoningHeading": "Hvorfor",
     "previousLabel": "Før du rørte den",
     "disclaimer": "Samme rene regel-motor som app'en. Ingen API, ingen spinner — kører i din browser.",
-    "ctaHowItWorks": "Se hele tankegangen →"
+    "ctaHowItWorks": "Se hele tankegangen →",
+    "ctaMembersOnly": "Kun for medlemmer — log ind med invite."
   },
   "crew": {
     "eyebrow": "01 — Crewet",
@@ -388,7 +389,7 @@
       "mindLabel": "Sind",
       "mindDetail": "60 sek · check-in + graf",
       "formCheckLabel": "Form-check",
-      "formCheckDetail": "AI-vurdering på 6 sek.",
+      "formCheckDetail": "AI-draft på 6 sek.",
       "buddyLabel": "Buddy",
       "buddyDetail": "AI-paired · ugentlig rematch",
       "coachSchoolLabel": "Coach School",
@@ -510,7 +511,7 @@
     "priceLockNote": "Endelig pris låses inden launch",
     "positioningEyebrow": "Sådan holder vi coaching tilgængelig",
     "positioningHeadline": "AI gør det generiske. Mennesker gør det vigtige.",
-    "positioningSub": "Vi automatiserer det der kan automatiseres — programopbygning, form-tjek, progression — og bruger mennesker dér hvor det faktisk batter: 1:1, milepæle og fællesskab. Resultatet er coaching der koster en brøkdel af markedet, uden at føles billigt.",
+    "positioningSub": "Vi automatiserer det der kan automatiseres — programopbygning, form-tjek, progression — og bruger mennesker dér hvor det faktisk batter: 1:1, milepæle og fællesskab. Closed beta er invite-only. Prisen er ikke offentlig endnu.",
     "marketLabel": "markedssnit for personlig coaching",
     "pillar1": {
       "eyebrow": "Automatiseret",
@@ -547,7 +548,8 @@
     },
     "betaValue": "Beta",
     "betaSuffix": "invite only",
-    "marketFraction": "En brøkdel af markedssnittet for personlig coaching."
+    "betaNext": "Ingen offentlig pris i closed beta. Stil dig i køen — vi skriver når der åbner en plads.",
+    "betaCta": "Skriv dig på ventelisten"
   },
   "testimonials": {
     "eyebrow": "07 — Crewet",
@@ -605,8 +607,8 @@
         "a": "For 95% af lifters: ja. AI form-check + ugentlig coach review fanger det meste. For dem der vil have noget mere — 1:1 add-on'en giver dig direkte Signal-adgang til Mikael og en ugentlig 30-min videosession. Begrænset til 8 pladser ad gangen."
       },
       "cheaper": {
-        "q": "Hvorfor er det billigere end traditionel coaching?",
-        "a": "Fordi AI håndterer det generiske — programgenerering, progression, øjeblikkelig form-feedback. Mikael og crewet bruger så tiden på det der faktisk batter: 1:1, milepæle, og at holde dig ansvarlig. Du betaler for det der tæller."
+        "q": "Hvad koster det?",
+        "a": "Closed beta er invite-only, og den offentlige pris er ikke låst endnu. Stil dig i køen — vi skriver når der åbner en plads. Har du allerede en kode, log ind."
       },
       "wearables": {
         "q": "Hvilke wearables understøtter HRV-modulet?",
