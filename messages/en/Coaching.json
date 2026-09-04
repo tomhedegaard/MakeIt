@@ -14,7 +14,11 @@
     "exercises": "Exercises",
     "sets": "Sets",
     "estTime": "Est. time",
-    "start": "Start session →"
+    "start": "Start session →",
+    "emptyEyebrow": "Today",
+    "emptyTitle": "Choose a program",
+    "emptyBody": "Start here — then we build the week. No demo workout.",
+    "emptyCta": "See programs"
   },
   "active": {
     "eyebrow": "Active program",

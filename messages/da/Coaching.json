@@ -14,7 +14,11 @@
     "exercises": "Øvelser",
     "sets": "Sæt",
     "estTime": "Est. tid",
-    "start": "Start session →"
+    "start": "Start session →",
+    "emptyEyebrow": "I dag",
+    "emptyTitle": "Vælg et program",
+    "emptyBody": "Start her — så bygger vi ugen. Ingen demo-pas.",
+    "emptyCta": "Se programmer"
   },
   "active": {
     "eyebrow": "Aktivt program",
