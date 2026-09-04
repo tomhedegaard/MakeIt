@@ -111,6 +111,19 @@ describe("connected first-run pickers", () => {
     ).toEqual([]);
   });
 
+  it("strips ADAPTIVE-DEMO-STR from the connected library", () => {
+    expect(
+      libraryForSurface({
+        connected: true,
+        fromDb: [
+          { id: "real-str", code: "STR-12" } as never,
+          { id: "demo-str", code: "ADAPTIVE-DEMO-STR" } as never,
+        ],
+        demo: [],
+      }).map((p) => p.code),
+    ).toEqual(["STR-12"]);
+  });
+
   it("uses the signal strip when connected and the demo strip otherwise", () => {
     const empty = emptyEngineStrip();
     expect(

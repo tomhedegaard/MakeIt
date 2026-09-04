@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getSession } from "@/lib/auth";
+import { canMemberAssignProgram } from "@/lib/programs/synthetic";
 
 /**
  * Switch the member's active program.
@@ -34,14 +35,23 @@ export async function startProgramAction(formData: FormData): Promise<void> {
   const supabase = await createClient();
   if (!supabase) return;
 
-  // Validate the program exists and is published — refusing to assign
-  // an unpublished program (e.g. a coach-only draft).
+  // Validate the program exists, is published, and is not a synthetic
+  // seed row (ADAPTIVE-DEMO*). Unpublished drafts and demo programs
+  // are coach/script-only — members cannot self-assign them.
   const { data: program } = await supabase
     .from("programs")
-    .select("id, is_published")
+    .select("id, code, is_published")
     .eq("id", programId)
     .maybeSingle();
-  if (!program || !program.is_published) return;
+  if (
+    !program ||
+    !canMemberAssignProgram({
+      code: program.code,
+      isPublished: program.is_published,
+    })
+  ) {
+    return;
+  }
 
   // No-op if already active.
   const { data: existing } = await supabase

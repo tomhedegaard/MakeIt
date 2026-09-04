@@ -17,4 +17,19 @@ describe("community connected first-run", () => {
     expect(page).toContain("Story strip — demo only");
     expect(page).toContain("Leaderboard — demo only");
   });
+
+  it("does not render challenge hero or IRL meet in connected mode", () => {
+    expect(page).toContain("Monthly challenge hero — demo only");
+    expect(page).toContain("IRL meet — demo only");
+    expect(page).toMatch(
+      /\{\/\* Monthly challenge hero — demo only[\s\S]*?\{\!useReal \? \(/,
+    );
+    expect(page).toMatch(
+      /\{\/\* IRL meet — demo only[\s\S]*?\{\!useReal \? \(/,
+    );
+    // No connected-mode placeholder chrome for May fixture copy.
+    expect(page).not.toContain("challengeEmptyTitle");
+    expect(page).not.toContain("challengeEmptyEyebrow");
+    expect(page).not.toMatch(/\{\!SUPABASE_ENABLED \? \(/);
+  });
 });

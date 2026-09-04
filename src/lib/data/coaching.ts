@@ -1,6 +1,7 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { currentIsoMonday } from "@/lib/data/nutrition";
+import { excludeSyntheticPrograms } from "@/lib/programs/synthetic";
 
 /**
  * Data fetchers for /coaching (the Træn page). Mirrors the
@@ -247,7 +248,9 @@ export async function getProgramLibrary(
   const activeProgramId = assignment?.program_id ?? null;
   const activeWeek = assignment?.current_week ?? null;
 
-  return programs.map((p): ProgramListing => {
+  // Seeded adaptive-demo rows stay out of the member library even if
+  // an older seed left them published (default is_published=true).
+  return excludeSyntheticPrograms(programs).map((p): ProgramListing => {
     const coach = unwrapOne(p.coach);
     return {
       id: p.id,
