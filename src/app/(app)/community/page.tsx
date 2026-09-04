@@ -131,8 +131,9 @@ export default async function CrewPage() {
       </p>
       )}
 
-      {/* Monthly challenge — invented demo totals stay in the fixture helper. */}
-      {!SUPABASE_ENABLED ? (
+      {/* Monthly challenge hero — demo only. No live challenge CMS yet;
+          connected empty crew is feed + composer only. */}
+      {!useReal ? (
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 pt-5 pb-3">
           <div className="flex items-center justify-between mb-3">
@@ -178,15 +179,7 @@ export default async function CrewPage() {
           </button>
         </div>
       </section>
-      ) : (
-      <section className="surface-2 rounded-2xl overflow-hidden px-5 py-6">
-        <div className="eyebrow mb-2">{t("challengeEmptyEyebrow")}</div>
-        <h2 className="font-display text-2xl md:text-3xl leading-[1] mb-2">
-          {t("challengeEmptyTitle")}
-        </h2>
-        <p className="text-fg-dim text-sm max-w-md">{t("challengeEmptyBody")}</p>
-      </section>
-      )}
+      ) : null}
 
       {/* Feed */}
       <section>
@@ -261,7 +254,9 @@ export default async function CrewPage() {
       </section>
       )}
 
-      {/* IRL meet */}
+      {/* IRL meet — demo only. May Open House is fixture copy, not a
+          live event. Hide until a real meets/events source exists. */}
+      {!useReal ? (
       <section className="surface-2 rounded-2xl p-5">
         <div className="eyebrow mb-2">{t("meetEyebrow")}</div>
         <div className="font-display text-2xl mb-1">{t("meetTitle")}</div>
@@ -275,6 +270,7 @@ export default async function CrewPage() {
           <button type="button" className="btn btn-sm">{t("meetReadMore")}</button>
         </div>
       </section>
+      ) : null}
     </Container>
   );
 }
