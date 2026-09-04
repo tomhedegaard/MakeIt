@@ -1,24 +1,30 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import NeedsAttentionStrip from "@/components/coach/NeedsAttentionStrip";
 import PriorityInboxList from "@/components/coach/PriorityInboxList";
 import SendDigestButton from "@/components/coach/SendDigestButton";
 import {
   getCoachOverview,
   getMembersSummary,
+  getNeedsAttentionModel,
   getPendingFormChecks,
 } from "@/lib/data/coach";
 import { getCoachPriorityInbox } from "@/lib/data/coach-priority-inbox";
+import { liftLabel } from "@/lib/form-queue/queue";
+import { loadNeedsAttentionCopy } from "@/lib/ui/sprint-b-copy";
 
 const INBOX_PREVIEW = 8;
 
 export default async function CoachOverviewPage() {
   const t = await getTranslations("Coach.overview");
   const tInbox = await getTranslations("Coach.inbox");
-  const [overview, members, pending, inbox] = await Promise.all([
+  const [overview, members, pending, needs, needsCopy, inbox] = await Promise.all([
     getCoachOverview(),
     getMembersSummary(),
     getPendingFormChecks(5),
+    getNeedsAttentionModel(),
+    loadNeedsAttentionCopy(),
     getCoachPriorityInbox(),
   ]);
 
@@ -42,6 +48,8 @@ export default async function CoachOverviewPage() {
         </div>
         <SendDigestButton />
       </header>
+
+      <NeedsAttentionStrip model={needs} copy={needsCopy} />
 
       {/* Who needs you today */}
       <section className="surface-2 rounded-2xl overflow-hidden">
@@ -146,7 +154,7 @@ export default async function CoachOverviewPage() {
                     </span>
                   </div>
                   <div className="text-fg-dim text-xs truncate">
-                    {f.exerciseName ?? t("formCheckFallback")}
+                    {liftLabel(f)}
                   </div>
                 </li>
               ))}

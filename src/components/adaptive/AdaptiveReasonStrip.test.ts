@@ -70,6 +70,8 @@ describe("AdaptiveReasonStrip", () => {
       }),
     );
     expect(html).toContain("data-munk-note");
+    expect(html).toContain("data-munk-mark");
     expect(html).toContain("Kør tilpasset.");
+    expect(html).toContain("data-motor-glyph");
   });
 });

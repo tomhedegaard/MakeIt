@@ -35,6 +35,8 @@ export async function analyzeFormCheckAction(input: {
   frames: string[];
   exerciseName?: string;
   exerciseId?: string;
+  setIndex?: number;
+  sessionId?: string;
   context?: ExerciseCoachingContext;
 }): Promise<AnalyzeFormCheckResult> {
   if (!input.frames || input.frames.length === 0) {
@@ -102,7 +104,10 @@ export async function analyzeFormCheckAction(input: {
             .insert({
               member_id: user.id,
               exercise_id: input.exerciseId ?? null,
-              exercise_name: input.exerciseName ?? verdict.detectedExercise,
+              exercise_name:
+                input.setIndex && (input.exerciseName ?? verdict.detectedExercise)
+                  ? `${input.exerciseName ?? verdict.detectedExercise} · sæt ${input.setIndex}`
+                  : input.exerciseName ?? verdict.detectedExercise,
               video_url: null, // attached separately once upload completes
               ai_score: verdict.score,
               ai_headline: verdict.headline,
