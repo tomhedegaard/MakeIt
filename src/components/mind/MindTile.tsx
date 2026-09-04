@@ -1,17 +1,18 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 /**
  * Dashboard tile for the Mind module (B-layer).
  *
  * Compact one-row card showing either:
- *  - "Tag dit mind-check (60 sek)" if not yet logged today, OR
- *  - "Dagens refleksion klar" if today's AI-coach output is ready, OR
- *  - "Streak: X dage" status fallback
+ *  - waiting if not yet logged today, OR
+ *  - reflection ready if today's Motor output is ready, OR
+ *  - streak fallback
  *
  * Always links to /mind (which routes to onboarding if not yet
  * acknowledged, else /mind/check).
  */
-export default function MindTile({
+export default async function MindTile({
   hasMindCheckToday,
   hasCoachOutputToday,
   currentStreak,
@@ -20,25 +21,26 @@ export default function MindTile({
   hasCoachOutputToday: boolean;
   currentStreak: number;
 }) {
+  const t = await getTranslations("Mind.tile");
   const { title, sub, cta } = (() => {
     if (!hasMindCheckToday) {
       return {
-        title: "Mind-check venter",
-        sub: "60 sek. Tre sliders. Det tager kortere tid end at vente på næste sæt.",
-        cta: "Start nu",
+        title: t("waitingTitle"),
+        sub: t("waitingSub"),
+        cta: t("waitingCta"),
       };
     }
     if (hasCoachOutputToday) {
       return {
-        title: "Dagens refleksion klar",
-        sub: "AI-coach har skrevet ud fra dit signal i dag.",
-        cta: "Læs",
+        title: t("readyTitle"),
+        sub: t("readySub"),
+        cta: t("readyCta"),
       };
     }
     return {
-      title: `Stribe: ${currentStreak} dage`,
-      sub: "Bliv på den. Næste milestone er +20 Reps ved 7 dage.",
-      cta: "Til Mind",
+      title: t("streakTitle", { days: currentStreak }),
+      sub: t("streakSub"),
+      cta: t("streakCta"),
     };
   })();
 

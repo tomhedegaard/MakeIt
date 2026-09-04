@@ -26,7 +26,11 @@ export default async function AppLayout({
   const unreadMessages = SUPABASE_ENABLED ? await getUnreadCount(member.id) : 0;
 
   return (
-    <AppShell member={member} unreadMessages={unreadMessages}>
+    <AppShell
+      member={member}
+      unreadMessages={unreadMessages}
+      demoMode={!SUPABASE_ENABLED}
+    >
       {children}
     </AppShell>
   );

@@ -316,7 +316,7 @@ export default async function TrainPage() {
                   {p.active ? (
                     today ? (
                     <Link
-                      href={`/session/${today.id}`}
+                      href={today ? `/session/${today.id}` : "/dashboard"}
                       className="btn btn-primary btn-sm flex-1"
                     >
                       {t("library.continue")}

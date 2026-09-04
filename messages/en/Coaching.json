@@ -2,7 +2,7 @@
   "header": {
     "eyebrow": "02 — Train",
     "title": "Your week.",
-    "subtitle": "All planned automatically by the AI, tuned by your coach, and dialed in for you."
+    "subtitle": "The Motor plans the weights. Munk signs off when it needs a human."
   },
   "week": {
     "ariaLabel": "Week overview",
@@ -31,7 +31,7 @@
     "eyebrow": "Programs",
     "activeBadge": "Active · week {week}",
     "coach": "Coach",
-    "coachFallback": "AI + team",
+    "coachFallback": "The Motor",
     "level": "Level",
     "levelFallback": "—",
     "continue": "Continue →",

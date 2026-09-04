@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -14,9 +15,10 @@ import MindFirstTimeTour from "@/components/mind/MindFirstTimeTour";
 import MindCelebration from "@/components/mind/MindCelebration";
 import { currentStreak, longestStreak } from "@/lib/mind/streak";
 
-export const metadata = {
-  title: "Mind-check · MakeIt",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Mind.check");
+  return { title: t("metaTitle") };
+}
 
 /**
  * `/mind/check` — the daily 60-second mental signal surface.
@@ -32,6 +34,7 @@ export default async function MindCheckPage() {
     redirect("/mind/onboarding");
   }
 
+  const t = await getTranslations("Mind.check");
   const [logs, today] = await Promise.all([
     getRecentMindCheckLogs(member.id, 30),
     getTodayMindCheck(member.id),
@@ -48,13 +51,9 @@ export default async function MindCheckPage() {
     <>
       <MindFirstTimeTour />
       <PageHeader
-        eyebrow="Mind · Søjle 5"
-        title={today ? "Mind-check — opdater." : "Mind-check — 60 sek."}
-        subtitle={
-          today
-            ? "Du har tjekket ind i dag. Du kan opdatere indtil midnat."
-            : "Tre sliders. Én sætning hvis du har lyst. Det tager kortere tid end at vente på din næste sæt."
-        }
+        eyebrow={t("eyebrow")}
+        title={today ? t("titleUpdate") : t("titleNew")}
+        subtitle={today ? t("subtitleUpdate") : t("subtitleNew")}
         right={<StreakBadge current={current} longest={longest} />}
       />
       <Container size="narrow" className="py-10 md:py-14 space-y-10">

@@ -3,7 +3,7 @@
   "page": {
     "eyebrow": "06 — Mad",
     "title": "Brændstof.",
-    "intro": "AI-genereret ugeplan, holdt indenfor brand-rammen. Olivenolie og smør, ikke rapsolie. Skyr og hytteost, ikke proteinbarer. Hele varer.",
+    "intro": "Motoren lægger ugens måltider inden for brand-rammen. Olivenolie og smør, ikke rapsolie. Skyr og hytteost, ikke proteinbarer. Hele varer.",
     "shoppingLink": "Indkøbsliste",
     "preferencesLink": "Indstillinger",
     "kcalAdjustEyebrow": "Auto-justering",
@@ -15,7 +15,7 @@
     "quotaBody": "Du har brugt din kvota for {label}-handlinger ({dailyUsed}/{dailyMax} i dag, {weeklyUsed}/{weeklyMax} denne uge).",
     "quotaNext": " Næste tilgængelig <strong>{reset}</strong>.",
     "emptyEyebrow": "Ingen plan for uge {week}",
-    "emptyTitle": "Sæt rammen, så bygger AI'en.",
+    "emptyTitle": "Sæt rammen, så bygger Motoren.",
     "emptyBody": "Når du har sat allergier, dislikes og foretrukne ingredienser, genererer vi en uge-plan med 21 måltider, indkøbsliste og prep-skema.",
     "emptyGenerate": "Generér ugeplan",
     "emptyPreferences": "Sæt indstillinger →",

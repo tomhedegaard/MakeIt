@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import InstallHint from "@/components/pwa/InstallHint";
 import { getSession } from "@/lib/auth";
@@ -89,7 +89,7 @@ function todayCardFromMock(): TodayCard {
   };
 }
 
-function fmtUpcomingDate(iso: string | null, t: Translator): string {
+function fmtUpcomingDate(iso: string | null, t: Translator, locale: string): string {
   if (!iso) return t("upcoming.soon");
   const d = new Date(iso + "T00:00:00");
   const today = new Date();
@@ -98,7 +98,7 @@ function fmtUpcomingDate(iso: string | null, t: Translator): string {
   tomorrow.setDate(today.getDate() + 1);
   if (d.getTime() === today.getTime()) return t("upcoming.today");
   if (d.getTime() === tomorrow.getTime()) return t("upcoming.tomorrow");
-  return d.toLocaleDateString("da-DK", { weekday: "short" }).replace(".", "");
+  return d.toLocaleDateString(locale === "en" ? "en-GB" : "da-DK", { weekday: "short" }).replace(".", "");
 }
 
 type HrvChipData = {
@@ -148,6 +148,7 @@ async function getHrvChipData(
 
 export default async function TodayPage() {
   const member = (await getSession())!;
+  const locale = await getLocale();
   const t = await getTranslations("Dashboard");
   const tHrv = await getTranslations("Hrv.band.qualitative");
   const chipLabels = {
@@ -159,7 +160,6 @@ export default async function TodayPage() {
     loadStripCopy(),
     loadDotsCopy(),
   ]);
-
   const connected = SUPABASE_ENABLED;
   const [todayDb, upcomingDb, feedDb, statsDb] = connected
     ? await Promise.all([
@@ -428,7 +428,7 @@ export default async function TodayPage() {
         <div className="bg-bg p-4 lg:p-5">
           <div className="eyebrow mb-2">{t("stats.reps")}</div>
           <div className="numeric text-2xl lg:text-3xl">
-            {stats ? formatReps(stats.repsBalance) : connected ? "0" : "1.420"}
+            {stats ? formatReps(stats.repsBalance, locale) : connected ? "0" : "1.420"}
           </div>
           <div className="text-[10px] font-mono text-fg-faint mt-1">{member.tier}</div>
         </div>
@@ -450,7 +450,7 @@ export default async function TodayPage() {
                   href={`/session/${row.id}`}
                   className="px-4 py-3 flex items-center gap-4 lift"
                 >
-                  <span className="eyebrow w-16 shrink-0">{fmtUpcomingDate(row.scheduledFor, t)}</span>
+                  <span className="eyebrow w-16 shrink-0">{fmtUpcomingDate(row.scheduledFor, t, locale)}</span>
                   <span className="flex-1 text-sm text-fg/90 truncate">{row.title}</span>
                   <span className="numeric text-fg-faint text-xs shrink-0">{row.estimatedMinutes}m</span>
                 </Link>
@@ -485,13 +485,13 @@ export default async function TodayPage() {
         {feed && feed.length > 0 ? (
           <ul className="space-y-2.5">
             {feed.map((row) => (
-              <CrewRow key={row.id} {...row} />
+              <CrewRow key={row.id} {...row} prLabel={t("crew.prBadge")} />
             ))}
           </ul>
         ) : feed === null ? (
           <ul className="space-y-2.5">
             {mockFeed(t).map((row, i) => (
-              <CrewRow key={i} id={String(i)} {...row} />
+              <CrewRow key={i} id={String(i)} {...row} prLabel={t("crew.prBadge")} />
             ))}
           </ul>
         ) : (
@@ -508,8 +508,8 @@ export default async function TodayPage() {
 }
 
 function CrewRow({
-  who, what, when, pr,
-}: Pick<CrewItem, "id" | "who" | "what" | "when" | "pr"> & { tier?: string }) {
+  who, what, when, pr, prLabel,
+}: Pick<CrewItem, "id" | "who" | "what" | "when" | "pr"> & { tier?: string; prLabel: string }) {
   return (
     <li className="surface-2 rounded-lg p-4 flex items-center gap-3">
       <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
@@ -524,7 +524,7 @@ function CrewRow({
       </div>
       {pr ? (
         <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 shrink-0">
-          ★ PR
+          {prLabel}
         </span>
       ) : null}
     </li>
@@ -583,8 +583,8 @@ function formatVolume(kg: number): string {
   return `${(kg / 1000).toFixed(1).replace(".", ",")}K`;
 }
 
-function formatReps(n: number): string {
-  return new Intl.NumberFormat("da-DK").format(n);
+function formatReps(n: number, locale = "da"): string {
+  return new Intl.NumberFormat(locale === "en" ? "en-GB" : "da-DK").format(n);
 }
 
 /**

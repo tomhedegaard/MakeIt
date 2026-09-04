@@ -8,13 +8,19 @@
     "home": "Til forsiden"
   },
   "loading": {
-    "label": "Loader"
+    "label": "Loader",
+    "redirectEyebrow": "Et øjeblik",
+    "redirectTitle": "Sender dig videre…",
+    "nutritionTitle": "Åbner kost…",
+    "nutritionBody": "Tjekker om du har en plan — ellers sender vi dig til opsætning.",
+    "mindTitle": "Åbner Mind…",
+    "mindBody": "Tjekker disclaimer — så sender vi dig videre."
   },
   "cookieBanner": {
     "eyebrow": "Cookies",
     "title": "Vi sætter en enkelt session-cookie.",
     "bodyBefore": "Vi bruger en strengt nødvendig cookie for at holde dig logget ind. Ingen analytics-cookies, ingen tracking, ingen ad-pixels. Læs detaljerne i ",
-    "privacyLink": "privacy policy",
+    "privacyLink": "privatlivspolitik",
     "bodyAfter": ".",
     "accept": "OK",
     "essential": "Kun nødvendige"

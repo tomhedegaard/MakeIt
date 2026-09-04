@@ -17,7 +17,7 @@ export default async function SciencePage() {
   const items = await getPublishedScienceItems();
 
   return (
-    <div className="mx-auto max-w-[860px] px-6 pb-24 pt-12 lg:pt-16">
+    <div className="mx-auto max-w-[860px] px-6 pt-12 lg:pt-16">
       <header>
         <p className="eyebrow">{t("eyebrow")}</p>
         <h1 className="font-display mt-2 text-4xl sm:text-5xl">{t("title")}</h1>

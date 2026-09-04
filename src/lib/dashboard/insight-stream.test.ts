@@ -94,6 +94,8 @@ describe("buildTodayInsightStream", () => {
     });
     expect(cards.some((c) => c.id === "body_food_session")).toBe(false);
     expect(cards.some((c) => c.id === "mind_body_check")).toBe(false);
+    expect(cards.every((c) => c.id !== "heart_body_low")).toBe(true);
+    expect(cards.every(cardGrammarOk)).toBe(true);
   });
 
   it("demo stream is Heart-first and routes the more-chip to an existing surface", () => {

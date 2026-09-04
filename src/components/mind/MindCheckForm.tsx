@@ -2,20 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { submitMindCheckAction } from "@/app/(app)/mind/check/actions";
 
-type Slider = {
-  key: "energy" | "stress" | "focus";
-  label: string;
-  low: string;
-  high: string;
-};
-
-const SLIDERS: Slider[] = [
-  { key: "energy", label: "Energi", low: "udmattet", high: "opladt" },
-  { key: "stress", label: "Stress", low: "rolig", high: "pumpet" },
-  { key: "focus", label: "Fokus", low: "spredt", high: "laserskarp" },
-];
+type SliderKey = "energy" | "stress" | "focus";
 
 /**
  * 60-second mind-check. Three 1-5 sliders + 280-char note. Idempotent
@@ -39,10 +29,17 @@ export default function MindCheckForm({
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const router = useRouter();
+  const t = useTranslations("Mind.check");
 
-  const setter = (key: Slider["key"]) =>
+  const sliders: { key: SliderKey; label: string; low: string; high: string }[] = [
+    { key: "energy", label: t("energy"), low: t("energyLow"), high: t("energyHigh") },
+    { key: "stress", label: t("stress"), low: t("stressLow"), high: t("stressHigh") },
+    { key: "focus", label: t("focus"), low: t("focusLow"), high: t("focusHigh") },
+  ];
+
+  const setter = (key: SliderKey) =>
     ({ energy: setEnergy, stress: setStress, focus: setFocus })[key];
-  const value = (key: Slider["key"]) => ({ energy, stress, focus })[key];
+  const value = (key: SliderKey) => ({ energy, stress, focus })[key];
 
   function handleSubmit(formData: FormData) {
     setError(null);
@@ -62,7 +59,7 @@ export default function MindCheckForm({
       action={handleSubmit}
       className="space-y-10"
     >
-      {SLIDERS.map((s) => (
+      {sliders.map((s) => (
         <fieldset key={s.key} className="space-y-3">
           <legend className="flex items-baseline justify-between w-full">
             <span className="font-display text-xl md:text-2xl">{s.label}</span>
@@ -90,7 +87,7 @@ export default function MindCheckForm({
 
       <fieldset className="space-y-2">
         <legend className="font-display text-xl md:text-2xl">
-          En sætning <span className="text-fg-dim text-sm">(valgfri)</span>
+          {t("noteLabel")} <span className="text-fg-dim text-sm">{t("noteOptional")}</span>
         </legend>
         <textarea
           name="note"
@@ -98,7 +95,7 @@ export default function MindCheckForm({
           onChange={(e) => setNote(e.target.value.slice(0, 280))}
           maxLength={280}
           rows={3}
-          placeholder="Hvad præger dig lige nu?"
+          placeholder={t("notePlaceholder")}
           className="w-full rounded-xl bg-bg-2/60 border hairline px-4 py-3 text-base resize-none focus:outline-none focus:border-fg/40"
         />
         <div className="text-fg-dim text-xs text-right tabular-nums">
@@ -118,11 +115,11 @@ export default function MindCheckForm({
           disabled={pending}
           className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3.5 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
         >
-          {pending ? "Gemmer..." : saved ? "Opdater" : "Gem mind-check"}
+          {pending ? t("saving") : saved ? t("update") : t("save")}
         </button>
         {saved && !pending ? (
           <span className="text-fg-dim text-sm">
-            Tjekket ind i dag — du kan opdatere senere.
+            {t("savedHint")}
           </span>
         ) : null}
       </div>

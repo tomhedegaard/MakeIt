@@ -117,7 +117,7 @@ export function buildTodayInsightStream(
       id: "body_food_session",
       domains: ["body", "food"],
       moreAbout: "food",
-      ctaHref: "/nutrition?q=squat-dag",
+      ctaHref: "/nutrition?q=pas",
       moreHref: "/nutrition",
     });
   }

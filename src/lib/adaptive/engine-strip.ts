@@ -83,10 +83,10 @@ function uniqueSteps(steps: EngineStripStep[]): EngineStripStep[] {
  * HRV / mind / RPE / alcohol when those were never observed.
  */
 export function buildEngineStrip(
-  input: Pick<
-    EngineInput,
-    "latestReading" | "lifestyle" | "nextSession" | "recentSessions"
-  > & { reasons?: Array<RuleReasonCode | string> },
+  input: Pick<EngineInput, "latestReading" | "lifestyle" | "recentSessions"> & {
+    nextSession?: EngineInput["nextSession"] | null;
+    reasons?: Array<RuleReasonCode | string>;
+  },
   munkNote = "",
 ): EngineStripModel {
   const steps: EngineStripStep[] = [];

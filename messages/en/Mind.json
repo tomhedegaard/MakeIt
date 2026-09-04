@@ -10,7 +10,7 @@
   "disclaimer": {
     "eyebrow": "Mind · Pillar 5",
     "title": "Mental health — our 5th pillar.",
-    "intro": "Real health is physical AND mental. /mind is your daily mental check-in, your private journal, your sessions library, and your AI coach for the head.",
+    "intro": "Real health is physical AND mental. /mind is your daily mental check-in, your private journal, your sessions library, and a daily reflection written by the Motor.",
     "important_title": "Important — read once.",
     "important_body": "MakeIt's Mind module is NOT clinical treatment. It's training mental habits — comparable to breathwork, journaling, and reflection. NOT a substitute for therapy or medication. If you're in a bad place, or thinking about harming yourself or others, talk to a real human who can help right now.",
     "resources_title": "If it's burning",
@@ -20,7 +20,10 @@
     "privacy_title": "How we handle your data",
     "privacy_journal": "Munk, coaches and other members cannot read your journal (only you in the app). An excerpt may be sent to Anthropic (Claude) for crisis-text moderation. That is a processor — not a coach.",
     "privacy_mind_check": "Your mind-check is private by default. When you tier up, you can choose to share your signal with your buddy. Both must opt in. An optional note may be included in the daily mental coach at Anthropic.",
-    "privacy_ai": "The AI coach (Anthropic) reads your mind-check including optional note, HRV, and training week — not your journal body — to write you a daily reflection. Output is stored so you can re-read it.",
+    "privacy_journal_label": "Journal",
+    "privacy_mind_check_label": "Mind-check",
+    "privacy_ai_label": "The Motor",
+    "privacy_ai": "The Motor (processor: Anthropic) reads your mind-check including optional note, HRV, and training week — not your journal body — to write you a daily reflection. Output is stored so you can re-read it. Anthropic is a processor, not a coach.",
     "accept": "I understand — continue",
     "accepted": "Thank you — the module is open."
   },
@@ -76,5 +79,45 @@
     "eyebrow": "Mind · Settings",
     "title": "Privacy + notifications.",
     "subtitle": "Munk and coaches cannot see your journal body. Anthropic may see an excerpt for moderation. The rest you can turn on and off."
+  },
+  "tile": {
+    "waitingTitle": "Mind-check waiting",
+    "waitingSub": "60 sec. Three sliders. Faster than waiting for the next set.",
+    "waitingCta": "Start now",
+    "readyTitle": "Today's reflection is ready",
+    "readySub": "The Motor wrote from your signal today.",
+    "readyCta": "Read",
+    "streakTitle": "Streak: {days} days",
+    "streakSub": "Stay on it. Next milestone is +20 Reps at 7 days.",
+    "streakCta": "To Mind"
+  },
+  "check": {
+    "metaTitle": "Mind-check · MakeIt",
+    "eyebrow": "Mind · Pillar 5",
+    "titleNew": "Mind-check — 60 sec.",
+    "titleUpdate": "Mind-check — update.",
+    "subtitleNew": "Three sliders. One sentence if you want. Faster than waiting for your next set.",
+    "subtitleUpdate": "You checked in today. You can update until midnight.",
+    "energy": "Energy",
+    "energyLow": "spent",
+    "energyHigh": "charged",
+    "stress": "Stress",
+    "stressLow": "calm",
+    "stressHigh": "amped",
+    "focus": "Focus",
+    "focusLow": "scattered",
+    "focusHigh": "sharp",
+    "noteLabel": "One sentence",
+    "noteOptional": "(optional)",
+    "notePlaceholder": "What is coloring you right now?",
+    "save": "Save mind-check",
+    "update": "Update",
+    "saving": "Saving...",
+    "savedHint": "Checked in today — you can update later."
+  },
+  "redirect": {
+    "eyebrow": "Mind",
+    "title": "Opening Mind…",
+    "body": "Checking whether you have accepted the disclaimer — then we send you on."
   }
 }

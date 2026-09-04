@@ -31,8 +31,31 @@
     "rangeLabel": "Personligt normalområde"
   },
   "trends": {
-    "eyebrow": "Recovery",
+    "eyebrow": "Restitution",
     "title": "Forløb",
     "subtitle": "Dit HRV-forløb over tid — den daglige måling, dit 7-dages snit og dit normalområde."
+  },
+  "subNav": {
+    "aria": "HRV",
+    "today": "I dag",
+    "trends": "Forløb",
+    "insights": "Indsigt",
+    "learn": "Lær"
+  },
+  "page": {
+    "eyebrow": "Hjerte",
+    "title": "HRV",
+    "subtitle": "Din hjerterytmevariabilitet — et dagligt mål for, hvor klar din krop er til at træne.",
+    "connectEyebrow": "Kom i gang",
+    "connectTitle": "Lad din HRV køre i baggrunden.",
+    "connectBody": "HRV — hjerterytmevariabilitet — fortæller, hvor restitueret du er. Forbind en wearable, så synker MakeIt din HRV automatisk hver morgen. Ingen manuel måling, ingen ekstra rutine — den er der bare, når du vågner.",
+    "connectStep1Title": "Forbind dit wearable",
+    "connectStep1Body": "Ét tryk — du godkender adgang hos din wearable-udbyder.",
+    "connectStep2Title": "HRV synker hver morgen",
+    "connectStep2Body": "MakeIt henter nattens måling automatisk. Du gør ingenting.",
+    "connectStep3Title": "Vi bygger din baseline",
+    "connectStep3Body": "De første par uger lærer MakeIt din normal — derefter ser du din readiness.",
+    "connectCta": "Forbind dit wearable",
+    "connectAppleNote": "Apple Watch-support kommer med MakeIt-appen til iPhone."
   }
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { localeLabels, isLocale } from "@/i18n/config";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import Sparkline from "@/components/ui/Sparkline";
@@ -24,6 +25,9 @@ export default async function ProfilePage() {
   const progression = computeFormCheckProgression(formChecks);
 
   const t = await getTranslations("Profile");
+  const locale = await getLocale();
+  const languageLabel = isLocale(locale) ? localeLabels[locale] : locale;
+  const dateLocale = locale === "en" ? "en-GB" : "da-DK";
 
   return (
     <>
@@ -32,7 +36,7 @@ export default async function ProfilePage() {
         title={`@${m.handle}`}
         subtitle={t("header.subtitle", {
           tier: m.tier,
-          date: new Date(m.joinedAt).toLocaleDateString("da-DK"),
+          date: new Date(m.joinedAt).toLocaleDateString(dateLocale),
         })}
         right={
           <div className="flex flex-wrap items-center gap-2">
@@ -114,7 +118,7 @@ export default async function ProfilePage() {
                   className="px-5 py-3 flex items-center gap-4 text-sm"
                 >
                   <span className="numeric text-xs text-fg-faint w-20 shrink-0">
-                    {new Date(pr.date).toLocaleDateString("da-DK", {
+                    {new Date(pr.date).toLocaleDateString(dateLocale, {
                       day: "numeric",
                       month: "short",
                     })}
@@ -154,7 +158,12 @@ export default async function ProfilePage() {
               </li>
               <li className="flex items-center justify-between border-b hairline pb-3">
                 <span className="text-fg-dim">{t("settings.language")}</span>
-                <span>{t("settings.languageValue")}</span>
+                <span>
+                  {languageLabel}
+                  <Link href="/settings" className="ml-2 text-fg-faint hover:text-fg">
+                    {t("settings.languageChange")}
+                  </Link>
+                </span>
               </li>
               <li className="flex items-center justify-between">
                 <span className="text-fg-dim">{t("settings.theme")}</span>
@@ -226,7 +235,7 @@ export default async function ProfilePage() {
                         {f.aiHeadline ?? t("formChecks.aiHeadlineFallback")}
                       </h3>
                       <div className="mt-1 text-[11px] font-mono text-fg-faint">
-                        {new Date(f.createdAt).toLocaleString("da-DK", {
+                        {new Date(f.createdAt).toLocaleString(dateLocale, {
                           weekday: "short",
                           day: "numeric",
                           month: "short",
@@ -301,7 +310,7 @@ export default async function ProfilePage() {
                           Mikael Munk · @Munk
                         </span>
                         <span className="numeric text-[10px] text-fg-faint">
-                          {new Date(f.reviewedAt).toLocaleString("da-DK", {
+                          {new Date(f.reviewedAt).toLocaleString(dateLocale, {
                             day: "numeric",
                             month: "short",
                             hour: "2-digit",
