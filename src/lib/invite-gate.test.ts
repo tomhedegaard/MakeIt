@@ -4,6 +4,7 @@ import {
   admitInviteConsume,
   admitInviteValidation,
   decideInviteConsume,
+  decidePasswordSignupNext,
   hasMinimumInviteShape,
   isNewlyCreatedAuthUser,
   normalizeInviteCode,
@@ -175,5 +176,63 @@ describe("decideInviteConsume", () => {
         alreadyAdmitted: null,
       }),
     ).toEqual({ action: "allow" });
+  });
+});
+
+describe("decidePasswordSignupNext", () => {
+  const userId = "user-new";
+
+  it("admits when signUp already returned a session (confirm off)", () => {
+    expect(
+      decidePasswordSignupNext({
+        user: { id: userId, identities: [{ id: "ident-1" }] },
+        session: { access_token: "tok" },
+      }),
+    ).toEqual({ action: "admit-session", userId });
+  });
+
+  it("confirms then signs in when a real user was created without a session", () => {
+    expect(
+      decidePasswordSignupNext({
+        user: { id: userId, identities: [{ id: "ident-1" }] },
+        session: null,
+      }),
+    ).toEqual({ action: "confirm-and-signin", userId });
+  });
+
+  it("treats missing identities as a real new user (not the exists stub)", () => {
+    expect(
+      decidePasswordSignupNext({
+        user: { id: userId },
+        session: null,
+      }),
+    ).toEqual({ action: "confirm-and-signin", userId });
+  });
+
+  it("refuses empty identities — GoTrue anti-enumeration for an existing email", () => {
+    expect(
+      decidePasswordSignupNext({
+        user: { id: userId, identities: [] },
+        session: null,
+      }),
+    ).toEqual({ action: "exists" });
+  });
+
+  it("fails closed when signUp returned no user", () => {
+    expect(
+      decidePasswordSignupNext({
+        user: null,
+        session: null,
+      }),
+    ).toEqual({ action: "fail" });
+  });
+
+  it("prefers the live session over empty identities", () => {
+    expect(
+      decidePasswordSignupNext({
+        user: { id: userId, identities: [] },
+        session: { access_token: "tok" },
+      }),
+    ).toEqual({ action: "admit-session", userId });
   });
 });

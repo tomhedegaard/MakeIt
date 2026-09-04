@@ -432,7 +432,8 @@ function AppleGlyph() {
 }
 
 /* ---------------------------------------------------------------- *
- * Sent confirmation (post-magic-link / post-signup)
+ * Sent confirmation — magic-link only. Password signup never
+ * lands here (`finishInvitePasswordSignup` → /dashboard or err).
  * ---------------------------------------------------------------- */
 
 async function SentState({ email }: { email?: string }) {

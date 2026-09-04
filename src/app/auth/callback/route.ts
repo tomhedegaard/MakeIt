@@ -17,7 +17,9 @@ const PENDING_INVITE_COOKIE = "mi_pending_invite";
  * Auth callback — handles every flow that ends here:
  *
  *   - Magic-link OTP    : ?code=<otp>&invite=<CODE>  (invite in URL)
- *   - Password sign-up  : ?code=<otp>&invite=<CODE>  (invite in URL)
+ *   - Password confirm  : leftover confirm-mail click after
+ *                         invite-gated signup already auto-confirmed
+ *                         (`invite` in URL; consume is idempotent)
  *   - OAuth (Google/    : ?code=<authcode>           (invite in cookie)
  *      Apple)
  *

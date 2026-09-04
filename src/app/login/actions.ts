@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { isValidMockInvite, SESSION_COOKIE } from "@/lib/auth";
 import {
-  admitInviteConsume,
   admitInviteValidation,
   hasMinimumInviteShape,
 } from "@/lib/invite-gate";
@@ -14,6 +13,8 @@ import {
   consumeInviteForUser,
   fetchInviteValidity,
 } from "@/lib/data/invites";
+import { confirmAuthUserEmail } from "@/lib/data/auth-admin";
+import { finishInvitePasswordSignup } from "@/lib/password-signup";
 
 /* ---------------------------------------------------------------- *
  * Helpers
@@ -125,11 +126,12 @@ export async function magicLinkAction(formData: FormData) {
  * Email + password — sign-in OR sign-up depending on `mode` field
  *
  * Sign-in: requires email + password.
- * Sign-up: requires email + password + invite. If email-confirmation
- *          is enabled in Supabase (prod default), the action returns
- *          immediately and the user gets a confirmation mail; the
- *          callback consumes the invite. If it's disabled (dev only),
- *          we have a session right after signUp and consume inline.
+ * Sign-up: requires email + password + invite. The invite is the
+ *          closed-beta gate. If signUp returns a session (confirm
+ *          off), consume inline. If it created a user with no
+ *          session (prod Confirm email ON), service-role confirm
+ *          that user, sign in, consume, then /dashboard — never
+ *          the magic-link «EMAIL SENT» wall.
  * ---------------------------------------------------------------- */
 
 export async function passwordAction(formData: FormData) {
@@ -153,8 +155,8 @@ export async function passwordAction(formData: FormData) {
       password,
       options: {
         // raw_user_meta_data.invite lets handle_new_user (0059)
-        // consume atomically. emailRedirectTo keeps the confirm
-        // callback working if the trigger did not (pre-push).
+        // consume atomically. emailRedirectTo keeps a later
+        // confirm-mail click harmless if GoTrue still sends one.
         data: { invite: code },
         emailRedirectTo: `${base}/auth/callback?invite=${encodeURIComponent(code)}`,
       },
@@ -166,20 +168,32 @@ export async function passwordAction(formData: FormData) {
       redirect(`/login?err=${reason}`);
     }
 
-    // If email-confirmation is OFF, signUp returns a session straight
-    // away. Consume via consume_invite RPC (service-role fallback
-    // until 0059 is applied).
-    if (data.session && data.user) {
-      const consumed = await consumeInviteForUser(code, data.user.id);
-      if (!admitInviteConsume(consumed)) {
-        await supabase.auth.signOut();
-        redirect("/login?err=invite");
-      }
-      redirect("/dashboard");
-    }
+    const finished = await finishInvitePasswordSignup({
+      signUpUser: data.user,
+      signUpSession: data.session,
+      email,
+      password,
+      invite: code,
+      confirmEmail: confirmAuthUserEmail,
+      signInWithPassword: async (signInEmail, signInPassword) => {
+        const signed = await supabase.auth.signInWithPassword({
+          email: signInEmail,
+          password: signInPassword,
+        });
+        return {
+          user: signed.data.user,
+          session: signed.data.session,
+          error: signed.error,
+        };
+      },
+      consumeInvite: consumeInviteForUser,
+      signOut: () => supabase.auth.signOut(),
+    });
 
-    // Otherwise nudge them to check their inbox.
-    redirect(`/login?sent=1&email=${encodeURIComponent(email)}`);
+    if (!finished.ok) {
+      redirect(`/login?err=${finished.err}`);
+    }
+    redirect("/dashboard");
   }
 
   // mode = signin

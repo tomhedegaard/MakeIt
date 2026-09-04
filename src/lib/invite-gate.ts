@@ -3,8 +3,9 @@
  *
  * SQL `is_invite_valid` is the source of truth for "is this code
  * currently usable". This module is the fail-closed policy around
- * that RPC and around consume-after-signup, so the rules can be
- * unit-tested without a database.
+ * that RPC, consume-after-signup, and the password-signup
+ * confirm-or-session decision, so the rules can be unit-tested
+ * without a database.
  *
  * Demo mock codes (MUNK-01 etc.) live in `auth.ts` and must never
  * be special-cased here — connected mode only admits an RPC `true`.
@@ -93,4 +94,35 @@ export function decideInviteConsume(args: {
   if (!isNew) return { action: "allow" };
   if (!invite) return { action: "reject" };
   return { action: "consume", invite };
+}
+
+/**
+ * After invite-validated `signUp`: the invite is the closed-beta gate.
+ * A session means confirm-email is off (or already satisfied). No
+ * session + identities means GoTrue created a real user and is
+ * waiting on confirm — we auto-confirm that user. Empty identities
+ * is the anti-enumeration stub for an email that already exists.
+ */
+export type PasswordSignupAuthUser = {
+  id: string;
+  identities?: readonly unknown[] | null;
+};
+
+export type PasswordSignupNext =
+  | { action: "admit-session"; userId: string }
+  | { action: "confirm-and-signin"; userId: string }
+  | { action: "exists" }
+  | { action: "fail" };
+
+export function decidePasswordSignupNext(args: {
+  user: PasswordSignupAuthUser | null | undefined;
+  session: { access_token?: string } | null | undefined;
+}): PasswordSignupNext {
+  const user = args.user;
+  if (!user?.id) return { action: "fail" };
+  if (args.session) return { action: "admit-session", userId: user.id };
+  if (Array.isArray(user.identities) && user.identities.length === 0) {
+    return { action: "exists" };
+  }
+  return { action: "confirm-and-signin", userId: user.id };
 }
