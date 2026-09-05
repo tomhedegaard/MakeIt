@@ -2,18 +2,25 @@
  * Shared «assign program + materialize sessions from blueprint».
  *
  * Coach assign and member Start Program both enroll a member on a
- * catalog program. The wave inserts (assignment → sessions →
- * session_exercises → session_sets) must stay in one place so the
+ * catalog program. The wave inserts must stay in one place so the
  * two paths cannot drift.
  *
- * Scope choice: materialize **all remaining weeks** (`startWeek`..
- * `weeks`), matching the existing coach assign path. Week 1-only
- * would leave later weeks empty until some other generator ran;
- * `maybeAdvanceWeek` progresses weights from a completed week, it
- * does not create missing week rows from the blueprint.
+ * Write order (transactional safety without a DB transaction):
+ *   1. load blueprint + prepare (empty days fail here — no writes)
+ *   2. materialize sessions → exercises → sets
+ *   3. only then supersede the previous active assignment + insert
+ * If materialize fails, the previous assignment is untouched. If the
+ * assignment flip fails after sessions exist, those sessions are
+ * deleted and the previous active row is restored.
  *
- * Empty blueprints (`days.length === 0`) fail **before** any
- * assignment write — published catalog shells must not look enrolled.
+ * Horizon:
+ *   - Coach (default): all remaining weeks (`startWeek`..`weeks`).
+ *   - Member self-serve: `throughWeek = startWeek` (week 1 / the
+ *     current week). Remaining weeks are generated later by
+ *     `maybeAdvanceWeek` from completed sessions — do not dump
+ *     10×4 sessions through a user-scoped server action.
+ *
+ * Empty blueprints (`days.length === 0`) fail **before** any write.
  */
 
 export const EMPTY_PROGRAM_DAYS_ERROR =
@@ -95,7 +102,16 @@ export type AssignFromBlueprintInput = {
   startWeek: number;
   /** Coach abandons the previous active assignment; member pauses it. */
   supersedeStatus: AssignSupersedeStatus;
+  /**
+   * Inclusive last week to materialize. Omit for all remaining weeks
+   * (coach). Member self-serve passes `MEMBER_SELF_SERVE_THROUGH_WEEK`
+   * so the request stays small (week 1 / next training week).
+   */
+  throughWeek?: number;
 };
+
+/** Inclusive last week for member Start Program (week 1 when startWeek is 1). */
+export const MEMBER_SELF_SERVE_THROUGH_WEEK = 1;
 
 /**
  * PostgREST-shaped client. Kept loose because the real
@@ -125,12 +141,26 @@ export function isEmptyDaysError(error: string | undefined): boolean {
   return error === EMPTY_PROGRAM_DAYS_ERROR;
 }
 
+export function resolveMaterializeThroughWeek(opts: {
+  startWeek: number;
+  programWeeks: number;
+  throughWeek?: number;
+}): number {
+  const start = Math.max(1, Math.floor(opts.startWeek || 1));
+  const last =
+    opts.throughWeek == null
+      ? opts.programWeeks
+      : Math.floor(opts.throughWeek);
+  return Math.min(opts.programWeeks, Math.max(start, last));
+}
+
 export function prepareAssignFromBlueprint(input: {
   memberId: string;
   programId: string;
   startWeek: number;
   weeks: number;
   days: BlueprintDay[] | null | undefined;
+  throughWeek?: number;
 }): { ok: false; error: string } | { ok: true; plan: AssignPlan } {
   const days = normalizeBlueprintDays(input.days);
   if (days.length === 0) {
@@ -138,9 +168,14 @@ export function prepareAssignFromBlueprint(input: {
   }
 
   const startWeek = Math.max(1, Math.floor(input.startWeek || 1));
+  const endWeek = resolveMaterializeThroughWeek({
+    startWeek,
+    programWeeks: input.weeks,
+    throughWeek: input.throughWeek,
+  });
   const sessionRows: SessionInsertRow[] = [];
   const sessionSeeds: SessionSeed[] = [];
-  for (let week = startWeek; week <= input.weeks; week++) {
+  for (let week = startWeek; week <= endWeek; week++) {
     days.forEach((day, dayIdx) => {
       sessionRows.push({
         member_id: input.memberId,
@@ -239,10 +274,86 @@ const BLUEPRINT_SELECT = `
       )
     `;
 
+async function rollbackInsertedSessions(
+  supabase: AssignClient,
+  sessionIds: string[],
+): Promise<void> {
+  if (sessionIds.length === 0) return;
+  await supabase.from("sessions").delete().in("id", sessionIds);
+}
+
+async function restorePreviousAssignment(
+  supabase: AssignClient,
+  previousId: string | null,
+): Promise<void> {
+  if (!previousId) return;
+  await supabase
+    .from("program_assignments")
+    .update({ status: "active" })
+    .eq("id", previousId);
+}
+
+async function materializePlanSessions(
+  supabase: AssignClient,
+  plan: AssignPlan,
+): Promise<{ ok: true; sessionIds: string[] } | { ok: false; error: string; sessionIds: string[] }> {
+  if (plan.sessionRows.length === 0) {
+    return { ok: true, sessionIds: [] };
+  }
+
+  const { data: insertedSessions, error: sErr } = await supabase
+    .from("sessions")
+    .insert(plan.sessionRows)
+    .select("id");
+  const sessionIds = (insertedSessions ?? []).map((row: { id: string }) => row.id);
+  if (sErr || !insertedSessions) {
+    return {
+      ok: false,
+      error: sErr?.message ?? "Kunne ikke oprette sessioner",
+      sessionIds,
+    };
+  }
+
+  const { rows: exerciseRows, seeds: exerciseSeeds } = buildSessionExerciseRows(
+    insertedSessions,
+    plan.sessionSeeds,
+    plan.days,
+  );
+
+  if (exerciseRows.length === 0) {
+    return { ok: true, sessionIds };
+  }
+
+  const { data: insertedEx, error: eErr } = await supabase
+    .from("session_exercises")
+    .insert(exerciseRows)
+    .select("id");
+  if (eErr || !insertedEx) {
+    return {
+      ok: false,
+      error: eErr?.message ?? "Kunne ikke oprette øvelser",
+      sessionIds,
+    };
+  }
+
+  const setRows = buildSessionSetRows(insertedEx, exerciseSeeds, plan.days);
+  if (setRows.length > 0) {
+    const { error: setErr } = await supabase
+      .from("session_sets")
+      .insert(setRows);
+    if (setErr) {
+      return { ok: false, error: setErr.message, sessionIds };
+    }
+  }
+
+  return { ok: true, sessionIds };
+}
+
 /**
- * Load blueprint, refuse empty days, supersede the current active
- * assignment, insert the new one, then materialize sessions for
- * remaining weeks. Callers own revalidation and member-policy checks.
+ * Load blueprint, refuse empty days, materialize the session wave,
+ * then flip the active assignment. Callers own revalidation and
+ * member-policy checks. `memberId` must be the authenticated
+ * caller's id — never a client-supplied stand-in.
  */
 export async function assignProgramFromBlueprint(
   supabase: AssignClient,
@@ -266,58 +377,47 @@ export async function assignProgramFromBlueprint(
     startWeek,
     weeks: bp.weeks,
     days: bp.days,
+    throughWeek: input.throughWeek,
   });
   if (!prepared.ok) return prepared;
 
   const { plan } = prepared;
+
+  const materialized = await materializePlanSessions(supabase, plan);
+  if (!materialized.ok) {
+    await rollbackInsertedSessions(supabase, materialized.sessionIds);
+    return { ok: false, error: materialized.error };
+  }
+
+  const { data: previousActive } = await supabase
+    .from("program_assignments")
+    .select("id")
+    .eq("member_id", input.memberId)
+    .eq("status", "active")
+    .maybeSingle();
+  const previousId =
+    previousActive && typeof previousActive.id === "string"
+      ? previousActive.id
+      : null;
 
   const { error: supersedeErr } = await supabase
     .from("program_assignments")
     .update({ status: input.supersedeStatus })
     .eq("member_id", input.memberId)
     .eq("status", "active");
-  if (supersedeErr) return { ok: false, error: supersedeErr.message };
+  if (supersedeErr) {
+    await rollbackInsertedSessions(supabase, materialized.sessionIds);
+    return { ok: false, error: supersedeErr.message };
+  }
 
   const { error: aErr } = await supabase
     .from("program_assignments")
     .insert(plan.assignment);
-  if (aErr) return { ok: false, error: aErr.message };
-
-  if (plan.sessionRows.length === 0) {
-    return { ok: true, sessionsCreated: 0 };
+  if (aErr) {
+    await restorePreviousAssignment(supabase, previousId);
+    await rollbackInsertedSessions(supabase, materialized.sessionIds);
+    return { ok: false, error: aErr.message };
   }
 
-  const { data: insertedSessions, error: sErr } = await supabase
-    .from("sessions")
-    .insert(plan.sessionRows)
-    .select("id");
-  if (sErr || !insertedSessions) {
-    return { ok: false, error: sErr?.message ?? "Kunne ikke oprette sessioner" };
-  }
-
-  const { rows: exerciseRows, seeds: exerciseSeeds } = buildSessionExerciseRows(
-    insertedSessions,
-    plan.sessionSeeds,
-    plan.days,
-  );
-
-  if (exerciseRows.length > 0) {
-    const { data: insertedEx, error: eErr } = await supabase
-      .from("session_exercises")
-      .insert(exerciseRows)
-      .select("id");
-    if (eErr || !insertedEx) {
-      return { ok: false, error: eErr?.message ?? "Kunne ikke oprette øvelser" };
-    }
-
-    const setRows = buildSessionSetRows(insertedEx, exerciseSeeds, plan.days);
-    if (setRows.length > 0) {
-      const { error: setErr } = await supabase
-        .from("session_sets")
-        .insert(setRows);
-      if (setErr) return { ok: false, error: setErr.message };
-    }
-  }
-
-  return { ok: true, sessionsCreated: insertedSessions.length };
+  return { ok: true, sessionsCreated: materialized.sessionIds.length };
 }

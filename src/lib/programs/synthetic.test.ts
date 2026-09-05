@@ -27,6 +27,10 @@ const startButtonSrc = readFileSync(
   new URL("../../app/(app)/coaching/StartProgramButton.tsx", import.meta.url),
   "utf8",
 );
+const assignProgramSrc = readFileSync(
+  new URL("../data/assign-program.ts", import.meta.url),
+  "utf8",
+);
 const detailSrc = readFileSync(
   new URL("../data/program-detail.ts", import.meta.url),
   "utf8",
@@ -103,22 +107,38 @@ describe("member surfaces use the denylist", () => {
 
 describe("member start shares blueprint materialization", () => {
   it("uses the shared helper instead of assignment-only insert", () => {
-    expect(actionsSrc).toContain("assignProgramFromBlueprint");
-    expect(actionsSrc).toContain("supersedeStatus: \"paused\"");
+    expect(actionsSrc).toContain("assignProgramForAuthenticatedMember");
     expect(actionsSrc).toContain("empty_days");
+    expect(actionsSrc).toContain("member.id");
     expect(actionsSrc).not.toMatch(
       /from\("program_assignments"\)\.insert\(\{[\s\S]*status:\s*"active"/,
     );
+    expect(actionsSrc).not.toContain("assignProgramFromBlueprint(supabase");
     expect(coachAssignSrc).toContain("assignProgramFromBlueprint");
     expect(coachAssignSrc).toContain("supersedeStatus: \"abandoned\"");
     expect(coachAssignSrc).toContain("Kan ikke publicere et program uden dage");
   });
 
-  it("wires StartProgramButton to pending, failure, and empty-day disable", () => {
+  it("materializes the member path with the service-role client", () => {
+    expect(assignProgramSrc).toContain("createServiceClient");
+    expect(assignProgramSrc).toContain("MEMBER_SELF_SERVE_THROUGH_WEEK");
+    expect(assignProgramSrc).toContain("supersedeStatus: \"paused\"");
+    expect(assignProgramSrc).toContain("memberId: input.memberId");
+    expect(assignProgramSrc).toContain("maybeAdvanceWeek");
+    expect(actionsSrc).toContain("canMemberAssignProgram");
+    expect(actionsSrc).toContain("assignProgramForAuthenticatedMember");
+    expect(actionsSrc).toContain("createClient()");
+  });
+
+  it("wires StartProgramButton to pending, failure, catch, and refresh", () => {
     expect(startButtonSrc).toContain("hasDays");
     expect(startButtonSrc).toContain("role=\"alert\"");
     expect(startButtonSrc).toContain("setError");
     expect(startButtonSrc).toContain("t(\"starting\")");
     expect(startButtonSrc).toContain("disabled={pending || !hasDays}");
+    expect(startButtonSrc).toContain("try {");
+    expect(startButtonSrc).toContain("setError(\"failed\")");
+    expect(startButtonSrc).toContain("router.refresh()");
+    expect(startButtonSrc).toContain("router.push(\"/coaching\")");
   });
 });
