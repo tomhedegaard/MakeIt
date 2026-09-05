@@ -1,4 +1,4 @@
-import { smoothLinePath } from "@/lib/svg/smooth-path";
+import { smoothAreaPath, smoothLinePath } from "@/lib/svg/smooth-path";
 import type { ReadinessBucket } from "./types";
 
 /** A single reading prepared for the trend chart. */
