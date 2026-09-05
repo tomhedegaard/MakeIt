@@ -1,3 +1,4 @@
+import ChartEmptyFrame from "@/components/ui/ChartEmptyFrame";
 import HrvBandRange from "@/components/hrv/HrvBandRange";
 import {
   buildBandRangeModel,
@@ -57,10 +58,9 @@ export default function HrvBandHero({
           <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-md">
             {copy.emptyBody}
           </p>
-          <div
-            aria-hidden
-            className="mt-6 rounded-xl border hairline h-9 w-full opacity-40"
-          />
+          <div className="mt-6" aria-hidden>
+            <ChartEmptyFrame />
+          </div>
         </div>
       ) : (
         <div className="px-6 py-8 md:px-8 md:py-10">

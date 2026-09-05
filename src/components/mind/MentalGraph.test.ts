@@ -68,6 +68,15 @@ describe("MentalGraph", () => {
     expect(html).toContain('stroke="currentColor"');
     expect(html).toContain("var(--mind-stress)");
     expect(html).toContain("var(--mind-focus)");
+    expect(html).toContain("vector-effect");
+    expect(html).not.toContain("rounded-full");
+  });
+
+  it("shows a quiet charcoal frame when there are no logs", () => {
+    const html = render([], 8);
+    expect(html).toContain("data-chart-empty");
+    expect(html).toContain("Mental graf — sidste 30 dage");
+    expect(html).not.toContain('id="mental-graph-fill-energy"');
   });
 
   it("breaks the path on a missing day instead of interpolating", () => {

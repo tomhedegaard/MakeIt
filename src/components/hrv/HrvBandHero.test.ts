@@ -48,6 +48,7 @@ describe("HrvBandHero states", () => {
     expect(html).not.toContain("data-engine-cue");
     expect(html).not.toContain("text-danger");
     expect(html).not.toContain("bg-danger");
+    expect(html).toContain("data-chart-empty");
   });
 
   it("building shows the large value and 7-night copy without a cue", () => {

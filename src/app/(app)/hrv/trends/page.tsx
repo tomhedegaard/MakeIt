@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
+import ChartEmptyFrame from "@/components/ui/ChartEmptyFrame";
 import TrendChart from "@/components/hrv/TrendChart";
 import { getSession } from "@/lib/auth";
 import { getHrvReadingSeries } from "@/lib/data/hrv";
@@ -102,16 +103,8 @@ function StateEmpty({ copy }: { copy: Awaited<ReturnType<typeof loadHrvBandCopy>
     <section className="surface-2 rounded-2xl overflow-hidden">
       <div className="px-6 py-7 md:px-8 md:py-10">
         <div className="eyebrow eyebrow-domain mb-3">{copy.eyebrow}</div>
-        {/* Faint chart-axis scaffold — placeholder for the trend chart. */}
-        <div
-          aria-hidden
-          className="rounded-xl border hairline aspect-[8/3] w-full flex items-end"
-        >
-          <div className="grid grid-cols-6 w-full h-full opacity-30">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="border-r hairline last:border-r-0" />
-            ))}
-          </div>
+        <div aria-hidden className="rounded-xl border hairline overflow-hidden">
+          <ChartEmptyFrame />
         </div>
         <p className="text-fg-dim text-sm md:text-base leading-relaxed mt-6 max-w-md">
           {copy.emptyBody}

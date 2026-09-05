@@ -447,8 +447,8 @@ async function MindScreen() {
             <div key={c.key} className="text-center">
               <div className="flex items-center justify-center gap-1 mb-0.5">
                 <span
-                  className="rounded-full shrink-0"
-                  style={{ width: 6, height: 6, background: c.token }}
+                  className="shrink-0"
+                  style={{ width: 10, height: 1, background: c.token }}
                   aria-hidden
                 />
                 <span className="text-[7px] tracking-[0.12em] uppercase text-fg-dim font-mono">
@@ -473,15 +473,15 @@ async function MindScreen() {
         >
           <defs>
             <linearGradient id="mind-showcase-fill-stress" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--mind-stress)" stopOpacity={0.28} />
+              <stop offset="0%" stopColor="var(--mind-stress)" stopOpacity={0.14} />
               <stop offset="100%" stopColor="var(--mind-stress)" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="mind-showcase-fill-focus" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--mind-focus)" stopOpacity={0.28} />
+              <stop offset="0%" stopColor="var(--mind-focus)" stopOpacity={0.16} />
               <stop offset="100%" stopColor="var(--mind-focus)" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="mind-showcase-fill-energy" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--mind-energy)" stopOpacity={0.28} />
+              <stop offset="0%" stopColor="var(--mind-energy)" stopOpacity={0.18} />
               <stop offset="100%" stopColor="var(--mind-energy)" stopOpacity={0} />
             </linearGradient>
           </defs>
@@ -493,8 +493,9 @@ async function MindScreen() {
                 y1={sparkY(v, layout)}
                 y2={sparkY(v, layout)}
                 stroke="currentColor"
-                strokeOpacity={0.08}
-                strokeDasharray="2 4"
+                strokeOpacity={0.07}
+                strokeWidth={1}
+                vectorEffect="non-scaling-stroke"
               />
               <text
                 x={layout.padL - 3}
@@ -511,65 +512,68 @@ async function MindScreen() {
           <path
             d={sparkAreaPath(stress, layout, true)}
             fill="url(#mind-showcase-fill-stress)"
-            fillOpacity={0.85}
+            fillOpacity={0.7}
             stroke="none"
           />
           <path
             d={sparkAreaPath(focus, layout)}
             fill="url(#mind-showcase-fill-focus)"
-            fillOpacity={0.85}
+            fillOpacity={0.7}
             stroke="none"
           />
           <path
             d={sparkAreaPath(energy, layout)}
             fill="url(#mind-showcase-fill-energy)"
-            fillOpacity={0.85}
+            fillOpacity={0.7}
             stroke="none"
           />
           <path
             d={sparkPath(stress, layout, true)}
             fill="none"
             stroke="var(--mind-stress)"
-            strokeWidth={1.4}
+            strokeWidth={1.25}
             strokeLinejoin="round"
             strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
           />
           <path
             d={sparkPath(focus, layout)}
             fill="none"
             stroke="var(--mind-focus)"
-            strokeWidth={1.4}
+            strokeWidth={1.25}
             strokeLinejoin="round"
             strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
           />
           <path
             d={sparkPath(energy, layout)}
             fill="none"
             stroke="var(--mind-energy)"
-            strokeWidth={1.4}
+            strokeWidth={1.25}
             strokeLinejoin="round"
             strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
           />
           <circle
             cx={sparkX(last, series.length, layout)}
             cy={sparkY(stress[last], layout, true)}
-            r={1.4}
+            r={1.1}
             fill="var(--mind-stress)"
-            fillOpacity={0.7}
+            fillOpacity={0.65}
           />
           <circle
             cx={sparkX(last, series.length, layout)}
             cy={sparkY(focus[last], layout)}
-            r={1.4}
+            r={1.1}
             fill="var(--mind-focus)"
-            fillOpacity={0.7}
+            fillOpacity={0.65}
           />
           <circle
             cx={sparkX(last, series.length, layout)}
             cy={sparkY(energy[last], layout)}
-            r={1.4}
+            r={1.1}
             fill="var(--mind-energy)"
-            fillOpacity={0.7}
+            fillOpacity={0.65}
           />
         </svg>
 
