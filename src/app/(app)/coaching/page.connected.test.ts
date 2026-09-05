@@ -23,4 +23,8 @@ describe("coaching connected first-run", () => {
     expect(page).toContain("data-today-empty");
     expect(page).toContain("today.emptyTitle");
   });
+
+  it("disables Start Program when the catalog row has no days", () => {
+    expect(page).toContain("hasDays={p.dayCount > 0}");
+  });
 });

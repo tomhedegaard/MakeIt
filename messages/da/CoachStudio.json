@@ -107,6 +107,7 @@
     "descriptionLabel": "Beskrivelse",
     "descriptionPlaceholder": "Kort om programmets formål",
     "publishedToggle": "Publiceret — synlig + klar til at assigne",
+    "publishNeedsDays": "Tilføj mindst én dag før du publicerer.",
     "days": "Dage",
     "addDay": "+ Tilføj dag",
     "newDayLabel": "Dag {letter}",
