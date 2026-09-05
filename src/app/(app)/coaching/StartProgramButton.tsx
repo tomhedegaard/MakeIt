@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { startProgramAction, type StartProgramError } from "./actions";
 
@@ -29,6 +30,7 @@ export default function StartProgramButton({
 }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<StartProgramError | null>(null);
+  const router = useRouter();
   const t = useTranslations("Coaching.startButton");
 
   function handleClick() {
@@ -40,8 +42,17 @@ export default function StartProgramButton({
 
     setError(null);
     startTransition(async () => {
-      const res = await startProgramAction(programId);
-      if (!res.ok) setError(res.error ?? "failed");
+      try {
+        const res = await startProgramAction(programId);
+        if (!res.ok) {
+          setError(res.error ?? "failed");
+          return;
+        }
+        router.refresh();
+        router.push("/coaching");
+      } catch {
+        setError("failed");
+      }
     });
   }
 

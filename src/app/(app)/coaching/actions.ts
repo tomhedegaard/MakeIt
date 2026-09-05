@@ -6,10 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getSession } from "@/lib/auth";
 import { canMemberAssignProgram } from "@/lib/programs/synthetic";
-import {
-  assignProgramFromBlueprint,
-  isEmptyDaysError,
-} from "@/lib/programs/assign-from-blueprint";
+import { assignProgramForAuthenticatedMember } from "@/lib/data/assign-program";
+import { isEmptyDaysError } from "@/lib/programs/assign-from-blueprint";
 
 export type StartProgramError =
   | "empty_days"
@@ -25,16 +23,17 @@ export type StartProgramResult = {
 };
 
 /**
- * Switch the member's active program and materialize sessions from
- * the catalog blueprint (same remaining-week wave as coach assign).
+ * Switch the member's active program and materialize week-1 sessions
+ * from the catalog blueprint (service-role write after auth).
  *
- * Pauses any currently-active assignment (member path — coach
- * abandons). The unique partial index
- * `idx_one_active_program_per_member` enforces at most one active
- * assignment.
+ * Policy checks (`canMemberAssignProgram`, already-active no-op)
+ * stay on the user-scoped client. The assignment flip + session
+ * wave use `assignProgramForAuthenticatedMember` so the write is
+ * not bound by user-scoped timeouts / RLS. Member id comes from
+ * `getSession()` — never from the form.
  *
- * Refuses unpublished / synthetic codes, empty blueprints (no
- * assignment write), and a no-op if `programId` is already active.
+ * Remaining weeks are generated later by `maybeAdvanceWeek`.
+ * Coach assign still materializes the full remaining-week wave.
  */
 export async function startProgramAction(
   programId: string,
@@ -83,21 +82,23 @@ export async function startProgramAction(
     return { ok: true, sessionsCreated: 0 };
   }
 
-  const result = await assignProgramFromBlueprint(supabase, {
-    memberId: member.id,
-    programId: id,
-    startWeek: 1,
-    supersedeStatus: "paused",
-  });
+  try {
+    const result = await assignProgramForAuthenticatedMember({
+      memberId: member.id,
+      programId: id,
+    });
 
-  if (!result.ok) {
-    if (isEmptyDaysError(result.error)) {
-      return { ok: false, error: "empty_days" };
+    if (!result.ok) {
+      if (isEmptyDaysError(result.error)) {
+        return { ok: false, error: "empty_days" };
+      }
+      return { ok: false, error: "failed" };
     }
+
+    revalidatePath("/coaching");
+    revalidatePath("/dashboard");
+    return result;
+  } catch {
     return { ok: false, error: "failed" };
   }
-
-  revalidatePath("/coaching");
-  revalidatePath("/dashboard");
-  return result;
 }
