@@ -218,6 +218,8 @@ export type ProgramListing = {
   coachName: string | null;
   active: boolean;
   currentWeek: number | null;
+  /** Blueprint day count — 0 means Start Program must stay disabled. */
+  dayCount: number;
 };
 
 export async function getProgramLibrary(
@@ -232,7 +234,8 @@ export async function getProgramLibrary(
       .from("programs")
       .select(
         `id, code, name, type, description, weeks, level,
-         coach:members(handle, tier)`
+         coach:members(handle, tier),
+         days:program_days(id)`
       )
       .eq("is_published", true)
       .order("name", { ascending: true }),
@@ -252,6 +255,7 @@ export async function getProgramLibrary(
   // an older seed left them published (default is_published=true).
   return excludeSyntheticPrograms(programs).map((p): ProgramListing => {
     const coach = unwrapOne(p.coach);
+    const row = p as typeof p & { days?: { id: string }[] | null };
     return {
       id: p.id,
       code: p.code,
@@ -263,6 +267,7 @@ export async function getProgramLibrary(
       coachName: coach?.handle ? `@${coach.handle}` : null,
       active: p.id === activeProgramId,
       currentWeek: p.id === activeProgramId ? activeWeek : null,
+      dayCount: (row.days ?? []).length,
     };
   });
 }

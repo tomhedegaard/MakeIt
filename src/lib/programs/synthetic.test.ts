@@ -19,6 +19,14 @@ const actionsSrc = readFileSync(
   new URL("../../app/(app)/coaching/actions.ts", import.meta.url),
   "utf8",
 );
+const coachAssignSrc = readFileSync(
+  new URL("../../app/coach/programs/actions.ts", import.meta.url),
+  "utf8",
+);
+const startButtonSrc = readFileSync(
+  new URL("../../app/(app)/coaching/StartProgramButton.tsx", import.meta.url),
+  "utf8",
+);
 const detailSrc = readFileSync(
   new URL("../data/program-detail.ts", import.meta.url),
   "utf8",
@@ -90,5 +98,27 @@ describe("member surfaces use the denylist", () => {
     expect(librarySrc).toContain("excludeSyntheticPrograms");
     expect(actionsSrc).toContain("canMemberAssignProgram");
     expect(detailSrc).toContain("isSyntheticProgramCode");
+  });
+});
+
+describe("member start shares blueprint materialization", () => {
+  it("uses the shared helper instead of assignment-only insert", () => {
+    expect(actionsSrc).toContain("assignProgramFromBlueprint");
+    expect(actionsSrc).toContain("supersedeStatus: \"paused\"");
+    expect(actionsSrc).toContain("empty_days");
+    expect(actionsSrc).not.toMatch(
+      /from\("program_assignments"\)\.insert\(\{[\s\S]*status:\s*"active"/,
+    );
+    expect(coachAssignSrc).toContain("assignProgramFromBlueprint");
+    expect(coachAssignSrc).toContain("supersedeStatus: \"abandoned\"");
+    expect(coachAssignSrc).toContain("Kan ikke publicere et program uden dage");
+  });
+
+  it("wires StartProgramButton to pending, failure, and empty-day disable", () => {
+    expect(startButtonSrc).toContain("hasDays");
+    expect(startButtonSrc).toContain("role=\"alert\"");
+    expect(startButtonSrc).toContain("setError");
+    expect(startButtonSrc).toContain("t(\"starting\")");
+    expect(startButtonSrc).toContain("disabled={pending || !hasDays}");
   });
 });

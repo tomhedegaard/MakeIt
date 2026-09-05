@@ -334,6 +334,7 @@ export default async function TrainPage() {
                       programId={p.id}
                       programName={p.name}
                       hasOtherActive={Boolean(active)}
+                      hasDays={p.dayCount > 0}
                     />
                   )}
                   <Link
@@ -507,6 +508,7 @@ function mockLibrary(): ProgramListing[] {
       coachName: "Mikael Munk",
       active: true,
       currentWeek: 4,
+      dayCount: 4,
     },
     {
       id: "mock-hyp-08",
@@ -520,6 +522,7 @@ function mockLibrary(): ProgramListing[] {
       coachName: "Maria",
       active: false,
       currentWeek: null,
+      dayCount: 4,
     },
     {
       id: "mock-pwr-10",
@@ -533,6 +536,7 @@ function mockLibrary(): ProgramListing[] {
       coachName: "Kasper",
       active: false,
       currentWeek: null,
+      dayCount: 4,
     },
     {
       id: "mock-dl-06",
@@ -546,6 +550,7 @@ function mockLibrary(): ProgramListing[] {
       coachName: "Mikael Munk",
       active: false,
       currentWeek: null,
+      dayCount: 3,
     },
   ];
 }

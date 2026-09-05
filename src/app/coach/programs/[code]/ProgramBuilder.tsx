@@ -285,10 +285,19 @@ export default function ProgramBuilder({
           <input
             type="checkbox"
             checked={isPublished}
-            onChange={(e) => setIsPublished(e.target.checked)}
+            disabled={days.length === 0 && !isPublished}
+            onChange={(e) => {
+              if (e.target.checked && days.length === 0) return;
+              setIsPublished(e.target.checked);
+            }}
           />
           <span>{t("publishedToggle")}</span>
         </label>
+        {days.length === 0 ? (
+          <p className="text-[11px] font-mono text-fg-dim">
+            {t("publishNeedsDays")}
+          </p>
+        ) : null}
       </section>
 
       {/* Days */}

@@ -49,6 +49,15 @@
     "switchConfirm": "Switch to \"{name}\"? Your current program will be paused (you can resume it later).",
     "startConfirm": "Start \"{name}\"?",
     "starting": "Starting…",
-    "start": "Start program"
+    "start": "Start program",
+    "unavailable": "Not ready yet",
+    "emptyDays": "This program has no days yet — start is not available.",
+    "errors": {
+      "empty_days": "This program has no days to generate sessions from.",
+      "not_allowed": "This program cannot be started.",
+      "not_found": "Program not found.",
+      "unavailable": "No connection — try again.",
+      "failed": "Could not start the program."
+    }
   }
 }

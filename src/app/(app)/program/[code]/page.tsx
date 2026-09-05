@@ -3,13 +3,16 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { COMPANY } from "@/lib/company";
+import { getSession } from "@/lib/auth";
 import { MUSCLE_LABELS, type MuscleGroup } from "@/lib/data/muscle-groups";
+import { getActiveProgram } from "@/lib/data/coaching";
 import {
   getMemberProgramByCode,
   type ProgramDetailDay,
   type ProgramDetailExercise,
   type ProgramDetailSet,
 } from "@/lib/data/program-detail";
+import StartProgramButton from "@/app/(app)/coaching/StartProgramButton";
 
 type Params = Promise<{ code: string }>;
 
@@ -32,6 +35,10 @@ export default async function ProgramDetailPage({
   const { code } = await params;
   const program = await getMemberProgramByCode(code);
   if (!program) notFound();
+
+  const member = await getSession();
+  const active = member ? await getActiveProgram(member.id) : null;
+  const isThisActive = active?.programId === program.id;
 
   const t = await getTranslations("ProgramDetail");
 
@@ -68,6 +75,20 @@ export default async function ProgramDetailPage({
               label={t("meta.coach")}
               value={program.coachName ?? t("meta.coachFallback")}
             />
+          </div>
+          <div className="mt-5 max-w-sm">
+            {isThisActive ? (
+              <Link href="/coaching" className="btn btn-sm">
+                {t("alreadyActive")}
+              </Link>
+            ) : (
+              <StartProgramButton
+                programId={program.id}
+                programName={program.name}
+                hasOtherActive={Boolean(active)}
+                hasDays={program.days.length > 0}
+              />
+            )}
           </div>
         </Container>
       </div>

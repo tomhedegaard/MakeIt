@@ -1,8 +1,8 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { startProgramAction } from "./actions";
+import { startProgramAction, type StartProgramError } from "./actions";
 
 /**
  * Confirms before swapping the active program. Pausing + reassigning
@@ -10,43 +10,65 @@ import { startProgramAction } from "./actions";
  * member's progress on the current program is preserved (status
  * goes 'active' → 'paused', not deleted), but a misclick still
  * resets current_week and breaks streak expectations.
+ *
+ * Empty blueprints disable the CTA; action failures surface inline
+ * so the button never looks dead.
  */
 export default function StartProgramButton({
   programId,
   programName,
   hasOtherActive,
+  hasDays,
   className,
 }: {
   programId: string;
   programName: string;
   hasOtherActive: boolean;
+  hasDays: boolean;
   className?: string;
 }) {
   const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<StartProgramError | null>(null);
   const t = useTranslations("Coaching.startButton");
 
   function handleClick() {
-    if (pending) return;
+    if (pending || !hasDays) return;
     const confirmText = hasOtherActive
       ? t("switchConfirm", { name: programName })
       : t("startConfirm", { name: programName });
     if (!confirm(confirmText)) return;
 
-    const fd = new FormData();
-    fd.set("programId", programId);
-    startTransition(() => {
-      startProgramAction(fd);
+    setError(null);
+    startTransition(async () => {
+      const res = await startProgramAction(programId);
+      if (!res.ok) setError(res.error ?? "failed");
     });
   }
 
+  const label = pending
+    ? t("starting")
+    : hasDays
+      ? t("start")
+      : t("unavailable");
+
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      disabled={pending}
-      className={className ?? "btn btn-sm flex-1"}
-    >
-      {pending ? t("starting") : t("start")}
-    </button>
+    <div className="flex-1 min-w-0 space-y-1">
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={pending || !hasDays}
+        aria-disabled={pending || !hasDays}
+        className={className ?? "btn btn-sm w-full"}
+      >
+        {label}
+      </button>
+      {error ? (
+        <p className="text-[11px] font-mono text-danger" role="alert">
+          {t(`errors.${error}`)}
+        </p>
+      ) : !hasDays ? (
+        <p className="text-[11px] font-mono text-fg-dim">{t("emptyDays")}</p>
+      ) : null}
+    </div>
   );
 }

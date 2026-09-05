@@ -20,5 +20,6 @@
     "exercises": "{count} øvelser",
     "sets": "{count} sæt"
   },
-  "emptyDays": "Programmet har ikke fået dage tilføjet endnu."
+  "emptyDays": "Programmet har ikke fået dage tilføjet endnu.",
+  "alreadyActive": "Gå til Træn →"
 }

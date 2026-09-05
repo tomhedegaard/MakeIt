@@ -49,6 +49,15 @@
     "switchConfirm": "Skifte til \"{name}\"? Dit nuværende program pauses (kan genoptages senere).",
     "startConfirm": "Start \"{name}\"?",
     "starting": "Starter…",
-    "start": "Start program"
+    "start": "Start program",
+    "unavailable": "Ikke klar endnu",
+    "emptyDays": "Programmet har ingen dage endnu — start er ikke muligt.",
+    "errors": {
+      "empty_days": "Programmet har ingen dage at generere sessioner fra.",
+      "not_allowed": "Programmet kan ikke startes.",
+      "not_found": "Programmet blev ikke fundet.",
+      "unavailable": "Ingen forbindelse — prøv igen.",
+      "failed": "Kunne ikke starte programmet."
+    }
   }
 }

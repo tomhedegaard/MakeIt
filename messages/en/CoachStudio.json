@@ -107,6 +107,7 @@
     "descriptionLabel": "Description",
     "descriptionPlaceholder": "Briefly, what the program is for",
     "publishedToggle": "Published — visible + ready to assign",
+    "publishNeedsDays": "Add at least one day before you publish.",
     "days": "Days",
     "addDay": "+ Add day",
     "newDayLabel": "Day {letter}",

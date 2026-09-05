@@ -20,5 +20,6 @@
     "exercises": "{count} exercises",
     "sets": "{count} sets"
   },
-  "emptyDays": "This program hasn't had days added yet."
+  "emptyDays": "This program hasn't had days added yet.",
+  "alreadyActive": "Go to Train →"
 }
