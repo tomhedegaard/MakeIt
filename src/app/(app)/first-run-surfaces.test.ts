@@ -39,12 +39,21 @@ describe("leftover first-run surfaces after #66", () => {
 
   it("sizes the mobile tab-bar so wrapped labels do not cover content", () => {
     const css = readFileSync(join(root, "src/app/globals.css"), "utf8");
-    expect(css).toMatch(/--tabbar-h:\s*72px/);
-    expect(css).toContain("min-height: var(--tabbar-h)");
+    expect(css).toContain("--tabbar-row-h: 72px");
+    expect(css).toContain("--tabbar-pad-y: 6px");
     expect(css).toMatch(
-      /padding-bottom:\s*calc\(var\(--tabbar-h\) \+ var\(--safe-bottom\) \+ 28px\)/,
+      /--tabbar-h:\s*calc\(var\(--tabbar-pad-y\) \* 2 \+ var\(--tabbar-row-h\)\)/,
     );
-    expect(css).toContain("padding: 6px 4px calc(6px + var(--safe-bottom))");
+    expect(css).toContain("min-height: var(--tabbar-row-h)");
+    expect(css).toMatch(
+      /padding-bottom:\s*calc\(var\(--tabbar-h\) \+ var\(--safe-bottom\) \+ 36px\)/,
+    );
+    expect(css).toContain("scroll-padding-bottom");
+    expect(css).toContain(
+      "padding: var(--tabbar-pad-y) 4px calc(var(--tabbar-pad-y) + var(--safe-bottom))",
+    );
     expect(css).toContain("body:has(.tabbar) .cookie-bar");
+    const shell = readFileSync(join(root, "src/components/app/AppShell.tsx"), "utf8");
+    expect(shell).toContain("pb-tabbar");
   });
 });

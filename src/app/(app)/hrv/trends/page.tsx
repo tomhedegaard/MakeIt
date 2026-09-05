@@ -103,7 +103,7 @@ function StateEmpty({ copy }: { copy: Awaited<ReturnType<typeof loadHrvBandCopy>
     <section className="surface-2 rounded-2xl overflow-hidden">
       <div className="px-6 py-7 md:px-8 md:py-10">
         <div className="eyebrow eyebrow-domain mb-3">{copy.eyebrow}</div>
-        <div aria-hidden className="rounded-xl border hairline overflow-hidden">
+        <div aria-hidden>
           <ChartEmptyFrame />
         </div>
         <p className="text-fg-dim text-sm md:text-base leading-relaxed mt-6 max-w-md">

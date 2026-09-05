@@ -42,12 +42,12 @@ export default function RestTimer({
 
   return (
     <div
-      className="surface-2 rounded-2xl px-5 py-4 flex items-center gap-4"
+      className="surface-2 rounded-2xl px-4 py-3 sm:px-5 sm:py-4 flex items-center gap-3 sm:gap-4"
       role="timer"
       aria-label={t("ariaLabel")}
     >
-      <div className="relative size-14 shrink-0">
-        <svg viewBox="0 0 36 36" className="size-14 -rotate-90">
+      <div className="relative size-12 sm:size-14 shrink-0">
+        <svg viewBox="0 0 36 36" className="size-full -rotate-90">
           <circle cx="18" cy="18" r="16" fill="none" stroke="var(--line)" strokeWidth="2" />
           <circle
             cx="18" cy="18" r="16" fill="none"
@@ -63,12 +63,12 @@ export default function RestTimer({
 
       <div className="flex-1 min-w-0">
         <div className="eyebrow mb-0.5">{t("title")}</div>
-        <div className="text-sm text-fg-dim truncate">
+        <div className="text-sm text-fg-dim leading-snug">
           {t("description", { time: fmt(left) })}
         </div>
       </div>
 
-      <button type="button" className="btn btn-sm" onClick={onSkip}>
+      <button type="button" className="btn btn-sm shrink-0" onClick={onSkip}>
         {t("skip")}
       </button>
     </div>
