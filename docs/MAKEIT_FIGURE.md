@@ -3,7 +3,10 @@
 > Status: Vedtaget 2026-09-01 (Tom/CDO). Mappingen er låst. Ikke et UDKAST.
 > Craft: v3A.2 (2026-09-03) — glyf-sprog: anatomisk hjerte + J-mave.
 >   v3A.1 var dosering/stater; Tom: «fersken» / «ballon i snor».
->   v3B = custom editorial silhuet (se `docs/briefs/MAKEIT_FIGURE_V3B_ILLUSTRATOR.md`).
+>   v3B = custom editorial silhuet. Illustratorens kilde er det danske
+>   one-pager `docs/briefs/MAKEIT_FIGURE_V3B_ILLUSTRATOR.md` — ikke den
+>   gamle engelske engineering-brief.
+
 > Tokens: `src/app/globals.css`. Farveprincip: `docs/DOMAIN_COLOR_SYSTEM.md`.
 
 Strength editorial bliver. Basen er monokrom. Farve er retning — max ~10 %
