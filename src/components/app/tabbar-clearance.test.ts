@@ -42,11 +42,11 @@ describe("AppShell tab-bar clearance", () => {
     const css = read("app/globals.css");
     expect(css).toContain("--tabbar-stack: calc(var(--tabbar-h) + var(--safe-bottom))");
     expect(css).toContain("padding-bottom: var(--tabbar-clearance)");
-    expect(css).toMatch(/\.tabbar \{[\s\S]*position: relative/);
-    expect(css).toMatch(/\.tabbar \{[\s\S]*flex-shrink: 0/);
-    expect(css).toMatch(/\.tabbar \{[\s\S]*background: var\(--bg\)/);
-    expect(css).not.toMatch(/\.tabbar \{[\s\S]*position: fixed/);
-    expect(css).not.toMatch(/\.tabbar \{[\s\S]*backdrop-filter/);
+    expect(css).toMatch(/nav\.tabbar \{[\s\S]*position: relative/);
+    expect(css).toMatch(/nav\.tabbar \{[\s\S]*flex-shrink: 0/);
+    expect(css).toMatch(/nav\.tabbar \{[\s\S]*background: var\(--bg\)/);
+    expect(css).not.toMatch(/nav\.tabbar \{[\s\S]*position: fixed/);
+    expect(css).not.toMatch(/nav\.tabbar \{[\s\S]*backdrop-filter/);
   });
 
   it("keeps HRV / Reps routes inheriting the shell scrollport", () => {

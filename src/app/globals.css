@@ -534,11 +534,15 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 /* ---------------------------------------------------------------- *
  * Mobile tab-bar
  * ---------------------------------------------------------------- */
-.tabbar {
+nav.tabbar {
   /* In-flow inside AppShell — the scrollport ends above this bar,
-   * so copy never paints behind it. Safe-area is padding, not overlay. */
+   * so copy never paints behind it. Safe-area is padding, not overlay.
+   * Inset/auto cancels a leftover `position:fixed; inset:0 auto 0 0`
+   * that Turbopack once merged from the overlay-era rule. */
   position: relative;
+  inset: auto;
   flex-shrink: 0;
+  width: 100%;
   background: var(--bg);
   border-top: 1px solid var(--line);
   padding: var(--tabbar-pad-y) 4px calc(var(--tabbar-pad-y) + var(--safe-bottom));

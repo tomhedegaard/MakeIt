@@ -107,7 +107,7 @@ export default function MobileTabBar({
   return (
     <nav
       ref={barRef}
-      className="tabbar lg:hidden"
+      className="tabbar relative inset-auto w-full shrink-0 lg:hidden"
       aria-label={t("shell.mainNav")}
     >
       <div className="tabbar-row">
