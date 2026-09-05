@@ -42,7 +42,8 @@ export default function RestTimer({
 
   return (
     <div
-      className="surface-2 rounded-2xl px-4 py-3 sm:px-5 sm:py-4 flex items-center gap-3 sm:gap-4"
+      data-rest-timer=""
+      className="surface-2 rounded-2xl px-3 py-3 sm:px-5 sm:py-4 grid grid-cols-[auto_minmax(0,1fr)_auto] gap-x-2.5 sm:gap-x-4 gap-y-1 items-center"
       role="timer"
       aria-label={t("ariaLabel")}
     >
@@ -61,14 +62,18 @@ export default function RestTimer({
         </div>
       </div>
 
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0">
         <div className="eyebrow mb-0.5">{t("title")}</div>
-        <div className="text-sm text-fg-dim leading-snug">
+        <div className="text-sm text-fg-dim leading-snug whitespace-normal break-words">
           {t("description", { time: fmt(left) })}
         </div>
       </div>
 
-      <button type="button" className="btn btn-sm shrink-0" onClick={onSkip}>
+      <button
+        type="button"
+        className="shrink-0 min-h-9 px-3 text-[10px] font-mono uppercase tracking-[0.12em] border hairline rounded-full touch-app"
+        onClick={onSkip}
+      >
         {t("skip")}
       </button>
     </div>
