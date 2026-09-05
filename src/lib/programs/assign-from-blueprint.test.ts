@@ -1,5 +1,6 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { copenhagenTodayIso } from "@/lib/dashboard/today-prose";
+import { copenhagenTodayIso } from "@/lib/dates/copenhagen";
 import {
   EMPTY_PROGRAM_DAYS_ERROR,
   MEMBER_SELF_SERVE_THROUGH_WEEK,
@@ -759,5 +760,15 @@ describe("assignProgramFromBlueprint", () => {
     expect(inserted.program_assignments).toHaveLength(0);
     expect(updated).toHaveLength(0);
     expect(deleted.some((d) => d.table === "sessions")).toBe(true);
+  });
+});
+
+describe("assign-from-blueprint import graph", () => {
+  it("uses the pure Copenhagen helper, not today-prose / workout / hrv", () => {
+    const src = readFileSync(new URL("./assign-from-blueprint.ts", import.meta.url), "utf8");
+    expect(src).toContain('from "@/lib/dates/copenhagen"');
+    expect(src).not.toMatch(/from ["']@\/lib\/dashboard\/today-prose["']/);
+    expect(src).not.toContain("@/lib/workout");
+    expect(src).not.toContain("@/lib/hrv");
   });
 });

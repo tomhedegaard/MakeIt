@@ -89,6 +89,7 @@ export async function startProgramAction(
     });
 
     if (!result.ok) {
+      console.error("[startProgramAction] assign failed", result.error);
       if (isEmptyDaysError(result.error)) {
         return { ok: false, error: "empty_days" };
       }
@@ -98,7 +99,8 @@ export async function startProgramAction(
     revalidatePath("/coaching");
     revalidatePath("/dashboard");
     return result;
-  } catch {
+  } catch (err) {
+    console.error("[startProgramAction] assign threw", err);
     return { ok: false, error: "failed" };
   }
 }
