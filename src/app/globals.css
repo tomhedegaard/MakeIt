@@ -393,24 +393,31 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 :root {
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top:    env(safe-area-inset-top, 0px);
-  --tabbar-h:    72px;
+  /* Full chrome: 6px pad + 72px row + 6px pad. Row may grow when
+   * 8 labels wrap at 390px; pb-tabbar adds slack below that. */
+  --tabbar-pad-y: 6px;
+  --tabbar-row-h: 72px;
+  --tabbar-h:    calc(var(--tabbar-pad-y) * 2 + var(--tabbar-row-h));
   --header-h:    3.5rem; /* marketing + app fixed header (h-14) */
 }
 
 .h-dvh   { height: 100dvh; }
 .minh-dvh { min-height: 100dvh; }
-.pb-tabbar { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 28px); }
+.pb-tabbar { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 36px); }
 
 /* Cookie bar sits on the tab-bar on first visit unless lifted. */
 .cookie-bar {
   bottom: 0;
 }
 @media (max-width: 1023px) {
+  html {
+    scroll-padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 16px);
+  }
   body:has(.tabbar) .cookie-bar {
     bottom: calc(var(--tabbar-h) + var(--safe-bottom));
   }
   body:has(.tabbar):has(.cookie-bar) .pb-tabbar {
-    padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 28px + 5.5rem);
+    padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 36px + 5.5rem);
   }
 }
 
@@ -521,11 +528,11 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
  * ---------------------------------------------------------------- */
 .tabbar {
   position: fixed; left: 0; right: 0; bottom: 0;
-  background: rgba(10, 10, 11, 0.86);
+  background: rgba(10, 10, 11, 0.94);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-top: 1px solid var(--line);
-  padding: 6px 4px calc(6px + var(--safe-bottom));
+  padding: var(--tabbar-pad-y) 4px calc(var(--tabbar-pad-y) + var(--safe-bottom));
   z-index: 50;
 }
 .tabbar-row {
@@ -535,13 +542,13 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
    * repeat(5, 1fr) wrapped the last two tabs out of the fixed height. */
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
-  min-height: var(--tabbar-h);
+  min-height: var(--tabbar-row-h);
   height: auto;
 }
 .tab {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 2px;
-  color: var(--fg-faint);
+  color: var(--fg-dim);
   font-family: var(--font-mono), monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.06em;

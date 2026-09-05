@@ -216,7 +216,14 @@ export default function SessionClient({
       </header>
 
       {/* Main column */}
-      <Container size="narrow" className="flex-1 py-6 pb-32 lg:pb-12 space-y-6">
+      <Container
+        size="narrow"
+        className={
+          resting
+            ? "flex-1 px-4 py-6 pb-52 md:px-10 lg:pb-12 space-y-6"
+            : "flex-1 px-4 py-6 pb-40 md:px-10 lg:pb-12 space-y-6"
+        }
+      >
         {/*
           Adaptive engine card supersedes the V2.4 nudge: if we already
           adapted the session, the card carries the richer "here's what
@@ -399,7 +406,7 @@ export default function SessionClient({
       {resting ? (
         <div
           className="fixed left-0 right-0 z-40 px-4"
-          style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 96px)" }}
+          style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 112px)" }}
         >
           <div className="mx-auto max-w-3xl">
             <RestTimer
@@ -620,26 +627,26 @@ function ExerciseSection({
         data-form-film-cta=""
         data-form-set={setIdx + 1}
         onClick={onOpenFormCheck}
-        className="mt-4 w-full text-left flex items-center justify-between gap-3 btn btn-primary rounded-xl px-4 py-3 lift touch-app"
+        className="mt-4 w-full min-h-11 text-left flex items-start gap-3 rounded-xl px-4 py-3 lift touch-app bg-fg text-bg overflow-x-clip"
       >
-        <span className="flex items-center gap-3">
-          <svg viewBox="0 0 24 24" className="size-4" fill="none" aria-hidden>
-            <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
-            <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-            <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
-          </svg>
-          <span className="text-sm">
-            <span className="block">{t("formCheck", { set: setIdx + 1 })}</span>
-            <span className="block text-[10px] font-mono uppercase tracking-[0.14em] opacity-70 mt-0.5">
-              {t("formCheckSub", { lift: ex.name })}
+        <svg viewBox="0 0 24 24" className="size-4 mt-1 shrink-0" fill="none" aria-hidden>
+          <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
+        </svg>
+        <span className="flex-1 min-w-0">
+          <span className="flex items-baseline justify-between gap-2">
+            <span className="text-sm leading-snug">{t("formCheck", { set: setIdx + 1 })}</span>
+            <span className="text-[10px] font-mono uppercase tracking-[0.12em] shrink-0">
+              {t("duration")}
             </span>
-            {overflowCues > 0 ? (
-              <span className="opacity-60">{t("moreCues", { count: overflowCues })}</span>
-            ) : null}
           </span>
-        </span>
-        <span className="text-[10px] font-mono uppercase tracking-[0.14em] shrink-0">
-          {t("duration")}
+          <span className="block text-[10px] font-mono uppercase tracking-[0.1em] opacity-70 mt-0.5 leading-snug break-words">
+            {t("formCheckSub", { lift: ex.name })}
+          </span>
+          {overflowCues > 0 ? (
+            <span className="block opacity-60 mt-0.5">{t("moreCues", { count: overflowCues })}</span>
+          ) : null}
         </span>
       </button>
 

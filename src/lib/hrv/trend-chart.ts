@@ -1,4 +1,4 @@
-import { smoothLinePath } from "@/lib/svg/smooth-path";
+import { smoothAreaPath, smoothLinePath } from "@/lib/svg/smooth-path";
 import type { ReadinessBucket } from "./types";
 
 /** A single reading prepared for the trend chart. */
@@ -18,12 +18,23 @@ export interface ChartViewport {
   height: number;
 }
 
+/** Plot rectangle inside the viewport (axis / grid frame). */
+export interface ChartPlot {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+}
+
 /** Pure-geometry model for rendering an SVG HRV trend chart. */
 export interface TrendChartModel {
   isEmpty: boolean;
+  plot: ChartPlot;
   points: { x: number; y: number; isSick: boolean }[];
   /** SVG path "d" string through the 7-day mean. */
   meanLinePath: string;
+  /** Closed area under the 7-day mean, dropped to the plot baseline. */
+  meanAreaPath: string;
   baselineBand: { topY: number; bottomY: number; path: string } | null;
   /**
    * Horizontal dashed personal average (14–28d window, or the persisted
@@ -55,11 +66,21 @@ export function buildTrendChartModel(
   readings: ChartReading[],
   viewport: ChartViewport,
 ): TrendChartModel {
+  const { width, height } = viewport;
+  const plot: ChartPlot = {
+    left: MARGIN,
+    right: width - MARGIN,
+    top: MARGIN,
+    bottom: height - MARGIN,
+  };
+
   if (readings.length === 0) {
     return {
       isEmpty: true,
+      plot,
       points: [],
       meanLinePath: "",
+      meanAreaPath: "",
       baselineBand: null,
       personalAvg: null,
       yTicks: [],
@@ -67,11 +88,10 @@ export function buildTrendChartModel(
     };
   }
 
-  const { width, height } = viewport;
-  const innerLeft = MARGIN;
-  const innerRight = width - MARGIN;
-  const innerTop = MARGIN;
-  const innerBottom = height - MARGIN;
+  const innerLeft = plot.left;
+  const innerRight = plot.right;
+  const innerTop = plot.top;
+  const innerBottom = plot.bottom;
   const innerWidth = Math.max(0, innerRight - innerLeft);
 
   const latest = readings[readings.length - 1];
@@ -124,13 +144,13 @@ export function buildTrendChartModel(
   }));
 
   // --- Mean line path (skip null vertices, segment gracefully) ---
-  const meanLinePath = smoothLinePath(
-    readings.map((r, i) =>
-      r.rolling7dMeanLnRmssd == null
-        ? null
-        : { x: xFor(i), y: yFor(r.rolling7dMeanLnRmssd) },
-    ),
+  const meanPoints = readings.map((r, i) =>
+    r.rolling7dMeanLnRmssd == null
+      ? null
+      : { x: xFor(i), y: yFor(r.rolling7dMeanLnRmssd) },
   );
+  const meanLinePath = smoothLinePath(meanPoints);
+  const meanAreaPath = smoothAreaPath(meanPoints, innerBottom);
 
   // --- Baseline band (flat band from the most recent reading) ---
   let baselineBand: TrendChartModel["baselineBand"] = null;
@@ -206,8 +226,10 @@ export function buildTrendChartModel(
 
   return {
     isEmpty: false,
+    plot,
     points,
     meanLinePath,
+    meanAreaPath,
     baselineBand,
     personalAvg,
     yTicks,

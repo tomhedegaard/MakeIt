@@ -19,6 +19,9 @@ describe("buildTrendChartModel", () => {
     const m = buildTrendChartModel([], { width: 600, height: 200 });
     expect(m.points).toEqual([]);
     expect(m.isEmpty).toBe(true);
+    expect(m.meanAreaPath).toBe("");
+    expect(m.plot.left).toBe(24);
+    expect(m.plot.right).toBe(576);
   });
 
   it("maps each reading to a point inside the viewport", () => {
@@ -97,5 +100,7 @@ describe("buildTrendChartModel", () => {
     expect(m.meanLinePath.match(/M /g) ?? []).toHaveLength(2);
     expect(m.meanLinePath).not.toMatch(/ L /);
     expect(m.meanLinePath).not.toMatch(/NaN/);
+    expect(m.meanAreaPath).toContain("Z");
+    expect(m.plot.top).toBeLessThan(m.plot.bottom);
   });
 });
