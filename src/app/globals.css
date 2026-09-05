@@ -393,17 +393,25 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 :root {
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top:    env(safe-area-inset-top, 0px);
-  /* Full chrome: 6px pad + 72px row + 6px pad. Row may grow when
-   * 8 labels wrap at 390px; pb-tabbar adds slack below that. */
+  /* Fallback chrome: 6px pad + 72px row + 6px pad. The live bar
+   * writes --tabbar-stack to its rendered height (wrap + safe-area). */
   --tabbar-pad-y: 6px;
   --tabbar-row-h: 72px;
   --tabbar-h:    calc(var(--tabbar-pad-y) * 2 + var(--tabbar-row-h));
+  --tabbar-clearance: 36px;
+  --tabbar-stack: calc(var(--tabbar-h) + var(--safe-bottom));
   --header-h:    3.5rem; /* marketing + app fixed header (h-14) */
 }
 
 .h-dvh   { height: 100dvh; }
 .minh-dvh { min-height: 100dvh; }
-.pb-tabbar { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 36px); }
+/* Last-line air on the AppShell scrollport. The tab bar is in-flow
+ * (not a fixed overlay), so this is slack — not a second copy of
+ * the bar height. Nested page wrappers do not own this padding. */
+.pb-tabbar {
+  padding-bottom: var(--tabbar-clearance);
+  scroll-padding-bottom: var(--tabbar-clearance);
+}
 
 /* Cookie bar sits on the tab-bar on first visit unless lifted. */
 .cookie-bar {
@@ -411,13 +419,13 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 }
 @media (max-width: 1023px) {
   html {
-    scroll-padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 16px);
+    scroll-padding-bottom: calc(var(--tabbar-stack) + 16px);
   }
   body:has(.tabbar) .cookie-bar {
-    bottom: calc(var(--tabbar-h) + var(--safe-bottom));
+    bottom: var(--tabbar-stack);
   }
   body:has(.tabbar):has(.cookie-bar) .pb-tabbar {
-    padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 36px + 5.5rem);
+    padding-bottom: calc(var(--tabbar-clearance) + 5.5rem);
   }
 }
 
@@ -526,11 +534,16 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 /* ---------------------------------------------------------------- *
  * Mobile tab-bar
  * ---------------------------------------------------------------- */
-.tabbar {
-  position: fixed; left: 0; right: 0; bottom: 0;
-  background: rgba(10, 10, 11, 0.94);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+nav.tabbar {
+  /* In-flow inside AppShell — the scrollport ends above this bar,
+   * so copy never paints behind it. Safe-area is padding, not overlay.
+   * Inset/auto cancels a leftover `position:fixed; inset:0 auto 0 0`
+   * that Turbopack once merged from the overlay-era rule. */
+  position: relative;
+  inset: auto;
+  flex-shrink: 0;
+  width: 100%;
+  background: var(--bg);
   border-top: 1px solid var(--line);
   padding: var(--tabbar-pad-y) 4px calc(var(--tabbar-pad-y) + var(--safe-bottom));
   z-index: 50;

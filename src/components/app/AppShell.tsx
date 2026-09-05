@@ -43,7 +43,7 @@ export default function AppShell({
   }
 
   return (
-    <div className="relative z-10 flex flex-1 minh-dvh">
+    <div className="relative z-10 flex h-dvh flex-1 lg:h-auto lg:minh-dvh">
       {/* Desktop sidebar (≥ lg) */}
       <aside className="hidden lg:flex w-[260px] shrink-0 flex-col border-r hairline bg-bg-2/40 sticky top-0 h-dvh">
         <div className="px-6 py-6 border-b hairline">
@@ -133,9 +133,9 @@ export default function AppShell({
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile top header */}
-        <header className="lg:hidden flex h-14 items-center justify-between px-5 border-b hairline sticky top-0 z-30 bg-bg/85 backdrop-blur">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        {/* Mobile top header — outside the scrollport. */}
+        <header className="lg:hidden flex h-14 shrink-0 items-center justify-between px-5 border-b hairline z-30 bg-bg/85 backdrop-blur">
           <Logo />
           <div className="flex items-center gap-3">
             {/* Messages — kept one-tap on mobile after the tab bar
@@ -172,7 +172,10 @@ export default function AppShell({
           </div>
         </header>
 
-        <main className="flex-1 pb-tabbar lg:pb-0">
+        <main
+          className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain pb-tabbar lg:overflow-visible lg:pb-0"
+          data-lenis-prevent
+        >
           {demoMode ? (
             <div
               role="status"
@@ -183,10 +186,10 @@ export default function AppShell({
           ) : null}
           {children}
         </main>
+        {/* In-flow on mobile so main's viewport ends above the 8-tab bar.
+            Fixed overlay was why #69's token bump never cleared Learn/Reps. */}
+        <MobileTabBar unreadMessages={unreadMessages} />
       </div>
-
-      {/* Mobile tab-bar */}
-      <MobileTabBar unreadMessages={unreadMessages} />
     </div>
   );
 }
