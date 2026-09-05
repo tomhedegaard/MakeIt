@@ -41,19 +41,30 @@ describe("leftover first-run surfaces after #66", () => {
     const css = readFileSync(join(root, "src/app/globals.css"), "utf8");
     expect(css).toContain("--tabbar-row-h: 72px");
     expect(css).toContain("--tabbar-pad-y: 6px");
+    expect(css).toContain("--tabbar-clearance: 36px");
     expect(css).toMatch(
       /--tabbar-h:\s*calc\(var\(--tabbar-pad-y\) \* 2 \+ var\(--tabbar-row-h\)\)/,
     );
+    expect(css).toMatch(
+      /--tabbar-stack:\s*calc\(var\(--tabbar-h\) \+ var\(--safe-bottom\)\)/,
+    );
     expect(css).toContain("min-height: var(--tabbar-row-h)");
     expect(css).toMatch(
-      /padding-bottom:\s*calc\(var\(--tabbar-h\) \+ var\(--safe-bottom\) \+ 36px\)/,
+      /padding-bottom:\s*calc\(var\(--tabbar-stack\) \+ var\(--tabbar-clearance\)\)/,
     );
     expect(css).toContain("scroll-padding-bottom");
     expect(css).toContain(
       "padding: var(--tabbar-pad-y) 4px calc(var(--tabbar-pad-y) + var(--safe-bottom))",
     );
     expect(css).toContain("body:has(.tabbar) .cookie-bar");
+    expect(css).toContain("bottom: var(--tabbar-stack)");
     const shell = readFileSync(join(root, "src/components/app/AppShell.tsx"), "utf8");
     expect(shell).toContain("pb-tabbar");
+    expect(shell).toContain("overflow-y-auto");
+    expect(shell).toContain("min-h-0");
+    expect(shell).toContain("data-lenis-prevent");
+    const bar = readFileSync(join(root, "src/components/app/MobileTabBar.tsx"), "utf8");
+    expect(bar).toContain("--tabbar-stack");
+    expect(bar).toContain("ResizeObserver");
   });
 });

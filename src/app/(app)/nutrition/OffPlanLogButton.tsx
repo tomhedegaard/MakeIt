@@ -49,7 +49,7 @@ export default function OffPlanLogButton() {
         onClick={() => setOpen(true)}
         aria-label="Log off-plan måltid"
         className="lg:hidden fixed right-4 z-40 btn btn-primary shadow-lg"
-        style={{ bottom: "calc(var(--tabbar-h) + var(--safe-bottom) + 16px)" }}
+        style={{ bottom: "calc(var(--tabbar-stack) + 16px)" }}
       >
         + Spiste noget andet
       </button>

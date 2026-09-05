@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -75,8 +76,37 @@ export default function MobileTabBar({
 }) {
   const pathname = usePathname();
   const t = useTranslations("Nav");
+  const barRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = barRef.current;
+    if (!el) return;
+
+    const apply = () => {
+      if (getComputedStyle(el).display === "none") {
+        document.documentElement.style.removeProperty("--tabbar-stack");
+        return;
+      }
+      const height = Math.ceil(el.getBoundingClientRect().height);
+      document.documentElement.style.setProperty("--tabbar-stack", `${height}px`);
+    };
+
+    apply();
+    const ro = new ResizeObserver(apply);
+    ro.observe(el);
+    window.addEventListener("resize", apply);
+    window.addEventListener("orientationchange", apply);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", apply);
+      window.removeEventListener("orientationchange", apply);
+      document.documentElement.style.removeProperty("--tabbar-stack");
+    };
+  }, []);
+
   return (
     <nav
+      ref={barRef}
       className="tabbar lg:hidden"
       aria-label={t("shell.mainNav")}
     >
