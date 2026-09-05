@@ -627,7 +627,7 @@ function ExerciseSection({
         data-form-film-cta=""
         data-form-set={setIdx + 1}
         onClick={onOpenFormCheck}
-        className="mt-4 w-full min-h-11 text-left flex items-start gap-3 rounded-xl px-3.5 py-3 lift touch-app bg-fg text-bg overflow-x-clip"
+        className="mt-4 w-full min-h-11 text-left flex items-start gap-3 rounded-xl px-4 py-3 lift touch-app bg-fg text-bg overflow-x-clip"
       >
         <svg viewBox="0 0 24 24" className="size-4 mt-1 shrink-0" fill="none" aria-hidden>
           <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
