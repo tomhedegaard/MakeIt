@@ -405,11 +405,12 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 
 .h-dvh   { height: 100dvh; }
 .minh-dvh { min-height: 100dvh; }
-/* Clearance lives on the AppShell scrollport (`main.pb-tabbar`), not
- * on nested page wrappers — those do not inherit padding. */
+/* Last-line air on the AppShell scrollport. The tab bar is in-flow
+ * (not a fixed overlay), so this is slack — not a second copy of
+ * the bar height. Nested page wrappers do not own this padding. */
 .pb-tabbar {
-  padding-bottom: calc(var(--tabbar-stack) + var(--tabbar-clearance));
-  scroll-padding-bottom: calc(var(--tabbar-stack) + var(--tabbar-clearance));
+  padding-bottom: var(--tabbar-clearance);
+  scroll-padding-bottom: var(--tabbar-clearance);
 }
 
 /* Cookie bar sits on the tab-bar on first visit unless lifted. */
@@ -424,7 +425,7 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
     bottom: var(--tabbar-stack);
   }
   body:has(.tabbar):has(.cookie-bar) .pb-tabbar {
-    padding-bottom: calc(var(--tabbar-stack) + var(--tabbar-clearance) + 5.5rem);
+    padding-bottom: calc(var(--tabbar-clearance) + 5.5rem);
   }
 }
 
@@ -534,8 +535,10 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
  * Mobile tab-bar
  * ---------------------------------------------------------------- */
 .tabbar {
-  position: fixed; left: 0; right: 0; bottom: 0;
-  /* Solid — frost lets last-line copy read as “behind” the bar. */
+  /* In-flow inside AppShell — the scrollport ends above this bar,
+   * so copy never paints behind it. Safe-area is padding, not overlay. */
+  position: relative;
+  flex-shrink: 0;
   background: var(--bg);
   border-top: 1px solid var(--line);
   padding: var(--tabbar-pad-y) 4px calc(var(--tabbar-pad-y) + var(--safe-bottom));

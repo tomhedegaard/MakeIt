@@ -11,17 +11,16 @@ function read(rel: string) {
 }
 
 /**
- * #69 bumped --tabbar-h on main.pb-tabbar, but the window was still the
- * scrollport (`html, body { height: 100% }` + flex minh-dvh). Long AppShell
- * routes (HRV Today/Learn, Reps) painted last lines under the 8-tab bar;
- * short Trends looked clear. Clearance has to live on the scrollport.
+ * #69 bumped --tabbar-h on main.pb-tabbar, but the bar stayed
+ * `position: fixed` over a window scrollport. Long AppShell routes
+ * (HRV Today/Learn, Reps) painted last lines *behind* the 8-tab bar;
+ * short Trends looked clear. The bar must sit in-flow under main.
  */
 describe("AppShell tab-bar clearance", () => {
-  it("makes main the mobile scrollport so pb-tabbar actually applies", () => {
+  it("makes main the mobile scrollport and keeps the tab bar in-flow", () => {
     const shell = read("components/app/AppShell.tsx");
     expect(shell).toContain("h-dvh");
     expect(shell).toContain("lg:h-auto");
-    expect(shell).toContain("overflow-hidden lg:overflow-visible");
     expect(shell).toMatch(
       /main[\s\S]*overflow-y-auto[\s\S]*pb-tabbar[\s\S]*lg:overflow-visible[\s\S]*lg:pb-0/,
     );
@@ -29,6 +28,10 @@ describe("AppShell tab-bar clearance", () => {
     expect(shell).toContain("data-lenis-prevent");
     expect(shell).toContain("shrink-0");
     expect(shell).not.toMatch(/header className="lg:hidden[^"]*sticky/);
+    // Tab bar is a sibling *after* main, inside the column — not a
+    // fixed overlay sibling of the whole shell.
+    expect(shell).toMatch(/<\/main>[\s\S]*<MobileTabBar/);
+    expect(shell.indexOf("<MobileTabBar")).toBeGreaterThan(shell.indexOf("</main>"));
   });
 
   it("binds --tabbar-stack to the rendered bar (wrap + safe-area)", () => {
@@ -38,8 +41,11 @@ describe("AppShell tab-bar clearance", () => {
     expect(bar).toContain("getBoundingClientRect");
     const css = read("app/globals.css");
     expect(css).toContain("--tabbar-stack: calc(var(--tabbar-h) + var(--safe-bottom))");
-    expect(css).toContain("padding-bottom: calc(var(--tabbar-stack) + var(--tabbar-clearance))");
+    expect(css).toContain("padding-bottom: var(--tabbar-clearance)");
+    expect(css).toMatch(/\.tabbar \{[\s\S]*position: relative/);
+    expect(css).toMatch(/\.tabbar \{[\s\S]*flex-shrink: 0/);
     expect(css).toMatch(/\.tabbar \{[\s\S]*background: var\(--bg\)/);
+    expect(css).not.toMatch(/\.tabbar \{[\s\S]*position: fixed/);
     expect(css).not.toMatch(/\.tabbar \{[\s\S]*backdrop-filter/);
   });
 

@@ -133,9 +133,8 @@ export default function AppShell({
         </div>
       </aside>
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden lg:overflow-visible">
-        {/* Mobile top header — outside the scrollport, so it cannot
-            eat main's tab-bar padding the way a window-sticky header did. */}
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        {/* Mobile top header — outside the scrollport. */}
         <header className="lg:hidden flex h-14 shrink-0 items-center justify-between px-5 border-b hairline z-30 bg-bg/85 backdrop-blur">
           <Logo />
           <div className="flex items-center gap-3">
@@ -187,10 +186,10 @@ export default function AppShell({
           ) : null}
           {children}
         </main>
+        {/* In-flow on mobile so main's viewport ends above the 8-tab bar.
+            Fixed overlay was why #69's token bump never cleared Learn/Reps. */}
+        <MobileTabBar unreadMessages={unreadMessages} />
       </div>
-
-      {/* Mobile tab-bar */}
-      <MobileTabBar unreadMessages={unreadMessages} />
     </div>
   );
 }

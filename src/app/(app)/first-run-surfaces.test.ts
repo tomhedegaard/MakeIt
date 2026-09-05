@@ -49,9 +49,9 @@ describe("leftover first-run surfaces after #66", () => {
       /--tabbar-stack:\s*calc\(var\(--tabbar-h\) \+ var\(--safe-bottom\)\)/,
     );
     expect(css).toContain("min-height: var(--tabbar-row-h)");
-    expect(css).toMatch(
-      /padding-bottom:\s*calc\(var\(--tabbar-stack\) \+ var\(--tabbar-clearance\)\)/,
-    );
+    expect(css).toContain("padding-bottom: var(--tabbar-clearance)");
+    expect(css).toContain("position: relative");
+    expect(css).toContain("flex-shrink: 0");
     expect(css).toContain("scroll-padding-bottom");
     expect(css).toContain(
       "padding: var(--tabbar-pad-y) 4px calc(var(--tabbar-pad-y) + var(--safe-bottom))",
