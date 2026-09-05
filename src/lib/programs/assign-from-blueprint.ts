@@ -9,9 +9,12 @@
  *   1. load blueprint + prepare (empty days fail here — no writes)
  *   2. materialize sessions → exercises → sets
  *   3. only then supersede the previous active assignment + insert
+ *   4. as part of the flip, skip leftover scheduled/active sessions
+ *      of the previous program so they cannot own Today / week-strip
  * If materialize fails, the previous assignment is untouched. If the
  * assignment flip fails after sessions exist, those sessions are
- * deleted and the previous active row is restored.
+ * deleted, leftover skips are restored, and the previous active row
+ * is restored.
  *
  * Horizon:
  *   - Coach (default): all remaining weeks (`startWeek`..`weeks`).
@@ -20,11 +23,48 @@
  *     `maybeAdvanceWeek` from completed sessions — do not dump
  *     10×4 sessions through a user-scoped server action.
  *
+ * Dates: every materialized session gets a non-null `scheduled_for`
+ * (Europe/Copenhagen calendar day). Without it, `getWeekStrip` drops
+ * the row and `getTodayCard` keeps showing leftover dated sessions
+ * from the previous program. See `scheduleBlueprintDates`.
+ *
  * Empty blueprints (`days.length === 0`) fail **before** any write.
  */
 
+import { copenhagenTodayIso } from "@/lib/dashboard/today-prose";
+
 export const EMPTY_PROGRAM_DAYS_ERROR =
   "Programmet har ingen dage at generere fra";
+
+const MS_PER_DAY = 86_400_000;
+const OPEN_SESSION_STATUSES = ["scheduled", "active"] as const;
+
+type LeftoverSession = { id: string; status: string };
+
+/**
+ * Consecutive Europe/Copenhagen calendar dates starting at `fromDate`.
+ *
+ * Rule (member week-1 and coach full-wave): session i is scheduled on
+ * `fromDate + i` days, in blueprint insertion order (week-major, then
+ * day position). Later weeks continue the sequence — they do not jump
+ * to the next Monday. Deterministic, DST-safe (date-only UTC math).
+ *
+ * `fromDate` is YYYY-MM-DD in the Europe/Copenhagen calendar (typically
+ * `copenhagenTodayIso()`). Used so `/coaching` week-strip and the
+ * Today card can see newly started programs.
+ */
+export function scheduleBlueprintDates(
+  dayCount: number,
+  fromDate: string,
+): string[] {
+  const count = Math.max(0, Math.floor(dayCount));
+  if (count === 0) return [];
+  const start = Date.parse(`${fromDate}T00:00:00Z`);
+  if (!Number.isFinite(start)) return [];
+  return Array.from({ length: count }, (_, i) =>
+    new Date(start + i * MS_PER_DAY).toISOString().slice(0, 10),
+  );
+}
 
 export type BlueprintExercise = {
   exercise_id: string | null;
@@ -61,6 +101,8 @@ export type SessionInsertRow = {
   title: string;
   estimated_minutes: number | null;
   status: "scheduled";
+  /** YYYY-MM-DD in Europe/Copenhagen. Required for week-strip + Today. */
+  scheduled_for: string;
 };
 
 export type ExerciseInsertRow = {
@@ -108,6 +150,11 @@ export type AssignFromBlueprintInput = {
    * so the request stays small (week 1 / next training week).
    */
   throughWeek?: number;
+  /**
+   * YYYY-MM-DD Europe/Copenhagen start date for `scheduled_for`.
+   * Defaults to Copenhagen today. Tests pass a fixed date.
+   */
+  fromDate?: string;
 };
 
 /** Inclusive last week for member Start Program (week 1 when startWeek is 1). */
@@ -161,6 +208,7 @@ export function prepareAssignFromBlueprint(input: {
   weeks: number;
   days: BlueprintDay[] | null | undefined;
   throughWeek?: number;
+  fromDate?: string;
 }): { ok: false; error: string } | { ok: true; plan: AssignPlan } {
   const days = normalizeBlueprintDays(input.days);
   if (days.length === 0) {
@@ -173,8 +221,17 @@ export function prepareAssignFromBlueprint(input: {
     programWeeks: input.weeks,
     throughWeek: input.throughWeek,
   });
+  const sessionCount = (endWeek - startWeek + 1) * days.length;
+  const dates = scheduleBlueprintDates(
+    sessionCount,
+    input.fromDate ?? copenhagenTodayIso(),
+  );
+  if (dates.length !== sessionCount) {
+    return { ok: false, error: "Kunne ikke datere sessioner" };
+  }
   const sessionRows: SessionInsertRow[] = [];
   const sessionSeeds: SessionSeed[] = [];
+  let dateIdx = 0;
   for (let week = startWeek; week <= endWeek; week++) {
     days.forEach((day, dayIdx) => {
       sessionRows.push({
@@ -185,7 +242,9 @@ export function prepareAssignFromBlueprint(input: {
         title: day.title,
         estimated_minutes: day.estimated_minutes,
         status: "scheduled",
+        scheduled_for: dates[dateIdx] as string,
       });
+      dateIdx += 1;
       sessionSeeds.push({ week, dayIdx });
     });
   }
@@ -293,6 +352,57 @@ async function restorePreviousAssignment(
     .eq("id", previousId);
 }
 
+async function loadLeftoverSessions(
+  supabase: AssignClient,
+  memberId: string,
+  previousProgramId: string,
+  excludeIds: string[],
+): Promise<
+  { ok: true; rows: LeftoverSession[] } | { ok: false; error: string }
+> {
+  const { data, error } = await supabase
+    .from("sessions")
+    .select("id, status")
+    .eq("member_id", memberId)
+    .eq("program_id", previousProgramId)
+    .in("status", [...OPEN_SESSION_STATUSES]);
+  if (error) return { ok: false, error: error.message };
+  const exclude = new Set(excludeIds);
+  const rows = ((data ?? []) as LeftoverSession[])
+    .filter((row) => typeof row.id === "string" && !exclude.has(row.id))
+    .map((row) => ({ id: row.id, status: row.status }));
+  return { ok: true, rows };
+}
+
+async function skipLeftoverSessions(
+  supabase: AssignClient,
+  leftoverIds: string[],
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (leftoverIds.length === 0) return { ok: true };
+  const { error } = await supabase
+    .from("sessions")
+    .update({ status: "skipped" })
+    .in("id", leftoverIds);
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
+async function restoreLeftoverSessions(
+  supabase: AssignClient,
+  leftovers: LeftoverSession[],
+): Promise<void> {
+  const byStatus = new Map<string, string[]>();
+  for (const row of leftovers) {
+    const list = byStatus.get(row.status) ?? [];
+    list.push(row.id);
+    byStatus.set(row.status, list);
+  }
+  for (const [status, ids] of byStatus) {
+    if (ids.length === 0) continue;
+    await supabase.from("sessions").update({ status }).in("id", ids);
+  }
+}
+
 async function materializePlanSessions(
   supabase: AssignClient,
   plan: AssignPlan,
@@ -378,6 +488,7 @@ export async function assignProgramFromBlueprint(
     weeks: bp.weeks,
     days: bp.days,
     throughWeek: input.throughWeek,
+    fromDate: input.fromDate,
   });
   if (!prepared.ok) return prepared;
 
@@ -391,7 +502,7 @@ export async function assignProgramFromBlueprint(
 
   const { data: previousActive } = await supabase
     .from("program_assignments")
-    .select("id")
+    .select("id, program_id")
     .eq("member_id", input.memberId)
     .eq("status", "active")
     .maybeSingle();
@@ -399,6 +510,25 @@ export async function assignProgramFromBlueprint(
     previousActive && typeof previousActive.id === "string"
       ? previousActive.id
       : null;
+  const previousProgramId =
+    previousActive && typeof previousActive.program_id === "string"
+      ? previousActive.program_id
+      : null;
+
+  let leftovers: LeftoverSession[] = [];
+  if (previousProgramId) {
+    const loaded = await loadLeftoverSessions(
+      supabase,
+      input.memberId,
+      previousProgramId,
+      materialized.sessionIds,
+    );
+    if (!loaded.ok) {
+      await rollbackInsertedSessions(supabase, materialized.sessionIds);
+      return { ok: false, error: loaded.error };
+    }
+    leftovers = loaded.rows;
+  }
 
   const { error: supersedeErr } = await supabase
     .from("program_assignments")
@@ -410,10 +540,21 @@ export async function assignProgramFromBlueprint(
     return { ok: false, error: supersedeErr.message };
   }
 
+  const skipped = await skipLeftoverSessions(
+    supabase,
+    leftovers.map((row) => row.id),
+  );
+  if (!skipped.ok) {
+    await restorePreviousAssignment(supabase, previousId);
+    await rollbackInsertedSessions(supabase, materialized.sessionIds);
+    return { ok: false, error: skipped.error };
+  }
+
   const { error: aErr } = await supabase
     .from("program_assignments")
     .insert(plan.assignment);
   if (aErr) {
+    await restoreLeftoverSessions(supabase, leftovers);
     await restorePreviousAssignment(supabase, previousId);
     await rollbackInsertedSessions(supabase, materialized.sessionIds);
     return { ok: false, error: aErr.message };
