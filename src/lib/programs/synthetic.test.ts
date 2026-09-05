@@ -128,6 +128,8 @@ describe("member start shares blueprint materialization", () => {
     expect(actionsSrc).toContain("canMemberAssignProgram");
     expect(actionsSrc).toContain("assignProgramForAuthenticatedMember");
     expect(actionsSrc).toContain("createClient()");
+    expect(actionsSrc).toContain("console.error(\"[startProgramAction] assign failed\"");
+    expect(actionsSrc).toContain("console.error(\"[startProgramAction] assign threw\"");
   });
 
   it("wires StartProgramButton to pending, failure, catch, and refresh", () => {
@@ -136,8 +138,15 @@ describe("member start shares blueprint materialization", () => {
     expect(startButtonSrc).toContain("setError");
     expect(startButtonSrc).toContain("t(\"starting\")");
     expect(startButtonSrc).toContain("disabled={pending || !hasDays}");
+    expect(startButtonSrc).toContain("useState(false)");
+    expect(startButtonSrc).toContain("setPending(true)");
+    expect(startButtonSrc).toContain("setPending(false)");
+    expect(startButtonSrc).not.toContain("useTransition");
     expect(startButtonSrc).toContain("try {");
     expect(startButtonSrc).toContain("setError(\"failed\")");
+    expect(startButtonSrc).toContain("console.error");
+    expect(startButtonSrc).toContain("text-danger");
+    expect(startButtonSrc).toContain("bg-danger/15");
     expect(startButtonSrc).toContain("router.refresh()");
     expect(startButtonSrc).toContain("router.push(\"/coaching\")");
   });
