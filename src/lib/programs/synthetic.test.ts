@@ -144,6 +144,9 @@ describe("member start shares blueprint materialization", () => {
     expect(startButtonSrc).toContain("setPending(true)");
     expect(startButtonSrc).toContain("setPending(false)");
     expect(startButtonSrc).not.toContain("useTransition");
+    expect(startButtonSrc).not.toContain("window.confirm");
+    expect(startButtonSrc).not.toMatch(/if\s*\(\s*!confirm\(/);
+    expect(startButtonSrc).toContain("setConfirming(true)");
     expect(startButtonSrc).toContain("try {");
     expect(startButtonSrc).toContain("setError(\"failed\")");
     expect(startButtonSrc).toContain("console.error");

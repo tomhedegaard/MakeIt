@@ -58,6 +58,9 @@
   "startButton": {
     "switchConfirm": "Switch to \"{name}\"? Your current program will be paused (you can resume it later).",
     "startConfirm": "Start \"{name}\"?",
+    "confirmSwitch": "Yes, switch",
+    "confirmStart": "Yes, start",
+    "cancel": "Cancel",
     "starting": "Starting…",
     "start": "Start program",
     "unavailable": "Not ready yet",

@@ -58,6 +58,9 @@
   "startButton": {
     "switchConfirm": "Skifte til \"{name}\"? Dit nuværende program pauses (kan genoptages senere).",
     "startConfirm": "Start \"{name}\"?",
+    "confirmSwitch": "Ja, skift",
+    "confirmStart": "Ja, start",
+    "cancel": "Annullér",
     "starting": "Starter…",
     "start": "Start program",
     "unavailable": "Ikke klar endnu",
