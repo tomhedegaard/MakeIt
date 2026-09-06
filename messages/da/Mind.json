@@ -122,6 +122,13 @@
     "title": "Åbner Mind…",
     "body": "Tjekker om du har sagt ja til disclaimer — så sender vi dig videre."
   },
+  "graph": {
+    "title": "Mental graf — sidste 30 dage",
+    "energy": "Energi",
+    "calm": "Ro (omvendt stress)",
+    "focus": "Fokus",
+    "aria": "Mental graf — energi, ro, fokus de seneste 30 dage"
+  },
   "tour": {
     "skip": "Spring over",
     "next": "Næste →",

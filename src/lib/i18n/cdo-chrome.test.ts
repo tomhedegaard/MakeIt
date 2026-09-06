@@ -114,6 +114,11 @@ describe("CDO DA/EN chrome — Mind-check", () => {
     expect(form).toContain('t("energy")');
     expect(form).toContain('t("focus")');
     expect(form).not.toMatch(/label:\s*"(Energy|Energi)"/);
+    expect(page).toContain('getTranslations("Mind.graph")');
+    expect(page).toContain("tGraph(");
+    const graphSrc = read("src/components/mind/MentalGraph.tsx");
+    expect(graphSrc).not.toContain("Mental graf — sidste 30 dage");
+    expect(graphSrc).toContain("copy.title");
   });
 
   it("resolves Mind tour skip/next from Mind.tour", () => {
@@ -162,7 +167,8 @@ describe("CDO DA/EN chrome — coaching day chips", () => {
       sun: "Søn",
     });
     expect(da.rest).toBe("Hvile");
-    expect(en.rest).toBe("Rest");
+    expect(en.days).toEqual(da.days);
+    expect(en.rest).toBe("Hvile");
   });
 
   it("renders week chips from Coaching.week keys, not hardcoded DA_DAYS", () => {
@@ -174,5 +180,26 @@ describe("CDO DA/EN chrome — coaching day chips", () => {
     expect(data).toContain("WEEK_DAY_KEYS");
     expect(data).not.toContain('["Man", "Tir", "Ons"');
     expect(data).toMatch(/Exercise names stay as program\/exercise proper labels/);
+  });
+});
+
+describe("CDO DA/EN chrome — locale resolution", () => {
+  it("lets members.locale beat a leftover en cookie", async () => {
+    const { resolveLocale } = await import("@/i18n/config");
+    expect(resolveLocale({ cookie: "en", memberLocale: "da" })).toBe("da");
+    expect(resolveLocale({ cookie: "da", memberLocale: "en" })).toBe("en");
+    expect(resolveLocale({ cookie: "en", memberLocale: null })).toBe("en");
+    expect(resolveLocale({ cookie: undefined, memberLocale: null })).toBe("da");
+  });
+
+  it("reads member locale in getRequestConfig and re-seeds on password login", () => {
+    const request = read("src/i18n/request.ts");
+    expect(request).toContain("resolveLocale");
+    expect(request).toContain("readMemberLocale");
+    expect(request).toContain('.select("locale")');
+    const login = read("src/app/login/actions.ts");
+    expect(login).toContain("select(\"id, locale\")");
+    expect(login).toContain("LOCALE_COOKIE");
+    expect(login).toContain("member.locale");
   });
 });

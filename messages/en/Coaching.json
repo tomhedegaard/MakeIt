@@ -8,15 +8,15 @@
     "ariaLabel": "Week overview",
     "done": "Completed",
     "today": "Today",
-    "rest": "Rest",
+    "rest": "Hvile",
     "days": {
-      "mon": "Mon",
-      "tue": "Tue",
-      "wed": "Wed",
-      "thu": "Thu",
-      "fri": "Fri",
-      "sat": "Sat",
-      "sun": "Sun"
+      "mon": "Man",
+      "tue": "Tir",
+      "wed": "Ons",
+      "thu": "Tor",
+      "fri": "Fre",
+      "sat": "Lør",
+      "sun": "Søn"
     }
   },
   "today": {

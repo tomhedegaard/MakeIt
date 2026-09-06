@@ -36,6 +36,7 @@ export default async function MindCheckPage() {
   }
 
   const t = await getTranslations("Mind.check");
+  const tGraph = await getTranslations("Mind.graph");
   const [logs, today] = await Promise.all([
     getRecentMindCheckLogs(member.id, 30),
     getTodayMindCheck(member.id),
@@ -81,7 +82,17 @@ export default async function MindCheckPage() {
         />
 
         <div className="mt-6">
-          <MentalGraph logs={logs} days={30} />
+          <MentalGraph
+            logs={logs}
+            days={30}
+            copy={{
+              title: tGraph("title"),
+              energy: tGraph("energy"),
+              calm: tGraph("calm"),
+              focus: tGraph("focus"),
+              aria: tGraph("aria"),
+            }}
+          />
         </div>
 
       </Container>

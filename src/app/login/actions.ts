@@ -6,6 +6,11 @@ import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { isValidMockInvite, SESSION_COOKIE } from "@/lib/auth";
 import {
+  LOCALE_COOKIE,
+  LOCALE_COOKIE_MAX_AGE,
+  isLocale,
+} from "@/i18n/config";
+import {
   admitInviteValidation,
   hasMinimumInviteShape,
 } from "@/lib/invite-gate";
@@ -213,12 +218,23 @@ export async function passwordAction(formData: FormData) {
   if (data.user) {
     const { data: member } = await supabase
       .from("members")
-      .select("id")
+      .select("id, locale")
       .eq("id", data.user.id)
       .maybeSingle();
     if (!member) {
       await supabase.auth.signOut();
       redirect("/login?err=invite");
+    }
+    // Same re-seed as /auth/callback — password sign-in never hit
+    // that route, so a leftover marketing `mi_locale=en` used to
+    // keep Danish members on English chrome (21-daen-* audit).
+    if (isLocale(member.locale)) {
+      const c = await cookies();
+      c.set(LOCALE_COOKIE, member.locale, {
+        path: "/",
+        maxAge: LOCALE_COOKIE_MAX_AGE,
+        sameSite: "lax",
+      });
     }
   }
 

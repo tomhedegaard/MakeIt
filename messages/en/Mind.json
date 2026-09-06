@@ -122,6 +122,13 @@
     "title": "Opening Mind…",
     "body": "Checking whether you have accepted the disclaimer — then we send you on."
   },
+  "graph": {
+    "title": "Mental graph — last 30 days",
+    "energy": "Energy",
+    "calm": "Calm (inverted stress)",
+    "focus": "Focus",
+    "aria": "Mental graph — energy, calm, focus over the last 30 days"
+  },
   "tour": {
     "skip": "Skip",
     "next": "Next →",
