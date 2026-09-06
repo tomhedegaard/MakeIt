@@ -82,6 +82,10 @@ function startButton(): HTMLButtonElement {
   return buttonWith("start");
 }
 
+function pendingButton(): HTMLButtonElement {
+  return buttonWith("starting");
+}
+
 function confirmButton(hasOtherActive = true): HTMLButtonElement {
   return buttonWith(hasOtherActive ? "confirmSwitch" : "confirmStart");
 }
@@ -167,9 +171,9 @@ describe("StartProgramButton", () => {
       confirmButton().click();
     });
 
-    expect(startButton().disabled).toBe(true);
-    expect(startButton().getAttribute("aria-busy")).toBe("true");
-    expect(startButton().textContent).toBe("starting");
+    expect(pendingButton().disabled).toBe(true);
+    expect(pendingButton().getAttribute("aria-busy")).toBe("true");
+    expect(pendingButton().textContent).toBe("starting");
     expect(host.textContent).toContain("status.calling");
     expect(alert()).toBeNull();
 

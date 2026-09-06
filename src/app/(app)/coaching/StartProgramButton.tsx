@@ -33,8 +33,8 @@ type StartTrace = "calling" | "ok" | null;
  * goes 'active' → 'paused', not deleted), but a misclick still
  * resets current_week and breaks streak expectations.
  *
- * Confirm is an inline second step, never `window.confirm`. Automated
- * browsers (and some in-app webviews) auto-dismiss native dialogs,
+ * Confirm is an inline second step, never a native dialog. Automated
+ * browsers (and some in-app webviews) auto-dismiss those dialogs,
  * which made Start look like a silent no-op: first click returned
  * before `setTrace("calling")`.
  *
