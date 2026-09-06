@@ -1,7 +1,7 @@
-import {
-  copenhagenTodayIso,
-  type TodayProseSession,
-  type TodaySessionState,
+import { copenhagenTodayIso } from "@/lib/dates/copenhagen";
+import type {
+  TodayProseSession,
+  TodaySessionState,
 } from "@/lib/dashboard/today-prose";
 import { createClient } from "@/lib/supabase/server";
 import type { SessionStatus } from "@/lib/workout";

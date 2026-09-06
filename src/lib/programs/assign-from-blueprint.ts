@@ -31,7 +31,7 @@
  * Empty blueprints (`days.length === 0`) fail **before** any write.
  */
 
-import { copenhagenTodayIso } from "@/lib/dashboard/today-prose";
+import { copenhagenTodayIso } from "@/lib/dates/copenhagen";
 
 export const EMPTY_PROGRAM_DAYS_ERROR =
   "Programmet har ingen dage at generere fra";
