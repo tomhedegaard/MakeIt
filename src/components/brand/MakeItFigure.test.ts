@@ -1,7 +1,8 @@
 /**
- * MakeItFigure is the brand body-map. Tests lock the AnatomyFigure
- * silhouette, data-domain anchors, v3A.2 organ glyphs, teaching hierarchy,
- * and the food-only full halo (docs/MAKEIT_FIGURE.md §2).
+ * MakeItFigure is the brand body-map. Tests lock v3B silhouette source
+ * (not the library highlighter), data-domain anchors, v3A.2 organ
+ * glyphs, teaching hierarchy, gut Y bounds, and the food-only full
+ * halo (docs/MAKEIT_FIGURE.md §2).
  */
 
 import { createElement } from "react";
@@ -10,6 +11,7 @@ import { describe, expect, it } from "vitest";
 
 import MakeItFigure, {
   ALL_DOMAINS,
+  DEFAULT_FIGURE_CRAFT,
   GUT_PATHS,
   GUT_Y_MAX,
   HEART_VOLUME,
@@ -17,29 +19,45 @@ import MakeItFigure, {
   figureMode,
   pathAbsoluteYs,
 } from "./MakeItFigure";
+import { V3B_OUTLINE, V3B_VIEWBOX } from "./figure-v3b";
 import { OUTLINES, VIEWBOX } from "@/lib/data/anatomy/paths";
 
-function render(highlightedDomains: Array<"mind" | "heart" | "body" | "food"> = []) {
+function render(
+  highlightedDomains: Array<"mind" | "heart" | "body" | "food"> = [],
+  variant?: "v3a.2" | "v3b",
+) {
   return renderToStaticMarkup(
     createElement(MakeItFigure, {
       highlightedDomains,
       ariaLabel: "body-map",
+      variant,
     })
   );
 }
 
 describe("MakeItFigure", () => {
-  it("traces the AnatomyFigure male-front silhouette", () => {
+  it("defaults to the v3B editorial silhouette — not the library highlighter", () => {
+    expect(DEFAULT_FIGURE_CRAFT).toBe("v3b");
     const html = render();
     expect(html).toContain("makeit-figure");
-    expect(html).toContain(`viewBox="${VIEWBOX.male.front}"`);
-    expect(html).toContain(OUTLINES.male.front.slice(0, 24));
+    expect(html).toContain(`viewBox="${V3B_VIEWBOX}"`);
+    expect(html).toContain(V3B_OUTLINE.slice(0, 24));
     expect(html).toContain("makeit-figure-outline");
-    expect(html).toContain('data-craft="v3a.2"');
+    expect(html).toContain('data-craft="v3b"');
+    expect(html).not.toContain(OUTLINES.male.front.slice(0, 24));
+    expect(html).not.toContain('data-craft="v3a.2"');
     expect(html).not.toContain("makeit-figure-halo");
     expect(html).not.toContain("makeit-figure-halo-glow");
     expect(html).not.toContain("data-highlighted");
-    expect(html).not.toContain('data-mode=');
+    expect(html).not.toContain("data-mode=");
+  });
+
+  it("keeps the library highlighter available as variant v3a.2", () => {
+    const html = render([], "v3a.2");
+    expect(html).toContain('data-craft="v3a.2"');
+    expect(html).toContain(`viewBox="${VIEWBOX.male.front}"`);
+    expect(html).toContain(OUTLINES.male.front.slice(0, 24));
+    expect(html).not.toContain(V3B_OUTLINE.slice(0, 24));
   });
 
   it("scopes each anchor with data-domain", () => {
@@ -163,6 +181,16 @@ describe("MakeItFigure", () => {
     expect(html).toContain("var(--fg-faint)");
     expect(html).not.toContain("#3a3a3e");
     expect(html).not.toContain("#1a1a1c");
+  });
+
+  it("v3B teaching still has no full green halo", () => {
+    const html = render(["mind", "heart", "body", "food"]);
+    expect(html).toContain('data-craft="v3b"');
+    expect(html).toContain('data-mode="teaching"');
+    expect(html).toContain('data-food-aura="ghost"');
+    expect(html).not.toContain("makeit-figure-halo");
+    expect(html).not.toContain("makeit-figure-halo-glow");
+    expect(html).not.toContain("makeit-figure-food-aura");
   });
 
   it("teaching body is the quietest fill — ghost, not an orange festival", () => {

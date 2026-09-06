@@ -64,6 +64,7 @@ describe("MarketingFigure", () => {
     }
     expect(html).toContain("var(--steel)");
     expect(html).not.toContain("#3a3a3e");
+    expect(html).toContain('data-craft="v3b"');
   });
 
   it("reuses DomainMark glyphs — no second icon set", () => {

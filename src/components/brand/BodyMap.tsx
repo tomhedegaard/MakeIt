@@ -9,6 +9,7 @@ import MakeItFigure from "./MakeItFigure";
  * (organs soft, body ghost, no food halo). Today-as-figure
  * (off-only lighting) is a later phase.
  * Existing dashboard tiles and data stay below.
+ * Inherits MakeItFigure default craft v3B (data-craft="v3b").
  */
 
 const KICKERS: { domain: Domain; href: string; num: string }[] = [

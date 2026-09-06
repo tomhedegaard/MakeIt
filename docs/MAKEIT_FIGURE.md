@@ -1,11 +1,13 @@
 # MakeIt-figuren — brandets kropskort
 
 > Status: Vedtaget 2026-09-01 (Tom/CDO). Mappingen er låst. Ikke et UDKAST.
-> Craft: v3A.2 (2026-09-03) — glyf-sprog: anatomisk hjerte + J-mave.
->   v3A.1 var dosering/stater; Tom: «fersken» / «ballon i snor».
->   v3B = custom editorial silhuet. Illustratorens kilde er det danske
->   one-pager `docs/briefs/MAKEIT_FIGURE_V3B_ILLUSTRATOR.md` — ikke den
->   gamle engelske engineering-brief.
+> Craft: v3B (2026-09-06) — custom editorial silhuet i
+>   `src/components/brand/figure-v3b/`. Glyf-sprog er stadig v3A.2
+>   (anatomisk hjerte + J-mave). v3A.2-omridset (`OUTLINES.male.front`)
+>   er tilgængeligt som `variant="v3a.2"` til sammenligning.
+>   Default på `MakeItFigure` (landing + dashboard) er v3B
+>   (`data-craft="v3b"`). Illustratorens kilde er det danske one-pager
+>   `docs/briefs/MAKEIT_FIGURE_V3B_ILLUSTRATOR.md`.
 
 > Tokens: `src/app/globals.css`. Farveprincip: `docs/DOMAIN_COLOR_SYSTEM.md`.
 
@@ -54,7 +56,7 @@ v3A løfter håndværket **på det eksisterende omrids** (`OUTLINES.male.front`
 fra react-native-body-highlighter). Omrids-pathen røres ikke. Custom
 silhuet er v3B.
 
-To visuelle modi på `MakeItFigure` (`data-mode`, `data-craft="v3a.2"`):
+To visuelle modi på `MakeItFigure` (`data-mode`, `data-craft="v3b"` default):
 
 | Mode | Hvornår | Læs |
 |------|---------|-----|
@@ -66,7 +68,8 @@ Dashboard (I dag) og landing-rest bruger `teaching`. Landing-hover
 
 ### Halo + glow (kun kost, og kun i food-focus)
 
-To lag omkring `OUTLINES.male.front`. Aldrig fill på silhuetten.
+To lag omkring den aktive silhuet (`V3B_OUTLINE` eller
+`OUTLINES.male.front`). Aldrig fill på silhuetten.
 Aldrig en fyldt grøn sky. Skal læses som aura på `--bg` (#0A0A0B).
 
 **Fuld aura** (`data-food-aura="full"`) kun når food er tændt **og**
@@ -118,10 +121,10 @@ om på samme omrids.
   blød kant 0.20) — ikke dekorative orange striber. Teaching = den
   stilleeste af de fire (fill 0.055 / stroke 0.12), ghost, ikke
   orange festival.
-- **Hænder/fødder:** v3A rører ikke omrids-pathen. Mitten-hænder og
-  flade fødder er et silhuet-problem og hører til v3B (custom
-  editorial charcoal). Ingen finger-overrides oven på library-omridset
-  — det bliver støj, ikke craft.
+- **Hænder/fødder:** v3B tegner fingre + vægtede fødder i
+  `V3B_OUTLINE`. Første craft-pass — se `docs/briefs/figure-v3b/`
+  for resterende huller (mitten-risiko, kønslæsning). Ingen
+  finger-overrides oven på library-omridset.
 - Slukket anker: charcoal med synlig tilstedeværelse (opacity ≈ 0.5 /
   fill 0.04) — ikke usynligt.
 
@@ -145,19 +148,20 @@ om på samme omrids.
 
 ---
 
-## 3. Silhuetten (AnatomyFigure er kilden)
+## 3. Silhuetten (v3B custom, AnatomyFigure urørt)
 
-Hypotesen holdt: `src/components/anatomy/AnatomyFigure.tsx` er det rigtige
-omrids at forlænge — ikke en ny krop.
+v3B erstatter library-omridset på **brandfiguren**. AnatomyFigure /
+`PARTS` på øvelsesfladerne røres ikke.
 
-`MakeItFigure` genbruger `OUTLINES.male.front` + `VIEWBOX.male.front`
-(`0 0 724 1448`) fra `src/lib/data/anatomy/paths.ts`. Kant og fyld er
-tokens (`--fg-faint`, `--steel`), ikke hardcoded hex. Female-omridset
-droppes her, fordi det bærer hår og dermed køn; brandfiguren er androgyn
-og uden ansigt.
+`MakeItFigure` default (`variant="v3b"`, `data-craft="v3b"`) tegner
+`V3B_OUTLINE` fra `src/components/brand/figure-v3b/` på samme viewBox
+`0 0 724 1448`. Kant og fyld er tokens (`--fg-faint`, `--steel`).
+`variant="v3a.2"` skifter tilbage til `OUTLINES.male.front` så craft
+kan sammenlignes. Marketing (`MarketingBodyMap`) og dashboard
+(`BodyMap`) arver default — ingen ekstra prop.
 
 AnatomyFigure selv (primary/secondary/tertiary, 3D-spike) bliver på
-øvelsesfladerne. Brandfiguren er samme krop, anden opgave.
+øvelsesfladerne. Brandfiguren er anden opgave, samme mapping.
 
 Sind-ankeret sporer `PARTS.male.front` head-path. Hjerte og fordøjelse
 findes ikke i muscle-taxonomien og tegnes som organ-glyffer i samme
@@ -216,7 +220,8 @@ De er **senere**, ikke huller i fase 1.
 | Fil | Rolle |
 |-----|--------|
 | `src/components/brand/DomainMark.tsx` | 24px streg-mærke. `domain` prop. `data-domain` + `domain-mark domain-mark--{domain}`. |
-| `src/components/brand/MakeItFigure.tsx` | Silhuet. `highlightedDomains?: Domain[]`. Teaching = balanceret ghost. Food-focus = gut + 1px halo + blød glow (§2). |
+| `src/components/brand/MakeItFigure.tsx` | Silhuet. `highlightedDomains?: Domain[]`. `variant?: "v3b" \| "v3a.2"` (default `v3b`). Teaching = balanceret ghost. Food-focus = gut + 1px halo + blød glow (§2). |
+| `src/components/brand/figure-v3b/` | Custom editorial outline + head volume. Samme viewBox `0 0 724 1448`. |
 | `src/components/brand/BodyMap.tsx` | Kompakt editorial slot: figur + fire DomainMark-kickers. |
 | `src/components/app/MobileTabBar.tsx` | Train/food/mind bruger DomainMark. Øvrige tabs urørt. |
 | Dashboard `HrvChip` | Heart-fladen får DomainMark. |

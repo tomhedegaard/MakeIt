@@ -8,14 +8,18 @@ import {
   type RnbhSlug,
 } from "@/lib/data/anatomy/paths";
 import type { Domain } from "./DomainMark";
+import { V3B_HEAD_PATHS, V3B_OUTLINE, V3B_VIEWBOX } from "./figure-v3b";
 
 /**
- * Brand body-map. Charcoal outline traced from AnatomyFigure
- * (OUTLINES.male.front) so we do not introduce a second body language.
+ * Brand body-map. Four systems on one human (docs/MAKEIT_FIGURE.md).
  *
- * v3A.2 glyph-pass (docs/MAKEIT_FIGURE.md §2): anatomical heart +
- * J-stomach/coils on the existing silhouette. Do not replace
- * OUTLINES.male.front — that is v3B.
+ * v3B (default): custom editorial silhouette in figure-v3b/. Same
+ * viewBox as AnatomyFigure so organ glyphs and the PARTS kinetic
+ * chain stay locked. AnatomyFigure / PARTS are not modified.
+ *
+ * v3A.2: library highlighter outline (OUTLINES.male.front). Pass
+ * variant="v3a.2" to compare. data-craft records which silhouette
+ * is on the SVG.
  *
  * highlightedDomains lights only the matching anchor. Food draws the
  * 1px --food halo + soft glow only when food is the focused highlight
@@ -29,6 +33,11 @@ import type { Domain } from "./DomainMark";
  *
  * No 3D. No photo. No mascot face. Coach stays type.
  */
+
+export type FigureCraft = "v3a.2" | "v3b";
+
+/** Default craft for marketing + dashboard. Override with variant="v3a.2". */
+export const DEFAULT_FIGURE_CRAFT: FigureCraft = "v3b";
 
 const HEAD_PATHS = PARTS.male.front.find((p) => p.slug === "head")?.path.common ?? [];
 
@@ -265,22 +274,31 @@ export default function MakeItFigure({
   className,
   ariaLabel,
   onDomainHover,
+  variant = DEFAULT_FIGURE_CRAFT,
 }: {
   highlightedDomains?: readonly Domain[];
   className?: string;
   ariaLabel?: string;
   /** When set, invisible SVG hot-zones teach each domain on pointer. */
   onDomainHover?: (domain: Domain | null) => void;
+  /**
+   * Silhouette craft. Default v3B (custom editorial). Pass "v3a.2"
+   * to compare against the library highlighter outline.
+   */
+  variant?: FigureCraft;
 }) {
   const uid = useId().replace(/:/g, "");
   const foodGlowFilterId = `${FOOD_GLOW_FILTER_BASE}-${uid}`;
+  const outlineClipId = `makeit-figure-outline-clip-${uid}`;
   const mindOn = isOn(highlightedDomains, "mind");
   const heartOn = isOn(highlightedDomains, "heart");
   const bodyOn = isOn(highlightedDomains, "body");
   const foodOn = isOn(highlightedDomains, "food");
   const mode = figureMode(highlightedDomains);
   const showFoodAura = foodAuraFull(highlightedDomains);
-  const outline = OUTLINES.male.front;
+  const isV3b = variant === "v3b";
+  const outline = isV3b ? V3B_OUTLINE : OUTLINES.male.front;
+  const headPaths = isV3b ? V3B_HEAD_PATHS : HEAD_PATHS;
   const mind = mindLook(mindOn, mode);
   const body = bodyLook(bodyOn, mode);
   const heart = heartLook(heartOn, mode);
@@ -288,16 +306,21 @@ export default function MakeItFigure({
 
   return (
     <svg
-      viewBox={VIEWBOX.male.front}
+      viewBox={isV3b ? V3B_VIEWBOX : VIEWBOX.male.front}
       className={cn("makeit-figure", className)}
       role="img"
       aria-label={ariaLabel}
       data-highlighted={highlightedDomains.join(" ") || undefined}
       data-mode={mode === "idle" ? undefined : mode}
-      data-craft="v3a.2"
+      data-craft={variant}
       overflow="visible"
     >
       <defs>
+        {isV3b ? (
+          <clipPath id={outlineClipId}>
+            <path d={outline} />
+          </clipPath>
+        ) : null}
         {showFoodAura ? (
           <filter
             id={foodGlowFilterId}
@@ -355,6 +378,7 @@ export default function MakeItFigure({
         className={cn("makeit-figure-anchor", bodyOn && "is-lit")}
         data-domain="body"
         data-lit={bodyOn || undefined}
+        clipPath={isV3b ? `url(#${outlineClipId})` : undefined}
       >
         {BODY_PARTS.map((part) => (
           <g key={part.slug} data-muscle={part.slug}>
@@ -374,14 +398,15 @@ export default function MakeItFigure({
         ))}
       </g>
 
-      {/* Mind = head. Traced from AnatomyFigure's head part.
-          Teaching: softer so the blue outline does not own the figure. */}
+      {/* Mind = head. v3B uses the custom cranial volume; v3A.2
+          traces AnatomyFigure's head part. Teaching: softer so the
+          blue outline does not own the figure. */}
       <g
         className={cn("makeit-figure-anchor", mindOn && "is-lit")}
         data-domain="mind"
         data-lit={mindOn || undefined}
       >
-        {HEAD_PATHS.map((d, i) => (
+        {headPaths.map((d, i) => (
           <path
             key={i}
             d={d}
@@ -542,7 +567,7 @@ export default function MakeItFigure({
             className="cursor-pointer"
             onPointerEnter={() => onDomainHover("heart")}
           />
-          {HEAD_PATHS.map((d, i) => (
+          {headPaths.map((d, i) => (
             <path
               key={i}
               d={d}

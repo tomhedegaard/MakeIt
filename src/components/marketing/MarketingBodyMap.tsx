@@ -17,7 +17,9 @@ import {
  * DomainMark kicker or an SVG hot-zone lights only that domain
  * and swaps the helhed caption for how MakeIt serves that system.
  * Color stays in the marks and anchors. Copy stays monochrome.
- * See docs/MAKEIT_FIGURE.md.
+ * See docs/MAKEIT_FIGURE.md. Inherits MakeItFigure's default craft
+ * v3B (data-craft="v3b"). Pass variant="v3a.2" on MakeItFigure to
+ * compare against the library highlighter.
  */
 export default function MarketingBodyMap() {
   const t = useTranslations("Marketing.app");

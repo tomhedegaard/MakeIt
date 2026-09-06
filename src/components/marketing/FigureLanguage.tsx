@@ -8,7 +8,8 @@ import { cn } from "@/lib/utils";
  * icon set. Teaching state: all four anchors lit as a balanced
  * read (no food-owned halo). Dosage stays in the marks and
  * anchors, never in body copy.
- * See docs/MAKEIT_FIGURE.md.
+ * See docs/MAKEIT_FIGURE.md. MakeItFigure defaults to craft v3B
+ * (custom editorial silhouette). Pass variant="v3a.2" to compare.
  */
 
 export const HERO_DOMAINS = ["body", "food", "heart", "mind"] as const;
