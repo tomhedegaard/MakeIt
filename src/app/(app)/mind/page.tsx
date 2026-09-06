@@ -55,7 +55,14 @@ export default async function MindCheckPage() {
         eyebrow={t("eyebrow")}
         title={today ? t("titleUpdate") : t("titleNew")}
         subtitle={today ? t("subtitleUpdate") : t("subtitleNew")}
-        right={<StreakBadge current={current} longest={longest} />}
+        right={
+          <StreakBadge
+            current={current}
+            longest={longest}
+            currentLabel={t("streakCurrent")}
+            longestLabel={t("streakLongest", { count: longest })}
+          />
+        }
       />
       <Container size="narrow" className="py-10 md:py-14 space-y-10">
         {celebrationKind ? <MindCelebration kind={celebrationKind} /> : null}

@@ -7,7 +7,17 @@
   "week": {
     "ariaLabel": "Ugeoversigt",
     "done": "Gennemført",
-    "today": "I dag"
+    "today": "I dag",
+    "rest": "Hvile",
+    "days": {
+      "mon": "Man",
+      "tue": "Tir",
+      "wed": "Ons",
+      "thu": "Tor",
+      "fri": "Fre",
+      "sat": "Lør",
+      "sun": "Søn"
+    }
   },
   "today": {
     "label": "I dag · {programCode} · uge {week}",

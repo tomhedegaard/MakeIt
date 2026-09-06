@@ -112,7 +112,7 @@ export default async function TrainPage() {
                   borderColor: day.today ? "var(--line-bright)" : undefined,
                 }}
               >
-                <div className="eyebrow mb-1.5">{day.label}</div>
+                <div className="eyebrow mb-1.5">{t(`week.days.${day.dayKey}`)}</div>
                 <div className="numeric text-2xl mb-1">
                   {String(day.date).padStart(2, "0")}
                 </div>
@@ -121,7 +121,7 @@ export default async function TrainPage() {
                     day.rest ? "text-fg-faint" : "text-fg-dim"
                   }`}
                 >
-                  {day.sessionLabel}
+                  {day.sessionLabel || t("week.rest")}
                 </div>
                 <div className="mt-2 flex justify-center">
                   {day.done ? (

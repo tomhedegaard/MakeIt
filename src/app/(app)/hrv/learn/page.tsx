@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
@@ -35,13 +36,15 @@ const SECTIONS: { heading: string; body: string }[] = [
   },
 ];
 
-export default function HrvLearnPage() {
+export default async function HrvLearnPage() {
+  const t = await getTranslations("Hrv.learn");
+
   return (
     <>
       <PageHeader
-        eyebrow="Recovery"
-        title="Lær"
-        subtitle="Hvad HRV er, hvorfor vi viser den, som vi gør — og hvad tallet betyder for dig."
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        subtitle={t("subtitle")}
       />
       <Container className="py-8 lg:py-12 space-y-10">
         <HrvSubNav />

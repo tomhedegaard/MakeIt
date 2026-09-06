@@ -42,6 +42,16 @@
     "insights": "Insight",
     "learn": "Learn"
   },
+  "learn": {
+    "eyebrow": "Recovery",
+    "title": "Learn",
+    "subtitle": "What HRV is, why we show it the way we do — and what the number means for you."
+  },
+  "insights": {
+    "eyebrow": "HRV",
+    "title": "Insight",
+    "subtitle": "Your weekly observation and what your lifestyle seems to be telling you."
+  },
   "page": {
     "eyebrow": "Heart",
     "title": "HRV",

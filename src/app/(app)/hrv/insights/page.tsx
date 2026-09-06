@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
@@ -23,14 +24,15 @@ export default async function HrvInsightsPage() {
   const member = await getSession();
   if (!member) redirect("/login");
 
+  const t = await getTranslations("Hrv.insights");
   const insight = await getLatestWeeklyInsight(member.id);
 
   return (
     <>
       <PageHeader
-        eyebrow="HRV"
-        title="Indsigt"
-        subtitle="Din ugentlige observation og hvad din livsstil ser ud til at betyde."
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        subtitle={t("subtitle")}
       />
       <Container className="py-8 lg:py-12 space-y-8">
         <HrvSubNav />

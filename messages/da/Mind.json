@@ -98,6 +98,8 @@
     "titleUpdate": "Mind-check — opdater.",
     "subtitleNew": "Tre sliders. Én sætning hvis du har lyst. Det tager kortere tid end at vente på din næste sæt.",
     "subtitleUpdate": "Du har tjekket ind i dag. Du kan opdatere indtil midnat.",
+    "streakCurrent": "dages stribe",
+    "streakLongest": "længste: {count}",
     "energy": "Energi",
     "energyLow": "udmattet",
     "energyHigh": "opladt",
@@ -119,5 +121,27 @@
     "eyebrow": "Mind",
     "title": "Åbner Mind…",
     "body": "Tjekker om du har sagt ja til disclaimer — så sender vi dig videre."
+  },
+  "tour": {
+    "skip": "Spring over",
+    "next": "Næste →",
+    "begin": "Begynd →",
+    "steps": {
+      "pillar": {
+        "eyebrow": "01 · Mind",
+        "title": "Søjle 5 — den mentale maskine.",
+        "body": "Du har lige bygget vanen op fysisk. Nu går vi i gang med hovedet. Tre minutter at sætte sig ind i — så er du i gang."
+      },
+      "check": {
+        "eyebrow": "02 · Mind-check",
+        "title": "60 sek/dag. Tre sliders.",
+        "body": "Energi, stress, fokus. Det bygger en mental graf parallelt med din HRV. Når dine mind-check viser belastning, justerer Adaptive Engine din næste session."
+      },
+      "library": {
+        "eyebrow": "03 · AI-coach + bibliotek",
+        "title": "Dagens refleksion er klar 06:30.",
+        "body": "AI-coach læser dit mind-check, HRV og uge — skriver en kort daglig refleksion. Plus 8 sessioner i biblioteket: vejrtrækning, fokus, recovery, debrief."
+      }
+    }
   }
 }

@@ -42,6 +42,16 @@
     "insights": "Indsigt",
     "learn": "Lær"
   },
+  "learn": {
+    "eyebrow": "Restitution",
+    "title": "Lær",
+    "subtitle": "Hvad HRV er, hvorfor vi viser den, som vi gør — og hvad tallet betyder for dig."
+  },
+  "insights": {
+    "eyebrow": "HRV",
+    "title": "Indsigt",
+    "subtitle": "Din ugentlige observation og hvad din livsstil ser ud til at betyde."
+  },
   "page": {
     "eyebrow": "Hjerte",
     "title": "HRV",
