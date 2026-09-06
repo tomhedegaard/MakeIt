@@ -9,6 +9,9 @@
  * The next-intl mock is a bare function — no `t.has`. If the button
  * calls `t.has`, rendering the alert throws and the test fails the
  * same way production did after #75.
+ *
+ * Confirm is inline — never `window.confirm`. First click only
+ * reveals Yes/Cancel; the action runs on the confirm click.
  */
 
 import { createElement } from "react";
@@ -43,7 +46,7 @@ import StartProgramButton from "./StartProgramButton";
 let root: Root;
 let host: HTMLDivElement;
 
-function mount(hasDays = true) {
+function mount(hasDays = true, hasOtherActive = true) {
   host = document.createElement("div");
   document.body.appendChild(host);
   root = createRoot(host);
@@ -52,26 +55,65 @@ function mount(hasDays = true) {
       createElement(StartProgramButton, {
         programId: "pwr-10",
         programName: "POWERBUILDING",
-        hasOtherActive: true,
+        hasOtherActive,
         hasDays,
       }),
     );
   });
 }
 
-function button(): HTMLButtonElement {
-  return host.querySelector("button") as HTMLButtonElement;
+function buttons(): HTMLButtonElement[] {
+  return Array.from(host.querySelectorAll("button"));
+}
+
+function buttonWith(text: string): HTMLButtonElement {
+  const match = buttons().find((el) => el.textContent === text);
+  if (!match) {
+    throw new Error(
+      `No button "${text}". Have: ${buttons()
+        .map((el) => el.textContent)
+        .join(", ")}`,
+    );
+  }
+  return match;
+}
+
+function startButton(): HTMLButtonElement {
+  return buttonWith("start");
+}
+
+function pendingButton(): HTMLButtonElement {
+  return buttonWith("starting");
+}
+
+function confirmButton(hasOtherActive = true): HTMLButtonElement {
+  return buttonWith(hasOtherActive ? "confirmSwitch" : "confirmStart");
+}
+
+function cancelButton(): HTMLButtonElement {
+  return buttonWith("cancel");
 }
 
 function alert(): HTMLElement | null {
   return host.querySelector("[role='alert']");
 }
 
+function openConfirm() {
+  act(() => {
+    startButton().click();
+  });
+}
+
+async function confirmStart(hasOtherActive = true) {
+  await act(async () => {
+    confirmButton(hasOtherActive).click();
+  });
+}
+
 beforeEach(() => {
   startProgramAction.mockReset();
   refresh.mockReset();
   push.mockReset();
-  vi.stubGlobal("confirm", vi.fn(() => true));
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
 
@@ -80,11 +122,36 @@ afterEach(() => {
     root.unmount();
   });
   host.remove();
-  vi.unstubAllGlobals();
   vi.restoreAllMocks();
 });
 
 describe("StartProgramButton", () => {
+  it("shows inline confirm on first click and does not call the action", () => {
+    mount();
+
+    openConfirm();
+
+    expect(startProgramAction).not.toHaveBeenCalled();
+    expect(host.textContent).toContain("switchConfirm");
+    expect(confirmButton().textContent).toBe("confirmSwitch");
+    expect(cancelButton().textContent).toBe("cancel");
+    expect(host.textContent).not.toContain("status.calling");
+    expect(alert()).toBeNull();
+  });
+
+  it("calls the action only after the confirm click", async () => {
+    startProgramAction.mockResolvedValue({ ok: true, sessionsCreated: 4 });
+    mount();
+
+    openConfirm();
+    expect(startProgramAction).not.toHaveBeenCalled();
+
+    await confirmStart();
+
+    expect(startProgramAction).toHaveBeenCalledTimes(1);
+    expect(startProgramAction).toHaveBeenCalledWith("pwr-10");
+  });
+
   it("keeps pending until the action settles, then shows a filled error", async () => {
     let resolveAction!: (value: {
       ok: boolean;
@@ -99,13 +166,14 @@ describe("StartProgramButton", () => {
     );
     mount();
 
+    openConfirm();
     act(() => {
-      button().click();
+      confirmButton().click();
     });
 
-    expect(button().disabled).toBe(true);
-    expect(button().getAttribute("aria-busy")).toBe("true");
-    expect(button().textContent).toBe("starting");
+    expect(pendingButton().disabled).toBe(true);
+    expect(pendingButton().getAttribute("aria-busy")).toBe("true");
+    expect(pendingButton().textContent).toBe("starting");
     expect(host.textContent).toContain("status.calling");
     expect(alert()).toBeNull();
 
@@ -117,9 +185,9 @@ describe("StartProgramButton", () => {
       });
     });
 
-    expect(button().disabled).toBe(false);
-    expect(button().getAttribute("aria-busy")).toBe("false");
-    expect(button().textContent).toBe("start");
+    expect(startButton().disabled).toBe(false);
+    expect(startButton().getAttribute("aria-busy")).toBe("false");
+    expect(startButton().textContent).toBe("start");
     expect(host.textContent).not.toContain("status.calling");
     expect(alert()?.textContent).toContain("errors.not_found");
     expect(alert()?.textContent).toContain("not_found id=pwr-10");
@@ -133,9 +201,8 @@ describe("StartProgramButton", () => {
     startProgramAction.mockRejectedValue(new Error("server action exploded"));
     mount();
 
-    await act(async () => {
-      button().click();
-    });
+    openConfirm();
+    await confirmStart();
 
     expect(alert()?.textContent).toContain("errors.failed");
     expect(alert()?.textContent).toContain("server action exploded");
@@ -149,9 +216,8 @@ describe("StartProgramButton", () => {
     startProgramAction.mockResolvedValue({ ok: false, error: "failed" });
     mount();
 
-    await act(async () => {
-      button().click();
-    });
+    openConfirm();
+    await confirmStart();
 
     expect(alert()?.textContent).toBe("errors.failed");
     expect(host.querySelector("[role='alert']")).not.toBeNull();
@@ -167,9 +233,8 @@ describe("StartProgramButton", () => {
     startProgramAction.mockResolvedValue({ ok: false, error: code });
     mount();
 
-    await act(async () => {
-      button().click();
-    });
+    openConfirm();
+    await confirmStart();
 
     expect(alert()?.textContent).toBe(`errors.${code}`);
     expect(alert()?.className).toMatch(/text-danger/);
@@ -184,9 +249,8 @@ describe("StartProgramButton", () => {
     });
     mount();
 
-    await act(async () => {
-      button().click();
-    });
+    openConfirm();
+    await confirmStart();
 
     expect(alert()?.textContent).toContain("errors.failed");
     expect(alert()?.textContent).toContain(
@@ -198,9 +262,8 @@ describe("StartProgramButton", () => {
     startProgramAction.mockResolvedValue({ ok: true, sessionsCreated: 4 });
     mount();
 
-    await act(async () => {
-      button().click();
-    });
+    openConfirm();
+    await confirmStart();
 
     expect(refresh).toHaveBeenCalledTimes(1);
     expect(push).toHaveBeenCalledWith("/coaching");
@@ -211,28 +274,43 @@ describe("StartProgramButton", () => {
   it("keeps empty-day programs disabled and never calls the action", async () => {
     mount(false);
 
-    expect(button().disabled).toBe(true);
+    expect(buttons()[0].disabled).toBe(true);
 
     await act(async () => {
-      button().click();
+      buttons()[0].click();
     });
 
     expect(startProgramAction).not.toHaveBeenCalled();
     expect(host.textContent).toContain("emptyDays");
+    expect(host.textContent).not.toContain("switchConfirm");
+    expect(host.textContent).not.toContain("startConfirm");
   });
 
-  it("does not start when confirm is cancelled", async () => {
-    vi.stubGlobal("confirm", vi.fn(() => false));
+  it("returns to idle and does not call the action when confirm is cancelled", async () => {
     startProgramAction.mockResolvedValue({ ok: true, sessionsCreated: 4 });
     mount();
 
+    openConfirm();
     await act(async () => {
-      button().click();
+      cancelButton().click();
     });
 
     expect(startProgramAction).not.toHaveBeenCalled();
-    expect(button().disabled).toBe(false);
-    expect(alert()).toBeNull();
+    expect(startButton().disabled).toBe(false);
+    expect(startButton().textContent).toBe("start");
+    expect(host.textContent).not.toContain("switchConfirm");
     expect(host.textContent).not.toContain("status.calling");
+    expect(alert()).toBeNull();
+  });
+
+  it("uses startConfirm copy when no other program is active", () => {
+    mount(true, false);
+
+    openConfirm();
+
+    expect(host.textContent).toContain("startConfirm");
+    expect(host.textContent).not.toContain("switchConfirm");
+    expect(confirmButton(false).textContent).toBe("confirmStart");
+    expect(startProgramAction).not.toHaveBeenCalled();
   });
 });

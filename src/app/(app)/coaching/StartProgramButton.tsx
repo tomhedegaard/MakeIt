@@ -33,6 +33,11 @@ type StartTrace = "calling" | "ok" | null;
  * goes 'active' → 'paused', not deleted), but a misclick still
  * resets current_week and breaks streak expectations.
  *
+ * Confirm is an inline second step, never a native dialog. Automated
+ * browsers (and some in-app webviews) auto-dismiss those dialogs,
+ * which made Start look like a silent no-op: first click returned
+ * before `setTrace("calling")`.
+ *
  * Empty blueprints disable the CTA. Pending is explicit `useState`
  * for the full async server call — a transition's isPending drops
  * after the first await, so the spinner died before the write
@@ -58,6 +63,7 @@ export default function StartProgramButton({
   className?: string;
 }) {
   const [pending, setPending] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState<StartProgramError | null>(null);
   const [detail, setDetail] = useState<string | null>(null);
   const [trace, setTrace] = useState<StartTrace>(null);
@@ -68,17 +74,34 @@ export default function StartProgramButton({
     return t(`errors.${code}`);
   }
 
-  async function handleClick() {
+  const confirmText = hasOtherActive
+    ? t("switchConfirm", { name: programName })
+    : t("startConfirm", { name: programName });
+
+  function handleStartClick() {
     if (pending || !hasDays) return;
-    const confirmText = hasOtherActive
-      ? t("switchConfirm", { name: programName })
-      : t("startConfirm", { name: programName });
-    if (!confirm(confirmText)) return;
+    setError(null);
+    setDetail(null);
+    setTrace(null);
+    setConfirming(true);
+  }
+
+  function handleCancel() {
+    if (pending) return;
+    setConfirming(false);
+    setError(null);
+    setDetail(null);
+    setTrace(null);
+  }
+
+  async function handleConfirm() {
+    if (pending || !hasDays) return;
 
     setError(null);
     setDetail(null);
     setTrace("calling");
     setPending(true);
+    setConfirming(false);
     try {
       const res = await startProgramAction(programId);
       if (!res.ok) {
@@ -109,16 +132,39 @@ export default function StartProgramButton({
 
   return (
     <div className="flex-1 min-w-0 space-y-1">
-      <button
-        type="button"
-        onClick={handleClick}
-        disabled={pending || !hasDays}
-        aria-busy={pending}
-        aria-disabled={pending || !hasDays}
-        className={className ?? "btn btn-sm w-full"}
-      >
-        {label}
-      </button>
+      {confirming && !pending ? (
+        <div className="space-y-2">
+          <p className="text-[11px] font-mono text-fg-dim">{confirmText}</p>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleConfirm}
+              disabled={!hasDays}
+              className={className ?? "btn btn-sm flex-1 min-w-0"}
+            >
+              {hasOtherActive ? t("confirmSwitch") : t("confirmStart")}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="btn btn-ghost btn-sm shrink-0"
+            >
+              {t("cancel")}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={handleStartClick}
+          disabled={pending || !hasDays}
+          aria-busy={pending}
+          aria-disabled={pending || !hasDays}
+          className={className ?? "btn btn-sm w-full"}
+        >
+          {label}
+        </button>
+      )}
       {trace === "calling" ? (
         <p className="text-[11px] font-mono text-fg-dim">{t("status.calling")}</p>
       ) : null}
