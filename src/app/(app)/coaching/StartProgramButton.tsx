@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import {
+  isNextRedirectError,
+  startProgramDetail,
+} from "@/lib/programs/start-program-error";
 import { startProgramAction, type StartProgramError } from "./actions";
 
 const START_PROGRAM_ERRORS = [
@@ -20,6 +24,8 @@ function isStartProgramError(value: unknown): value is StartProgramError {
   );
 }
 
+type StartTrace = "calling" | "ok" | null;
+
 /**
  * Confirms before swapping the active program. Pausing + reassigning
  * is destructive enough that we want an explicit "yes" — the
@@ -32,6 +38,11 @@ function isStartProgramError(value: unknown): value is StartProgramError {
  * after the first await, so the spinner died before the write
  * finished. Failures always render a filled alert under the button
  * so Start never looks like a silent no-op.
+ *
+ * Do not call `t.has` here. next-intl ^4.12 documents `t.has`, but a
+ * missing method on the client translator throws during error paint,
+ * React remounts the button, and Testy sees a short spinner then
+ * silence. Known `StartProgramError` keys exist in da/en Coaching.
  */
 export default function StartProgramButton({
   programId,
@@ -48,12 +59,13 @@ export default function StartProgramButton({
 }) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<StartProgramError | null>(null);
+  const [detail, setDetail] = useState<string | null>(null);
+  const [trace, setTrace] = useState<StartTrace>(null);
   const router = useRouter();
   const t = useTranslations("Coaching.startButton");
 
   function errorLabel(code: StartProgramError): string {
-    const key = `errors.${code}`;
-    return t.has(key) ? t(key) : t("errors.failed");
+    return t(`errors.${code}`);
   }
 
   async function handleClick() {
@@ -64,18 +76,26 @@ export default function StartProgramButton({
     if (!confirm(confirmText)) return;
 
     setError(null);
+    setDetail(null);
+    setTrace("calling");
     setPending(true);
     try {
       const res = await startProgramAction(programId);
       if (!res.ok) {
         setError(isStartProgramError(res.error) ? res.error : "failed");
+        setDetail(res.detail?.trim() ? res.detail.trim() : null);
+        setTrace(null);
         return;
       }
+      setTrace("ok");
       router.refresh();
       router.push("/coaching");
     } catch (err) {
+      if (isNextRedirectError(err)) throw err;
       console.error("[StartProgramButton] startProgramAction failed", err);
       setError("failed");
+      setDetail(startProgramDetail(err));
+      setTrace(null);
     } finally {
       setPending(false);
     }
@@ -99,12 +119,21 @@ export default function StartProgramButton({
       >
         {label}
       </button>
+      {trace === "calling" ? (
+        <p className="text-[11px] font-mono text-fg-dim">{t("status.calling")}</p>
+      ) : null}
+      {trace === "ok" ? (
+        <p className="text-[11px] font-mono text-ok">{t("status.ok")}</p>
+      ) : null}
       {error ? (
         <p
           className="rounded-md border border-danger/40 bg-danger/15 px-2 py-1 text-[11px] font-mono text-danger"
           role="alert"
         >
-          {errorLabel(error)}
+          <span>{errorLabel(error)}</span>
+          {detail ? (
+            <span className="mt-0.5 block break-words text-fg-dim">{detail}</span>
+          ) : null}
         </p>
       ) : !hasDays ? (
         <p className="text-[11px] font-mono text-fg-dim">{t("emptyDays")}</p>

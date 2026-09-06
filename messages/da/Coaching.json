@@ -62,6 +62,10 @@
     "start": "Start program",
     "unavailable": "Ikke klar endnu",
     "emptyDays": "Programmet har ingen dage endnu — start er ikke muligt.",
+    "status": {
+      "calling": "Kalder server…",
+      "ok": "Startet."
+    },
     "errors": {
       "empty_days": "Programmet har ingen dage at generere sessioner fra.",
       "not_allowed": "Programmet kan ikke startes.",

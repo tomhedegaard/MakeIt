@@ -62,6 +62,10 @@
     "start": "Start program",
     "unavailable": "Not ready yet",
     "emptyDays": "This program has no days yet — start is not available.",
+    "status": {
+      "calling": "Calling server…",
+      "ok": "Started."
+    },
     "errors": {
       "empty_days": "This program has no days to generate sessions from.",
       "not_allowed": "This program cannot be started.",

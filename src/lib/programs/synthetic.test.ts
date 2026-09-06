@@ -130,6 +130,8 @@ describe("member start shares blueprint materialization", () => {
     expect(actionsSrc).toContain("createClient()");
     expect(actionsSrc).toContain("console.error(\"[startProgramAction] assign failed\"");
     expect(actionsSrc).toContain("console.error(\"[startProgramAction] assign threw\"");
+    expect(actionsSrc).toContain("detail");
+    expect(actionsSrc).toContain("isNextRedirectError");
   });
 
   it("wires StartProgramButton to pending, failure, catch, and refresh", () => {
@@ -149,5 +151,8 @@ describe("member start shares blueprint materialization", () => {
     expect(startButtonSrc).toContain("bg-danger/15");
     expect(startButtonSrc).toContain("router.refresh()");
     expect(startButtonSrc).toContain("router.push(\"/coaching\")");
+    expect(startButtonSrc).toContain("status.calling");
+    expect(startButtonSrc).toContain("setDetail");
+    expect(startButtonSrc).not.toMatch(/t\.has\s*\(/);
   });
 });
