@@ -7,7 +7,17 @@
   "week": {
     "ariaLabel": "Week overview",
     "done": "Completed",
-    "today": "Today"
+    "today": "Today",
+    "rest": "Hvile",
+    "days": {
+      "mon": "Man",
+      "tue": "Tir",
+      "wed": "Ons",
+      "thu": "Tor",
+      "fri": "Fre",
+      "sat": "Lør",
+      "sun": "Søn"
+    }
   },
   "today": {
     "label": "Today · {programCode} · week {week}",

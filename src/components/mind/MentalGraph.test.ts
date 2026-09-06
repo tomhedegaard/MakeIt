@@ -8,9 +8,12 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import MentalGraph from "./MentalGraph";
+import MentalGraph, { type MentalGraphCopy } from "./MentalGraph";
 import type { MindCheckLog } from "@/lib/mind/types";
 import { utcDateNDaysAgo } from "@/lib/mind/streak";
+import daMind from "../../../messages/da/Mind.json";
+
+const copy = daMind.graph as MentalGraphCopy;
 
 function log(
   daysAgo: number,
@@ -34,7 +37,7 @@ function log(
 }
 
 function render(logs: MindCheckLog[], days = 30) {
-  return renderToStaticMarkup(createElement(MentalGraph, { logs, days }));
+  return renderToStaticMarkup(createElement(MentalGraph, { logs, days, copy }));
 }
 
 function pathD(html: string, token: string): string {

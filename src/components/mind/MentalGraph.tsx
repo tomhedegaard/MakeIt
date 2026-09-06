@@ -45,12 +45,22 @@ const SERIES = [
   },
 ];
 
+export type MentalGraphCopy = {
+  title: string;
+  energy: string;
+  calm: string;
+  focus: string;
+  aria: string;
+};
+
 export default function MentalGraph({
   logs,
   days = 30,
+  copy,
 }: {
   logs: MindCheckLog[];
   days?: number;
+  copy: MentalGraphCopy;
 }) {
   const byDate = new Map<string, MindCheckLog>();
   for (const l of logs) byDate.set(l.logged_date, l);
@@ -95,19 +105,19 @@ export default function MentalGraph({
   return (
     <div className="space-y-3" data-domain="mind">
       <div className="flex items-center justify-between">
-        <h2 className="font-display text-2xl">Mental graf — sidste 30 dage</h2>
+        <h2 className="font-display text-2xl">{copy.title}</h2>
         <div className="flex items-center gap-3 text-xs text-fg-dim">
           <span className="inline-flex items-center gap-1.5">
             <span className="inline-block w-3 h-px bg-mind-energy" aria-hidden />
-            Energi
+            {copy.energy}
           </span>
           <span className="inline-flex items-center gap-1.5">
             <span className="inline-block w-3 h-px bg-mind-stress" aria-hidden />
-            Ro (omvendt stress)
+            {copy.calm}
           </span>
           <span className="inline-flex items-center gap-1.5">
             <span className="inline-block w-3 h-px bg-mind-focus" aria-hidden />
-            Fokus
+            {copy.focus}
           </span>
         </div>
       </div>
@@ -117,7 +127,7 @@ export default function MentalGraph({
             viewBox={`0 0 ${w} ${h}`}
             className="w-full h-auto"
             role="img"
-            aria-label="Mental graf — energi, ro, fokus de seneste 30 dage"
+            aria-label={copy.aria}
           >
             <defs>
               {SERIES.map((s) => (

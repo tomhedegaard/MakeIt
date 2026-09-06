@@ -98,6 +98,8 @@
     "titleUpdate": "Mind-check — update.",
     "subtitleNew": "Three sliders. One sentence if you want. Faster than waiting for your next set.",
     "subtitleUpdate": "You checked in today. You can update until midnight.",
+    "streakCurrent": "day streak",
+    "streakLongest": "longest: {count}",
     "energy": "Energy",
     "energyLow": "spent",
     "energyHigh": "charged",
@@ -119,5 +121,34 @@
     "eyebrow": "Mind",
     "title": "Opening Mind…",
     "body": "Checking whether you have accepted the disclaimer — then we send you on."
+  },
+  "graph": {
+    "title": "Mental graph — last 30 days",
+    "energy": "Energy",
+    "calm": "Calm (inverted stress)",
+    "focus": "Focus",
+    "aria": "Mental graph — energy, calm, focus over the last 30 days"
+  },
+  "tour": {
+    "skip": "Skip",
+    "next": "Next →",
+    "begin": "Begin →",
+    "steps": {
+      "pillar": {
+        "eyebrow": "01 · Mind",
+        "title": "Pillar 5 — the mental machine.",
+        "body": "You just built the physical habit. Now we start on the head. Three minutes to get oriented — then you are in."
+      },
+      "check": {
+        "eyebrow": "02 · Mind-check",
+        "title": "60 sec/day. Three sliders.",
+        "body": "Energy, stress, focus. It builds a mental graph parallel to your HRV. When your mind-checks show strain, the Adaptive Engine adjusts your next session."
+      },
+      "library": {
+        "eyebrow": "03 · AI coach + library",
+        "title": "Today's reflection is ready at 06:30.",
+        "body": "The AI coach reads your mind-check, HRV and week — writes a short daily reflection. Plus 8 sessions in the library: breathwork, focus, recovery, debrief."
+      }
+    }
   }
 }

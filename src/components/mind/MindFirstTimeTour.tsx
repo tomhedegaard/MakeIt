@@ -1,43 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const STORAGE_KEY = "mi_mind_tour_done_v1";
 
-interface Step {
-  eyebrow: string;
-  title: string;
-  body: string;
-}
-
-const STEPS: Step[] = [
-  {
-    eyebrow: "01 · Mind",
-    title: "Søjle 5 — den mentale maskine.",
-    body: "Du har lige bygget vanen op fysisk. Nu går vi i gang med hovedet. Tre minutter at sætte sig ind i — så er du i gang.",
-  },
-  {
-    eyebrow: "02 · Mind-check",
-    title: "60 sek/dag. Tre sliders.",
-    body: "Energi, stress, fokus. Det bygger en mental graf parallelt med din HRV. Når dine mind-check viser belastning, justerer Adaptive Engine din næste session.",
-  },
-  {
-    eyebrow: "03 · AI-coach + bibliotek",
-    title: "Dagens refleksion er klar 06:30.",
-    body: "AI-coach læser dit mind-check, HRV og uge — skriver en kort daglig refleksion. Plus 8 sessioner i biblioteket: vejrtrækning, fokus, recovery, debrief.",
-  },
-];
+const STEP_KEYS = ["pillar", "check", "library"] as const;
 
 /**
  * First-visit tour for /mind, mirrors the existing FirstTimeTour
  * pattern (localStorage flag, full-screen overlay, 3-step walkthrough).
  *
  * Renders only on first visit. After dismissal, key flips and the
- * component is a no-op.
+ * component is a no-op. Chrome resolves from Mind.tour so DA/EN
+ * follow the member locale.
  */
 export default function MindFirstTimeTour() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
+  const t = useTranslations("Mind.tour");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -62,7 +43,7 @@ export default function MindFirstTimeTour() {
   }
 
   function next() {
-    if (step >= STEPS.length - 1) {
+    if (step >= STEP_KEYS.length - 1) {
       dismiss();
       return;
     }
@@ -70,7 +51,8 @@ export default function MindFirstTimeTour() {
   }
 
   if (!open) return null;
-  const current = STEPS[step]!;
+  const currentKey = STEP_KEYS[step]!;
+  const isLast = step >= STEP_KEYS.length - 1;
 
   return (
     <div
@@ -81,9 +63,9 @@ export default function MindFirstTimeTour() {
     >
       <div className="max-w-lg w-full rounded-2xl border hairline bg-bg-2 p-8 md:p-10 space-y-6">
         <div className="flex items-center justify-between">
-          <div className="eyebrow">{current.eyebrow}</div>
+          <div className="eyebrow">{t(`steps.${currentKey}.eyebrow`)}</div>
           <div className="text-fg-faint text-[10px] font-mono uppercase tracking-[0.16em]">
-            {step + 1} / {STEPS.length}
+            {step + 1} / {STEP_KEYS.length}
           </div>
         </div>
 
@@ -91,17 +73,17 @@ export default function MindFirstTimeTour() {
           id="mind-tour-title"
           className="font-display text-2xl md:text-3xl leading-tight"
         >
-          {current.title}
+          {t(`steps.${currentKey}.title`)}
         </h2>
 
         <p className="text-fg-dim leading-relaxed text-base md:text-lg">
-          {current.body}
+          {t(`steps.${currentKey}.body`)}
         </p>
 
         <div className="h-1 bg-bg-3 overflow-hidden rounded-full">
           <div
             className="h-full bg-fg transition-all duration-500"
-            style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
+            style={{ width: `${((step + 1) / STEP_KEYS.length) * 100}%` }}
           />
         </div>
 
@@ -111,14 +93,14 @@ export default function MindFirstTimeTour() {
             onClick={dismiss}
             className="text-fg-dim text-sm hover:text-fg transition-colors"
           >
-            Spring over
+            {t("skip")}
           </button>
           <button
             type="button"
             onClick={next}
             className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
           >
-            {step >= STEPS.length - 1 ? "Begynd →" : "Næste →"}
+            {isLast ? t("begin") : t("next")}
           </button>
         </div>
       </div>

@@ -13,14 +13,30 @@ import { excludeSyntheticPrograms } from "@/lib/programs/synthetic";
  * Week strip — Mon..Sun for the current ISO week
  * ================================================================ */
 
+export const WEEK_DAY_KEYS = [
+  "mon",
+  "tue",
+  "wed",
+  "thu",
+  "fri",
+  "sat",
+  "sun",
+] as const;
+
+export type WeekDayKey = (typeof WEEK_DAY_KEYS)[number];
+
 export type WeekDay = {
-  /** Mon..Søn — display label */
-  label: string;
+  /** Mon..Sun key — chrome label resolves from Coaching.week.days */
+  dayKey: WeekDayKey;
   /** Day-of-month (1..31) */
   date: number;
   /** YYYY-MM-DD for click-through */
   iso: string;
-  /** Compressed session label, e.g. "Squat" / "Push" / "Hvile" */
+  /**
+   * Compressed session label, e.g. "Squat" / "Push".
+   * Exercise names stay as program/exercise proper labels (not translated).
+   * Empty string = rest day; the page renders Coaching.week.rest.
+   */
   sessionLabel: string;
   /** Session id if a session is scheduled, for the link */
   sessionId: string | null;
@@ -29,8 +45,6 @@ export type WeekDay = {
   today: boolean;
   rest: boolean;
 };
-
-const DA_DAYS = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
 
 export async function getWeekStrip(memberId: string): Promise<WeekDay[] | null> {
   const supabase = await createClient();
@@ -73,12 +87,12 @@ export async function getWeekStrip(memberId: string): Promise<WeekDay[] | null> 
     const date = Number(iso.slice(8, 10));
     const isRest = !session;
     out.push({
-      label: DA_DAYS[i],
+      dayKey: WEEK_DAY_KEYS[i],
       date,
       iso,
       sessionLabel: session
         ? compressSessionLabel(session.dayLabel, session.title)
-        : "Hvile",
+        : "",
       sessionId: session?.id ?? null,
       done: session?.status === "completed",
       today: iso === today,
@@ -96,12 +110,14 @@ export async function getWeekStrip(memberId: string): Promise<WeekDay[] | null> 
 export function mockWeekStrip(): WeekDay[] {
   const monday = currentIsoMonday();
   const today = todayIso();
-  const labels = ["Squat", "Push", "Pull", "Deadlift", "Hyper", "Hvile", "Aktiv"];
+  // Exercise proper names stay English; rest days leave sessionLabel
+  // empty so the page can render Coaching.week.rest in the locale.
+  const labels = ["Squat", "Push", "Pull", "Deadlift", "Hyper", "", ""];
   return labels.map((label, i) => {
     const iso = isoPlusDays(monday, i);
     const isRest = i >= 5;
     return {
-      label: DA_DAYS[i],
+      dayKey: WEEK_DAY_KEYS[i],
       date: Number(iso.slice(8, 10)),
       iso,
       sessionLabel: label,
@@ -120,13 +136,13 @@ export function mockWeekStrip(): WeekDay[] {
 export function emptyWeekStrip(): WeekDay[] {
   const monday = currentIsoMonday();
   const today = todayIso();
-  return DA_DAYS.map((label, i) => {
+  return WEEK_DAY_KEYS.map((dayKey, i) => {
     const iso = isoPlusDays(monday, i);
     return {
-      label,
+      dayKey,
       date: Number(iso.slice(8, 10)),
       iso,
-      sessionLabel: "Hvile",
+      sessionLabel: "",
       sessionId: null,
       done: false,
       today: iso === today,

@@ -72,7 +72,7 @@ describe("connected first-run pickers", () => {
   it("does not use the mock week labels or mock library when connected", () => {
     const demoWeek = [
       {
-        label: "Man",
+        dayKey: "mon" as const,
         date: 4,
         iso: "2026-05-04",
         sessionLabel: "Squat",
@@ -84,10 +84,10 @@ describe("connected first-run pickers", () => {
     ];
     const emptyWeek = [
       {
-        label: "Man",
+        dayKey: "mon" as const,
         date: 4,
         iso: "2026-05-04",
-        sessionLabel: "Hvile",
+        sessionLabel: "",
         sessionId: null,
         done: false,
         today: false,
@@ -101,7 +101,7 @@ describe("connected first-run pickers", () => {
         demo: demoWeek,
         empty: emptyWeek,
       })[0].sessionLabel,
-    ).toBe("Hvile");
+    ).toBe("");
     expect(
       libraryForSurface({
         connected: true,

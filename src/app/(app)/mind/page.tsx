@@ -36,6 +36,7 @@ export default async function MindCheckPage() {
   }
 
   const t = await getTranslations("Mind.check");
+  const tGraph = await getTranslations("Mind.graph");
   const [logs, today] = await Promise.all([
     getRecentMindCheckLogs(member.id, 30),
     getTodayMindCheck(member.id),
@@ -55,7 +56,14 @@ export default async function MindCheckPage() {
         eyebrow={t("eyebrow")}
         title={today ? t("titleUpdate") : t("titleNew")}
         subtitle={today ? t("subtitleUpdate") : t("subtitleNew")}
-        right={<StreakBadge current={current} longest={longest} />}
+        right={
+          <StreakBadge
+            current={current}
+            longest={longest}
+            currentLabel={t("streakCurrent")}
+            longestLabel={t("streakLongest", { count: longest })}
+          />
+        }
       />
       <Container size="narrow" className="py-10 md:py-14 space-y-10">
         {celebrationKind ? <MindCelebration kind={celebrationKind} /> : null}
@@ -74,7 +82,17 @@ export default async function MindCheckPage() {
         />
 
         <div className="mt-6">
-          <MentalGraph logs={logs} days={30} />
+          <MentalGraph
+            logs={logs}
+            days={30}
+            copy={{
+              title: tGraph("title"),
+              energy: tGraph("energy"),
+              calm: tGraph("calm"),
+              focus: tGraph("focus"),
+              aria: tGraph("aria"),
+            }}
+          />
         </div>
 
       </Container>
