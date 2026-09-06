@@ -5,6 +5,10 @@
  * useState — useTransition drops isPending after the first await).
  * Thrown actions and structured {ok:false} must render a filled alert
  * with a real error string (never a silent short spinner).
+ *
+ * The next-intl mock is a bare function — no `t.has`. If the button
+ * calls `t.has`, rendering the alert throws and the test fails the
+ * same way production did after #75.
  */
 
 import { createElement } from "react";
@@ -18,20 +22,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const startProgramAction = vi.fn();
 const refresh = vi.fn();
 const push = vi.fn();
-const hasKey = vi.fn((key: string) =>
-  [
-    "errors.empty_days",
-    "errors.not_allowed",
-    "errors.not_found",
-    "errors.unavailable",
-    "errors.failed",
-  ].includes(key),
-);
 
 vi.mock("next-intl", () => ({
   useTranslations: () => {
     const t = (key: string) => key;
-    t.has = hasKey;
     return t;
   },
 }));
@@ -77,7 +71,6 @@ beforeEach(() => {
   startProgramAction.mockReset();
   refresh.mockReset();
   push.mockReset();
-  hasKey.mockClear();
   vi.stubGlobal("confirm", vi.fn(() => true));
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
@@ -93,7 +86,11 @@ afterEach(() => {
 
 describe("StartProgramButton", () => {
   it("keeps pending until the action settles, then shows a filled error", async () => {
-    let resolveAction!: (value: { ok: boolean; error?: string }) => void;
+    let resolveAction!: (value: {
+      ok: boolean;
+      error?: string;
+      detail?: string;
+    }) => void;
     startProgramAction.mockImplementation(
       () =>
         new Promise((resolve) => {
@@ -109,16 +106,23 @@ describe("StartProgramButton", () => {
     expect(button().disabled).toBe(true);
     expect(button().getAttribute("aria-busy")).toBe("true");
     expect(button().textContent).toBe("starting");
+    expect(host.textContent).toContain("status.calling");
     expect(alert()).toBeNull();
 
     await act(async () => {
-      resolveAction({ ok: false, error: "not_found" });
+      resolveAction({
+        ok: false,
+        error: "not_found",
+        detail: "not_found id=pwr-10",
+      });
     });
 
     expect(button().disabled).toBe(false);
     expect(button().getAttribute("aria-busy")).toBe("false");
     expect(button().textContent).toBe("start");
-    expect(alert()?.textContent).toBe("errors.not_found");
+    expect(host.textContent).not.toContain("status.calling");
+    expect(alert()?.textContent).toContain("errors.not_found");
+    expect(alert()?.textContent).toContain("not_found id=pwr-10");
     expect(alert()?.className).toContain("text-danger");
     expect(alert()?.className).toContain("bg-danger/15");
     expect(refresh).not.toHaveBeenCalled();
@@ -133,11 +137,24 @@ describe("StartProgramButton", () => {
       button().click();
     });
 
-    expect(alert()?.textContent).toBe("errors.failed");
+    expect(alert()?.textContent).toContain("errors.failed");
+    expect(alert()?.textContent).toContain("server action exploded");
     expect(alert()?.className).toContain("text-danger");
     expect(console.error).toHaveBeenCalled();
     expect(refresh).not.toHaveBeenCalled();
     expect(push).not.toHaveBeenCalled();
+  });
+
+  it("renders a stable alert when the translator has no t.has", async () => {
+    startProgramAction.mockResolvedValue({ ok: false, error: "failed" });
+    mount();
+
+    await act(async () => {
+      button().click();
+    });
+
+    expect(alert()?.textContent).toBe("errors.failed");
+    expect(host.querySelector("[role='alert']")).not.toBeNull();
   });
 
   it.each([
@@ -163,6 +180,7 @@ describe("StartProgramButton", () => {
     startProgramAction.mockResolvedValue({
       ok: false,
       error: "something_else",
+      detail: "createServiceClient: SUPABASE_SERVICE_ROLE_KEY is not set.",
     });
     mount();
 
@@ -170,7 +188,10 @@ describe("StartProgramButton", () => {
       button().click();
     });
 
-    expect(alert()?.textContent).toBe("errors.failed");
+    expect(alert()?.textContent).toContain("errors.failed");
+    expect(alert()?.textContent).toContain(
+      "createServiceClient: SUPABASE_SERVICE_ROLE_KEY is not set.",
+    );
   });
 
   it("refreshes and soft-navigates to /coaching on ok", async () => {
@@ -183,6 +204,7 @@ describe("StartProgramButton", () => {
 
     expect(refresh).toHaveBeenCalledTimes(1);
     expect(push).toHaveBeenCalledWith("/coaching");
+    expect(host.textContent).toContain("status.ok");
     expect(alert()).toBeNull();
   });
 
@@ -211,5 +233,6 @@ describe("StartProgramButton", () => {
     expect(startProgramAction).not.toHaveBeenCalled();
     expect(button().disabled).toBe(false);
     expect(alert()).toBeNull();
+    expect(host.textContent).not.toContain("status.calling");
   });
 });
