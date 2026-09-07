@@ -49,7 +49,7 @@ export default function OnboardingClient({
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (pending) return;
+    if (pending || step !== totalSteps) return;
 
     // Explicit useState — a form-status hook can look idle for the
     // rest of a long server action. Overlay + nav disable stay on

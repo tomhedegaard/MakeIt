@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const actionsSrc = readFileSync(new URL("./actions.ts", import.meta.url), "utf8");
+const pageSrc = readFileSync(new URL("./page.tsx", import.meta.url), "utf8");
 const clientSrc = readFileSync(
   new URL("./OnboardingClient.tsx", import.meta.url),
   "utf8",
@@ -37,6 +38,12 @@ describe("onboarding DONE action wiring", () => {
     expect(actionsSrc).toContain('redirect("/dashboard")');
     expect(actionsSrc).toContain("step=success-redirect-dashboard");
   });
+
+  it("lets demo replay /onboarding even when the mock member is onboarded", () => {
+    expect(pageSrc).toContain("SUPABASE_ENABLED");
+    expect(pageSrc).toContain("if (SUPABASE_ENABLED && m.onboardedAt)");
+    expect(pageSrc).not.toMatch(/if\s*\(\s*m\.onboardedAt\s*\)\s*redirect/);
+  });
 });
 
 describe("onboarding DONE pending UI wiring", () => {
@@ -45,6 +52,7 @@ describe("onboarding DONE pending UI wiring", () => {
     expect(clientSrc).toContain("setPending(true)");
     expect(clientSrc).toContain("onSubmit={handleSubmit}");
     expect(clientSrc).toContain("event.preventDefault()");
+    expect(clientSrc).toContain("step !== totalSteps");
     expect(clientSrc).toContain("PlanGenerationOverlay");
     expect(clientSrc).toContain("pending={pending}");
     expect(clientSrc).toContain('namespace="Onboarding.programOverlay"');

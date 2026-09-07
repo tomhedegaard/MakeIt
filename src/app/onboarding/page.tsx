@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getSession, signOutLeftoverAuthUser, type Member } from "@/lib/auth";
+import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import OnboardingClient from "./OnboardingClient";
 
 export async function generateMetadata() {
@@ -20,9 +21,10 @@ export default async function OnboardingPage({
   }
 
   // Connected mode: if already onboarded, go straight to dashboard.
-  // (Demo mode lets you replay the flow at /onboarding for design QA.)
+  // Demo mode lets you replay the flow at /onboarding for design QA —
+  // the mock member is onboarded by default (see app layout).
   const m = member as Member & { onboardedAt?: string | null };
-  if (m.onboardedAt) redirect("/dashboard");
+  if (SUPABASE_ENABLED && m.onboardedAt) redirect("/dashboard");
 
   const { err } = await searchParams;
   return <OnboardingClient memberHandle={member.handle} err={err} />;
