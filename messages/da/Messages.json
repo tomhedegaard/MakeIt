@@ -3,13 +3,15 @@
     "eyebrow": "07 — Beskeder",
     "titleWithCoach": "Chat med @{handle}",
     "titleFallback": "Din coach",
-    "subtitle": "To spor: Munk (craft) og Motor (Adaptive Engine). De blandes ikke."
+    "subtitle": "Munk er din coach. Motor er Adaptive Engine — systemet, ikke en person."
   },
   "streams": {
+    "munkRole": "Coach",
     "munkTitle": "Munk",
-    "munkSub": "Menneskelig craft",
+    "munkSub": "Mikael Munk · person",
+    "motorRole": "Motor",
     "motorTitle": "Motor · Adaptive Engine",
-    "motorSub": "Ingen ansigt · @foreslår",
+    "motorSub": "Adaptive Engine · system",
     "propose": "@foreslår",
     "voice": "Lydbesked"
   },

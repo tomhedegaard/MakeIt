@@ -1,7 +1,10 @@
 {
   "strip": {
     "why": "Why",
+    "role": "Motor",
     "attribution": "Motor · Adaptive Engine",
+    "gloss": "Adaptive Engine adapts the week — Munk is your coach",
+    "munkRole": "Coach",
     "munkNoteLabel": "Note from Munk",
     "steps": {
       "hrvLow": "Heart — last night's HRV sits below your band",
@@ -23,6 +26,7 @@
   "dots": {
     "eyebrow": "Today",
     "title": "The links",
+    "gloss": "Adaptive Engine adapts the week — Munk is your coach",
     "moreAbout": "Tell me more about",
     "dismiss": "Hide",
     "snooze": "Tomorrow",

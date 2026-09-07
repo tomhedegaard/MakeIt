@@ -72,7 +72,10 @@ export async function loadStripCopy(): Promise<AdaptiveStripCopy> {
   ) as Record<StripStepKey, string>;
   return {
     why: t("why"),
+    role: t("role"),
     attribution: t("attribution"),
+    gloss: t("gloss"),
+    munkRole: t("munkRole"),
     munkNoteLabel: t("munkNoteLabel"),
     steps,
   };
@@ -93,6 +96,7 @@ export async function loadDotsCopy(): Promise<DotsCopy> {
   return {
     eyebrow: t("eyebrow"),
     title: t("title"),
+    gloss: t("gloss"),
     moreAbout: t("moreAbout"),
     dismiss: t("dismiss"),
     snooze: t("snooze"),

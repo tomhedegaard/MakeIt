@@ -19,7 +19,10 @@ import { demoEngineStrip } from "@/lib/adaptive/engine-strip";
 
 const COPY: AdaptiveStripCopy = {
   why: "Hvorfor",
+  role: "Motor",
   attribution: "Motor · Adaptive Engine",
+  gloss: "Adaptive Engine tilpasser ugen — Munk er din coach",
+  munkRole: "Coach",
   munkNoteLabel: "Note fra Munk",
   steps: {
     hrvLow: "Hjerte — nattens HRV ligger under dit bånd",
@@ -78,5 +81,6 @@ describe("AdaptiveReasonStrip expand", () => {
     expect(host.querySelectorAll("[data-strip-step]").length).toBe(5);
     expect(host.textContent).toContain("Hjerte — nattens HRV ligger under dit bånd");
     expect(host.textContent).toContain("Motor · Adaptive Engine");
+    expect(host.textContent).toContain("Adaptive Engine tilpasser ugen — Munk er din coach");
   });
 });

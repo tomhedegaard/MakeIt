@@ -7,6 +7,7 @@ import { demoInsightStream } from "@/lib/dashboard/insight-stream";
 const COPY: DotsCopy = {
   eyebrow: "I dag",
   title: "Sammenhængene",
+  gloss: "Adaptive Engine tilpasser ugen — Munk er din coach",
   moreAbout: "Sig mere om",
   dismiss: "Skjul",
   snooze: "I morgen",
@@ -41,5 +42,7 @@ describe("ConnectDotsStream card grammar", () => {
     expect(html).toContain("/session/sess-2026-05-05");
     expect(html).toContain("data-motor-glyph");
     expect(html).toContain("Motor · Adaptive Engine");
+    expect(html).toContain("data-engine-gloss");
+    expect(html).toContain("Adaptive Engine tilpasser ugen — Munk er din coach");
   });
 });

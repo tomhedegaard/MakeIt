@@ -13,6 +13,7 @@ import type {
 export type DotsCopy = {
   eyebrow: string;
   title: string;
+  gloss: string;
   moreAbout: string;
   dismiss: string;
   snooze: string;
@@ -119,6 +120,9 @@ export default function ConnectDotsStream({
         <h2 className="font-display text-2xl md:text-3xl leading-none">
           {copy.title}
         </h2>
+        <p data-engine-gloss="" className="mt-2 text-sm text-fg-dim leading-relaxed max-w-md">
+          {copy.gloss}
+        </p>
       </div>
 
       <ul className="space-y-2.5">

@@ -8,7 +8,10 @@ import { demoEngineStrip, emptyEngineStrip } from "@/lib/adaptive/engine-strip";
 
 const COPY: AdaptiveStripCopy = {
   why: "Hvorfor",
+  role: "Motor",
   attribution: "Motor · Adaptive Engine",
+  gloss: "Adaptive Engine tilpasser ugen — Munk er din coach",
+  munkRole: "Coach",
   munkNoteLabel: "Note fra Munk",
   steps: {
     hrvLow: "Hjerte — nattens HRV ligger under dit bånd",
@@ -41,6 +44,9 @@ describe("AdaptiveReasonStrip", () => {
     expect(html).not.toMatch(/<details[^>]*\sopen[\s>]/);
     expect(html).toContain("Hvorfor");
     expect(html).toContain("Motor · Adaptive Engine");
+    expect(html).toContain("data-engine-gloss");
+    expect(html).toContain("Adaptive Engine tilpasser ugen — Munk er din coach");
+    expect(html).toContain(">Motor<");
     expect(html).toContain("data-motor-glyph");
     expect(html).toContain("data-engine-steps");
     expect(html.match(/data-strip-step=/g)?.length).toBe(5);
@@ -71,6 +77,7 @@ describe("AdaptiveReasonStrip", () => {
     );
     expect(html).toContain("data-munk-note");
     expect(html).toContain("data-munk-mark");
+    expect(html).toContain("Coach");
     expect(html).toContain("Kør tilpasset.");
     expect(html).toContain("data-motor-glyph");
   });

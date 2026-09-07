@@ -1,17 +1,29 @@
+import { getTranslations } from "next-intl/server";
+
 /**
- * Daily AI mental coach output renderer. Three H2 sections —
+ * Daily Motor reflection renderer. Three H2 sections —
  * "Det jeg ser hos dig i dag" / "Et spørgsmål til dig" /
  * "En lille ting at gøre i dag" — rendered as hero typography.
  *
- * Source-agnostic: same render for Claude output, fallback template,
- * or a coach-authored note in v1.
+ * Source-agnostic: same render for generated output, fallback template,
+ * or a coach-authored note in v1. Chrome names the Motor as a system,
+ * never a chatbot persona competing with Munk.
  */
-export default function CoachReflection({ bodyMd }: { bodyMd: string }) {
+export default async function CoachReflection({ bodyMd }: { bodyMd: string }) {
+  const t = await getTranslations("Mind.reflection");
   const sections = splitOnH2(bodyMd);
 
   return (
     <article className="space-y-8 rounded-2xl border hairline bg-bg-2/30 p-6 md:p-8">
-      <div className="eyebrow">Mind-coach · i dag</div>
+      <header>
+        <div data-identity="motor" className="eyebrow">{t("eyebrow")}</div>
+        <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-1">
+          {t("title")}
+        </div>
+        <p data-engine-gloss="" className="mt-2 text-sm text-fg-dim leading-relaxed">
+          {t("gloss")}
+        </p>
+      </header>
       {sections.map((sec, i) => (
         <section key={i} className="space-y-2">
           {sec.heading ? (

@@ -8,7 +8,10 @@ import type {
 
 export type AdaptiveStripCopy = {
   why: string;
+  role: string;
   attribution: string;
+  gloss: string;
+  munkRole: string;
   munkNoteLabel: string;
   steps: Record<StripStepKey, string>;
 };
@@ -16,7 +19,8 @@ export type AdaptiveStripCopy = {
 /**
  * Collapsible Adaptive Engine reason strip. Collapsed by default.
  * Native <details> — no JS state. Attribution is the Motor glyph,
- * never a face or a personality label.
+ * never a face or a personality label. Role + gloss keep Motor a
+ * system and Munk a coach, even before the strip is opened.
  */
 export default function AdaptiveReasonStrip({
   model,
@@ -32,18 +36,26 @@ export default function AdaptiveReasonStrip({
       data-engine-strip=""
       className="group border-t hairline"
     >
-      <summary className="cursor-pointer list-none px-5 py-3 flex items-center gap-3 select-none touch-app hover:bg-bg-3/60">
-        <MotorGlyph className="text-fg-dim" />
-        <span className="eyebrow flex-1">{copy.why}</span>
-        <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint hidden sm:inline">
-          {copy.attribution}
-        </span>
-        <span
-          aria-hidden
-          className="text-fg-faint text-xs group-open:rotate-180 transition-transform"
+      <summary className="cursor-pointer list-none px-5 py-3 select-none touch-app hover:bg-bg-3/60">
+        <div className="flex items-center gap-3">
+          <MotorGlyph className="text-fg-dim" />
+          <span className="eyebrow flex-1">{copy.role}</span>
+          <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint hidden sm:inline">
+            {copy.attribution}
+          </span>
+          <span
+            aria-hidden
+            className="text-fg-faint text-xs group-open:rotate-180 transition-transform"
+          >
+            ↓
+          </span>
+        </div>
+        <p
+          data-engine-gloss=""
+          className="mt-1.5 pl-8 text-sm text-fg-dim leading-relaxed"
         >
-          ↓
-        </span>
+          {copy.gloss}
+        </p>
       </summary>
 
       <div className="px-5 pb-4 space-y-3">
@@ -59,11 +71,16 @@ export default function AdaptiveReasonStrip({
           >
             <span className="flex items-center gap-2 mb-1">
               <MunkMark />
-              <span className="eyebrow">{copy.munkNoteLabel}</span>
+              <span className="eyebrow">{copy.munkRole}</span>
+              <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                {copy.munkNoteLabel}
+              </span>
             </span>
             {model.munkNote}
           </p>
         ) : null}
+
+        <div className="eyebrow">{copy.why}</div>
 
         <ol data-engine-steps="" className="space-y-2">
           {model.steps.map((step, i) => (

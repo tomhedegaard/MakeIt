@@ -3,13 +3,15 @@
     "eyebrow": "07 — Messages",
     "titleWithCoach": "Chat with @{handle}",
     "titleFallback": "Your coach",
-    "subtitle": "Two streams: Munk (craft) and Motor (Adaptive Engine). They do not mix."
+    "subtitle": "Munk is your coach. Motor is Adaptive Engine — the system, not a person."
   },
   "streams": {
+    "munkRole": "Coach",
     "munkTitle": "Munk",
-    "munkSub": "Human craft",
+    "munkSub": "Mikael Munk · person",
+    "motorRole": "Motor",
     "motorTitle": "Motor · Adaptive Engine",
-    "motorSub": "No face · @propose",
+    "motorSub": "Adaptive Engine · system",
     "propose": "@propose",
     "voice": "Voice note"
   },
