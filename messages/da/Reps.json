@@ -17,7 +17,7 @@
     "list": {
       "Lifter": {
         "range": "0 — 999",
-        "perks": ["Adgang til crew-feed", "Månedlige challenges", "5% medlemsrabat"]
+        "perks": ["Adgang til crewets feed", "Månedlige challenges", "5% medlemsrabat"]
       },
       "Athlete": {
         "range": "1.000 — 4.999",
@@ -29,7 +29,7 @@
       },
       "Legend": {
         "range": "15.000+",
-        "perks": ["Alt fra Beast", "1:1 tid med Mikael Munk", "Limited drops i navnet dit", "20% rabat livstid"]
+        "perks": ["Alt fra Beast", "1:1 tid med Mikael Munk", "Begrænset drop med dit navn", "20% rabat livstid"]
       }
     }
   },

@@ -273,6 +273,8 @@ describe("CDO DA/EN bodycopy — seed / demo catalog fixtures", () => {
     /StrapIt-strap/i,
     /posterior chain/i,
     /squat, bench og DL/i,
+    /Limited drops i navnet/i,
+    /Limited drop med/i,
   ];
 
   it("keeps DA coaching blurbs and reps shop/perks free of Testy Franglais", () => {
@@ -328,11 +330,19 @@ describe("CDO DA/EN bodycopy — seed / demo catalog fixtures", () => {
   });
 
   it("rewrites DA reps perks and shop lines into one locale", () => {
+    const lifter = (daReps.tiers as { list: { Lifter: { perks: string[] } } }).list.Lifter;
     const athlete = (daReps.tiers as { list: { Athlete: { perks: string[] } } }).list.Athlete;
     const beast = (daReps.tiers as { list: { Beast: { perks: string[] } } }).list.Beast;
+    const legend = (daReps.tiers as { list: { Legend: { perks: string[] } } }).list.Legend;
+    const enLegend = (enReps.tiers as { list: { Legend: { perks: string[] } } }).list.Legend;
+    expect(lifter.perks).toContain("Adgang til crewets feed");
+    expect(lifter.perks).not.toContain("Adgang til crew-feed");
     expect(athlete.perks).toContain("Først til drops");
     expect(beast.perks).toContain("Valgfri strap-farve (1 stk/år)");
     expect(beast.perks).toContain("VIP til træf IRL");
+    expect(legend.perks).toContain("Begrænset drop med dit navn");
+    expect(legend.perks.join("\n")).not.toMatch(/^Limited /m);
+    expect(enLegend.perks).toContain("Limited drop with your name");
     const shop = (daReps.shop as {
       mock: Record<string, { name: string; description: string }>;
     }).mock;
