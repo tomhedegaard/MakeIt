@@ -119,6 +119,12 @@ describe("OnboardingClient DONE pending", () => {
     });
   });
 
+  async function waitForHardNav() {
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 450));
+    });
+  }
+
   it("hard-navigates to /dashboard when the action returns", async () => {
     completeOnboardingAction.mockResolvedValue(undefined);
     mount();
@@ -127,10 +133,11 @@ describe("OnboardingClient DONE pending", () => {
     await act(async () => {
       buttonWith("nav.submit").click();
     });
+    expect(host.querySelector("[role='status']")).not.toBeNull();
+    await waitForHardNav();
 
     expect(completeOnboardingAction).toHaveBeenCalledTimes(1);
     expect(locationAssign).toHaveBeenCalledWith("/dashboard");
-    expect(host.querySelector("[role='status']")).not.toBeNull();
   });
 
   it("hard-navigates to the redirect path after a long NEXT_REDIRECT", async () => {
@@ -143,9 +150,10 @@ describe("OnboardingClient DONE pending", () => {
     await act(async () => {
       buttonWith("nav.submit").click();
     });
+    expect(host.querySelector("[role='status']")).not.toBeNull();
+    await waitForHardNav();
 
     expect(locationAssign).toHaveBeenCalledWith("/dashboard");
-    expect(host.querySelector("[role='status']")).not.toBeNull();
   });
 
   it("hard-navigates error redirects so the overlay does not freeze", async () => {
@@ -158,6 +166,7 @@ describe("OnboardingClient DONE pending", () => {
     await act(async () => {
       buttonWith("nav.submit").click();
     });
+    await waitForHardNav();
 
     expect(locationAssign).toHaveBeenCalledWith("/onboarding?err=gen");
   });
@@ -170,6 +179,7 @@ describe("OnboardingClient DONE pending", () => {
     await act(async () => {
       buttonWith("nav.submit").click();
     });
+    await waitForHardNav();
 
     expect(console.error).toHaveBeenCalled();
     expect(locationAssign).toHaveBeenCalledWith("/onboarding?err=gen");

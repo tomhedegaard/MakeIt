@@ -49,7 +49,9 @@ describe("onboarding DONE action wiring", () => {
 describe("onboarding DONE pending UI wiring", () => {
   it("uses explicit client pending, overlay, and hard dashboard navigation", () => {
     expect(clientSrc).toContain("useState(false)");
+    expect(clientSrc).toContain("flushSync");
     expect(clientSrc).toContain("setPending(true)");
+    expect(clientSrc).toContain("MIN_PENDING_MS");
     expect(clientSrc).toContain("onSubmit={handleSubmit}");
     expect(clientSrc).toContain("event.preventDefault()");
     expect(clientSrc).toContain("step !== totalSteps");
@@ -63,7 +65,8 @@ describe("onboarding DONE pending UI wiring", () => {
     expect(clientSrc).toContain('namespace="Onboarding.programOverlay"');
     expect(clientSrc).toContain("t(\"nav.submitting\")");
     expect(clientSrc).toContain("disabled={pending}");
-    expect(clientSrc).toContain('window.location.assign("/dashboard")');
+    expect(clientSrc).toContain("window.location.assign(path)");
+    expect(clientSrc).toContain('await finish("/dashboard")');
     expect(clientSrc).toContain("nextRedirectPath");
     expect(clientSrc).toContain("isNextRedirectError");
     expect(clientSrc).not.toMatch(/useFormStatus\s*\(/);

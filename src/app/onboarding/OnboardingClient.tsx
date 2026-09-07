@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, type FormEvent } from "react";
+import { flushSync } from "react-dom";
 import { useTranslations } from "next-intl";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
@@ -21,6 +22,10 @@ const LEVEL_IDS: Level[] = ["beginner", "intermediate", "advanced"];
 const EQUIP_IDS: Equip[] = ["full", "home_rack", "minimal"];
 
 const FREQ_OPTS = [3, 4, 5] as const;
+
+/** Demo (and a fast connected write) can finish in the same tick.
+ *  Keep the overlay up long enough that DONE never looks like a no-op. */
+const MIN_PENDING_MS = 400;
 
 export default function OnboardingClient({
   memberHandle,
@@ -53,21 +58,31 @@ export default function OnboardingClient({
     const form = formRef.current;
     if (!form) return;
 
-    // Explicit useState — a form-status hook can look idle for the
-    // rest of a long server action. Overlay + nav disable stay on
-    // until we leave the page.
-    setPending(true);
+    // flushSync so the overlay paints before the server action starts.
+    // A form-status hook can look idle for the rest of a long write.
+    const startedAt = Date.now();
+    flushSync(() => {
+      setPending(true);
+    });
+
+    async function finish(path: string) {
+      const wait = MIN_PENDING_MS - (Date.now() - startedAt);
+      if (wait > 0) {
+        await new Promise((resolve) => window.setTimeout(resolve, wait));
+      }
+      window.location.assign(path);
+    }
+
     try {
       await completeOnboardingAction(new FormData(form));
-      window.location.assign("/dashboard");
+      await finish("/dashboard");
     } catch (error) {
       if (isNextRedirectError(error)) {
-        const path = nextRedirectPath(error);
-        window.location.assign(path ?? "/dashboard");
+        await finish(nextRedirectPath(error) ?? "/dashboard");
         return;
       }
       console.error("[OnboardingClient] completeOnboardingAction failed", error);
-      window.location.assign("/onboarding?err=gen");
+      await finish("/onboarding?err=gen");
     }
   }
 
