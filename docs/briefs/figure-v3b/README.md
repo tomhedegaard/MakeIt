@@ -7,6 +7,7 @@ Final er en custom SVG-silhuet der erstatter `OUTLINES.male.front` i
 `docs/MAKEIT_FIGURE.md` §1.
 
 Illustratorens kilde: `docs/briefs/MAKEIT_FIGURE_V3B_ILLUSTRATOR.md`.
+Design-AI + engineering-accept: `HANDOFF_DESIGN_AI_AGENT.md`.
 
 | Fil | Frame |
 |-----|--------|

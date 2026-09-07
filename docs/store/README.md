@@ -6,3 +6,4 @@ server-drevne; billing er gated ude (Apple 3.1.1). Disse frames viser
 
 Aktivt sæt: [`iphone-6.7/`](./iphone-6.7/) — Today + fire domæner,
 figuren synlig på Today. Login er udeladt (demo-login er ikke rent).
+Recaptured 2026-09-07 after chart/tab/i18n craft.
