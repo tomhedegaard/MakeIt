@@ -25,7 +25,7 @@ const FREQ_OPTS = [3, 4, 5] as const;
 
 /** Demo (and a fast connected write) can finish in the same tick.
  *  Keep the overlay up long enough that DONE never looks like a no-op. */
-const MIN_PENDING_MS = 400;
+const MIN_PENDING_MS = 800;
 
 export default function OnboardingClient({
   memberHandle,

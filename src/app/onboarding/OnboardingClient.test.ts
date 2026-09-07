@@ -121,7 +121,7 @@ describe("OnboardingClient DONE pending", () => {
 
   async function waitForHardNav() {
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 450));
+      await new Promise((resolve) => setTimeout(resolve, 850));
     });
   }
 
