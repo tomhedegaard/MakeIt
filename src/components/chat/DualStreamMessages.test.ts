@@ -8,17 +8,22 @@ import { demoDualStream } from "@/lib/data/message-streams";
 import { demoEngineStrip } from "@/lib/adaptive/engine-strip";
 
 const COPY: DualStreamCopy = {
+  munkRole: "Coach",
   munkTitle: "Munk",
-  munkSub: "Menneskelig craft",
+  munkSub: "Mikael Munk · person",
+  motorRole: "Motor",
   motorTitle: "Motor · Adaptive Engine",
-  motorSub: "Ingen ansigt",
+  motorSub: "Adaptive Engine · system",
   propose: "@foreslår",
   voice: "Lydbesked",
 };
 
 const STRIP_COPY = {
   why: "Hvorfor",
+  role: "Motor",
   attribution: "Motor · Adaptive Engine",
+  gloss: "Adaptive Engine tilpasser ugen — Munk er din coach",
+  munkRole: "Coach",
   munkNoteLabel: "Note fra Munk",
   steps: {
     hrvLow: "hrv",
@@ -56,6 +61,11 @@ describe("DualStreamMessages", () => {
     expect(html).toContain('data-stream="motor"');
     expect(html).toContain("data-munk-mark");
     expect(html).toContain("data-motor-glyph");
+    expect(html).toContain('data-identity="coach"');
+    expect(html).toContain('data-identity="motor"');
+    expect(html).toContain("Mikael Munk · person");
+    expect(html).toContain("Adaptive Engine · system");
+    expect(html).toContain("Adaptive Engine tilpasser ugen — Munk er din coach");
     expect(html).toContain('data-stream-bubble="munk"');
     expect(html).toContain('data-stream-bubble="motor"');
     expect(html).toContain('data-propose="true"');

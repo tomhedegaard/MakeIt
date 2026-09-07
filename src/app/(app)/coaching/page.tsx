@@ -91,6 +91,12 @@ export default async function TrainPage() {
         <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
           {t("header.title")}
         </h1>
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+          <span data-identity="coach" className="eyebrow">{t("header.coachChip")}</span>
+          <span data-identity="motor" className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+            {t("header.motorChip")}
+          </span>
+        </div>
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
           {t("header.subtitle")}
         </p>
@@ -299,9 +305,11 @@ export default async function TrainPage() {
 
                 <div className="grid grid-cols-2 gap-px bg-line border hairline rounded-lg overflow-hidden mb-4">
                   <div className="bg-bg-2 px-3 py-2.5">
-                    <div className="eyebrow mb-0.5">{t("library.coach")}</div>
+                    <div className="eyebrow mb-0.5">
+                      {p.coachName ? t("library.coach") : t("library.engine")}
+                    </div>
                     <div className="text-sm">
-                      {p.coachName ?? t("library.coachFallback")}
+                      {p.coachName ?? t("library.engineName")}
                     </div>
                   </div>
                   <div className="bg-bg-2 px-3 py-2.5">

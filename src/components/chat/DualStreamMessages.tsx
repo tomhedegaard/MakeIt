@@ -9,8 +9,10 @@ import type { StreamMessage } from "@/lib/data/message-streams";
 import DualStreamBubble from "./DualStreamBubble";
 
 export type DualStreamCopy = {
+  munkRole: string;
   munkTitle: string;
   munkSub: string;
+  motorRole: string;
   motorTitle: string;
   motorSub: string;
   propose: string;
@@ -46,10 +48,13 @@ export default function DualStreamMessages({
         data-stream="munk"
         className="surface-2 rounded-2xl overflow-hidden flex flex-col min-h-[280px]"
       >
-        <header className="px-5 py-4 border-b hairline flex items-center gap-3">
-          <MunkMark name={copy.munkTitle} />
-          <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint min-w-0">
-            {copy.munkSub}
+        <header className="px-5 py-4 border-b hairline">
+          <div data-identity="coach" className="eyebrow mb-2">{copy.munkRole}</div>
+          <div className="flex items-center gap-3">
+            <MunkMark name={copy.munkTitle} />
+            <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint min-w-0">
+              {copy.munkSub}
+            </div>
           </div>
         </header>
         <ol className="flex-1 px-4 py-4 space-y-3">
@@ -64,12 +69,15 @@ export default function DualStreamMessages({
         data-stream="motor"
         className="surface-2 rounded-2xl overflow-hidden flex flex-col min-h-[280px]"
       >
-        <header className="px-5 py-4 border-b hairline flex items-center gap-3">
-          <MotorGlyph className="text-fg-dim" />
-          <div className="min-w-0">
-            <div className="text-sm leading-tight">{copy.motorTitle}</div>
-            <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-              {copy.motorSub}
+        <header className="px-5 py-4 border-b hairline">
+          <div data-identity="motor" className="eyebrow mb-2">{copy.motorRole}</div>
+          <div className="flex items-center gap-3">
+            <MotorGlyph className="text-fg-dim" />
+            <div className="min-w-0">
+              <div className="text-sm leading-tight">{copy.motorTitle}</div>
+              <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                {copy.motorSub}
+              </div>
             </div>
           </div>
         </header>

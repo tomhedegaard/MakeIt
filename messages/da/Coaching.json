@@ -2,7 +2,9 @@
   "header": {
     "eyebrow": "02 — Træn",
     "title": "Din uge.",
-    "subtitle": "Motoren planlægger vægtene. Munk skriver under når det kræver et menneske."
+    "subtitle": "Motoren planlægger vægtene. Munk skriver under når det kræver et menneske.",
+    "coachChip": "Coach · Mikael Munk",
+    "motorChip": "Motor · Adaptive Engine"
   },
   "week": {
     "ariaLabel": "Ugeoversigt",
@@ -42,6 +44,8 @@
     "activeBadge": "Aktiv · uge {week}",
     "coach": "Coach",
     "coachFallback": "Motoren",
+    "engine": "Motor",
+    "engineName": "Adaptive Engine",
     "level": "Niveau",
     "levelFallback": "—",
     "continue": "Fortsæt →",

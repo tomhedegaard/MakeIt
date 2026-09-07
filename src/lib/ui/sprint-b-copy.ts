@@ -26,8 +26,10 @@ export async function loadNeedsAttentionCopy(): Promise<NeedsAttentionCopy> {
 export async function loadDualStreamCopy(): Promise<DualStreamCopy> {
   const t = await getTranslations("Messages.streams");
   return {
+    munkRole: t("munkRole"),
     munkTitle: t("munkTitle"),
     munkSub: t("munkSub"),
+    motorRole: t("motorRole"),
     motorTitle: t("motorTitle"),
     motorSub: t("motorSub"),
     propose: t("propose"),

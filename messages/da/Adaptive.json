@@ -1,7 +1,10 @@
 {
   "strip": {
     "why": "Hvorfor",
+    "role": "Motor",
     "attribution": "Motor · Adaptive Engine",
+    "gloss": "Adaptive Engine tilpasser ugen — Munk er din coach",
+    "munkRole": "Coach",
     "munkNoteLabel": "Note fra Munk",
     "steps": {
       "hrvLow": "Hjerte — nattens HRV ligger under dit bånd",
@@ -23,6 +26,7 @@
   "dots": {
     "eyebrow": "I dag",
     "title": "Sammenhængene",
+    "gloss": "Adaptive Engine tilpasser ugen — Munk er din coach",
     "moreAbout": "Sig mere om",
     "dismiss": "Skjul",
     "snooze": "I morgen",
