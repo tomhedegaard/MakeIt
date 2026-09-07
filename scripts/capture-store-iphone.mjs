@@ -65,10 +65,17 @@ const FRAMES = [
   },
   {
     file: "05-mind.png",
-    path: "/mind/check",
+    // Daily mind home is /mind (check + graph). /mind/check redirects.
+    path: "/mind",
     mind: true,
   },
 ];
+
+/** Mind domain home — /mind, plus the legacy check/today aliases. */
+function isMindHome(url) {
+  const path = new URL(url).pathname.replace(/\/$/, "") || "/";
+  return path === "/mind" || path === "/mind/check" || path === "/mind/today";
+}
 
 function loadPlaywright() {
   try {
@@ -167,7 +174,7 @@ async function acceptMindDisclaimer(page) {
   const accept = page.getByRole("button", { name: /Jeg har forstået/i });
   if (await accept.count()) {
     await accept.click();
-    await page.waitForURL(/\/mind\/(check|today)/, { timeout: 15_000 });
+    await page.waitForURL((url) => isMindHome(url.href), { timeout: 15_000 });
     await waitSettled(page);
   }
 }
@@ -234,17 +241,19 @@ async function main() {
 
       if (frame.mind) {
         await acceptMindDisclaimer(page);
-        if (!/\/mind\/(check|today)/.test(page.url())) {
-          await page.goto(`${BASE}/mind/check`, {
+        if (!isMindHome(page.url())) {
+          await page.goto(`${BASE}/mind`, {
             waitUntil: "domcontentloaded",
             timeout: 45_000,
           });
           await waitSettled(page);
           await acceptMindDisclaimer(page);
         }
-        const graph = page.locator('svg[aria-label*="Mental graf"]');
+        const graph = page
+          .locator('svg[aria-label*="Mental graf"], svg[aria-label*="Mental graph"]')
+          .or(page.locator('[data-domain="mind"] svg[role="img"]'));
         if (await graph.count()) {
-          await graph.evaluate((el) => {
+          await graph.first().evaluate((el) => {
             el.scrollIntoView({ block: "center", behavior: "instant" });
           });
           await page.waitForTimeout(250);
