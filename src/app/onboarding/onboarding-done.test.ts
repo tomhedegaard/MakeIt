@@ -53,6 +53,11 @@ describe("onboarding DONE pending UI wiring", () => {
     expect(clientSrc).toContain("onSubmit={handleSubmit}");
     expect(clientSrc).toContain("event.preventDefault()");
     expect(clientSrc).toContain("step !== totalSteps");
+    expect(clientSrc).toContain('key="onboarding-next"');
+    expect(clientSrc).toContain('key="onboarding-done"');
+    expect(clientSrc).toContain("type=\"button\"");
+    expect(clientSrc).toContain("onClick={onDone}");
+    expect(clientSrc).not.toMatch(/type=\"submit\"/);
     expect(clientSrc).toContain("PlanGenerationOverlay");
     expect(clientSrc).toContain("pending={pending}");
     expect(clientSrc).toContain('namespace="Onboarding.programOverlay"');

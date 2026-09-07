@@ -189,4 +189,40 @@ describe("OnboardingClient DONE pending", () => {
 
     expect(completeOnboardingAction).toHaveBeenCalledTimes(1);
   });
+
+  it("does not complete when advancing from step 2", async () => {
+    completeOnboardingAction.mockResolvedValue(undefined);
+    host = document.createElement("div");
+    document.body.appendChild(host);
+    root = createRoot(host);
+    act(() => {
+      root.render(createElement(OnboardingClient, { memberHandle: "testy" }));
+    });
+
+    function clickChoice(title: string) {
+      const label = Array.from(host.querySelectorAll("label")).find((el) =>
+        el.textContent?.includes(title),
+      );
+      if (!label) throw new Error(`No choice "${title}"`);
+      act(() => {
+        label.click();
+      });
+    }
+
+    clickChoice("goals.strength.title");
+    clickChoice("levels.intermediate.title");
+    clickChoice("equipment.full.title");
+    act(() => {
+      buttonWith("nav.next").click();
+    });
+    expect(host.textContent).toContain("step2.introTitle");
+    act(() => {
+      buttonWith("nav.next").click();
+    });
+
+    expect(completeOnboardingAction).not.toHaveBeenCalled();
+    expect(locationAssign).not.toHaveBeenCalled();
+    expect(buttonWith("nav.submit").textContent).toBe("nav.submit");
+    expect(host.textContent).toContain("step3.introTitle");
+  });
 });

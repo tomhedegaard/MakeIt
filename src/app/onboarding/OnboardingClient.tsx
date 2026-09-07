@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
@@ -42,21 +42,23 @@ export default function OnboardingClient({
   const [maxDeadlift, setMaxDeadlift] = useState("");
   const [maxOhp, setMaxOhp] = useState("");
   const [pending, setPending] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const totalSteps = 3;
   const canNext1 = goal && level && equip;
   const canNext2 = true; // 1RMs are optional
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (pending || step !== totalSteps) return;
+  async function runComplete() {
+    if (pending) return;
+    const form = formRef.current;
+    if (!form) return;
 
     // Explicit useState — a form-status hook can look idle for the
     // rest of a long server action. Overlay + nav disable stay on
     // until we leave the page.
     setPending(true);
     try {
-      await completeOnboardingAction(new FormData(event.currentTarget));
+      await completeOnboardingAction(new FormData(form));
       window.location.assign("/dashboard");
     } catch (error) {
       if (isNextRedirectError(error)) {
@@ -67,6 +69,12 @@ export default function OnboardingClient({
       console.error("[OnboardingClient] completeOnboardingAction failed", error);
       window.location.assign("/onboarding?err=gen");
     }
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (step !== totalSteps) return;
+    void runComplete();
   }
 
   return (
@@ -90,6 +98,7 @@ export default function OnboardingClient({
       </header>
 
       <form
+        ref={formRef}
         action={completeOnboardingAction}
         onSubmit={handleSubmit}
         aria-busy={pending}
@@ -293,6 +302,7 @@ export default function OnboardingClient({
               pending={pending}
               onBack={() => setStep(step - 1)}
               onNext={() => setStep(step + 1)}
+              onDone={() => void runComplete()}
             />
           </Container>
         </div>
@@ -313,6 +323,7 @@ function OnboardingNav({
   pending,
   onBack,
   onNext,
+  onDone,
 }: {
   step: number;
   totalSteps: number;
@@ -321,6 +332,7 @@ function OnboardingNav({
   pending: boolean;
   onBack: () => void;
   onNext: () => void;
+  onDone: () => void;
 }) {
   const t = useTranslations("Onboarding");
 
@@ -338,6 +350,7 @@ function OnboardingNav({
       ) : null}
       {step < totalSteps ? (
         <button
+          key="onboarding-next"
           type="button"
           className="btn btn-primary btn-xl flex-1"
           onClick={onNext}
@@ -347,7 +360,9 @@ function OnboardingNav({
         </button>
       ) : (
         <button
-          type="submit"
+          key="onboarding-done"
+          type="button"
+          onClick={onDone}
           disabled={pending}
           aria-busy={pending}
           className="btn btn-primary btn-xl flex-1 disabled:opacity-60"
