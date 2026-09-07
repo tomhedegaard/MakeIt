@@ -32,6 +32,9 @@
       "dayLabel": "Day A — Squat",
       "title": "Squat — Top set @ RPE 8, 3×3 backoff"
     },
+    "generated": {
+      "squatFocus": "Squat focus and the posterior chain"
+    },
     "emptyEyebrow": "Today",
     "emptyTitle": "Choose a program",
     "emptyBody": "Start here — then we build the week. No demo workout.",
@@ -64,22 +67,22 @@
       "STR-12": {
         "type": "Strength",
         "level": "Inter./Adv.",
-        "description": "Classic linear periodization with RPE. Built for new PRs on squat, bench and DL."
+        "description": "Classic linear periodization with RPE. Built for new PRs on Squat, Bench and Deadlift."
       },
       "HYP-08": {
         "type": "Hypertrophy",
         "level": "All levels",
-        "description": "Volume-focused block with a bro-split logic for legs, back and shoulders."
+        "description": "Volume block split across legs, back and shoulders. Most reps, most mass."
       },
       "PWR-10": {
         "type": "Hybrid",
         "level": "Intermediate",
-        "description": "50/50 strength and hypertrophy. Heavy top sets, accessory for aesthetics."
+        "description": "Half strength and half hypertrophy. Heavy top sets on the big lifts, accessories for aesthetics."
       },
       "DL-06": {
         "type": "Specialization",
         "level": "Advanced",
-        "description": "Six weeks focused 100% on deadlift. Pause pulls, deficits, peak protocol."
+        "description": "Six weeks on deadlift only. Pause pulls, deficit pulls, and a peak week aimed at a new 1RM."
       }
     }
   },

@@ -35,6 +35,9 @@
       "dayLabel": "Day A — Squat",
       "title": "Squat — Top set @ RPE 8, 3×3 backoff"
     },
+    "generated": {
+      "squatFocus": "Squat focus and the posterior chain"
+    },
     "emptyEyebrow": "Today's session",
     "emptyTitle": "No session yet",
     "emptyBody": "When you pick a program, today's session lands here. No demo workout.",

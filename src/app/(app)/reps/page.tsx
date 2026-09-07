@@ -38,6 +38,7 @@ const DEMO_REWARD_NAME_SLUG: Record<string, (typeof MOCK_REWARD_SLUGS)[number]> 
   "Limited Cuff — Olive": "limited-cuff-olive",
   "1:1 Form-check med Mikael": "1on1-formcheck",
   "Custom-broderet strap": "custom-broderet-strap",
+  "Broderet StrapIt": "custom-broderet-strap",
   "Open House VIP-pakke": "open-house-vip",
 };
 

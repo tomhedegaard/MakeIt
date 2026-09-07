@@ -111,7 +111,7 @@ function strengthDayA(p: ProfileInput): GeneratedSession {
   const rm = pick1RM(p, "sq");
   return {
     dayLabel: "Dag A — Squat",
-    title: "Squat fokus + posterior chain",
+    title: "Squat-fokus og bagside",
     estimatedMinutes: 65,
     scheduledOffsetDays: 0,
     exercises: [
@@ -384,7 +384,7 @@ export function generateRuleBased(profile: ProfileInput): {
     sessions = [
       { ...dl, scheduledOffsetDays: 0 },
       ...others.slice(0, 2).map((s, i) => ({ ...s, scheduledOffsetDays: i + 1 })),
-      { ...dl, dayLabel: "Dag D — Pull volumen", title: "DL technik + accessory pulls", scheduledOffsetDays: 4 },
+      { ...dl, dayLabel: "Dag D — Pull volumen", title: "Dødløft-teknik og støtte-træk", scheduledOffsetDays: 4 },
     ];
   }
 

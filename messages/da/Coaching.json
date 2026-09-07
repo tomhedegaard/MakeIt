@@ -32,6 +32,9 @@
       "dayLabel": "Dag A — Squat",
       "title": "Squat — Top set @ RPE 8, 3×3 backoff"
     },
+    "generated": {
+      "squatFocus": "Squat-fokus og bagside"
+    },
     "emptyEyebrow": "I dag",
     "emptyTitle": "Vælg et program",
     "emptyBody": "Start her — så bygger vi ugen. Ingen demo-pas.",
@@ -64,22 +67,22 @@
       "STR-12": {
         "type": "Styrke",
         "level": "Mellem/øvet",
-        "description": "Klassisk linær periodisering med RPE. Bygget til nye PR'er på squat, bench og DL."
+        "description": "Klassisk linær periodisering med RPE. Bygget til nye PR'er i Squat, Bench og Deadlift."
       },
       "HYP-08": {
         "type": "Hypertrofi",
         "level": "Alle niveauer",
-        "description": "Volumen-fokuseret blok med bro-split logik for ben, ryg og skuldre."
+        "description": "Volumenblok med split på ben, ryg og skuldre. Flest gentagelser, mest masse."
       },
       "PWR-10": {
         "type": "Hybrid",
         "level": "Mellem",
-        "description": "50/50 styrke og hypertrofi. Tunge top-sets, accessory til æstetik."
+        "description": "Halv styrke og halv hypertrofi. Tunge topsæt på de store løft, støtteøvelser til æstetikken."
       },
       "DL-06": {
         "type": "Specialisering",
         "level": "Øvet",
-        "description": "Seks uger fokuseret 100% på dødløft. Pause-pulls, deficits, peak-protokol."
+        "description": "Seks uger kun på dødløft. Træk med pause, træk fra underskud, og en topuge der sigter efter ny 1RM."
       }
     }
   },

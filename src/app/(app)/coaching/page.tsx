@@ -28,7 +28,11 @@ import {
   emptyEngineStrip,
 } from "@/lib/adaptive/engine-strip";
 import { loadStripCopy } from "@/lib/ui/sprint-a-copy";
-import { computeTrendChip } from "@/lib/i18n/member-bodycopy";
+import {
+  computeTrendChip,
+  generatedSessionTitleKey,
+  seedProgramCopyPath,
+} from "@/lib/i18n/member-bodycopy";
 import {
   libraryForSurface,
   todayCardForSurface,
@@ -57,11 +61,14 @@ export default async function TrainPage() {
         ])
       : ([null, null, null, null, null, 0] as const);
 
-  const today = todayCardForSurface({
+  const todayRaw = todayCardForSurface({
     connected,
     fromDb: todayCardDb,
     demo: todayCardFromMock(t),
   });
+  const today = todayRaw
+    ? { ...todayRaw, title: localizeGeneratedTitle(todayRaw.title, t) }
+    : todayRaw;
   const week: WeekDay[] = weekStripForSurface({
     connected,
     fromDb: weekDb,
@@ -73,7 +80,7 @@ export default async function TrainPage() {
     connected,
     fromDb: libraryDb,
     demo: mockLibrary(t),
-  });
+  }).map((p) => localizeSeedProgram(p, t));
   const sets = today
     ? today.setCount > 0
       ? today.setCount
@@ -474,6 +481,22 @@ function formatVolume(kg: number): string {
  * Mock fallbacks (mirror the previous static markup so demo mode and
  * unconnected sessions still render the page).
  * ---------------------------------------------------------------- */
+
+function localizeGeneratedTitle(title: string, t: CoachingT): string {
+  const key = generatedSessionTitleKey(title);
+  return key ? t(`today.${key}`) : title;
+}
+
+function localizeSeedProgram(p: ProgramListing, t: CoachingT): ProgramListing {
+  const path = seedProgramCopyPath(p.code);
+  if (!path) return p;
+  return {
+    ...p,
+    type: t(`${path}.type`),
+    level: t(`${path}.level`),
+    description: t(`${path}.description`),
+  };
+}
 
 function todayCardFromMock(t: CoachingT): TodayCard {
   return {

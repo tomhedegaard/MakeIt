@@ -51,8 +51,14 @@ import {
   todayCardForSurface,
   upcomingForSurface,
 } from "@/lib/trust/connected-first-run";
+import { generatedSessionTitleKey } from "@/lib/i18n/member-bodycopy";
 
 type Translator = Awaited<ReturnType<typeof getTranslations<"Dashboard">>>;
+
+function localizeGeneratedTitle(title: string, t: Translator): string {
+  const key = generatedSessionTitleKey(title);
+  return key ? t(`todaySession.${key}`) : title;
+}
 
 function mockUpcoming(t: Translator) {
   return [
@@ -171,12 +177,24 @@ export default async function TodayPage() {
       ])
     : ([null, null, null, null] as const);
 
-  const today = todayCardForSurface({
+  const todayRaw = todayCardForSurface({
     connected,
     fromDb: todayDb,
     demo: todayCardFromMock(t),
   });
-  const upcoming = upcomingForSurface({ connected, fromDb: upcomingDb });
+  const today = todayRaw
+    ? {
+        ...todayRaw,
+        title: localizeGeneratedTitle(todayRaw.title, t),
+      }
+    : todayRaw;
+  const upcomingRaw = upcomingForSurface({ connected, fromDb: upcomingDb });
+  const upcoming = upcomingRaw
+    ? upcomingRaw.map((row) => ({
+        ...row,
+        title: localizeGeneratedTitle(row.title, t),
+      }))
+    : upcomingRaw;
   const feed = feedForSurface({ connected, fromDb: feedDb });
   const stats = statsForSurface({ connected, fromDb: statsDb });
 

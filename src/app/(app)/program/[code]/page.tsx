@@ -13,6 +13,7 @@ import {
   type ProgramDetailSet,
 } from "@/lib/data/program-detail";
 import StartProgramButton from "@/app/(app)/coaching/StartProgramButton";
+import { seedProgramCopyPath } from "@/lib/i18n/member-bodycopy";
 
 type Params = Promise<{ code: string }>;
 
@@ -41,6 +42,15 @@ export default async function ProgramDetailPage({
   const isThisActive = active?.programId === program.id;
 
   const t = await getTranslations("ProgramDetail");
+  const tCoach = await getTranslations("Coaching");
+  const seedPath = seedProgramCopyPath(program.code);
+  const type = seedPath ? tCoach(`${seedPath}.type`) : program.type;
+  const level = seedPath
+    ? tCoach(`${seedPath}.level`)
+    : (program.level ?? t("meta.levelFallback"));
+  const description = seedPath
+    ? tCoach(`${seedPath}.description`)
+    : program.description;
 
   return (
     <>
@@ -53,14 +63,14 @@ export default async function ProgramDetailPage({
             <span aria-hidden>·</span>
             <span>{program.code}</span>
             <span aria-hidden>·</span>
-            <span>{program.type}</span>
+            <span>{type}</span>
           </div>
           <h1 className="font-display text-[clamp(2.2rem,5.5vw,4rem)] leading-[0.95]">
             {program.name}.
           </h1>
-          {program.description ? (
+          {description ? (
             <p className="mt-4 max-w-2xl text-fg-dim text-base md:text-lg">
-              {program.description}
+              {description}
             </p>
           ) : null}
 
@@ -69,7 +79,7 @@ export default async function ProgramDetailPage({
             <Meta label={t("meta.days")} value={program.days.length} />
             <Meta
               label={t("meta.level")}
-              value={program.level ?? t("meta.levelFallback")}
+              value={level}
             />
             <Meta
               label={t("meta.coach")}
