@@ -9,10 +9,11 @@
  *
  * `memberId` must be `getSession().id`. Never a client-supplied id.
  *
- * Week 1 only. Remaining weeks are generated later by
- * `maybeAdvanceWeek` from completed sessions. Coach assign still
- * materializes all remaining weeks via `assignProgramFromBlueprint`
- * (user/coach client) and may chunk later if that path grows.
+ * Week 1 only. Used by member Start Program and onboarding DONE.
+ * Remaining weeks are generated later by `maybeAdvanceWeek` from
+ * completed sessions. Coach assign still materializes all remaining
+ * weeks via `assignProgramFromBlueprint` (user/coach client) and may
+ * chunk later if that path grows.
  */
 import "server-only";
 import { createServiceClient } from "@/lib/supabase/service";

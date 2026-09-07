@@ -19,3 +19,15 @@ export function isNextRedirectError(err: unknown): boolean {
   const digest = (err as { digest?: unknown }).digest;
   return typeof digest === "string" && digest.startsWith("NEXT_REDIRECT");
 }
+
+/**
+ * Path from a Next.js `redirect()` sentinel
+ * (`NEXT_REDIRECT;replace;/dashboard;307;`). Used so a long server
+ * action can hard-navigate after the throw — soft follow can flake.
+ */
+export function nextRedirectPath(err: unknown): string | null {
+  if (!isNextRedirectError(err)) return null;
+  const digest = String((err as { digest?: unknown }).digest ?? "");
+  const path = digest.split(";")[2]?.trim();
+  return path && path.startsWith("/") ? path : null;
+}

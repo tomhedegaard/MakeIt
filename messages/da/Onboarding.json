@@ -78,7 +78,7 @@
     "injuriesLabel": "Skader / noter",
     "injuriesPlaceholder": "F.eks. Lidt anstrengt højre skulder — undgå behind-the-neck press.",
     "footnote": "Bagefter ligger første session på I dag.",
-    "submitTiming": "Tager 10–20 sek · Motoren bygger din første uge",
+    "submitTiming": "Et øjeblik · Motoren lægger din første uge",
     "errorSave": "Vi kunne ikke gemme din profil. Prøv igen.",
     "errorAuth": "Din session udløb. Log ind og prøv igen.",
     "errorGen": "Programmet blev ikke bygget. Prøv Færdig igen — din profil er gemt.",
@@ -94,7 +94,7 @@
     "eyebrow": "Bygger program",
     "title": "Motoren lægger din første uge.",
     "stageProgress": "{label}…",
-    "elapsed": "{elapsed}s · forventet 10–20 sek",
+    "elapsed": "{elapsed}s · bliv på siden",
     "overtime": "Tager lidt længere end normalt — bliv på siden",
     "stayOnPage": "Bliv på siden — vi sender dig til I dag, når programmet findes"
   },

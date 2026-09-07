@@ -6,14 +6,20 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import {
-  generateProgram,
+  catalogProgramForProfile,
   type GoalFocus,
   type ExperienceLevel,
   type EquipmentLevel,
   type ProfileInput,
 } from "@/lib/data/program-generator";
+import { assignProgramForAuthenticatedMember } from "@/lib/data/assign-program";
+import { canMemberAssignProgram } from "@/lib/programs/synthetic";
 import { sendWelcomeEmail } from "@/lib/email/templates/welcome";
 import { isLocale, type Locale } from "@/i18n/config";
+import {
+  isNextRedirectError,
+  startProgramDetail,
+} from "@/lib/programs/start-program-error";
 
 const GOALS: GoalFocus[] = [
   "strength",
@@ -154,103 +160,79 @@ export async function completeOnboardingAction(formData: FormData) {
     if (insertErr) redirect("/onboarding?err=save");
   }
 
-  // 2) Generate program week 1 — skip if a previous attempt already
+  // 2) Materialize week 1 from the catalog blueprint (service-role,
+  //    same path as Start Program). Skip if a previous attempt already
   //    persisted sessions so a retry after a timeout still lands on
-  //    dashboard instead of duplicating the week.
+  //    dashboard instead of duplicating the week. generateProgram /
+  //    Claude still chooses the catalog code via catalogProgramForProfile;
+  //    it does not write session rows here.
   const { count: existingSessions } = await supabase
     .from("sessions")
     .select("id", { count: "exact", head: true })
     .eq("member_id", user.id);
 
-  let generated: Awaited<ReturnType<typeof generateProgram>> | null = null;
+  const choice = catalogProgramForProfile(profile.goalFocus);
+  let assignedProgramName = choice.programName;
+  let firstSessionLabel: string | null = null;
 
   if ((existingSessions ?? 0) === 0) {
     try {
-      console.info("[onboarding] step=generate-program-start");
-      generated = await generateProgram(profile);
-      console.info("[onboarding] step=generate-program-ok", {
-        programCode: generated.programCode,
-        sessionCount: generated.sessions.length,
+      console.info("[onboarding] step=catalog-program", {
+        programCode: choice.programCode,
       });
 
-      // Resolve program template id (matching code)
-      const { data: prog } = await supabase
+      const { data: prog, error: progErr } = await supabase
         .from("programs")
-        .select("id")
-        .eq("code", generated.programCode)
+        .select("id, code, name, is_published")
+        .eq("code", choice.programCode)
         .maybeSingle();
       console.info("[onboarding] step=program-lookup", {
-        programCode: generated.programCode,
+        programCode: choice.programCode,
         found: !!prog,
+        progErr: progErr?.message ?? null,
       });
 
-      // 3) Active program assignment
-      if (prog) {
-        await supabase.from("program_assignments").upsert(
-          {
-            member_id: user.id,
-            program_id: prog.id,
-            current_week: 1,
-            status: "active",
-          },
-          { onConflict: "member_id" }
-        );
+      if (
+        progErr ||
+        !prog ||
+        !canMemberAssignProgram({
+          code: prog.code,
+          isPublished: prog.is_published,
+        })
+      ) {
+        console.error("[onboarding] reject=gen program lookup", {
+          userId: user.id,
+          programCode: choice.programCode,
+          error: progErr?.message ?? (prog ? "not_allowed" : "not_found"),
+        });
+        redirect("/onboarding?err=gen");
       }
 
-      // 4) Insert sessions + exercises + sets in a tight loop. RLS is fine
-      //    because each row has member_id = auth.uid() (or is keyed off a
-      //    session row that does).
-      for (const s of generated.sessions) {
-        const d = new Date();
-        d.setDate(d.getDate() + s.scheduledOffsetDays);
+      assignedProgramName = prog.name ?? choice.programName;
 
-        const { data: sessionRow } = await supabase
-          .from("sessions")
-          .insert({
-            member_id: user.id,
-            program_id: prog?.id ?? null,
-            week: 1,
-            day_label: s.dayLabel,
-            title: s.title,
-            estimated_minutes: s.estimatedMinutes,
-            status: "scheduled",
-            scheduled_for: d.toISOString().slice(0, 10),
-          })
-          .select("id")
-          .single();
+      const result = await assignProgramForAuthenticatedMember({
+        memberId: user.id,
+        programId: prog.id,
+      });
 
-        if (!sessionRow) continue;
-
-        for (let i = 0; i < s.exercises.length; i++) {
-          const ex = s.exercises[i];
-          const { data: exRow } = await supabase
-            .from("session_exercises")
-            .insert({
-              session_id: sessionRow.id,
-              exercise_name: ex.name,
-              cue: ex.cue,
-              position: i + 1,
-            })
-            .select("id")
-            .single();
-          if (!exRow) continue;
-
-          await supabase.from("session_sets").insert(
-            ex.sets.map((set, j) => ({
-              session_exercise_id: exRow.id,
-              position: j + 1,
-              target_reps: set.reps,
-              target_weight: set.weight,
-              target_rpe: set.rpe,
-              rest_sec: set.restSec,
-            }))
-          );
-        }
+      if (!result.ok) {
+        console.error("[onboarding] reject=gen assign failed", {
+          userId: user.id,
+          error: result.error,
+        });
+        redirect("/onboarding?err=gen");
       }
+
+      console.info("[onboarding] step=assign-ok", {
+        userId: user.id,
+        programCode: choice.programCode,
+        sessionsCreated: result.sessionsCreated,
+      });
     } catch (err) {
+      if (isNextRedirectError(err)) throw err;
       console.error("[onboarding] reject=gen", {
         userId: user.id,
-        error: err instanceof Error ? err.message : String(err),
+        error: startProgramDetail(err),
       });
       redirect("/onboarding?err=gen");
     }
@@ -282,8 +264,16 @@ export async function completeOnboardingAction(formData: FormData) {
       .eq("id", user.id)
       .maybeSingle();
 
+    const { data: firstSession } = await supabase
+      .from("sessions")
+      .select("day_label")
+      .eq("member_id", user.id)
+      .order("scheduled_for", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    firstSessionLabel = firstSession?.day_label ?? null;
+
     if (m?.email) {
-      const firstSession = generated?.sessions[0];
       const h = await headers();
       const proto = h.get("x-forwarded-proto") ?? "http";
       const host = h.get("host") ?? "localhost:3002";
@@ -291,8 +281,8 @@ export async function completeOnboardingAction(formData: FormData) {
       await sendWelcomeEmail({
         to: m.email,
         handle: m.handle,
-        programName: generated?.programName ?? "MakeIt",
-        firstSessionLabel: firstSession?.dayLabel ?? null,
+        programName: assignedProgramName,
+        firstSessionLabel,
         baseUrl: `${proto}://${host}`,
         locale,
       });
