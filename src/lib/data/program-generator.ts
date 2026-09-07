@@ -336,6 +336,24 @@ function asHypertrophy(session: GeneratedSession): GeneratedSession {
  * ----------------------------------------------------------------- */
 
 /**
+ * Catalog program chosen from onboarding goal. Same mapping as
+ * `generateRuleBased` / the Claude prompt — used by DONE to resolve
+ * the blueprint without synthesizing week-1 rows (or calling Claude).
+ */
+export function catalogProgramForProfile(goalFocus: GoalFocus): {
+  programCode: string;
+  programName: string;
+} {
+  if (goalFocus === "hypertrophy") {
+    return { programCode: "HYP-08", programName: "Build Phase" };
+  }
+  if (goalFocus === "deadlift_spec") {
+    return { programCode: "DL-06", programName: "Deadlift Specialization" };
+  }
+  return { programCode: "STR-12", programName: "PR-Block" };
+}
+
+/**
  * Public API — async dispatcher. When ANTHROPIC_API_KEY is set, we try
  * Claude (Sonnet 4.6) first; on any failure we silently fall back to
  * the rule-based generator. Both paths return the same shape.
@@ -404,18 +422,7 @@ export function generateRuleBased(profile: ProfileInput): {
   }
 
   return {
-    programCode:
-      profile.goalFocus === "hypertrophy"
-        ? "HYP-08"
-        : profile.goalFocus === "deadlift_spec"
-          ? "DL-06"
-          : "STR-12",
-    programName:
-      profile.goalFocus === "hypertrophy"
-        ? "Build Phase"
-        : profile.goalFocus === "deadlift_spec"
-          ? "Deadlift Specialization"
-          : "PR-Block",
+    ...catalogProgramForProfile(profile.goalFocus),
     sessions,
   };
 }

@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
 import PlanGenerationOverlay from "@/components/nutrition/PlanGenerationOverlay";
 import { cn } from "@/lib/utils";
+import {
+  isNextRedirectError,
+  nextRedirectPath,
+} from "@/lib/programs/start-program-error";
 import { completeOnboardingAction } from "./actions";
 
 type Goal = "strength" | "hypertrophy" | "hybrid" | "deadlift_spec";
@@ -34,10 +37,37 @@ export default function OnboardingClient({
   const [level, setLevel] = useState<Level | null>(null);
   const [freq, setFreq] = useState<number>(4);
   const [equip, setEquip] = useState<Equip | null>(null);
+  const [maxSquat, setMaxSquat] = useState("");
+  const [maxBench, setMaxBench] = useState("");
+  const [maxDeadlift, setMaxDeadlift] = useState("");
+  const [maxOhp, setMaxOhp] = useState("");
+  const [pending, setPending] = useState(false);
 
   const totalSteps = 3;
   const canNext1 = goal && level && equip;
   const canNext2 = true; // 1RMs are optional
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (pending) return;
+
+    // Explicit useState — a form-status hook can look idle for the
+    // rest of a long server action. Overlay + nav disable stay on
+    // until we leave the page.
+    setPending(true);
+    try {
+      await completeOnboardingAction(new FormData(event.currentTarget));
+      window.location.assign("/dashboard");
+    } catch (error) {
+      if (isNextRedirectError(error)) {
+        const path = nextRedirectPath(error);
+        window.location.assign(path ?? "/dashboard");
+        return;
+      }
+      console.error("[OnboardingClient] completeOnboardingAction failed", error);
+      window.location.assign("/onboarding?err=gen");
+    }
+  }
 
   return (
     <div className="minh-dvh flex flex-col">
@@ -59,16 +89,25 @@ export default function OnboardingClient({
         </div>
       </header>
 
-      <form action={completeOnboardingAction} className="flex-1 flex flex-col">
+      <form
+        action={completeOnboardingAction}
+        onSubmit={handleSubmit}
+        aria-busy={pending}
+        className="flex-1 flex flex-col"
+      >
         {/* Persisted state across step navigation. Step 1's radio inputs only
             render when step === 1, so without these the form would submit
             blank goal/experience/equipment when the user clicks Generér on
             step 3. Frequency already had a hidden input below; pulled that
-            up here for consistency. */}
+            up here for consistency. Same for 1RMs from step 2. */}
         <input type="hidden" name="goal" value={goal ?? ""} />
         <input type="hidden" name="experience" value={level ?? ""} />
         <input type="hidden" name="equipment" value={equip ?? ""} />
         <input type="hidden" name="frequency" value={freq} />
+        <input type="hidden" name="maxSquat" value={maxSquat} />
+        <input type="hidden" name="maxBench" value={maxBench} />
+        <input type="hidden" name="maxDeadlift" value={maxDeadlift} />
+        <input type="hidden" name="maxOhp" value={maxOhp} />
 
         <Container size="narrow" className="py-8 lg:py-14 flex-1 space-y-10 pb-28 lg:pb-10">
           {err === "goal" || err === "level" || err === "equip" ? (
@@ -98,6 +137,7 @@ export default function OnboardingClient({
                       onCheck={() => setGoal(id)}
                       title={t(`goals.${id}.title`)}
                       sub={t(`goals.${id}.sub`)}
+                      disabled={pending}
                     />
                   ))}
                 </Grid>
@@ -114,6 +154,7 @@ export default function OnboardingClient({
                       onCheck={() => setLevel(id)}
                       title={t(`levels.${id}.title`)}
                       sub={t(`levels.${id}.sub`)}
+                      disabled={pending}
                     />
                   ))}
                 </Grid>
@@ -127,6 +168,7 @@ export default function OnboardingClient({
                       type="button"
                       data-active={freq === f}
                       onClick={() => setFreq(f)}
+                      disabled={pending}
                       className="pill touch-app h-12"
                     >
                       {t("freqOption", { days: f })}
@@ -146,6 +188,7 @@ export default function OnboardingClient({
                       onCheck={() => setEquip(id)}
                       title={t(`equipment.${id}.title`)}
                       sub={t(`equipment.${id}.sub`)}
+                      disabled={pending}
                     />
                   ))}
                 </Grid>
@@ -162,10 +205,34 @@ export default function OnboardingClient({
               />
 
               <div className="grid grid-cols-2 gap-3">
-                <NumField name="maxSquat"    label={t("step2.squat")}    placeholder="—" />
-                <NumField name="maxBench"    label={t("step2.bench")}    placeholder="—" />
-                <NumField name="maxDeadlift" label={t("step2.deadlift")} placeholder="—" />
-                <NumField name="maxOhp"      label={t("step2.ohp")}      placeholder="—" />
+                <NumField
+                  label={t("step2.squat")}
+                  placeholder="—"
+                  value={maxSquat}
+                  onChange={setMaxSquat}
+                  disabled={pending}
+                />
+                <NumField
+                  label={t("step2.bench")}
+                  placeholder="—"
+                  value={maxBench}
+                  onChange={setMaxBench}
+                  disabled={pending}
+                />
+                <NumField
+                  label={t("step2.deadlift")}
+                  placeholder="—"
+                  value={maxDeadlift}
+                  onChange={setMaxDeadlift}
+                  disabled={pending}
+                />
+                <NumField
+                  label={t("step2.ohp")}
+                  placeholder="—"
+                  value={maxOhp}
+                  onChange={setMaxOhp}
+                  disabled={pending}
+                />
               </div>
 
               <p className="text-xs font-mono text-fg-faint">
@@ -187,6 +254,7 @@ export default function OnboardingClient({
                 <textarea
                   name="injuries"
                   rows={4}
+                  disabled={pending}
                   className="field py-3 min-h-[120px] resize-none w-full"
                   placeholder={t("step3.injuriesPlaceholder")}
                 />
@@ -222,11 +290,16 @@ export default function OnboardingClient({
               totalSteps={totalSteps}
               canNext1={!!canNext1}
               canNext2={canNext2}
+              pending={pending}
               onBack={() => setStep(step - 1)}
               onNext={() => setStep(step + 1)}
             />
           </Container>
         </div>
+        <PlanGenerationOverlay
+          pending={pending}
+          namespace="Onboarding.programOverlay"
+        />
       </form>
     </div>
   );
@@ -237,6 +310,7 @@ function OnboardingNav({
   totalSteps,
   canNext1,
   canNext2,
+  pending,
   onBack,
   onNext,
 }: {
@@ -244,11 +318,11 @@ function OnboardingNav({
   totalSteps: number;
   canNext1: boolean;
   canNext2: boolean;
+  pending: boolean;
   onBack: () => void;
   onNext: () => void;
 }) {
   const t = useTranslations("Onboarding");
-  const { pending } = useFormStatus();
 
   return (
     <>
@@ -275,6 +349,7 @@ function OnboardingNav({
         <button
           type="submit"
           disabled={pending}
+          aria-busy={pending}
           className="btn btn-primary btn-xl flex-1 disabled:opacity-60"
         >
           {pending ? (
@@ -287,10 +362,6 @@ function OnboardingNav({
           )}
         </button>
       )}
-      <PlanGenerationOverlay
-        pending={pending}
-        namespace="Onboarding.programOverlay"
-      />
     </>
   );
 }
@@ -324,7 +395,7 @@ function Grid({ children }: { children: React.ReactNode }) {
 }
 
 function Choice({
-  name, value, checked, onCheck, title, sub,
+  name, value, checked, onCheck, title, sub, disabled,
 }: {
   name: string;
   value: string;
@@ -332,11 +403,13 @@ function Choice({
   onCheck: () => void;
   title: string;
   sub: string;
+  disabled?: boolean;
 }) {
   return (
     <label
       className={cn(
         "surface-2 rounded-2xl p-5 cursor-pointer touch-app block lift",
+        disabled && "pointer-events-none opacity-60",
       )}
       style={{
         background: checked ? "var(--bg-3)" : undefined,
@@ -349,6 +422,7 @@ function Choice({
         value={value}
         checked={checked}
         onChange={onCheck}
+        disabled={disabled}
         className="sr-only"
       />
       <div className="flex items-start gap-3">
@@ -368,18 +442,28 @@ function Choice({
   );
 }
 
-function NumField({ name, label, placeholder }: { name: string; label: string; placeholder?: string }) {
+function NumField({
+  label, placeholder, value, onChange, disabled,
+}: {
+  label: string;
+  placeholder?: string;
+  value: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+}) {
   return (
     <label className="block">
       <span className="eyebrow block mb-2">{label}</span>
       <div className="relative">
         <input
-          name={name}
           type="number"
           step="2.5"
           min="0"
           max="600"
           inputMode="decimal"
+          disabled={disabled}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           className="field text-2xl numeric pr-10"
           placeholder={placeholder}
         />
