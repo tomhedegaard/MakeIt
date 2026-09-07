@@ -215,7 +215,9 @@ export function buildTodayProse(input: TodayProseInput): TodayProseModel {
  * Demo fixture — same sources the dashboard chip / session card /
  * hasMindCheckToday already use. Locked so MUNK-01 prose stays honest.
  */
-export function demoTodayProseInput(): TodayProseInput {
+export function demoTodayProseInput(
+  dayLabel: string = TODAY_SESSION.dayLabel,
+): TodayProseInput {
   const view = buildHrvBandView(demoSteadySeries());
   return {
     hrv: {
@@ -225,7 +227,7 @@ export function demoTodayProseInput(): TodayProseInput {
     },
     session: {
       state: "assigned",
-      dayLabel: TODAY_SESSION.dayLabel,
+      dayLabel,
     },
     mind: {
       checkedToday: true,

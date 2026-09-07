@@ -66,6 +66,9 @@ describe("CDO DA/EN bodycopy — Today / Train / Reps", () => {
     expect(page).toContain('t("todaySession.start")');
     expect(page).toContain('t("todaySession.mock.dayLabel")');
     expect(page).toContain('t("todaySession.mock.title")');
+    const prose = read("src/lib/data/today-prose.ts");
+    expect(prose).toContain('getTranslations("Dashboard.todaySession.mock")');
+    expect(prose).toContain('tSession("dayLabel")');
     expect(page).toContain('t("todaySession.minuteUnit")');
     expect(page).toContain('t("todaySession.minutes"');
     expect(page).toContain('t("hrvChip.unit")');
