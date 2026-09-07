@@ -67,3 +67,34 @@ export function computeTrendChip(
     label: `${pct > 0 ? "↑" : "↓"} ${Math.abs(pct)}%`,
   };
 }
+
+/** Seed / demo library codes whose blurbs live in Coaching.library.mock.* */
+export const SEED_PROGRAM_CODES = ["STR-12", "HYP-08", "PWR-10", "DL-06"] as const;
+
+export type SeedProgramCode = (typeof SEED_PROGRAM_CODES)[number];
+
+export function seedProgramCopyPath(
+  code: string,
+): `library.mock.${SeedProgramCode}` | null {
+  if (!(SEED_PROGRAM_CODES as readonly string[]).includes(code)) return null;
+  return `library.mock.${code as SeedProgramCode}`;
+}
+
+/**
+ * Stored generator titles that used to ship as Franglais. Display
+ * resolves Coaching.today.generated.* / Dashboard.todaySession.generated.*
+ * so DA and EN each get a full-sentence variant.
+ */
+export const GENERATED_SESSION_TITLE_ALIASES: Record<
+  string,
+  "generated.squatFocus"
+> = {
+  "Squat fokus + posterior chain": "generated.squatFocus",
+  "Squat-fokus og bagside": "generated.squatFocus",
+};
+
+export function generatedSessionTitleKey(
+  title: string,
+): "generated.squatFocus" | null {
+  return GENERATED_SESSION_TITLE_ALIASES[title] ?? null;
+}

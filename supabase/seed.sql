@@ -31,16 +31,16 @@ on conflict (slug) do nothing;
 -- Programs (matches the demo content)
 insert into public.programs (code, name, type, description, weeks, level) values
   ('STR-12','PR-Block',             'Strength',
-    'Klassisk linær periodisering med RPE-styring. Bygget til at tage din squat, bench og DL til nye PR''er på 12 uger.',
+    'Klassisk linær periodisering med RPE. Bygget til nye PR''er i Squat, Bench og Deadlift.',
     12, 'Intermediate / Advanced'),
   ('HYP-08','Build Phase',          'Hypertrophy',
-    'Volumen-fokuseret blok med bro-split logik for ben, ryg og skuldre. Mest reps, mest masse.',
+    'Volumenblok med split på ben, ryg og skuldre. Flest gentagelser, mest masse.',
     8,  'All levels'),
   ('PWR-10','Powerbuilding',        'Hybrid',
-    '50/50 strength og hypertrofi. Tunge top-sets på big lifts, accessory-arbejde til æstetik.',
+    'Halv styrke og halv hypertrofi. Tunge topsæt på de store løft, støtteøvelser til æstetikken.',
     10, 'Intermediate'),
   ('DL-06', 'Deadlift Specialization','Specialization',
-    'Seks uger fokuseret 100% på dødløft. Pause-pulls, deficits, og en peak-protokol til ny 1RM.',
+    'Seks uger kun på dødløft. Træk med pause, træk fra underskud, og en topuge der sigter efter ny 1RM.',
     6,  'Advanced')
 on conflict (code) do nothing;
 

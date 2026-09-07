@@ -42,7 +42,7 @@ const MOCK_REWARDS: Reward[] = [
     slug: "1on1-formcheck",
     name: "1:1 Form-check med Mikael",
     description:
-      "Privat 30-minutters videosession med head coach Mikael Munk.",
+      "Privat videosession på 30 minutter med coach Mikael Munk.",
     costReps: 2000,
     kind: "experience",
     stock: null,
@@ -51,8 +51,8 @@ const MOCK_REWARDS: Reward[] = [
   {
     id: "demo-strap",
     slug: "custom-broderet-strap",
-    name: "Custom-broderet strap",
-    description: "Få dit handle broderet på en sort StrapIt-strap.",
+    name: "Broderet StrapIt",
+    description: "Få dit handle broderet på en sort StrapIt.",
     costReps: 3500,
     kind: "physical",
     stock: null,

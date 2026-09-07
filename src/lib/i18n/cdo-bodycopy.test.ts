@@ -5,8 +5,10 @@ import { describe, expect, it } from "vitest";
 import { intlLocaleTag, resolveLocale } from "@/i18n/config";
 import {
   computeTrendChip,
+  generatedSessionTitleKey,
   relativeAgoBucket,
   repsReasonMessageKey,
+  seedProgramCopyPath,
 } from "@/lib/i18n/member-bodycopy";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -18,6 +20,15 @@ function read(rel: string): string {
 
 function loadJson(rel: string): Record<string, unknown> {
   return JSON.parse(read(rel)) as Record<string, unknown>;
+}
+
+function allStrings(value: unknown): string[] {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap(allStrings);
+  if (value && typeof value === "object") {
+    return Object.values(value).flatMap(allStrings);
+  }
+  return [];
 }
 
 function keysOf(value: unknown, prefix = ""): string[] {
@@ -224,5 +235,154 @@ describe("CDO DA/EN bodycopy — locale helpers", () => {
     const pricing = read("src/lib/pricing.ts");
     expect(pricing).toMatch(/spots:\s*8/);
     expect(pricing).not.toContain("8 pladser");
+  });
+
+  it("maps seed program codes to Coaching.library.mock paths", () => {
+    expect(seedProgramCopyPath("STR-12")).toBe("library.mock.STR-12");
+    expect(seedProgramCopyPath("HYP-08")).toBe("library.mock.HYP-08");
+    expect(seedProgramCopyPath("PWR-10")).toBe("library.mock.PWR-10");
+    expect(seedProgramCopyPath("DL-06")).toBe("library.mock.DL-06");
+    expect(seedProgramCopyPath("ADAPT-01")).toBeNull();
+  });
+
+  it("maps the known Franglais generator title to a locale key", () => {
+    expect(generatedSessionTitleKey("Squat fokus + posterior chain")).toBe(
+      "generated.squatFocus",
+    );
+    expect(generatedSessionTitleKey("Squat-fokus og bagside")).toBe(
+      "generated.squatFocus",
+    );
+    expect(generatedSessionTitleKey("Squat — Top set @ RPE 8, 3×3 backoff")).toBeNull();
+  });
+});
+
+describe("CDO DA/EN bodycopy — seed / demo catalog fixtures", () => {
+  const TESTY_FRANGLAIS = [
+    /Volumen-fokuseret blok med bro-split/i,
+    /bro-split logik/i,
+    /Pause-pulls/,
+    /peak-protokol/i,
+    /50\/50 strength/i,
+    /top-sets/,
+    /accessory-arbejde/i,
+    /accessory til/i,
+    /Early access til/i,
+    /Custom strap-farve/i,
+    /VIP til IRL-meets/i,
+    /head coach/i,
+    /StrapIt-strap/i,
+    /posterior chain/i,
+    /squat, bench og DL/i,
+  ];
+
+  it("keeps DA coaching blurbs and reps shop/perks free of Testy Franglais", () => {
+    const daLib = (daCoaching.library as { mock: unknown }).mock;
+    const daShop = (daReps.shop as { mock: unknown }).mock;
+    const daTiers = (daReps.tiers as { list: unknown }).list;
+    const daGen = (daCoaching.today as { generated: unknown }).generated;
+    const blob = [
+      ...allStrings(daLib),
+      ...allStrings(daShop),
+      ...allStrings(daTiers),
+      ...allStrings(daGen),
+    ].join("\n");
+    for (const re of TESTY_FRANGLAIS) {
+      expect(blob).not.toMatch(re);
+    }
+  });
+
+  it("keeps EN catalog strings as full English sentences, not DA fragments", () => {
+    const enLib = (enCoaching.library as { mock: unknown }).mock;
+    const enShop = (enReps.shop as { mock: unknown }).mock;
+    const enTiers = (enReps.tiers as { list: unknown }).list;
+    const blob = [
+      ...allStrings(enLib),
+      ...allStrings(enShop),
+      ...allStrings(enTiers),
+    ].join("\n");
+    expect(blob).not.toMatch(/til drops/);
+    expect(blob).not.toMatch(/strap-farve/);
+    expect(blob).not.toMatch(/IRL-meets/);
+    expect(blob).not.toMatch(/StrapIt-strap/);
+    expect(blob).not.toMatch(/head coach/i);
+    expect(blob).not.toMatch(/bro-split/);
+    expect(blob).toMatch(/Volume block split across legs/);
+    expect(blob).toMatch(/Embroidered StrapIt/);
+    expect(blob).toMatch(/Early access to drops/);
+  });
+
+  it("rewrites DA program blurbs into full-sentence Danish", () => {
+    const mock = (daCoaching.library as { mock: Record<string, { description: string }> }).mock;
+    expect(mock["STR-12"].description).toBe(
+      "Klassisk linær periodisering med RPE. Bygget til nye PR'er i Squat, Bench og Deadlift.",
+    );
+    expect(mock["HYP-08"].description).toBe(
+      "Volumenblok med split på ben, ryg og skuldre. Flest gentagelser, mest masse.",
+    );
+    expect(mock["PWR-10"].description).toBe(
+      "Halv styrke og halv hypertrofi. Tunge topsæt på de store løft, støtteøvelser til æstetikken.",
+    );
+    expect(mock["DL-06"].description).toBe(
+      "Seks uger kun på dødløft. Træk med pause, træk fra underskud, og en topuge der sigter efter ny 1RM.",
+    );
+  });
+
+  it("rewrites DA reps perks and shop lines into one locale", () => {
+    const athlete = (daReps.tiers as { list: { Athlete: { perks: string[] } } }).list.Athlete;
+    const beast = (daReps.tiers as { list: { Beast: { perks: string[] } } }).list.Beast;
+    expect(athlete.perks).toContain("Først til drops");
+    expect(beast.perks).toContain("Valgfri strap-farve (1 stk/år)");
+    expect(beast.perks).toContain("VIP til træf IRL");
+    const shop = (daReps.shop as {
+      mock: Record<string, { name: string; description: string }>;
+    }).mock;
+    expect(shop["1on1-formcheck"].description).toBe(
+      "Privat videosession på 30 minutter med coach Mikael Munk.",
+    );
+    expect(shop["custom-broderet-strap"].name).toBe("Broderet StrapIt");
+    expect(shop["custom-broderet-strap"].description).toBe(
+      "Få dit handle broderet på en sort StrapIt.",
+    );
+  });
+
+  it("does not leave Testy Franglais in seed / demo reward / generator fixtures", () => {
+    const fixtures = [
+      read("supabase/seed.sql"),
+      read("src/lib/data/rewards.ts"),
+      read("src/lib/data/program-generator.ts"),
+    ].join("\n");
+    for (const re of TESTY_FRANGLAIS) {
+      expect(fixtures).not.toMatch(re);
+    }
+  });
+
+  it("overlays seed library + generated titles from messages on /coaching", () => {
+    const page = read("src/app/(app)/coaching/page.tsx");
+    expect(page).toContain("seedProgramCopyPath");
+    expect(page).toContain("localizeSeedProgram");
+    expect(page).toContain("generatedSessionTitleKey");
+    expect(page).toContain('t(`today.${key}`)');
+    expect(page).not.toContain("Volumen-fokuseret");
+    expect(page).not.toContain("Pause-pulls");
+    expect(page).not.toContain("accessory-arbejde");
+  });
+
+  it("overlays seed catalog copy on /program/[code] and generated titles on /dashboard", () => {
+    const detail = read("src/app/(app)/program/[code]/page.tsx");
+    expect(detail).toContain("seedProgramCopyPath");
+    expect(detail).toContain('getTranslations("Coaching")');
+    const dash = read("src/app/(app)/dashboard/page.tsx");
+    expect(dash).toContain("generatedSessionTitleKey");
+    expect(dash).toContain('t(`todaySession.${key}`)');
+    expect(dash).not.toContain("posterior chain");
+  });
+
+  it("localizes /reps shop mocks by slug and keeps identity gloss untouched", () => {
+    const repsPage = read("src/app/(app)/reps/page.tsx");
+    expect(repsPage).toContain("localizeReward");
+    expect(repsPage).toContain("shop.mock.");
+    const daAdaptive = loadJson("messages/da/Adaptive.json");
+    const gloss = (daAdaptive.strip as { gloss: string }).gloss;
+    expect(gloss).toBe("Adaptive Engine tilpasser ugen — Munk er din coach");
   });
 });
