@@ -279,3 +279,25 @@ on conflict (slug) do update set
   regression        = excluded.regression,
   display_order     = excluded.display_order,
   is_published      = excluded.is_published;
+
+-- Bundled v1 demo loops live in public/exercise-demos/{slug}.{webm,mp4}
+-- plus {slug}-poster.jpg. Demo mode and resolveDemoAssets() use the
+-- same public path. Coach uploads write a Storage URL
+-- (…/storage/v1/object/public/exercise-demos/{slug}.webm?v=) via
+-- DemoAssetUploader — leave those rows alone. front-squat has no
+-- trio; keep demo_asset_url null (PhaseAnimator / AnatomyFigure).
+--
+-- 0051 already ran this UPDATE, but migrations run BEFORE seed, so
+-- a fresh db:reset would otherwise insert these 20 rows with null.
+update public.exercises
+set demo_asset_url = '/exercise-demos/' || slug || '.webm'
+where slug in (
+  'back-squat', 'deadlift', 'bench', 'paused-bench', 'ohp',
+  'pull-up', 'row', 'lunge', 'khr', 'push-up',
+  'dip', 'plank', 'barbell-curl', 'tricep-pushdown', 'lateral-raise',
+  'rdl', 'push-press', 'hip-thrust', 'standing-calf-raise'
+)
+and (
+  demo_asset_url is null
+  or demo_asset_url like '/exercise-demos/%'
+);
