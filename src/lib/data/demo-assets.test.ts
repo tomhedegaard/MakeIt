@@ -95,11 +95,12 @@ describe("bundled v1 demo loops", () => {
     expect(mock, "front-squat must exist in demo mock").toBeTruthy();
     expect(mock?.demoAssetUrl).toBeNull();
 
-    // Seed inserts the row but the UPDATE in-list must not include it.
-    const updateBlock = SEED_EXERCISES.slice(
-      SEED_EXERCISES.lastIndexOf("update public.exercises"),
+    // Seed inserts the row but the bundled-loop UPDATE must not include it.
+    expect(SEED_EXERCISES).toMatch(/front-squat has no/);
+    const updateStart = SEED_EXERCISES.lastIndexOf(
+      "set demo_asset_url = '/exercise-demos/' || slug || '.webm'",
     );
-    expect(updateBlock).toMatch(/front-squat has no/);
+    const updateBlock = SEED_EXERCISES.slice(updateStart);
     expect(updateBlock).not.toMatch(/'front-squat'/);
   });
 
