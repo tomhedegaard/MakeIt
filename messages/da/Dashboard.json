@@ -27,8 +27,14 @@
     "exercises": "Øvelser",
     "sets": "Sæt",
     "estTime": "Est. tid",
+    "minuteUnit": "m",
+    "minutes": "{count}m",
     "setCountSuffix": "× sæt",
-    "start": "Start session →",
+    "start": "Start pas →",
+    "mock": {
+      "dayLabel": "Dag A — Squat",
+      "title": "Squat — Top set @ RPE 8, 3×3 backoff"
+    },
     "emptyEyebrow": "Dagens session",
     "emptyTitle": "Intet pas endnu",
     "emptyBody": "Når du vælger et program, lander dagens session her. Ingen demo-pas.",
@@ -97,7 +103,8 @@
   },
   "hrvChip": {
     "eyebrow": "HRV-klarhed",
-    "connect": "Forbind wearable"
+    "connect": "Forbind wearable",
+    "unit": "ms"
   },
   "installHint": {
     "eyebrow": "Få appen",

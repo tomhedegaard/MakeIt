@@ -24,7 +24,12 @@
     "exercises": "Exercises",
     "sets": "Sets",
     "estTime": "Est. time",
+    "minuteUnit": "m",
     "start": "Start session →",
+    "mock": {
+      "dayLabel": "Day A — Squat",
+      "title": "Squat — Top set @ RPE 8, 3×3 backoff"
+    },
     "emptyEyebrow": "Today",
     "emptyTitle": "Choose a program",
     "emptyBody": "Start here — then we build the week. No demo workout.",
@@ -35,7 +40,12 @@
     "weeks": "weeks",
     "volume": "Volume · 4w",
     "prs": "PRs · 4w",
-    "streak": "Streak"
+    "streak": "Streak",
+    "kgUnit": "kg",
+    "dayUnit": "d"
+  },
+  "trend": {
+    "new": "↑ new"
   },
   "library": {
     "eyebrow": "Programs",
@@ -45,12 +55,34 @@
     "level": "Level",
     "levelFallback": "—",
     "continue": "Continue →",
-    "details": "Details"
+    "details": "Details",
+    "mock": {
+      "STR-12": {
+        "type": "Strength",
+        "level": "Inter./Adv.",
+        "description": "Classic linear periodization with RPE. Built for new PRs on squat, bench and DL."
+      },
+      "HYP-08": {
+        "type": "Hypertrophy",
+        "level": "All levels",
+        "description": "Volume-focused block with a bro-split logic for legs, back and shoulders."
+      },
+      "PWR-10": {
+        "type": "Hybrid",
+        "level": "Intermediate",
+        "description": "50/50 strength and hypertrophy. Heavy top sets, accessory for aesthetics."
+      },
+      "DL-06": {
+        "type": "Specialization",
+        "level": "Advanced",
+        "description": "Six weeks focused 100% on deadlift. Pause pulls, deficits, peak protocol."
+      }
+    }
   },
   "oneOnOne": {
     "eyebrow": "1:1 Coaching · The only 100% human part",
     "title": "Want Mikael Munk straight in your ear?",
-    "body": "A personal program, weekly form checks over video, and direct access on Signal. {spots} at a time.",
+    "body": "A personal program, weekly form checks over video, and direct access on Signal. {count} spots at a time.",
     "priceSuffix": "{currency}/{period} on top of membership",
     "apply": "Apply for a spot →",
     "readMore": "Read more"

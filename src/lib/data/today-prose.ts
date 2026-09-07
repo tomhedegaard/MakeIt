@@ -8,6 +8,7 @@
  * card, plus hasMindCheckToday (mock logs include today).
  */
 
+import { getTranslations } from "next-intl/server";
 import {
   buildTodayProse,
   demoTodayProseInput,
@@ -24,9 +25,12 @@ export type { TodayProseModel };
 
 export async function getTodayProse(memberId: string): Promise<TodayProseModel> {
   if (!SUPABASE_ENABLED) {
-    const mindChecked = await hasMindCheckToday(memberId);
+    const [mindChecked, tSession] = await Promise.all([
+      hasMindCheckToday(memberId),
+      getTranslations("Dashboard.todaySession.mock"),
+    ]);
     return buildTodayProse({
-      ...demoTodayProseInput(),
+      ...demoTodayProseInput(tSession("dayLabel")),
       mind: { checkedToday: mindChecked },
     });
   }

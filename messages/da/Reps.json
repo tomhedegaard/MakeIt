@@ -6,12 +6,12 @@
   },
   "balance": {
     "label": "Din balance",
-    "tier": "Tier: {tier}",
+    "tier": "Niveau: {tier}",
     "toNext": "{amount} til {tier}",
     "topCap": "Topcap nået · ★"
   },
   "tiers": {
-    "eyebrow": "Tiers",
+    "eyebrow": "Niveauer",
     "you": "Du",
     "range": "{range} Reps",
     "list": {
@@ -45,13 +45,74 @@
     }
   },
   "kindLabels": {
-    "drop": "Limited drop",
-    "experience": "Experience",
+    "drop": "Begrænset drop",
+    "experience": "Oplevelse",
     "physical": "Fysisk vare",
     "digital": "Digital"
   },
+  "transactions": {
+    "eyebrow": "Seneste Reps",
+    "count": "Sidste {count}",
+    "empty": "Endnu ingen Reps registreret. Træn, tjek mind-check eller skriv journal."
+  },
+  "categories": {
+    "mental": "Mental",
+    "coaching": "Coaching",
+    "training": "Træning"
+  },
+  "relativeTime": {
+    "minutes": "{count} min siden",
+    "hours": "{count} t siden",
+    "days": "{count, plural, one {# dag siden} other {# dage siden}}"
+  },
+  "status": {
+    "pending": "Afventer",
+    "approved": "Godkendt",
+    "shipped": "Sendt",
+    "fulfilled": "Modtaget",
+    "cancelled": "Annulleret"
+  },
+  "reasons": {
+    "session": "Session gennemført",
+    "session_completed": "Session gennemført",
+    "journal_entry": "Journal-post",
+    "mental_session_completed": "Mental session gennemført",
+    "mind_check_streak": "Mind-check stribe",
+    "weekly_program": "Ugentligt program",
+    "mental_buddy_interaction": "Mental check-in med buddy",
+    "cirkel_participation": "Cirkel",
+    "mental_milestone_30d": "30 dages mental engagement",
+    "mental_milestone_90d": "90 dages mental engagement",
+    "lesson_completed": "Lektion gennemført",
+    "coach_review_sandbox": "Sandbox-review matched Munk",
+    "co_coach_promotion": "Co-coach-promovering",
+    "buddy_interaction_streak": "Buddy-stribe",
+    "hrv_first_connection": "Første wearable forbundet",
+    "nutrition_log_photo": "Måltidsfoto",
+    "cooking_streak": "Mad-stribe",
+    "hrv_sync_streak": "HRV sync-stribe",
+    "reward": "Indløst belønning"
+  },
   "shop": {
-    "eyebrow": "Reward shop",
+    "eyebrow": "Belønninger",
+    "mock": {
+      "limited-cuff-olive": {
+        "name": "Limited Cuff — Olive",
+        "description": "Olive-grøn HookIt cuff. Kun 80 stk lavet i denne farve. Sendes med GLS."
+      },
+      "1on1-formcheck": {
+        "name": "1:1 Form-check med Mikael",
+        "description": "Privat 30-minutters videosession med head coach Mikael Munk."
+      },
+      "custom-broderet-strap": {
+        "name": "Custom-broderet strap",
+        "description": "Få dit handle broderet på en sort StrapIt-strap."
+      },
+      "open-house-vip": {
+        "name": "Open House VIP-pakke",
+        "description": "Træning + middag på Amagerbro 24/05 · 12 pladser."
+      }
+    },
     "balance": "Saldo: {balance} Reps",
     "empty": "Ingen aktive belønninger lige nu. Mikael lægger nye drops ind løbende.",
     "repsLabel": "Reps",

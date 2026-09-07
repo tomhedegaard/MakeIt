@@ -28,11 +28,14 @@ import {
   emptyEngineStrip,
 } from "@/lib/adaptive/engine-strip";
 import { loadStripCopy } from "@/lib/ui/sprint-a-copy";
+import { computeTrendChip } from "@/lib/i18n/member-bodycopy";
 import {
   libraryForSurface,
   todayCardForSurface,
   weekStripForSurface,
 } from "@/lib/trust/connected-first-run";
+
+type CoachingT = Awaited<ReturnType<typeof getTranslations<"Coaching">>>;
 
 export default async function TrainPage() {
   const member = await getSession();
@@ -57,7 +60,7 @@ export default async function TrainPage() {
   const today = todayCardForSurface({
     connected,
     fromDb: todayCardDb,
-    demo: todayCardFromMock(),
+    demo: todayCardFromMock(t),
   });
   const week: WeekDay[] = weekStripForSurface({
     connected,
@@ -69,7 +72,7 @@ export default async function TrainPage() {
   const library: ProgramListing[] = libraryForSurface({
     connected,
     fromDb: libraryDb,
-    demo: mockLibrary(),
+    demo: mockLibrary(t),
   });
   const sets = today
     ? today.setCount > 0
@@ -185,7 +188,7 @@ export default async function TrainPage() {
           <Mini
             label={t("today.estTime")}
             value={today.estimatedMinutes}
-            suffix="m"
+            suffix={t("today.minuteUnit")}
           />
         </div>
 
@@ -244,17 +247,19 @@ export default async function TrainPage() {
             <MiniWithTrend
               label={t("active.volume")}
               value={formatVolume(volumeKg)}
-              suffix={volumeKg >= 1000 ? "" : "kg"}
+              suffix={volumeKg >= 1000 ? "" : t("active.kgUnit")}
               current={volumeKg}
               previous={volumeKgPrev}
+              newLabel={t("trend.new")}
             />
             <MiniWithTrend
               label={t("active.prs")}
               value={String(prs4w).padStart(2, "0")}
               current={prs4w}
               previous={prsPrev}
+              newLabel={t("trend.new")}
             />
-            <Mini label={t("active.streak")} value={streakDays} suffix="d" small />
+            <Mini label={t("active.streak")} value={streakDays} suffix={t("active.dayUnit")} small />
           </div>
         </section>
       ) : null}
@@ -357,7 +362,7 @@ export default async function TrainPage() {
           {t("oneOnOne.title")}
         </h3>
         <p className="text-fg-dim text-sm md:text-base max-w-xl mb-5">
-          {t("oneOnOne.body", { spots: pricing.oneOnOne.spots })}
+          {t("oneOnOne.body", { count: pricing.oneOnOne.spots })}
         </p>
 
         <div className="flex items-baseline gap-2 mb-5">
@@ -409,14 +414,16 @@ function MiniWithTrend({
   suffix,
   current,
   previous,
+  newLabel,
 }: {
   label: string;
   value: number | string;
   suffix?: string;
   current: number;
   previous: number;
+  newLabel: string;
 }) {
-  const trend = computeTrend(current, previous);
+  const trend = computeTrendChip(current, previous, newLabel);
   return (
     <div className="bg-bg-2 px-4 py-3 text-center">
       <div className="eyebrow mb-1">{label}</div>
@@ -441,20 +448,6 @@ function MiniWithTrend({
   );
 }
 
-function computeTrend(
-  current: number,
-  previous: number
-): { direction: "up" | "down" | "flat"; label: string } | null {
-  if (previous === 0 && current === 0) return null;
-  if (previous === 0) return { direction: "up", label: "↑ ny" };
-  const pct = Math.round(((current - previous) / previous) * 100);
-  if (Math.abs(pct) < 3) return { direction: "flat", label: "·" };
-  return {
-    direction: pct > 0 ? "up" : "down",
-    label: `${pct > 0 ? "↑" : "↓"} ${Math.abs(pct)}%`,
-  };
-}
-
 /* ---------------------------------------------------------------- *
  * Volume formatting: 84_200 → "84.2K", 950 → "950"
  * ---------------------------------------------------------------- */
@@ -474,15 +467,15 @@ function formatVolume(kg: number): string {
  * unconnected sessions still render the page).
  * ---------------------------------------------------------------- */
 
-function todayCardFromMock(): TodayCard {
+function todayCardFromMock(t: CoachingT): TodayCard {
   return {
     id: TODAY_SESSION.id,
     programCode: TODAY_SESSION.programCode,
     programName: TODAY_SESSION.programName,
     week: TODAY_SESSION.week,
     isDeload: false,
-    dayLabel: TODAY_SESSION.dayLabel,
-    title: TODAY_SESSION.title,
+    dayLabel: t("today.mock.dayLabel"),
+    title: t("today.mock.title"),
     estimatedMinutes: TODAY_SESSION.estimatedMinutes,
     exerciseCount: TODAY_SESSION.exercises.length,
     setCount: totalSets(TODAY_SESSION),
@@ -494,17 +487,16 @@ function todayCardFromMock(): TodayCard {
   };
 }
 
-function mockLibrary(): ProgramListing[] {
+function mockLibrary(t: CoachingT): ProgramListing[] {
   return [
     {
       id: "mock-str-12",
       code: "STR-12",
       name: "PR-Block",
-      type: "Strength",
+      type: t("library.mock.STR-12.type"),
       weeks: 12,
-      level: "Inter./Adv.",
-      description:
-        "Klassisk linær periodisering med RPE. Bygget til nye PR'er på squat, bench og DL.",
+      level: t("library.mock.STR-12.level"),
+      description: t("library.mock.STR-12.description"),
       coachName: "Mikael Munk",
       active: true,
       currentWeek: 4,
@@ -514,11 +506,10 @@ function mockLibrary(): ProgramListing[] {
       id: "mock-hyp-08",
       code: "HYP-08",
       name: "Build Phase",
-      type: "Hypertrofi",
+      type: t("library.mock.HYP-08.type"),
       weeks: 8,
-      level: "All levels",
-      description:
-        "Volumen-fokuseret blok med bro-split logik for ben, ryg og skuldre.",
+      level: t("library.mock.HYP-08.level"),
+      description: t("library.mock.HYP-08.description"),
       coachName: "Maria",
       active: false,
       currentWeek: null,
@@ -528,11 +519,10 @@ function mockLibrary(): ProgramListing[] {
       id: "mock-pwr-10",
       code: "PWR-10",
       name: "Powerbuilding",
-      type: "Hybrid",
+      type: t("library.mock.PWR-10.type"),
       weeks: 10,
-      level: "Intermediate",
-      description:
-        "50/50 strength og hypertrofi. Tunge top-sets, accessory til æstetik.",
+      level: t("library.mock.PWR-10.level"),
+      description: t("library.mock.PWR-10.description"),
       coachName: "Kasper",
       active: false,
       currentWeek: null,
@@ -542,11 +532,10 @@ function mockLibrary(): ProgramListing[] {
       id: "mock-dl-06",
       code: "DL-06",
       name: "Deadlift Spec.",
-      type: "Specialization",
+      type: t("library.mock.DL-06.type"),
       weeks: 6,
-      level: "Advanced",
-      description:
-        "Seks uger fokuseret 100% på dødløft. Pause-pulls, deficits, peak-protokol.",
+      level: t("library.mock.DL-06.level"),
+      description: t("library.mock.DL-06.description"),
       coachName: "Mikael Munk",
       active: false,
       currentWeek: null,

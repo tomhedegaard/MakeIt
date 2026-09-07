@@ -24,7 +24,12 @@
     "exercises": "Øvelser",
     "sets": "Sæt",
     "estTime": "Est. tid",
-    "start": "Start session →",
+    "minuteUnit": "m",
+    "start": "Start pas →",
+    "mock": {
+      "dayLabel": "Dag A — Squat",
+      "title": "Squat — Top set @ RPE 8, 3×3 backoff"
+    },
     "emptyEyebrow": "I dag",
     "emptyTitle": "Vælg et program",
     "emptyBody": "Start her — så bygger vi ugen. Ingen demo-pas.",
@@ -35,7 +40,12 @@
     "weeks": "uger",
     "volume": "Volumen · 4u",
     "prs": "PR'er · 4u",
-    "streak": "Streak"
+    "streak": "Stribe",
+    "kgUnit": "kg",
+    "dayUnit": "d"
+  },
+  "trend": {
+    "new": "↑ ny"
   },
   "library": {
     "eyebrow": "Programmer",
@@ -45,12 +55,34 @@
     "level": "Niveau",
     "levelFallback": "—",
     "continue": "Fortsæt →",
-    "details": "Detaljer"
+    "details": "Detaljer",
+    "mock": {
+      "STR-12": {
+        "type": "Styrke",
+        "level": "Mellem/øvet",
+        "description": "Klassisk linær periodisering med RPE. Bygget til nye PR'er på squat, bench og DL."
+      },
+      "HYP-08": {
+        "type": "Hypertrofi",
+        "level": "Alle niveauer",
+        "description": "Volumen-fokuseret blok med bro-split logik for ben, ryg og skuldre."
+      },
+      "PWR-10": {
+        "type": "Hybrid",
+        "level": "Mellem",
+        "description": "50/50 styrke og hypertrofi. Tunge top-sets, accessory til æstetik."
+      },
+      "DL-06": {
+        "type": "Specialisering",
+        "level": "Øvet",
+        "description": "Seks uger fokuseret 100% på dødløft. Pause-pulls, deficits, peak-protokol."
+      }
+    }
   },
   "oneOnOne": {
     "eyebrow": "1:1 Coaching · Den eneste 100% menneskelige del",
     "title": "Vil du have Mikael Munk i dit øre direkte?",
-    "body": "Personligt program, ugentlige form-checks via video, og direkte adgang over Signal. {spots} ind ad gangen.",
+    "body": "Personligt program, ugentlige form-checks via video, og direkte adgang over Signal. {count} pladser ind ad gangen.",
     "priceSuffix": "{currency}/{period} oven i medlemskabet",
     "apply": "Søg om plads →",
     "readMore": "Læs mere"

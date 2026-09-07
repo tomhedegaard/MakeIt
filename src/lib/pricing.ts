@@ -21,7 +21,7 @@ export const pricing = {
     amount: "[ZZ]",
     currency: "kr",
     period: "md",
-    spots: "8 pladser",
+    spots: 8,
   },
 } as const;
 
