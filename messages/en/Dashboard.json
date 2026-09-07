@@ -27,8 +27,14 @@
     "exercises": "Exercises",
     "sets": "Sets",
     "estTime": "Est. time",
+    "minuteUnit": "m",
+    "minutes": "{count}m",
     "setCountSuffix": "× sets",
     "start": "Start session →",
+    "mock": {
+      "dayLabel": "Day A — Squat",
+      "title": "Squat — Top set @ RPE 8, 3×3 backoff"
+    },
     "emptyEyebrow": "Today's session",
     "emptyTitle": "No session yet",
     "emptyBody": "When you pick a program, today's session lands here. No demo workout.",
@@ -97,7 +103,8 @@
   },
   "hrvChip": {
     "eyebrow": "HRV readiness",
-    "connect": "Connect a wearable"
+    "connect": "Connect a wearable",
+    "unit": "ms"
   },
   "installHint": {
     "eyebrow": "Get the app",

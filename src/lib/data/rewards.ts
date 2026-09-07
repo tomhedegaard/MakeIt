@@ -22,18 +22,6 @@ export type Redemption = {
   fulfilledAt: string | null;
 };
 
-const STATUS_LABELS: Record<Redemption["status"], string> = {
-  pending: "Afventer",
-  approved: "Godkendt",
-  shipped: "Sendt",
-  fulfilled: "Modtaget",
-  cancelled: "Annulleret",
-};
-
-export function statusLabel(s: Redemption["status"]) {
-  return STATUS_LABELS[s] ?? s;
-}
-
 /* ---------------------------------------------------------------- *
  * Demo-mode mocks
  * ---------------------------------------------------------------- */

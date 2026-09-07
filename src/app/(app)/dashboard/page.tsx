@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
+import { intlLocaleTag } from "@/i18n/config";
 import Container from "@/components/Container";
 import InstallHint from "@/components/pwa/InstallHint";
 import { getSession } from "@/lib/auth";
@@ -55,9 +56,9 @@ type Translator = Awaited<ReturnType<typeof getTranslations<"Dashboard">>>;
 
 function mockUpcoming(t: Translator) {
   return [
-    { d: t("upcoming.mock.tomorrowLabel"), t: t("upcoming.mock.tomorrowTitle"), m: "55m" },
-    { d: t("upcoming.mock.thuLabel"),      t: t("upcoming.mock.thuTitle"),      m: "70m" },
-    { d: t("upcoming.mock.friLabel"),      t: t("upcoming.mock.friTitle"),      m: "45m" },
+    { d: t("upcoming.mock.tomorrowLabel"), t: t("upcoming.mock.tomorrowTitle"), m: t("todaySession.minutes", { count: 55 }) },
+    { d: t("upcoming.mock.thuLabel"),      t: t("upcoming.mock.thuTitle"),      m: t("todaySession.minutes", { count: 70 }) },
+    { d: t("upcoming.mock.friLabel"),      t: t("upcoming.mock.friTitle"),      m: t("todaySession.minutes", { count: 45 }) },
   ];
 }
 
@@ -69,15 +70,15 @@ function mockFeed(t: Translator) {
   ];
 }
 
-function todayCardFromMock(): TodayCard {
+function todayCardFromMock(t: Translator): TodayCard {
   return {
     id: TODAY_SESSION.id,
     programCode: TODAY_SESSION.programCode,
     programName: TODAY_SESSION.programName,
     week: TODAY_SESSION.week,
     isDeload: false,
-    dayLabel: TODAY_SESSION.dayLabel,
-    title: TODAY_SESSION.title,
+    dayLabel: t("todaySession.mock.dayLabel"),
+    title: t("todaySession.mock.title"),
     estimatedMinutes: TODAY_SESSION.estimatedMinutes,
     exerciseCount: TODAY_SESSION.exercises.length,
     setCount: totalSets(TODAY_SESSION),
@@ -98,7 +99,7 @@ function fmtUpcomingDate(iso: string | null, t: Translator, locale: string): str
   tomorrow.setDate(today.getDate() + 1);
   if (d.getTime() === today.getTime()) return t("upcoming.today");
   if (d.getTime() === tomorrow.getTime()) return t("upcoming.tomorrow");
-  return d.toLocaleDateString(locale === "en" ? "en-GB" : "da-DK", { weekday: "short" }).replace(".", "");
+  return d.toLocaleDateString(intlLocaleTag(locale), { weekday: "short" }).replace(".", "");
 }
 
 type HrvChipData = {
@@ -173,7 +174,7 @@ export default async function TodayPage() {
   const today = todayCardForSurface({
     connected,
     fromDb: todayDb,
-    demo: todayCardFromMock(),
+    demo: todayCardFromMock(t),
   });
   const upcoming = upcomingForSurface({ connected, fromDb: upcomingDb });
   const feed = feedForSurface({ connected, fromDb: feedDb });
@@ -222,7 +223,7 @@ export default async function TodayPage() {
         mindCheckedToday: mindChecked,
         hasSession: today != null,
       })
-    : demoInsightStream(`/session/${todayCardFromMock().id}`);
+        : demoInsightStream(`/session/${todayCardFromMock(t).id}`);
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
@@ -262,7 +263,7 @@ export default async function TodayPage() {
         currentStreak={mentalSettings.current_streak_days}
       />
 
-      <HrvChip hrv={hrv} eyebrow={t("hrvChip.eyebrow")} connect={t("hrvChip.connect")} />
+      <HrvChip hrv={hrv} eyebrow={t("hrvChip.eyebrow")} connect={t("hrvChip.connect")} unit={t("hrvChip.unit")} />
 
       <ConnectDotsStream cards={insightCards} copy={dotsCopy} />
 
@@ -334,7 +335,7 @@ export default async function TodayPage() {
             <div className="eyebrow mb-1">{t("todaySession.estTime")}</div>
             <div className="numeric text-2xl">
               {today.estimatedMinutes}
-              <span className="text-fg-dim text-sm">m</span>
+              <span className="text-fg-dim text-sm">{t("todaySession.minuteUnit")}</span>
             </div>
           </div>
         </div>
@@ -452,7 +453,7 @@ export default async function TodayPage() {
                 >
                   <span className="eyebrow w-16 shrink-0">{fmtUpcomingDate(row.scheduledFor, t, locale)}</span>
                   <span className="flex-1 text-sm text-fg/90 truncate">{row.title}</span>
-                  <span className="numeric text-fg-faint text-xs shrink-0">{row.estimatedMinutes}m</span>
+                  <span className="numeric text-fg-faint text-xs shrink-0">{t("todaySession.minutes", { count: row.estimatedMinutes })}</span>
                 </Link>
               </li>
             ))}
@@ -540,10 +541,12 @@ function HrvChip({
   hrv,
   eyebrow,
   connect,
+  unit,
 }: {
   hrv: HrvChipData | null;
   eyebrow: string;
   connect: string;
+  unit: string;
 }) {
   return (
     <Link
@@ -559,7 +562,7 @@ function HrvChip({
             <div className="flex items-baseline gap-2">
               <span className="numeric text-2xl lg:text-3xl">
                 {Math.round(hrv.rmssdMs)}
-                <span className="text-fg-dim text-sm ml-1">ms</span>
+                <span className="text-fg-dim text-sm ml-1">{unit}</span>
               </span>
               {hrv.readiness ? (
                 <span className="text-sm text-fg-dim">· {hrv.readiness}</span>
@@ -584,7 +587,7 @@ function formatVolume(kg: number): string {
 }
 
 function formatReps(n: number, locale = "da"): string {
-  return new Intl.NumberFormat(locale === "en" ? "en-GB" : "da-DK").format(n);
+  return new Intl.NumberFormat(intlLocaleTag(locale)).format(n);
 }
 
 /**

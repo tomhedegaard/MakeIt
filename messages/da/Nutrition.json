@@ -227,11 +227,11 @@
   },
   "checkIn": {
     "skipConfirm": "Markér dette måltid som skippet?",
-    "eyebrow": "Daily check-in",
+    "eyebrow": "Dagligt check-in",
     "slotWindow": "{slot} · {window}",
     "slotNoWindow": "{slot}",
     "loggedToday": "{logged}/{total} i dag",
-    "streak": "streak",
+    "streak": "stribe",
     "milestoneDaysAwayOne": "+50 om {days} dag",
     "milestoneDaysAwayOther": "+50 om {days} dage",
     "milestonePrompt": "Log mad i {days} dage",
