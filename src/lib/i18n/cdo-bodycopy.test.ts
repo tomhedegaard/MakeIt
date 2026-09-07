@@ -146,6 +146,17 @@ describe("CDO DA/EN bodycopy — Today / Train / Reps", () => {
     expect(rewards).not.toContain("function statusLabel");
   });
 
+  it("keeps the dashboard Mind tile streak line Danish", () => {
+    const daMind = loadJson("messages/da/Mind.json");
+    const enMind = loadJson("messages/en/Mind.json");
+    const da = daMind.tile as { streakSub: string };
+    const en = enMind.tile as { streakSub: string };
+    expect(da.streakSub).toMatch(/milepæl/);
+    expect(da.streakSub).not.toMatch(/milestone/i);
+    expect(en.streakSub).toMatch(/milestone/);
+    expect(keysOf(daMind.tile).sort()).toEqual(keysOf(enMind.tile).sort());
+  });
+
   it("translates dashboard nutrition check-in leftovers in DA", () => {
     const da = daNutrition.checkIn as Record<string, string>;
     const en = enNutrition.checkIn as Record<string, string>;
