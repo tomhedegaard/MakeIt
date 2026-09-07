@@ -2,14 +2,16 @@
  * Workout / session — types + mock data for the closed beta.
  * Replace with database fetch once schema is in place.
  */
+import type { ExercisePhase } from "@/lib/data/exercises";
 import type { MuscleGroup } from "@/lib/data/muscle-groups";
 
 /**
  * When a session_exercises row has its exercise_id populated, we
  * hydrate this slice of the structured exercise library so the
  * session page can render the mini anatomy figure, structured cues,
- * and a deep-link to the full /train/exercises/[slug] detail page.
- * Null for free-text exercises that don't match a library entry.
+ * the MoveKit loop (when a demo asset exists), and a deep-link to
+ * /train/exercises/[slug]. Null for free-text exercises that don't
+ * match a library entry.
  */
 export type ExerciseLibrary = {
   exerciseId: string;
@@ -19,6 +21,10 @@ export type ExerciseLibrary = {
   primaryMuscles: MuscleGroup[];
   secondaryMuscles: MuscleGroup[];
   tertiaryMuscles: MuscleGroup[];
+  /** Resolved loop URL, or null when the slug has no bundled/Storage asset. */
+  demoAssetUrl: string | null;
+  /** Rep phases for cue/video sync. Empty when the library row has none. */
+  phases?: ExercisePhase[];
 };
 
 export type ExerciseSet = {

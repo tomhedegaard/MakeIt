@@ -6,6 +6,12 @@ import { describe, expect, it } from "vitest";
 const here = dirname(fileURLToPath(import.meta.url));
 
 describe("session chrome at 390px", () => {
+  it("hydrates TODAY_SESSION library in the demo page path", () => {
+    const src = readFileSync(join(here, "page.tsx"), "utf8");
+    expect(src).toContain("hydrateDemoSessionLibrary");
+    expect(src).toContain("TODAY_SESSION");
+  });
+
   it("lets the film CTA wrap instead of clipping Film →", () => {
     const src = readFileSync(join(here, "SessionClient.tsx"), "utf8");
     const film = src.slice(
@@ -26,6 +32,21 @@ describe("session chrome at 390px", () => {
     expect(src).toContain("pb-40");
     expect(src).toContain("pb-52");
     expect(src).toContain('bottom: "calc(env(safe-area-inset-bottom, 0px) + 112px)"');
+  });
+
+  it("renders a compact demo loop without replacing the film CTA", () => {
+    const src = readFileSync(join(here, "SessionClient.tsx"), "utf8");
+    expect(src).toContain("SessionExerciseDemo");
+    expect(src).toContain("resolveSessionDemoAssetUrl");
+    expect(src).toContain("data-form-film-cta");
+    expect(src).toContain("onOpenFormCheck");
+    // Library loop and member camera upload stay separate features.
+    const film = src.slice(
+      src.indexOf("data-form-film-cta"),
+      src.indexOf("<FormCheckThread"),
+    );
+    expect(film).not.toContain("SessionExerciseDemo");
+    expect(film).not.toContain("<video");
   });
 
   it("wraps rest copy instead of truncating it", () => {
