@@ -181,6 +181,92 @@ describe("CDO DA/EN bodycopy — Today / Train / Reps", () => {
   });
 });
 
+describe("CDO DA/EN bodycopy — Nutrition setup", () => {
+  it("keeps Nutrition.setup / preferences / logWeight keys in lockstep", () => {
+    expect(keysOf(daNutrition.setup).sort()).toEqual(keysOf(enNutrition.setup).sort());
+    expect(keysOf(daNutrition.preferences).sort()).toEqual(
+      keysOf(enNutrition.preferences).sort(),
+    );
+    expect(keysOf(daNutrition.logWeight).sort()).toEqual(
+      keysOf(enNutrition.logWeight).sort(),
+    );
+  });
+
+  it("shows Danish goal/diet chip labels, not English enums", () => {
+    const da = daNutrition.setup as Record<string, string>;
+    const en = enNutrition.setup as Record<string, string>;
+    expect(da.goalCutTitle).toBe("Fedttab");
+    expect(da.goalRecompTitle).toBe("Ombygning");
+    expect(da.goalMaintainTitle).toBe("Hold");
+    expect(da.goalMassTitle).toBe("Masse");
+    expect(da.dietOmnivoreTitle).toBe("Alt");
+    expect(da.dietPescatarianTitle).toBe("Fisk + plante");
+    expect(da.dietVegetarianTitle).toBe("Vegetar");
+    expect(da.dietVeganTitle).toBe("Veganer");
+    expect(en.goalCutTitle).toBe("Cut");
+    expect(en.goalRecompTitle).toBe("Recomp");
+    expect(en.goalMaintainTitle).toBe("Maintain");
+    expect(en.goalMassTitle).toBe("Mass");
+    expect(en.dietOmnivoreTitle).toBe("Omnivore");
+    const daBlob = allStrings(daNutrition.setup).join("\n");
+    expect(daBlob).not.toMatch(/\b(CUT|RECOMP|MAINTAIN|MASS|OMNIVORE)\b/);
+    expect(daBlob).not.toMatch(/\b(Omnivore|Pescatarian|Vegetarian|Maintain|Recomp)\b/);
+    expect(da.cookingIntermediateTitle).toBe("Moderat");
+    expect(da.cookingAdvancedTitle).toBe("Elsker det");
+    expect(en.cookingAdvancedTitle).toBe("Love it");
+    const daPrefs = daNutrition.preferences as Record<string, string>;
+    expect(daPrefs.goalCut).toBe("Fedttab");
+    expect(daPrefs.goalRecomp).toBe("Ombygning");
+    expect(daPrefs.goalMass).toBe("Masse");
+    expect(daPrefs.dietVegan).toBe("Veganer");
+  });
+
+  it("uses a proper DA/EN bodyweight label instead of BODYWEIGHT KG", () => {
+    const da = daNutrition.setup as Record<string, string>;
+    const en = enNutrition.setup as Record<string, string>;
+    expect(da.weightFieldLabel).toBe("Kropsvægt (kg)");
+    expect(en.weightFieldLabel).toBe("Bodyweight (kg)");
+    expect(da.weightFieldLabel).not.toMatch(/bodyweight/i);
+    const daLog = daNutrition.logWeight as { eyebrow: string };
+    expect(daLog.eyebrow).toBe("Kropsvægt");
+    expect(daLog.eyebrow).not.toMatch(/bodyweight/i);
+  });
+
+  it("keeps the Sunday batch-cook line in one locale", () => {
+    const da = daNutrition.preferences as {
+      mealPrepCheckbox: string;
+      mealPrepLabel: string;
+      mealPrepHint: string;
+    };
+    const en = enNutrition.preferences as { mealPrepCheckbox: string };
+    expect(da.mealPrepLabel).toBe("Samlet madlavning");
+    expect(da.mealPrepHint).not.toMatch(/\b(meals|prep|Sunday|batch-cook)\b/i);
+    expect(da.mealPrepCheckbox).toBe(
+      "Genbrug måltider og lav dem samlet om søndagen",
+    );
+    expect(en.mealPrepCheckbox).toBe("Reuse meals for a Sunday batch-cook");
+    expect(da.mealPrepCheckbox).not.toMatch(/Sunday|batch-cook/i);
+    expect(en.mealPrepCheckbox).not.toMatch(/Genbrug|måltider/);
+  });
+
+  it("wires setup chips and bodyweight from Nutrition.setup keys, not raw enums", () => {
+    const wizard = read("src/app/(app)/nutrition/setup/SetupWizardClient.tsx");
+    expect(wizard).toContain('t("goalCutTitle")');
+    expect(wizard).toContain('t("goalRecompTitle")');
+    expect(wizard).toContain('t("goalMaintainTitle")');
+    expect(wizard).toContain('t("goalMassTitle")');
+    expect(wizard).toContain('t("dietOmnivoreTitle")');
+    expect(wizard).toContain('t("weightFieldLabel")');
+    expect(wizard).toContain('name="goal"');
+    expect(wizard).toContain('id: "cut"');
+    expect(wizard).not.toContain("toUpperCase()");
+    expect(wizard).not.toContain("BODYWEIGHT");
+    const prefs = read("src/app/(app)/nutrition/preferences/page.tsx");
+    expect(prefs).toContain('t("mealPrepCheckbox")');
+    expect(prefs).not.toContain("Sunday batch-cook");
+  });
+});
+
 describe("CDO DA/EN bodycopy — locale helpers", () => {
   it("lets members.locale beat a leftover en cookie", () => {
     expect(resolveLocale({ cookie: "en", memberLocale: "da" })).toBe("da");
