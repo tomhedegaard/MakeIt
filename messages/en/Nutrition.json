@@ -195,7 +195,7 @@
     "cookingAdvancedSub": "Happy to spend more time + technique — sous vide, low-roast, all of it.",
     "weightTitle": "What do you weigh now?",
     "weightSub": "We use it to aim calories + protein right. You can update it weekly on the dashboard.",
-    "weightFieldLabel": "Bodyweight",
+    "weightFieldLabel": "Bodyweight (kg)",
     "weightTiming": "Best timing: morning, fasted, after the toilet",
     "submitTiming": "Takes 5-10 sec · AI builds the week",
     "submitting": "Generating plan…",
