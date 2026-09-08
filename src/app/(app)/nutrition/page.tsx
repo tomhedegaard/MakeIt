@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { getSession } from "@/lib/auth";
@@ -32,6 +31,7 @@ import OffPlanLogButton from "./OffPlanLogButton";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
 import { getDailyIntake } from "@/lib/data/nutrition-intake";
 import { isNutritionProfileFresh } from "@/lib/nutrition/profile-fresh";
+import NutritionSetupView from "./setup/NutritionSetupView";
 
 export async function generateMetadata() {
   const t = await getTranslations("Nutrition");
@@ -49,18 +49,22 @@ export default async function NutritionPage({
 }) {
   const { err } = await searchParams;
   const member = (await getSession())!;
-  const t = await getTranslations("Nutrition");
   const weekStart = currentIsoMonday();
-  // Cheap first-visit gate before the rest of the page's fetches so
-  // /nutrition → /nutrition/setup is not a multi-second blank.
+  // Cheap first-visit gate before the rest of the page's fetches.
+  // Render the wizard here — do not bounce to the setup path.
+  // A server redirect() after this await commits an empty stub on
+  // client navigations (Next.js App Router), which is the blank
+  // flash Testy hit on the Kost tab.
   const [profile, plan, latestWeight] = await Promise.all([
     getOrCreateNutritionProfile(member.id),
     getCurrentPlan(member.id),
     getLatestWeight(member.id),
   ]);
   if (isNutritionProfileFresh({ plan, latestWeight, profile })) {
-    redirect("/nutrition/setup");
+    return <NutritionSetupView />;
   }
+
+  const t = await getTranslations("Nutrition");
 
   const [
     checkin,
@@ -101,16 +105,6 @@ export default async function NutritionPage({
     }
   }
 
-  // First-time guard: only redirect when the profile is genuinely
-  // untouched. The earlier `plan === null && latestWeight === null`
-  // check looped users back to the wizard whenever either persist
-  // step failed (Claude timeout + mock fallback DB hiccup, or
-  // missing weight_logs migration making logWeight no-op). We now
-  // gate on a single signal — has the member ever opened the
-  // wizard — by checking whether onboarded_at on the profile is
-  // null. The wizard sets the goal explicitly; if it's still at
-  // the schema default AND there's no plan AND no weight, we know
-  // they've never completed setup.
   const todayIndex = todayDayIndex();
 
   return (

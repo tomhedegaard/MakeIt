@@ -24,8 +24,10 @@ export async function generateMetadata() {
 /**
  * `/mind` — the daily 60-second mental signal surface.
  *
- * First tap on the Mind tab renders the check (or the disclaimer).
- * No intermediate redirect, no segment loading flash.
+ * First tap on the Mind tab renders the check (or the disclaimer)
+ * in place. Do not hop to the onboarding path after the disclaimer
+ * fetch — that commit is an empty stub on client nav.
+ * `loading.tsx` paints an honest opening state while we wait.
  */
 export default async function MindCheckPage() {
   const member = await getSession();

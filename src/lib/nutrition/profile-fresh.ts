@@ -1,10 +1,11 @@
 /**
- * First-visit gate for /nutrition → /nutrition/setup.
+ * First-visit gate for /nutrition.
  *
  * A profile is "fresh" when there is no plan, no weigh-in, and the
  * defaults from getOrCreateNutritionProfile have not been replaced
- * (goal still maintain, no kcal target). Used so the page can
- * redirect before the heavy fetches — and so tests can lock the rule.
+ * (goal still maintain, no kcal target). The page renders the setup
+ * wizard in place when this is true — a server redirect() after the
+ * gate fetch paints an empty stub on client navigations.
  */
 
 export function isNutritionProfileFresh(input: {
