@@ -2,8 +2,9 @@
   "metaTitle": "Log ind — {product}",
   "errors": {
     "1": "Noget gik galt — prøv igen",
-    "missing": "Email og kode kræves",
+    "missing": "Email kræves",
     "invite": "Ugyldig invite-kode",
+    "need_invite": "Ny konto kræver en gyldig invite-kode",
     "otp": "Kunne ikke sende mail — prøv igen",
     "pw_short": "Passwordet skal være mindst 8 tegn",
     "exists": "Email er allerede registreret — log ind i stedet",
@@ -23,7 +24,7 @@
   },
   "statusConnected": "Forbundet",
   "statusDemo": "Demo-tilstand · ingen backend tilkoblet",
-  "memberOnlyHint": "Den side du prøvede at åbne er kun for medlemmer. Log ind med din invite-kode.",
+  "memberOnlyHint": "Den side du prøvede at åbne er kun for medlemmer. Log ind for at fortsætte.",
   "waitlistHint": "Ingen invite-kode?",
   "waitlistLink": "Skriv dig på ventelisten",
   "mock": {
@@ -39,10 +40,11 @@
     "oauth": "Google / Apple"
   },
   "magic": {
-    "intro": "Indtast email + invite-kode. Vi sender et engangs-login-link.",
+    "intro": "Indtast din email. Er du ny, skal du også have en invite-kode.",
     "emailLabel": "Email",
     "emailPlaceholder": "dig@email.com",
-    "inviteCodeLabel": "Invite-kode",
+    "inviteCodeLabel": "Invite-kode (kun nye)",
+    "invitePlaceholder": "Valgfri hvis du allerede er medlem",
     "submit": "Send login-link"
   },
   "password": {

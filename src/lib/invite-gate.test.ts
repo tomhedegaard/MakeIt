@@ -3,7 +3,9 @@ import {
   NEW_AUTH_USER_WINDOW_MS,
   admitInviteConsume,
   admitInviteValidation,
+  classifyMagicLinkOtpError,
   decideInviteConsume,
+  decideMagicLinkSend,
   decidePasswordSignupNext,
   hasMinimumInviteShape,
   isNewlyCreatedAuthUser,
@@ -176,6 +178,100 @@ describe("decideInviteConsume", () => {
         alreadyAdmitted: null,
       }),
     ).toEqual({ action: "allow" });
+  });
+
+  it("allows an official returning magic-link even inside the 7-day window", () => {
+    const created = new Date(NOW - 1000).toISOString();
+    expect(
+      decideInviteConsume({
+        invite: null,
+        userCreatedAt: created,
+        nowMs: NOW,
+        alreadyAdmitted: null,
+        returningMagicLink: true,
+      }),
+    ).toEqual({ action: "allow" });
+  });
+
+  it("still rejects an un-admitted returning magic-link (0059 probed false)", () => {
+    const created = new Date(NOW - 1000).toISOString();
+    expect(
+      decideInviteConsume({
+        invite: null,
+        userCreatedAt: created,
+        nowMs: NOW,
+        alreadyAdmitted: false,
+        returningMagicLink: true,
+      }),
+    ).toEqual({ action: "reject" });
+  });
+});
+
+describe("decideMagicLinkSend", () => {
+  it("sends a returning OTP when email is present and invite is blank", () => {
+    expect(
+      decideMagicLinkSend({ email: "  Tom@TomTesty.dk  ", invite: null }),
+    ).toEqual({ action: "send-returning" });
+    expect(
+      decideMagicLinkSend({ email: "tom@tomtesty.dk", invite: "   " }),
+    ).toEqual({ action: "send-returning" });
+  });
+
+  it("treats a shaped invite as signup that still needs the RPC", () => {
+    expect(
+      decideMagicLinkSend({
+        email: "new@example.com",
+        invite: "  testy-01  ",
+      }),
+    ).toEqual({ action: "send-signup", invite: "TESTY-01" });
+  });
+
+  it("rejects a missing email even if an invite is present", () => {
+    expect(
+      decideMagicLinkSend({ email: "   ", invite: "TESTY-01" }),
+    ).toEqual({ action: "reject-email" });
+  });
+
+  it("rejects a too-short invite instead of treating it as returning", () => {
+    expect(
+      decideMagicLinkSend({ email: "new@example.com", invite: "ab" }),
+    ).toEqual({ action: "reject-invite" });
+  });
+});
+
+describe("classifyMagicLinkOtpError", () => {
+  it("maps signup-disabled on the returning path to need_invite", () => {
+    expect(
+      classifyMagicLinkOtpError(
+        { message: "Signups not allowed for otp", status: 422 },
+        false,
+      ),
+    ).toBe("need_invite");
+    expect(
+      classifyMagicLinkOtpError({ code: "user_not_found", status: 400 }, false),
+    ).toBe("need_invite");
+  });
+
+  it("keeps signup-disabled as otp on the invite-signup path", () => {
+    expect(
+      classifyMagicLinkOtpError(
+        { message: "Signups not allowed for otp", status: 422 },
+        true,
+      ),
+    ).toBe("otp");
+  });
+
+  it("treats rate-limits as sent so the user checks their inbox", () => {
+    expect(
+      classifyMagicLinkOtpError(
+        { message: "email rate limit exceeded", status: 429 },
+        false,
+      ),
+    ).toBe("sent");
+  });
+
+  it("treats a missing error as sent", () => {
+    expect(classifyMagicLinkOtpError(null, false)).toBe("sent");
   });
 });
 

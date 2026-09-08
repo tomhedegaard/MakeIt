@@ -12,6 +12,8 @@ import {
 } from "@/i18n/config";
 import {
   admitInviteValidation,
+  classifyMagicLinkOtpError,
+  decideMagicLinkSend,
   hasMinimumInviteShape,
 } from "@/lib/invite-gate";
 import {
@@ -82,14 +84,33 @@ export async function magicLinkAction(formData: FormData) {
 
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const code = String(formData.get("code") ?? "").trim().toUpperCase();
-  if (!email || !code) redirect("/login?err=missing");
-  await requireValidConnectedInvite(code);
+  const send = decideMagicLinkSend({ email, invite: code });
+
+  if (send.action === "reject-email") redirect("/login?err=missing");
+  if (send.action === "reject-invite") redirect("/login?err=invite");
+
+  let createUser = false;
+  let inviteForRedirect: string | null = null;
+  if (send.action === "send-signup") {
+    await requireValidConnectedInvite(send.invite);
+    createUser = true;
+    inviteForRedirect = send.invite;
+  } else {
+    // Stale OAuth stash must not ride along on a returning OTP click.
+    const jar = await cookies();
+    jar.delete(PENDING_INVITE_COOKIE);
+  }
 
   const base = await baseUrl();
+  const redirectTo = inviteForRedirect
+    ? `${base}/auth/callback?invite=${encodeURIComponent(inviteForRedirect)}`
+    : `${base}/auth/callback`;
+
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${base}/auth/callback?invite=${encodeURIComponent(code)}`,
+      shouldCreateUser: createUser,
+      emailRedirectTo: redirectTo,
     },
   });
 
@@ -97,31 +118,18 @@ export async function magicLinkAction(formData: FormData) {
   // the mail anyway — known SDK behavior) or transient network blips
   // that resolve quickly. Surface as "sent" UI so the user goes to
   // check their inbox, and log the underlying error server-side for
-  // diagnostics. We only bail to err=otp on truly blocking signals.
+  // diagnostics. Returning OTP + "signups not allowed" is honest
+  // need_invite (new email, no code). Other hard fails → err=otp.
   if (error) {
-    const code = error.code ?? "";
-    const status = error.status ?? 0;
-    const message = error.message ?? "";
-
     console.warn("[magic-link] signInWithOtp returned error:", {
-      code,
-      status,
-      message,
+      code: error.code ?? "",
+      status: error.status ?? 0,
+      message: error.message ?? "",
     });
 
-    // Hard fails — the mail definitely did not go out: invalid email
-    // address shape (server-side sanity check), invite/redirect URL
-    // not allow-listed, anonymous sign-ins disabled. Bubble to UI.
-    const isHardFail =
-      status === 422 || // unprocessable input
-      status === 400 ||
-      /invalid|forbidden|not allowed|disabled/i.test(message);
-
-    if (isHardFail) {
-      redirect(`/login?err=otp`);
-    }
-    // Otherwise (429 rate-limit, 5xx, transient) — assume the mail
-    // is on its way and tell the user to check their inbox.
+    const classified = classifyMagicLinkOtpError(error, createUser);
+    if (classified === "need_invite") redirect("/login?err=need_invite");
+    if (classified === "otp") redirect("/login?err=otp");
   }
 
   redirect(`/login?sent=1&email=${encodeURIComponent(email)}`);
