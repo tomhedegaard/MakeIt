@@ -46,17 +46,17 @@
     "demo": "See the move",
     "demoAria": "See the move — {lift}",
     "demoPlay": "Play the move",
-    "formCheck": "Film set {set}",
-    "formCheckSub": "Goes to Munk — bound to {lift}",
+    "formCheck": "Record set {set}",
+    "formCheckSub": "Goes to coach Munk — bound to {lift}",
     "moreCues": " · {count} more cues",
-    "duration": "Film →",
+    "duration": "Record →",
     "thread": {
-      "eyebrow": "Thread under this lift",
-      "pending": "Waiting on Munk",
-      "reviewed": "Munk replied",
+      "eyebrow": "Form-check under this lift",
+      "pending": "Waiting for feedback from coach Munk",
+      "reviewed": "Coach Munk replied",
       "voice": "Voice note",
       "youFilmed": "You filmed this set",
-      "munkReply": "Reply from Munk"
+      "munkReply": "Feedback from coach Munk"
     }
   },
   "restTimer": {
@@ -76,6 +76,6 @@
     "sets": "Sets",
     "estTime": "Time",
     "summary": "{exerciseCount} exercises · {setCount} sets",
-    "start": "Start session"
+    "start": "Start the session"
   }
 }

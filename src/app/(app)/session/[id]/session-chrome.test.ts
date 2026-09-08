@@ -61,3 +61,16 @@ describe("session chrome at 390px", () => {
     expect(src).not.toContain("btn btn-sm");
   });
 });
+
+describe("session i18n chrome (Testy LOW)", () => {
+  it("keeps Danish session CTAs out of English leftovers", async () => {
+    const da = await import("../../../../../messages/da/Session.json");
+    expect(da.default.preview.start).toBe("Start sessionen");
+    expect(da.default.restTimer.skip).toBe("Spring over");
+    expect(da.default.exercise.duration).toBe("Optag →");
+    expect(da.default.exercise.formCheck).toMatch(/^Optag sæt/);
+    expect(da.default.exercise.thread.pending).toMatch(/coach Munk/i);
+    expect(da.default.exercise.thread.reviewed).toMatch(/Coach Munk/);
+    expect(da.default.done.eyebrow).toBe("Session færdig");
+  });
+});
