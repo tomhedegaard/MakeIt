@@ -233,8 +233,14 @@ describe("CDO DA/EN bodycopy — Nutrition setup", () => {
   });
 
   it("keeps the Sunday batch-cook line in one locale", () => {
-    const da = daNutrition.preferences as { mealPrepCheckbox: string };
+    const da = daNutrition.preferences as {
+      mealPrepCheckbox: string;
+      mealPrepLabel: string;
+      mealPrepHint: string;
+    };
     const en = enNutrition.preferences as { mealPrepCheckbox: string };
+    expect(da.mealPrepLabel).toBe("Samlet madlavning");
+    expect(da.mealPrepHint).not.toMatch(/\b(meals|prep|Sunday|batch-cook)\b/i);
     expect(da.mealPrepCheckbox).toBe(
       "Genbrug måltider og lav dem samlet om søndagen",
     );
