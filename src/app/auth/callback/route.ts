@@ -5,10 +5,7 @@ import {
   consumeInviteForUser,
   fetchInviteAdmitted,
 } from "@/lib/data/invites";
-import {
-  admitInviteConsume,
-  decideInviteConsume,
-} from "@/lib/invite-gate";
+import { finishMagicLinkCallback } from "@/lib/magic-link";
 import { LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE, isLocale } from "@/i18n/config";
 
 const PENDING_INVITE_COOKIE = "mi_pending_invite";
@@ -16,7 +13,8 @@ const PENDING_INVITE_COOKIE = "mi_pending_invite";
 /**
  * Auth callback — handles every flow that ends here:
  *
- *   - Magic-link OTP    : ?code=<otp>&invite=<CODE>  (invite in URL)
+ *   - Magic-link OTP    : ?code=<otp>                (returning)
+ *                         ?code=<otp>&invite=<CODE>  (new signup)
  *   - Password confirm  : leftover confirm-mail click after
  *                         invite-gated signup already auto-confirmed
  *                         (`invite` in URL; consume is idempotent)
@@ -24,15 +22,18 @@ const PENDING_INVITE_COOKIE = "mi_pending_invite";
  *      Apple)
  *
  * We exchange whatever code is present for a session, then consume
- * the invite for newly created users. The invite source is
- * "URL first, cookie fallback" so the magic-link / password flows
- * keep working unchanged, and OAuth picks up the stashed cookie.
+ * the invite for newly created / un-admitted users. Returning
+ * members (admitted, or official OTP with no invite) skip consume.
+ * The invite source is "URL first, cookie fallback" so the
+ * magic-link signup and password confirm flows keep working, and
+ * OAuth picks up the stashed cookie.
  *
  * Failure modes:
  *   - No code in URL          → /login?err=callback
  *   - Exchange fails          → /login?err=callback
- *   - New user, no invite or consume fails → sign out, /login?err=invite
- *     (fail closed — never land a signup that did not spend a valid code)
+ *   - New / un-admitted user, no invite or consume fails → sign out,
+ *     /login?err=invite (fail closed — never land a signup that did
+ *     not spend a valid code)
  */
 export async function GET(req: NextRequest) {
   const url = req.nextUrl;
@@ -69,24 +70,17 @@ export async function GET(req: NextRequest) {
   }
 
   const alreadyAdmitted = await fetchInviteAdmitted();
-  const decision = decideInviteConsume({
+  const finished = await finishMagicLinkCallback({
+    user,
     invite,
-    userCreatedAt: user.created_at,
     nowMs: Date.now(),
     alreadyAdmitted,
+    consumeInvite: consumeInviteForUser,
+    signOut: () => supabase.auth.signOut(),
   });
 
-  if (decision.action === "reject") {
-    await supabase.auth.signOut();
-    return NextResponse.redirect(new URL("/login?err=invite", url));
-  }
-
-  if (decision.action === "consume") {
-    const consumed = await consumeInviteForUser(decision.invite, user.id);
-    if (!admitInviteConsume(consumed)) {
-      await supabase.auth.signOut();
-      return NextResponse.redirect(new URL("/login?err=invite", url));
-    }
+  if (!finished.ok) {
+    return NextResponse.redirect(new URL(`/login?err=${finished.err}`, url));
   }
 
   // Re-seed the language cookie from the member's saved preference so

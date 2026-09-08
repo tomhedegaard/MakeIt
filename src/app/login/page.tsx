@@ -226,10 +226,9 @@ async function MagicLinkForm() {
           <span className="eyebrow block mb-2">{t("inviteCodeLabel")}</span>
           <input
             name="code"
-            required
             autoComplete="off"
             spellCheck={false}
-            placeholder="MUNK-01"
+            placeholder={t("invitePlaceholder")}
             className="field"
           />
         </label>

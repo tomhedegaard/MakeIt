@@ -2,8 +2,9 @@
   "metaTitle": "Sign in — {product}",
   "errors": {
     "1": "Something went wrong — try again",
-    "missing": "Email and code are required",
+    "missing": "Email is required",
     "invite": "Invalid invite code",
+    "need_invite": "New accounts need a valid invite code",
     "otp": "Could not send email — try again",
     "pw_short": "Password must be at least 8 characters",
     "exists": "Email is already registered — sign in instead",
@@ -23,7 +24,7 @@
   },
   "statusConnected": "Connected",
   "statusDemo": "Demo mode · no backend connected",
-  "memberOnlyHint": "The page you tried to open is for members only. Sign in with your invite code.",
+  "memberOnlyHint": "The page you tried to open is for members only. Sign in to continue.",
   "waitlistHint": "No invite code?",
   "waitlistLink": "Join the waitlist",
   "mock": {
@@ -39,10 +40,11 @@
     "oauth": "Google / Apple"
   },
   "magic": {
-    "intro": "Enter email + invite code. We'll send a one-time login link.",
+    "intro": "Enter your email. New accounts also need an invite code.",
     "emailLabel": "Email",
     "emailPlaceholder": "you@email.com",
-    "inviteCodeLabel": "Invite code",
+    "inviteCodeLabel": "Invite code (new accounts)",
+    "invitePlaceholder": "Optional if you already have an account",
     "submit": "Send login link"
   },
   "password": {
