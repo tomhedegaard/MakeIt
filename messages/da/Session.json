@@ -23,7 +23,7 @@
     "logSet": "Log sæt →"
   },
   "done": {
-    "eyebrow": "Session done",
+    "eyebrow": "Session færdig",
     "title": "Godt arbejde.",
     "body": "Du loggede {sets} sæt og holdt dig på programmet. Vi sender dataene videre til din coach for ugentlig review.",
     "sets": "Sæt",
@@ -46,24 +46,24 @@
     "demo": "Se bevægelse",
     "demoAria": "Se bevægelse — {lift}",
     "demoPlay": "Afspil bevægelse",
-    "formCheck": "Film sæt {set}",
-    "formCheckSub": "Sendes til Munk — bundet til {lift}",
+    "formCheck": "Optag sæt {set}",
+    "formCheckSub": "Sendes til coach Munk — bundet til {lift}",
     "moreCues": " · {count} cues mere",
-    "duration": "Film →",
+    "duration": "Optag →",
     "thread": {
-      "eyebrow": "Tråd under løftet",
-      "pending": "Afventer Munk",
-      "reviewed": "Munk har svaret",
+      "eyebrow": "Form-check under løftet",
+      "pending": "Afventer feedback fra coach Munk",
+      "reviewed": "Coach Munk har svaret",
       "voice": "Lydbesked",
       "youFilmed": "Du filmede dette sæt",
-      "munkReply": "Svar fra Munk"
+      "munkReply": "Feedback fra coach Munk"
     }
   },
   "restTimer": {
     "ariaLabel": "Hvile",
     "title": "Hvile",
     "description": "Næste sæt om {time} — tag en slurk vand.",
-    "skip": "Skip"
+    "skip": "Spring over"
   },
   "rpe": {
     "label": "RPE — hvor tungt føltes det?",
@@ -76,6 +76,6 @@
     "sets": "Sæt",
     "estTime": "Tid",
     "summary": "{exerciseCount} øvelser · {setCount} sæt",
-    "start": "Start session"
+    "start": "Start sessionen"
   }
 }
