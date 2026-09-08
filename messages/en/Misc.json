@@ -12,9 +12,9 @@
     "redirectEyebrow": "One moment",
     "redirectTitle": "Sending you on…",
     "nutritionTitle": "Opening food…",
-    "nutritionBody": "Checking whether you have a plan — otherwise we send you to setup.",
+    "nutritionBody": "Loading your plan — or setup, if this is your first visit.",
     "mindTitle": "Opening Mind…",
-    "mindBody": "Checking the disclaimer — then we send you on."
+    "mindBody": "Loading your check — or the disclaimer, if this is your first visit."
   },
   "cookieBanner": {
     "eyebrow": "Cookies",

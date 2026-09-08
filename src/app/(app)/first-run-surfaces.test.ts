@@ -7,16 +7,55 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "../../..");
 
 describe("leftover first-run surfaces after #66", () => {
-  it("does not show a LOADING flash on /mind or /nutrition", () => {
-    expect(existsSync(join(here, "mind/loading.tsx"))).toBe(false);
-    expect(existsSync(join(here, "nutrition/loading.tsx"))).toBe(false);
+  it("opens /mind and /nutrition without a blank redirect hop", () => {
+    // Honest opening state while the gate fetch runs — not an empty
+    // content slot, and not a generic "Loader" pulse.
+    expect(existsSync(join(here, "mind/loading.tsx"))).toBe(true);
+    expect(existsSync(join(here, "nutrition/loading.tsx"))).toBe(true);
+    const mindLoading = readFileSync(join(here, "mind/loading.tsx"), "utf8");
+    const nutritionLoading = readFileSync(
+      join(here, "nutrition/loading.tsx"),
+      "utf8",
+    );
+    expect(mindLoading).toContain("RouteOpening");
+    expect(mindLoading).toContain('kind="mind"');
+    expect(nutritionLoading).toContain("RouteOpening");
+    expect(nutritionLoading).toContain('kind="nutrition"');
+
     const mind = readFileSync(join(here, "mind/page.tsx"), "utf8");
     expect(mind).toContain("MindCheckForm");
     expect(mind).toContain("MindDisclaimer");
     expect(mind).not.toContain('redirect("/mind/check")');
     expect(mind).not.toContain('redirect("/mind/onboarding")');
+
+    // Server redirect() after the setup gate commits an empty stub
+    // on client tab clicks. Render the wizard on /nutrition instead.
     const nutrition = readFileSync(join(here, "nutrition/page.tsx"), "utf8");
     expect(nutrition).toContain("isNutritionProfileFresh");
+    expect(nutrition).toContain("NutritionSetupView");
+    expect(nutrition).not.toContain('redirect("/nutrition/setup")');
+
+    const opening = readFileSync(
+      join(root, "src/components/app/RouteOpening.tsx"),
+      "utf8",
+    );
+    expect(opening).toContain('useTranslations("Misc.loading")');
+    expect(opening).toContain("nutritionTitle");
+    expect(opening).toContain("mindTitle");
+
+    const da = JSON.parse(
+      readFileSync(join(root, "messages/da/Misc.json"), "utf8"),
+    ) as { loading: Record<string, string> };
+    const en = JSON.parse(
+      readFileSync(join(root, "messages/en/Misc.json"), "utf8"),
+    ) as { loading: Record<string, string> };
+    expect(Object.keys(da.loading)).toEqual(Object.keys(en.loading));
+    expect(da.loading.nutritionTitle).toBe("Åbner kost…");
+    expect(en.loading.nutritionTitle).toBe("Opening food…");
+    expect(da.loading.mindTitle).toBe("Åbner Mind…");
+    expect(en.loading.mindTitle).toBe("Opening Mind…");
+    expect(da.loading.nutritionBody).not.toMatch(/sender/i);
+    expect(en.loading.nutritionBody).not.toMatch(/send you/i);
   });
 
   it("keeps May challenge and Open House behind demo on Crew", () => {
