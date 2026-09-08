@@ -1,13 +1,16 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useCallback, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import type { Exercise, Session } from "@/lib/workout";
 import type { FormCheckQuota } from "@/lib/data/form-check-quota";
 import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
+import SessionExerciseDemo from "@/components/exercise/SessionExerciseDemo";
 import { MUSCLE_LABELS } from "@/lib/data/muscle-groups";
+import { buildCuePhaseMap } from "@/lib/exercise/cue-phase-mapping";
+import { resolveSessionDemoAssetUrl } from "@/lib/data/session-demo-assets";
 import Stepper from "@/components/ui/Stepper";
 import RpeSelect from "@/components/ui/RpeSelect";
 import RestTimer from "@/components/ui/RestTimer";
@@ -258,6 +261,7 @@ export default function SessionClient({
 
         {/* Exercise card */}
         <ExerciseSection
+          key={ex.id}
           ex={ex}
           exIdx={exIdx}
           setIdx={setIdx}
@@ -504,9 +508,13 @@ export default function SessionClient({
  * Exercise header for the current set in a session. When the exercise
  * is linked to the library (`ex.library` populated via the
  * exercise_id FK on session_exercises), we render:
- *   - mini AnatomyFigure (static, shows recruited muscles)
- *   - top 3 cues from the structured array
+ *   - compact MoveKit loop when demoAssetUrl resolves
+ *   - mini AnatomyFigure when the slug has no loop (front-squat etc.)
+ *   - top 3 cues from the structured array (phase-synced when a loop plays)
  *   - "Se hele øvelsen →" deep-link to /train/exercises/[slug]
+ *
+ * The form-check «Film» CTA stays a member camera upload — it is
+ * not the library loop.
  *
  * When library is null (coach typed a free-text exercise), we fall
  * back to the legacy single-cue display so nothing breaks.
@@ -549,10 +557,22 @@ function ExerciseSection({
   const t = useTranslations("Session.exercise");
   const lib = ex.library;
   const figureView = lib ? dominantView(lib) : "front";
+  const demoAssetUrl = lib
+    ? resolveSessionDemoAssetUrl(lib.demoAssetUrl, lib.slug)
+    : null;
+  const phases = lib?.phases ?? [];
+  const [activePhaseIdx, setActivePhaseIdx] = useState<number | null>(null);
+  const handlePhaseChange = useCallback((idx: number) => {
+    setActivePhaseIdx(idx);
+  }, []);
   // Show 3 cues inline — keep the page focused on the active set,
   // not on reading. The full list lives on the detail page.
   const inlineCues = lib?.cues.slice(0, 3) ?? [];
   const overflowCues = lib ? lib.cues.length - inlineCues.length : 0;
+  const cuePhaseMap = useMemo(
+    () => buildCuePhaseMap(inlineCues.length, phases.length),
+    [inlineCues.length, phases.length],
+  );
 
   return (
     <section className="surface-2 rounded-2xl p-5 lg:p-7">
@@ -576,31 +596,58 @@ function ExerciseSection({
 
       {lib ? (
         <div className="flex gap-4 border-t hairline pt-4">
-          <Link
-            href={`/train/exercises/${lib.slug}`}
-            className="shrink-0 lift rounded-md surface p-1.5"
-            aria-label={t("openDetails")}
-          >
-            <AnatomyFigure
-              view={figureView}
-              primary={lib.primaryMuscles}
-              secondary={lib.secondaryMuscles}
-              tertiary={lib.tertiaryMuscles}
-              style={{ width: 56, height: 112 }}
+          {demoAssetUrl ? (
+            <SessionExerciseDemo
+              demoAssetUrl={demoAssetUrl}
+              phases={phases}
+              onPhaseChange={handlePhaseChange}
+              label={t("demoAria", { lift: ex.name })}
+              playLabel={t("demoPlay")}
+              eyebrow={t("demo")}
             />
-          </Link>
+          ) : (
+            <Link
+              href={`/train/exercises/${lib.slug}`}
+              className="shrink-0 lift rounded-md surface p-1.5"
+              aria-label={t("openDetails")}
+            >
+              <AnatomyFigure
+                view={figureView}
+                primary={lib.primaryMuscles}
+                secondary={lib.secondaryMuscles}
+                tertiary={lib.tertiaryMuscles}
+                style={{ width: 56, height: 112 }}
+              />
+            </Link>
+          )}
 
           <div className="min-w-0 flex-1 space-y-3">
             {inlineCues.length > 0 ? (
               <ol className="space-y-1.5">
-                {inlineCues.map((cue, i) => (
-                  <li key={i} className="flex gap-2 text-sm leading-snug">
-                    <span className="font-mono text-fg-faint shrink-0 text-[11px] mt-0.5">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span>{cue}</span>
-                  </li>
-                ))}
+                {inlineCues.map((cue, i) => {
+                  const isActive =
+                    demoAssetUrl != null &&
+                    activePhaseIdx != null &&
+                    cuePhaseMap[i] === activePhaseIdx;
+                  return (
+                    <li
+                      key={i}
+                      data-active={isActive}
+                      className={`flex gap-2 text-sm leading-snug pl-2 -ml-2 border-l-2 transition-colors duration-200 ${
+                        isActive ? "border-l-[#C97B3E] text-fg" : "border-l-transparent"
+                      }`}
+                    >
+                      <span
+                        className={`font-mono shrink-0 text-[11px] mt-0.5 ${
+                          isActive ? "text-fg" : "text-fg-faint"
+                        }`}
+                      >
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span>{cue}</span>
+                    </li>
+                  );
+                })}
               </ol>
             ) : null}
 

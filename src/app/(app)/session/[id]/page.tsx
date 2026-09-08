@@ -4,6 +4,7 @@ import SessionClient from "./SessionClient";
 import SessionPreview from "./SessionPreview";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getFullSession } from "@/lib/data/session";
+import { hydrateDemoSessionLibrary } from "@/lib/data/session-library";
 import { getSession } from "@/lib/auth";
 import {
   FORM_CHECK_LIMIT,
@@ -54,8 +55,11 @@ export default async function SessionPage({
     );
   }
 
-  // Demo mode — only the static TODAY_SESSION resolves
-  const session = id === TODAY_SESSION.id ? TODAY_SESSION : null;
+  // Demo mode — only the static TODAY_SESSION resolves.
+  // Hydrate library join (cues, muscles, bundled demo loop) the
+  // connected path would have loaded via session_exercises.exercise_id.
+  const session =
+    id === TODAY_SESSION.id ? hydrateDemoSessionLibrary(TODAY_SESSION) : null;
   if (!session) notFound();
   if (session.status === "scheduled") {
     return <SessionPreview session={session} />;

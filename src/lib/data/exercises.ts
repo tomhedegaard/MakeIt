@@ -101,6 +101,11 @@ function isExercisePhase(p: unknown): p is ExercisePhase {
   );
 }
 
+/** Narrow unknown JSON (DB jsonb / mock) to the phase list the UI can play. */
+export function parseExercisePhases(raw: unknown): ExercisePhase[] {
+  return Array.isArray(raw) ? raw.filter(isExercisePhase) : [];
+}
+
 function asExercise(r: ExerciseRow): Exercise {
   return {
     id: r.id,
@@ -127,7 +132,7 @@ function asExercise(r: ExerciseRow): Exercise {
     thumbnailUrl: r.thumbnail_url,
     displayOrder: r.display_order ?? 0,
     isPublished: r.is_published ?? false,
-    phases: Array.isArray(r.phases) ? (r.phases as unknown[]).filter(isExercisePhase) : [],
+    phases: parseExercisePhases(r.phases),
   };
 }
 

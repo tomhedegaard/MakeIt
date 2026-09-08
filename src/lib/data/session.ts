@@ -1,4 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
+import { parseExercisePhases } from "@/lib/data/exercises";
+import { resolveSessionDemoAssetUrl } from "@/lib/data/session-demo-assets";
 import type { ExerciseLibrary, Session, SessionStatus } from "@/lib/workout";
 import type { MuscleGroup } from "@/lib/data/muscle-groups";
 
@@ -8,8 +10,9 @@ import type { MuscleGroup } from "@/lib/data/muscle-groups";
  * in-memory TODAY_SESSION.
  *
  * JOIN strategy: session_exercises.exercise_id (nullable FK) →
- * exercises. When set, we hydrate `library` with cues + muscle tiers
- * so the SessionClient can render the mini figure + structured cues.
+ * exercises. When set, we hydrate `library` with cues, muscle tiers,
+ * phases, and demoAssetUrl (joined URL or slug→bundled helper) so
+ * SessionClient can render the mini figure / MoveKit loop + cues.
  * When null (coach typed a free-text exercise), library = null and
  * the UI falls back to the legacy single-cue display.
  */
@@ -30,7 +33,7 @@ export async function getFullSession(
         id, exercise_name, cue, position,
         library:exercises(
           id, slug, primary_muscles, secondary_muscles, tertiary_muscles,
-          cues, mistakes
+          cues, mistakes, demo_asset_url, phases
         ),
         sets:session_sets(
           id, position, target_reps, target_weight, target_rpe, rest_sec,
@@ -90,6 +93,8 @@ type LibraryRow = {
   tertiary_muscles: string[] | null;
   cues: unknown;
   mistakes: unknown;
+  demo_asset_url: string | null;
+  phases: unknown;
 };
 
 function shapeLibrary(
@@ -107,5 +112,7 @@ function shapeLibrary(
     primaryMuscles: (row.primary_muscles ?? []) as MuscleGroup[],
     secondaryMuscles: (row.secondary_muscles ?? []) as MuscleGroup[],
     tertiaryMuscles: (row.tertiary_muscles ?? []) as MuscleGroup[],
+    demoAssetUrl: resolveSessionDemoAssetUrl(row.demo_asset_url, row.slug),
+    phases: parseExercisePhases(row.phases),
   };
 }
