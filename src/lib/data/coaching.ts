@@ -1,7 +1,15 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { currentIsoMonday } from "@/lib/data/nutrition";
+import { copenhagenTodayIso } from "@/lib/dates/copenhagen";
+import {
+  pickDashboardTodaySession,
+  preferSessionForDate,
+  weekStripPulseIso,
+  type TodaySessionCandidate,
+} from "@/lib/dashboard/pick-today-session";
 import { excludeSyntheticPrograms } from "@/lib/programs/synthetic";
+import type { SessionStatus } from "@/lib/workout";
 
 /**
  * Data fetchers for /coaching (the Træn page). Mirrors the
@@ -52,7 +60,7 @@ export async function getWeekStrip(memberId: string): Promise<WeekDay[] | null> 
 
   const monday = currentIsoMonday();
   const sunday = isoPlusDays(monday, 6);
-  const today = todayIso();
+  const today = copenhagenTodayIso();
 
   // Pull all sessions in the window in one shot.
   const { data: sessions } = await supabase
@@ -64,25 +72,38 @@ export async function getWeekStrip(memberId: string): Promise<WeekDay[] | null> 
 
   const byDate = new Map<
     string,
-    { id: string; dayLabel: string | null; title: string; status: string }
+    { id: string; dayLabel: string | null; title: string; status: SessionStatus }
   >();
+  const candidates: TodaySessionCandidate[] = [];
   for (const s of sessions ?? []) {
     if (!s.scheduled_for) continue;
-    // First session per day wins — programs typically only have one
-    // scheduled session per date.
-    if (!byDate.has(s.scheduled_for)) {
-      byDate.set(s.scheduled_for, {
-        id: s.id,
-        dayLabel: s.day_label,
-        title: s.title,
-        status: s.status,
-      });
-    }
+    const incoming = {
+      id: s.id as string,
+      dayLabel: s.day_label as string | null,
+      title: s.title as string,
+      status: (s.status ?? "scheduled") as SessionStatus,
+    };
+    const existing = byDate.get(s.scheduled_for);
+    byDate.set(
+      s.scheduled_for,
+      existing ? preferSessionForDate(existing, incoming) : incoming,
+    );
+    candidates.push({
+      id: incoming.id,
+      status: incoming.status,
+      scheduledFor: s.scheduled_for,
+      dayLabel: incoming.dayLabel,
+      title: incoming.title,
+    });
   }
+
+  const weekIsos = Array.from({ length: 7 }, (_, i) => isoPlusDays(monday, i));
+  const picked = pickDashboardTodaySession(candidates, today);
+  const pulseIso = weekStripPulseIso(picked?.scheduledFor, today, weekIsos);
 
   const out: WeekDay[] = [];
   for (let i = 0; i < 7; i++) {
-    const iso = isoPlusDays(monday, i);
+    const iso = weekIsos[i];
     const session = byDate.get(iso);
     const date = Number(iso.slice(8, 10));
     const isRest = !session;
@@ -95,7 +116,7 @@ export async function getWeekStrip(memberId: string): Promise<WeekDay[] | null> 
         : "",
       sessionId: session?.id ?? null,
       done: session?.status === "completed",
-      today: iso === today,
+      today: iso === pulseIso,
       rest: isRest,
     });
   }
@@ -109,7 +130,7 @@ export async function getWeekStrip(memberId: string): Promise<WeekDay[] | null> 
  */
 export function mockWeekStrip(): WeekDay[] {
   const monday = currentIsoMonday();
-  const today = todayIso();
+  const today = copenhagenTodayIso();
   // Exercise proper names stay English; rest days leave sessionLabel
   // empty so the page can render Coaching.week.rest in the locale.
   const labels = ["Squat", "Push", "Pull", "Deadlift", "Hyper", "", ""];
@@ -135,7 +156,7 @@ export function mockWeekStrip(): WeekDay[] {
  */
 export function emptyWeekStrip(): WeekDay[] {
   const monday = currentIsoMonday();
-  const today = todayIso();
+  const today = copenhagenTodayIso();
   return WEEK_DAY_KEYS.map((dayKey, i) => {
     const iso = isoPlusDays(monday, i);
     return {
@@ -299,7 +320,7 @@ export async function getSessionStreak(memberId: string): Promise<number> {
   const supabase = await createClient();
   if (!supabase) return 0;
 
-  const today = todayIso();
+  const today = copenhagenTodayIso();
   const { data } = await supabase
     .from("sessions")
     .select("status, scheduled_for")
@@ -335,16 +356,6 @@ function isoPlusDays(iso: string, n: number): string {
   const d = new Date(iso + "T00:00:00Z");
   d.setUTCDate(d.getUTCDate() + n);
   return d.toISOString().slice(0, 10);
-}
-
-function todayIso(): string {
-  // Europe/Copenhagen-aware "today" so the strip flips at local midnight.
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Europe/Copenhagen",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
 }
 
 /**

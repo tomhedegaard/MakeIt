@@ -1,8 +1,11 @@
 import { copenhagenTodayIso } from "@/lib/dates/copenhagen";
-import type {
-  TodayProseSession,
-  TodaySessionState,
-} from "@/lib/dashboard/today-prose";
+import {
+  isOpenSessionStatus,
+  pickDashboardTodaySession,
+  todayProseSessionFromPick,
+  type TodaySessionCandidate,
+} from "@/lib/dashboard/pick-today-session";
+import type { TodayProseSession } from "@/lib/dashboard/today-prose";
 import { createClient } from "@/lib/supabase/server";
 import type { SessionStatus } from "@/lib/workout";
 
@@ -65,6 +68,7 @@ type SessionRow = {
   title: string;
   estimated_minutes: number | null;
   scheduled_for: string | null;
+  status?: SessionStatus | null;
   program: { code: string; name: string } | { code: string; name: string }[] | null;
   exercises: {
     id: string;
@@ -82,79 +86,24 @@ function unwrapProgram(p: SessionRow["program"]) {
   return Array.isArray(p) ? p[0] ?? null : p;
 }
 
-function sessionStateFromStatus(status: SessionStatus): TodaySessionState {
-  if (status === "completed") return "done";
-  if (status === "skipped") return "skipped";
-  return "assigned";
-}
+type TodayPickRow = SessionRow & {
+  status: SessionStatus;
+};
 
-/**
- * Today's session as a prose signal. Unlike getTodayCard this is
- * Copenhagen-today only: no row → rest. Demo / no client → null
- * (composer uses TODAY_SESSION). Query errors → null (unknown).
- */
-export async function getTodaySessionSignal(
-  memberId: string,
-  now: Date = new Date(),
-): Promise<TodayProseSession | null> {
-  const supabase = await createClient();
-  if (!supabase) return null;
-
-  const today = copenhagenTodayIso(now);
-  const { data, error } = await supabase
-    .from("sessions")
-    .select("status, day_label, title")
-    .eq("member_id", memberId)
-    .eq("scheduled_for", today)
-    .order("scheduled_for", { ascending: true })
-    .limit(1)
-    .maybeSingle();
-
-  if (error) {
-    console.warn("[dashboard] today session signal failed", error.message);
-    return null;
-  }
-  if (!data) {
-    return { state: "rest", dayLabel: null };
-  }
-
-  const status = (data.status ?? "scheduled") as SessionStatus;
-  const dayLabel = (data.day_label as string | null) ?? (data.title as string | null);
+function toCandidate(row: TodayPickRow): TodaySessionCandidate {
   return {
-    state: sessionStateFromStatus(status),
-    dayLabel,
+    id: row.id,
+    status: (row.status ?? "scheduled") as SessionStatus,
+    scheduledFor: row.scheduled_for,
+    dayLabel: row.day_label,
+    title: row.title,
   };
 }
 
-export async function getTodayCard(memberId: string): Promise<TodayCard | null> {
-  const supabase = await createClient();
-  if (!supabase) return null;
-
-  const { data, error } = await supabase
-    .from("sessions")
-    .select(
-      `
-      id, week, day_label, title, estimated_minutes, scheduled_for,
-      program:programs(code, name),
-      exercises:session_exercises(
-        id, exercise_name,
-        library:exercises(slug),
-        sets:session_sets(id)
-      )
-    `
-    )
-    .eq("member_id", memberId)
-    .in("status", ["scheduled", "active"])
-    .order("scheduled_for", { ascending: true })
-    .limit(1)
-    .maybeSingle<SessionRow>();
-
-  if (error || !data) return null;
-
+function mapSessionRowToCard(data: SessionRow): TodayCard {
   const exercises = data.exercises ?? [];
   const setCount = exercises.reduce((a, e) => a + (e.sets?.length ?? 0), 0);
   const program = unwrapProgram(data.program);
-
   const week = data.week ?? 1;
   return {
     id: data.id,
@@ -178,6 +127,94 @@ export async function getTodayCard(memberId: string): Promise<TodayCard | null> 
   };
 }
 
+/**
+ * Candidate rows for the shared Today pick: every still-open session
+ * plus anything dated Copenhagen today (done / skipped).
+ */
+async function loadTodayPickRows(
+  memberId: string,
+  now: Date = new Date(),
+): Promise<{ today: string; rows: TodayPickRow[] } | null> {
+  const supabase = await createClient();
+  if (!supabase) return null;
+
+  const today = copenhagenTodayIso(now);
+  const { data, error } = await supabase
+    .from("sessions")
+    .select(
+      `
+      id, week, day_label, title, estimated_minutes, scheduled_for, status,
+      program:programs(code, name),
+      exercises:session_exercises(
+        id, exercise_name,
+        library:exercises(slug),
+        sets:session_sets(id)
+      )
+    `,
+    )
+    .eq("member_id", memberId)
+    .or(`status.in.(scheduled,active),scheduled_for.eq."${today}"`)
+    .order("scheduled_for", { ascending: true, nullsFirst: false })
+    .limit(40)
+    .returns<TodayPickRow[]>();
+
+  if (error) {
+    console.warn("[dashboard] today session pick failed", error.message);
+    return null;
+  }
+
+  return { today, rows: data ?? [] };
+}
+
+async function resolveTodayPick(
+  memberId: string,
+  now: Date = new Date(),
+): Promise<{
+  today: string;
+  picked: TodaySessionCandidate | null;
+  rows: TodayPickRow[];
+} | null> {
+  const loaded = await loadTodayPickRows(memberId, now);
+  if (!loaded) return null;
+  return {
+    today: loaded.today,
+    picked: pickDashboardTodaySession(
+      loaded.rows.map(toCandidate),
+      loaded.today,
+    ),
+    rows: loaded.rows,
+  };
+}
+
+/**
+ * Today's session as a prose signal. Same pick as getTodayCard —
+ * an in-progress / overdue Dag A wins over calendar-today Dag B.
+ * Demo / no client → null (composer uses TODAY_SESSION).
+ * Query errors → null (unknown).
+ */
+export async function getTodaySessionSignal(
+  memberId: string,
+  now: Date = new Date(),
+): Promise<TodayProseSession | null> {
+  const resolved = await resolveTodayPick(memberId, now);
+  if (!resolved) return null;
+  return todayProseSessionFromPick(resolved.picked);
+}
+
+export async function getTodayCard(
+  memberId: string,
+  now: Date = new Date(),
+): Promise<TodayCard | null> {
+  const resolved = await resolveTodayPick(memberId, now);
+  if (!resolved?.picked || !isOpenSessionStatus(resolved.picked.status)) {
+    return null;
+  }
+
+  const row = resolved.rows.find((r) => r.id === resolved.picked?.id);
+  if (!row) return null;
+  return mapSessionRowToCard(row);
+}
+
 export async function getUpcomingSessions(
   memberId: string,
   limit = 3
@@ -186,7 +223,7 @@ export async function getUpcomingSessions(
   if (!supabase) return null;
 
   // Skip the active/today's session — we want sessions AFTER today.
-  const today = new Date().toISOString().slice(0, 10);
+  const today = copenhagenTodayIso();
 
   const { data, error } = await supabase
     .from("sessions")
