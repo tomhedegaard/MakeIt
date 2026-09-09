@@ -190,6 +190,7 @@ describe("CDO DA/EN bodycopy — Nutrition setup", () => {
     expect(keysOf(daNutrition.logWeight).sort()).toEqual(
       keysOf(enNutrition.logWeight).sort(),
     );
+    expect(keysOf(daNutrition.page).sort()).toEqual(keysOf(enNutrition.page).sort());
   });
 
   it("shows Danish goal/diet chip labels, not English enums", () => {

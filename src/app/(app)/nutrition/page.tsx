@@ -146,6 +146,8 @@ export default async function NutritionPage({
 
       {kcalAdjust ? <KcalAdjustBanner delta={kcalAdjust.delta} reason={kcalAdjust.reason} t={t} /> : null}
 
+      {plan?.generator === "mock" ? <FallbackPlanBanner t={t} /> : null}
+
       <DailyCheckInCard checkin={checkin} />
 
       <DailyIntakeCard intake={intake} />
@@ -213,6 +215,15 @@ function KcalAdjustBanner({
 /* ---------------------------------------------------------------- *
  * Quota error banner
  * ---------------------------------------------------------------- */
+
+function FallbackPlanBanner({ t }: { t: T }) {
+  return (
+    <div className="surface-2 rounded-xl border border-warn/40 px-5 py-3 text-sm">
+      <span className="eyebrow text-warn mr-2">{t("page.fallbackEyebrow")}</span>
+      {t("page.fallbackBody")}
+    </div>
+  );
+}
 
 function QuotaBanner({
   kind,

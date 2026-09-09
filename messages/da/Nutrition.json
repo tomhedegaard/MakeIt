@@ -38,7 +38,9 @@
     "supplementConsider": "Overvej",
     "regenerate": "Regenerér ugeplan",
     "generatedByClaude": "AI-udkast",
-    "generatedLocally": "Genereret lokalt (mock)"
+    "generatedLocally": "Regelbaseret plan (skaleret til dit mål)",
+    "fallbackEyebrow": "Ikke et AI-udkast",
+    "fallbackBody": "Motoren nåede ikke at færdiggøre AI-udkastet inden for tiden. Vi har lagt en skaleret standardplan der rammer dine daglige kcal- og proteinmål — ikke et ujusteret katalog."
   },
   "dayLabels": {
     "mon": "Man",
