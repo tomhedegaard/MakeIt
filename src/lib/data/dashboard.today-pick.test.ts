@@ -32,12 +32,12 @@ describe("Today surfaces share one session pick", () => {
     );
   });
 
-  it("week strip pulses the same pick, not a private todayIso", () => {
-    expect(coaching).toContain("pickDashboardTodaySession");
-    expect(coaching).toContain("weekStripPulseIso");
-    expect(coaching).toContain("preferSessionForDate");
+  it("week strip builds from the shared pick, not a UTC ISO-week clamp", () => {
+    expect(coaching).toContain("buildWeekStrip");
     expect(coaching).toContain("copenhagenTodayIso");
     expect(coaching).not.toMatch(/function todayIso\(/);
+    expect(coaching).not.toMatch(/currentIsoMonday/);
+    expect(coaching).not.toMatch(/gte\("scheduled_for", monday\)/);
   });
 
   it("Today-prose composer still reads getTodaySessionSignal", () => {
