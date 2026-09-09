@@ -177,9 +177,10 @@ describe("CDO DA/EN chrome — coaching day chips", () => {
     expect(page).toContain('t("week.rest")');
     expect(page).not.toMatch(/\{day\.label\}/);
     const data = read("src/lib/data/coaching.ts");
+    const strip = read("src/lib/dashboard/week-strip.ts");
     expect(data).toContain("WEEK_DAY_KEYS");
     expect(data).not.toContain('["Man", "Tir", "Ons"');
-    expect(data).toMatch(/Exercise names stay as program\/exercise proper labels/);
+    expect(strip).toMatch(/Exercise names stay as program\/exercise proper labels/);
   });
 });
 

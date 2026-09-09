@@ -1,15 +1,20 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
-import { currentIsoMonday } from "@/lib/data/nutrition";
-import { copenhagenTodayIso } from "@/lib/dates/copenhagen";
 import {
-  pickDashboardTodaySession,
-  preferSessionForDate,
-  weekStripPulseIso,
-  type TodaySessionCandidate,
-} from "@/lib/dashboard/pick-today-session";
+  copenhagenIsoMonday,
+  copenhagenTodayIso,
+  isoPlusDays,
+} from "@/lib/dates/copenhagen";
+import {
+  buildWeekStrip,
+  WEEK_DAY_KEYS,
+  type WeekDay,
+  type WeekStripSession,
+} from "@/lib/dashboard/week-strip";
 import { excludeSyntheticPrograms } from "@/lib/programs/synthetic";
-import type { SessionStatus } from "@/lib/workout";
+
+export { WEEK_DAY_KEYS };
+export type { WeekDay, WeekDayKey } from "@/lib/dashboard/week-strip";
 
 /**
  * Data fetchers for /coaching (the Træn page). Mirrors the
@@ -21,106 +26,32 @@ import type { SessionStatus } from "@/lib/workout";
  * Week strip — Mon..Sun for the current ISO week
  * ================================================================ */
 
-export const WEEK_DAY_KEYS = [
-  "mon",
-  "tue",
-  "wed",
-  "thu",
-  "fri",
-  "sat",
-  "sun",
-] as const;
-
-export type WeekDayKey = (typeof WEEK_DAY_KEYS)[number];
-
-export type WeekDay = {
-  /** Mon..Sun key — chrome label resolves from Coaching.week.days */
-  dayKey: WeekDayKey;
-  /** Day-of-month (1..31) */
-  date: number;
-  /** YYYY-MM-DD for click-through */
-  iso: string;
-  /**
-   * Compressed session label, e.g. "Squat" / "Push".
-   * Exercise names stay as program/exercise proper labels (not translated).
-   * Empty string = rest day; the page renders Coaching.week.rest.
-   */
-  sessionLabel: string;
-  /** Session id if a session is scheduled, for the link */
-  sessionId: string | null;
-  /** Status flags driving the dot variant */
-  done: boolean;
-  today: boolean;
-  rest: boolean;
-};
-
 export async function getWeekStrip(memberId: string): Promise<WeekDay[] | null> {
   const supabase = await createClient();
   if (!supabase) return null;
 
-  const monday = currentIsoMonday();
-  const sunday = isoPlusDays(monday, 6);
   const today = copenhagenTodayIso();
-
-  // Pull all sessions in the window in one shot.
+  // Do not clamp to the current UTC ISO week — that drops an overdue
+  // Dag A and the pulse lands on Bench. Same universe as the Today pick:
+  // dated sessions the member actually has (open + this horizon).
   const { data: sessions } = await supabase
     .from("sessions")
     .select("id, day_label, title, scheduled_for, status")
     .eq("member_id", memberId)
-    .gte("scheduled_for", monday)
-    .lte("scheduled_for", sunday);
+    .not("scheduled_for", "is", null)
+    .order("scheduled_for", { ascending: true })
+    .limit(80);
 
-  const byDate = new Map<
-    string,
-    { id: string; dayLabel: string | null; title: string; status: SessionStatus }
-  >();
-  const candidates: TodaySessionCandidate[] = [];
-  for (const s of sessions ?? []) {
-    if (!s.scheduled_for) continue;
-    const incoming = {
+  return buildWeekStrip({
+    todayIso: today,
+    sessions: (sessions ?? []).map((s) => ({
       id: s.id as string,
+      status: (s.status ?? "scheduled") as WeekStripSession["status"],
+      scheduledFor: s.scheduled_for as string,
       dayLabel: s.day_label as string | null,
       title: s.title as string,
-      status: (s.status ?? "scheduled") as SessionStatus,
-    };
-    const existing = byDate.get(s.scheduled_for);
-    byDate.set(
-      s.scheduled_for,
-      existing ? preferSessionForDate(existing, incoming) : incoming,
-    );
-    candidates.push({
-      id: incoming.id,
-      status: incoming.status,
-      scheduledFor: s.scheduled_for,
-      dayLabel: incoming.dayLabel,
-      title: incoming.title,
-    });
-  }
-
-  const weekIsos = Array.from({ length: 7 }, (_, i) => isoPlusDays(monday, i));
-  const picked = pickDashboardTodaySession(candidates, today);
-  const pulseIso = weekStripPulseIso(picked?.scheduledFor, today, weekIsos);
-
-  const out: WeekDay[] = [];
-  for (let i = 0; i < 7; i++) {
-    const iso = weekIsos[i];
-    const session = byDate.get(iso);
-    const date = Number(iso.slice(8, 10));
-    const isRest = !session;
-    out.push({
-      dayKey: WEEK_DAY_KEYS[i],
-      date,
-      iso,
-      sessionLabel: session
-        ? compressSessionLabel(session.dayLabel, session.title)
-        : "",
-      sessionId: session?.id ?? null,
-      done: session?.status === "completed",
-      today: iso === pulseIso,
-      rest: isRest,
-    });
-  }
-  return out;
+    })),
+  });
 }
 
 /**
@@ -129,7 +60,7 @@ export async function getWeekStrip(memberId: string): Promise<WeekDay[] | null> 
  * unconnected demo still looks "live".
  */
 export function mockWeekStrip(): WeekDay[] {
-  const monday = currentIsoMonday();
+  const monday = copenhagenIsoMonday();
   const today = copenhagenTodayIso();
   // Exercise proper names stay English; rest days leave sessionLabel
   // empty so the page can render Coaching.week.rest in the locale.
@@ -155,20 +86,9 @@ export function mockWeekStrip(): WeekDay[] {
  * Used when connected mode has no week fetch (should be rare).
  */
 export function emptyWeekStrip(): WeekDay[] {
-  const monday = currentIsoMonday();
-  const today = copenhagenTodayIso();
-  return WEEK_DAY_KEYS.map((dayKey, i) => {
-    const iso = isoPlusDays(monday, i);
-    return {
-      dayKey,
-      date: Number(iso.slice(8, 10)),
-      iso,
-      sessionLabel: "",
-      sessionId: null,
-      done: false,
-      today: iso === today,
-      rest: true,
-    };
+  return buildWeekStrip({
+    sessions: [],
+    todayIso: copenhagenTodayIso(),
   });
 }
 
@@ -350,32 +270,4 @@ export async function getSessionStreak(memberId: string): Promise<number> {
 function unwrapOne<T>(v: T | T[] | null | undefined): T | null {
   if (!v) return null;
   return Array.isArray(v) ? v[0] ?? null : v;
-}
-
-function isoPlusDays(iso: string, n: number): string {
-  const d = new Date(iso + "T00:00:00Z");
-  d.setUTCDate(d.getUTCDate() + n);
-  return d.toISOString().slice(0, 10);
-}
-
-/**
- * "Dag A — Squat" → "Squat". "Squat — Top set" → "Squat". Picks the
- * shortest meaningful chunk so the day-strip stays compact.
- */
-function compressSessionLabel(
-  dayLabel: string | null,
-  title: string
-): string {
-  const candidates = [dayLabel, title].filter(
-    (s): s is string => typeof s === "string" && s.length > 0
-  );
-  for (const c of candidates) {
-    // Pull text after an em-dash if present (handles "Dag A — Squat")
-    const m = c.match(/—\s*(.+)$/);
-    const tail = m ? m[1] : c;
-    // First word, max 12 chars
-    const word = tail.trim().split(/\s+/)[0] ?? tail;
-    if (word) return word.slice(0, 12);
-  }
-  return "—";
 }
