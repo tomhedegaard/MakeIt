@@ -64,8 +64,22 @@
     "connectStep2Title": "HRV syncs every morning",
     "connectStep2Body": "MakeIt fetches last night's reading automatically. You do nothing.",
     "connectStep3Title": "We build your baseline",
-    "connectStep3Body": "The first couple of weeks MakeIt learns your normal — then you see readiness.",
+    "connectStep3Body": "The first couple of weeks MakeIt learns your normal — then you see your HRV readiness.",
     "connectCta": "Connect your wearable",
     "connectAppleNote": "Apple Watch support arrives with the MakeIt iPhone app."
+  },
+  "connectSheet": {
+    "eyebrow": "Wearable",
+    "title": "Connect your wearable.",
+    "body": "Connect a wearable to sync your HRV automatically — no manual entry.",
+    "action": "Connect →",
+    "opening": "Opening {name}…",
+    "meta": "HRV · sleep · recovery",
+    "comingSoon": "Coming soon",
+    "errorGeneric": "Something went wrong. Try again.",
+    "errorDemo": "Wearable connection is not available in demo mode.",
+    "errorNoSession": "You need to be signed in to connect a wearable.",
+    "errorUnsupported": "This wearable is not supported yet.",
+    "errorStart": "Could not start the connection. Try again."
   }
 }
