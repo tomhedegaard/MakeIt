@@ -74,3 +74,33 @@ describe("session i18n chrome (Testy LOW)", () => {
     expect(da.default.done.eyebrow).toBe("Session færdig");
   });
 });
+
+describe("session set-log weight input (Testy LOW)", () => {
+  it("lets members type kg instead of only stepping", () => {
+    const stepper = readFileSync(
+      join(here, "../../../../components/ui/Stepper.tsx"),
+      "utf8",
+    );
+    expect(stepper).toContain("data-stepper-input");
+    expect(stepper).toContain('inputMode={allowDecimal ? "decimal" : "numeric"}');
+    expect(stepper).toContain("commitStepperInput");
+    expect(stepper).toContain("stepper-btn");
+
+    const client = readFileSync(join(here, "SessionClient.tsx"), "utf8");
+    expect(client).toContain('name="weight"');
+    expect(client).toContain('unit="kg"');
+    expect(client).toContain('step={2.5}');
+  });
+
+  it("keeps stepper decrease/increase labels in DA/EN lockstep", async () => {
+    const da = await import("../../../../../messages/da/Session.json");
+    const en = await import("../../../../../messages/en/Session.json");
+    expect(da.default.steppers.decrease).toBe("Mindre {label}");
+    expect(da.default.steppers.increase).toBe("Mere {label}");
+    expect(en.default.steppers.decrease).toBe("Decrease {label}");
+    expect(en.default.steppers.increase).toBe("Increase {label}");
+    expect(Object.keys(da.default.steppers)).toEqual(
+      Object.keys(en.default.steppers),
+    );
+  });
+});
