@@ -16,6 +16,8 @@
  *   - profile.fishPerWeek          — caps the number of fish dinners
  *   - profile.cookingLevel         — gates "advanced" recipes
  *   - profile.goal                 — daily kcal/macro targets
+ *   - profile.dailyKcalTarget /
+ *     dailyProteinGTarget          — portions are scaled to these
  */
 
 import type {
@@ -27,6 +29,11 @@ import type {
   MealSlot,
   NutritionProfile,
 } from "@/lib/data/nutrition";
+import {
+  resolveDailyTargets,
+  scaleMealDraft,
+  scaleMealsToDailyTargets,
+} from "@/lib/nutrition/plan-macros";
 
 /* ---------------------------------------------------------------- *
  * Template type
@@ -748,19 +755,19 @@ export function generateMockPlan(opts: {
     bySlot[slot] = rankBucket(bySlot[slot], profile);
   }
 
-  // Targets — pick from profile or estimate from goal.
-  const dailyKcal = profile.dailyKcalTarget ?? defaultKcal(profile.goal);
-  const dailyProtein = profile.dailyProteinGTarget ?? Math.round(dailyKcal * 0.30 / 4);
-  const dailyCarbs = Math.round(dailyKcal * 0.40 / 4);
-  const dailyFat = Math.round(dailyKcal * 0.30 / 9);
+  const targets = resolveDailyTargets(profile);
+  const targetDensity = targets.proteinG / Math.max(targets.kcal, 1);
 
   // Slot a meal per (day, slot) using round-robin from each ranked
   // bucket. Cap fish dinners by fishPerWeek to respect preference.
-  const meals: Omit<Meal, "id" | "planId">[] = [];
+  // Then rebalance low-protein days before we scale portions — a
+  // 70 g-P Tuesday cannot reach 188 g by kcal-scaling alone.
+  const dayPicks: Template[][] = [];
   const fishCap = clamp(profile.fishPerWeek, 0, 7);
   let fishUsed = 0;
 
   for (let day = 0; day < 7; day++) {
+    const picks: Template[] = [];
     for (const slot of ["morgen", "frokost", "aften"] as MealSlot[]) {
       const bucket = bySlot[slot];
       if (bucket.length === 0) continue;
@@ -781,29 +788,35 @@ export function generateMockPlan(opts: {
         attempts++;
       }
       if (!chosen) chosen = bucket[(day * 3 + slotIndex(slot)) % bucket.length];
+      picks.push(chosen);
+    }
+    const balanced = rebalanceDay(picks, bySlot, targetDensity, fishCap, fishUsed);
+    fishUsed = countFish(dayPicks.flat()) + countFish(balanced);
+    dayPicks.push(balanced);
+  }
 
-      meals.push(templateToMeal(chosen, day, slot, meals.length));
+  const meals: Omit<Meal, "id" | "planId">[] = [];
+  for (let day = 0; day < dayPicks.length; day++) {
+    for (const chosen of dayPicks[day]) {
+      meals.push(templateToMeal(chosen, day, chosen.slot, meals.length));
     }
   }
 
   return {
-    targets: {
-      kcal: dailyKcal,
-      proteinG: dailyProtein,
-      carbsG: dailyCarbs,
-      fatG: dailyFat,
-    },
+    targets,
     notes:
       `Plan genereret for uge ${opts.weekStart}. ` +
-      `Fisk: ${fishUsed} måltider (mål ${fishCap}). ` +
+      `Fisk: ${countFish(dayPicks.flat())} måltider (mål ${fishCap}). ` +
+      `Portioner skaleret til ${targets.kcal} kcal / ${targets.proteinG}g protein. ` +
       `Bygget på MakeIt-allowlist — ingen rapsolie, intet UPF, intet tilsat sukker.`,
-    meals,
+    meals: scaleMealsToDailyTargets(meals, targets),
   };
 }
 
 export function swapMockMeal(opts: {
   profile: Pick<NutritionProfile,
-    "diet" | "allergies" | "dislikes" | "preferences" | "fishPerWeek" | "cookingLevel"
+    "diet" | "allergies" | "dislikes" | "preferences" | "fishPerWeek" | "cookingLevel" |
+    "goal" | "dailyKcalTarget" | "dailyProteinGTarget"
   >;
   dayIndex: number;
   slot: MealSlot;
@@ -816,7 +829,12 @@ export function swapMockMeal(opts: {
 
   const ranked = rankBucket(allowed, opts.profile);
   const pick = ranked[(opts.dayIndex + 1) % Math.max(1, ranked.length)] ?? CATALOG[0];
-  return templateToMeal(pick, opts.dayIndex, opts.slot, 0);
+  const meal = templateToMeal(pick, opts.dayIndex, opts.slot, 0);
+  const targets = resolveDailyTargets(opts.profile);
+  const share = slotKcalShare(opts.slot);
+  const rawKcal = meal.estKcal ?? pick.macros.kcal;
+  if (rawKcal <= 0) return meal;
+  return scaleMealDraft(meal, (targets.kcal * share) / rawKcal);
 }
 
 /* ---------------------------------------------------------------- *
@@ -867,17 +885,82 @@ function countPrefHits(t: Template, prefs: string[]): number {
   return prefs.reduce((acc, p) => acc + (hay.includes(p) ? 1 : 0), 0);
 }
 
-function defaultKcal(goal: NutritionProfile["goal"]): number {
-  switch (goal) {
-    case "cut": return 2200;
-    case "mass": return 3000;
-    case "recomp": return 2500;
-    default: return 2400;
+function slotIndex(slot: MealSlot): number {
+  return ["morgen", "frokost", "aften", "snack", "pre", "post"].indexOf(slot);
+}
+
+function slotKcalShare(slot: MealSlot): number {
+  switch (slot) {
+    case "morgen":
+      return 0.28;
+    case "frokost":
+      return 0.36;
+    case "aften":
+      return 0.36;
+    case "snack":
+    case "pre":
+    case "post":
+      return 0.12;
+    default: {
+      const _exhaustive: never = slot;
+      return _exhaustive;
+    }
   }
 }
 
-function slotIndex(slot: MealSlot): number {
-  return ["morgen", "frokost", "aften", "snack", "pre", "post"].indexOf(slot);
+function countFish(templates: Template[]): number {
+  return templates.filter((t) => t.containsFish).length;
+}
+
+/**
+ * Swap the lowest protein-density meal on a day for a denser unused
+ * alternative in the same slot, so kcal-scaling can still hit the
+ * protein band. Respects the remaining weekly fish cap.
+ */
+function rebalanceDay(
+  picks: Template[],
+  bySlot: Record<MealSlot, Template[]>,
+  targetDensity: number,
+  fishCap: number,
+  fishUsedAfterPick: number,
+): Template[] {
+  const current = [...picks];
+  let fishUsed = fishUsedAfterPick;
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const kcal = current.reduce((s, t) => s + t.macros.kcal, 0);
+    const protein = current.reduce((s, t) => s + t.macros.proteinG, 0);
+    if (kcal > 0 && protein / kcal >= targetDensity * 0.88) return current;
+
+    let worstI = 0;
+    let worstD = Infinity;
+    current.forEach((t, i) => {
+      const d = t.macros.proteinG / Math.max(t.macros.kcal, 1);
+      if (d < worstD) {
+        worstD = d;
+        worstI = i;
+      }
+    });
+
+    const victim = current[worstI];
+    const remainingFish = fishCap - (fishUsed - (victim.containsFish ? 1 : 0));
+    const better = bySlot[victim.slot]
+      .filter((t) => t.id !== victim.id)
+      .filter((t) => !current.some((c) => c.id === t.id))
+      .filter((t) => !t.containsFish || remainingFish > 0)
+      .sort((a, b) => density(b) - density(a))[0];
+    if (!better) break;
+    if (density(better) <= worstD * 1.05) break;
+
+    if (victim.containsFish) fishUsed--;
+    if (better.containsFish) fishUsed++;
+    current[worstI] = better;
+  }
+  return current;
+}
+
+function density(t: Template): number {
+  return t.macros.proteinG / Math.max(t.macros.kcal, 1);
 }
 
 function clamp(n: number, min: number, max: number): number {

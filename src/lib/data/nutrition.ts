@@ -1,6 +1,7 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { generateMockPlan } from "@/lib/nutrition/mock-plan";
+import { fallbackPlanNotes } from "@/lib/nutrition/plan-macros";
 import { getMealImage, getMealImagesBatch } from "@/lib/nutrition/unsplash";
 
 /* ---------------------------------------------------------------- *
@@ -260,13 +261,17 @@ export async function getCurrentPlan(memberId: string): Promise<Plan | null> {
 export async function generatePlan(
   memberId: string,
   weekStart: string,
-  profile: NutritionProfile
+  profile: NutritionProfile,
+  opts?: { fallbackFromClaude?: boolean },
 ): Promise<Plan> {
   // Build the plan shape (ingredients, steps, macros) from the mock
-  // generator. The real Claude generator (commit 3) will replace
-  // this call with a Sonnet-4.6 round-trip when ANTHROPIC_API_KEY is
-  // present, falling back to the same mock on miss/error.
+  // generator. Claude is tried first in generatePlanAction; this
+  // path is demo mode and the scaled fallback when the AI hook
+  // returns null (no key, timeout, or invalid output).
   const planShape = generateMockPlan({ profile, weekStart });
+  const notes = opts?.fallbackFromClaude
+    ? fallbackPlanNotes(weekStart, planShape.targets)
+    : planShape.notes;
 
   const supabase = await createClient();
   if (!supabase) {
@@ -281,7 +286,7 @@ export async function generatePlan(
       dailyFatG: planShape.targets.fatG,
       generator: "mock",
       generatorModel: null,
-      notes: planShape.notes,
+      notes,
       generatedAt: new Date().toISOString(),
       meals: planShape.meals.map((m, i) => ({
         ...m,
@@ -313,7 +318,7 @@ export async function generatePlan(
       daily_carbs_g: planShape.targets.carbsG,
       daily_fat_g: planShape.targets.fatG,
       generator: "mock",
-      notes: planShape.notes,
+      notes,
     })
     .select("*")
     .single();

@@ -20,6 +20,10 @@ import {
 } from "@/lib/data/nutrition";
 import { gradeMealPhoto } from "@/lib/data/nutrition-photo-claude";
 import { generatePlanWithClaude } from "@/lib/data/nutrition-planner-claude";
+import {
+  resolveDailyTargets,
+  scaleMealsToDailyTargets,
+} from "@/lib/nutrition/plan-macros";
 import { logWeight } from "@/lib/data/weight";
 import { getMealImagesBatch } from "@/lib/nutrition/unsplash";
 import { checkLimit, recordAction } from "@/lib/data/rate-limits";
@@ -196,9 +200,20 @@ export async function generatePlanAction(): Promise<void> {
   let succeeded = false;
   try {
     if (aiShape) {
-      await persistAiPlan(member.id, weekStart, aiShape);
+      // Claude can return a plausible-looking week that still sits
+      // ~60% under the member's targets (same failure mode as the
+      // unscaled mock catalog). Re-assert profile targets and scale
+      // portions before persist.
+      const targets = resolveDailyTargets(profile);
+      await persistAiPlan(member.id, weekStart, {
+        ...aiShape,
+        targets,
+        meals: scaleMealsToDailyTargets(aiShape.meals, targets),
+      });
     } else {
-      await generatePlan(member.id, weekStart, profile);
+      await generatePlan(member.id, weekStart, profile, {
+        fallbackFromClaude: true,
+      });
     }
     succeeded = true;
   } catch (err) {
@@ -624,10 +639,18 @@ export async function completeSetupAction(formData: FormData): Promise<void> {
     ? cooking_level
     : "basic";
 
+  const targets = resolveDailyTargets({
+    goal: safeGoal,
+    dailyKcalTarget: null,
+    dailyProteinGTarget: null,
+  });
+
   await saveNutritionProfile(member.id, {
     goal: safeGoal,
     diet: safeDiet,
     cookingLevel: safeCooking,
+    dailyKcalTarget: targets.kcal,
+    dailyProteinGTarget: targets.proteinG,
   });
 
   if (isFinite(kg) && kg > 30 && kg < 300) {

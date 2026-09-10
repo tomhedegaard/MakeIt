@@ -38,7 +38,9 @@
     "supplementConsider": "Consider",
     "regenerate": "Regenerate weekly plan",
     "generatedByClaude": "AI draft",
-    "generatedLocally": "Generated locally (mock)"
+    "generatedLocally": "Rule-based plan (scaled to your targets)",
+    "fallbackEyebrow": "Not an AI draft",
+    "fallbackBody": "The Motor did not finish the AI draft in time. We served a scaled standard plan that hits your daily kcal and protein targets — not an unadjusted catalog."
   },
   "dayLabels": {
     "mon": "Mon",

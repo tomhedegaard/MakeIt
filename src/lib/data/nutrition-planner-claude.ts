@@ -120,7 +120,10 @@ Sæt daglige targets baseret på medlemmets goal:
   - mass:     ~3000 kcal, høj carbs (4-5g/kg), 1.8g/kg protein, fedt fylder resten
 
 Hvis medlemmet har sat dailyKcalTarget eller dailyProteinGTarget i profilen,
-respektér dem.
+respektér dem. HARD: for hver dag (undtagen skip-dage) SKAL summen af
+estKcal ligge inden for ±10% af daily-kcal-målet, og summen af estProteinG
+inden for ±15% af protein-målet. Skalér portioner (gram kød, skyr, ris).
+Returnér ALDRIG en ~1500 kcal-dag til et 2500 kcal-mål.
 
 # Carb density
 
@@ -306,6 +309,8 @@ function buildUserMessage(opts: GeneratePlanOpts): string {
     "  Hviledag:    alle meals 'standard' eller 'low' carbDensity, lavere total carbs.",
     "    Slet ikke fjern carbs — protein + grønt stiger lidt for samme mæthed.",
     "  Skip-dag:    udlad alle slots for dagen. Generér 0 meals for skip-day-indekset.",
+    "",
+    `Dagligt mål (HARD): ${profile.dailyKcalTarget ?? "auto"} kcal / ${profile.dailyProteinGTarget ?? "auto"}g protein. Hver dags meal-sum SKAL ramme det — skalér portioner.`,
     "",
     "Generér ugeplanen og returnér via submit_plan.",
   ];
