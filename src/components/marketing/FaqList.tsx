@@ -47,7 +47,6 @@ export default function FaqList({
             <details className="group">
               <summary
                 className="flex items-start gap-4 py-5 cursor-pointer list-none touch-app"
-                style={{ outline: "none" }}
               >
                 <span className="numeric text-[11px] text-fg-faint w-7 shrink-0 mt-1.5">
                   {String(i + 1).padStart(2, "0")}

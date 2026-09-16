@@ -35,8 +35,11 @@ export default function CustomCursor() {
   useEffect(() => {
     // Gate on fine-pointer + hover capability. Excludes touch
     // devices (phones/tablets) and assistive setups where a custom
-    // cursor would feel hostile.
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+    // cursor would feel hostile. Reduced-motion users keep the
+    // native cursor too — the spring trail is pure motion.
+    const fine = window.matchMedia(
+      "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)",
+    );
     const apply = () => setEnabled(fine.matches);
     apply();
     fine.addEventListener("change", apply);

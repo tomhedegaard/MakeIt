@@ -27,7 +27,9 @@ export default function Spotlight({
 
     // Skip on devices that don't truly hover — touch-only screens fire
     // synthetic mousemove events that look jittery.
-    const canHover = window.matchMedia("(hover: hover)").matches;
+    const canHover = window.matchMedia(
+      "(hover: hover) and (prefers-reduced-motion: no-preference)",
+    ).matches;
     if (!canHover) return;
 
     let raf = 0;

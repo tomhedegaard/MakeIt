@@ -1,6 +1,6 @@
 "use client";
 
-import { animate, useInView, useMotionValue, useTransform } from "framer-motion";
+import { animate, useInView, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
 import { useEffect, useRef } from "react";
 
 /**
@@ -10,6 +10,8 @@ import { useEffect, useRef } from "react";
  *   as "50.142".
  * - `pad` left-pads the integer with zeros (we use this for "07").
  * - Triggers once; subsequent scrolls don't replay.
+ * - Under prefers-reduced-motion the target is written directly —
+ *   no scramble, no count.
  * - When `scramble` is true (the default), the value flickers
  *   through random digits for ~400ms before the actual count
  *   starts. The scramble phase writes textContent directly so it
@@ -31,6 +33,7 @@ export default function CountUp({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.6 });
+  const reduced = useReducedMotion();
   const mv = useMotionValue(0);
   const fmt = (n: number) => {
     const s = new Intl.NumberFormat("da-DK").format(Math.round(n));
@@ -40,6 +43,10 @@ export default function CountUp({
 
   useEffect(() => {
     if (!inView) return;
+    if (reduced) {
+      mv.set(to);
+      return;
+    }
 
     const SCRAMBLE_MS = scramble ? 420 : 0;
 

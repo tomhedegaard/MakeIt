@@ -4,7 +4,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
-import RevealObserver from "@/components/RevealObserver";
 import CookieBanner from "@/components/marketing/CookieBanner";
 import CustomCursor from "@/components/CustomCursor";
 import SWRegister from "@/components/pwa/SWRegister";
@@ -52,6 +51,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#0A0A0B",
+  colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -72,7 +72,6 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col grain vignette">
         <NextIntlClientProvider>
           <SmoothScroll />
-          <RevealObserver />
           <CustomCursor />
           <SWRegister />
           {children}
