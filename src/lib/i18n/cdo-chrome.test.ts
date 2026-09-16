@@ -259,8 +259,8 @@ describe("CDO DA/EN chrome — Crew / HRV / Mig empty surfaces", () => {
     expect(en.meetEmptyEyebrow).toBe("IRL meet");
 
     const daBlob = allStrings(daCommunity).join("\n");
-    // .font-display / .eyebrow uppercase "Live-feed." into the EN chrome
-    // testers still read as LIVE-FEED. Ban both spaced and hyphenated forms.
+    // .font-display and .eyebrow apply text-transform:uppercase, so
+    // "Live-feed." still paints as LIVE-FEED. Ban both forms.
     expect(daBlob).not.toMatch(/\bLIVE FEED\b/i);
     expect(daBlob).not.toMatch(/\bLIVE-FEED\b/i);
     expect(daBlob).not.toMatch(/\bLive feed\b/);
