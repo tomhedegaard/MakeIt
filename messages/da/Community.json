@@ -1,7 +1,7 @@
 {
   "page": {
     "eyebrow": "03 — Crew",
-    "title": "Live-feed.",
+    "title": "Crew-feed.",
     "shareAria": "Del med crewet",
     "shareButton": "+ Del",
     "storiesAria": "Crew der træner i dag",
@@ -17,7 +17,7 @@
     "challengeStatusLabel": "Status",
     "challengeStatusValue": "Tilmeldt — på vej",
     "challengeStatusEmpty": "Ikke tilmeldt",
-    "feedEyebrow": "Live-feed",
+    "feedEyebrow": "Crew-feed",
     "feedCount": "{count} opslag",
     "feedUpdated": "Senest opdateret · nu",
     "emptyTitle": "Crewet er stille.",

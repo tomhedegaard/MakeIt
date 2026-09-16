@@ -245,22 +245,26 @@ describe("CDO DA/EN chrome — Crew / HRV / Mig empty surfaces", () => {
     expect(keysOf(daCommunity.realtime)).toEqual(keysOf(enCommunity.realtime));
     const da = daCommunity.page as Record<string, string>;
     const en = enCommunity.page as Record<string, string>;
-    expect(da.title).toBe("Live-feed.");
-    expect(da.feedEyebrow).toBe("Live-feed");
+    expect(da.title).toBe("Crew-feed.");
+    expect(da.feedEyebrow).toBe("Crew-feed");
     expect(da.feedCount).toBe("{count} opslag");
     expect(da.leaderboardEyebrow).toBe("Rangliste");
     expect(da.meetEmptyEyebrow).toBe("IRL-møde");
     expect(da.meetEmptyTitle).toBe("Ingen planlagt IRL-møde.");
     expect(da.meetEyebrow).toBe("Næste IRL-møde");
-    expect(en.title).toBe("Live feed.");
-    expect(en.feedEyebrow).toBe("Live feed");
+    expect(en.title).toBe("Crew feed.");
+    expect(en.feedEyebrow).toBe("Crew feed");
     expect(en.feedCount).toBe("{count} posts");
     expect(en.leaderboardEyebrow).toBe("Leaderboard");
     expect(en.meetEmptyEyebrow).toBe("IRL meet");
 
     const daBlob = allStrings(daCommunity).join("\n");
+    // .font-display / .eyebrow uppercase "Live-feed." into the EN chrome
+    // testers still read as LIVE-FEED. Ban both spaced and hyphenated forms.
     expect(daBlob).not.toMatch(/\bLIVE FEED\b/i);
+    expect(daBlob).not.toMatch(/\bLIVE-FEED\b/i);
     expect(daBlob).not.toMatch(/\bLive feed\b/);
+    expect(daBlob).not.toMatch(/Live-feed/i);
     expect(daBlob).not.toMatch(/\bLEADERBOARD\b/i);
     expect(daBlob).not.toMatch(/\bLeaderboard\b/);
     expect(daBlob).not.toMatch(/\{count\} posts/);
@@ -283,7 +287,9 @@ describe("CDO DA/EN chrome — Crew / HRV / Mig empty surfaces", () => {
     expect(page).toContain('t("leaderboardEyebrow")');
     expect(page).toContain('t("meetEmptyEyebrow")');
     expect(page).toContain('t("meetEmptyTitle")');
-    expect(page).not.toMatch(/"LIVE FEED/);
+    expect(page).not.toMatch(/LIVE FEED/i);
+    expect(page).not.toMatch(/LIVE-FEED/i);
+    expect(page).not.toMatch(/Live-feed/i);
     expect(page).not.toMatch(/"LEADERBOARD"/);
     expect(page).not.toMatch(/"0 posts"/);
     expect(page).not.toMatch(/"IRL-MEET"/);
