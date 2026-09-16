@@ -33,7 +33,11 @@
   "trends": {
     "eyebrow": "Recovery",
     "title": "Trend",
-    "subtitle": "Your HRV over time — the daily reading, your 7-day mean and your normal range."
+    "subtitle": "Your HRV over time — the daily reading, your 7-day mean and your normal range.",
+    "empty": {
+      "title": "No readings yet",
+      "body": "Connect your wearable so overnight HRV syncs automatically. The chart appears when the first reading lands — not before."
+    }
   },
   "subNav": {
     "aria": "HRV",

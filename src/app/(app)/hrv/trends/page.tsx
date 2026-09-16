@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
-import ChartEmptyFrame from "@/components/ui/ChartEmptyFrame";
+import HrvTrendsEmpty from "@/components/hrv/HrvTrendsEmpty";
 import TrendChart from "@/components/hrv/TrendChart";
 import { getSession } from "@/lib/auth";
 import { getHrvReadingSeries } from "@/lib/data/hrv";
@@ -13,6 +13,7 @@ import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { buildHrvBandView } from "@/lib/hrv/band";
 import { demoSteadySeries } from "@/lib/hrv/demo-series";
 import { loadHrvBandCopy } from "@/lib/ui/sprint-a-copy";
+import ConnectButton from "../ConnectButton";
 
 /**
  * `/hrv/trends` — a member's HRV trend chart + readiness-bucket distribution.
@@ -20,11 +21,13 @@ import { loadHrvBandCopy } from "@/lib/ui/sprint-a-copy";
  * Reads the member's primary-connection reading history via
  * `getHrvReadingSeries`, then renders ONE of three states by series length
  * (spec §6):
- *  - Empty (0 readings) → a faint axis scaffold + reassurance copy.
+ *  - Empty (0 readings) → honest empty copy + wearable connect CTA.
  *  - Provisional (1–13 readings) → the trend chart while the baseline builds.
  *  - Active (≥14 readings) → the full chart + a 30-day bucket distribution.
  *
- * Demo mode (`getHrvReadingSeries` returns `[]`) falls into the empty state.
+ * Demo mode (`!SUPABASE_ENABLED` + empty fetch) uses `demoSteadySeries`
+ * so the populated chart can be reviewed locally. Connected members with
+ * zero readings see the honest empty state.
  *
  * The shared `HrvSubNav` at the top links between the three `/hrv` pages.
  */
@@ -55,6 +58,7 @@ export default async function HrvTrendsPage() {
   if (!member) redirect("/login");
 
   const t = await getTranslations("Hrv.trends");
+  const tPage = await getTranslations("Hrv.page");
   const fetched = await getHrvReadingSeries(member.id);
   const series = fetched.length === 0 && !SUPABASE_ENABLED
     ? demoSteadySeries()
@@ -83,7 +87,13 @@ export default async function HrvTrendsPage() {
         <HrvSubNav />
 
         {state === "empty" ? (
-          <StateEmpty copy={bandCopy} />
+          <HrvTrendsEmpty
+            eyebrow={t("eyebrow")}
+            title={t("empty.title")}
+            body={t("empty.body")}
+            disclaimer={bandCopy.disclaimer}
+            cta={<ConnectButton label={tPage("connectCta")} />}
+          />
         ) : state === "provisional" ? (
           <StateProvisional series={series} copy={bandCopy} />
         ) : (
@@ -91,29 +101,6 @@ export default async function HrvTrendsPage() {
         )}
       </Container>
     </>
-  );
-}
-
-/* ---------------------------------------------------------------- */
-/* Empty — 0 readings                                               */
-/* ---------------------------------------------------------------- */
-
-function StateEmpty({ copy }: { copy: Awaited<ReturnType<typeof loadHrvBandCopy>> }) {
-  return (
-    <section className="surface-2 rounded-2xl overflow-hidden">
-      <div className="px-6 py-7 md:px-8 md:py-10">
-        <div className="eyebrow eyebrow-domain mb-3">{copy.eyebrow}</div>
-        <div aria-hidden>
-          <ChartEmptyFrame />
-        </div>
-        <p className="text-fg-dim text-sm md:text-base leading-relaxed mt-6 max-w-md">
-          {copy.emptyBody}
-        </p>
-        <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-4">
-          {copy.disclaimer}
-        </p>
-      </div>
-    </section>
   );
 }
 
