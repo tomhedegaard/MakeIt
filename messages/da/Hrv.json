@@ -33,7 +33,11 @@
   "trends": {
     "eyebrow": "Restitution",
     "title": "Forløb",
-    "subtitle": "Dit HRV-forløb over tid — den daglige måling, dit 7-dages snit og dit normalområde."
+    "subtitle": "Dit HRV-forløb over tid — den daglige måling, dit 7-dages snit og dit normalområde.",
+    "empty": {
+      "title": "Ingen målinger endnu",
+      "body": "Forbind dit wearable, så nattens HRV synker automatisk. Grafen kommer, når den første måling lander — ikke før."
+    }
   },
   "subNav": {
     "aria": "HRV",

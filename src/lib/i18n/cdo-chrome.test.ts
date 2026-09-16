@@ -81,6 +81,27 @@ describe("CDO DA/EN chrome — HRV subnav", () => {
     }
   });
 
+  it("keeps Hrv.trends.empty keys in lockstep — honest empty, not a blank plot", () => {
+    expect(keysOf(daHrv.trends)).toEqual(keysOf(enHrv.trends));
+    const da = daHrv.trends as {
+      empty: { title: string; body: string };
+    };
+    const en = enHrv.trends as {
+      empty: { title: string; body: string };
+    };
+    expect(da.empty.title).toBe("Ingen målinger endnu");
+    expect(en.empty.title).toBe("No readings yet");
+    expect(da.empty.body).toMatch(/wearable/);
+    expect(en.empty.body).toMatch(/wearable/);
+    expect(da.empty.body).not.toMatch(/tomt spor|tom graf|empty track/i);
+    expect(en.empty.body).not.toMatch(/empty track|empty plot/i);
+    const page = read("src/app/(app)/hrv/trends/page.tsx");
+    expect(page).toContain("HrvTrendsEmpty");
+    expect(page).toContain('t("empty.title")');
+    expect(page).toContain('tPage("connectCta")');
+    expect(page).not.toContain("ChartEmptyFrame");
+  });
+
   it("reads /hrv/learn chrome from Hrv.learn (no Recovery/Lær leftovers)", () => {
     expect(keysOf(daHrv.learn)).toEqual(keysOf(enHrv.learn));
     const da = daHrv.learn as Record<string, string>;
