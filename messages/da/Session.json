@@ -11,7 +11,9 @@
   },
   "steppers": {
     "weight": "Vægt",
-    "reps": "Reps"
+    "reps": "Reps",
+    "decrease": "Mindre {label}",
+    "increase": "Mere {label}"
   },
   "sets": {
     "title": "Sæt i dette øvelse",

@@ -459,11 +459,36 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   padding: 0.625rem 0;
 }
 .stepper-num {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
   font-family: var(--font-mono), monospace;
   font-variant-numeric: tabular-nums;
   font-size: 2rem;
   letter-spacing: -0.03em;
   line-height: 1;
+}
+.stepper-input {
+  box-sizing: content-box;
+  width: 6.5ch;
+  min-width: 4ch;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0.125rem 0.15rem;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: center;
+  appearance: none;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.stepper-input:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
 }
 .stepper-label {
   font-family: var(--font-mono), monospace;

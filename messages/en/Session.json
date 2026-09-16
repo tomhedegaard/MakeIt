@@ -11,7 +11,9 @@
   },
   "steppers": {
     "weight": "Weight",
-    "reps": "Reps"
+    "reps": "Reps",
+    "decrease": "Decrease {label}",
+    "increase": "Increase {label}"
   },
   "sets": {
     "title": "Sets in this exercise",

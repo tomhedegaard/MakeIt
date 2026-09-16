@@ -315,6 +315,7 @@ export default function SessionClient({
         {/* Steppers */}
         <section className="space-y-3">
           <Stepper
+            name="weight"
             value={current.weight}
             step={2.5}
             min={0}
@@ -323,6 +324,7 @@ export default function SessionClient({
             onChange={(weight) => patch({ weight })}
           />
           <Stepper
+            name="reps"
             value={current.reps}
             step={1}
             min={0}
