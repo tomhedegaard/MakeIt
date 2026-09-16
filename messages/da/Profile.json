@@ -1,13 +1,13 @@
 {
   "header": {
     "eyebrow": "05 — Profil",
-    "subtitle": "Tier: {tier} · Medlem siden {date}",
+    "subtitle": "Niveau: {tier} · Medlem siden {date}",
     "settings": "Indstillinger",
     "openCoachConsole": "Åbn coach-konsol →"
   },
   "lifts": {
-    "ariaLabel": "Lifts",
-    "title": "Lifts på record",
+    "ariaLabel": "Løft",
+    "title": "Dine løft",
     "delta": "{sign}{value} kg / 4u",
     "e1rmUnit": "kg e1RM",
     "weeksOne": "{count} uge data",
@@ -28,14 +28,13 @@
     "notificationsValue": "Crew + PR'er",
     "language": "Sprog",
     "languageValue": "Dansk",
-    "languageChange": "Skift på Indstillinger",
     "theme": "Tema",
     "themeValue": "Mørk (kun)"
   },
   "billing": {
     "eyebrow": "Betaling",
     "title": "Abonnement & betaling",
-    "description": "Administrér dit Crew-medlemskab og 1:1 add-on. Sikker checkout via Stripe.",
+    "description": "Administrér dit Crew-medlemskab og 1:1-tillæg. Sikker betaling via Stripe.",
     "open": "Åbn betaling →"
   },
   "formChecks": {
@@ -46,7 +45,7 @@
     "description": "AI-vurdering først, derefter en personlig note fra Mikael Munk inden for 24 timer.",
     "coachRepliesOne": "{count} svar fra coach",
     "coachRepliesOther": "{count} svar fra coach",
-    "emptyHint": "Tap “Form-check med AI” i en aktiv session eller via + Del i Crew for at få din første vurdering.",
+    "emptyHint": "Åbn “Form-check med AI” i en aktiv session, eller via + Del i Crew, for at få din første vurdering.",
     "exerciseFallback": "Form-check",
     "aiHeadlineFallback": "AI-svar",
     "outOf": "/ 100",

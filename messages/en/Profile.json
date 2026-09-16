@@ -28,7 +28,6 @@
     "notificationsValue": "Crew + PRs",
     "language": "Language",
     "languageValue": "Danish",
-    "languageChange": "Change in Settings",
     "theme": "Theme",
     "themeValue": "Dark (only)"
   },
@@ -46,7 +45,7 @@
     "description": "AI assessment first, then a personal note from Mikael Munk within 24 hours.",
     "coachRepliesOne": "{count} reply from coach",
     "coachRepliesOther": "{count} replies from coach",
-    "emptyHint": "Tap “Form check with AI” in an active session or via + Share in Crew to get your first assessment.",
+    "emptyHint": "Open “Form check with AI” in an active session, or via + Share in Crew, to get your first assessment.",
     "exerciseFallback": "Form check",
     "aiHeadlineFallback": "AI response",
     "outOf": "/ 100",

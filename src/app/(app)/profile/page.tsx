@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
-import { localeLabels, isLocale } from "@/i18n/config";
 import Container from "@/components/Container";
+import LanguageSelector from "@/components/LanguageSelector";
 import PageHeader from "@/components/app/PageHeader";
 import Sparkline from "@/components/ui/Sparkline";
 import FormCheckProgressionCard from "@/components/profile/FormCheckProgressionCard";
@@ -26,7 +26,6 @@ export default async function ProfilePage() {
 
   const t = await getTranslations("Profile");
   const locale = await getLocale();
-  const languageLabel = isLocale(locale) ? localeLabels[locale] : locale;
   const dateLocale = locale === "en" ? "en-GB" : "da-DK";
 
   return (
@@ -156,14 +155,9 @@ export default async function ProfilePage() {
                 <span className="text-fg-dim">{t("settings.notifications")}</span>
                 <span>{t("settings.notificationsValue")}</span>
               </li>
-              <li className="flex items-center justify-between border-b hairline pb-3">
+              <li className="flex items-center justify-between gap-3 border-b hairline pb-3">
                 <span className="text-fg-dim">{t("settings.language")}</span>
-                <span>
-                  {languageLabel}
-                  <Link href="/settings" className="ml-2 text-fg-faint hover:text-fg">
-                    {t("settings.languageChange")}
-                  </Link>
-                </span>
+                <LanguageSelector />
               </li>
               <li className="flex items-center justify-between">
                 <span className="text-fg-dim">{t("settings.theme")}</span>

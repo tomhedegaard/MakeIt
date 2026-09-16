@@ -1,7 +1,7 @@
 {
   "page": {
     "eyebrow": "03 — Crew",
-    "title": "Live feed.",
+    "title": "Live-feed.",
     "shareAria": "Del med crewet",
     "shareButton": "+ Del",
     "storiesAria": "Crew der træner i dag",
@@ -17,8 +17,8 @@
     "challengeStatusLabel": "Status",
     "challengeStatusValue": "Tilmeldt — på vej",
     "challengeStatusEmpty": "Ikke tilmeldt",
-    "feedEyebrow": "Live feed",
-    "feedCount": "{count} posts",
+    "feedEyebrow": "Live-feed",
+    "feedCount": "{count} opslag",
     "feedUpdated": "Senest opdateret · nu",
     "emptyTitle": "Crewet er stille.",
     "emptyBody": "Vær den første til at dele en PR, en note eller et form-check. De andre kommer.",
@@ -27,17 +27,17 @@
     "challengeEmptyBody": "Når crewet kører en rigtig volumen-udfordring, vises den her. Vi finder ikke på tal.",
     "leaderboardEmpty": "Ingen rangliste endnu — den vises når der er rigtige løft.",
     "storiesEmpty": "Ingen i crewet har trænet i dag endnu.",
-    "leaderboardEyebrow": "Leaderboard",
+    "leaderboardEyebrow": "Rangliste",
     "leaderboardTitle": "Top atleter",
     "leaderboardMonth": "Maj 2026",
-    "meetEyebrow": "Næste IRL-meet",
+    "meetEyebrow": "Næste IRL-møde",
     "meetTitle": "Open House — Amagerbro",
     "meetDescription": "Lørdag 24/05 · København · Træning, kaffe, og en sneak peek af nye produkter.",
     "meetRsvp": "RSVP",
     "meetReadMore": "Læs mere",
-    "meetEmptyEyebrow": "IRL-meet",
-    "meetEmptyTitle": "Ingen planlagt meet.",
-    "meetEmptyBody": "Når crewet mødes IRL, vises det her. Vi finder ikke på events."
+    "meetEmptyEyebrow": "IRL-møde",
+    "meetEmptyTitle": "Ingen planlagt IRL-møde.",
+    "meetEmptyBody": "Når crewet mødes IRL, vises det her. Vi finder ikke på møder."
   },
   "post": {
     "prBadge": "★ PR",
@@ -70,7 +70,7 @@
     "submit": "Del →"
   },
   "realtime": {
-    "newPostsOne": "{count} nyt post — opdatér",
-    "newPostsOther": "{count} nye posts — opdatér"
+    "newPostsOne": "{count} nyt opslag — opdatér",
+    "newPostsOther": "{count} nye opslag — opdatér"
   }
 }
