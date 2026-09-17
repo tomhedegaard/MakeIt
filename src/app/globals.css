@@ -65,6 +65,16 @@
   --grain-blend: overlay;
   --grain-opacity: 0.55;
   --signal-ink: #F5F2EC;
+
+  /* Scrim (modal backdrop) and media letterbox */
+  --scrim: rgba(0, 0, 0, 0.7);
+  --media: #000000;
+
+  /* Anatomy figure — muscle map illustration */
+  --anatomy-body:   #1A1A1C; /* silhuet */
+  --anatomy-edge:   #3A3A3E; /* kant, led, hoved */
+  --anatomy-idle:   #222226; /* ikke-trænede muskler */
+  --anatomy-accent: #C97B3E; /* sekundære/tertiære muskler */
 }
 
 /* Big Shoulders is the one display voice everywhere; the treatment lives
@@ -130,6 +140,16 @@ html:has(.theme-root[data-theme="kalk"]),
   --vignette-edge: rgba(13, 15, 18, 0.06);
   --grain-blend: multiply;
   --grain-opacity: 0.35;
+
+  /* Scrim (modal backdrop) and media letterbox */
+  --scrim: rgba(13, 15, 18, 0.45);
+  --media: #0D0F12;
+
+  /* Anatomy figure — muscle map illustration */
+  --anatomy-body:   #DCDFE2; /* silhuet */
+  --anatomy-edge:   #B4B9C0; /* kant, led, hoved */
+  --anatomy-idle:   #CDD1D6; /* ikke-trænede muskler */
+  --anatomy-accent: #A8380B; /* sekundære/tertiære muskler (= --body) */
 }
 
 /* A Nat surface inside a Kalk layout (e.g. /session) wins at <html>.
@@ -157,6 +177,8 @@ html:has(.theme-root[data-theme="nat"]) {
   --glow: rgba(245, 242, 236, 0.08);
   --grain-blend: overlay; --grain-opacity: 0.55;
   --vignette-edge: rgba(0, 0, 0, 0.45);
+  --scrim: rgba(0, 0, 0, 0.7); --media: #000000;
+  --anatomy-body: #1A1A1C; --anatomy-edge: #3A3A3E; --anatomy-idle: #222226; --anatomy-accent: #C97B3E;
 }
 
 .theme-root { background: var(--bg); color: var(--fg); }
@@ -182,6 +204,8 @@ html:has(.theme-root[data-theme="nat"]) {
   --color-line-bright: var(--line-bright);
   --color-steel:       var(--steel);
   --color-signal:      var(--signal);
+  --color-scrim:       var(--scrim);
+  --color-media:       var(--media);
 
   /* Domain accents */
   --color-heart:      var(--heart);

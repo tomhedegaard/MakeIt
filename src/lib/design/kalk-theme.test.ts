@@ -94,4 +94,22 @@ describe("Kalk theme gate (spec §3, §8)", () => {
   it("gives inputs 16px on touch so iOS does not zoom (enables removing maximumScale)", () => {
     expect(css).toMatch(/@media \(pointer: coarse\)\s*\{[\s\S]*?\.input,\s*\.field\s*\{[\s\S]*?font-size:\s*16px/);
   });
+
+  const NEW_TOKENS = ["--scrim", "--media", "--anatomy-body", "--anatomy-edge", "--anatomy-idle", "--anatomy-accent"];
+
+  it.each(NEW_TOKENS)("%s exists in Kalk, Nat and the Nat lift", (t) => {
+    const natLift = readThemeTokens(css, 'html:has(.theme-root[data-theme="nat"])');
+    expect(kalk[t], "kalk").toBeDefined();
+    expect(nat[t], "nat").toBeDefined();
+    expect(natLift[t], "lift").toBeDefined();
+  });
+
+  it("exposes scrim and media as Tailwind colours", () => {
+    expect(css).toMatch(/--color-scrim:\s*var\(--scrim\)/);
+    expect(css).toMatch(/--color-media:\s*var\(--media\)/);
+  });
+
+  it("gives the anatomy accent 3:1 as a graphic on Kalk --bg-2", () => {
+    expect(contrastRatio(kalk["--anatomy-accent"], kalk["--bg-2"])).toBeGreaterThanOrEqual(3);
+  });
 });
