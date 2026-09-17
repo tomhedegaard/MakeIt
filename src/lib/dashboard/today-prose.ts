@@ -8,6 +8,7 @@
  * Copy lives in messages/{da,en}/Dashboard.json under todayProse.
  */
 
+import { normalizeDayLabel } from "@/lib/dashboard/week-strip";
 import { buildHrvBandView, type QualitativeBand } from "@/lib/hrv/band";
 import { demoSteadySeries } from "@/lib/hrv/demo-series";
 import { TODAY_SESSION } from "@/lib/workout";
@@ -73,7 +74,9 @@ const MIN_LINES_BEFORE_MIND_LOGGED = 2;
 type Candidate = { rank: number; line: TodayProseLine };
 
 function sessionLabel(dayLabel: string | null): string | null {
-  const trimmed = dayLabel?.trim() ?? "";
+  // Stored rows predate the taste pass and still say "Dag A — Squat";
+  // the label goes straight into member prose, so normalise it here.
+  const trimmed = normalizeDayLabel(dayLabel ?? "");
   return trimmed.length > 0 ? trimmed : null;
 }
 

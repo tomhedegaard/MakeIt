@@ -77,7 +77,7 @@ describe("buildTodayProse — rank", () => {
     expect(model.lines).toHaveLength(3);
     expect(model.leadTone).toBe("warn");
     expect(model.leadDomain).toBe("heart");
-    expect(model.lines[1].params).toEqual({ label: "Dag A — Squat" });
+    expect(model.lines[1].params).toEqual({ label: "Dag A · Squat" });
   });
 
   it("drops mindLogged when two stronger lines already exist", () => {
@@ -127,7 +127,7 @@ describe("buildTodayProse — session states", () => {
       input({ session: { state: "done", dayLabel: "Dag B — Bench" } }),
     );
     expect(keysOf(model)[0]).toBe("sessionDoneWithLabel");
-    expect(model.lines[0].params).toEqual({ label: "Dag B — Bench" });
+    expect(model.lines[0].params).toEqual({ label: "Dag B · Bench" });
     expect(model.leadTone).toBe("ok");
   });
 
@@ -248,5 +248,23 @@ describe("demoTodayProseInput", () => {
     expect(keysOf(model)).toEqual(["hrvLav", "sessionAssignedWithLabel"]);
     expect(model.leadDomain).toBe("heart");
     expect(model.leadTone).toBe("warn");
+  });
+});
+
+describe("buildTodayProse — stored day labels", () => {
+  it("renders a dash-separated legacy label with · (no DB migration)", () => {
+    const model = buildTodayProse(
+      input({ session: { state: "assigned", dayLabel: "Dag A — Squat" } }),
+    );
+    const line = model.lines.find((l) => l.key === "sessionAssignedWithLabel");
+    expect(line?.params).toEqual({ label: "Dag A · Squat" });
+  });
+
+  it("leaves a label that is already written with · untouched", () => {
+    const model = buildTodayProse(
+      input({ session: { state: "assigned", dayLabel: "Dag A · Squat" } }),
+    );
+    const line = model.lines.find((l) => l.key === "sessionAssignedWithLabel");
+    expect(line?.params).toEqual({ label: "Dag A · Squat" });
   });
 });

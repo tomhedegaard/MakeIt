@@ -74,6 +74,26 @@ export function dayLabelTail(label: string): string | null {
   return null;
 }
 
+/**
+ * A stored day label as member copy: "Dag A — Squat" becomes
+ * "Dag A · Squat".
+ *
+ * Labels are written with "·" today, but rows saved before the taste
+ * pass still arrive from the database with a dash separator, and
+ * today-prose renders the label verbatim. Normalise at render time
+ * rather than migrating the table.
+ */
+export function normalizeDayLabel(label: string): string {
+  return label
+    .replace(/\s*[—–]\s*/g, " · ")
+    // A plain hyphen only separates with whitespace on both sides,
+    // or "Dødløft-teknik" would split inside the word.
+    .replace(/\s+-\s+/g, " · ")
+    .replace(/^\s*·\s*/, "")
+    .replace(/\s*·\s*$/, "")
+    .trim();
+}
+
 export function compressSessionLabel(
   dayLabel: string | null,
   title: string,
