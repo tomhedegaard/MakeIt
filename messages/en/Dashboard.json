@@ -41,7 +41,10 @@
     "emptyEyebrow": "Today's session",
     "emptyTitle": "No session yet",
     "emptyBody": "When you pick a program, today's session lands here. No demo workout.",
-    "emptyCta": "Choose a program →"
+    "emptyCta": "Choose a program →",
+    "keepOriginal": "Keep original",
+    "keptOriginal": "You are running the original plan today.",
+    "keepOriginalError": "That did not go through. Try again."
   },
   "stats": {
     "volume": "Volume",
