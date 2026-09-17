@@ -763,3 +763,48 @@ nav.tabbar {
 
 /* Disable iOS double-tap-zoom for app surfaces */
 .touch-app { touch-action: manipulation; }
+
+/* ---------------------------------------------------------------- *
+ * Kalk landing helpers (F2). Tokens only, Kalk scope only.
+ * ---------------------------------------------------------------- */
+
+/* Changed number: a slanted signal stroke drawn once across it. */
+@keyframes kalk-strike {
+  from { transform: rotate(-8deg) scaleX(0); }
+  to   { transform: rotate(-8deg) scaleX(1); }
+}
+[data-theme="kalk"] .strike-signal {
+  position: relative;
+}
+[data-theme="kalk"] .strike-signal::after {
+  content: "";
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  top: 48%;
+  height: max(3px, 0.05em);
+  background: var(--signal);
+  transform: rotate(-8deg);
+  transform-origin: left center;
+  animation: kalk-strike 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.5s both;
+}
+
+/* Kg ruler above a section, like the holes in a rack. */
+[data-theme="kalk"] .kalk-rule {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-bright);
+  background: repeating-linear-gradient(90deg, var(--line-bright) 0 1px, transparent 1px 22px) top left / 100% 7px no-repeat;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--fg-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="kalk"] .strike-signal::after {
+    animation: none;
+    transform: rotate(-8deg);
+  }
+}
