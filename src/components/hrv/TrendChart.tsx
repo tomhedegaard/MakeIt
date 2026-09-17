@@ -68,11 +68,12 @@ export default function TrendChart({
       <svg
         viewBox={`0 0 ${VIEWPORT.width} ${VIEWPORT.height}`}
         width="100%"
-        height="auto"
+        // height is a CSS length attribute in SVG: "auto" is invalid and logs a
+        // console error. The viewBox plus w-full/h-auto keeps the ratio.
         preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-labelledby="trendchart-title trendchart-desc"
-        className="block w-full"
+        className="block w-full h-auto"
       >
         <title id="trendchart-title">{t("title")}</title>
         <desc id="trendchart-desc">
