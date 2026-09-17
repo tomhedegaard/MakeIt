@@ -21,23 +21,83 @@ const OUT_OF_SCOPE = [
 ];
 // Browser-chrome metadata must be a literal (Next viewport API): Nat values are legitimate there.
 // status-bar.ts (Task 5) paints the native bar and needs literal hex for the plugin.
-const CHROME_METADATA = [
-  "app/layout.tsx", "app/(app)/session/[id]/page.tsx", "app/coach/layout.tsx", "lib/native/status-bar.ts",
-];
+// These files are NOT exempted wholesale — they ARE scanned like any other member
+// surface. Only the one literal-bearing declaration is stripped first, so anything
+// else added to the file (a stray bg-black, a leftover dark hex) still fails.
+const CHROME_METADATA: Record<string, (src: string) => string> = {
+  // Next viewport export — themeColor is legitimately a dark literal here.
+  // Non-greedy so it stops at the export's own closing "};", single- or multi-line.
+  "app/layout.tsx": (src) => src.replace(/export const viewport[\s\S]*?};/, ""),
+  "app/(app)/session/[id]/page.tsx": (src) => src.replace(/export const viewport[\s\S]*?};/, ""),
+  "app/coach/layout.tsx": (src) => src.replace(/export const viewport[\s\S]*?};/, ""),
+  // Only the native status-bar background-colour map — the rest of the file
+  // (style logic, plugin wiring) stays subject to the gate.
+  "lib/native/status-bar.ts": (src) => src.replace(/const BACKGROUND = \{[\s\S]*?\} as const;/, ""),
+};
 
-const DARK = /#0A0A0B|#F5F2EC|#111113|#18181B|#1F1F23|#A8A6A0|#56554F|#C97B3E|#4CAF7D|#E8703A|#4F86C6|rgba\(245,\s?242,\s?236|rgba\(10,\s?10,\s?11/i;
+// Intentionally narrow: the exact Nat token hex values (plus the old Nat anatomy
+// hexes) — not a general hex/colour scanner. Widen only when a genuine new
+// dark-only literal shows up; do not loosen this into "any hex".
+const DARK = /#0A0A0B|#F5F2EC|#111113|#18181B|#1F1F23|#A8A6A0|#56554F|#C97B3E|#4CAF7D|#E8703A|#4F86C6|#1A1A1C|#3A3A3E|#222226|rgba\(245,\s?242,\s?236|rgba\(10,\s?10,\s?11/i;
+// Intentionally narrow: only the specific dark-only Tailwind utilities that were
+// actually used pre-Kalk, not every colour utility.
 const DARK_UTIL = /\b(bg-black|text-white|bg-white|text-black)(\/\d+)?\b/;
 
 const surfaceFiles = walk(SRC)
   .map((p) => relative(SRC, p))
   .filter((p) => /\.(tsx?|css)$/.test(p) && !/\.test\./.test(p) && p !== "app/globals.css")
-  .filter((p) => !OUT_OF_SCOPE.some((r) => r.test(p)) && !CHROME_METADATA.includes(p));
+  .filter((p) => !OUT_OF_SCOPE.some((r) => r.test(p)));
 
 describe("no dark-only literals on member surfaces (spec §8)", () => {
   it.each(surfaceFiles)("%s", (p) => {
-    const src = readFileSync(join(SRC, p), "utf8");
+    const raw = readFileSync(join(SRC, p), "utf8");
+    const src = CHROME_METADATA[p] ? CHROME_METADATA[p](raw) : raw;
     expect(src).not.toMatch(DARK);
     expect(src).not.toMatch(DARK_UTIL);
+  });
+});
+
+describe("chrome-metadata stripping is narrow (self-test)", () => {
+  it("strips a single-line viewport export clean of its dark literal", () => {
+    const strip = CHROME_METADATA["app/coach/layout.tsx"];
+    const fixture = 'export const viewport: Viewport = { themeColor: "#0A0A0B", colorScheme: "dark" };\n';
+    expect(strip(fixture)).not.toMatch(DARK);
+  });
+
+  it("strips a multi-line viewport export clean of its dark literal", () => {
+    const strip = CHROME_METADATA["app/layout.tsx"];
+    const fixture = [
+      "export const viewport: Viewport = {",
+      '  themeColor: "#0A0A0B",',
+      '  colorScheme: "dark",',
+      "};",
+      "",
+    ].join("\n");
+    expect(strip(fixture)).not.toMatch(DARK);
+  });
+
+  it("does NOT strip a dark literal that lives outside the viewport export", () => {
+    const strip = CHROME_METADATA["app/layout.tsx"];
+    const fixture = [
+      'export const viewport: Viewport = { themeColor: "#0A0A0B", colorScheme: "dark" };',
+      'const rogue = "bg-black";',
+      "",
+    ].join("\n");
+    // The strip only removes the viewport statement; the matcher still catches
+    // anything else — this is not a blanket file exemption.
+    expect(strip(fixture)).toMatch(DARK_UTIL);
+  });
+
+  it("strips only the BACKGROUND map in status-bar.ts, not the rest of the file", () => {
+    const strip = CHROME_METADATA["lib/native/status-bar.ts"];
+    const fixture = [
+      'const BACKGROUND = { LIGHT: "#E7E9EB", DARK: "#0A0A0B" } as const;',
+      'const rogue = "bg-black";',
+      "",
+    ].join("\n");
+    const stripped = strip(fixture);
+    expect(stripped).not.toMatch(DARK);
+    expect(stripped).toMatch(DARK_UTIL);
   });
 });
 

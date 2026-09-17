@@ -69,10 +69,7 @@ describe("Kalk theme gate (spec §3, §8)", () => {
 
   it("mirrors every Kalk colour token in the Nat <html> lift", () => {
     const natLift = readThemeTokens(css, 'html:has(.theme-root[data-theme="nat"])');
-    const kalkColours = Object.keys(kalk).filter(
-      (k) => !k.startsWith("--font-") && !k.startsWith("--display-"),
-    );
-    for (const k of kalkColours) expect(natLift, k).toHaveProperty(k);
+    for (const k of Object.keys(kalk)) expect(natLift, k).toHaveProperty(k);
   });
 
   it("keeps the Nat <html> lift value-identical to Nat", () => {
