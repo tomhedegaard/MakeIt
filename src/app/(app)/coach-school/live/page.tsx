@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import LiveDecisionCard from "@/components/coach-school/LiveDecisionCard";
 import {
   getOpenLiveCases,
@@ -34,10 +35,7 @@ export default async function CoachSchoolLivePage() {
   return (
     <Container className="py-6 lg:py-12 space-y-6">
       <header className="pt-2">
-        <div className="eyebrow mb-2">{t("live.eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {t("live.title")}
-        </h1>
+        <PageTitle size="compact" kicker={t("live.eyebrow")} title={t("live.title")} />
         <p className="mt-2 text-fg-dim text-sm">
           {t("live.subtitle", { count: cases.length })}
         </p>

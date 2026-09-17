@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import LessonForm from "@/components/coach-school/LessonForm";
 import { loadLessonBySlug } from "@/lib/data/lessons";
 
@@ -39,14 +40,11 @@ export default async function CoachSchoolLessonPage({
       </Link>
 
       <header className="pt-2">
-        <div className="eyebrow mb-2">
-          {t(`tree.tierHeader.${lesson.requiredTier}`)}
-          {" · "}
-          {fmtDuration(lesson.durationSec)}
-        </div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {lesson.titleDa}
-        </h1>
+        <PageTitle
+          size="compact"
+          kicker={`${t(`tree.tierHeader.${lesson.requiredTier}`)} · ${fmtDuration(lesson.durationSec)}`}
+          title={lesson.titleDa}
+        />
       </header>
 
       {/* Video — v0 placeholder when the bucket URL isn't yet recorded. */}

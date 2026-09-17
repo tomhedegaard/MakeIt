@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import SandboxCaseCard from "@/components/coach-school/SandboxCaseCard";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import {
@@ -36,10 +37,7 @@ export default async function CoachSchoolSandboxPage() {
   return (
     <Container className="py-6 lg:py-12 space-y-6">
       <header className="pt-2">
-        <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {t("title")}
-        </h1>
+        <PageTitle size="compact" kicker={t("eyebrow")} title={t("title")} />
         <p className="mt-2 text-fg-dim text-sm">
           {t("subtitle", { count: cases.length })}
         </p>
