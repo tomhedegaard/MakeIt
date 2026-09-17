@@ -10,14 +10,14 @@ const COPY: AdaptiveStripCopy = {
   why: "Hvorfor",
   role: "Motor",
   attribution: "Motor · Adaptive Engine",
-  gloss: "Adaptive Engine tilpasser ugen — Munk er din coach",
+  gloss: "Adaptive Engine tilpasser ugen. Munk er din coach",
   munkRole: "Coach",
   munkNoteLabel: "Note fra Munk",
   steps: {
-    hrvLow: "Hjerte — nattens HRV ligger under dit bånd",
+    hrvLow: "Hjerte: nattens HRV ligger under dit bånd",
     hrvVeryLow: "very",
     hrvInBand: "in",
-    sessionToday: "Krop — dagens pas",
+    sessionToday: "Krop: dagens pas",
     lowSleep: "sleep",
     alcohol: "alc",
     lowFeeling: "træt",
@@ -45,7 +45,7 @@ describe("AdaptiveReasonStrip", () => {
     expect(html).toContain("Hvorfor");
     expect(html).toContain("Motor · Adaptive Engine");
     expect(html).toContain("data-engine-gloss");
-    expect(html).toContain("Adaptive Engine tilpasser ugen — Munk er din coach");
+    expect(html).toContain("Adaptive Engine tilpasser ugen. Munk er din coach");
     expect(html).toContain(">Motor<");
     expect(html).toContain("data-motor-glyph");
     expect(html).toContain("data-engine-steps");

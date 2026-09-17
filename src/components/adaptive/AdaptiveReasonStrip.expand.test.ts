@@ -21,14 +21,14 @@ const COPY: AdaptiveStripCopy = {
   why: "Hvorfor",
   role: "Motor",
   attribution: "Motor · Adaptive Engine",
-  gloss: "Adaptive Engine tilpasser ugen — Munk er din coach",
+  gloss: "Adaptive Engine tilpasser ugen. Munk er din coach",
   munkRole: "Coach",
   munkNoteLabel: "Note fra Munk",
   steps: {
-    hrvLow: "Hjerte — nattens HRV ligger under dit bånd",
+    hrvLow: "Hjerte: nattens HRV ligger under dit bånd",
     hrvVeryLow: "very",
     hrvInBand: "in",
-    sessionToday: "Krop — dagens pas",
+    sessionToday: "Krop: dagens pas",
     lowSleep: "sleep",
     alcohol: "alc",
     lowFeeling: "træt",
@@ -79,8 +79,8 @@ describe("AdaptiveReasonStrip expand", () => {
 
     expect(details.open).toBe(true);
     expect(host.querySelectorAll("[data-strip-step]").length).toBe(5);
-    expect(host.textContent).toContain("Hjerte — nattens HRV ligger under dit bånd");
+    expect(host.textContent).toContain("Hjerte: nattens HRV ligger under dit bånd");
     expect(host.textContent).toContain("Motor · Adaptive Engine");
-    expect(host.textContent).toContain("Adaptive Engine tilpasser ugen — Munk er din coach");
+    expect(host.textContent).toContain("Adaptive Engine tilpasser ugen. Munk er din coach");
   });
 });

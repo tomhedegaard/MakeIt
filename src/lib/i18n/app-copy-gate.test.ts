@@ -28,4 +28,16 @@ describe("app copy gate (spec §5 taste rules, §8)", () => {
     const bad = all.filter(([k, s]) => /eyebrow/i.test(k) && /^\s*\d{1,2}\s*[·—–-]/.test(s));
     expect(bad).toEqual([]);
   });
+
+  it("has no em or en dashes", () => {
+    const bad = all.filter(([, s]) => /[–—]/.test(s)).map(([k]) => k);
+    expect(bad).toEqual([]);
+  });
+
+  it("keeps da and en keys in lockstep", () => {
+    for (const ns of APP_NAMESPACES) {
+      const keys = (l: string) => entries(load(l, ns)).map(([k]) => k).sort();
+      expect(keys("da"), ns).toEqual(keys("en"));
+    }
+  });
 });

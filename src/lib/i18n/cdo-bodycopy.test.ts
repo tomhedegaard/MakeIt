@@ -483,6 +483,6 @@ describe("CDO DA/EN bodycopy — seed / demo catalog fixtures", () => {
     expect(repsPage).toContain("shop.mock.");
     const daAdaptive = loadJson("messages/da/Adaptive.json");
     const gloss = (daAdaptive.strip as { gloss: string }).gloss;
-    expect(gloss).toBe("Adaptive Engine tilpasser ugen — Munk er din coach");
+    expect(gloss).toBe("Adaptive Engine tilpasser ugen. Munk er din coach");
   });
 });
