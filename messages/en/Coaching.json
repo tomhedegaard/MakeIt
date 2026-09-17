@@ -29,15 +29,15 @@
     "minuteUnit": "m",
     "start": "Start session →",
     "mock": {
-      "dayLabel": "Day A — Squat",
-      "title": "Squat — Top set @ RPE 8, 3×3 backoff"
+      "dayLabel": "Day A · Squat",
+      "title": "Squat · Top set @ RPE 8, 3×3 backoff"
     },
     "generated": {
       "squatFocus": "Squat focus and the posterior chain"
     },
     "emptyEyebrow": "Today",
     "emptyTitle": "Choose a program",
-    "emptyBody": "Start here — then we build the week. No demo workout.",
+    "emptyBody": "Start here, then we build the week. No demo workout.",
     "emptyCta": "See programs"
   },
   "active": {
@@ -60,7 +60,7 @@
     "engine": "Motor",
     "engineName": "Adaptive Engine",
     "level": "Level",
-    "levelFallback": "—",
+    "levelFallback": "-",
     "continue": "Continue →",
     "details": "Details",
     "mock": {
@@ -103,7 +103,7 @@
     "starting": "Starting…",
     "start": "Start program",
     "unavailable": "Not ready yet",
-    "emptyDays": "This program has no days yet — start is not available.",
+    "emptyDays": "This program has no days yet. Start is not available.",
     "status": {
       "calling": "Calling server…",
       "ok": "Started."
@@ -112,7 +112,7 @@
       "empty_days": "This program has no days to generate sessions from.",
       "not_allowed": "This program cannot be started.",
       "not_found": "Program not found.",
-      "unavailable": "No connection — try again.",
+      "unavailable": "No connection. Try again.",
       "failed": "Could not start the program."
     }
   }
