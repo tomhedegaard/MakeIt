@@ -8,7 +8,7 @@
   "testSent": "Sent {seconds}s ago",
   "dailyReminder": "Daily reminder · 08:00",
   "vapidMissing": "VAPID keys missing",
-  "vapidMissingAdmin": "VAPID keys missing — contact an admin",
+  "vapidMissingAdmin": "VAPID keys missing. Contact an admin",
   "vapidNotConfigured": "VAPID not configured",
   "ellipsis": "…"
 }
