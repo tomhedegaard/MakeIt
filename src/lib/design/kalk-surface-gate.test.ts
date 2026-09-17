@@ -131,6 +131,17 @@ describe("one title scale on every app page (spec §6)", () => {
   });
 });
 
+describe("section headers use SectionHeader (spec §6)", () => {
+  const HAND_BUILT = /<(div|p|span)\s+className="eyebrow[^"]*"[^>]*>[\s\S]{0,160}?<\/\1>\s*<h2\b/;
+  // The F2 landing (components/marketing/kalk) has its own type scale and gates.
+  const files = surfaceFiles.filter(
+    (p) => p.endsWith(".tsx") && !p.startsWith("components/ui/") && !p.startsWith("components/marketing/"),
+  );
+  it.each(files)("%s", (p) => {
+    expect(readFileSync(join(SRC, p), "utf8")).not.toMatch(HAND_BUILT);
+  });
+});
+
 describe("theme scopes (spec §2)", () => {
   it("/coach is explicitly Nat with dark browser chrome", () => {
     const src = read("app/coach/layout.tsx");
