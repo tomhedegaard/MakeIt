@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import { COMPANY } from "@/lib/company";
 import { getSession } from "@/lib/auth";
 import { MUSCLE_LABELS, type MuscleGroup } from "@/lib/data/muscle-groups";
@@ -65,9 +66,7 @@ export default async function ProgramDetailPage({
             <span aria-hidden>·</span>
             <span>{type}</span>
           </div>
-          <h1 className="font-display text-[clamp(2.2rem,5.5vw,4rem)] leading-[0.95]">
-            {program.name}.
-          </h1>
+          <PageTitle title={`${program.name}.`} />
           {description ? (
             <p className="mt-4 max-w-2xl text-fg-dim text-base md:text-lg">
               {description}
