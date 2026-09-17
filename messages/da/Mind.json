@@ -140,17 +140,17 @@
     "begin": "Begynd →",
     "steps": {
       "pillar": {
-        "eyebrow": "01 · Mind",
+        "eyebrow": "Mind",
         "title": "Søjle 5 — den mentale maskine.",
         "body": "Du har lige bygget vanen op fysisk. Nu går vi i gang med hovedet. Tre minutter at sætte sig ind i — så er du i gang."
       },
       "check": {
-        "eyebrow": "02 · Mind-check",
+        "eyebrow": "Mind-check",
         "title": "60 sek/dag. Tre sliders.",
         "body": "Energi, stress, fokus. Det bygger en mental graf parallelt med din HRV. Når dine mind-check viser belastning, justerer Adaptive Engine din næste session."
       },
       "library": {
-        "eyebrow": "03 · AI-coach + bibliotek",
+        "eyebrow": "AI-coach + bibliotek",
         "title": "Dagens refleksion er klar 06:30.",
         "body": "AI-coach læser dit mind-check, HRV og uge — skriver en kort daglig refleksion. Plus 8 sessioner i biblioteket: vejrtrækning, fokus, recovery, debrief."
       }

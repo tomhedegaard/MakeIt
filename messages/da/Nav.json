@@ -42,22 +42,22 @@
         "body": "Fire skærme. Så ved du, hvor alt ligger."
       },
       "today": {
-        "eyebrow": "01 · I dag",
+        "eyebrow": "I dag",
         "title": "Dagens session ligger her.",
         "body": "Hver morgen åbner du Today. Tap det store \"Start session\"-kort og du er i gang. Vægtene er sat ud fra dine 1RM'er."
       },
       "tabs": {
-        "eyebrow": "02 · Fem faner",
+        "eyebrow": "Fem faner",
         "title": "Fem faner bærer hele appen.",
         "body": "I dag, Træn, Mad, Mind og Crew ligger i bunden. Mig, Reps, HRV og Forskning finder du i menuen bag dine initialer øverst til højre."
       },
       "formCheck": {
-        "eyebrow": "03 · Form-check",
+        "eyebrow": "Form-check",
         "title": "Teknikken bliver tjekket.",
         "body": "Tap \"Form-check\" inde i en session. Optag eller upload. Motoren giver et første bud; Munk skriver under inden 24 timer."
       },
       "reps": {
-        "eyebrow": "04 · Reps",
+        "eyebrow": "Reps",
         "title": "Du får for det du laver.",
         "body": "+250 Reps pr. fuldført session. +100 pr. uge i program. Bytt dem til limited drops, custom-broderede straps, og 1:1 tid med Mikael."
       }

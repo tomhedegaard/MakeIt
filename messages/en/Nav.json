@@ -42,22 +42,22 @@
         "body": "Four screens. Then you know where everything lives."
       },
       "today": {
-        "eyebrow": "01 · Today",
+        "eyebrow": "Today",
         "title": "Today's session lives here.",
         "body": "Every morning you open Today. Tap the big \"Start session\" card and you're off. Weights are set from your 1RMs."
       },
       "tabs": {
-        "eyebrow": "02 · Five tabs",
+        "eyebrow": "Five tabs",
         "title": "Five tabs carry the whole app.",
         "body": "Today, Train, Food, Mind and Crew sit at the bottom. Me, Reps, HRV and Science live in the menu behind your initials, top right."
       },
       "formCheck": {
-        "eyebrow": "03 · Form check",
+        "eyebrow": "Form check",
         "title": "Technique gets a check.",
         "body": "Tap \"Form check\" inside a session. Record or upload. The Motor gives a first pass; Munk signs off within 24 hours."
       },
       "reps": {
-        "eyebrow": "04 · Reps",
+        "eyebrow": "Reps",
         "title": "You get rewarded for showing up.",
         "body": "+250 Reps per completed session. +100 per week in a program. Trade them for limited drops, custom-embroidered straps, and 1:1 time with Mikael."
       }
