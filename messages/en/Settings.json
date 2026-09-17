@@ -36,7 +36,6 @@
     "save": "Save preferences"
   },
   "account": {
-    "eyebrow": "Account",
     "title": "Behind the scenes",
     "email": "Email",
     "tier": "Tier",
@@ -51,6 +50,7 @@
     "export": "Export my data ↓"
   },
   "danger": {
+    "eyebrow": "Danger zone",
     "title": "Delete your account",
     "description": "Permanent and irreversible. All sessions, posts, Reps and form checks are deleted. Any active Stripe subscription must be cancelled separately from the billing page first.",
     "delete": "Delete my account",

@@ -217,7 +217,7 @@ export default function SettingsClient({
 
       {/* Account info — read-only */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7">
-        <SectionHeader eyebrow={t("account.eyebrow")} title={t("account.title")} />
+        <SectionHeader title={t("account.title")} />
         <ul className="space-y-3 text-sm">
           <Row k={t("account.email")} v={settings.email ?? "-"} />
           <Row k={t("account.tier")} v={settings.tier} />
@@ -251,7 +251,7 @@ export default function SettingsClient({
         className="surface-2 rounded-2xl p-5 lg:p-7"
         style={{ borderColor: "var(--line-bright)" }}
       >
-        <SectionHeader title={t("danger.title")} />
+        <SectionHeader eyebrow={t("danger.eyebrow")} title={t("danger.title")} />
         <p className="text-fg-dim text-sm mb-4 max-w-md">
           {t("danger.description")}
         </p>

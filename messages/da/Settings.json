@@ -36,7 +36,6 @@
     "save": "Gem præferencer"
   },
   "account": {
-    "eyebrow": "Konto",
     "title": "Bagved kulissen",
     "email": "Email",
     "tier": "Tier",
@@ -51,6 +50,7 @@
     "export": "Eksportér mine data ↓"
   },
   "danger": {
+    "eyebrow": "Farezone",
     "title": "Slet din konto",
     "description": "Permanent og uigenkaldelig. Alle sessioner, posts, Reps og form-checks slettes. Eventuelt aktivt Stripe-abonnement skal opsiges separat fra billing-siden inden.",
     "delete": "Slet min konto",
