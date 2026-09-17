@@ -15,7 +15,7 @@
     "challengeRewardLabel": "Reward",
     "challengeRewardValue": "Limited silver cuff + 1,000 Reps",
     "challengeStatusLabel": "Status",
-    "challengeStatusValue": "Signed up — on track",
+    "challengeStatusValue": "Signed up · on track",
     "challengeStatusEmpty": "Not signed up",
     "feedEyebrow": "Crew feed",
     "feedCount": "{count} posts",
@@ -25,13 +25,13 @@
     "challengeEmptyEyebrow": "Crew challenge",
     "challengeEmptyTitle": "No active challenge.",
     "challengeEmptyBody": "When the crew runs a real volume challenge, it shows here. We do not invent numbers.",
-    "leaderboardEmpty": "No leaderboard yet — it appears when there are real lifts.",
+    "leaderboardEmpty": "No leaderboard yet. It appears when there are real lifts.",
     "storiesEmpty": "Nobody in the crew has trained today yet.",
     "leaderboardEyebrow": "Leaderboard",
     "leaderboardTitle": "Top athletes",
     "leaderboardMonth": "May 2026",
     "meetEyebrow": "Next IRL meet",
-    "meetTitle": "Open House — Amagerbro",
+    "meetTitle": "Open House · Amagerbro",
     "meetDescription": "Saturday 24/05 · Copenhagen · Training, coffee, and a sneak peek at new products.",
     "meetRsvp": "RSVP",
     "meetReadMore": "Read more",
@@ -46,7 +46,7 @@
     "commentsOther": "Comments",
     "share": "Share",
     "loadingComments": "Loading comments…",
-    "noComments": "No comments yet — be the first.",
+    "noComments": "No comments yet. Be the first.",
     "commentPlaceholder": "Write a comment… use @handle to tag someone",
     "sending": "…",
     "send": "Send",
@@ -64,13 +64,13 @@
     "placeholderFormCheck": "Describe what you want feedback on...",
     "placeholderDefault": "Write something to the crew...",
     "addVideo": "Add video",
-    "addVideoSub": "Record or upload — AI form check included",
+    "addVideoSub": "Record or upload. AI form check included",
     "cancel": "Cancel",
     "sending": "Sending…",
     "submit": "Share →"
   },
   "realtime": {
-    "newPostsOne": "{count} new post — refresh",
-    "newPostsOther": "{count} new posts — refresh"
+    "newPostsOne": "{count} new post · refresh",
+    "newPostsOther": "{count} new posts · refresh"
   }
 }
