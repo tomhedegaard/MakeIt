@@ -307,6 +307,20 @@ export default async function TodayPage() {
             </div>
           </div>
 
+          {/* Start sits above the exercise list so it stays above the fold on phones (spec §6). */}
+          <div className="p-4 lg:p-5 flex flex-col items-stretch gap-3 border-b hairline">
+            <Link href={`/session/${today.id}`} className="btn btn-primary btn-xl">
+              {t("todaySession.start")}
+            </Link>
+            {adaptation ? (
+              <KeepOriginal
+                modifierId={adaptation.modifierId}
+                sessionId={today.id}
+                accepted={adaptation.acceptedByMember}
+              />
+            ) : null}
+          </div>
+
           <ul className="divide-y hairline">
             {today.exercises.map((ex, i) => {
               const row = (
@@ -334,19 +348,6 @@ export default async function TodayPage() {
               );
             })}
           </ul>
-
-          <div className="p-4 lg:p-5 flex flex-col items-stretch gap-3">
-            <Link href={`/session/${today.id}`} className="btn btn-primary btn-xl">
-              {t("todaySession.start")}
-            </Link>
-            {adaptation ? (
-              <KeepOriginal
-                modifierId={adaptation.modifierId}
-                sessionId={today.id}
-                accepted={adaptation.acceptedByMember}
-              />
-            ) : null}
-          </div>
         </Card>
       ) : (
         <EmptyState

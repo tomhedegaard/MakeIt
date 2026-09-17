@@ -28,4 +28,8 @@ describe("dashboard renders today first", () => {
     expect(awaits.length).toBeLessThanOrEqual(2);
     expect(page.match(/todayCardFromMock\(t\)/g)).toHaveLength(1);
   });
+  it("puts Start above the exercise list so it is above the fold on phones", () => {
+    const card = page.slice(page.indexOf('data-dashboard="todaySession"'));
+    expect(card.indexOf("todaySession.start")).toBeLessThan(card.indexOf("today.exercises.map("));
+  });
 });
