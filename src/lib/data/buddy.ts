@@ -112,7 +112,7 @@ function mockBuddy(currentMemberId: string): BuddySummary {
         fromMember: "m-mads",
         toMember: currentMemberId,
         kind: "comment",
-        body: "Solid 5x5 i går — vi tager hill-sprints søndag, husk det 💪",
+        body: "Solid 5x5 i går. Vi tager hill-sprints søndag, husk det 💪",
         createdAt: new Date(now - 48 * 3_600_000).toISOString(),
       },
     ],

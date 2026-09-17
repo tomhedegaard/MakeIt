@@ -81,7 +81,7 @@ export function evaluateAdaptation(input: EngineInput): CandidateDecision {
   if (!input.latestReading) {
     return noChange(
       ["no_reading"],
-      "Ingen HRV-måling — kører dagens session uændret."
+      "Ingen HRV-måling. Kører dagens session uændret."
     );
   }
 
@@ -91,7 +91,7 @@ export function evaluateAdaptation(input: EngineInput): CandidateDecision {
   if (ageMs > MAX_READING_AGE_MS || ageMs < 0) {
     return noChange(
       ["stale_reading"],
-      "Din HRV-måling er ikke frisk nok — kører dagens session uændret."
+      "Din HRV-måling er ikke frisk nok. Kører dagens session uændret."
     );
   }
 
@@ -99,7 +99,7 @@ export function evaluateAdaptation(input: EngineInput): CandidateDecision {
   if (input.latestReading.warmUpState !== "active") {
     return noChange(
       ["warmup_incomplete"],
-      "Din HRV-baseline er endnu under opbygning — kører dagens session uændret."
+      "Din HRV-baseline er endnu under opbygning. Kører dagens session uændret."
     );
   }
 
@@ -116,7 +116,7 @@ export function evaluateAdaptation(input: EngineInput): CandidateDecision {
       params: {},
       humanReviewRecommended: true,
       explanationDa:
-        "Du har markeret dig som syg — dagens session er erstattet med aktiv restitution. Munk får besked.",
+        "Du har markeret dig som syg. Dagens session er erstattet med aktiv restitution. Munk får besked.",
     };
   }
 
@@ -135,7 +135,7 @@ export function evaluateAdaptation(input: EngineInput): CandidateDecision {
       params: {},
       humanReviewRecommended: true,
       explanationDa:
-        "Din krop har trukket læsset over en længere periode — Munk overvejer en deload-uge. Du hører fra ham.",
+        "Din krop har trukket læsset over en længere periode. Munk overvejer en deload-uge. Du hører fra ham.",
     };
   }
 
@@ -148,7 +148,7 @@ export function evaluateAdaptation(input: EngineInput): CandidateDecision {
       params: {},
       humanReviewRecommended: true,
       explanationDa:
-        "Din HRV er meget lav i dag — dagens session er erstattet med 10 min mobilitet + gåtur. Munk får besked.",
+        "Din HRV er meget lav i dag. Dagens session er erstattet med 10 min mobilitet + gåtur. Munk får besked.",
     };
   }
 
@@ -220,7 +220,7 @@ export function evaluateAdaptation(input: EngineInput): CandidateDecision {
         variantReason: mainLift.lighterVariant.variantReason,
       },
       humanReviewRecommended: false,
-      explanationDa: `Din HRV er lav i dag og dit sidste form-check på ${mainLift.exerciseName} viste plads til forbedring — vi har byttet til en lettere variant. Du kan altid vise originalen.`,
+      explanationDa: `Din HRV er lav i dag og dit sidste form-check på ${mainLift.exerciseName} viste plads til forbedring, så vi har byttet til en lettere variant. Du kan altid vise originalen.`,
     };
   }
 
@@ -254,7 +254,7 @@ export function evaluateAdaptation(input: EngineInput): CandidateDecision {
       params: { accessorySetsDropped: 2 },
       humanReviewRecommended: false,
       explanationDa:
-        "Din HRV er lav i dag — vi har droppet 2 accessory-sæt. Hovedløftene er uændret.",
+        "Din HRV er lav i dag, så vi har droppet 2 accessory-sæt. Hovedløftene er uændret.",
     };
   }
 
@@ -267,7 +267,7 @@ export function evaluateAdaptation(input: EngineInput): CandidateDecision {
       params: {},
       humanReviewRecommended: false,
       explanationDa:
-        "Sidste session var hårdere end planlagt og du har misset et par dage — vi har markeret accessory-blokken som valgfri.",
+        "Sidste session var hårdere end planlagt og du har misset et par dage, så vi har markeret accessory-blokken som valgfri.",
     };
   }
 
@@ -294,7 +294,7 @@ export function evaluateAdaptation(input: EngineInput): CandidateDecision {
 
   return noChange(
     ["no_actionable_signals"],
-    "Alt ser fint ud — kør sessionen som planlagt."
+    "Alt ser fint ud. Kør sessionen som planlagt."
   );
 }
 
@@ -340,5 +340,5 @@ function buildTopSetExplanation(reasons: RuleReasonCode[]): string {
     factors.length === 1
       ? factors[0]
       : `${factors.slice(0, -1).join(", ")} og ${factors[factors.length - 1]}`;
-  return `Din HRV er lav i dag, og ${factorText} ovenpå — vi har reduceret topsæt-vægten med 10%. Arbejdssæt og volumen er uændret.`;
+  return `Din HRV er lav i dag, og ${factorText} ovenpå. Vi har reduceret topsæt-vægten med 10%. Arbejdssæt og volumen er uændret.`;
 }

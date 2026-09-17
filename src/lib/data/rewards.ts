@@ -29,7 +29,7 @@ const MOCK_REWARDS: Reward[] = [
   {
     id: "demo-cuff",
     slug: "limited-cuff-olive",
-    name: "Limited Cuff — Olive",
+    name: "Limited Cuff · Olive",
     description:
       "Olive-grøn HookIt cuff. Kun 80 stk lavet i denne farve. Sendes med GLS.",
     costReps: 1200,
@@ -73,7 +73,7 @@ const MOCK_REWARDS: Reward[] = [
 const MOCK_REDEMPTIONS: Redemption[] = [
   {
     id: "rd-1",
-    rewardName: "Limited Cuff — Olive",
+    rewardName: "Limited Cuff · Olive",
     costReps: 1200,
     status: "shipped",
     redeemedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 6).toISOString(),
@@ -180,7 +180,7 @@ export async function getRecentRepsTransactions(
       { id: "tx-1", delta: 250, reason: "Session gennemført", reference_type: "session_completed", created_at: new Date(now - 2 * 3600_000).toISOString() },
       { id: "tx-2", delta: 5, reason: "Journal-post", reference_type: "journal_entry", created_at: new Date(now - 5 * 3600_000).toISOString() },
       { id: "tx-3", delta: 10, reason: "Mental session gennemført", reference_type: "mental_session_completed", created_at: new Date(now - 8 * 3600_000).toISOString() },
-      { id: "tx-4", delta: 20, reason: "Mind-check stribe — 7 dage", reference_type: "mind_check_streak", created_at: new Date(now - 26 * 3600_000).toISOString() },
+      { id: "tx-4", delta: 20, reason: "Mind-check stribe: 7 dage", reference_type: "mind_check_streak", created_at: new Date(now - 26 * 3600_000).toISOString() },
       { id: "tx-5", delta: 100, reason: "Ugentligt program", reference_type: "weekly_program", created_at: new Date(now - 48 * 3600_000).toISOString() },
     ];
   }

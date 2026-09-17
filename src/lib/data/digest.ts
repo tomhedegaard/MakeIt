@@ -25,9 +25,9 @@ const MOCK_DIGEST: WeekDigest = {
   totalFormChecksReviewed: 9,
   newMembers: 6,
   topPosts: [
-    { who: "@nina_dl", content: "Ny DL PR — 175 kg @ 68 kg BW.", reactions: 84 },
+    { who: "@nina_dl", content: "Ny DL PR: 175 kg @ 68 kg BW.", reactions: 84 },
     { who: "@kasper_s", content: "Squat top single 162.5 kg, sad let.", reactions: 41 },
-    { who: "@maria.lift", content: "Bench-pause med 90 kg — form-check sent ind.", reactions: 28 },
+    { who: "@maria.lift", content: "Bench-pause med 90 kg, form-check sendt ind.", reactions: 28 },
   ],
   topPosters: [
     { who: "@maria.lift", count: 6 },

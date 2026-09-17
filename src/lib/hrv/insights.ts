@@ -263,7 +263,7 @@ export function buildTemplateSummary(data: InsightData): string {
 
   if (okCards.length === 0) {
     sentences.push(
-      "Vi har endnu ikke nok data til at vise sammenhænge med livsstil — fortsæt med at logge.",
+      "Vi har endnu ikke nok data til at vise sammenhænge med livsstil. Fortsæt med at logge.",
     );
   }
 

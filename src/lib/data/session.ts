@@ -55,7 +55,7 @@ export async function getFullSession(
 
   return {
     id: data.id,
-    programCode: program?.code ?? "—",
+    programCode: program?.code ?? "-",
     programName: program?.name ?? "",
     week: data.week ?? 1,
     dayLabel: data.day_label ?? "",

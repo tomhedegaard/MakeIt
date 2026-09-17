@@ -949,7 +949,7 @@ export async function getMentalSafetyMetrics(days = 7): Promise<MentalSafetyMetr
 
   const openAlerts: MentalSafetyAlertListItem[] = rows.map((r) => ({
     ...r,
-    member_handle: handleById.get(r.member_id) ?? "—",
+    member_handle: handleById.get(r.member_id) ?? "-",
   }));
 
   return unavailable({
