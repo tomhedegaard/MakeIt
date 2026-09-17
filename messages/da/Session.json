@@ -36,7 +36,7 @@
   },
   "exit": {
     "title": "Afslut session?",
-    "description": "Dine loggede sæt er allerede gemt — du kan fortsætte senere.",
+    "description": "Dine loggede sæt er allerede gemt. Du kan fortsætte senere.",
     "stay": "Bliv",
     "confirm": "Afslut"
   },
@@ -46,10 +46,10 @@
     "openDetails": "Åbn øvelsens detaljer",
     "seeFull": "Se hele øvelsen →",
     "demo": "Se bevægelse",
-    "demoAria": "Se bevægelse — {lift}",
+    "demoAria": "Se bevægelse: {lift}",
     "demoPlay": "Afspil bevægelse",
     "formCheck": "Optag sæt {set}",
-    "formCheckSub": "Sendes til coach Munk — bundet til {lift}",
+    "formCheckSub": "Sendes til coach Munk, bundet til {lift}",
     "moreCues": " · {count} cues mere",
     "duration": "Optag →",
     "thread": {
@@ -64,11 +64,11 @@
   "restTimer": {
     "ariaLabel": "Hvile",
     "title": "Hvile",
-    "description": "Næste sæt om {time} — tag en slurk vand.",
+    "description": "Næste sæt om {time}. Tag en slurk vand.",
     "skip": "Spring over"
   },
   "rpe": {
-    "label": "RPE — hvor tungt føltes det?",
+    "label": "RPE: hvor tungt føltes det?",
     "ariaLabel": "RPE"
   },
   "preview": {
