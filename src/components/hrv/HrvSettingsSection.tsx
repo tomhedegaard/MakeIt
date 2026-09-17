@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ConnectionStatus from "@/components/hrv/ConnectionStatus";
 import WearableConnectSheet from "@/components/hrv/WearableConnectSheet";
+import SectionHeader from "@/components/ui/SectionHeader";
 import {
   setPrimaryConnection,
   setCycleTracking,
@@ -95,10 +96,7 @@ export default function HrvSettingsSection({
 
   return (
     <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-5">
-      <div>
-        <div className="eyebrow mb-1">HRV</div>
-        <h2 className="font-display text-2xl">Wearables og recovery</h2>
-      </div>
+      <SectionHeader eyebrow="HRV" title="Wearables og recovery" />
 
       {/* Wearable connections */}
       <div className="space-y-3">

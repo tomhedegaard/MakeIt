@@ -4,6 +4,7 @@ import { useState, useTransition, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { logLifestyleEvent } from "@/app/(app)/hrv/lifestyle-actions";
 import { FEELING_STATES, type FeelingState } from "@/lib/hrv/lifestyle";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 /**
  * Daily lifestyle quick-log card for `/hrv` (V2.1 Task 5).
@@ -249,10 +250,7 @@ export default function LifestyleLogCard({
 
   return (
     <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-5">
-      <div>
-        <div className="eyebrow mb-1">Livsstil</div>
-        <h2 className="font-display text-2xl">I dag</h2>
-      </div>
+      <SectionHeader eyebrow="Livsstil" title="I dag" />
 
       <Row label="Alkohol">
         <Selector<0 | 1 | 2 | 3>

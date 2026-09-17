@@ -16,6 +16,7 @@ import AdaptiveConsentCard from "@/components/adaptive/AdaptiveConsentCard";
 import AdaptationHistory from "@/components/adaptive/AdaptationHistory";
 import type { ReadinessBucket, WarmUpState } from "@/lib/hrv/types";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
+import SectionHeader from "@/components/ui/SectionHeader";
 import ReadinessLadder from "@/components/hrv/ReadinessLadder";
 import HrvBandHero from "@/components/hrv/HrvBandHero";
 import LifestyleLogCard from "@/components/hrv/LifestyleLogCard";
@@ -319,10 +320,7 @@ function StateNotConnected({
   return (
     <section className="surface-2 rounded-2xl overflow-hidden">
       <div className="px-6 py-7 md:px-8 md:py-10 border-b hairline">
-        <div className="eyebrow mb-3">{t("connectEyebrow")}</div>
-        <h2 className="font-display text-3xl md:text-4xl leading-[1.02] mb-3">
-          {t("connectTitle")}
-        </h2>
+        <SectionHeader eyebrow={t("connectEyebrow")} title={t("connectTitle")} />
         <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-xl">
           {t("connectBody")}
         </p>
@@ -478,10 +476,7 @@ function StateActive({
 function StatePendingFirstSync({ provider }: { provider: string }) {
   return (
     <section className="surface-2 rounded-2xl px-6 py-8 md:px-8 md:py-10">
-      <div className="eyebrow mb-3">Forbundet</div>
-      <h2 className="font-display text-2xl md:text-3xl leading-tight mb-3">
-        {provider} er forbundet.
-      </h2>
+      <SectionHeader eyebrow="Forbundet" title={`${provider} er forbundet.`} />
       <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-md">
         Din første HRV-måling synker næste gang {provider} har en nats data.
         Kig forbi i morgen tidlig.
