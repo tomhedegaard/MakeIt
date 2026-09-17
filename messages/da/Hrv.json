@@ -37,6 +37,18 @@
     "empty": {
       "title": "Ingen målinger endnu",
       "body": "Forbind dit wearable, så nattens HRV synker automatisk. Grafen kommer, når den første måling lander. Ikke før."
+    },
+    "distribution": {
+      "eyebrow": "Readiness-fordeling",
+      "bucket": {
+        "very_low": "Langt under",
+        "low": "Under",
+        "normal": "Normal",
+        "high": "Over",
+        "very_high": "Langt over"
+      },
+      "summary": "Dine sidste {days} dage: {normal}% normal, {under}% under, {over}% over.",
+      "none": "Ingen readiness-data i de sidste {days} dage."
     }
   },
   "subNav": {
@@ -49,12 +61,38 @@
   "learn": {
     "eyebrow": "Restitution",
     "title": "Lær",
-    "subtitle": "Hvad HRV er, hvorfor vi viser den, som vi gør, og hvad tallet betyder for dig."
+    "subtitle": "Hvad HRV er, hvorfor vi viser den, som vi gør, og hvad tallet betyder for dig.",
+    "sections": {
+      "what": {
+        "heading": "Hvad er HRV?",
+        "body": "Hjerterytmevariabilitet er de små udsving i tid mellem dine hjerteslag. Det afspejler dit autonome nervesystem: balancen mellem gas og bremse. Det er ikke en diagnose, men et fingerpeg om, hvor restitueret din krop er."
+      },
+      "rmssd": {
+        "heading": "Hvorfor RMSSD?",
+        "body": "Der findes mange HRV-tal; vi viser RMSSD, fordi det er det mest robuste for korte, daglige målinger. Vi viser dig din faktiske værdi i millisekunder, ikke et opfundet “score”."
+      },
+      "noScore": {
+        "heading": "Hvorfor du ikke får et 0-100 score",
+        "body": "Et tal fra 0 til 100 lover en præcision, der ikke findes. Vi viser dit rigtige tal og dit eget baseline-bånd, så du ser, hvor du ligger i forhold til din egen normal."
+      },
+      "noCompare": {
+        "heading": "Hvorfor du ikke kan sammenligne din HRV med andres",
+        "body": "Sundt RMSSD spænder fra ca. 10 til 200 ms afhængigt af alder, køn og form. Et højt tal hos én er et lavt tal hos en anden. Kun din egen baseline betyder noget."
+      },
+      "cycle": {
+        "heading": "Cyklus & HRV",
+        "body": "For kvindelige medlemmer: HRV svinger naturligt hen over menstruationscyklussen, typisk lavere i dagene før menstruation. Slå cyklus-tracking til under Settings, så din baseline tager højde for det."
+      }
+    }
   },
   "insights": {
     "eyebrow": "HRV",
     "title": "Indsigt",
-    "subtitle": "Din ugentlige observation og hvad din livsstil ser ud til at betyde."
+    "subtitle": "Din ugentlige observation og hvad din livsstil ser ud til at betyde.",
+    "empty": "Din første ugentlige indsigt skrives søndag aften, så snart du har 14 dages data fra dit wearable.",
+    "provenanceAuto": "Skrevet automatisk.",
+    "provenanceCoach": "Skrevet af MakeIt-coachen.",
+    "weekFrom": "Uge fra {date}."
   },
   "page": {
     "eyebrow": "Hjerte",
@@ -70,7 +108,38 @@
     "connectStep3Title": "Vi bygger din baseline",
     "connectStep3Body": "De første par uger lærer MakeIt din normal. Derefter ser du din HRV-klarhed.",
     "connectCta": "Forbind din wearable-enhed",
-    "connectAppleNote": "Apple Watch-understøttelse kommer med MakeIt-appen til iPhone."
+    "connectAppleNote": "Apple Watch-understøttelse kommer med MakeIt-appen til iPhone.",
+    "yourWearable": "din wearable",
+    "unit": "ms",
+    "syncedFrom": "Synket fra {provider}",
+    "readiness": {
+      "very_low": "Langt under din norm",
+      "low": "Under din norm",
+      "normal": "I dit normale område",
+      "high": "Over din norm",
+      "very_high": "Langt over din norm"
+    },
+    "reauth": {
+      "eyebrow": "Forbindelse afbrudt",
+      "body": "Din forbindelse til {provider} skal fornyes for at fortsætte med at synke din HRV.",
+      "cta": "Forny forbindelse"
+    },
+    "warmingUp": {
+      "eyebrow": "Bygger din baseline",
+      "latest": "Seneste HRV",
+      "body": "Vi bygger din baseline. <em>{count, plural, one {# dag} other {# dage}} tilbage.</em> Indtil da viser vi din rå måling. Readiness kommer, når MakeIt kender din normal."
+    },
+    "active": {
+      "eyebrow": "Dagens readiness",
+      "latest": "HRV i morges",
+      "mean7d": "7-dages snit",
+      "source": "Kilde"
+    },
+    "pending": {
+      "eyebrow": "Forbundet",
+      "title": "{provider} er forbundet.",
+      "body": "Din første HRV-måling synker næste gang {provider} har en nats data. Kig forbi i morgen tidlig."
+    }
   },
   "connectSheet": {
     "eyebrow": "Wearable-enhed",
@@ -85,5 +154,158 @@
     "errorNoSession": "Du skal være logget ind for at forbinde en wearable-enhed.",
     "errorUnsupported": "Denne wearable-enhed understøttes ikke endnu.",
     "errorStart": "Kunne ikke starte forbindelsen. Prøv igen."
+  },
+  "learnAdaptive": {
+    "eyebrow": "Recovery",
+    "title": "Hvordan motoren tænker",
+    "subtitle": "Se hele beslutningskæden bag en daglig session-tilpasning, og prøv selv at ændre signalerne.",
+    "hero": {
+      "p1": "Den adaptive motor justerer dagens session ud fra fire ting: din HRV-måling, din søvn, sidste sessions RPE, og dine seneste form-checks. Den fyrer hver morgen klokken 05:30, og du ser resultatet når du åbner sessionen.",
+      "p2": "Vi viser dig hele tankegangen. Hvad motoren så, hvilken regel der fyrede, og hvad Munks AI-assistent eventuelt justerede. Du kan også trække i et signal og se hvad motoren ville have valgt i stedet."
+    },
+    "example": {
+      "eyebrow": "Eksempel · sådan ser kortet ud",
+      "title": "Topsæt-vægt reduceret",
+      "meta": "Automatisk · baseret på din HRV",
+      "accept": "OK, kør tilpasset",
+      "keep": "Behold original",
+      "note": "(Knapperne er deaktiverede her. Du finder det rigtige kort i din session når motoren er aktiv.)"
+    },
+    "reasoningEyebrow": "Tankegangen bag",
+    "playground": {
+      "eyebrow": "Prøv selv",
+      "body": "Træk i en slider og se motorens beslutning ændre sig live. Det hele kører i din browser: der er ingen API-kald, intet spinner-vent. Det er muligt fordi motoren er en ren funktion."
+    },
+    "bounds": {
+      "title": "Hvad må motoren?",
+      "engineTitle": "Motoren selv",
+      "engine": [
+        "Reducere topsæt-vægten",
+        "Markere accessory-sæt som valgfri",
+        "Foreslå en lettere variant af hovedløftet",
+        "Afkorte sessionen"
+      ],
+      "coachTitle": "Kræver Munks godkendelse",
+      "coach": [
+        "Pause en hel session",
+        "Indlægge en deload-uge",
+        "Eskalere usædvanlige kombinationer"
+      ],
+      "footer": "Og uanset hvad: du kan altid sige “behold original” i sessionen og køre det planlagte program. Ingenting sker bag din ryg. Alle beslutninger er logget og kan inspiceres."
+    },
+    "backLink": "← Tilbage til HRV <faint>· slå adaptiv til der</faint>",
+    "exampleDecision": "Eksempel-beslutningen ovenfor: {action} · confidence {confidence}."
+  },
+  "connectionStatus": {
+    "status": {
+      "active": "Forbundet",
+      "needs_reauth": "Skal fornyes",
+      "revoked": "Afbrudt"
+    },
+    "error": "Kunne ikke afbryde. Prøv igen.",
+    "primary": "Primær",
+    "disconnect": "Afbryd",
+    "disconnecting": "Afbryder…",
+    "lastSynced": "Sidst synket: {when}",
+    "neverSynced": "Endnu ikke synket",
+    "ago": {
+      "now": "lige nu",
+      "minutes": "for {count} min. siden",
+      "hours": "for {count} t. siden",
+      "days": "for {count, plural, one {# dag} other {# dage}} siden"
+    }
+  },
+  "toast": {
+    "milestone": "{days}-dages HRV-streak nået. +{reps} Reps tilføjet.",
+    "welcomeBonus": "Wearable forbundet. +{reps} Reps tilføjet.",
+    "close": "Luk",
+    "closeAria": "Luk besked"
+  },
+  "nudge": {
+    "cta": "Se HRV →"
+  },
+  "insightCard": {
+    "factor": {
+      "alcohol": {
+        "label": "Alkohol",
+        "framing": "Dage med alkohol vs. uden"
+      },
+      "sleep": {
+        "label": "Søvn",
+        "framing": "Nætter under 7 t vs. 7 t+"
+      }
+    },
+    "deltaSr": "HRV-forskel:",
+    "with": "Med: {ms} ms<faint> · {count} dage</faint>",
+    "without": "Uden: {ms} ms<faint> · {count} dage</faint>",
+    "notEnough": "Ikke nok data endnu",
+    "needMore": "{exposed} med · {baseline} uden · brug for mindst {min} i hver gruppe"
+  },
+  "readinessLadder": {
+    "bucket": {
+      "very_low": "Meget under din norm",
+      "low": "Under din norm",
+      "normal": "I dit normale område",
+      "high": "Over din norm",
+      "very_high": "Meget over din norm"
+    },
+    "ariaWaiting": "Readiness-stige, venter på baseline",
+    "aria": "Readiness: {label}",
+    "waiting": "Readiness kommer når din baseline er klar"
+  },
+  "trendChart": {
+    "title": "HRV-trend",
+    "desc": "Daglig HRV (RMSSD) med 7-dages gennemsnitslinje og 60-dages baseline-bånd. {count} målinger.",
+    "caption": "HRV-målinger: dato og RMSSD",
+    "colDate": "Dato",
+    "colRmssd": "RMSSD (ms)"
+  },
+  "settingsSection": {
+    "eyebrow": "HRV",
+    "title": "Wearables og recovery",
+    "connected": "Forbundne wearables",
+    "empty": "Du har ingen wearable forbundet. Forbind én, så synker MakeIt din HRV automatisk hver morgen.",
+    "connect": "Forbind wearable",
+    "saving": "Gemmer…",
+    "makePrimary": "Gør primær",
+    "primaryError": "Kunne ikke gøre primær. Prøv igen.",
+    "saved": "✓ Gemt",
+    "saveError": "Kunne ikke gemme. Prøv igen.",
+    "cycle": {
+      "title": "Cyklus-tracking",
+      "body": "Justér din baseline for menstruationscyklussen, så din readiness tager højde for de naturlige HRV-udsving."
+    },
+    "nudge": {
+      "title": "Vis HRV-nudge på workouts",
+      "body": "Når din readiness er lav i dag, ser du en kort note øverst på dagens session. Slå fra, hvis du hellere vil have ro."
+    },
+    "seeAll": "Se din fulde HRV →"
+  },
+  "lifestyle": {
+    "eyebrow": "Livsstil",
+    "title": "I dag",
+    "saveError": "Kunne ikke gemme. Prøv igen.",
+    "alcohol": "Alkohol",
+    "sleep": "Søvn",
+    "sleepAria": "Timers søvn",
+    "hours": "timer",
+    "feeling": "Tilstand",
+    "feelings": {
+      "fresh": "Frisk",
+      "ok": "OK",
+      "tired": "Træt",
+      "stressed": "Stresset"
+    },
+    "lateMeal": "Sent måltid",
+    "sick": "Syg i dag, udelades fra baseline",
+    "menstruation": "Menstruation",
+    "menstruationLogged": "✓ Menstruation markeret i dag",
+    "menstruationMark": "Markér menstruation startede i dag"
+  },
+  "syncStreak": {
+    "line": "Sync-streak: {count, plural, one {# dag} other {# dage}} · {detail}",
+    "allDone": "alle milestones gennemført",
+    "nextToday": "næste milestone i dag (+{reps} Reps)",
+    "nextIn": "næste milestone om {count, plural, one {# dag} other {# dage}} (+{reps} Reps)"
   }
 }

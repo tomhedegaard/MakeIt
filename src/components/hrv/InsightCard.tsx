@@ -1,7 +1,7 @@
+import { useTranslations } from "next-intl";
 import {
   MIN_GROUP_N,
   type CorrelationCard,
-  type InsightFactor,
 } from "@/lib/hrv/insights";
 
 /**
@@ -15,18 +15,6 @@ import {
  * carries the heart domain color via the /hrv data-domain scope.
  */
 
-/** Danish label for each factor. */
-const FACTOR_LABEL: Record<InsightFactor, string> = {
-  alcohol: "Alkohol",
-  sleep: "Søvn",
-};
-
-/** Danish framing — what the two groups being compared actually are. */
-const FACTOR_FRAMING: Record<InsightFactor, string> = {
-  alcohol: "Dage med alkohol vs. uden",
-  sleep: "Nætter under 7 t vs. 7 t+",
-};
-
 /** Format a percentage delta with an explicit sign — e.g. `−12%`, `+5%`, `±0%`. */
 function formatDelta(deltaPct: number): string {
   if (deltaPct > 0) return `+${deltaPct}%`;
@@ -35,12 +23,13 @@ function formatDelta(deltaPct: number): string {
 }
 
 export default function InsightCard({ card }: { card: CorrelationCard }) {
-  const label = FACTOR_LABEL[card.factor];
+  const t = useTranslations("Hrv.insightCard");
+  const label = t(`factor.${card.factor}.label`);
 
   return (
     <div className="surface-2 rounded-2xl p-5">
       <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-domain">
-        {FACTOR_FRAMING[card.factor]}
+        {t(`factor.${card.factor}.framing`)}
       </div>
       <div className="mt-1 font-display text-lg leading-tight text-fg">
         {label}
@@ -52,26 +41,35 @@ export default function InsightCard({ card }: { card: CorrelationCard }) {
       card.baselineMeanRmssd !== null ? (
         <div className="mt-4 flex flex-col gap-3">
           <div className="font-display text-2xl leading-tight text-fg">
-            <span className="sr-only">HRV-forskel: </span>
+            <span className="sr-only">{t("deltaSr")} </span>
             {formatDelta(card.deltaPct)}
           </div>
           <div className="flex flex-col gap-1 text-sm text-fg-dim">
             <span>
-              Med: {card.exposedMeanRmssd} ms
-              <span className="text-fg-faint"> · {card.exposedN} dage</span>
+              {t.rich("with", {
+                ms: card.exposedMeanRmssd,
+                count: card.exposedN,
+                faint: (chunks) => <span className="text-fg-faint">{chunks}</span>,
+              })}
             </span>
             <span>
-              Uden: {card.baselineMeanRmssd} ms
-              <span className="text-fg-faint"> · {card.baselineN} dage</span>
+              {t.rich("without", {
+                ms: card.baselineMeanRmssd,
+                count: card.baselineN,
+                faint: (chunks) => <span className="text-fg-faint">{chunks}</span>,
+              })}
             </span>
           </div>
         </div>
       ) : (
         <div className="mt-4 flex flex-col gap-2">
-          <div className="text-sm text-fg-dim">Ikke nok data endnu</div>
+          <div className="text-sm text-fg-dim">{t("notEnough")}</div>
           <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint leading-relaxed">
-            {card.exposedN} med · {card.baselineN} uden — brug for mindst{" "}
-            {MIN_GROUP_N} i hver gruppe
+            {t("needMore", {
+              exposed: card.exposedN,
+              baseline: card.baselineN,
+              min: MIN_GROUP_N,
+            })}
           </div>
         </div>
       )}

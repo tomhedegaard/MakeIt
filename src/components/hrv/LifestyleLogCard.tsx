@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { logLifestyleEvent } from "@/app/(app)/hrv/lifestyle-actions";
 import { FEELING_STATES, type FeelingState } from "@/lib/hrv/lifestyle";
@@ -161,6 +162,7 @@ export default function LifestyleLogCard({
   initialLogs,
   cycleTrackingEnabled,
 }: Props) {
+  const t = useTranslations("Hrv.lifestyle");
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -199,7 +201,7 @@ export default function LifestyleLogCard({
       const res = await logLifestyleEvent(eventType, value);
       if (!res.ok) {
         rollback(prev);
-        setError("Kunne ikke gemme — prøv igen.");
+        setError(t("saveError"));
       }
     });
   }
@@ -250,11 +252,11 @@ export default function LifestyleLogCard({
 
   return (
     <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-5">
-      <SectionHeader eyebrow="Livsstil" title="I dag" />
+      <SectionHeader eyebrow={t("eyebrow")} title={t("title")} />
 
-      <Row label="Alkohol">
+      <Row label={t("alcohol")}>
         <Selector<0 | 1 | 2 | 3>
-          label="Alkohol"
+          label={t("alcohol")}
           value={alcohol}
           disabled={pending}
           onSelect={selectAlcohol}
@@ -267,7 +269,7 @@ export default function LifestyleLogCard({
         />
       </Row>
 
-      <Row label="Søvn">
+      <Row label={t("sleep")}>
         <div className="flex items-center gap-2">
           <input
             type="number"
@@ -278,26 +280,26 @@ export default function LifestyleLogCard({
             value={sleep ?? ""}
             disabled={pending}
             onChange={(e) => changeSleep(e.target.value)}
-            aria-label="Timers søvn"
+            aria-label={t("sleepAria")}
             className="w-24 disabled:opacity-50"
           />
           <span className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-            timer
+            {t("hours")}
           </span>
         </div>
       </Row>
 
-      <Row label="Tilstand">
+      <Row label={t("feeling")}>
         <Selector<FeelingState>
-          label="Tilstand"
+          label={t("feeling")}
           value={feeling}
           disabled={pending}
           onSelect={selectFeeling}
           options={[
-            { value: "fresh", label: "Frisk" },
-            { value: "ok", label: "OK" },
-            { value: "tired", label: "Træt" },
-            { value: "stressed", label: "Stresset" },
+            { value: "fresh", label: t("feelings.fresh") },
+            { value: "ok", label: t("feelings.ok") },
+            { value: "tired", label: t("feelings.tired") },
+            { value: "stressed", label: t("feelings.stressed") },
           ]}
         />
       </Row>
@@ -305,7 +307,7 @@ export default function LifestyleLogCard({
       <ul className="divide-y hairline border-y hairline">
         <li className="py-3">
           <Toggle
-            label="Sent måltid"
+            label={t("lateMeal")}
             checked={lateMeal}
             disabled={pending}
             onChange={toggleLateMeal}
@@ -313,7 +315,7 @@ export default function LifestyleLogCard({
         </li>
         <li className="py-3">
           <Toggle
-            label="Syg i dag — udelades fra baseline"
+            label={t("sick")}
             checked={sick}
             disabled={pending}
             onChange={toggleSick}
@@ -322,7 +324,7 @@ export default function LifestyleLogCard({
       </ul>
 
       {cycleTrackingEnabled ? (
-        <Row label="Menstruation">
+        <Row label={t("menstruation")}>
           <button
             type="button"
             onClick={markMenstruation}
@@ -337,8 +339,8 @@ export default function LifestyleLogCard({
             )}
           >
             {menstruationLogged
-              ? "✓ Menstruation markeret i dag"
-              : "Markér menstruation startede i dag"}
+              ? t("menstruationLogged")
+              : t("menstruationMark")}
           </button>
         </Row>
       ) : null}

@@ -1,3 +1,4 @@
+import { useLocale, useTranslations } from "next-intl";
 import ChartEmptyFrame from "@/components/ui/ChartEmptyFrame";
 import { CHART_CRAFT } from "@/lib/svg/chart-craft";
 import {
@@ -31,11 +32,11 @@ import {
 /** Fixed SVG coordinate space — the element scales to its container width. */
 const VIEWPORT = { width: 640, height: 240 };
 
-/** Format an ISO timestamp as a short Danish date for the fallback table. */
-function tableDate(iso: string): string {
+/** Format an ISO timestamp as a short localized date for the fallback table. */
+function tableDate(iso: string, locale: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString("da-DK", { day: "numeric", month: "short" });
+  return d.toLocaleDateString(locale, { day: "numeric", month: "short" });
 }
 
 /** lnRMSSD → whole-millisecond RMSSD. */
@@ -48,6 +49,8 @@ export default function TrendChart({
 }: {
   readings: ChartReading[];
 }) {
+  const t = useTranslations("Hrv.trendChart");
+  const locale = useLocale();
   const model = buildTrendChartModel(readings, VIEWPORT);
 
   if (model.isEmpty) {
@@ -71,10 +74,9 @@ export default function TrendChart({
         aria-labelledby="trendchart-title trendchart-desc"
         className="block w-full"
       >
-        <title id="trendchart-title">HRV-trend</title>
+        <title id="trendchart-title">{t("title")}</title>
         <desc id="trendchart-desc">
-          Daglig HRV (RMSSD) med 7-dages gennemsnitslinje og 60-dages
-          baseline-bånd. {readings.length} målinger.
+          {t("desc", { count: readings.length })}
         </desc>
 
         {/* Hairline plot frame + y-grid — monochrome, non-scaling. */}
@@ -197,17 +199,17 @@ export default function TrendChart({
 
       {/* Visually-hidden data-table fallback for non-visual users. */}
       <table className="sr-only">
-        <caption>HRV-målinger: dato og RMSSD</caption>
+        <caption>{t("caption")}</caption>
         <thead>
           <tr>
-            <th scope="col">Dato</th>
-            <th scope="col">RMSSD (ms)</th>
+            <th scope="col">{t("colDate")}</th>
+            <th scope="col">{t("colRmssd")}</th>
           </tr>
         </thead>
         <tbody>
           {readings.map((r, i) => (
             <tr key={i}>
-              <td>{tableDate(r.measuredAt)}</td>
+              <td>{tableDate(r.measuredAt, locale)}</td>
               <td>{rmssdMs(r.lnRmssd)}</td>
             </tr>
           ))}

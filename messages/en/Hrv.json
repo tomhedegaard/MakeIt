@@ -37,6 +37,18 @@
     "empty": {
       "title": "No readings yet",
       "body": "Connect your wearable so overnight HRV syncs automatically. The chart appears when the first reading lands. Not before."
+    },
+    "distribution": {
+      "eyebrow": "Readiness distribution",
+      "bucket": {
+        "very_low": "Well below",
+        "low": "Below",
+        "normal": "Normal",
+        "high": "Above",
+        "very_high": "Well above"
+      },
+      "summary": "Your last {days} days: {normal}% normal, {under}% below, {over}% above.",
+      "none": "No readiness data in the last {days} days."
     }
   },
   "subNav": {
@@ -49,12 +61,38 @@
   "learn": {
     "eyebrow": "Recovery",
     "title": "Learn",
-    "subtitle": "What HRV is, why we show it the way we do, and what the number means for you."
+    "subtitle": "What HRV is, why we show it the way we do, and what the number means for you.",
+    "sections": {
+      "what": {
+        "heading": "What is HRV?",
+        "body": "Heart-rate variability is the small variation in time between your heartbeats. It reflects your autonomic nervous system: the balance between accelerator and brake. It is not a diagnosis, but a pointer to how recovered your body is."
+      },
+      "rmssd": {
+        "heading": "Why RMSSD?",
+        "body": "There are many HRV numbers; we show RMSSD because it is the most robust for short, daily readings. We show you your actual value in milliseconds, not an invented “score”."
+      },
+      "noScore": {
+        "heading": "Why you don't get a 0-100 score",
+        "body": "A number from 0 to 100 promises a precision that does not exist. We show your real number and your own baseline band, so you see where you sit relative to your own normal."
+      },
+      "noCompare": {
+        "heading": "Why you can't compare your HRV with others'",
+        "body": "Healthy RMSSD ranges from about 10 to 200 ms depending on age, sex and fitness. A high number for one person is a low number for another. Only your own baseline matters."
+      },
+      "cycle": {
+        "heading": "Cycle & HRV",
+        "body": "For female members: HRV naturally swings across the menstrual cycle, typically lower in the days before menstruation. Turn on cycle tracking under Settings so your baseline accounts for it."
+      }
+    }
   },
   "insights": {
     "eyebrow": "HRV",
     "title": "Insight",
-    "subtitle": "Your weekly observation and what your lifestyle seems to be telling you."
+    "subtitle": "Your weekly observation and what your lifestyle seems to be telling you.",
+    "empty": "Your first weekly insight is written on Sunday evening, as soon as you have 14 days of data from your wearable.",
+    "provenanceAuto": "Written automatically.",
+    "provenanceCoach": "Written by the MakeIt coach.",
+    "weekFrom": "Week from {date}."
   },
   "page": {
     "eyebrow": "Heart",
@@ -70,7 +108,38 @@
     "connectStep3Title": "We build your baseline",
     "connectStep3Body": "The first couple of weeks MakeIt learns your normal. Then you see your HRV readiness.",
     "connectCta": "Connect your wearable",
-    "connectAppleNote": "Apple Watch support arrives with the MakeIt iPhone app."
+    "connectAppleNote": "Apple Watch support arrives with the MakeIt iPhone app.",
+    "yourWearable": "your wearable",
+    "unit": "ms",
+    "syncedFrom": "Synced from {provider}",
+    "readiness": {
+      "very_low": "Well below your norm",
+      "low": "Below your norm",
+      "normal": "Within your normal range",
+      "high": "Above your norm",
+      "very_high": "Well above your norm"
+    },
+    "reauth": {
+      "eyebrow": "Connection lost",
+      "body": "Your connection to {provider} needs renewing to keep syncing your HRV.",
+      "cta": "Renew connection"
+    },
+    "warmingUp": {
+      "eyebrow": "Building your baseline",
+      "latest": "Latest HRV",
+      "body": "We are building your baseline. <em>{count, plural, one {# day} other {# days}} to go.</em> Until then we show your raw reading. Readiness arrives once MakeIt knows your normal."
+    },
+    "active": {
+      "eyebrow": "Today's readiness",
+      "latest": "HRV this morning",
+      "mean7d": "7-day mean",
+      "source": "Source"
+    },
+    "pending": {
+      "eyebrow": "Connected",
+      "title": "{provider} is connected.",
+      "body": "Your first HRV reading syncs the next time {provider} has a night of data. Check back tomorrow morning."
+    }
   },
   "connectSheet": {
     "eyebrow": "Wearable",
@@ -85,5 +154,158 @@
     "errorNoSession": "You need to be signed in to connect a wearable.",
     "errorUnsupported": "This wearable is not supported yet.",
     "errorStart": "Could not start the connection. Try again."
+  },
+  "learnAdaptive": {
+    "eyebrow": "Recovery",
+    "title": "How the engine thinks",
+    "subtitle": "See the full decision chain behind a daily session adjustment, and try changing the signals yourself.",
+    "hero": {
+      "p1": "The adaptive engine adjusts today's session from four things: your HRV reading, your sleep, last session's RPE, and your latest form checks. It fires every morning at 05:30, and you see the result when you open the session.",
+      "p2": "We show you the whole line of thought. What the engine saw, which rule fired, and what Munk's AI assistant may have adjusted. You can also pull on a signal and see what the engine would have chosen instead."
+    },
+    "example": {
+      "eyebrow": "Example · what the card looks like",
+      "title": "Top set weight reduced",
+      "meta": "Automatic · based on your HRV",
+      "accept": "OK, run adjusted",
+      "keep": "Keep original",
+      "note": "(The buttons are disabled here. You find the real card in your session when the engine is active.)"
+    },
+    "reasoningEyebrow": "The reasoning behind it",
+    "playground": {
+      "eyebrow": "Try it yourself",
+      "body": "Drag a slider and watch the engine's decision change live. It all runs in your browser: no API calls, no spinner wait. That works because the engine is a pure function."
+    },
+    "bounds": {
+      "title": "What may the engine do?",
+      "engineTitle": "The engine alone",
+      "engine": [
+        "Reduce the top set weight",
+        "Mark accessory sets as optional",
+        "Suggest a lighter variant of the main lift",
+        "Shorten the session"
+      ],
+      "coachTitle": "Needs Munk's approval",
+      "coach": [
+        "Pause a whole session",
+        "Insert a deload week",
+        "Escalate unusual combinations"
+      ],
+      "footer": "And no matter what: you can always say “keep original” in the session and run the planned program. Nothing happens behind your back. Every decision is logged and can be inspected."
+    },
+    "backLink": "← Back to HRV <faint>· turn on adaptive there</faint>",
+    "exampleDecision": "The example decision above: {action} · confidence {confidence}."
+  },
+  "connectionStatus": {
+    "status": {
+      "active": "Connected",
+      "needs_reauth": "Needs renewing",
+      "revoked": "Disconnected"
+    },
+    "error": "Could not disconnect. Try again.",
+    "primary": "Primary",
+    "disconnect": "Disconnect",
+    "disconnecting": "Disconnecting…",
+    "lastSynced": "Last synced: {when}",
+    "neverSynced": "Not synced yet",
+    "ago": {
+      "now": "just now",
+      "minutes": "{count} min ago",
+      "hours": "{count} h ago",
+      "days": "{count, plural, one {# day} other {# days}} ago"
+    }
+  },
+  "toast": {
+    "milestone": "{days}-day HRV streak reached. +{reps} Reps added.",
+    "welcomeBonus": "Wearable connected. +{reps} Reps added.",
+    "close": "Close",
+    "closeAria": "Close message"
+  },
+  "nudge": {
+    "cta": "See HRV →"
+  },
+  "insightCard": {
+    "factor": {
+      "alcohol": {
+        "label": "Alcohol",
+        "framing": "Days with alcohol vs. without"
+      },
+      "sleep": {
+        "label": "Sleep",
+        "framing": "Nights under 7 h vs. 7 h+"
+      }
+    },
+    "deltaSr": "HRV difference:",
+    "with": "With: {ms} ms<faint> · {count} days</faint>",
+    "without": "Without: {ms} ms<faint> · {count} days</faint>",
+    "notEnough": "Not enough data yet",
+    "needMore": "{exposed} with · {baseline} without · need at least {min} in each group"
+  },
+  "readinessLadder": {
+    "bucket": {
+      "very_low": "Well below your norm",
+      "low": "Below your norm",
+      "normal": "Within your normal range",
+      "high": "Above your norm",
+      "very_high": "Well above your norm"
+    },
+    "ariaWaiting": "Readiness ladder, waiting for baseline",
+    "aria": "Readiness: {label}",
+    "waiting": "Readiness arrives once your baseline is ready"
+  },
+  "trendChart": {
+    "title": "HRV trend",
+    "desc": "Daily HRV (RMSSD) with a 7-day mean line and a 60-day baseline band. {count} readings.",
+    "caption": "HRV readings: date and RMSSD",
+    "colDate": "Date",
+    "colRmssd": "RMSSD (ms)"
+  },
+  "settingsSection": {
+    "eyebrow": "HRV",
+    "title": "Wearables and recovery",
+    "connected": "Connected wearables",
+    "empty": "You have no wearable connected. Connect one and MakeIt syncs your HRV automatically every morning.",
+    "connect": "Connect wearable",
+    "saving": "Saving…",
+    "makePrimary": "Make primary",
+    "primaryError": "Could not make primary. Try again.",
+    "saved": "✓ Saved",
+    "saveError": "Could not save. Try again.",
+    "cycle": {
+      "title": "Cycle tracking",
+      "body": "Adjust your baseline for the menstrual cycle, so your readiness accounts for the natural HRV swings."
+    },
+    "nudge": {
+      "title": "Show HRV nudge on workouts",
+      "body": "When your readiness is low today, you see a short note at the top of today's session. Turn it off if you would rather have peace."
+    },
+    "seeAll": "See your full HRV →"
+  },
+  "lifestyle": {
+    "eyebrow": "Lifestyle",
+    "title": "Today",
+    "saveError": "Could not save. Try again.",
+    "alcohol": "Alcohol",
+    "sleep": "Sleep",
+    "sleepAria": "Hours of sleep",
+    "hours": "hours",
+    "feeling": "State",
+    "feelings": {
+      "fresh": "Fresh",
+      "ok": "OK",
+      "tired": "Tired",
+      "stressed": "Stressed"
+    },
+    "lateMeal": "Late meal",
+    "sick": "Sick today, left out of baseline",
+    "menstruation": "Menstruation",
+    "menstruationLogged": "✓ Menstruation marked today",
+    "menstruationMark": "Mark menstruation started today"
+  },
+  "syncStreak": {
+    "line": "Sync streak: {count, plural, one {# day} other {# days}} · {detail}",
+    "allDone": "all milestones complete",
+    "nextToday": "next milestone today (+{reps} Reps)",
+    "nextIn": "next milestone in {count, plural, one {# day} other {# days}} (+{reps} Reps)"
   }
 }

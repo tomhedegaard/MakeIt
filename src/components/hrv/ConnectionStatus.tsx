@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { disconnectWearable } from "@/app/(app)/hrv/connect-actions";
 
@@ -26,24 +27,26 @@ const PROVIDER_LABELS: Record<string, string> = {
   polar: "Polar",
 };
 
-const STATUS_LABELS: Record<string, string> = {
-  active: "Forbundet",
-  needs_reauth: "Skal fornyes",
-  revoked: "Afbrudt",
-};
+const STATUS_KEYS = ["active", "needs_reauth", "revoked"] as const;
+type StatusKey = (typeof STATUS_KEYS)[number];
+type ConnectionT = ReturnType<typeof useTranslations<"Hrv.connectionStatus">>;
 
 export default function ConnectionStatus({
   connection,
 }: {
   connection: Connection;
 }) {
+  const t = useTranslations("Hrv.connectionStatus");
+  const locale = useLocale();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
   const providerName =
     PROVIDER_LABELS[connection.provider.toLowerCase()] ??
     capitalize(connection.provider);
-  const statusLabel = STATUS_LABELS[connection.status] ?? connection.status;
+  const statusLabel = (STATUS_KEYS as readonly string[]).includes(connection.status)
+    ? t(`status.${connection.status as StatusKey}`)
+    : connection.status;
   const needsAttention = connection.status === "needs_reauth";
 
   function handleDisconnect() {
@@ -52,7 +55,7 @@ export default function ConnectionStatus({
     startTransition(async () => {
       const res = await disconnectWearable(connection.id);
       if (!res.ok) {
-        setError("Kunne ikke afbryde. Prøv igen.");
+        setError(t("error"));
       }
       // On success the parent re-renders via revalidatePath('/hrv').
     });
@@ -68,7 +71,7 @@ export default function ConnectionStatus({
             </span>
             {connection.isPrimary ? (
               <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint border border-line-strong rounded-full px-2 py-0.5">
-                Primær
+                {t("primary")}
               </span>
             ) : null}
           </div>
@@ -94,14 +97,16 @@ export default function ConnectionStatus({
             isPending ? "opacity-50" : "lift text-fg-dim",
           )}
         >
-          {isPending ? "Afbryder…" : "Afbryd"}
+          {isPending ? t("disconnecting") : t("disconnect")}
         </button>
       </div>
 
       <div className="mt-3 text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
         {connection.lastSyncedAt
-          ? `Sidst synket: ${formatLastSynced(connection.lastSyncedAt)}`
-          : "Endnu ikke synket"}
+          ? t("lastSynced", {
+              when: formatLastSynced(connection.lastSyncedAt, t, locale),
+            })
+          : t("neverSynced")}
       </div>
 
       {error ? (
@@ -122,25 +127,25 @@ function capitalize(value: string): string {
 }
 
 /**
- * Turns an ISO timestamp into a short Danish relative label, falling back
+ * Turns an ISO timestamp into a short localized relative label, falling back
  * to a compact absolute date for anything older than a week.
  */
-function formatLastSynced(iso: string): string {
+function formatLastSynced(iso: string, t: ConnectionT, locale: string): string {
   const then = new Date(iso);
   const ms = then.getTime();
   if (Number.isNaN(ms)) return iso;
 
   const diffMin = Math.round((Date.now() - ms) / 60_000);
-  if (diffMin < 1) return "lige nu";
-  if (diffMin < 60) return `for ${diffMin} min. siden`;
+  if (diffMin < 1) return t("ago.now");
+  if (diffMin < 60) return t("ago.minutes", { count: diffMin });
 
   const diffHr = Math.round(diffMin / 60);
-  if (diffHr < 24) return `for ${diffHr} t. siden`;
+  if (diffHr < 24) return t("ago.hours", { count: diffHr });
 
   const diffDay = Math.round(diffHr / 24);
-  if (diffDay < 7) return `for ${diffDay} ${diffDay === 1 ? "dag" : "dage"} siden`;
+  if (diffDay < 7) return t("ago.days", { count: diffDay });
 
-  return then.toLocaleDateString("da-DK", {
+  return then.toLocaleDateString(locale, {
     day: "numeric",
     month: "short",
   });
