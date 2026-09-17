@@ -5,6 +5,7 @@ import { contrastRatio } from "./contrast";
 import { readThemeTokens } from "./theme-tokens";
 
 const css = readFileSync(new URL("../../app/globals.css", import.meta.url), "utf8");
+const layout = readFileSync(new URL("../../app/layout.tsx", import.meta.url), "utf8");
 const kalk = readThemeTokens(css, '[data-theme="kalk"]');
 const nat = readThemeTokens(css, '[data-theme="nat"]');
 
@@ -73,5 +74,12 @@ describe("Kalk theme gate (spec §3, §8)", () => {
     // Nat comes after Kalk so a Nat page inside a Kalk layout wins at <html>
     expect(css.indexOf('html:has(.theme-root[data-theme="nat"])'))
       .toBeGreaterThan(css.indexOf('html:has(.theme-root[data-theme="kalk"])'));
+  });
+
+  it("loads the Kalk families under the variables the theme points at", () => {
+    expect(layout).toMatch(/Big_Shoulders\(\{[\s\S]*?variable: "--font-kalk-display"/);
+    expect(layout).toMatch(/Geist\(\{[\s\S]*?variable: "--font-kalk-sans"/);
+    expect(layout).toMatch(/Geist_Mono\(\{[\s\S]*?variable: "--font-kalk-mono"/);
+    expect(layout).toContain("kalkDisplay.variable");
   });
 });
