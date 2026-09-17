@@ -134,4 +134,27 @@ describe("compressSessionLabel", () => {
     expect(compressSessionLabel("Dag A — Squat", "Squat fokus")).toBe("Squat");
     expect(compressSessionLabel("Dag B — Bench", "")).toBe("Bench");
   });
+
+  it("accepts en-dash, interpunct and plain hyphen as separator", () => {
+    expect(compressSessionLabel("Dag A – Squat", "")).toBe("Squat");
+    expect(compressSessionLabel("Dag A · Squat", "")).toBe("Squat");
+    expect(compressSessionLabel("Dag A - Squat", "")).toBe("Squat");
+  });
+
+  it("falls back to the first word when there is no separator", () => {
+    expect(compressSessionLabel("Squat fokus", "")).toBe("Squat");
+    expect(compressSessionLabel(null, "Bench dag")).toBe("Bench");
+  });
+
+  it("does not split on a hyphen inside a compound word", () => {
+    expect(compressSessionLabel("Dødløft-teknik", "")).toBe("Dødløft-tekn");
+  });
+
+  it("prefers the em-dash when several separators are present", () => {
+    expect(compressSessionLabel("Dag A · nej — Squat", "")).toBe("Squat");
+  });
+
+  it("returns a plain hyphen when nothing is left", () => {
+    expect(compressSessionLabel(null, "")).toBe("-");
+  });
 });

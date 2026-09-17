@@ -110,7 +110,7 @@ function restFor(intent: "main_strength" | "main_hyp" | "accessory" | "isolation
 function strengthDayA(p: ProfileInput): GeneratedSession {
   const rm = pick1RM(p, "sq");
   return {
-    dayLabel: "Dag A — Squat",
+    dayLabel: "Dag A · Squat",
     title: "Squat-fokus og bagside",
     estimatedMinutes: 65,
     scheduledOffsetDays: 0,
@@ -162,7 +162,7 @@ function strengthDayA(p: ProfileInput): GeneratedSession {
 function strengthDayB(p: ProfileInput): GeneratedSession {
   const rm = pick1RM(p, "b");
   return {
-    dayLabel: "Dag B — Bench",
+    dayLabel: "Dag B · Bench",
     title: "Pause-bench + horisontalt træk",
     estimatedMinutes: 55,
     scheduledOffsetDays: 1,
@@ -215,7 +215,7 @@ function strengthDayB(p: ProfileInput): GeneratedSession {
 function strengthDayC(p: ProfileInput): GeneratedSession {
   const rm = pick1RM(p, "dl");
   return {
-    dayLabel: "Dag C — Deadlift",
+    dayLabel: "Dag C · Deadlift",
     title: "Deadlift fokus + benstyrke",
     estimatedMinutes: 70,
     scheduledOffsetDays: 3,
@@ -263,7 +263,7 @@ function strengthDayC(p: ProfileInput): GeneratedSession {
 
 function strengthDayD(p: ProfileInput): GeneratedSession {
   return {
-    dayLabel: "Dag D — Hyper",
+    dayLabel: "Dag D · Hyper",
     title: "Volumen-blok: kvadriceps + skulder",
     estimatedMinutes: 50,
     scheduledOffsetDays: 4,
@@ -402,7 +402,7 @@ export function generateRuleBased(profile: ProfileInput): {
     sessions = [
       { ...dl, scheduledOffsetDays: 0 },
       ...others.slice(0, 2).map((s, i) => ({ ...s, scheduledOffsetDays: i + 1 })),
-      { ...dl, dayLabel: "Dag D — Pull volumen", title: "Dødløft-teknik og støtte-træk", scheduledOffsetDays: 4 },
+      { ...dl, dayLabel: "Dag D · Pull volumen", title: "Dødløft-teknik og støtte-træk", scheduledOffsetDays: 4 },
     ];
   }
 
@@ -498,7 +498,7 @@ export function progressWeek(
   const offsets = [0, 1, 3, 4];
   return prev.map((s, idx) => ({
     dayLabel: s.day_label ?? `Dag ${idx + 1}`,
-    title: isDeload ? `${s.title} — DELOAD` : s.title,
+    title: isDeload ? `${s.title} · DELOAD` : s.title,
     estimatedMinutes: s.estimated_minutes ?? 60,
     scheduledOffsetDays: offsets[idx] ?? idx,
     exercises: s.exercises
