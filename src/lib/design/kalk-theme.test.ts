@@ -109,4 +109,11 @@ describe("Kalk theme gate (spec §3, §8)", () => {
   it("gives the anatomy accent 3:1 as a graphic on Kalk --bg-2", () => {
     expect(contrastRatio(kalk["--anatomy-accent"], kalk["--bg-2"])).toBeGreaterThanOrEqual(3);
   });
+
+  it.each(["--mind-energy", "--mind-stress", "--mind-focus"])(
+    "%s reaches 3:1 as chart ink on Kalk --bg and --bg-2",
+    (t) => {
+      for (const s of SURFACES) expect(contrastRatio(kalk[t], kalk[s])).toBeGreaterThanOrEqual(3);
+    },
+  );
 });
