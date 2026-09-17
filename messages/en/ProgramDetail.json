@@ -1,5 +1,5 @@
 {
-  "metaFallback": "Program — MakeIt",
+  "metaFallback": "Program · MakeIt",
   "breadcrumb": "Train",
   "meta": {
     "weeks": "Weeks",
@@ -11,8 +11,8 @@
   },
   "template": {
     "eyebrow": "Program structure",
-    "title": "Weekly template — repeats for {weeks} weeks with progressive overload.",
-    "body": "Each day below stays the same week to week — only weight, reps, and deload shift. Every 4th week is a deload."
+    "title": "Weekly template. Repeats for {weeks} weeks with progressive overload.",
+    "body": "Each day below stays the same week to week. Only weight, reps, and deload shift. Every 4th week is a deload."
   },
   "day": {
     "position": "Day {position}",
