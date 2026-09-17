@@ -3,7 +3,8 @@
 /* ---------------------------------------------------------------- *
  * MakeIt — design tokens (monochrome / strength editorial)
  * ---------------------------------------------------------------- */
-:root {
+:root,
+[data-theme="nat"] {
   /* Surfaces */
   --bg:           #0A0A0B;
   --bg-2:         #111113;
@@ -55,7 +56,114 @@
   --ok:     #4ADE80;
   --warn:   #FACC15;
   --danger: #F87171;
+
+  /* Theme-dependent treatments (Kalk overrides below) */
+  --glow: rgba(245, 242, 236, 0.08);
+  --vignette-edge: rgba(0, 0, 0, 0.45);
+  --grain-blend: overlay;
+  --grain-opacity: 0.55;
+  --signal-ink: #F5F2EC;
 }
+
+/* Display treatment travels with the font stack, not with Nat colours. */
+:root {
+  --display-weight: 400;
+  --display-tracking: -0.025em;
+  --display-leading: 0.92;
+}
+
+/* ---------------------------------------------------------------- *
+ * Kalk — daylight theme (spec 2026-09-17 §3). Same token names,
+ * light values. Enabled per surface via <ThemeScope theme="kalk">.
+ * html:has(...) lifts it to <html>/<body> so page background,
+ * overscroll and root-level UI (cookie bar) follow.
+ * ---------------------------------------------------------------- */
+html:has(.theme-root[data-theme="kalk"]),
+[data-theme="kalk"] {
+  color-scheme: light;
+
+  --bg:          #E7E9EB;
+  --bg-2:        #F4F5F6;
+  --bg-3:        #DCDFE2;
+  --bg-elev:     #FFFFFF;
+
+  --fg:          #0D0F12;
+  --fg-dim:      #4A4F57;
+  --fg-faint:    #5A6069; /* 4.74:1 on --bg-3, 5.21:1 on --bg */
+
+  --line:        rgba(13, 15, 18, 0.10);
+  --line-strong: rgba(13, 15, 18, 0.18);
+  --line-bright: rgba(13, 15, 18, 0.32);
+
+  --steel:       #DCDFE2;
+  --signal:      #E4570F; /* graphic only, never text, never on --bg-3 */
+  --signal-ink:  #A8380B; /* orange as text */
+
+  --heart: #BE123C;
+  --food:  #116A35;
+  --body:  #A8380B;
+  --mind:  #1D4ED8;
+
+  /* Custom properties resolve where declared, so tints must be
+   * re-declared here or they keep the Nat hues from :root. */
+  --heart-tint: color-mix(in oklab, var(--heart) 12%, transparent);
+  --food-tint:  color-mix(in oklab, var(--food) 12%, transparent);
+  --body-tint:  color-mix(in oklab, var(--body) 12%, transparent);
+  --mind-tint:  color-mix(in oklab, var(--mind) 12%, transparent);
+  --heart-line: color-mix(in oklab, var(--heart) 32%, transparent);
+  --food-line:  color-mix(in oklab, var(--food) 32%, transparent);
+  --body-line:  color-mix(in oklab, var(--body) 32%, transparent);
+  --mind-line:  color-mix(in oklab, var(--mind) 32%, transparent);
+
+  --mind-energy: #6D28D9;
+  --mind-stress: #1D4ED8;
+  --mind-focus:  #0E7490;
+
+  --ok:     #166534;
+  --warn:   #854D0E;
+  --danger: #B91C1C;
+
+  --font-display-stack: var(--font-kalk-display);
+  --font-sans-stack:    var(--font-kalk-sans);
+  --font-mono-stack:    var(--font-kalk-mono);
+
+  --display-weight: 800;
+  --display-tracking: -0.005em;
+  --display-leading: 0.88;
+  --glow: rgba(255, 255, 255, 0.7);
+  --vignette-edge: rgba(13, 15, 18, 0.06);
+  --grain-blend: multiply;
+  --grain-opacity: 0.35;
+}
+
+/* A Nat surface inside a Kalk layout (e.g. /session) wins at <html>.
+ * Mirrors every colour token Kalk overrides, so root-level UI
+ * (cookie bar, sheets portalled to body) never mixes the two. */
+html:has(.theme-root[data-theme="nat"]) {
+  color-scheme: dark;
+  --bg: #0A0A0B; --bg-2: #111113; --bg-3: #18181B; --bg-elev: #1F1F23;
+  --fg: #F5F2EC; --fg-dim: #A8A6A0; --fg-faint: #56554F;
+  --line: rgba(245, 242, 236, 0.08);
+  --line-strong: rgba(245, 242, 236, 0.18);
+  --line-bright: rgba(245, 242, 236, 0.34);
+  --steel: #1A1D24; --signal: #F5F2EC; --signal-ink: #F5F2EC;
+  --heart: #F2545B; --food: #45C487; --body: #FF9C41; --mind: #5B9DF5;
+  --heart-tint: color-mix(in oklab, var(--heart) 12%, transparent);
+  --food-tint:  color-mix(in oklab, var(--food) 12%, transparent);
+  --body-tint:  color-mix(in oklab, var(--body) 12%, transparent);
+  --mind-tint:  color-mix(in oklab, var(--mind) 12%, transparent);
+  --heart-line: color-mix(in oklab, var(--heart) 32%, transparent);
+  --food-line:  color-mix(in oklab, var(--food) 32%, transparent);
+  --body-line:  color-mix(in oklab, var(--body) 32%, transparent);
+  --mind-line:  color-mix(in oklab, var(--mind) 32%, transparent);
+  --mind-energy: #9F8CFB; --mind-stress: #5B9DF5; --mind-focus: #6FE0E8;
+  --ok: #4ADE80; --warn: #FACC15; --danger: #F87171;
+  --glow: rgba(245, 242, 236, 0.08);
+  --grain-blend: overlay; --grain-opacity: 0.55;
+  --vignette-edge: rgba(0, 0, 0, 0.45);
+}
+
+.theme-root { background: var(--bg); color: var(--fg); }
 
 /* data-domain scope — set once on a layout/section/card, every
  * descendant resolves text-domain / bg-domain-tint / border-domain-line
@@ -157,12 +265,12 @@ html.cursor-custom * {
  * ---------------------------------------------------------------- */
 .font-display {
   font-family: var(--font-display), Impact, "Helvetica Neue", sans-serif;
-  /* Archivo Black ships one weight (400). Asking for 900 made the
-   * browser synthesize a smeared faux-bold on top of it. */
-  font-weight: 400;
+  /* Archivo Black ships one weight (400); Big Shoulders is variable.
+   * The theme picks the weight, synthesis stays off. */
+  font-weight: var(--display-weight);
   font-synthesis: none;
-  letter-spacing: -0.025em;
-  line-height: 0.92;
+  letter-spacing: var(--display-tracking);
+  line-height: var(--display-leading);
   text-transform: uppercase;
 }
 
@@ -205,8 +313,8 @@ html.cursor-custom * {
   content: "";
   position: fixed; inset: -10%; pointer-events: none; z-index: 1;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1   0 0 0 0 0.95   0 0 0 0 0.92   0 0 0 0.045 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  opacity: 0.55;
-  mix-blend-mode: overlay;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: var(--grain-blend);
   /* Subtle film-projector drift — the tile shifts in 8 steps so
    * it never reads as smooth motion (which would feel like a
    * texture sliding) but instead as the grain pattern itself
@@ -241,7 +349,7 @@ html.cursor-custom * {
 .vignette::after {
   content: "";
   position: fixed; inset: 0; pointer-events: none; z-index: 1;
-  background: radial-gradient(120% 80% at 50% 0%, transparent 40%, rgba(0,0,0,0.45) 100%);
+  background: radial-gradient(120% 80% at 50% 0%, transparent 40%, var(--vignette-edge) 100%);
 }
 
 .divider {
