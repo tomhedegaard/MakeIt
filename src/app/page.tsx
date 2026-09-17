@@ -1,4 +1,7 @@
+import type { Viewport } from "next";
 import { getTranslations } from "next-intl/server";
+import { getLandingVariant } from "@/lib/marketing/landing-variant";
+import KalkLanding from "@/components/marketing/kalk/KalkLanding";
 import MarketingNav from "@/components/marketing/MarketingNav";
 import Hero from "@/components/marketing/Hero";
 import WorksWith from "@/components/marketing/WorksWith";
@@ -19,7 +22,18 @@ import MarketingFooter from "@/components/marketing/Footer";
 import Marquee from "@/components/Marquee";
 import RevealObserver from "@/components/RevealObserver";
 
+export function generateViewport(): Viewport {
+  return getLandingVariant() === "kalk"
+    ? { themeColor: "#E7E9EB", colorScheme: "light" }
+    : {};
+}
+
 export default async function Home() {
+  if (getLandingVariant() === "kalk") return <KalkLanding />;
+  return <ClassicLanding />;
+}
+
+async function ClassicLanding() {
   const marquee = await getTranslations("Marketing.marquee");
 
   return (
