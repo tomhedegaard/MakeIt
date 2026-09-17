@@ -40,4 +40,9 @@ describe("readThemeTokens", () => {
   it("ignores ordinary declarations", () => {
     expect(readThemeTokens(css, ".btn")).toEqual({});
   });
+
+  it("skips a leading statement at-rule like @import", () => {
+    const withImport = `@import "tailwindcss";\n\n:root {\n  --bg: #000000;\n}`;
+    expect(readThemeTokens(withImport, ":root")).toEqual({ "--bg": "#000000" });
+  });
 });
