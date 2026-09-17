@@ -84,6 +84,10 @@ describe("Kalk theme gate (spec §3, §8)", () => {
       .toBeGreaterThan(css.indexOf('html:has(.theme-root[data-theme="kalk"])'));
   });
 
+  it("gives inputs 16px on touch so iOS does not zoom (enables removing maximumScale)", () => {
+    expect(css).toMatch(/@media \(pointer: coarse\)\s*\{[\s\S]*?\.input,\s*\.field\s*\{[\s\S]*?font-size:\s*16px/);
+  });
+
   it("loads the Kalk families under the variables the theme points at", () => {
     expect(layout).toMatch(/Big_Shoulders\(\{[\s\S]*?variable: "--font-kalk-display"/);
     expect(layout).toMatch(/Geist\(\{[\s\S]*?variable: "--font-kalk-sans"/);

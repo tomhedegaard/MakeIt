@@ -20,7 +20,8 @@
     "logout": "Log ud",
     "myProfile": "Min profil",
     "unread": "{count} ulæste",
-    "mainNav": "Hovednavigation"
+    "mainNav": "Hovednavigation",
+    "menu": "Menu"
   },
   "tierBanner": {
     "eyebrow": "Tier-up",
@@ -38,7 +39,7 @@
       "welcome": {
         "eyebrow": "Velkommen",
         "title": "Du er inde i crewet.",
-        "body": "Fire skærme — så ved du hvor alt ligger."
+        "body": "Fire skærme. Så ved du, hvor alt ligger."
       },
       "today": {
         "eyebrow": "01 · I dag",
@@ -46,9 +47,9 @@
         "body": "Hver morgen åbner du Today. Tap det store \"Start session\"-kort og du er i gang. Vægtene er sat ud fra dine 1RM'er."
       },
       "tabs": {
-        "eyebrow": "02 · Træn / Crew / Reps / Mig",
-        "title": "Bottom tab-bar = hele appen.",
-        "body": "Træn = dine programmer. Crew = feed med PR'er + form-checks. Reps = optjen og indløs. Mig = profil, lifts-historik og coach-noter fra Mikael."
+        "eyebrow": "02 · Fem faner",
+        "title": "Fem faner bærer hele appen.",
+        "body": "I dag, Træn, Mad, Mind og Crew ligger i bunden. Mig, Reps, HRV og Forskning finder du i menuen bag dine initialer øverst til højre."
       },
       "formCheck": {
         "eyebrow": "03 · Form-check",

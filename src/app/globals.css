@@ -518,6 +518,13 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 .field:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
 .field::placeholder { color: var(--fg-faint); }
 
+/* iOS zooms on focus below 16px. With this, the root viewport can
+ * drop maximumScale and let people pinch-zoom (WCAG 1.4.4). */
+@media (pointer: coarse) {
+  .input,
+  .field { font-size: 16px; }
+}
+
 /* Card hover lift */
 .lift { transition: transform 380ms cubic-bezier(.2,.7,.2,1), border-color 380ms ease, background 380ms ease; }
 .lift:hover { transform: translateY(-3px); border-color: var(--line-strong); }
@@ -741,12 +748,11 @@ nav.tabbar {
   content: "";
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
   width: 24px; height: 2px;
-  background: var(--fg);
+  background: var(--signal);
   border-radius: 0 0 2px 2px;
 }
-/* Domain tabs activate in their hue instead of white */
-.tab[data-domain][data-active="true"] { color: var(--domain); }
-.tab[data-domain][data-active="true"]::before { background: var(--domain); }
+/* Kalk (spec §6): every active tab is an ink label + signal stroke;
+ * no domain hue on the tab bar. */
 .tab-icon { width: 22px; height: 22px; }
 
 /* ---------------------------------------------------------------- *

@@ -61,7 +61,7 @@ export default function FirstTimeTour() {
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-bg/80 backdrop-blur-sm"
         onClick={dismiss}
         aria-hidden
       />

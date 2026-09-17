@@ -41,7 +41,10 @@
     "emptyEyebrow": "Today's session",
     "emptyTitle": "No session yet",
     "emptyBody": "When you pick a program, today's session lands here. No demo workout.",
-    "emptyCta": "Choose a program →"
+    "emptyCta": "Choose a program →",
+    "keepOriginal": "Keep original",
+    "keptOriginal": "You are running the original plan today.",
+    "keepOriginalError": "That did not go through. Try again."
   },
   "stats": {
     "volume": "Volume",
@@ -116,5 +119,33 @@
     "bodyAndroid": "Install MakeIt as an app — full screen, faster launch and notifications.",
     "install": "Install",
     "dismiss": "Not now"
+  },
+  "morningSignal": {
+    "label": "Morning signal",
+    "kcal": "kcal",
+    "labels": {
+      "body": "Body",
+      "heart": "Heart",
+      "mind": "Mind",
+      "food": "Food"
+    },
+    "values": {
+      "adapted": "Adapted",
+      "planned": "Ready",
+      "measured": "Measured",
+      "noSession": "No session",
+      "belowBand": "Below band",
+      "inBand": "In band",
+      "aboveBand": "Above band",
+      "noReading": "No reading",
+      "checkIn": "Check in",
+      "checkedIn": "Checked in",
+      "eaten": "Eaten today"
+    },
+    "sr": {
+      "status": "{label}. {status}.",
+      "value": "{label}. {status}. {value} {unit}.",
+      "valueOf": "{label}. {status}. {value} of {of} {unit}."
+    }
   }
 }

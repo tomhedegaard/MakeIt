@@ -20,7 +20,7 @@
 |---|---|---|---|---|
 | **F1 Fundament** | Kalk- og Nat-scopes, fonte, `ThemeScope`, kontrastport, `/login` som pilot | Fase 0 (`7209696`) | 1-2 dage | **Detaljeret nedenfor** |
 | **F2 Landing** | 8 sektioner (spec §5) med A1, A3, A4, C2, C3, C4, C6 | F1, D4, D5 | 6-8 dage | Egen plan: `…-kalk-f2-landing.md` |
-| **F3 App-kerne** | 6 primitiver, dashboard "i dag først" (A2, C5), 5 faner, `(app)` i Kalk, `/session` i Nat | F1 | 5-6 dage | Egen plan: `…-kalk-f3-app-core.md` |
+| **F3 App-kerne** | 6 primitiver, dashboard "i dag først" (A2, C1, C5), 5 faner, `(app)` i Kalk, `/session` i Nat | F1 | 5-6 dage | [`2026-09-17-kalk-f3-app-core.md`](2026-09-17-kalk-f3-app-core.md) |
 | **F4 App-flader** | Træn, Mad, Hjerte, Sind, Crew, profil og onboarding migreret. Farver uden for tokens fjernet. Statusbar i shells. Gamle fonte fjernet. | F3 | 6-8 dage | Egen plan: `…-kalk-f4-surfaces.md` |
 | **F5 Assets** | Munk-portræt, ægte skærmbilleder (landing + App Store), citater | D6, D7 (Tom) | Løbende | Brief i `docs/briefs/` |
 
@@ -883,7 +883,7 @@ Findes allerede i `AdaptationCard`, så der er ikke noget motor-spor. F2 viser k
 ## Status
 
 - [x] F1 Fundament (2026-09-17, branch `claude/kalk-redesign`)
-- [ ] F2 Landing
-- [ ] F3 App-kerne
+- [x] F2 Landing (#102, bag `LANDING_VARIANT`; Preview-env sat 2026-09-17)
+- [x] F3 App-kerne (2026-09-17)
 - [ ] F4 App-flader
 - [ ] F5 Assets (Tom)
