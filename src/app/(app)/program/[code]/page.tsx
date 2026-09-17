@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageTitle from "@/components/ui/PageTitle";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { COMPANY } from "@/lib/company";
 import { getSession } from "@/lib/auth";
 import { MUSCLE_LABELS, type MuscleGroup } from "@/lib/data/muscle-groups";
@@ -104,10 +105,7 @@ export default async function ProgramDetailPage({
 
       <Container className="py-10 md:py-14 space-y-10">
         <section>
-          <div className="eyebrow mb-3">{t("template.eyebrow")}</div>
-          <h2 className="font-display text-2xl md:text-3xl leading-[1.05] max-w-xl">
-            {t("template.title", { weeks: program.weeks })}
-          </h2>
+          <SectionHeader eyebrow={t("template.eyebrow")} title={t("template.title", { weeks: program.weeks })} />
           <p className="mt-3 text-fg-dim text-sm md:text-base max-w-xl">
             {t("template.body")}
           </p>
