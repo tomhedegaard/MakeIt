@@ -584,7 +584,7 @@ git commit -m "feat(design): indlæs Big Shoulders, Geist og Geist Mono til Kalk
 
 **Files:**
 - Create: `src/components/ui/ThemeScope.tsx`
-- Test: `src/components/ui/ThemeScope.test.ts`
+- Test: `src/components/ui/ThemeScope.test.tsx` (JSX: `react/no-children-prop` forbyder children som prop, og tsc kræver dem)
 
 - [ ] **Step 1: Skriv den fejlende test**
 
@@ -889,7 +889,7 @@ Landingens FAQ-spørgsmål "Kan jeg sige nej…" og beslutningsskærmens knap l�
 
 ## Status
 
-- [ ] F1 Fundament
+- [x] F1 Fundament (2026-09-17, branch `claude/kalk-redesign`)
 - [ ] F2 Landing
 - [ ] F3 App-kerne
 - [ ] F4 App-flader
