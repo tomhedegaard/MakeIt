@@ -18,7 +18,7 @@ export default async function PreferencesPage() {
 
   return (
     <Container className="py-6 lg:py-12 max-w-2xl space-y-8">
-      <header className="pt-2">
+      <div className="pt-2">
         <div className="flex items-center gap-3 mb-3">
           <Link
             href="/nutrition"
@@ -33,7 +33,7 @@ export default async function PreferencesPage() {
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
           {t("intro")}
         </p>
-      </header>
+      </div>
 
       <form action={savePreferencesAction} className="space-y-8">
         {/* Goal */}

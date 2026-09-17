@@ -111,7 +111,7 @@ export default async function NutritionPage({
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
-      <header className="pt-2">
+      <div className="pt-2">
         <PageTitle
           kicker={t("page.eyebrow")}
           title={t("page.title")}
@@ -136,7 +136,7 @@ export default async function NutritionPage({
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
           {t("page.intro")}
         </p>
-      </header>
+      </div>
 
       {err === "quota_plan" || err === "quota_swap" ? (
         <QuotaBanner

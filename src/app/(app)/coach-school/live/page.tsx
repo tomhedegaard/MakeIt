@@ -34,12 +34,12 @@ export default async function CoachSchoolLivePage() {
 
   return (
     <Container className="py-6 lg:py-12 space-y-6">
-      <header className="pt-2">
+      <div className="pt-2">
         <PageTitle size="compact" kicker={t("live.eyebrow")} title={t("live.title")} />
         <p className="mt-2 text-fg-dim text-sm">
           {t("live.subtitle", { count: cases.length })}
         </p>
-      </header>
+      </div>
 
       {cases.length === 0 ? (
         <div className="surface-2 rounded-lg p-6 text-center">

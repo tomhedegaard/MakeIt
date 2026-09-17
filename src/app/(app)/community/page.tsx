@@ -75,7 +75,7 @@ export default async function CrewPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <RealtimeIndicator />
       {/* Header + post composer */}
-      <header className="pt-2">
+      <div className="pt-2">
         <PageTitle
           kicker={t("eyebrow")}
           title={t("title")}
@@ -93,7 +93,7 @@ export default async function CrewPage() {
             />
           }
         />
-      </header>
+      </div>
 
       {/* Story strip — demo only. Connected members see an
           honest empty line until we have a real trained-today query. */}

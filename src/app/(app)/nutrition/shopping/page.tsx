@@ -101,7 +101,7 @@ function Header({
   t: Awaited<ReturnType<typeof getTranslations<"Nutrition.shopping">>>;
 }) {
   return (
-    <header className="pt-2">
+    <div className="pt-2">
       <div className="flex items-center gap-3 mb-3">
         <Link
           href="/nutrition"
@@ -116,6 +116,6 @@ function Header({
       <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
         {t("intro")}
       </p>
-    </header>
+    </div>
   );
 }

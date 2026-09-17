@@ -39,13 +39,13 @@ export default async function CoachSchoolLessonPage({
         {t("lesson.backToTree")}
       </Link>
 
-      <header className="pt-2">
+      <div className="pt-2">
         <PageTitle
           size="compact"
           kicker={`${t(`tree.tierHeader.${lesson.requiredTier}`)} · ${fmtDuration(lesson.durationSec)}`}
           title={lesson.titleDa}
         />
-      </header>
+      </div>
 
       {/* Video — v0 placeholder when the bucket URL isn't yet recorded. */}
       <section className="surface rounded-xl overflow-hidden bg-bg-3">

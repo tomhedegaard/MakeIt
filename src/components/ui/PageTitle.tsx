@@ -16,7 +16,7 @@ export default function PageTitle({
   className?: string;
 }) {
   return (
-    <header data-size={size} className={cn("flex flex-wrap items-end justify-between gap-4", className)}>
+    <div data-size={size} className={cn("flex flex-wrap items-end justify-between gap-4", className)}>
       <div className="min-w-0 flex-1 basis-48">
         {kicker ? <p className="eyebrow eyebrow-domain mb-2">{kicker}</p> : null}
         <h1
@@ -29,6 +29,6 @@ export default function PageTitle({
         </h1>
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}
-    </header>
+    </div>
   );
 }

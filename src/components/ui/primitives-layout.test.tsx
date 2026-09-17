@@ -56,6 +56,12 @@ describe("PageTitle", () => {
     expect(page).toContain("font-display");
   });
 
+  it("renders a div, not a header (call sites wrap it in <header> themselves)", () => {
+    const html = renderToStaticMarkup(<PageTitle title="I dag" />);
+    expect(html).not.toMatch(/^<header/);
+    expect(html).toMatch(/^<div/);
+  });
+
   it("wraps so a wide action drops below the title instead of squeezing it (spec §6)", () => {
     const html = renderToStaticMarkup(
       <PageTitle title="Reps" action={<div className="min-w-[220px]">Saldo</div>} />,

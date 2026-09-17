@@ -19,7 +19,7 @@ export default async function SciencePage() {
 
   return (
     <div className="mx-auto max-w-[860px] px-6 pt-12 lg:pt-16">
-      <header>
+      <div>
         <PageTitle kicker={t("eyebrow")} title={t("title")} />
         <p className="mt-3 max-w-[60ch] text-fg-dim">
           {t("subtitle")}{" "}
@@ -27,7 +27,7 @@ export default async function SciencePage() {
             {t("rss")}
           </a>
         </p>
-      </header>
+      </div>
 
       <ScienceFeed items={items} />
 

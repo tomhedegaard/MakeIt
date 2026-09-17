@@ -52,17 +52,17 @@ export default async function BuddyPage() {
   if (!buddy) {
     return (
       <Container className="py-6 lg:py-12 space-y-6">
-        <header className="pt-2">
+        <div className="pt-2">
           <PageTitle kicker={t("eyebrow")} title={t("titleEmpty")} />
           <p className="mt-2 text-fg-dim text-sm">{t("emptyBody")}</p>
-        </header>
+        </div>
       </Container>
     );
   }
 
   return (
     <Container className="py-6 lg:py-12 space-y-6">
-      <header className="pt-2">
+      <div className="pt-2">
         <PageTitle
           kicker={t("eyebrow")}
           title={t("titleWithHandle", { handle: buddy.buddyHandle })}
@@ -70,7 +70,7 @@ export default async function BuddyPage() {
         <p className="mt-2 text-fg-dim text-sm">
           {t("subtitle", { tier: buddy.buddyTier })}
         </p>
-      </header>
+      </div>
 
       <section className="surface rounded-xl p-5 space-y-4">
         <div className="flex items-center justify-between gap-4">

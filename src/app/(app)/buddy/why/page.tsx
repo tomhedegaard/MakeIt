@@ -32,12 +32,12 @@ export default async function BuddyWhyPage() {
   if (!buddy || !buddy.pairingReason) {
     return (
       <Container className="py-6 lg:py-12 space-y-6">
-        <header className="pt-2">
+        <div className="pt-2">
           <PageTitle size="compact" kicker={t("eyebrow")} title={t("whyTitleEmpty")} />
           <p className="mt-2 text-fg-dim text-sm">
             {t("whyEmptyBody")}
           </p>
-        </header>
+        </div>
         <Link href="/buddy" className="btn">
           {t("backToBuddy")}
         </Link>
@@ -53,14 +53,14 @@ export default async function BuddyWhyPage() {
 
   return (
     <Container className="py-6 lg:py-12 space-y-6">
-      <header className="pt-2">
+      <div className="pt-2">
         <PageTitle
           size="compact"
           kicker={t("eyebrow")}
           title={t("whyTitle", { handle: buddy.buddyHandle })}
         />
         <p className="mt-2 text-fg-dim text-sm">{t("whyIntro")}</p>
-      </header>
+      </div>
 
       <ol className="space-y-3 list-none">
         {factors.map((code, i) => (

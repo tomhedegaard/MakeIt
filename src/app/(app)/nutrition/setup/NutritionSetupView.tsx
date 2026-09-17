@@ -10,12 +10,12 @@ export default async function NutritionSetupView() {
   return (
     <main className="relative z-10 flex-1 py-12 md:py-20">
       <Container size="narrow">
-        <header className="mb-10">
+        <div className="mb-10">
           <PageTitle kicker={t("eyebrow")} title={`${t("title")} ${t("titleLine2")}`} />
           <p className="mt-4 text-fg-dim text-base md:text-lg leading-relaxed max-w-md">
             {t("intro")}
           </p>
-        </header>
+        </div>
 
         <SetupWizardClient />
       </Container>

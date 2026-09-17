@@ -50,10 +50,10 @@ export default async function CoachSchoolTreePage() {
 
   return (
     <Container className="py-6 lg:py-12 space-y-6">
-      <header className="pt-2">
+      <div className="pt-2">
         <PageTitle size="compact" kicker={t("tree.eyebrow")} title={t("tree.title")} />
         <p className="mt-2 text-fg-dim text-sm">{t("tree.subtitle")}</p>
-      </header>
+      </div>
 
       {lessons.length === 0 ? (
         <div className="surface-2 rounded-lg p-6 text-center">

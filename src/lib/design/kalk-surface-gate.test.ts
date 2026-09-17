@@ -142,6 +142,18 @@ describe("section headers use SectionHeader (spec §6)", () => {
   });
 });
 
+describe("no <header> wrapping PageTitle (spec §6, invalid nested header)", () => {
+  const APP = join(SRC, "app/(app)");
+  const files = walk(APP)
+    .map((p) => relative(APP, p))
+    .filter((p) => /\.tsx$/.test(p) && !/\.test\./.test(p));
+
+  it.each(files)("%s", (p) => {
+    const src = readFileSync(join(APP, p), "utf8");
+    expect(src).not.toMatch(/<header\b[^>]*>\s*<PageTitle\b/);
+  });
+});
+
 describe("theme scopes (spec §2)", () => {
   it("/coach is explicitly Nat with dark browser chrome", () => {
     const src = read("app/coach/layout.tsx");

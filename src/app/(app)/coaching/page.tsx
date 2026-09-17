@@ -98,7 +98,7 @@ export default async function TrainPage() {
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
-      <header className="pt-2 pb-1">
+      <div className="pt-2 pb-1">
         <PageTitle kicker={t("header.eyebrow")} title={t("header.title")} />
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
           <span data-identity="coach" className="eyebrow">{t("header.coachChip")}</span>
@@ -109,7 +109,7 @@ export default async function TrainPage() {
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
           {t("header.subtitle")}
         </p>
-      </header>
+      </div>
 
       {/* Week strip — horizontal scroll on mobile */}
       <section
