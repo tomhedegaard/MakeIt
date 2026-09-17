@@ -4,8 +4,8 @@
     "title": "Film dette sæt.",
     "titleBlocked": "Du er løbet tør for form-checks.",
     "descriptionDefault": "Vores AI tjekker dybde, bar-path og bevægelseskvalitet på din øvelse.",
-    "descriptionExercise": "Film sæt {set} på {exercise}. Køen hos Munk får atleten og løftet — ikke en generel indbakke.",
-    "descriptionSet": "Bundet til {lift} · sæt {set}. Munk svarer i tråden under løftet — tekst eller lyd.",
+    "descriptionExercise": "Film sæt {set} på {exercise}. Køen hos Munk får atleten og løftet, ikke en generel indbakke.",
+    "descriptionSet": "Bundet til {lift} · sæt {set}. Munk svarer i tråden under løftet med tekst eller lyd.",
     "descriptionBlocked": "AI form-check er en Athlete-tier perk og opefter. Upgradér for at få flere.",
     "recordNow": "Optag nu",
     "recordNowSub": "Brug kameraet til at filme dit næste sæt.",
@@ -44,28 +44,28 @@
     "coachTip": "Coach-tip",
     "newRecording": "Ny optagelse",
     "done": "Færdig",
-    "coachReviewNote": "I køen hos Munk som form-check — bundet til dette sæt."
+    "coachReviewNote": "I køen hos Munk som form-check, bundet til dette sæt."
   },
   "verdicts": {
     "back squat": {
-      "headline": "Solid sæt — let knæ-valgus i hullet",
+      "headline": "Solidt sæt. Let knæ-valgus i hullet",
       "pos": [
-        "Bardepth ramt — hofte under knæ på alle 3 reps",
+        "Bardepth ramt: hofte under knæ på alle 3 reps",
         "Konsistent bar-path lige over midtfod",
         "God spinal kontrol gennem hele sættet"
       ],
       "neg": [
         "Højre knæ kollapser let indad på rep 2 og 3",
-        "Tempo accelererer ud af hullet — mister tension"
+        "Tempo accelererer ud af hullet og mister tension"
       ],
       "fix": "Driv knæene aktivt udad i bunden (\"spread the floor\"). Hold 1 sek pause i bunden næste sæt for at genopbygge tension."
     },
     "deadlift": {
-      "headline": "Stærkt løft — hyperekstension på toppen",
+      "headline": "Stærkt løft. Hyperekstension på toppen",
       "pos": [
         "Bar holder kontakt med kroppen hele vejen op",
         "Bagdel og lats engageret fra setup",
-        "God pace — ingen tøven ved knæene"
+        "God pace, ingen tøven ved knæene"
       ],
       "neg": [
         "Hyperextension i lock-out (læn dig 5° tilbage)",
@@ -74,7 +74,7 @@
       "fix": "Lås ud med squeeze i baller, ikke ved at læne tilbage. Tænk \"stå op\" frem for \"læn tilbage\" på toppen."
     },
     "default": {
-      "headline": "Teknisk solidt — to mindre justeringer",
+      "headline": "Teknisk solidt. To mindre justeringer",
       "pos": [
         "God kontrol over hele bevægelsen",
         "Konsistent ROM (range of motion) på alle reps",

@@ -4,8 +4,8 @@
     "title": "Film this set.",
     "titleBlocked": "You're out of form checks.",
     "descriptionDefault": "Our AI checks depth, bar path and movement quality on your exercise.",
-    "descriptionExercise": "Film set {set} on {exercise}. Munk's queue gets the athlete and the lift — not a general inbox.",
-    "descriptionSet": "Bound to {lift} · set {set}. Munk replies in the thread under the lift — text or voice.",
+    "descriptionExercise": "Film set {set} on {exercise}. Munk's queue gets the athlete and the lift, not a general inbox.",
+    "descriptionSet": "Bound to {lift} · set {set}. Munk replies in the thread under the lift with text or voice.",
     "descriptionBlocked": "AI form check is an Athlete-tier perk and up. Upgrade to get more.",
     "recordNow": "Record now",
     "recordNowSub": "Use the camera to film your next set.",
@@ -44,28 +44,28 @@
     "coachTip": "Coach tip",
     "newRecording": "New recording",
     "done": "Done",
-    "coachReviewNote": "In Munk's queue as a form-check — bound to this set."
+    "coachReviewNote": "In Munk's queue as a form-check, bound to this set."
   },
   "verdicts": {
     "back squat": {
-      "headline": "Solid set — slight knee valgus in the hole",
+      "headline": "Solid set. Slight knee valgus in the hole",
       "pos": [
-        "Bar depth hit — hip below knee on all 3 reps",
+        "Bar depth hit: hip below knee on all 3 reps",
         "Consistent bar path right over midfoot",
         "Good spinal control through the whole set"
       ],
       "neg": [
         "Right knee caves in slightly on reps 2 and 3",
-        "Tempo accelerates out of the hole — losing tension"
+        "Tempo accelerates out of the hole and loses tension"
       ],
       "fix": "Actively drive the knees out at the bottom (\"spread the floor\"). Hold a 1 sec pause at the bottom next set to rebuild tension."
     },
     "deadlift": {
-      "headline": "Strong pull — hyperextension at the top",
+      "headline": "Strong pull. Hyperextension at the top",
       "pos": [
         "Bar stays in contact with the body all the way up",
         "Glutes and lats engaged from setup",
-        "Good pace — no hesitation at the knees"
+        "Good pace, no hesitation at the knees"
       ],
       "neg": [
         "Hyperextension at lock-out (you lean back 5°)",
@@ -74,7 +74,7 @@
       "fix": "Lock out by squeezing the glutes, not by leaning back. Think \"stand up\" rather than \"lean back\" at the top."
     },
     "default": {
-      "headline": "Technically solid — two minor adjustments",
+      "headline": "Technically solid. Two minor adjustments",
       "pos": [
         "Good control over the whole movement",
         "Consistent ROM (range of motion) on every rep",
