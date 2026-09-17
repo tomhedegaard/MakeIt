@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
 import PlanGenerationOverlay from "@/components/nutrition/PlanGenerationOverlay";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { cn } from "@/lib/utils";
 import {
   isNextRedirectError,
@@ -167,7 +168,7 @@ export default function OnboardingClient({
                 </Grid>
               </Section>
 
-              <Section eyebrow={t("step1.levelEyebrow")} title={t("step1.levelTitle")}>
+              <Section title={t("step1.levelTitle")}>
                 <Grid>
                   {LEVEL_IDS.map((id) => (
                     <Choice
@@ -184,7 +185,7 @@ export default function OnboardingClient({
                 </Grid>
               </Section>
 
-              <Section eyebrow={t("step1.freqEyebrow")} title={t("step1.freqTitle")}>
+              <Section title={t("step1.freqTitle")}>
                 <div className="grid grid-cols-3 gap-2">
                   {FREQ_OPTS.map((f) => (
                     <button
@@ -410,11 +411,10 @@ function Intro({ eyebrow, title, sub }: { eyebrow: string; title: string; sub: s
   );
 }
 
-function Section({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) {
+function Section({ eyebrow, title, children }: { eyebrow?: string; title: string; children: React.ReactNode }) {
   return (
     <section>
-      <div className="eyebrow mb-2">{eyebrow}</div>
-      <h2 className="font-display text-2xl md:text-3xl mb-4">{title}</h2>
+      <SectionHeader eyebrow={eyebrow} title={title} />
       {children}
     </section>
   );

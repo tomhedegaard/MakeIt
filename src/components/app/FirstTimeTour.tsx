@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 const STORAGE_KEY = "mi_tour_done_v1";
 
@@ -79,13 +80,7 @@ export default function FirstTimeTour() {
           {t("skip")}
         </button>
 
-        <div className="eyebrow mb-3">{t(`steps.${currentKey}.eyebrow`)}</div>
-        <h2
-          id="tour-title"
-          className="font-display text-2xl md:text-3xl leading-[1.05] mb-3"
-        >
-          {t(`steps.${currentKey}.title`)}
-        </h2>
+        <SectionHeader id="tour-title" eyebrow={t(`steps.${currentKey}.eyebrow`)} title={t(`steps.${currentKey}.title`)} />
         <p className="text-fg-dim text-sm md:text-base leading-relaxed mb-6">
           {t(`steps.${currentKey}.body`)}
         </p>
