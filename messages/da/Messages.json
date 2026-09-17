@@ -3,7 +3,7 @@
     "eyebrow": "Beskeder",
     "titleWithCoach": "Chat med @{handle}",
     "titleFallback": "Din coach",
-    "subtitle": "Munk er din coach. Motor er Adaptive Engine — systemet, ikke en person."
+    "subtitle": "Munk er din coach. Motor er Adaptive Engine: systemet, ikke en person."
   },
   "streams": {
     "munkRole": "Coach",
@@ -49,7 +49,7 @@
       "no_coach": "Ingen coach tilgængelig endnu",
       "empty": "Skriv noget først",
       "no_media": "Vedhæft en fil først",
-      "unknown": "Kunne ikke sende — prøv igen"
+      "unknown": "Kunne ikke sende. Prøv igen"
     }
   },
   "audioRecorder": {
@@ -62,7 +62,7 @@
     "send": "Send",
     "startFailed": "Kunne ikke starte optagelse: {message}",
     "unknownError": "ukendt fejl",
-    "sendFailed": "Kunne ikke sende — prøv igen."
+    "sendFailed": "Kunne ikke sende. Prøv igen."
   },
   "videoRecorder": {
     "record": "● Optag video",
@@ -72,11 +72,11 @@
     "discard": "Slet",
     "sending": "Sender…",
     "send": "Send",
-    "permissionDenied": "Tilgang nægtet — tillad kamera + mikrofon i browseren.",
+    "permissionDenied": "Adgang nægtet. Tillad kamera + mikrofon i browseren.",
     "noCamera": "Intet kamera fundet på enheden.",
     "cameraBusy": "Kamera er optaget af et andet program.",
     "startFailed": "Kunne ikke starte optagelse: {message}",
     "unknownError": "ukendt fejl",
-    "sendFailed": "Kunne ikke sende — prøv igen."
+    "sendFailed": "Kunne ikke sende. Prøv igen."
   }
 }

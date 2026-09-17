@@ -3,7 +3,7 @@
     "eyebrow": "Messages",
     "titleWithCoach": "Chat with @{handle}",
     "titleFallback": "Your coach",
-    "subtitle": "Munk is your coach. Motor is Adaptive Engine — the system, not a person."
+    "subtitle": "Munk is your coach. Motor is Adaptive Engine: the system, not a person."
   },
   "streams": {
     "munkRole": "Coach",
@@ -49,7 +49,7 @@
       "no_coach": "No coach available yet",
       "empty": "Write something first",
       "no_media": "Attach a file first",
-      "unknown": "Could not send — try again"
+      "unknown": "Could not send. Try again"
     }
   },
   "audioRecorder": {
@@ -62,7 +62,7 @@
     "send": "Send",
     "startFailed": "Could not start recording: {message}",
     "unknownError": "unknown error",
-    "sendFailed": "Could not send — try again."
+    "sendFailed": "Could not send. Try again."
   },
   "videoRecorder": {
     "record": "● Record video",
@@ -72,11 +72,11 @@
     "discard": "Delete",
     "sending": "Sending…",
     "send": "Send",
-    "permissionDenied": "Access denied — allow camera + microphone in the browser.",
+    "permissionDenied": "Access denied. Allow camera + microphone in the browser.",
     "noCamera": "No camera found on the device.",
     "cameraBusy": "Camera is in use by another app.",
     "startFailed": "Could not start recording: {message}",
     "unknownError": "unknown error",
-    "sendFailed": "Could not send — try again."
+    "sendFailed": "Could not send. Try again."
   }
 }
