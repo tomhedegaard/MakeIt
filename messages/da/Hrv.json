@@ -11,11 +11,11 @@
     },
     "empty": {
       "title": "Dit bånd venter på de første nætter",
-      "body": "Når nattens måling lander, begynder vi at samle dit personlige normalområde. Ingen alarm — bare et tomt spor."
+      "body": "Når nattens måling lander, begynder vi at samle dit personlige normalområde. Ingen alarm, bare et tomt spor."
     },
     "building": {
       "title": "Bygger dit bånd",
-      "body": "7 nætter bygger dit personlige bånd. Ingen alarm — bare data der samler sig.",
+      "body": "7 nætter bygger dit personlige bånd. Ingen alarm, bare data der samler sig.",
       "nights": "{count} af {needed} nætter"
     },
     "steady": {
@@ -23,9 +23,9 @@
     },
     "engine": {
       "below": "Motoren læste nattens HRV under dit bånd og letter dagens squat-topsæt.",
-      "above": "Motoren læste nattens HRV over dit bånd — kroppen er klar; dagens pas kører som planlagt."
+      "above": "Motoren læste nattens HRV over dit bånd. Kroppen er klar, og dagens pas kører som planlagt."
     },
-    "disclaimer": "HRV er et restitutions-signal — ikke en diagnose.",
+    "disclaimer": "HRV er et restitutions-signal, ikke en diagnose.",
     "legendBand": "Dit bånd",
     "legendAvg": "Dit snit",
     "rangeLabel": "Personligt normalområde"
@@ -33,10 +33,10 @@
   "trends": {
     "eyebrow": "Restitution",
     "title": "Forløb",
-    "subtitle": "Dit HRV-forløb over tid — den daglige måling, dit 7-dages snit og dit normalområde.",
+    "subtitle": "Dit HRV-forløb over tid: den daglige måling, dit 7-dages snit og dit normalområde.",
     "empty": {
       "title": "Ingen målinger endnu",
-      "body": "Forbind dit wearable, så nattens HRV synker automatisk. Grafen kommer, når den første måling lander — ikke før."
+      "body": "Forbind dit wearable, så nattens HRV synker automatisk. Grafen kommer, når den første måling lander. Ikke før."
     }
   },
   "subNav": {
@@ -49,7 +49,7 @@
   "learn": {
     "eyebrow": "Restitution",
     "title": "Lær",
-    "subtitle": "Hvad HRV er, hvorfor vi viser den, som vi gør — og hvad tallet betyder for dig."
+    "subtitle": "Hvad HRV er, hvorfor vi viser den, som vi gør, og hvad tallet betyder for dig."
   },
   "insights": {
     "eyebrow": "HRV",
@@ -59,23 +59,23 @@
   "page": {
     "eyebrow": "Hjerte",
     "title": "HRV",
-    "subtitle": "Din hjerterytmevariabilitet — et dagligt mål for, hvor klar din krop er til at træne.",
+    "subtitle": "Din hjerterytmevariabilitet: et dagligt mål for, hvor klar din krop er til at træne.",
     "connectEyebrow": "Kom i gang",
     "connectTitle": "Lad din HRV køre i baggrunden.",
-    "connectBody": "HRV — hjerterytmevariabilitet — fortæller, hvor restitueret du er. Forbind en wearable-enhed, så synker MakeIt din HRV automatisk hver morgen. Ingen manuel måling, ingen ekstra rutine — den er der bare, når du vågner.",
+    "connectBody": "HRV (hjerterytmevariabilitet) fortæller, hvor restitueret du er. Forbind en wearable-enhed, så synker MakeIt din HRV automatisk hver morgen. Ingen manuel måling, ingen ekstra rutine. Den er der bare, når du vågner.",
     "connectStep1Title": "Forbind din wearable-enhed",
-    "connectStep1Body": "Ét tryk — du godkender adgang hos din wearable-udbyder.",
+    "connectStep1Body": "Ét tryk. Du godkender adgang hos din wearable-udbyder.",
     "connectStep2Title": "HRV synker hver morgen",
     "connectStep2Body": "MakeIt henter nattens måling automatisk. Du gør ingenting.",
     "connectStep3Title": "Vi bygger din baseline",
-    "connectStep3Body": "De første par uger lærer MakeIt din normal — derefter ser du din HRV-klarhed.",
+    "connectStep3Body": "De første par uger lærer MakeIt din normal. Derefter ser du din HRV-klarhed.",
     "connectCta": "Forbind din wearable-enhed",
     "connectAppleNote": "Apple Watch-understøttelse kommer med MakeIt-appen til iPhone."
   },
   "connectSheet": {
     "eyebrow": "Wearable-enhed",
     "title": "Forbind din wearable-enhed.",
-    "body": "Forbind en wearable-enhed for at synke din HRV automatisk — ingen manuel indtastning.",
+    "body": "Forbind en wearable-enhed for at synke din HRV automatisk. Ingen manuel indtastning.",
     "action": "Forbind →",
     "opening": "Åbner {name}…",
     "meta": "HRV · søvn · restitution",
