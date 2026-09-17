@@ -16,15 +16,15 @@
     "range": "{range} Reps",
     "list": {
       "Lifter": {
-        "range": "0 — 999",
+        "range": "0-999",
         "perks": ["Adgang til crewets feed", "Månedlige challenges", "5% medlemsrabat"]
       },
       "Athlete": {
-        "range": "1.000 — 4.999",
+        "range": "1.000-4.999",
         "perks": ["Alt fra Lifter", "Først til drops", "10% rabat", "1 form-check pr. md."]
       },
       "Beast": {
-        "range": "5.000 — 14.999",
+        "range": "5.000-14.999",
         "perks": ["Alt fra Athlete", "Valgfri strap-farve (1 stk/år)", "15% rabat", "VIP til træf IRL"]
       },
       "Legend": {
@@ -97,7 +97,7 @@
     "eyebrow": "Belønninger",
     "mock": {
       "limited-cuff-olive": {
-        "name": "Limited Cuff — Olive",
+        "name": "Limited Cuff · Olive",
         "description": "Olive-grøn HookIt cuff. Kun 80 stk lavet i denne farve. Sendes med GLS."
       },
       "1on1-formcheck": {
@@ -126,10 +126,10 @@
   "redeem": {
     "errors": {
       "auth": "Du skal være logget ind.",
-      "sold_out": "Den her er udsolgt — det går stærkt!",
+      "sold_out": "Den her er udsolgt. Det går stærkt!",
       "insufficient_reps": "Du har ikke nok Reps endnu.",
       "unavailable": "Belønningen er ikke tilgængelig lige nu.",
-      "unknown": "Noget gik galt — prøv igen om lidt."
+      "unknown": "Noget gik galt. Prøv igen om lidt."
     },
     "soldOut": "Udsolgt",
     "missingReps": "Mangler {amount} Reps",

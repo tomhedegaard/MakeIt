@@ -16,15 +16,15 @@
     "range": "{range} Reps",
     "list": {
       "Lifter": {
-        "range": "0 — 999",
+        "range": "0-999",
         "perks": ["Access to the crew feed", "Monthly challenges", "5% member discount"]
       },
       "Athlete": {
-        "range": "1,000 — 4,999",
+        "range": "1,000-4,999",
         "perks": ["Everything from Lifter", "Early access to drops", "10% discount", "1 form check per month"]
       },
       "Beast": {
-        "range": "5,000 — 14,999",
+        "range": "5,000-14,999",
         "perks": ["Everything from Athlete", "Custom strap colour (1 per year)", "15% discount", "VIP at IRL meets"]
       },
       "Legend": {
@@ -97,7 +97,7 @@
     "eyebrow": "Reward shop",
     "mock": {
       "limited-cuff-olive": {
-        "name": "Limited Cuff — Olive",
+        "name": "Limited Cuff · Olive",
         "description": "Olive HookIt cuff. Only 80 made in this colour. Ships with GLS."
       },
       "1on1-formcheck": {
@@ -126,10 +126,10 @@
   "redeem": {
     "errors": {
       "auth": "You need to be signed in.",
-      "sold_out": "This one's sold out — it's going fast!",
+      "sold_out": "This one's sold out. It's going fast!",
       "insufficient_reps": "You don't have enough Reps yet.",
       "unavailable": "This reward isn't available right now.",
-      "unknown": "Something went wrong — try again in a moment."
+      "unknown": "Something went wrong. Try again in a moment."
     },
     "soldOut": "Sold out",
     "missingReps": "Short {amount} Reps",
