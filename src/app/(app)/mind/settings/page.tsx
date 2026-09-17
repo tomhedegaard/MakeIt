@@ -11,9 +11,10 @@ import {
 import { getMyBuddy } from "@/lib/data/buddy";
 import MentalToggleRow from "@/components/mind/MentalToggleRow";
 
-export const metadata = {
-  title: "Indstillinger · Mind · MakeIt",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Mind.settingsPage");
+  return { title: t("metaTitle") };
+}
 
 /**
  * `/mind/settings` — privacy + notification toggles for Søjle 5.
@@ -46,87 +47,87 @@ export default async function MindSettingsPage() {
       />
       <Container size="narrow" className="py-10 md:py-14 space-y-12">
         <section>
-          <h2 className="font-display text-xl mb-2">Crew-deling</h2>
-          <p className="text-fg-dim text-sm mb-4">
-            Hvad din buddy og dit cirkel ser. Begge sider skal sige ja.
-          </p>
+          <h2 className="font-display text-xl mb-2">{t("crew.title")}</h2>
+          <p className="text-fg-dim text-sm mb-4">{t("crew.body")}</p>
           <div className="space-y-0">
             <MentalToggleRow
               field="buddy_share_enabled"
               initialValue={settings.buddy_share_enabled}
-              title="Del mind-check med min buddy"
-              description="Din buddy ser dit signal (energi/stress/fokus) som tal — aldrig din journal. Kræver at buddy også siger ja."
+              title={t("buddyShare.title")}
+              description={t("buddyShare.description")}
               disabled={!buddyEligible}
               disabledReason={
                 !buddy
-                  ? "Du har ingen aktiv buddy lige nu."
+                  ? t("buddyShare.noBuddy")
                   : member.tier === "Lifter"
-                    ? "Athlete-tier låser dette op."
+                    ? t("buddyShare.tierLocked")
                     : undefined
               }
             />
             <MentalToggleRow
               field="cirkel_share_aggregate_enabled"
               initialValue={settings.cirkel_share_aggregate_enabled}
-              title="Del aggregeret signal med mit cirkel"
-              description="Cirklets gennemsnit ser dit 7-dages snit. Ingen daglige tal."
+              title={t("cirkelAggregate.title")}
+              description={t("cirkelAggregate.description")}
               disabled={!cirkelEligible}
               disabledReason={
-                cirkelEligible ? undefined : "Beast-tier låser cirkler op (MH-10)."
+                cirkelEligible ? undefined : t("cirkelLocked")
               }
             />
             <MentalToggleRow
               field="cirkel_share_daily_enabled"
               initialValue={settings.cirkel_share_daily_enabled}
-              title="Del daglige tal med mit cirkel"
-              description="Avanceret: dine daglige mind-check tal er synlige i cirklet. Kun hvis du virkelig vil."
+              title={t("cirkelDaily.title")}
+              description={t("cirkelDaily.description")}
               disabled={!cirkelEligible}
               disabledReason={
-                cirkelEligible ? undefined : "Beast-tier låser cirkler op (MH-10)."
+                cirkelEligible ? undefined : t("cirkelLocked")
               }
             />
           </div>
         </section>
 
         <section>
-          <h2 className="font-display text-xl mb-2">AI mental coach</h2>
+          <h2 className="font-display text-xl mb-2">{t("aiCoach.title")}</h2>
           <div className="space-y-0">
             <MentalToggleRow
               field="ai_coach_enabled"
               initialValue={settings.ai_coach_enabled}
-              title="AI-coach daglige refleksion"
-              description="AI læser din mind-check, HRV og uge — skriver en kort daglig refleksion. Ingen adgang til din journal."
+              title={t("aiCoach.rowTitle")}
+              description={t("aiCoach.rowDescription")}
             />
           </div>
         </section>
 
         <section>
-          <h2 className="font-display text-xl mb-2">Notifikationer</h2>
+          <h2 className="font-display text-xl mb-2">{t("notifications.title")}</h2>
           <div className="space-y-0">
             <MentalToggleRow
               field="notif_mind_check_evening"
               initialValue={settings.notif_mind_check_evening}
-              title="Aften-mind-check nudge"
-              description="20:00 lokal tid hvis du endnu ikke har tjekket ind."
+              title={t("notifications.evening.title")}
+              description={t("notifications.evening.description")}
             />
             <MentalToggleRow
               field="notif_ai_coach_morning"
               initialValue={settings.notif_ai_coach_morning}
-              title="Morgen-refleksion push"
-              description="06:30 lokal tid — AI-coachens daglige refleksion."
+              title={t("notifications.morning.title")}
+              description={t("notifications.morning.description")}
             />
             <MentalToggleRow
               field="notif_buddy_mental_alert"
               initialValue={settings.notif_buddy_mental_alert}
-              title="Buddy-mental check-in"
-              description="Hvis du og din buddy ikke har interageret i 7 dage og I begge har sagt ja til deling."
+              title={t("notifications.buddy.title")}
+              description={t("notifications.buddy.description")}
             />
           </div>
         </section>
 
         <div className="text-xs text-fg-dim pt-4">
-          Streak: {settings.current_streak_days} dage · længste:{" "}
-          {settings.longest_streak_days} dage.
+          {t("streak", {
+            current: settings.current_streak_days,
+            longest: settings.longest_streak_days,
+          })}
         </div>
       </Container>
     </>

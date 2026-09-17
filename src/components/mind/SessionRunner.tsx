@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import BreathingRing from "./BreathingRing";
 import AudioPlayer from "./AudioPlayer";
 import SectionHeader from "@/components/ui/SectionHeader";
@@ -52,6 +53,7 @@ export default function SessionRunner({
   context = "library",
   alreadyCompleted = false,
 }: SessionRunnerProps) {
+  const t = useTranslations("Mind.runner");
   const [running, setRunning] = useState(false);
   const [completed, setCompleted] = useState(alreadyCompleted);
   const [pending, startTransition] = useTransition();
@@ -77,15 +79,18 @@ export default function SessionRunner({
   if (!running) {
     return (
       <div className="rounded-2xl border hairline bg-bg-2/40 p-6 md:p-8 space-y-4">
-        <SectionHeader eyebrow="Dagens session" title={title} />
+        <SectionHeader eyebrow={t("eyebrow")} title={title} />
         {subtitle ? <p className="text-fg-dim">{subtitle}</p> : null}
         <p className="text-fg-dim text-sm">
-          {Math.round(durationSeconds / 60)} min · {visualPattern.replace(/_/g, " ")}
+          {t("meta", {
+            minutes: Math.round(durationSeconds / 60),
+            pattern: visualPattern.replace(/_/g, " "),
+          })}
         </p>
         <div className="pt-2">
           {completed ? (
             <span className="inline-flex items-center gap-2 text-sm text-fg-dim">
-              ✓ Gennemført i dag — gå videre.
+              {t("done")}
             </span>
           ) : (
             <button
@@ -93,7 +98,7 @@ export default function SessionRunner({
               onClick={() => setRunning(true)}
               className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
             >
-              Start session →
+              {t("start")}
             </button>
           )}
         </div>
@@ -108,13 +113,13 @@ export default function SessionRunner({
       className="fixed inset-0 z-50 bg-bg flex flex-col"
     >
       <div className="flex items-center justify-between p-6 border-b hairline">
-        <SectionHeader eyebrow="Mind · session" title={title} className="mb-0" />
+        <SectionHeader eyebrow={t("overlayEyebrow")} title={title} className="mb-0" />
         <button
           type="button"
           onClick={() => setRunning(false)}
           className="text-fg-dim hover:text-fg text-sm"
         >
-          Luk
+          {t("close")}
         </button>
       </div>
 
@@ -148,7 +153,7 @@ export default function SessionRunner({
           disabled={pending}
           className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
         >
-          {pending ? "Gemmer..." : "Færdig — gem"}
+          {pending ? t("saving") : t("finish")}
         </button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -27,6 +28,7 @@ export default async function MindSessionRunnerPage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
+  const t = await getTranslations("Mind.sessionPage");
   const member = await getSession();
   if (!member) redirect("/login");
   if (!(await hasAcknowledgedMentalDisclaimer(member.id))) {
@@ -56,7 +58,7 @@ export default async function MindSessionRunnerPage({
           href="/mind/sessions"
           className="inline-block text-fg-dim text-sm hover:text-fg"
         >
-          ← Tilbage til bibliotek
+          {t("backToLibrary")}
         </Link>
 
         <SessionRunner

@@ -78,7 +78,48 @@
   "settingsPage": {
     "eyebrow": "Mind · Indstillinger",
     "title": "Privatliv + notifikationer.",
-    "subtitle": "Munk og coaches ser ikke din journal-brødtekst. Anthropic kan se et uddrag til moderering. Resten kan du tænde og slukke for."
+    "subtitle": "Munk og coaches ser ikke din journal-brødtekst. Anthropic kan se et uddrag til moderering. Resten kan du tænde og slukke for.",
+    "metaTitle": "Indstillinger · Mind · MakeIt",
+    "crew": {
+      "title": "Crew-deling",
+      "body": "Hvad din buddy og dit cirkel ser. Begge sider skal sige ja."
+    },
+    "buddyShare": {
+      "title": "Del mind-check med min buddy",
+      "description": "Din buddy ser dit signal (energi/stress/fokus) som tal, aldrig din journal. Kræver at buddy også siger ja.",
+      "noBuddy": "Du har ingen aktiv buddy lige nu.",
+      "tierLocked": "Athlete-tier låser dette op."
+    },
+    "cirkelAggregate": {
+      "title": "Del aggregeret signal med mit cirkel",
+      "description": "Cirklets gennemsnit ser dit 7-dages snit. Ingen daglige tal."
+    },
+    "cirkelDaily": {
+      "title": "Del daglige tal med mit cirkel",
+      "description": "Avanceret: dine daglige mind-check tal er synlige i cirklet. Kun hvis du virkelig vil."
+    },
+    "cirkelLocked": "Beast-tier låser cirkler op (MH-10).",
+    "aiCoach": {
+      "title": "AI mental coach",
+      "rowTitle": "AI-coach daglige refleksion",
+      "rowDescription": "AI læser din mind-check, HRV og uge og skriver en kort daglig refleksion. Ingen adgang til din journal."
+    },
+    "notifications": {
+      "title": "Notifikationer",
+      "evening": {
+        "title": "Aften-mind-check nudge",
+        "description": "20:00 lokal tid hvis du endnu ikke har tjekket ind."
+      },
+      "morning": {
+        "title": "Morgen-refleksion push",
+        "description": "06:30 lokal tid. AI-coachens daglige refleksion."
+      },
+      "buddy": {
+        "title": "Buddy-mental check-in",
+        "description": "Hvis du og din buddy ikke har interageret i 7 dage og I begge har sagt ja til deling."
+      }
+    },
+    "streak": "Streak: {current} dage · længste: {longest} dage."
   },
   "tile": {
     "waitingTitle": "Mind-check venter",
@@ -155,5 +196,167 @@
         "body": "AI-coach læser dit mind-check, HRV og uge og skriver en kort daglig refleksion. Plus 8 sessioner i biblioteket: vejrtrækning, fokus, recovery, debrief."
       }
     }
+  },
+  "todayPage": {
+    "metaTitle": "I dag · Mind · MakeIt",
+    "eyebrow": "Mind · I dag",
+    "title": "Dagens refleksion.",
+    "subtitle": "Personlig refleksion + session, bygget til din mind-check, HRV og uge."
+  },
+  "weeklyPage": {
+    "metaTitle": "Din uge · Mind · MakeIt",
+    "eyebrow": "Mind · Din uge",
+    "title": "Sidste 7 dage.",
+    "subtitle": "Mandage 18:00 lokal tid sender vi en mental uge-resumé som push."
+  },
+  "sessionsPage": {
+    "metaTitle": "Sessions · Mind · MakeIt",
+    "eyebrow": "Mind · Sessions",
+    "title": "Bibliotek.",
+    "subtitle": "Vejrtrækning, fokus, recovery, debrief. Vælg én. 1-5 minutter pr. session.",
+    "category": {
+      "breathing": {
+        "heading": "Vejrtrækning",
+        "subtitle": "Box breath, coherence, lang udånding. For ro og HRV."
+      },
+      "focus": {
+        "heading": "Fokus",
+        "subtitle": "Pre-session priming + genstart efter pause."
+      },
+      "recovery": {
+        "heading": "Recovery",
+        "subtitle": "Vind ned efter beast-mode. Sov bedre."
+      },
+      "debrief": {
+        "heading": "Debrief",
+        "subtitle": "Efter sessionen: hvad lærte du?"
+      }
+    }
+  },
+  "sessionPage": {
+    "backToLibrary": "← Tilbage til bibliotek"
+  },
+  "cirklerPage": {
+    "metaTitle": "Cirkler · Mind · MakeIt",
+    "eyebrow": "Mind · Cirkler",
+    "locked": {
+      "title": "Beast-tier låser cirkler op.",
+      "subtitle": "Cirkler er små grupper (3-6 medlemmer) der laver ugentlige check-ins. Når du rykker til Beast, åbner det her sig.",
+      "body": "Indtil da: hold fast i mind-check og journal hver dag. Det er sådan Reps bygges op."
+    },
+    "empty": {
+      "title": "Ingen cirkel endnu.",
+      "subtitle": "Munk opretter cirkler i grupper på 3-6. Du får besked når du er paret med en."
+    },
+    "subtitle": "{count} medlemmer · asynkron ugentlig check-in",
+    "multi": "Du er medlem af {count} cirkler. Multi-cirkel-skifte kommer i en fast follow-up."
+  },
+  "audio": {
+    "play": "Afspil audio",
+    "pause": "Pause audio",
+    "seek": "Søg i audio"
+  },
+  "cirkelFeed": {
+    "empty": "Ingen poster i cirklet endnu. Vær den første denne uge, én sætning er nok.",
+    "energy": "energi {value}/5",
+    "stress": "stress {value}/5",
+    "focus": "fokus {value}/5",
+    "ago": {
+      "now": "lige nu",
+      "hours": "{count} t siden",
+      "days": "{count, plural, one {# dag} other {# dage}} siden"
+    }
+  },
+  "cirkelForm": {
+    "eyebrow": "Ugens check-in",
+    "placeholder": "Hvordan står ugen, kort?",
+    "shareLabel": "Del mit dagens mind-check signal (energi/stress/fokus) med cirklet",
+    "counter": "{count} / {max}",
+    "sending": "Sender...",
+    "sent": "Sendt. Opdater næste uge",
+    "submit": "Post i cirklet"
+  },
+  "journalHistory": {
+    "empty": "Ingen poster endnu. Hver dag du skriver én, optjener du Reps og bygger en stribe der låser tier-perks op.",
+    "date": "{day}. {month}",
+    "months": [
+      "jan",
+      "feb",
+      "mar",
+      "apr",
+      "maj",
+      "jun",
+      "jul",
+      "aug",
+      "sep",
+      "okt",
+      "nov",
+      "dec"
+    ]
+  },
+  "celebration": {
+    "reps": "+{reps} Reps",
+    "dismiss": "Tak, luk",
+    "kind": {
+      "first_check": {
+        "eyebrow": "Mind · første mind-check",
+        "title": "Du gjorde det.",
+        "body": "Velkommen i mental-data. Hver dag du tjekker ind, bygger du grafen og giver Adaptive Engine mere at arbejde med."
+      },
+      "streak_3": {
+        "eyebrow": "Mind · 3-dages stribe",
+        "title": "Tre dage i streg.",
+        "body": "Det er der vanen sætter sig. Fortsæt. Næste milestone er 7 dage og +20 Reps."
+      },
+      "streak_7": {
+        "eyebrow": "Mind · 7-dages stribe",
+        "title": "Hel uge i mål.",
+        "body": "Du er nu blandt de medlemmer der bygger mental data konsistent. Næste: 30 dage og +100 Reps."
+      },
+      "streak_30": {
+        "eyebrow": "Mind · 30-dages stribe",
+        "title": "30 dage. Solidt.",
+        "body": "En måneds mental data. Nu kan AI-coach reelt se mønstre i din uge. +100 Reps + milestone-bonus tikkede ind."
+      },
+      "streak_90": {
+        "eyebrow": "Mind · 90-dages stribe",
+        "title": "90 dage. Det er en praksis.",
+        "body": "Du har bygget mental sundhed som en disciplin. Det her er stadig den hårdeste del. Du gjorde det."
+      }
+    }
+  },
+  "sessionCard": {
+    "category": {
+      "breathing": "Vejrtrækning",
+      "focus": "Fokus",
+      "recovery": "Recovery",
+      "debrief": "Debrief"
+    },
+    "minutes": "{minutes} min",
+    "completed": "✓ Gennemført"
+  },
+  "runner": {
+    "eyebrow": "Dagens session",
+    "meta": "{minutes} min · {pattern}",
+    "done": "✓ Gennemført i dag. Gå videre.",
+    "start": "Start session →",
+    "overlayEyebrow": "Mind · session",
+    "close": "Luk",
+    "saving": "Gemmer...",
+    "finish": "Færdig, gem"
+  },
+  "weekly": {
+    "eyebrow": "Din mentale uge",
+    "numbers": "Tal i ugen",
+    "energy": "Energi",
+    "stress": "Stress",
+    "focus": "Fokus",
+    "activity": "Aktivitet",
+    "mindCheck": "Mind-check",
+    "sessions": "Sessioner",
+    "journal": "Journal",
+    "delta": "{delta} vs sidste uge",
+    "unchanged": "uændret",
+    "footer": "Sammenlignet med ugen før. Mandage 18:00 sender vi dig en mental uge-resumé som push. Du kan slå det fra på <link>/mind/settings</link>."
   }
 }

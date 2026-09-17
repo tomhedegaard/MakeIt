@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { useTranslations } from "next-intl";
 import type { WeeklyInsights } from "@/lib/mind/weekly-insights";
 
 /**
@@ -11,10 +13,11 @@ export default function WeeklyInsightsView({
   insights: WeeklyInsights;
   headline: string;
 }) {
+  const t = useTranslations("Mind.weekly");
   return (
     <div className="space-y-10">
       <section className="rounded-2xl border hairline bg-bg-2/30 p-6 md:p-8 space-y-3">
-        <div className="eyebrow">Din mentale uge</div>
+        <div className="eyebrow">{t("eyebrow")}</div>
         <p className="font-display text-2xl md:text-3xl leading-tight">{headline}</p>
         <p className="text-fg-dim text-sm">
           {insights.weekStartDate} → {insights.weekEndDate}
@@ -22,22 +25,22 @@ export default function WeeklyInsightsView({
       </section>
 
       <section>
-        <h2 className="font-display text-xl mb-4">Tal i ugen</h2>
+        <h2 className="font-display text-xl mb-4">{t("numbers")}</h2>
         <div className="grid grid-cols-3 gap-px bg-line border hairline rounded-xl overflow-hidden">
           <MetricCell
-            label="Energi"
+            label={t("energy")}
             current={insights.current.energyMedian}
             delta={insights.delta.energy}
             higherIsBetter
           />
           <MetricCell
-            label="Stress"
+            label={t("stress")}
             current={insights.current.stressMedian}
             delta={insights.delta.stress}
             higherIsBetter={false}
           />
           <MetricCell
-            label="Fokus"
+            label={t("focus")}
             current={insights.current.focusMedian}
             delta={insights.delta.focus}
             higherIsBetter
@@ -46,22 +49,22 @@ export default function WeeklyInsightsView({
       </section>
 
       <section>
-        <h2 className="font-display text-xl mb-4">Aktivitet</h2>
+        <h2 className="font-display text-xl mb-4">{t("activity")}</h2>
         <div className="grid grid-cols-3 gap-px bg-line border hairline rounded-xl overflow-hidden">
           <CountCell
-            label="Mind-check"
+            label={t("mindCheck")}
             value={insights.current.mindCheckDays}
             unit={`/ ${insights.consistency.daysExpected}`}
             delta={insights.delta.mindCheckDays}
           />
           <CountCell
-            label="Sessioner"
+            label={t("sessions")}
             value={insights.current.sessionsCompleted}
             unit=""
             delta={insights.delta.sessionsCompleted}
           />
           <CountCell
-            label="Journal"
+            label={t("journal")}
             value={insights.current.journalEntries}
             unit=""
             delta={insights.delta.journalEntries}
@@ -70,9 +73,13 @@ export default function WeeklyInsightsView({
       </section>
 
       <p className="text-fg-dim text-sm leading-relaxed">
-        Sammenlignet med ugen før. Mandage 18:00 sender vi dig en mental
-        uge-resumé som push — du kan slå det fra på{" "}
-        <span className="text-fg">/mind/settings</span>.
+        {t.rich("footer", {
+          link: (chunks) => (
+            <Link href="/mind/settings" className="text-fg">
+              {chunks}
+            </Link>
+          ),
+        })}
       </p>
     </div>
   );
@@ -89,6 +96,7 @@ function MetricCell({
   delta: number | null;
   higherIsBetter: boolean;
 }) {
+  const t = useTranslations("Mind.weekly");
   return (
     <div className="bg-bg-2/40 p-5">
       <div className="eyebrow text-xs mb-2">{label}</div>
@@ -101,11 +109,10 @@ function MetricCell({
             (delta > 0) === higherIsBetter ? "text-ok" : "text-warn"
           }`}
         >
-          {delta > 0 ? "+" : ""}
-          {delta} vs sidste uge
+          {t("delta", { delta: delta > 0 ? `+${delta}` : String(delta) })}
         </div>
       ) : (
-        <div className="text-fg-dim text-xs mt-1">uændret</div>
+        <div className="text-fg-dim text-xs mt-1">{t("unchanged")}</div>
       )}
     </div>
   );
@@ -122,6 +129,7 @@ function CountCell({
   unit: string;
   delta: number;
 }) {
+  const t = useTranslations("Mind.weekly");
   return (
     <div className="bg-bg-2/40 p-5">
       <div className="eyebrow text-xs mb-2">{label}</div>
@@ -135,11 +143,10 @@ function CountCell({
             delta > 0 ? "text-ok" : "text-warn"
           }`}
         >
-          {delta > 0 ? "+" : ""}
-          {delta} vs sidste uge
+          {t("delta", { delta: delta > 0 ? `+${delta}` : String(delta) })}
         </div>
       ) : (
-        <div className="text-fg-dim text-xs mt-1">uændret</div>
+        <div className="text-fg-dim text-xs mt-1">{t("unchanged")}</div>
       )}
     </div>
   );

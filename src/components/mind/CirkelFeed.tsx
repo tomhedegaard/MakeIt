@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 interface Post {
   id: string;
   author_handle: string;
@@ -13,12 +15,9 @@ interface Post {
  * Reactions UI (post a reaction) is deferred — out of MH-10 scope.
  */
 export default function CirkelFeed({ posts }: { posts: Post[] }) {
+  const t = useTranslations("Mind.cirkelFeed");
   if (posts.length === 0) {
-    return (
-      <p className="text-fg-dim leading-relaxed">
-        Ingen poster i cirklet endnu. Vær den første denne uge — én sætning er nok.
-      </p>
-    );
+    return <p className="text-fg-dim leading-relaxed">{t("empty")}</p>;
   }
   return (
     <div className="space-y-8">
@@ -27,24 +26,24 @@ export default function CirkelFeed({ posts }: { posts: Post[] }) {
           <div className="flex items-baseline gap-3">
             <span className="font-display text-lg">{p.author_handle}</span>
             <time className="text-fg-dim text-xs" dateTime={p.posted_at}>
-              {formatRelative(p.posted_at)}
+              {formatRelative(p.posted_at, t)}
             </time>
           </div>
           {p.mind_share ? (
             <div className="flex flex-wrap gap-2 text-xs text-fg-dim">
               {p.mind_share.energy !== undefined ? (
                 <span className="rounded-full border hairline px-2.5 py-1">
-                  energi {p.mind_share.energy}/5
+                  {t("energy", { value: p.mind_share.energy })}
                 </span>
               ) : null}
               {p.mind_share.stress !== undefined ? (
                 <span className="rounded-full border hairline px-2.5 py-1">
-                  stress {p.mind_share.stress}/5
+                  {t("stress", { value: p.mind_share.stress })}
                 </span>
               ) : null}
               {p.mind_share.focus !== undefined ? (
                 <span className="rounded-full border hairline px-2.5 py-1">
-                  fokus {p.mind_share.focus}/5
+                  {t("focus", { value: p.mind_share.focus })}
                 </span>
               ) : null}
             </div>
@@ -61,11 +60,14 @@ export default function CirkelFeed({ posts }: { posts: Post[] }) {
   );
 }
 
-function formatRelative(iso: string): string {
+function formatRelative(
+  iso: string,
+  t: ReturnType<typeof useTranslations<"Mind.cirkelFeed">>,
+): string {
   const ms = Date.now() - new Date(iso).getTime();
   const hrs = Math.floor(ms / 3_600_000);
-  if (hrs < 1) return "lige nu";
-  if (hrs < 24) return `${hrs} t siden`;
+  if (hrs < 1) return t("ago.now");
+  if (hrs < 24) return t("ago.hours", { count: hrs });
   const days = Math.floor(hrs / 24);
-  return `${days} dage siden`;
+  return t("ago.days", { count: days });
 }

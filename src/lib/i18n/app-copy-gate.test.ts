@@ -1,4 +1,6 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 // Member-app namespaces. Marketing (classic landing; kalk has its own gate), Email, Legal
@@ -39,5 +41,26 @@ describe("app copy gate (spec §5 taste rules, §8)", () => {
       const keys = (l: string) => entries(load(l, ns)).map(([k]) => k).sort();
       expect(keys("da"), ns).toEqual(keys("en"));
     }
+  });
+});
+
+describe("no hardcoded copy in HRV and Mind (review finding)", () => {
+  const SRC = fileURLToPath(new URL("../../", import.meta.url));
+  const dirs = ["app/(app)/hrv", "app/(app)/mind", "components/hrv", "components/mind"];
+  const walk = (d: string): string[] =>
+    readdirSync(d).flatMap((n) => (statSync(join(d, n)).isDirectory() ? walk(join(d, n)) : [join(d, n)]));
+  const files = dirs.flatMap((d) => walk(join(SRC, d))).filter((f) => f.endsWith(".tsx") && !f.includes(".test."));
+  // JSX text: must follow a real tag (opening `<tag …>` or closing `</tag>`) and end at a tag,
+  // so TS generics (`useState<X>(null)`) and ternaries (`: null; return (<`) don't match.
+  // Text never starts with `)`: that is a JSX ternary branch (`<A />\n) : cond ? (\n<B`), not copy.
+  const JSX_TEXT = /(?:<[a-zA-Z][\w.]*(?:\s[^<>]*)?>|<\/[\w.]+>)[ \t]*\n?[ \t]*[^<>{}\s)][^<>{}]*[A-Za-zÆØÅæøå]{3,}[^<>{}]*<\/?[a-zA-Z]/;
+  const ATTR = /\b(aria-label|title|placeholder|alt|eyebrow|subtitle|label)="[^"]*[A-Za-zÆØÅæøå]{3,}[^"]*"/;
+  // Metadata <title> with an id is a11y copy too; keep it in messages.
+  it.each(files.map((f) => [f.slice(SRC.length), f]))("%s", (_n, f) => {
+    const src = readFileSync(f, "utf8")
+      .replace(/\{\/\*[\s\S]*?\*\/\}/g, "") // JSX comments
+      .replace(/\b\w+<[^<>()=]*>(?=\()/g, ""); // TS generics: useState<string | null>(
+    expect(src).not.toMatch(JSX_TEXT);
+    expect(src).not.toMatch(ATTR);
   });
 });
