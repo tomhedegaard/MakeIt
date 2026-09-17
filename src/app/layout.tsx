@@ -7,6 +7,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import CookieBanner from "@/components/marketing/CookieBanner";
 import CustomCursor from "@/components/CustomCursor";
 import SWRegister from "@/components/pwa/SWRegister";
+import NativeChrome from "@/components/native/NativeChrome";
 import { COMPANY } from "@/lib/company";
 
 // Kalk (spec 2026-09-17 §3.2) is the one typographic voice. Nat surfaces
@@ -70,6 +71,7 @@ export default async function RootLayout({
           <SmoothScroll />
           <CustomCursor />
           <SWRegister />
+          <NativeChrome />
           {children}
           <CookieBanner />
         </NextIntlClientProvider>
