@@ -161,7 +161,7 @@ async function DayCard({ day }: { day: ProgramDetailDay }) {
             </div>
             <div className="text-right shrink-0">
               <div className="numeric text-xl">
-                {day.estimatedMinutes ?? "—"}
+                {day.estimatedMinutes ?? "-"}
                 {day.estimatedMinutes ? (
                   <span className="text-fg-dim text-sm ml-0.5">m</span>
                 ) : null}
@@ -256,7 +256,7 @@ function MuscleChips({ muscles }: { muscles: MuscleGroup[] }) {
 }
 
 function formatSetScheme(sets: ProgramDetailSet[]): string {
-  if (sets.length === 0) return "—";
+  if (sets.length === 0) return "-";
   // Collapse identical sets: e.g., three (5 reps × 100 kg @ RPE 8) →
   // "3 × 5 reps · 100 kg @ RPE 8". Mixed schemes get spelled out
   // briefly to avoid a wall of text on the day card.
@@ -274,5 +274,5 @@ function describeSet(s: ProgramDetailSet): string {
   if (s.reps > 0) parts.push(`${s.reps} reps`);
   if (s.weight > 0) parts.push(`${s.weight} kg`);
   if (s.rpe) parts.push(`RPE ${s.rpe}`);
-  return parts.join(" · ") || "—";
+  return parts.join(" · ") || "-";
 }

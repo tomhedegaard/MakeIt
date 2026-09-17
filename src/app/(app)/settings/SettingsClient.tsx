@@ -219,7 +219,7 @@ export default function SettingsClient({
       <section className="surface-2 rounded-2xl p-5 lg:p-7">
         <SectionHeader eyebrow={t("account.eyebrow")} title={t("account.title")} />
         <ul className="space-y-3 text-sm">
-          <Row k={t("account.email")} v={settings.email ?? "—"} />
+          <Row k={t("account.email")} v={settings.email ?? "-"} />
           <Row k={t("account.tier")} v={settings.tier} />
           <Row
             k={t("account.memberSince")}

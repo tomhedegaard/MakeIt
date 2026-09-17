@@ -288,7 +288,7 @@ export default function CounterfactualSliders({
           {decisionMatches && !sliderTouched ? (
             <ResultBlock
               headline="Samme beslutning"
-              detail="Du er ved baseline-værdierne — træk i en slider for at simulere."
+              detail="Du er ved baseline-værdierne. Træk i en slider for at simulere."
               tone="quiet"
             />
           ) : decisionMatches ? (

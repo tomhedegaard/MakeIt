@@ -22,7 +22,7 @@ const STORIES = [
 const MOCK_FEED: FeedPost[] = [
   {
     id: "m1", who: "@nina_dl", tier: "Beast",
-    content: "Ny DL PR — 175 kg @ 68 kg BW. Brugte sorte StrapIts, hænderne overlevede.",
+    content: "Ny DL PR: 175 kg @ 68 kg BW. Brugte sorte StrapIts, hænderne overlevede.",
     tag: "PR", isPr: true, whenLabel: "2m",
     reactionsCount: 84, commentsCount: 12, reactedByMe: false,
   },
@@ -34,13 +34,13 @@ const MOCK_FEED: FeedPost[] = [
   },
   {
     id: "m3", who: "@maria.lift", tier: "Beast",
-    content: "Form-check video uploadet — bench-pause med 90 kg. Tager gerne kommentarer.",
+    content: "Form-check video uploadet: bench-pause med 90 kg. Tager gerne kommentarer.",
     tag: "Form-check", isPr: false, formcheck: true, whenLabel: "3t",
     reactionsCount: 28, commentsCount: 8, reactedByMe: false,
   },
   {
     id: "m4", who: "@Munk", tier: "Legend",
-    content: "Limited cuff-farve drops på fredag — kun for crewet. Olive er tilbage.",
+    content: "Limited cuff-farve drops på fredag, kun for crewet. Olive er tilbage.",
     tag: null, isPr: false, whenLabel: "5t",
     reactionsCount: 122, commentsCount: 31, reactedByMe: false,
   },

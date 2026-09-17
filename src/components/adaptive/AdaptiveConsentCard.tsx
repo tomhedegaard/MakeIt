@@ -61,7 +61,7 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
       <SectionHeader
         id="adaptive-consent-heading"
         eyebrow="Nyt for dig"
-        title="Din baseline er klar — vil du have din session tilpasset hver dag?"
+        title="Din baseline er klar. Vil du have din session tilpasset hver dag?"
       />
 
       <div className="text-sm text-fg-dim leading-relaxed space-y-3">

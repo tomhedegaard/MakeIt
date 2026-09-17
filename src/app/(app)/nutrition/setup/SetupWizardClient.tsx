@@ -124,7 +124,7 @@ export default function SetupWizardClient() {
               max="250"
               step="0.1"
               inputMode="decimal"
-              placeholder="—"
+              placeholder="-"
               className="field text-2xl numeric pr-12"
               autoComplete="off"
             />

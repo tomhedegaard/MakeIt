@@ -19,7 +19,7 @@ export type DailyCheckIn = {
   dateIso: string;
   /** The slot to log against, or the next slot when state="upcoming" */
   slot: MealSlot | null;
-  /** Time-window label for the active/next slot, e.g. "06–11" */
+  /** Time-window label for the active/next slot, e.g. "06-11" */
   slotWindow: string | null;
   /** The planned meal for that slot, if a plan exists */
   meal: Meal | null;
@@ -57,9 +57,9 @@ export type DailyCheckIn = {
 type SlotWindow = { slot: MealSlot; from: number; to: number; label: string };
 
 const SLOT_WINDOWS: SlotWindow[] = [
-  { slot: "morgen",  from: 6,  to: 11, label: "06–11" },
-  { slot: "frokost", from: 11, to: 15, label: "11–15" },
-  { slot: "aften",   from: 17, to: 22, label: "17–22" },
+  { slot: "morgen",  from: 6,  to: 11, label: "06-11" },
+  { slot: "frokost", from: 11, to: 15, label: "11-15" },
+  { slot: "aften",   from: 17, to: 22, label: "17-22" },
 ];
 
 /** Returns the active slot for the given local hour, or null if outside any window. */

@@ -58,7 +58,7 @@ export default function Stepper({
         onClick={dec}
         disabled={value <= min}
       >
-        –
+        −
       </button>
       <div className="stepper-value">
         <div className="stepper-num">

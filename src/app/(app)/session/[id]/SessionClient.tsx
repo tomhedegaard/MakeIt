@@ -309,7 +309,7 @@ export default function SessionClient({
           </div>
           <div className="bg-bg-2 p-4 text-center">
             <div className="eyebrow mb-1">{t("targets.rpe")}</div>
-            <div className="numeric text-xl">{set.targetRpe ? set.targetRpe : "—"}</div>
+            <div className="numeric text-xl">{set.targetRpe ? set.targetRpe : "-"}</div>
           </div>
         </section>
 

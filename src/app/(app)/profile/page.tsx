@@ -79,7 +79,7 @@ export default async function ProfilePage() {
                 </div>
                 <div className="flex items-baseline gap-1.5 mb-3">
                   <span className="numeric text-4xl">
-                    {l.currentE1rm != null ? l.currentE1rm : "—"}
+                    {l.currentE1rm != null ? l.currentE1rm : "-"}
                   </span>
                   <span className="text-fg-dim text-xs">{t("lifts.e1rmUnit")}</span>
                 </div>
@@ -239,7 +239,7 @@ export default async function ProfilePage() {
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <div className="numeric text-3xl">{f.aiScore ?? "—"}</div>
+                      <div className="numeric text-3xl">{f.aiScore ?? "-"}</div>
                       <div className="eyebrow">{t("formChecks.outOf")}</div>
                     </div>
                   </header>

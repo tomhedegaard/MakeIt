@@ -111,7 +111,7 @@ export default async function BillingPage({
               value={
                 crew?.currentPeriodEnd
                   ? new Date(crew.currentPeriodEnd).toLocaleDateString("da-DK")
-                  : "—"
+                  : "-"
               }
             />
           </div>

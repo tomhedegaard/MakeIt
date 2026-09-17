@@ -79,7 +79,7 @@ export default function OffPlanLogButton() {
                   Spiste noget andet
                 </h3>
                 <p className="text-xs text-fg-faint mt-1">
-                  Et hurtigt estimat tæller med — ærlighed slår en brudt streak.
+                  Et hurtigt estimat tæller med. Ærlighed slår en brudt streak.
                 </p>
               </div>
               <button

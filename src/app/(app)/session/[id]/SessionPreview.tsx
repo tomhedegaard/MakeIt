@@ -250,7 +250,7 @@ function formatSetTarget(
   if (reps > 0) parts.push(`${reps} reps`);
   if (weight > 0) parts.push(`${weight} kg`);
   if (rpe) parts.push(`RPE ${rpe}`);
-  return parts.length > 0 ? parts.join(" · ") : "—";
+  return parts.length > 0 ? parts.join(" · ") : "-";
 }
 
 function dominantView(lib: ExerciseLibrary): "front" | "back" {

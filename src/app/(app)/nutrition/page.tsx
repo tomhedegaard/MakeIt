@@ -374,10 +374,10 @@ function PlanView({
     <>
       {/* Macro / meta strip */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline rounded-lg overflow-hidden">
-        <Stat label={t("page.statKcal")} value={plan.dailyKcal ?? "—"} />
-        <Stat label={t("page.statProtein")} value={plan.dailyProteinG ?? "—"} />
-        <Stat label={t("page.statCarbs")} value={plan.dailyCarbsG ?? "—"} />
-        <Stat label={t("page.statFat")} value={plan.dailyFatG ?? "—"} />
+        <Stat label={t("page.statKcal")} value={plan.dailyKcal ?? "-"} />
+        <Stat label={t("page.statProtein")} value={plan.dailyProteinG ?? "-"} />
+        <Stat label={t("page.statCarbs")} value={plan.dailyCarbsG ?? "-"} />
+        <Stat label={t("page.statFat")} value={plan.dailyFatG ?? "-"} />
       </section>
 
       {/* Week strip */}
@@ -406,7 +406,7 @@ function PlanView({
                     {t("page.meals")}
                   </div>
                   <div className="numeric text-[11px] text-fg-dim mt-1.5">
-                    {dayKcal > 0 ? `${dayKcal} kcal` : "—"}
+                    {dayKcal > 0 ? `${dayKcal} kcal` : "-"}
                   </div>
                 </a>
               </li>

@@ -13,7 +13,7 @@ import { loadLessonBySlug } from "@/lib/data/lessons";
  * Spec: docs/superpowers/specs/2026-05-25-crew-coaching-pyramid-v0-design.md §8
  */
 function fmtDuration(seconds: number | null): string {
-  if (!seconds) return "—";
+  if (!seconds) return "-";
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
   return `${m}m ${s.toString().padStart(2, "0")}s`;

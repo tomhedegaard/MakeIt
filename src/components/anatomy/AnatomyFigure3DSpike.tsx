@@ -169,7 +169,7 @@ export default function AnatomyFigure3DSpike() {
       <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint max-w-xl">
         Spike: 3D-figuren extruder de eksisterende 2D SVG-paths via THREE.ExtrudeGeometry.
         Front + back er to separate slabs ryg-mod-ryg, så når du orbiterer bagom ser
-        du faktisk back-view&apos;ens musklayout — ikke bagsiden af front-extruderingen.
+        du faktisk back-view&apos;ens musklayout, ikke bagsiden af front-extruderingen.
       </p>
     </div>
   );
