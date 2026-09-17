@@ -36,6 +36,10 @@ const kalkDisplay = Big_Shoulders({
   subsets: ["latin"],
   display: "swap",
   preload: false,
+  // next/font has no automatic fallback metrics for Big Shoulders; opt out
+  // instead of letting the build warn on every run.
+  adjustFontFallback: false,
+  fallback: ["Arial Narrow", "Helvetica Neue", "sans-serif"],
 });
 
 const kalkSans = Geist({
