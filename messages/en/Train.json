@@ -43,10 +43,10 @@
   },
   "card": {
     "primaryPrefix": "Primary: ",
-    "metaEmpty": "—"
+    "metaEmpty": "-"
   },
   "formCheck": {
-    "limitReached": "AI form check — monthly limit reached",
+    "limitReached": "AI form check: monthly limit reached",
     "test": "Test your form with AI",
     "stats": "{cues} cues · {mistakes} common mistakes",
     "used": " · {used}/{limit} used",
