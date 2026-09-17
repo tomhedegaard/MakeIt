@@ -3,7 +3,7 @@
   "metaDescription": "The latest credible research: nutrition, movement and mental wellbeing.",
   "eyebrow": "MakeIt // HQ · Science",
   "title": "The latest evidence, filtered hard.",
-  "subtitle": "Credible research on nutrition, movement and mental wellbeing — only meta-analyses, systematic reviews and RCTs from whitelisted journals. Updated automatically every day.",
+  "subtitle": "Credible research on nutrition, movement and mental wellbeing. Only meta-analyses, systematic reviews and RCTs from whitelisted journals. Updated automatically every day.",
   "rss": "RSS",
   "filters": {
     "all": "All",
@@ -23,5 +23,5 @@
   "caveatLabel": "Caveat",
   "openAccess": "Open Access",
   "readSource": "Read the source →",
-  "disclaimer": "Research summaries — not individual health or nutrition advice."
+  "disclaimer": "Research summaries, not individual health or nutrition advice."
 }
