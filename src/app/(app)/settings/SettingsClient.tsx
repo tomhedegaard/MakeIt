@@ -13,6 +13,7 @@ import PushToggle from "@/components/push/PushToggle";
 import NativePushToggle from "@/components/push/NativePushToggle";
 import LanguageSelector from "@/components/LanguageSelector";
 import HrvSettingsSection from "@/components/hrv/HrvSettingsSection";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 type Status = { ok: boolean; text: string } | null;
 
@@ -101,20 +102,14 @@ export default function SettingsClient({
     <div className="space-y-6">
       {/* Language */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-4">
-        <div>
-          <div className="eyebrow mb-1">{tl("eyebrow")}</div>
-          <h2 className="font-display text-2xl">{tl("title")}</h2>
-        </div>
+        <SectionHeader eyebrow={tl("eyebrow")} title={tl("title")} />
         <p className="text-fg-dim text-sm max-w-md">{tl("description")}</p>
         <LanguageSelector />
       </section>
 
       {/* Profile */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-4">
-        <div>
-          <div className="eyebrow mb-1">{t("profile.eyebrow")}</div>
-          <h2 className="font-display text-2xl">{t("profile.title")}</h2>
-        </div>
+        <SectionHeader title={t("profile.title")} />
         <div className="grid gap-3 md:grid-cols-2">
           <Field label={t("profile.handleLabel")}>
             <div className="flex items-center gap-2">
@@ -163,10 +158,7 @@ export default function SettingsClient({
 
       {/* Notifications */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-4">
-        <div>
-          <div className="eyebrow mb-1">{t("notifications.eyebrow")}</div>
-          <h2 className="font-display text-2xl">{t("notifications.title")}</h2>
-        </div>
+        <SectionHeader title={t("notifications.title")} />
         <div className="rounded-xl border hairline px-4 py-3 flex items-start gap-4">
           <div className="flex-1">
             <div className="text-sm font-medium mb-1">
@@ -225,10 +217,7 @@ export default function SettingsClient({
 
       {/* Account info — read-only */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7">
-        <div className="mb-4">
-          <div className="eyebrow mb-1">{t("account.eyebrow")}</div>
-          <h2 className="font-display text-2xl">{t("account.title")}</h2>
-        </div>
+        <SectionHeader eyebrow={t("account.eyebrow")} title={t("account.title")} />
         <ul className="space-y-3 text-sm">
           <Row k={t("account.email")} v={settings.email ?? "—"} />
           <Row k={t("account.tier")} v={settings.tier} />
@@ -244,10 +233,7 @@ export default function SettingsClient({
 
       {/* Data export */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7">
-        <div className="mb-4">
-          <div className="eyebrow mb-1">{t("data.eyebrow")}</div>
-          <h2 className="font-display text-2xl">{t("data.title")}</h2>
-        </div>
+        <SectionHeader title={t("data.title")} />
         <p className="text-fg-dim text-sm mb-4 max-w-md">
           {t("data.description")}
         </p>
@@ -265,10 +251,7 @@ export default function SettingsClient({
         className="surface-2 rounded-2xl p-5 lg:p-7"
         style={{ borderColor: "var(--line-bright)" }}
       >
-        <div className="mb-4">
-          <div className="eyebrow mb-1">{t("danger.eyebrow")}</div>
-          <h2 className="font-display text-2xl">{t("danger.title")}</h2>
-        </div>
+        <SectionHeader title={t("danger.title")} />
         <p className="text-fg-dim text-sm mb-4 max-w-md">
           {t("danger.description")}
         </p>

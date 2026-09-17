@@ -13,7 +13,6 @@
     "prefs_save": "Could not save — please try again."
   },
   "profile": {
-    "eyebrow": "Profile",
     "title": "How the crew sees you",
     "handleLabel": "Handle",
     "displayNameLabel": "Display name",
@@ -23,7 +22,6 @@
     "save": "Save profile"
   },
   "notifications": {
-    "eyebrow": "Notifications",
     "title": "When we may reach out to you",
     "pushTitle": "Push reminders",
     "pushDescription": "A notification on your phone when it is time to log a meal or start a session. Requires you to allow notifications in the browser.",
@@ -45,7 +43,6 @@
     "memberSince": "Member since"
   },
   "data": {
-    "eyebrow": "Data",
     "title": "Export your own rows",
     "description": "Download a JSON file with the member-owned rows we can read under your login: profile, training, journal, mind-check, mental coach, HRV, nutrition, messages, weight, community, Reps and form checks. Not “everything in the universe” — your own rows. GDPR art. 20.",
     "exportNoteConnected": "Personal data export from {product}. Contains your own member rows we can read under your login (RLS). Contact {email} if something is missing or looks wrong.",
@@ -54,7 +51,6 @@
     "export": "Export my data ↓"
   },
   "danger": {
-    "eyebrow": "Danger zone",
     "title": "Delete your account",
     "description": "Permanent and irreversible. All sessions, posts, Reps and form checks are deleted. Any active Stripe subscription must be cancelled separately from the billing page first.",
     "delete": "Delete my account",

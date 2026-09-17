@@ -13,7 +13,6 @@
     "prefs_save": "Kunne ikke gemme — prøv igen."
   },
   "profile": {
-    "eyebrow": "Profil",
     "title": "Hvordan crewet ser dig",
     "handleLabel": "Kaldenavn",
     "displayNameLabel": "Vist navn",
@@ -23,7 +22,6 @@
     "save": "Gem profil"
   },
   "notifications": {
-    "eyebrow": "Notifikationer",
     "title": "Hvornår vi må skrive til dig",
     "pushTitle": "Push-påmindelser",
     "pushDescription": "Notifikation på telefonen når det er tid til at logge mad eller starte session. Kræver at du tillader notifikationer i browseren.",
@@ -45,7 +43,6 @@
     "memberSince": "Medlem siden"
   },
   "data": {
-    "eyebrow": "Data",
     "title": "Eksportér dine egne rækker",
     "description": "Download en JSON-fil med de medlemsrækker vi kan læse under dit login: profil, træning, journal, mind-check, mental coach, HRV, ernæring, beskeder, vægt, community, Reps og form-checks. Ikke «alt i universet» — dine egne rækker. GDPR art. 20.",
     "exportNoteConnected": "Personlig dataeksport fra {product}. Indeholder dine egne medlemsrækker vi kan læse under dit login (RLS). Kontakt {email} hvis noget mangler eller ser forkert ud.",
@@ -54,7 +51,6 @@
     "export": "Eksportér mine data ↓"
   },
   "danger": {
-    "eyebrow": "Farezone",
     "title": "Slet din konto",
     "description": "Permanent og uigenkaldelig. Alle sessioner, posts, Reps og form-checks slettes. Eventuelt aktivt Stripe-abonnement skal opsiges separat fra billing-siden inden.",
     "delete": "Slet min konto",
