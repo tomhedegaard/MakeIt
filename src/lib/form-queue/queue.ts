@@ -157,11 +157,11 @@ export function demoFormQueueItems(now = new Date()): FormQueueItem[] {
       setIndex: 2,
       sessionId: "sess-2026-05-05",
       aiScore: 79,
-      aiHeadline: "Stærkt løft — hyperekstension på toppen",
+      aiHeadline: "Stærkt løft, hyperekstension på toppen",
       aiPos: [
         "Bar holder kontakt med kroppen hele vejen op",
         "Lats engageret fra setup",
-        "God pace — ingen tøven ved knæene",
+        "God pace, ingen tøven ved knæene",
       ],
       aiNeg: [
         "Hyperextension i lock-out (læn 5° tilbage)",
@@ -170,7 +170,7 @@ export function demoFormQueueItems(now = new Date()): FormQueueItem[] {
       aiFix:
         'Lås ud med squeeze i baller, ikke ved at læne tilbage. Tænk "stå op" frem for "læn tilbage".',
       aiDraftedReply:
-        "Stærkt løft, Nina — baren holder kontakt hele vejen op. Du låner lidt for langt tilbage i toppen; lås ud ved at knibe ballerne, ikke ved at læne dig bagud.",
+        "Stærkt løft, Nina. Baren holder kontakt hele vejen op. Du låner lidt for langt tilbage i toppen; lås ud ved at knibe ballerne, ikke ved at læne dig bagud.",
     },
     pendingCreated,
   );
@@ -183,7 +183,7 @@ export function demoFormQueueItems(now = new Date()): FormQueueItem[] {
       setIndex: 4,
       sessionId: "sess-2026-05-05",
       aiScore: 84,
-      aiHeadline: "Solid sæt — let knæ-valgus i hullet",
+      aiHeadline: "Solid sæt, let knæ-valgus i hullet",
       aiPos: [
         "Bardepth ramt på alle 3 reps",
         "Konsistent bar-path",
@@ -198,7 +198,7 @@ export function demoFormQueueItems(now = new Date()): FormQueueItem[] {
 
   const reviewed = markFormQueueReviewed(reviewedBase, {
     notes:
-      "Enig. Næste session: pause-squat med 80%. Film fra siden. — Munk",
+      "Enig. Næste session: pause-squat med 80%. Film fra siden. Hilsen Munk",
     voiceNoteUrl: "demo:voice",
     voiceNoteDurationSec: 18,
     reviewedAt: reviewedAt.toISOString(),
@@ -213,12 +213,12 @@ export function demoFormQueueItems(now = new Date()): FormQueueItem[] {
       setIndex: 3,
       sessionId: "sess-2026-05-05",
       aiScore: 84,
-      aiHeadline: "Solid sæt — let knæ-valgus i hullet",
+      aiHeadline: "Solid sæt, let knæ-valgus i hullet",
       aiPos: ["Bardepth ramt på alle 3 reps", "Konsistent bar-path"],
       aiNeg: ["Højre knæ kollapser let indad på rep 2 og 3"],
       aiFix: 'Driv knæene aktivt udad i bunden ("spread the floor").',
       aiDraftedReply:
-        "Solidt sæt, Kasper — dybde ramt. Højre knæ falder lidt indad; driv knæene udad i bunden.",
+        "Solidt sæt, Kasper. Dybde ramt. Højre knæ falder lidt indad; driv knæene udad i bunden.",
     },
     new Date(now.getTime() - 1000 * 60 * 60 * 6),
   );
@@ -230,12 +230,12 @@ export function demoFormQueueItems(now = new Date()): FormQueueItem[] {
       exerciseName: "Paused Bench",
       setIndex: 1,
       aiScore: 87,
-      aiHeadline: "Solid pause-bench — kontroller ekscentrisk lidt mere",
+      aiHeadline: "Solid pause-bench, kontroller ekscentrisk lidt mere",
       aiPos: ["Solid pause i bunden", "Ben i gulvet hele sættet"],
       aiNeg: ["Lidt for hurtig på vej ned"],
       aiFix: "Tæl 3 sek på vej ned næste gang.",
       aiDraftedReply:
-        "Flot pause-bench, Maria — solid pause. Du falder lidt for hurtigt ned; tæl tre.",
+        "Flot pause-bench, Maria. Solid pause. Du falder lidt for hurtigt ned; tæl tre.",
     },
     new Date(now.getTime() - 1000 * 60 * 60 * 2),
   );
