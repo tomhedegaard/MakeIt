@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { TIERS as LADDER } from "@/lib/marketing/tiers";
 
 /**
  * Reps-simulator (UX-audit B3 + B4).
@@ -24,11 +25,7 @@ const EARN = {
   challenges: 1000, // pr. vundet månedlig challenge
 } as const;
 
-const TIERS = [
-  { key: "athlete", name: "Athlete", at: 1000 },
-  { key: "beast", name: "Beast", at: 5000 },
-  { key: "legend", name: "Legend", at: 15000 },
-] as const;
+const TIERS = LADDER.slice(1).map((t) => ({ key: t.key, name: t.name, at: t.from }));
 
 type Field = keyof typeof EARN;
 
