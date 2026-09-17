@@ -6,6 +6,11 @@ import { useTranslations } from "next-intl";
 import Container from "@/components/Container";
 import RepsSimulator from "@/components/marketing/RepsSimulator";
 import { PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
+import { TIERS as LADDER } from "@/lib/marketing/tiers";
+
+const fmt = (n: number) => n.toLocaleString("da-DK");
+const rangeOf = (i: number) =>
+  LADDER[i + 1] ? `${fmt(LADDER[i].from)} – ${fmt(LADDER[i + 1].from - 1)}` : `${fmt(LADDER[i].from)}+`;
 
 /**
  * Tier journey — scroll-driven visualization of the Reps tier
@@ -55,7 +60,7 @@ export default function TierJourney() {
     {
       num: "01",
       name: "Lifter",
-      range: "0 – 999",
+      range: rangeOf(0),
       tierKey: "lifter",
       description: t("lifter.description"),
       sigil: "▲",
@@ -70,7 +75,7 @@ export default function TierJourney() {
     {
       num: "02",
       name: "Athlete",
-      range: "1.000 – 4.999",
+      range: rangeOf(1),
       tierKey: "athlete",
       description: t("athlete.description"),
       sigil: "▲▲",
@@ -85,7 +90,7 @@ export default function TierJourney() {
     {
       num: "03",
       name: "Beast",
-      range: "5.000 – 14.999",
+      range: rangeOf(2),
       tierKey: "beast",
       description: t("beast.description"),
       sigil: "▲▲▲",
@@ -100,7 +105,7 @@ export default function TierJourney() {
     {
       num: "04",
       name: "Legend",
-      range: "15.000+",
+      range: rangeOf(3),
       tierKey: "legend",
       description: t("legend.description"),
       sigil: "▲▲▲▲",

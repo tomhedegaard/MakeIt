@@ -612,11 +612,11 @@
       },
       "wearables": {
         "q": "Which wearables does the HRV module support?",
-        "a": "WHOOP, Oura and Polar (H10 and the O20 series) are live. You connect via OAuth from settings — we never store your login details, only tokens encrypted at rest. Apple Watch support ships with the MakeIt iPhone app. Garmin is on the roadmap, but not in v1."
+        "a": "WHOOP, Oura and Polar (H10 and the O20 series) are live. You connect via OAuth from settings. We never store your login details, only tokens encrypted at rest. Apple Watch support ships with the MakeIt iPhone app. Garmin is on the roadmap, but not in v1."
       },
       "hrvScore": {
         "q": "Why don't I get an HRV score from 0 to 100?",
-        "a": "Because a number from 0 to 100 promises a precision that doesn't exist. We show your actual RMSSD in milliseconds, your own 60-day baseline band and a 5-bucket readiness ladder — so you see where you sit relative to your own normal, not a made-up scale. You also can't compare your HRV with other people's; healthy RMSSD ranges from roughly 10 to 200 ms depending on age, sex and shape."
+        "a": "Because a number from 0 to 100 promises a precision that doesn't exist. We show your actual RMSSD in milliseconds, your own 60-day baseline band and a 5-bucket readiness ladder, so you see where you sit relative to your own normal, not a made-up scale. You also can't compare your HRV with other people's; healthy RMSSD ranges from roughly 10 to 200 ms depending on age, sex and shape."
       },
       "hrvPrivacy": {
         "q": "Who sees my HRV data and lifestyle logs?",
@@ -674,5 +674,323 @@
     "belowBaseline": "Below baseline",
     "withinBaseline": "Within baseline",
     "aria": "Chart: 30 days of HRV readings in milliseconds RMSSD, ranging {low} to {high} ms, with a 7-day mean and a baseline band as reference range."
+  },
+  "kalk": {
+    "nav": {
+      "engine": "Engine",
+      "systems": "Systems",
+      "munk": "Munk",
+      "crew": "Crew",
+      "login": "Log in",
+      "cta": "Get access"
+    },
+    "hero": {
+      "heading": "Built for those who lift.",
+      "sub": "The engine reads your night and rewrites today's session before you get under the bar.",
+      "cta": "Get access",
+      "link": "See how the engine works",
+      "plateOld": "150",
+      "plateNew": "135",
+      "plateUnit": "kg",
+      "phoneCaption": "Today. The engine rewrote the session."
+    },
+    "engine": {
+      "eyebrow": "Every morning",
+      "heading": "The session gets rewritten while you sleep.",
+      "sub": "The engine reads last night's HRV, sleep, mind check and your recent sessions. Then it adjusts weight and volume.",
+      "night": {
+        "label": "Last night",
+        "sample": "Sample data",
+        "t0": "23:40",
+        "t1": "02:00",
+        "t2": "05:30",
+        "t3": "06:45",
+        "legendHrv": "HRV, ms",
+        "legendSleep": "Sleep stages",
+        "legendBand": "Your band"
+      },
+      "steps": {
+        "sleep": {
+          "time": "05:30:02",
+          "source": "Oura",
+          "label": "Sleep",
+          "value": "5 h 12 m",
+          "note": "2 h 18 m under your target. Awake twice after 3 am."
+        },
+        "hrv": {
+          "time": "05:30:04",
+          "source": "WHOOP",
+          "label": "HRV",
+          "value": "48",
+          "unit": "ms",
+          "note": "Below your band of 54 to 68 ms. Third day in a row of decline."
+        },
+        "stress": {
+          "time": "05:30:05",
+          "source": "Mind check yesterday 21:40",
+          "label": "Stress",
+          "value": "4",
+          "unit": "/5",
+          "note": "Twice as high as your normal week."
+        },
+        "decision": {
+          "time": "05:30:07",
+          "source": "Engine",
+          "label": "Decision",
+          "value": "Top set down",
+          "lift": "Back squat",
+          "from": "150 kg",
+          "to": "135 kg",
+          "note": "Same exercises, same week. Lighter top set so you can come back tomorrow."
+        }
+      },
+      "keepOriginal": "Keep original",
+      "keepOriginalNote": "You always see why, and you can always keep the original plan.",
+      "disclaimer": "HRV is a recovery signal, not a diagnosis."
+    },
+    "systems": {
+      "heading": "Four systems. One session.",
+      "sub": "Body, food, heart and mind talk to each other. What happens in one place moves something in another.",
+      "body": {
+        "kicker": "Body",
+        "heading": "The program moves with you.",
+        "text": "Four week blocks. Top set, backoff and rest set by the engine every morning.",
+        "stat": "16",
+        "statLabel": "Sets today"
+      },
+      "food": {
+        "kicker": "Food",
+        "heading": "Fuel.",
+        "quote": "Olive oil and butter, not rapeseed oil. Skyr and cottage cheese, not protein bars.",
+        "macro": "2,740 kcal · 182 g protein",
+        "p": "Protein",
+        "c": "Carbs",
+        "f": "Fat"
+      },
+      "heart": {
+        "kicker": "Heart",
+        "heading": "Your band, not an average.",
+        "now": "HRV this morning",
+        "avg": "Your average",
+        "disclaimer": "HRV is a recovery signal, not a diagnosis."
+      },
+      "mind": {
+        "kicker": "Mind",
+        "heading": "The head is part of the session.",
+        "text": "60 seconds. How is your head today?",
+        "energy": "Energy",
+        "stress": "Stress",
+        "focus": "Focus"
+      },
+      "rack": {
+        "heading": "The app, in daylight.",
+        "sub": "Swipe, scroll or use the arrow keys.",
+        "sample": "Sample data",
+        "prev": "Previous screen",
+        "next": "Next screen",
+        "listLabel": "Five app screens"
+      }
+    },
+    "munk": {
+      "heading": "A human signs off.",
+      "sub": "Mikael Munk is head coach. He reads your lifts.",
+      "portraitAlt": "Mikael Munk, head coach",
+      "flow": [
+        {
+          "t": "+0 h",
+          "label": "You record the set in the app"
+        },
+        {
+          "t": "+4 min",
+          "label": "AI writes a draft"
+        },
+        {
+          "t": "+6 h",
+          "label": "Munk corrects and signs off"
+        },
+        {
+          "t": "Max",
+          "label": "24 hours, every time"
+        }
+      ],
+      "card": {
+        "kicker": "Form check",
+        "lift": "Back squat · set 3",
+        "draftLabel": "AI draft",
+        "draft": "Slight knee valgus visible during the eccentric phase.",
+        "final": "Knees cave in at the bottom. Think: push the floor apart.",
+        "signed": "Munk",
+        "answered": "answered in 6 h",
+        "reference": "Reference",
+        "yours": "Your recording",
+        "signatureLabel": "Signature, Mikael Munk"
+      }
+    },
+    "crew": {
+      "eyebrow": "The crew",
+      "heading": "Load the bar, one plate at a time.",
+      "sub": "Reps are earned by training, sending form checks, setting PRs and helping others.",
+      "here": "You are here",
+      "coachSchool": "Coach School opens",
+      "tiers": {
+        "lifter": "You are in. Every session counts.",
+        "athlete": "Form checks and PRs earn the most reps.",
+        "beast": "Coach School opens. You learn to answer others.",
+        "legend": "The top of the crew."
+      },
+      "meterLabel": "Athlete · 1,240 of 5,000 reps",
+      "meterNote": "Example",
+      "earnHeading": "How reps are earned",
+      "earn": {
+        "sessions": "Sessions",
+        "formChecks": "Form checks",
+        "prs": "PRs",
+        "help": "Helping others"
+      }
+    },
+    "voices": {
+      "enabled": "false",
+      "heading": "From the crew."
+    },
+    "access": {
+      "eyebrow": "Access",
+      "heading": "Join the list.",
+      "sub": "Invite only. Spots open in small groups.",
+      "worksWith": "Works with WHOOP, Oura, Polar and Apple Watch through the iPhone app.",
+      "emailLabel": "Your email",
+      "emailPlaceholder": "name@domain.com",
+      "cta": "Sign me up",
+      "pending": "One moment…",
+      "done": "You are on the list. We will write when the next group opens.",
+      "error": "That did not work. Check the email and try again.",
+      "fine": "Invites only. No newsletters."
+    },
+    "faq": {
+      "heading": "Questions.",
+      "sub": "Missing an answer? Write to Munk.",
+      "inviteOnly": {
+        "q": "Why is it invite only?",
+        "a": "Because Munk himself signs off on the answers. That is why we open in small groups."
+      }
+    },
+    "footer": {
+      "slogan": "Made for those who lift.",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "sample": "Numbers and screens on this page are sample data."
+    },
+    "screens": {
+      "time": "05:31",
+      "program": "STR-12 · week 4",
+      "dayTitle": "Day A: Squat",
+      "engineStamp": "Engine · 05:30",
+      "munkInitials": "MM",
+      "pause": "Pause",
+      "play": "Play",
+      "dashboard": {
+        "aria": "App screen, Today: the engine has rewritten today's session. Back squat top set from 150 to 135 kg, because last night's HRV sat below your band.",
+        "greeting": "Good morning",
+        "day": "Wednesday",
+        "streak": "12 day streak",
+        "sessionSub": "Squat · top set @ RPE 8, 3×3 backoff",
+        "exercisesValue": "5",
+        "setsValue": "16",
+        "timeValue": "58m",
+        "munkReply": "Mikael Munk answered 1 form check",
+        "volumeLabel": "Volume 4 weeks",
+        "volumeValue": "18,420 kg",
+        "prLabel": "PRs",
+        "prValue": "3",
+        "repsLabel": "Reps",
+        "repsValue": "1,240"
+      },
+      "session": {
+        "aria": "App screen, live session in dark mode: back squat, set 3 of 3 at 135 kg, with a button to log the set and record it for Munk.",
+        "day": "Day A",
+        "targetReps": "3 reps",
+        "targetRpe": "RPE 8",
+        "set": "Set {n}",
+        "setValue": "135 × 3",
+        "sendTo": "Sent to coach Munk",
+        "restValue": "2:30"
+      },
+      "hrv": {
+        "aria": "App screen, HRV: 48 ms this morning against an average of 61 ms, below your personal band. The engine eases today's squat top set.",
+        "title": "Recovery",
+        "avgValue": "61 ms",
+        "range": "14 nights",
+        "sleepValue": "5h 12m",
+        "rhrLabel": "Resting HR",
+        "rhrValue": "54",
+        "sourceLabel": "Source"
+      },
+      "food": {
+        "aria": "App screen, Food: today's plan on a training day with 2,740 kcal and 182 g protein, three meals and a shopping list.",
+        "trainingDay": "Training day",
+        "kcal": "2,740",
+        "kcalUnit": "kcal",
+        "protein": "182 g protein",
+        "breakfast": "Skyr, oats, blueberries",
+        "lunch": "Rye bread, eggs, avocado",
+        "dinner": "Salmon, potatoes, beans",
+        "shopping": "Shopping list · 14 items"
+      },
+      "mind": {
+        "aria": "App screen, 60 second mind check: energy, stress and focus on a scale from 1 to 5, a journal and the last 7 days.",
+        "title": "Mind check",
+        "journal": "Journal",
+        "journalEntry": "Slept short, but my head is clear. Looking forward to squats.",
+        "checkIn": "Check in",
+        "week": "Last 7 days"
+      },
+      "formCheck": {
+        "aria": "App screen, Form check: the member's own recording of set 3 next to a reference movement, and Munk's signed reply.",
+        "videoLabel": "Reference movement: back squat",
+        "duration": "0:22",
+        "next": "Record next set"
+      },
+      "decision": {
+        "aria": "App screen, the engine's decision: today's session has been rewritten. Back squat top set from 150 to 135 kg, backoff from 128 to 115 kg. Why: sleep, HRV and stress. You can keep the original plan.",
+        "heading": "Today's session is rewritten.",
+        "topSet": "Top set",
+        "backoff": "Backoff 3×3",
+        "backoffFrom": "128 kg",
+        "backoffTo": "115 kg",
+        "timeTo": "52m",
+        "why": "Why",
+        "restOfWeek": "Rest of the week",
+        "dayB": "Day B: Bench",
+        "dayBStatus": "Unchanged",
+        "dayC": "Day C: Deadlift",
+        "dayCStatus": "Reviewed Thursday"
+      },
+      "sleep": {
+        "aria": "App screen, Sleep: 5 hours 12 minutes last night, 2 hours 18 minutes under your goal, with sleep stages and the last 7 nights.",
+        "goal": "Goal 7 h 30 m, 2 h 18 m under",
+        "awake": "Awake",
+        "rem": "REM",
+        "light": "Light",
+        "deep": "Deep",
+        "start": "23:48",
+        "end": "05:02",
+        "inBed": "In bed",
+        "deepSleep": "Deep sleep",
+        "deepValue": "38 m",
+        "remValue": "54 m",
+        "awakeValue": "2 times",
+        "nights": "7 nights",
+        "synced": "Synced from Oura at 05:14"
+      },
+      "mindChecked": {
+        "aria": "App screen, mind check from last night: energy 3 of 5, stress 4 of 5, focus 3 of 5.",
+        "heading": "Your head last night.",
+        "energyValue": "3/5",
+        "stressValue": "4/5",
+        "focusValue": "3/5",
+        "trend": "Stress, 7 days. Your average sits at 2 of 5.",
+        "journalEntry": "Deadline moved to Friday. Slept badly after 3 am.",
+        "checkedIn": "Checked in 21:40"
+      }
+    }
   }
 }

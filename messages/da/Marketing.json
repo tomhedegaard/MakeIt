@@ -612,11 +612,11 @@
       },
       "wearables": {
         "q": "Hvilke wearables understøtter HRV-modulet?",
-        "a": "WHOOP, Oura og Polar (H10 og O20-serien) er live. Du forbinder via OAuth fra indstillingerne — vi opbevarer aldrig dine login-detaljer, kun tokens som er krypteret i hvile. Apple Watch-support kommer med MakeIt-appen til iPhone. Garmin er på roadmap'en, men ikke i v1."
+        "a": "WHOOP, Oura og Polar (H10 og O20-serien) er live. Du forbinder via OAuth fra indstillingerne. Vi opbevarer aldrig dine login-detaljer, kun tokens som er krypteret i hvile. Apple Watch-support kommer med MakeIt-appen til iPhone. Garmin er på roadmap'en, men ikke i v1."
       },
       "hrvScore": {
         "q": "Hvorfor får jeg ikke en HRV-score fra 0 til 100?",
-        "a": "Fordi et tal fra 0 til 100 lover en præcision, der ikke findes. Vi viser din faktiske RMSSD i millisekunder, dit eget 60-dages baseline-bånd og en 5-bucket readiness-ladder — så du ser hvor du ligger i forhold til din egen normal, ikke en opfundet skala. Du kan heller ikke sammenligne din HRV med andres; sundt RMSSD spænder fra ca. 10 til 200 ms afhængigt af alder, køn og form."
+        "a": "Fordi et tal fra 0 til 100 lover en præcision, der ikke findes. Vi viser din faktiske RMSSD i millisekunder, dit eget 60-dages baseline-bånd og en 5-bucket readiness-ladder, så du ser hvor du ligger i forhold til din egen normal, ikke en opfundet skala. Du kan heller ikke sammenligne din HRV med andres; sundt RMSSD spænder fra ca. 10 til 200 ms afhængigt af alder, køn og form."
       },
       "hrvPrivacy": {
         "q": "Hvem ser min HRV-data og mine livsstil-logs?",
@@ -674,5 +674,323 @@
     "belowBaseline": "Under baseline",
     "withinBaseline": "Inden for baseline",
     "aria": "Graf: 30 dages HRV-aflæsninger i millisekunder RMSSD, fra {low} til {high} ms, med 7-dages gennemsnit og et baseline-bånd som referenceområde."
+  },
+  "kalk": {
+    "nav": {
+      "engine": "Motoren",
+      "systems": "Systemer",
+      "munk": "Munk",
+      "crew": "Crew",
+      "login": "Log ind",
+      "cta": "Få adgang"
+    },
+    "hero": {
+      "heading": "Bygget til dem der løfter.",
+      "sub": "Motoren læser din nat og skriver dagens pas om, før du står under stangen.",
+      "cta": "Få adgang",
+      "link": "Se hvordan motoren virker",
+      "plateOld": "150",
+      "plateNew": "135",
+      "plateUnit": "kg",
+      "phoneCaption": "I dag. Motoren har skrevet passet om."
+    },
+    "engine": {
+      "eyebrow": "Hver morgen",
+      "heading": "Passet bliver skrevet om, mens du sover.",
+      "sub": "Motoren læser nattens HRV, søvn, mind-check og dine seneste pas. Så justerer den vægt og volumen.",
+      "night": {
+        "label": "I nat",
+        "sample": "Eksempeldata",
+        "t0": "23:40",
+        "t1": "02:00",
+        "t2": "05:30",
+        "t3": "06:45",
+        "legendHrv": "HRV, ms",
+        "legendSleep": "Søvnfaser",
+        "legendBand": "Dit bånd"
+      },
+      "steps": {
+        "sleep": {
+          "time": "05:30:02",
+          "source": "Oura",
+          "label": "Søvn",
+          "value": "5 t 12 m",
+          "note": "2 t 18 m under dit mål. Vågen to gange efter kl. 03."
+        },
+        "hrv": {
+          "time": "05:30:04",
+          "source": "WHOOP",
+          "label": "HRV",
+          "value": "48",
+          "unit": "ms",
+          "note": "Under dit bånd på 54 til 68 ms. Tredje dag i træk med fald."
+        },
+        "stress": {
+          "time": "05:30:05",
+          "source": "Mind-check i går 21:40",
+          "label": "Stress",
+          "value": "4",
+          "unit": "/5",
+          "note": "Dobbelt så højt som din normale uge."
+        },
+        "decision": {
+          "time": "05:30:07",
+          "source": "Motoren",
+          "label": "Beslutning",
+          "value": "Topsæt ned",
+          "lift": "Back squat",
+          "from": "150 kg",
+          "to": "135 kg",
+          "note": "Samme øvelser, samme uge. Lettere topsæt, så du kan komme igen i morgen."
+        }
+      },
+      "keepOriginal": "Behold original",
+      "keepOriginalNote": "Du ser altid hvorfor, og du kan altid beholde den oprindelige plan.",
+      "disclaimer": "HRV er et restitutionssignal, ikke en diagnose."
+    },
+    "systems": {
+      "heading": "Fire systemer. Ét pas.",
+      "sub": "Krop, mad, hjerte og sind taler sammen. Det der sker ét sted, flytter noget et andet sted.",
+      "body": {
+        "kicker": "Krop",
+        "heading": "Programmet flytter sig med dig.",
+        "text": "Blokke på fire uger. Topsæt, backoff og hvil sat af motoren hver morgen.",
+        "stat": "16",
+        "statLabel": "Sæt i dag"
+      },
+      "food": {
+        "kicker": "Mad",
+        "heading": "Brændstof.",
+        "quote": "Olivenolie og smør, ikke rapsolie. Skyr og hytteost, ikke proteinbarer.",
+        "macro": "2.740 kcal · 182 g protein",
+        "p": "Protein",
+        "c": "Kulhydrat",
+        "f": "Fedt"
+      },
+      "heart": {
+        "kicker": "Hjerte",
+        "heading": "Dit bånd, ikke et gennemsnit.",
+        "now": "HRV i morges",
+        "avg": "Dit snit",
+        "disclaimer": "HRV er et restitutionssignal, ikke en diagnose."
+      },
+      "mind": {
+        "kicker": "Sind",
+        "heading": "Hovedet er en del af passet.",
+        "text": "60 sekunder. Hvordan har hovedet det i dag?",
+        "energy": "Energi",
+        "stress": "Stress",
+        "focus": "Fokus"
+      },
+      "rack": {
+        "heading": "Appen, i dagslys.",
+        "sub": "Swipe, scroll eller brug piletasterne.",
+        "sample": "Eksempeldata",
+        "prev": "Forrige skærm",
+        "next": "Næste skærm",
+        "listLabel": "Fem app-skærme"
+      }
+    },
+    "munk": {
+      "heading": "Et menneske skriver under.",
+      "sub": "Mikael Munk er hovedcoach. Han læser dine løft.",
+      "portraitAlt": "Mikael Munk, hovedcoach",
+      "flow": [
+        {
+          "t": "+0 t",
+          "label": "Du optager sættet i appen"
+        },
+        {
+          "t": "+4 min",
+          "label": "AI skriver et udkast"
+        },
+        {
+          "t": "+6 t",
+          "label": "Munk retter og skriver under"
+        },
+        {
+          "t": "Maks",
+          "label": "24 timer, hver gang"
+        }
+      ],
+      "card": {
+        "kicker": "Form-check",
+        "lift": "Back squat · sæt 3",
+        "draftLabel": "AI-udkast",
+        "draft": "Der ses let valgus i knæleddet under den excentriske fase.",
+        "final": "Knæene falder ind i bunden. Tænk: skub gulvet fra hinanden.",
+        "signed": "Munk",
+        "answered": "svaret på 6 t",
+        "reference": "Reference",
+        "yours": "Din optagelse",
+        "signatureLabel": "Underskrift, Mikael Munk"
+      }
+    },
+    "crew": {
+      "eyebrow": "Crewet",
+      "heading": "Læs på, en skive ad gangen.",
+      "sub": "Reps optjenes ved at træne, sende form-checks, sætte PR'er og hjælpe andre.",
+      "here": "Du er her",
+      "coachSchool": "Coach School åbner",
+      "tiers": {
+        "lifter": "Du er med. Hvert pas tæller.",
+        "athlete": "Form-checks og PR'er giver flest reps.",
+        "beast": "Coach School åbner. Du lærer at svare andre.",
+        "legend": "Toppen af crewet."
+      },
+      "meterLabel": "Athlete · 1.240 af 5.000 reps",
+      "meterNote": "Eksempel",
+      "earnHeading": "Sådan optjenes reps",
+      "earn": {
+        "sessions": "Pas",
+        "formChecks": "Form-checks",
+        "prs": "PR'er",
+        "help": "Hjælp til andre"
+      }
+    },
+    "voices": {
+      "enabled": "false",
+      "heading": "Fra crewet."
+    },
+    "access": {
+      "eyebrow": "Adgang",
+      "heading": "Skriv dig på listen.",
+      "sub": "Invite-only. Pladser åbnes i små hold.",
+      "worksWith": "Virker med WHOOP, Oura, Polar og Apple Watch via iPhone-appen.",
+      "emailLabel": "Din email",
+      "emailPlaceholder": "navn@domæne.dk",
+      "cta": "Skriv mig op",
+      "pending": "Et øjeblik…",
+      "done": "Du står på listen. Vi skriver, når næste hold åbner.",
+      "error": "Det virkede ikke. Tjek emailen og prøv igen.",
+      "fine": "Kun invites. Ingen nyhedsbreve."
+    },
+    "faq": {
+      "heading": "Spørgsmål.",
+      "sub": "Mangler du et svar, så skriv til Munk.",
+      "inviteOnly": {
+        "q": "Hvorfor er det invite-only?",
+        "a": "Fordi Munk selv skriver under på svarene. Derfor åbner vi i små hold."
+      }
+    },
+    "footer": {
+      "slogan": "Made for those who lift.",
+      "privacy": "Privatliv",
+      "terms": "Vilkår",
+      "sample": "Tal og skærme på siden er eksempeldata."
+    },
+    "screens": {
+      "time": "05:31",
+      "program": "STR-12 · uge 4",
+      "dayTitle": "Dag A: Squat",
+      "engineStamp": "Motoren · 05:30",
+      "munkInitials": "MM",
+      "pause": "Pause",
+      "play": "Afspil",
+      "dashboard": {
+        "aria": "App-skærm, I dag: motoren har skrevet dagens pas om. Back squat topsæt fra 150 til 135 kg, fordi nattens HRV lå under dit bånd.",
+        "greeting": "God morgen",
+        "day": "Onsdag",
+        "streak": "Stribe 12 dage",
+        "sessionSub": "Squat · topsæt @ RPE 8, 3×3 backoff",
+        "exercisesValue": "5",
+        "setsValue": "16",
+        "timeValue": "58m",
+        "munkReply": "Mikael Munk har besvaret 1 form-check",
+        "volumeLabel": "Volumen 4 uger",
+        "volumeValue": "18.420 kg",
+        "prLabel": "PR'er",
+        "prValue": "3",
+        "repsLabel": "Reps",
+        "repsValue": "1.240"
+      },
+      "session": {
+        "aria": "App-skærm, live session i mørkt tema: back squat, sæt 3 af 3 på 135 kg, med knap til at logge sættet og optage det til Munk.",
+        "day": "Dag A",
+        "targetReps": "3 reps",
+        "targetRpe": "RPE 8",
+        "set": "Sæt {n}",
+        "setValue": "135 × 3",
+        "sendTo": "Sendes til coach Munk",
+        "restValue": "2:30"
+      },
+      "hrv": {
+        "aria": "App-skærm, HRV: 48 ms i morges mod et snit på 61 ms, under dit personlige bånd. Motoren letter dagens squat-topsæt.",
+        "title": "Restitution",
+        "avgValue": "61 ms",
+        "range": "14 nætter",
+        "sleepValue": "5t 12m",
+        "rhrLabel": "Hvilepuls",
+        "rhrValue": "54",
+        "sourceLabel": "Kilde"
+      },
+      "food": {
+        "aria": "App-skærm, Mad: dagens plan på en træningsdag med 2.740 kcal og 182 g protein, tre måltider og en indkøbsliste.",
+        "trainingDay": "Træningsdag",
+        "kcal": "2.740",
+        "kcalUnit": "kcal",
+        "protein": "182 g protein",
+        "breakfast": "Skyr, havre, blåbær",
+        "lunch": "Rugbrød, æg, avocado",
+        "dinner": "Laks, kartofler, bønner",
+        "shopping": "Indkøbsliste · 14 varer"
+      },
+      "mind": {
+        "aria": "App-skærm, Mind-check på 60 sekunder: energi, stress og fokus på en skala fra 1 til 5, en journal og de sidste 7 dage.",
+        "title": "Mind-check",
+        "journal": "Journal",
+        "journalEntry": "Sov kort, men hovedet er klart. Glæder mig til squat.",
+        "checkIn": "Tjek ind",
+        "week": "Sidste 7 dage"
+      },
+      "formCheck": {
+        "aria": "App-skærm, Form-check: medlemmets egen optagelse af sæt 3 ved siden af en referencebevægelse, og Munks underskrevne svar.",
+        "videoLabel": "Referencebevægelse: back squat",
+        "duration": "0:22",
+        "next": "Optag næste sæt"
+      },
+      "decision": {
+        "aria": "App-skærm, Motorens beslutning: dagens pas er skrevet om. Back squat topsæt fra 150 til 135 kg, backoff fra 128 til 115 kg. Hvorfor: søvn, HRV og stress. Du kan beholde den oprindelige plan.",
+        "heading": "Dagens pas er skrevet om.",
+        "topSet": "Topsæt",
+        "backoff": "Backoff 3×3",
+        "backoffFrom": "128 kg",
+        "backoffTo": "115 kg",
+        "timeTo": "52m",
+        "why": "Hvorfor",
+        "restOfWeek": "Resten af ugen",
+        "dayB": "Dag B: Bænk",
+        "dayBStatus": "Uændret",
+        "dayC": "Dag C: Dødløft",
+        "dayCStatus": "Vurderes torsdag"
+      },
+      "sleep": {
+        "aria": "App-skærm, Søvn: 5 timer 12 minutter i nat, 2 timer 18 minutter under målet, med søvnfaser og de sidste 7 nætter.",
+        "goal": "Mål 7 t 30 m, 2 t 18 m under",
+        "awake": "Vågen",
+        "rem": "REM",
+        "light": "Let",
+        "deep": "Dyb",
+        "start": "23:48",
+        "end": "05:02",
+        "inBed": "I seng",
+        "deepSleep": "Dyb søvn",
+        "deepValue": "38 m",
+        "remValue": "54 m",
+        "awakeValue": "2 gange",
+        "nights": "7 nætter",
+        "synced": "Synket fra Oura kl. 05:14"
+      },
+      "mindChecked": {
+        "aria": "App-skærm, Mind-check fra i går aftes: energi 3 af 5, stress 4 af 5, fokus 3 af 5.",
+        "heading": "Hovedet i går aftes.",
+        "energyValue": "3/5",
+        "stressValue": "4/5",
+        "focusValue": "3/5",
+        "trend": "Stress, 7 dage. Dit snit ligger på 2 af 5.",
+        "journalEntry": "Deadline flyttet til fredag. Sov dårligt efter kl. 03.",
+        "checkedIn": "Tjekket ind 21:40"
+      }
+    }
   }
 }
