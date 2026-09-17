@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 
 const layout = readFileSync(new URL("./layout.tsx", import.meta.url), "utf8");
 const session = readFileSync(new URL("./session/[id]/page.tsx", import.meta.url), "utf8");
+const sessionLoading = readFileSync(new URL("./session/[id]/loading.tsx", import.meta.url), "utf8");
+const appLoading = readFileSync(new URL("./loading.tsx", import.meta.url), "utf8");
 
 describe("app theme scopes (spec §2, §6)", () => {
   it("runs the member app in Kalk with a light browser chrome", () => {
@@ -25,5 +27,15 @@ describe("app theme scopes (spec §2, §6)", () => {
     expect(session).toMatch(
       /export const metadata[\s\S]*?appleWebApp: \{[^}]*capable: true[^}]*statusBarStyle: "black-translucent"[^}]*title: COMPANY\.name/,
     );
+  });
+
+  // No light flash before the dark session: the session's own boundary is
+  // Nat, and the (app) boundary (the first one a dynamic prefetch reaches)
+  // turns Nat on /session too. Both share one skeleton.
+  it("shows the loading skeleton in Nat on /session", () => {
+    expect(sessionLoading).toContain('<ThemeScope theme="nat" className="minh-dvh">');
+    expect(sessionLoading).toContain("<AppLoadingSkeleton");
+    expect(appLoading).toContain("<AppLoadingSkeleton");
+    expect(appLoading).toContain("<LoadingTheme");
   });
 });

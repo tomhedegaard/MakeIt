@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -37,8 +37,35 @@ export default function AppShell({
   const pathname = usePathname();
   const t = useTranslations("Nav");
   const menuRef = useRef<HTMLDetailsElement>(null);
-  // <details> works without JS; with JS, close it once a link is chosen.
+  const summaryRef = useRef<HTMLElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  // <details> works without JS; with JS, close it once a link is chosen,
+  // on any route change, on Escape and on a press outside.
   const closeMenu = () => menuRef.current?.removeAttribute("open");
+
+  useEffect(() => {
+    menuRef.current?.removeAttribute("open");
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (!menuRef.current?.contains(e.target as Node)) {
+        menuRef.current?.removeAttribute("open");
+      }
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      menuRef.current?.removeAttribute("open");
+      summaryRef.current?.focus();
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
   // Immersive mode for the active workout — hide chrome.
   const immersive = pathname?.startsWith("/session");
 
@@ -139,7 +166,7 @@ export default function AppShell({
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         {/* Mobile top header — outside the scrollport. */}
-        <header className="lg:hidden flex h-14 shrink-0 items-center justify-between px-5 border-b hairline z-30 bg-bg/85 backdrop-blur">
+        <header className="lg:hidden relative flex h-14 shrink-0 items-center justify-between px-5 border-b hairline z-30 bg-bg/85 backdrop-blur">
           <Logo />
           <div className="flex items-center gap-3">
             {/* Messages — kept one-tap on mobile after the tab bar
@@ -168,10 +195,16 @@ export default function AppShell({
             </Link>
             {/* Header menu (spec §6): the five tabs leave Me, Reps, HRV
                 and Science here. */}
-            <details ref={menuRef} data-mobile-menu className="relative">
+            <details
+              ref={menuRef}
+              data-mobile-menu
+              className="relative z-10"
+              onToggle={(e) => setMenuOpen(e.currentTarget.open)}
+            >
               <summary
+                ref={summaryRef}
                 className="size-9 rounded-full surface-2 flex items-center justify-center text-xs font-mono uppercase cursor-pointer list-none [&::-webkit-details-marker]:hidden"
-                aria-label={t("shell.myProfile")}
+                aria-label={t("shell.menu")}
               >
                 {member.handle.slice(0, 2)}
               </summary>
