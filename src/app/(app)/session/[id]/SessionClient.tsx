@@ -16,6 +16,7 @@ import RpeSelect from "@/components/ui/RpeSelect";
 import RestTimer from "@/components/ui/RestTimer";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
+import SectionHeader from "@/components/ui/SectionHeader";
 import FormCheckThread from "@/components/form-check/FormCheckThread";
 import {
   demoFormQueueItems,
@@ -428,8 +429,9 @@ export default function SessionClient({
       <Sheet open={doneOpen} onOpenChange={setDoneOpen}>
         <SheetContent>
           <div className="text-center pb-4">
-            <div className="eyebrow mb-3">{t("done.eyebrow")}</div>
-            <h2 className="font-display text-4xl mb-2">{t("done.title")}</h2>
+            <div className="flex justify-center">
+              <SectionHeader eyebrow={t("done.eyebrow")} title={t("done.title")} />
+            </div>
             <p className="text-fg-dim text-sm mb-6 px-2">
               {t("done.body", { sets: completedSets })}
             </p>
