@@ -1,6 +1,6 @@
 # Kalk: nyt visuelt sprog for landing og app
 
-**Dato:** 2026-09-17 · **Spec-revision:** 1
+**Dato:** 2026-09-17 · **Spec-revision:** 2 (D8 rettet: "Behold original" findes allerede. D4 og D5 besluttet.)
 **Status:** Retning valgt af Tom (koncept B "Kalk" med udvalgte elementer fra A og C). Åbne beslutninger i §7.
 **Branch:** `claude/kalk-redesign` (bygger på `claude/design-phase0-quickfixes` @ `7209696`)
 **Forudsætninger:** design review 2026-09-16, koncepterne A, B og C (links i §9)
@@ -20,7 +20,8 @@
 | `next/font/google` har `Big_Shoulders` (variabel, 100-900), `Geist` og `Geist_Mono` | `node_modules/next/dist/compiled/@next/font/dist/google/font-data.json`. Bemærk: familien hedder nu "Big Shoulders", ikke "Big Shoulders Display". |
 | Grain-laget bruger `mix-blend-mode: overlay` med lys støj og er tunet til mørk baggrund | `globals.css:204-215` |
 | Capacitor-shells er sat til mørk baggrund | `capacitor.config.ts:23,36` (`#0A0A0B`) |
-| Motoren har **ingen** funktion til at afvise en ændring. Der er intet "behold oprindelig plan" | `src/lib/adaptive/*` og `src/components/adaptive/*`: ingen decline/revert-sti. `apply.ts` anvender aktive tilpasninger. |
+| **"Behold original" findes allerede.** Medlemmet kan afvise motorens tilpasning på session-skærmen. Valget skrives til `hrv_session_modifiers.accepted_by_member = false`, og `applyAdaptationToSession` kører den uændrede session. Rev. 1 påstod fejlagtigt det modsatte. | `src/components/adaptive/AdaptationCard.tsx:37-43,158`, `src/app/(app)/session/[id]/actions.ts:117-176`, FAQ `optOutAdaptive` |
+| Reps-grænserne 1.000, 5.000 og 15.000 er hardcodet to steder på landingen. Tier gemmes i databasen (`members.tier`). | `TierJourney.tsx:27-29`, `RepsSimulator.tsx:28-30`, `src/lib/auth.ts:21` |
 | Der findes allerede en begrundelses-strimmel til motorændringer | `src/components/adaptive/AdaptiveReasonStrip.tsx`, `engine-strip.ts`. A2-chips bygges oven på den, ikke ved siden af. |
 | Kalk-koncept B's krop- og mad-farver fejler AA som 11 px tekst på `#E7E9EB` (4,25 og 4,12) | Kontrastberegning. Rettet i §3. |
 
@@ -109,12 +110,12 @@ Hver idé er vurderet på designværdi (fortæller den produktets kerne bedre?) 
 | A2 | **"Hvorfor"-chips** på enhver motorændring: Søvn 5 t 12 m · HRV 48 ms · Stress 4/5 | A | Landingens beslutningsskærm **og** appens dagens-pas-kort | Gør motoren gennemsigtig og er et app-mønster, ikke kun marketing. |
 | A3 | **Stemmer: 1 stort citat + 2 små** | A | Erstatter B's tre ens forskudte kort | Tydeligt hierarki. Et citat kan bære sektionen. |
 | A4 | **Munks håndskrevne signatur** (SVG) under form-check-svaret | A | Munk-sektionen og form-check-skærmen i appen | Tillid. Underskriften er det fysiske bevis på "mennesket bag". |
-| C1 | **"Behold den oprindelige plan"** som sekundær handling. **Kræver ny motorfunktion (D8).** | C | Appens omskrevne pas og beslutningsskærmen på landingen, men først når funktionen findes | Brugeren bevarer kontrollen, og det dæmper frygten for, at en algoritme bestemmer. |
+| C1 | **"Behold original"** som sekundær handling. Funktionen findes (`AdaptationCard`), og Kalk flytter den frem. | C | Dagens pas på dashboardet (F3) og beslutningsskærmen på landingen (F2) | Brugeren bevarer kontrollen, og det dæmper frygten for, at en algoritme bestemmer. |
 | C2 | **Nattens tidslinje 23:40 → 05:30 → 06:45** som graf med tre aflæsninger | C | Øverst i Motor-sektionen og erstatter B's tre tekstlinjer | Viser tidsdimensionen, som tabellen mangler. |
 | C3 | **Munk-flow med tidsstempler:** +0 t optag · +4 min AI-udkast · +6 t Munk skriver under · maks 24 t | C | Erstatter B's tre generiske trin | Konkrete tal slår adjektiver. |
 | C4 | **"Du er her" og "Coach School åbner"** på progressionen | C | Oven på B's vægtskiver i Crew | Skiverne er smukke men stumme. Markørerne giver dem betydning. |
 | C5 | **Morgenens signal:** fire domæner i én række med status | C | Appens dashboard (readiness-rækken fra reviewet) | Samler HRV, Sind og Mad over folden uden at stjæle fokus fra dagens pas. |
-| C6 | FAQ: "Hvorfor er det invite-only?" nu. "Kan jeg sige nej til et omskrevet pas?" først når D8 er leveret. | C | FAQ | Besvarer de to reelle indvendinger. |
+| C6 | FAQ: "Hvorfor er det invite-only?" (ny) og "Kan jeg sige nej?" (den eksisterende `optOutAdaptive`) | C | FAQ | Besvarer de to reelle indvendinger. |
 
 **Fravalgt med vilje:**
 - C's pulskurve gennem siden: to strukturelle greb (rack-grid og kurve) konkurrerer.
@@ -127,7 +128,7 @@ Hver idé er vurderet på designværdi (fortæller den produktets kerne bedre?) 
 ## 5. Landingens struktur (8 sektioner)
 
 1. **Hero:** H1 "Bygget til dem der løfter.", én sætning, "Få adgang" og tekstlinket "Se hvordan motoren virker". Til højre vægtskive-tallene 150 (overstreget i orange) og 135 kg samt dashboard-telefonen.
-2. **Motor:** C2 nattens tidslinje, derefter A1 morgenrapport med sticky telefon og A2 hvorfor-chips i sidste tilstand. C1 behold-plan tilføjes først, når D8 er leveret.
+2. **Motor:** C2 nattens tidslinje, derefter A1 morgenrapport med sticky telefon og A2 hvorfor-chips samt C1 "Behold original" i sidste tilstand.
 3. **Fire systemer:** B's bento med 4 celler (Hjerte-cellen i Nat), derefter B's swipebare rack med 5 app-skærme.
 4. **Munk:** B's MUNK-ordmærke og skive-monogram, C3 tidsstempel-flow, form-check-kort med AI-udkast overstreget og A4 signatur.
 5. **Crewet:** B's vægtskiver, C4 markører og reps-måler.
@@ -148,7 +149,7 @@ Anker-ID'er bevares: `#crew`, `#engine`, `#tiers`, `#waitlist`, `#faq`. Nye ID'e
 
 - **Dashboard "i dag først":**
   - hilsen og stribe,
-  - dagens pas som eneste primærkort, med A2-chips (via `AdaptiveReasonStrip`) når motoren har ændret noget, og C1 behold-plan når D8 er leveret,
+  - dagens pas som eneste primærkort, med A2-chips (via `AdaptiveReasonStrip`) og C1 "Behold original" (genbruger `setAdaptationResponseAction` fra `session/[id]/actions.ts`), når motoren har ændret noget,
   - C5 morgenens signal,
   - besked fra Munk,
   - resten.
@@ -164,11 +165,11 @@ Anker-ID'er bevares: `#crew`, `#engine`, `#tiers`, `#waitlist`, `#faq`. Nye ID'e
 | D1 | Scope: landing og app, eller kun landing? | **Begge i rækkefølge.** Landingen først, fordi den er uafhængig og viser retningen. |
 | D2 | Skal medlemmer selv kunne vælge mørkt tema i appen? | **Ikke i v1.** Nat-tokens findes og bruges i session og coach. Et brugervalg kommer efter lancering, når alle flader er migreret. |
 | D3 | Splash, ikon og statusbar i native shells | **Statusbar nu** (kodeændring i bridge). **Splash og ikon** med næste butiksudgivelse. Det kræver din accept før indsendelse. |
-| D4 | H1 på dansk ("Bygget til dem der løfter.") og det engelske slogan i footeren | **Ja.** |
-| D5 | "412 aktive medlemmer" | **Fjernes.** Kalk-hero har ingen stats-bånd. |
+| D4 | H1 på dansk ("Bygget til dem der løfter.") og det engelske slogan i footeren | **Besluttet 2026-09-17: ja.** |
+| D5 | "412 aktive medlemmer" | **Besluttet 2026-09-17: fjernes.** Kalk-hero har ingen stats-bånd. |
 | D6 | Tre ægte citater med fornavn, tier og startmåned | **Tom skaffer dem.** Indtil da vises sektionen ikke i produktion (feature-flag). |
 | D9 | Hosting af de 188 MoveKit-klip (`public/` ca. 57 MB eller Supabase Storage) | **Supabase Storage** bag den eksisterende `demo_asset_url`-kontrakt. `public/` beholder de 19 bundlede til offline. |
-| D8 | Skal medlemmer kunne afvise motorens ændring (C1)? Det kræver en migration (status `declined`), en server action og en regel for, hvad motoren lærer af et nej. | **Ja, men som eget spor med CTO-agenten.** Kalk-UI'et reserverer pladsen. Landingen lover det ikke, før det er i produktion. |
+| D8 | ~~Ny motorfunktion til at afvise ændringer~~ | **Udgår.** Funktionen findes allerede (se §0). |
 | D7 | Portræt af Munk | **Book et shoot.** Kalk klarer sig med ordmærke og monogram indtil da. |
 
 ## 8. Kvalitetsporte

@@ -23,7 +23,6 @@
 | **F3 App-kerne** | 6 primitiver, dashboard "i dag først" (A2, C5), 5 faner, `(app)` i Kalk, `/session` i Nat | F1 | 5-6 dage | Egen plan: `…-kalk-f3-app-core.md` |
 | **F4 App-flader** | Træn, Mad, Hjerte, Sind, Crew, profil og onboarding migreret. Farver uden for tokens fjernet. Statusbar i shells. Gamle fonte fjernet. | F3 | 6-8 dage | Egen plan: `…-kalk-f4-surfaces.md` |
 | **F5 Assets** | Munk-portræt, ægte skærmbilleder (landing + App Store), citater | D6, D7 (Tom) | Løbende | Brief i `docs/briefs/` |
-| **Spor D8** | "Behold oprindelig plan" i motoren (C1) | CTO-agent | Afklares | Egen spec |
 
 Hver fase kan shippes for sig. F2 og F3 kan køre parallelt efter F1.
 
@@ -823,7 +822,7 @@ De næste faser får hver deres detaljerede plan, når F1 er leveret. Rammerne h
 - eyebrow-tæller ≤ 3,
 - anker-ID'erne bevaret (`public-anchors.test.ts`),
 - A1 har statisk fallback uden JS og ved reduceret bevægelse,
-- ingen løfte om C1, før D8 er leveret.
+- C1 vises som "Behold original" (funktionen findes).
 
 **Fjernes:**
 - `CustomCursor`, `Spotlight` og Lenis fra root-layoutet (kun brugt af landingen),
@@ -875,15 +874,9 @@ Hver primitiv får en render-test.
 
 **Afløser:** `PhoneFrame` får en `src`-variant, der viser et billede i stedet for en tegnet skærm.
 
-### Spor D8 · behold oprindelig plan
+### C1 "Behold original"
 
-Egen spec sammen med CTO-agenten. Den skal beskrive:
-- migration med ny status `declined` på tilpasninger,
-- server action,
-- hvad motoren lærer af et nej,
-- Kalk-UI: sekundær ghost-knap på dagens pas.
-
-Landingens FAQ-spørgsmål "Kan jeg sige nej…" og beslutningsskærmens knap låses op først, når D8 er i produktion.
+Findes allerede i `AdaptationCard`, så der er ikke noget motor-spor. F2 viser knappen på beslutningsskærmen, og F3 flytter den frem på dagens pas.
 
 ---
 
@@ -894,4 +887,3 @@ Landingens FAQ-spørgsmål "Kan jeg sige nej…" og beslutningsskærmens knap l�
 - [ ] F3 App-kerne
 - [ ] F4 App-flader
 - [ ] F5 Assets (Tom)
-- [ ] D8 (CTO)
