@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import PostComposer from "@/components/community/PostComposer";
 import PostCard from "@/components/community/PostCard";
 import RealtimeIndicator from "@/components/community/RealtimeIndicator";
@@ -73,22 +74,22 @@ export default async function CrewPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <RealtimeIndicator />
       {/* Header + post composer */}
-      <header className="flex items-end justify-between gap-4 pt-2">
-        <div>
-          <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
-            {t("title")}
-          </h1>
-        </div>
-        <PostComposer
-          trigger={
-            <button
-              type="button"
-              className="btn btn-primary btn-sm"
-              aria-label={t("shareAria")}
-            >
-              {t("shareButton")}
-            </button>
+      <header className="pt-2">
+        <PageTitle
+          kicker={t("eyebrow")}
+          title={t("title")}
+          action={
+            <PostComposer
+              trigger={
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  aria-label={t("shareAria")}
+                >
+                  {t("shareButton")}
+                </button>
+              }
+            />
           }
         />
       </header>

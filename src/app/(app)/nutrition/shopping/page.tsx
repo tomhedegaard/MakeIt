@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import { getSession } from "@/lib/auth";
 import {
   getCurrentPlan,
@@ -111,9 +112,7 @@ function Header({
         <span className="text-fg-faint" aria-hidden>·</span>
         <span className="eyebrow">{t("eyebrow")}</span>
       </div>
-      <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-        {t("title")}
-      </h1>
+      <PageTitle size="compact" title={t("title")} />
       <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
         {t("intro")}
       </p>

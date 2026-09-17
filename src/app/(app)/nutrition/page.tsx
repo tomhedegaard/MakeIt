@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import { getSession } from "@/lib/auth";
 import {
   currentIsoMonday,
@@ -109,31 +110,31 @@ export default async function NutritionPage({
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
-      <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="eyebrow eyebrow-domain mb-2">{t("page.eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
-            {t("page.title")}
-          </h1>
-          <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-            {t("page.intro")}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <OffPlanLogButton />
-          <Link
-            href="/nutrition/shopping"
-            className="btn btn-sm"
-          >
-            {t("page.shoppingLink")}
-          </Link>
-          <Link
-            href="/nutrition/preferences"
-            className="btn btn-ghost btn-sm"
-          >
-            {t("page.preferencesLink")}
-          </Link>
-        </div>
+      <header className="pt-2">
+        <PageTitle
+          kicker={t("page.eyebrow")}
+          title={t("page.title")}
+          action={
+            <div className="flex flex-wrap items-center gap-2">
+              <OffPlanLogButton />
+              <Link
+                href="/nutrition/shopping"
+                className="btn btn-sm"
+              >
+                {t("page.shoppingLink")}
+              </Link>
+              <Link
+                href="/nutrition/preferences"
+                className="btn btn-ghost btn-sm"
+              >
+                {t("page.preferencesLink")}
+              </Link>
+            </div>
+          }
+        />
+        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+          {t("page.intro")}
+        </p>
       </header>
 
       {err === "quota_plan" || err === "quota_swap" ? (
