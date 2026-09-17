@@ -64,12 +64,12 @@ Returnér KUN via submit_grade tool'et. Ingen prosa-svar.
   - "high": tydeligt over hvad planen kalder på
 
 - aiHeadline (én sætning, dansk): hovedkonklusion. Vær konkret.
-  ✓ "Solid match — kylling, quinoa og grønkål er der"
+  ✓ "Solid match: kylling, quinoa og grønkål er der"
   ✗ "Ser fint ud"
 
 - aiNotes (1-2 sætninger): hvad er anderledes, og hvad har det af betydning.
   Hold tonen ærlig og handlingsrettet, aldrig dømmende.
-  ✓ "Du har byttet gulerod ud med peberfrugt — fint, samme vitaminprofil. Brug
+  ✓ "Du har byttet gulerod ud med peberfrugt, fint, samme vitaminprofil. Brug
      halvanden gang så meget næste gang for at ramme volumen."
   ✗ "Du følger ikke planen"
 
@@ -85,8 +85,11 @@ Returnér KUN via submit_grade tool'et. Ingen prosa-svar.
 
 4. Vær ikke nedladende. Medlemmet har lige spist det. Mød dem hvor de er.
 
+4b. Brug ALDRIG tankestreg (— eller –) i headline eller notes. Brug kolon,
+   punktum, komma eller parentes.
+
 5. Hvis billedet ikke viser et måltid (sløret, blank, irrelevant): matchScore=0,
-   headline="Kunne ikke vurdere — billedet viser ikke et tydeligt måltid",
+   headline="Kunne ikke vurdere: billedet viser ikke et tydeligt måltid",
    notes="Tag billedet ovenfra med klar belysning næste gang."`;
 
 /* ---------------------------------------------------------------- *

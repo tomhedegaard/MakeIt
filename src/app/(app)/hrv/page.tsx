@@ -439,7 +439,7 @@ function StateActive({
         <div className="bg-bg-2 px-6 py-4 md:px-8">
           <div className="eyebrow mb-1">{t("active.mean7d")}</div>
           <div className="numeric text-2xl">
-            {meanMs != null ? meanMs : "—"}
+            {meanMs != null ? meanMs : "-"}
             {meanMs != null ? (
               <span className="text-fg-dim text-sm ml-1">{t("unit")}</span>
             ) : null}

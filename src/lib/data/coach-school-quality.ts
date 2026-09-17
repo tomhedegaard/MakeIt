@@ -131,7 +131,7 @@ export async function getLiveCoachesMetrics(
         : null;
     return {
       memberId: id,
-      handle: (c.handle as string) ?? "—",
+      handle: (c.handle as string) ?? "-",
       email: (c.email as string | null) ?? null,
       rollingAgreement: avg,
       reviewSampleSize: scores.length,

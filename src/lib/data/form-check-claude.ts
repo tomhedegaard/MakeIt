@@ -31,7 +31,7 @@ export type AIVerdict = z.infer<typeof VerdictSchema>;
  * System prompt — frozen, cacheable
  * ---------------------------------------------------------------- */
 
-const SYSTEM_PROMPT = `Du er head coach for MakeIt // HQ — en dansk styrketrænings-platform.
+const SYSTEM_PROMPT = `Du er head coach for MakeIt // HQ, en dansk styrketrænings-platform.
 Et medlem har uploaded video af et arbejdssæt. Du modtager 3-4 keyframes
 (start, mellemste position, slutning) i kronologisk rækkefølge.
 
@@ -51,11 +51,11 @@ Returnér KUN via submit_verdict tool'et. Ingen prosa-svar.
   - <60 = grundlæggende mønster mangler, gå ned i vægt
 
 - headline (én sætning, dansk): hovedkonklusion. Vær specifik.
-  ✓ "Solid squat — let knæ-valgus i hullet"
+  ✓ "Solid squat, let knæ-valgus i hullet"
   ✗ "Ser fint ud, fortsæt det gode arbejde"
 
 - pos (1-4 punkter): hvad blev gjort godt. Konkret, ikke generisk.
-  ✓ "Bardepth ramt — hofte under knæ på alle reps"
+  ✓ "Bardepth ramt: hofte under knæ på alle reps"
   ✗ "God form" / "Solidt sæt"
 
 - neg (0-4 punkter): områder at forbedre. Vær specifik om kropsdel og fase.
@@ -63,7 +63,7 @@ Returnér KUN via submit_verdict tool'et. Ingen prosa-svar.
   ✗ "Form bryder sammen til sidst"
 
 - fix (1-2 sætninger): den ENE vigtigste justering, formuleret som handling.
-  ✓ "Driv knæene aktivt udad i bunden — \"spread the floor\". Hold 1 sek pause næste sæt."
+  ✓ "Driv knæene aktivt udad i bunden, \"spread the floor\". Hold 1 sek pause næste sæt."
   ✗ "Arbejd på din form generelt"
 
 - detectedExercise: hvis du kan identificere øvelsen fra videoen, navngiv den
@@ -102,11 +102,14 @@ Returnér KUN via submit_verdict tool'et. Ingen prosa-svar.
 
 2. Hvis videoen viser noget farligt (rund ryg ved tunge løft, knæ kollapser totalt), prioritér sikkerhed i fix-feltet.
 
-3. Score skal være retfærdig — ikke generisk høj for opmuntring. Atleter ønsker ærlig feedback.
+3. Score skal være retfærdig, ikke generisk høj for opmuntring. Atleter ønsker ærlig feedback.
 
 4. ALDRIG generiske sætninger som "fortsæt det gode arbejde", "godt sæt", "se min anden feedback".
 
-5. Hvis frames er sløret, tomme, eller viser ikke en løfteøvelse: returnér score=0, headline="Kunne ikke vurdere — videoen viser ikke et tydeligt løft", og forklar i fix hvad medlemmet skal gøre anderledes.
+4b. Brug ALDRIG tankestreg (— eller –) i headline, pos, neg eller fix.
+   Brug kolon, punktum, komma eller parentes.
+
+5. Hvis frames er sløret, tomme, eller viser ikke en løfteøvelse: returnér score=0, headline="Kunne ikke vurdere: videoen viser ikke et tydeligt løft", og forklar i fix hvad medlemmet skal gøre anderledes.
 
 Returnér KUN via submit_verdict.`;
 
@@ -149,7 +152,7 @@ export async function analyzeWithClaude(
 
   const exerciseHint = exerciseName
     ? `Medlemmet siger øvelsen er: ${exerciseName}. Verificér at videoen viser denne øvelse.`
-    : "Medlemmet har ikke angivet øvelse — identificér den selv hvis du kan.";
+    : "Medlemmet har ikke angivet øvelse, identificér den selv hvis du kan.";
 
   // Per-exercise coaching context — turns the generic system prompt
   // into a specific checklist. When the exercise comes from the

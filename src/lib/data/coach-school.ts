@@ -147,7 +147,7 @@ export async function getPendingSandboxCases(
     cases.push({
       alertId: id,
       triggeredAt: a.triggered_at as string,
-      memberHandle: (m?.handle as string) ?? "—",
+      memberHandle: (m?.handle as string) ?? "-",
       conditionsMet:
         (a.conditions_met as Record<string, unknown> | null) ?? {},
       munkDecisionHidden: munkDerived,
@@ -235,7 +235,7 @@ export async function getOpenLiveCases(limit: number = 20): Promise<LiveCase[]> 
       alertId: a.id as string,
       triggeredAt: a.triggered_at as string,
       memberId: (m?.id as string) ?? "",
-      memberHandle: (m?.handle as string) ?? "—",
+      memberHandle: (m?.handle as string) ?? "-",
       conditionsMet:
         (a.conditions_met as Record<string, unknown> | null) ?? {},
     };
@@ -381,7 +381,7 @@ export async function getBeastsInTraining(): Promise<BeastInTraining[]> {
       avg !== null && avg >= PROMOTE_THRESHOLD && scores.length >= ROLLING_WINDOW;
     return {
       memberId: id,
-      handle: (b.handle as string) ?? "—",
+      handle: (b.handle as string) ?? "-",
       rollingAgreement: avg,
       sandboxReviewCount: bucket?.total ?? 0,
       lastReviewAt: bucket?.lastAt ?? null,

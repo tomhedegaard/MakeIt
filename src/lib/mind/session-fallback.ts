@@ -28,10 +28,10 @@ export function buildFallbackSession(ctx: CoachContext): SessionScript {
   if (s >= 4) {
     return {
       title: "Coherence 5-5 til lige nu",
-      subtitle: "Når stress sidder højt — 3 min",
+      subtitle: "Når stress sidder højt · 3 min",
       body_md: [
         `# I dag\n`,
-        `Stress er højt. Du behøver ikke fikse noget — bare ånde.\n`,
+        `Stress er højt. Du behøver ikke fikse noget, bare ånde.\n`,
         `## Mønstret\n`,
         `5 sekunder ind. 5 sekunder ud. Følg ringen.\n`,
         `## Når du er færdig\n`,
@@ -46,7 +46,7 @@ export function buildFallbackSession(ctx: CoachContext): SessionScript {
   if (e <= 2) {
     return {
       title: "Lige nu er du træt",
-      subtitle: "Compassion + scan — 2 min",
+      subtitle: "Compassion + scan · 2 min",
       body_md: [
         `# Hvad du har brug for\n`,
         `Du er træt. Ingen krav. Bare to minutter.\n`,
@@ -64,7 +64,7 @@ export function buildFallbackSession(ctx: CoachContext): SessionScript {
   // Default → quick focus priming.
   return {
     title: "60 sekunders fokus-prime",
-    subtitle: "Hurtig — inden næste opgave",
+    subtitle: "Hurtig, inden næste opgave",
     body_md: [
       `# I dag\n`,
       `Energi og stress er ok. Du kan bruge et minut på at samle dig.\n`,

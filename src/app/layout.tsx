@@ -28,7 +28,7 @@ const mono = Geist_Mono({ variable: "--font-mono-stack", subsets: ["latin"], dis
 
 export const metadata: Metadata = {
   title: COMPANY.product,
-  description: `${COMPANY.product} — ${COMPANY.tagline} Made in Denmark.`,
+  description: `${COMPANY.product}: ${COMPANY.tagline} Made in Denmark.`,
   metadataBase: new URL(COMPANY.appUrl),
   openGraph: {
     title: COMPANY.product,
