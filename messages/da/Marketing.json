@@ -794,6 +794,7 @@
     "munk": {
       "heading": "Et menneske skriver under.",
       "sub": "Mikael Munk er hovedcoach. Han læser dine løft.",
+      "portraitAlt": "Mikael Munk, hovedcoach",
       "flow": [
         {
           "t": "+0 t",
@@ -821,7 +822,8 @@
         "signed": "Munk",
         "answered": "svaret på 6 t",
         "reference": "Reference",
-        "yours": "Din optagelse"
+        "yours": "Din optagelse",
+        "signatureLabel": "Underskrift, Mikael Munk"
       }
     },
     "crew": {

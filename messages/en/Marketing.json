@@ -794,6 +794,7 @@
     "munk": {
       "heading": "A human signs off.",
       "sub": "Mikael Munk is head coach. He reads your lifts.",
+      "portraitAlt": "Mikael Munk, head coach",
       "flow": [
         {
           "t": "+0 h",
@@ -821,7 +822,8 @@
         "signed": "Munk",
         "answered": "answered in 6 h",
         "reference": "Reference",
-        "yours": "Your recording"
+        "yours": "Your recording",
+        "signatureLabel": "Signature, Mikael Munk"
       }
     },
     "crew": {
