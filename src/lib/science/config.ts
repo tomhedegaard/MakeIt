@@ -11,7 +11,6 @@ export type DomainKey = "mad" | "krop" | "sind";
 
 export interface DomainConfig {
   label: string;
-  color: string;
   terms: string[];
 }
 
@@ -81,19 +80,19 @@ export const CONFIG: ScienceConfig = {
   // MeSH major-topics and title/abstract terms that bind a study to a domain.
   domains: {
     krop: {
-      label: "Krop", color: "#E8703A",
+      label: "Krop",
       terms: ["resistance training", "hypertrophy", "muscle strength", "muscle, skeletal",
         "strength training", "endurance training", "exercise", "training volume", "frequency",
         "vo2", "aerobic", "athletic performance", "muscle"],
     },
     mad: {
-      label: "Mad", color: "#4CAF7D",
+      label: "Mad",
       terms: ["creatine", "dietary proteins", "protein", "dietary carbohydrates", "carbohydrate",
         "dietary supplements", "supplement", "nutrition", "diet", "omega-3", "intake",
         "body composition", "lean mass"],
     },
     sind: {
-      label: "Sind", color: "#4F86C6",
+      label: "Sind",
       terms: ["depression", "anxiety", "mindfulness", "sleep", "mental health", "stress",
         "wellbeing", "mood", "cognitive", "psychological", "meditation"],
     },

@@ -158,7 +158,7 @@ export default async function ExerciseDetailPage({
               {ex.mistakes.map((m, i) => (
                 <article
                   key={i}
-                  className="surface-2 rounded-xl p-5 border-l-2 border-l-[#C97B3E]"
+                  className="surface-2 rounded-xl p-5 border-l-2 border-l-body"
                 >
                   <div className="font-display text-lg leading-tight mb-2">
                     {m.title}

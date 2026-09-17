@@ -57,7 +57,7 @@ export default function CuesList({
               key={i}
               data-active={isActive}
               className={`flex gap-4 pl-3 -ml-3 border-l-2 transition-colors duration-200 ${
-                isActive ? "border-l-[#C97B3E]" : "border-l-transparent"
+                isActive ? "border-l-body" : "border-l-transparent"
               }`}
             >
               <span

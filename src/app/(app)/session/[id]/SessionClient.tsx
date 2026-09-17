@@ -636,7 +636,7 @@ function ExerciseSection({
                       key={i}
                       data-active={isActive}
                       className={`flex gap-2 text-sm leading-snug pl-2 -ml-2 border-l-2 transition-colors duration-200 ${
-                        isActive ? "border-l-[#C97B3E] text-fg" : "border-l-transparent"
+                        isActive ? "border-l-body text-fg" : "border-l-transparent"
                       }`}
                     >
                       <span

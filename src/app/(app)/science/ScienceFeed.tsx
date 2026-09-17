@@ -109,7 +109,7 @@ function Card({ item }: { item: ScienceFeedItem }) {
           </span>
           <span className="rounded-full border surface-2 px-2.5 py-0.5">{item.evidenceBadge}</span>
           {item.verified && (
-            <span className="text-[#4CAF7D]" title={t("verifiedTitle")}>
+            <span className="text-food" title={t("verifiedTitle")}>
               ✓ {t("verified")}
             </span>
           )}

@@ -19,9 +19,9 @@ type Props = {
 };
 
 const TIER_COLOR = {
-  primary: "#F5F2EC",
-  secondary: "#C97B3E",
-  tertiary: "#C97B3E66",
+  primary: "var(--fg)",
+  secondary: "var(--anatomy-accent)",
+  tertiary: "color-mix(in oklab, var(--anatomy-accent) 40%, transparent)",
 } as const;
 
 /**
@@ -207,7 +207,7 @@ function Chip({
       className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs"
       style={{
         background: color,
-        color: dark ? "#0A0A0B" : "#F5F2EC",
+        color: dark ? "var(--bg)" : "var(--fg)",
       }}
     >
       {label}

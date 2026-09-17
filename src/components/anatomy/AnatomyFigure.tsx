@@ -31,12 +31,12 @@ import {
 } from "@/lib/data/anatomy/paths";
 
 const COLORS = {
-  body: "#1a1a1c", // base silhouette fill
-  body_outline: "#3a3a3e", // edge stroke + non-muscle parts (joints, hands, head)
-  inactive: "#222226", // muscles not targeted — blends with body
-  tertiary: "#C97B3E", // warm amber, low opacity
-  secondary: "#C97B3E", // warm amber, high opacity
-  primary: "#F5F2EC", // brand cream
+  body: "var(--anatomy-body)", // base silhouette fill
+  body_outline: "var(--anatomy-edge)", // edge stroke + non-muscle parts (joints, hands, head)
+  inactive: "var(--anatomy-idle)", // muscles not targeted — blends with body
+  tertiary: "var(--anatomy-accent)", // low opacity
+  secondary: "var(--anatomy-accent)", // high opacity
+  primary: "var(--fg)", // brand foreground
 } as const;
 
 export default function AnatomyFigure({
@@ -89,11 +89,12 @@ export default function AnatomyFigure({
             })
       }
     >
-      {/* Body silhouette — single closed outline path */}
+      {/* Body silhouette — single closed outline path.
+          fill/stroke set via style: SVG presentation attributes don't
+          reliably accept var() in Safari. */}
       <path
         d={outline}
-        fill={COLORS.body}
-        stroke={COLORS.body_outline}
+        style={{ fill: COLORS.body, stroke: COLORS.body_outline }}
         strokeWidth="1.5"
         vectorEffect="non-scaling-stroke"
       />
@@ -148,7 +149,7 @@ function MuscleGroupPaths({
       }}
     >
       {paths.map((d, i) => (
-        <path key={i} d={d} fill={fill} opacity={opacity} />
+        <path key={i} d={d} style={{ fill }} opacity={opacity} />
       ))}
     </g>
   );
