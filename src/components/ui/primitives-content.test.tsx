@@ -14,6 +14,13 @@ describe("EmptyState", () => {
     expect(html).toContain("btn btn-primary");
   });
 
+  it("gives the empty region a heading", () => {
+    const html = renderToStaticMarkup(
+      <EmptyState title="Intet pas endnu" body="Vælg et program." actionHref="/coaching" actionLabel="Vælg program" />,
+    );
+    expect(html).toMatch(/<h2 class="font-display text-xl">Intet pas endnu<\/h2>/);
+  });
+
   it("passes data-attributes through so the connected dashboard can target it", () => {
     const html = renderToStaticMarkup(
       <EmptyState

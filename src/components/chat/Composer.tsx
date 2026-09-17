@@ -315,7 +315,7 @@ export default function Composer({
         }}
         placeholder={t("placeholder")}
         rows={2}
-        className="flex-1 min-w-0 resize-none rounded-lg border hairline px-3 py-2 text-sm bg-bg leading-relaxed focus:outline-none focus:border-line-bright"
+        className="flex-1 min-w-0 resize-none rounded-lg border hairline px-3 py-2 text-base md:text-sm bg-bg leading-relaxed focus:outline-none focus:border-line-bright"
         disabled={pending}
       />
 

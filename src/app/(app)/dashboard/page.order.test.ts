@@ -16,7 +16,16 @@ describe("dashboard renders today first", () => {
     expect(page).toContain("<KeepOriginal");
     expect(page).toContain("getTodayAdaptation(");
     expect(page).not.toContain("<BodyMap");
-    expect(page).not.toContain("<HrvChip");
+    expect(page).not.toMatch(/<HrvChip[\s/>]/);
     expect(page).not.toContain("<MindTile");
+  });
+
+  it("fetches the independent dashboard data in one parallel batch", () => {
+    const awaits = page.match(/await Promise\.all\(/g) ?? [];
+    expect(page).not.toMatch(/await getMyFormChecks\(/);
+    expect(page).not.toMatch(/await getLatestUnseenPromotion\(/);
+    expect(page).toMatch(/Promise\.all\(\[[\s\S]*getTodayCard[\s\S]*getMyFormChecks[\s\S]*getLatestUnseenPromotion[\s\S]*getHrvChipData[\s\S]*hasMindCheckToday[\s\S]*getTodayProse[\s\S]*getDailyIntake[\s\S]*\]\)/);
+    expect(awaits.length).toBeLessThanOrEqual(2);
+    expect(page.match(/todayCardFromMock\(t\)/g)).toHaveLength(1);
   });
 });

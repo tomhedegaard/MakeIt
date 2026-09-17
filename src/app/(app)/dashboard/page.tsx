@@ -110,7 +110,7 @@ function fmtUpcomingDate(iso: string | null, t: Translator, locale: string): str
   return d.toLocaleDateString(intlLocaleTag(locale), { weekday: "short" }).replace(".", "");
 }
 
-type HrvReading = {
+type HrvChipData = {
   rmssdMs: number;
   bucket: ReadinessBucket | null;
 };
@@ -119,7 +119,7 @@ type HrvReading = {
  * Latest HRV reading for the morning signal. Demo mode uses the
  * steady fixture so Heart is visible without a wearable.
  */
-async function getHrvReading(memberId: string): Promise<HrvReading | null> {
+async function getHrvChipData(memberId: string): Promise<HrvChipData | null> {
   if (!SUPABASE_ENABLED) {
     const view = buildHrvBandView(demoSteadySeries());
     return {
@@ -155,14 +155,40 @@ export default async function TodayPage() {
     loadDotsCopy(),
   ]);
   const connected = SUPABASE_ENABLED;
-  const [todayDb, upcomingDb, feedDb, statsDb] = connected
-    ? await Promise.all([
-        getTodayCard(member.id),
-        getUpcomingSessions(member.id, 3),
-        getRecentFeed(3),
-        getMemberStats(member.id),
-      ])
-    : ([null, null, null, null] as const);
+  // Everything independent loads in one batch. Demo mode skips the
+  // dashboard queries exactly as before (null → surface fallbacks).
+  const [
+    todayDb,
+    upcomingDb,
+    feedDb,
+    statsDb,
+    myChecks,
+    promotion,
+    hrv,
+    mindChecked,
+    prose,
+    intakeRaw,
+    demoProfile,
+  ] = await Promise.all([
+    connected ? getTodayCard(member.id) : null,
+    connected ? getUpcomingSessions(member.id, 3) : null,
+    connected ? getRecentFeed(3) : null,
+    connected ? getMemberStats(member.id) : null,
+    // Coach-review notification: count reviewed form-checks with notes.
+    // (No "read" state in v1.)
+    getMyFormChecks(member.id, 5),
+    // Tier promotion banner: latest unseen tier-up.
+    getLatestUnseenPromotion(member.id),
+    // Morning signal inputs (C5).
+    getHrvChipData(member.id),
+    hasMindCheckToday(member.id),
+    getTodayProse(member.id),
+    getDailyIntake(member.id),
+    // Demo has no intake rows and no plan, so the food cell would show
+    // "0 kcal" without a goal. The demo profile's target, resolved the
+    // same way the demo meal plan resolves it, fills that in.
+    connected ? null : getOrCreateNutritionProfile(member.id),
+  ]);
 
   const todayRaw = todayCardForSurface({
     connected,
@@ -185,34 +211,17 @@ export default async function TodayPage() {
   const feed = feedForSurface({ connected, fromDb: feedDb });
   const stats = statsForSurface({ connected, fromDb: statsDb });
 
-  // Coach-review notification: surface a banner when there are new
-  // form-checks with coach notes the member hasn't seen yet. (No
-  // "read" state in v1, so we just show count of reviewed-with-notes.)
-  const myChecks = await getMyFormChecks(member.id, 5);
   const reviewedCount = myChecks.filter(
     (c) => c.reviewedAt && c.coachNotes
   ).length;
 
-  // Tier promotion banner: surface latest unseen tier-up.
-  const promotion = await getLatestUnseenPromotion(member.id);
-
-  // Morning signal inputs (C5) + today's adaptation (C1).
-  const [hrv, mindChecked, prose, intakeRaw, adaptation] = await Promise.all([
-    getHrvReading(member.id),
-    hasMindCheckToday(member.id),
-    getTodayProse(member.id),
-    getDailyIntake(member.id),
-    getTodayAdaptation(member.id, today?.id ?? null),
-  ]);
-
-  // Demo has no intake rows and no plan, so the food cell would show
-  // "0 kcal" without a goal. Use the demo profile's target, resolved
-  // the same way the demo meal plan resolves it (goal default when the
-  // profile has no explicit kcal target).
   const targetKcal =
-    !connected && intakeRaw.targetKcal == null
-      ? resolveDailyTargets(await getOrCreateNutritionProfile(member.id)).kcal
+    intakeRaw.targetKcal == null && demoProfile
+      ? resolveDailyTargets(demoProfile).kcal
       : intakeRaw.targetKcal;
+
+  // Today's adaptation (C1) needs today's session id.
+  const adaptation = await getTodayAdaptation(member.id, today?.id ?? null);
 
   const engineStrip = connected
     ? stripFromAvailableSignals({
@@ -231,7 +240,7 @@ export default async function TodayPage() {
         mindCheckedToday: mindChecked,
         hasSession: today != null,
       })
-        : demoInsightStream(`/session/${todayCardFromMock(t).id}`);
+    : demoInsightStream(`/session/${today?.id ?? TODAY_SESSION.id}`);
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">

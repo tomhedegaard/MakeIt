@@ -261,7 +261,7 @@ export default function CounterfactualSliders({
               setFeeling(e.currentTarget.value as FeelingState)
             }
             aria-label="Følelse"
-            className="bg-bg-2 border hairline rounded-md px-2 py-1 text-sm touch-app"
+            className="bg-bg-2 border hairline rounded-md px-2 py-1 text-base md:text-sm touch-app"
           >
             {FEELING_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>

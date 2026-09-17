@@ -33,7 +33,7 @@ export default function EmptyState({
           {icon}
         </span>
       ) : null}
-      <p className="font-display text-xl">{title}</p>
+      <h2 className="font-display text-xl">{title}</h2>
       <p className="text-fg-dim text-sm">{body}</p>
       <Link href={actionHref} className="btn btn-primary">
         {actionLabel}
