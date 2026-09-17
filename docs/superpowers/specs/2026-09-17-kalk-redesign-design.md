@@ -35,6 +35,7 @@ Det nuværende "strength editorial"-sprog er konsekvent, men det er mørkt, reda
 - **Kalk (lyst):** landingssiden, login, onboarding og hele medlemsappen.
 - **Nat (mørkt):** live-sessionen `/session/[id]` ("session-tilstand er altid mørk") og `/coach/*` i v1.
 - Udrulningen sker flade for flade ved at sætte `data-theme="kalk"` på et layout. Intet skifter, før det bliver slået til.
+- **Fonte følger `<html>`, ikke farvescopet.** En Nat-flade inde i Kalk (fx `/session`) bruger Kalk-fontene med mørke farver. Det giver én typografisk stemme. `ThemeScope` er kun til hele sider og layouts, og en mørk blok inde i en side bruger `data-theme="nat"` uden `.theme-root`.
 
 Fravalgt (én linje hver):
 - *Fuld omskrivning af alle komponenter:* for dyrt, og tokenlaget gør det overflødigt.

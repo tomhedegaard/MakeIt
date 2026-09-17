@@ -5,6 +5,8 @@
  * ---------------------------------------------------------------- */
 :root,
 [data-theme="nat"] {
+  color-scheme: dark;
+
   /* Surfaces */
   --bg:           #0A0A0B;
   --bg-2:         #111113;
@@ -334,6 +336,14 @@ html.cursor-custom * {
   80%  { transform: translate(4%, -2%); }
   90%  { transform: translate(-1%, 5%); }
   100% { transform: translate(0%, 0%); }
+}
+
+/* Kalk: dark noise so multiply leaves a visible concrete texture. */
+html:has(.theme-root[data-theme="kalk"]) .grain::before {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05   0 0 0 0 0.06   0 0 0 0 0.07   0 0 0 0.22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+html:has(.theme-root[data-theme="nat"]) .grain::before {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1   0 0 0 0 0.95   0 0 0 0 0.92   0 0 0 0.045 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
 @media (prefers-reduced-motion: reduce) {
