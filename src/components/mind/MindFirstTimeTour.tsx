@@ -59,7 +59,7 @@ export default function MindFirstTimeTour() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="mind-tour-title"
-      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-6"
+      className="fixed inset-0 z-50 bg-scrim backdrop-blur-sm flex items-center justify-center p-6"
     >
       <div className="max-w-lg w-full rounded-2xl border hairline bg-bg-2 p-8 md:p-10 space-y-6">
         <div className="flex items-center justify-between">

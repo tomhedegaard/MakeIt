@@ -251,7 +251,7 @@ export default async function ProfilePage() {
                         controls
                         playsInline
                         preload="metadata"
-                        className="w-full max-h-[340px] object-contain bg-black"
+                        className="w-full max-h-[340px] object-contain bg-media"
                       />
                     </div>
                   ) : null}

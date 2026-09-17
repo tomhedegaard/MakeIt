@@ -65,7 +65,7 @@ export default function OffPlanLogButton() {
             type="button"
             aria-label="Luk"
             onClick={() => setOpen(false)}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-scrim backdrop-blur-sm"
           />
           <form
             ref={formRef}

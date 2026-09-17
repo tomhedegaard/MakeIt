@@ -57,7 +57,7 @@ export default async function CoachSchoolLessonPage({
             controls
             playsInline
             preload="metadata"
-            className="w-full max-h-[420px] object-contain bg-black"
+            className="w-full max-h-[420px] object-contain bg-media"
           />
         ) : (
           <div className="aspect-video flex items-center justify-center text-fg-faint text-sm">

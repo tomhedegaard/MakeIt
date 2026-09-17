@@ -77,7 +77,7 @@ function MentalResourcesDialog({ onClose }: { onClose: () => void }) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="mental-resources-title"
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-6"
+      className="fixed inset-0 z-50 bg-scrim backdrop-blur-sm flex items-center justify-center p-6"
     >
       <div className="max-w-lg w-full rounded-2xl border hairline bg-bg-2 p-8 space-y-6">
         {mode === "resources" ? (
