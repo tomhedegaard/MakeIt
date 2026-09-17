@@ -82,7 +82,27 @@ describe("PageTitle", () => {
     );
     expect(html).toMatch(/class="[^"]*flex-wrap[^"]*items-end[^"]*justify-between[^"]*"/);
     expect(html).toMatch(/class="[^"]*min-w-0[^"]*flex-1[^"]*basis-48[^"]*"/);
-    expect(html).toContain('class="shrink-0"');
+    expect(html).toContain('class="shrink-0 max-w-full"');
+  });
+
+  it("caps a wide action at the viewport so it wraps instead of clipping (Kost action row)", () => {
+    // /nutrition hands PageTitle three buttons whose natural width is wider
+    // than a 390px phone. shrink-0 alone kept them at max-content and the
+    // last link ended up off-screen with no way to scroll to it.
+    const html = renderToStaticMarkup(
+      <PageTitle
+        title="Kost"
+        action={
+          <div className="flex flex-wrap items-center gap-2">
+            <button type="button">Log</button>
+            <a href="/nutrition/shopping">Indkøbsliste</a>
+            <a href="/nutrition/preferences">Indstillinger</a>
+          </div>
+        }
+      />,
+    );
+    expect(html).toContain('class="shrink-0 max-w-full"');
+    expect(html).toContain("flex flex-wrap items-center gap-2");
   });
 });
 

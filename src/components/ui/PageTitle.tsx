@@ -28,7 +28,10 @@ export default function PageTitle({
           {title}
         </h1>
       </div>
-      {action ? <div className="shrink-0">{action}</div> : null}
+      {/* shrink-0 keeps a small action (streak badge) beside the title;
+          max-w-full stops a wide one (the Kost action row) from spilling
+          past the viewport once it has wrapped onto its own line. */}
+      {action ? <div className="shrink-0 max-w-full">{action}</div> : null}
     </div>
   );
 }
