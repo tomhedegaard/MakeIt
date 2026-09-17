@@ -42,8 +42,9 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     // Run on everything except static, API routes (incl. Stripe webhook
-    // and /api/settings/export — those self-auth), and image assets.
+    // and /api/settings/export — those self-auth), and image and video
+    // assets (public MoveKit loops play on the logged-out landing).
     // Supabase needs to refresh cookies on every matched request.
-    "/((?!_next/static|_next/image|favicon.ico|api/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|webm|mp4)).*)",
   ],
 };
