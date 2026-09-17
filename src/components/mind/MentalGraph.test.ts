@@ -78,7 +78,7 @@ describe("MentalGraph", () => {
   it("shows a quiet charcoal frame when there are no logs", () => {
     const html = render([], 8);
     expect(html).toContain("data-chart-empty");
-    expect(html).toContain("Mental graf — sidste 30 dage");
+    expect(html).toContain("Mental graf · sidste 30 dage");
     expect(html).not.toContain('id="mental-graph-fill-energy"');
   });
 

@@ -9,39 +9,39 @@
   },
   "disclaimer": {
     "eyebrow": "Mind · Pillar 5",
-    "title": "Mental health — our 5th pillar.",
+    "title": "Mental health. Our 5th pillar.",
     "intro": "Real health is physical AND mental. /mind is your daily mental check-in, your private journal, your sessions library, and a daily reflection written by the Motor.",
-    "important_title": "Important — read once.",
-    "important_body": "MakeIt's Mind module is NOT clinical treatment. It's training mental habits — comparable to breathwork, journaling, and reflection. NOT a substitute for therapy or medication. If you're in a bad place, or thinking about harming yourself or others, talk to a real human who can help right now.",
+    "important_title": "Important: read once.",
+    "important_body": "MakeIt's Mind module is NOT clinical treatment. It's training mental habits, comparable to breathwork, journaling, and reflection. NOT a substitute for therapy or medication. If you're in a bad place, or thinking about harming yourself or others, talk to a real human who can help right now.",
     "resources_title": "If it's burning",
     "resources_livslinien": "Livslinien · 70 201 201 (Denmark, 24/7)",
     "resources_emergency": "Emergency · 112 (EU) / 911 (US)",
     "resources_doctor": "Your doctor or the psychiatric ER",
     "privacy_title": "How we handle your data",
-    "privacy_journal": "Munk, coaches and other members cannot read your journal (only you in the app). An excerpt may be sent to Anthropic (Claude) for crisis-text moderation. That is a processor — not a coach.",
+    "privacy_journal": "Munk, coaches and other members cannot read your journal (only you in the app). An excerpt may be sent to Anthropic (Claude) for crisis-text moderation. That is a processor, not a coach.",
     "privacy_mind_check": "Your mind-check is private by default. When you tier up, you can choose to share your signal with your buddy. Both must opt in. An optional note may be included in the daily mental coach at Anthropic.",
     "privacy_journal_label": "Journal",
     "privacy_mind_check_label": "Mind-check",
     "privacy_ai_label": "The Motor",
-    "privacy_ai": "The Motor (processor: Anthropic) reads your mind-check including optional note, HRV, and training week — not your journal body — to write you a daily reflection. Output is stored so you can re-read it. Anthropic is a processor, not a coach.",
-    "accept": "I understand — continue",
-    "accepted": "Thank you — the module is open."
+    "privacy_ai": "The Motor (processor: Anthropic) reads your mind-check including optional note, HRV, and training week (not your journal body) to write you a daily reflection. Output is stored so you can re-read it. Anthropic is a processor, not a coach.",
+    "accept": "I understand. Continue",
+    "accepted": "Thank you. The module is open."
   },
   "safety": {
     "eyebrow": "Mind · safety",
     "title": "We saw something that worries us.",
-    "body": "You wrote something that sounds like you're having a really hard time right now. You don't need to do anything with us here — the important thing is talking to a person who can help.",
+    "body": "You wrote something that sounds like you're having a really hard time right now. You don't need to do anything with us here. The important thing is talking to a person who can help.",
     "ifBurning": "If it's burning",
     "livslinien": "Livslinien · 70 201 201",
     "livslinienHours": "(Denmark, 24/7)",
     "emergency": "Emergency · 112",
     "doctor": "Your doctor or the psychiatric ER",
-    "privacy": "Your journal entry is saved. Munk and coaches cannot see it. An excerpt may have been sent to Anthropic for moderation — not for coaching.",
+    "privacy": "Your journal entry is saved. Munk and coaches cannot see it. An excerpt may have been sent to Anthropic for moderation, not for coaching.",
     "tellMunk": "Write to Munk",
-    "close": "Thanks — close",
+    "close": "Thanks, close",
     "escalateEyebrow": "Mind · write to Munk",
     "escalateTitle": "Write yourself what you want to share.",
-    "escalateBody": "Munk sees ONLY what you write here. Never your journal. A strength coach is not a crisis service — Livslinien and 112 are still the right call if it's burning.",
+    "escalateBody": "Munk sees ONLY what you write here. Never your journal. A strength coach is not a crisis service. Livslinien and 112 are still the right call if it's burning.",
     "escalatePlaceholder": "E.g. 'I'm having a hard time right now. Could we talk this week?'",
     "back": "Back",
     "send": "Save for Munk",
@@ -54,7 +54,7 @@
     "sentClose": "Close",
     "errorNotAuthed": "You are not signed in.",
     "errorInvalid": "The message could not be sent. Try again.",
-    "errorTooShort": "Write a little more — at least 4 characters.",
+    "errorTooShort": "Write a little more, at least 4 characters.",
     "errorTooLong": "The message is too long.",
     "errorRls": "The message could not be saved. Call Livslinien if you need help now.",
     "errorWrite": "The message could not be saved. Try again, or call Livslinien.",
@@ -62,8 +62,8 @@
   },
   "journal": {
     "eyebrow": "Mind · Journal",
-    "titleNew": "Journal — private.",
-    "titleUpdate": "Journal — update.",
+    "titleNew": "Journal · private.",
+    "titleUpdate": "Journal · update.",
     "subtitleNew": "Three words or three paragraphs. Munk and coaches cannot see it. Anthropic may see an excerpt for crisis-text moderation.",
     "subtitleUpdate": "You have written today. You can update until midnight.",
     "promptEyebrow": "Today's prompt",
@@ -72,7 +72,7 @@
     "saving": "Saving...",
     "update": "Update",
     "save": "Save entry",
-    "saved": "Saved — Munk and coaches cannot see it.",
+    "saved": "Saved. Munk and coaches cannot see it.",
     "history": "Earlier entries"
   },
   "settingsPage": {
@@ -94,13 +94,13 @@
   "reflection": {
     "eyebrow": "Motor",
     "title": "Motor · Adaptive Engine",
-    "gloss": "The Motor writes the reflection — Munk is your coach"
+    "gloss": "The Motor writes the reflection. Munk is your coach"
   },
   "check": {
     "metaTitle": "Mind-check · MakeIt",
     "eyebrow": "Mind · Pillar 5",
-    "titleNew": "Mind-check — 60 sec.",
-    "titleUpdate": "Mind-check — update.",
+    "titleNew": "Mind-check · 60 sec.",
+    "titleUpdate": "Mind-check · update.",
     "subtitleNew": "Three sliders. One sentence if you want. Faster than waiting for your next set.",
     "subtitleUpdate": "You checked in today. You can update until midnight.",
     "streakCurrent": "day streak",
@@ -120,19 +120,19 @@
     "save": "Save mind-check",
     "update": "Update",
     "saving": "Saving...",
-    "savedHint": "Checked in today — you can update later."
+    "savedHint": "Checked in today. You can update later."
   },
   "redirect": {
     "eyebrow": "Mind",
     "title": "Opening Mind…",
-    "body": "Checking whether you have accepted the disclaimer — then we send you on."
+    "body": "Checking whether you have accepted the disclaimer. Then we send you on."
   },
   "graph": {
-    "title": "Mental graph — last 30 days",
+    "title": "Mental graph · last 30 days",
     "energy": "Energy",
     "calm": "Calm (inverted stress)",
     "focus": "Focus",
-    "aria": "Mental graph — energy, calm, focus over the last 30 days"
+    "aria": "Mental graph: energy, calm, focus over the last 30 days"
   },
   "tour": {
     "skip": "Skip",
@@ -141,8 +141,8 @@
     "steps": {
       "pillar": {
         "eyebrow": "Mind",
-        "title": "Pillar 5 — the mental machine.",
-        "body": "You just built the physical habit. Now we start on the head. Three minutes to get oriented — then you are in."
+        "title": "Pillar 5: the mental machine.",
+        "body": "You just built the physical habit. Now we start on the head. Three minutes to get oriented, then you are in."
       },
       "check": {
         "eyebrow": "Mind-check",
@@ -152,7 +152,7 @@
       "library": {
         "eyebrow": "AI coach + library",
         "title": "Today's reflection is ready at 06:30.",
-        "body": "The AI coach reads your mind-check, HRV and week — writes a short daily reflection. Plus 8 sessions in the library: breathwork, focus, recovery, debrief."
+        "body": "The AI coach reads your mind-check, HRV and week and writes a short daily reflection. Plus 8 sessions in the library: breathwork, focus, recovery, debrief."
       }
     }
   }
