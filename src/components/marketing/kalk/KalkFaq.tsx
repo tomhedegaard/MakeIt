@@ -21,7 +21,7 @@ export default function KalkFaq() {
   ];
 
   return (
-    <section id="faq" aria-labelledby="faq-heading" className="scroll-mt-[68px] pb-[clamp(80px,10vw,150px)]">
+    <section id="faq" aria-labelledby="faq-heading" className="scroll-mt-[68px] pb-[clamp(72px,8vw,128px)]">
       <div className="mx-auto max-w-[1360px] px-4 md:px-8">
         <div className="grid gap-[clamp(40px,6vw,96px)] lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]">
           <div>

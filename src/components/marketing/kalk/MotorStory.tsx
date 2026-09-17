@@ -66,7 +66,7 @@ export default function MotorStory() {
   const t = useTranslations("Marketing.kalk.engine");
 
   return (
-    <section id="engine" aria-labelledby="engine-heading" className="scroll-mt-[68px] py-[clamp(80px,10vw,150px)]">
+    <section id="engine" aria-labelledby="engine-heading" className="scroll-mt-[68px] py-[clamp(72px,8vw,128px)]">
       <div className="mx-auto max-w-[1360px] px-4 md:px-8">
         <Rule />
 
@@ -135,7 +135,7 @@ function ReportLine({ step, domain }: { step: MotorStepKey; domain: string }) {
       data-domain={domain}
       className={cn(
         "relative border-t border-line-strong pb-9 pt-7",
-        "lg:order-none lg:flex lg:min-h-[82vh] lg:flex-col lg:justify-center lg:border-l lg:border-t-0 lg:border-line lg:py-10 lg:pl-10",
+        "lg:order-none lg:flex lg:min-h-[52vh] lg:flex-col lg:justify-center lg:border-l lg:border-t-0 lg:border-line lg:py-10 lg:pl-10",
         style.lineOrder,
       )}
     >

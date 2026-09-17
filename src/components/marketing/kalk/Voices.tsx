@@ -16,7 +16,7 @@ export default function Voices() {
   const [big, ...small] = t.raw("items") as Voice[];
 
   return (
-    <section id="voices" aria-labelledby="voices-heading" className="scroll-mt-[68px] pb-[clamp(80px,10vw,150px)]">
+    <section id="voices" aria-labelledby="voices-heading" className="scroll-mt-[68px] pb-[clamp(72px,8vw,128px)]">
       <div className="mx-auto max-w-[1360px] px-4 md:px-8">
         <h2 id="voices-heading" className="font-display text-[clamp(46px,6.4vw,96px)]">
           {t("heading")}

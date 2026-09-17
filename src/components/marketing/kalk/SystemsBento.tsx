@@ -56,7 +56,7 @@ export default function SystemsBento() {
     <section
       id="systems"
       aria-labelledby="systems-heading"
-      className="scroll-mt-[68px] overflow-x-clip pb-[clamp(80px,10vw,150px)]"
+      className="scroll-mt-[68px] overflow-x-clip pb-[clamp(72px,8vw,128px)]"
     >
       <div className="mx-auto max-w-[1360px] px-4 md:px-8">
         <Rule />

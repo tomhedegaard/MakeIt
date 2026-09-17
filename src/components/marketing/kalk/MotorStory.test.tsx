@@ -32,7 +32,7 @@ describe("MotorStory", () => {
     const rig = html.match(/<div[^>]*data-active="decision"[^>]*class="([^"]*)"/)?.[1] ?? "";
     expect(rig).toContain("lg:w-[calc(288px*var(--rig-s))]");
     expect(rig).toContain("lg:top-[max(1rem,calc(50svh_-_312px*var(--rig-s)))]");
-    expect(rig).toContain("lg:mt-[calc(41vh_-_312px*var(--rig-s))]");
+    expect(rig).toContain("lg:mt-[max(0px,calc(26vh_-_312px*var(--rig-s)))]");
     const state = html.match(/<div[^>]*data-state="sleep"[^>]*class="([^"]*)"/)?.[1] ?? "";
     expect(state).toContain("lg:[transform:scale(var(--rig-s))]");
     expect(state).toContain("lg:origin-top-left");

@@ -22,7 +22,7 @@ export default function KalkMunk() {
     <section
       id="munk"
       aria-labelledby="munk-heading"
-      className="scroll-mt-[68px] overflow-hidden pb-[clamp(80px,10vw,150px)] pt-[clamp(60px,7vw,110px)]"
+      className="scroll-mt-[68px] overflow-hidden pb-[clamp(72px,8vw,128px)] pt-[clamp(60px,7vw,110px)]"
     >
       <div className="mx-auto max-w-[1360px] px-4 md:px-8">
         <div

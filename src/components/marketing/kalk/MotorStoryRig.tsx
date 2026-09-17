@@ -80,7 +80,7 @@ export default function MotorStoryRig({ children }: { children: ReactNode }) {
     <div
       ref={ref}
       data-active={active}
-      className="group/rig contents lg:sticky lg:top-[max(1rem,calc(50svh_-_312px*var(--rig-s)))] lg:mt-[calc(41vh_-_312px*var(--rig-s))] lg:block lg:aspect-[9/19.5] lg:w-[calc(288px*var(--rig-s))] lg:self-start lg:before:absolute lg:before:inset-0 lg:before:rounded-[16%/7.38%] lg:before:bg-fg"
+      className="group/rig contents lg:sticky lg:top-[max(1rem,calc(50svh_-_312px*var(--rig-s)))] lg:mt-[max(0px,calc(26vh_-_312px*var(--rig-s)))] lg:block lg:aspect-[9/19.5] lg:w-[calc(288px*var(--rig-s))] lg:self-start lg:before:absolute lg:before:inset-0 lg:before:rounded-[16%/7.38%] lg:before:bg-fg"
     >
       {children}
       <div aria-hidden="true" className="absolute inset-x-0 top-[calc(100%+46px)] hidden justify-center gap-1.5 lg:flex">
