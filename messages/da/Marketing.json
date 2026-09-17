@@ -612,11 +612,11 @@
       },
       "wearables": {
         "q": "Hvilke wearables understøtter HRV-modulet?",
-        "a": "WHOOP, Oura og Polar (H10 og O20-serien) er live. Du forbinder via OAuth fra indstillingerne — vi opbevarer aldrig dine login-detaljer, kun tokens som er krypteret i hvile. Apple Watch-support kommer med MakeIt-appen til iPhone. Garmin er på roadmap'en, men ikke i v1."
+        "a": "WHOOP, Oura og Polar (H10 og O20-serien) er live. Du forbinder via OAuth fra indstillingerne. Vi opbevarer aldrig dine login-detaljer, kun tokens som er krypteret i hvile. Apple Watch-support kommer med MakeIt-appen til iPhone. Garmin er på roadmap'en, men ikke i v1."
       },
       "hrvScore": {
         "q": "Hvorfor får jeg ikke en HRV-score fra 0 til 100?",
-        "a": "Fordi et tal fra 0 til 100 lover en præcision, der ikke findes. Vi viser din faktiske RMSSD i millisekunder, dit eget 60-dages baseline-bånd og en 5-bucket readiness-ladder — så du ser hvor du ligger i forhold til din egen normal, ikke en opfundet skala. Du kan heller ikke sammenligne din HRV med andres; sundt RMSSD spænder fra ca. 10 til 200 ms afhængigt af alder, køn og form."
+        "a": "Fordi et tal fra 0 til 100 lover en præcision, der ikke findes. Vi viser din faktiske RMSSD i millisekunder, dit eget 60-dages baseline-bånd og en 5-bucket readiness-ladder, så du ser hvor du ligger i forhold til din egen normal, ikke en opfundet skala. Du kan heller ikke sammenligne din HRV med andres; sundt RMSSD spænder fra ca. 10 til 200 ms afhængigt af alder, køn og form."
       },
       "hrvPrivacy": {
         "q": "Hvem ser min HRV-data og mine livsstil-logs?",
