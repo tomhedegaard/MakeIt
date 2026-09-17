@@ -20,16 +20,18 @@ import { getMyFormChecks } from "@/lib/data/me";
 import { getLatestUnseenPromotion } from "@/lib/data/tier-events";
 import TierBanner from "@/components/app/TierBanner";
 import FirstTimeTour from "@/components/app/FirstTimeTour";
-import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
-import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
-import MindTile from "@/components/mind/MindTile";
-import BodyMap from "@/components/brand/BodyMap";
-import DomainMark from "@/components/brand/DomainMark";
-import {
-  getOrCreateMentalSettings,
-  getTodayMentalCoachOutput,
-  hasMindCheckToday,
-} from "@/lib/data/mind";
+import { hasMindCheckToday } from "@/lib/data/mind";
+import { getDailyIntake } from "@/lib/data/nutrition-intake";
+import { getOrCreateNutritionProfile } from "@/lib/data/nutrition";
+import { resolveDailyTargets } from "@/lib/nutrition/plan-macros";
+import { getTodayAdaptation } from "@/lib/data/today-adaptation";
+import Card from "@/components/ui/Card";
+import EmptyState from "@/components/ui/EmptyState";
+import PageTitle from "@/components/ui/PageTitle";
+import SectionHeader from "@/components/ui/SectionHeader";
+import Stat from "@/components/ui/Stat";
+import KeepOriginal from "@/components/dashboard/KeepOriginal";
+import MorningSignal from "@/components/dashboard/MorningSignal";
 import AdaptiveReasonStrip from "@/components/adaptive/AdaptiveReasonStrip";
 import ConnectDotsStream from "@/components/dashboard/ConnectDotsStream";
 import TodayProse from "@/components/dashboard/TodayProse";
@@ -108,26 +110,20 @@ function fmtUpcomingDate(iso: string | null, t: Translator, locale: string): str
   return d.toLocaleDateString(intlLocaleTag(locale), { weekday: "short" }).replace(".", "");
 }
 
-type HrvChipData = {
+type HrvReading = {
   rmssdMs: number;
-  readiness: string | null;
   bucket: ReadinessBucket | null;
 };
 
 /**
- * Latest HRV reading for the dashboard chip. Demo mode uses the
+ * Latest HRV reading for the morning signal. Demo mode uses the
  * steady fixture so Heart is visible without a wearable.
  */
-async function getHrvChipData(
-  memberId: string,
-  labels: Record<"ro" | "midt" | "lav", string>,
-): Promise<HrvChipData | null> {
+async function getHrvReading(memberId: string): Promise<HrvReading | null> {
   if (!SUPABASE_ENABLED) {
     const view = buildHrvBandView(demoSteadySeries());
-    const q = view.qualitative;
     return {
       rmssdMs: view.latestMs ?? 0,
-      readiness: q ? labels[q] : null,
       bucket: view.qualitative === "lav" ? "low" : view.qualitative === "ro" ? "high" : "normal",
     };
   }
@@ -144,12 +140,9 @@ async function getHrvChipData(
 
   if (!data) return null;
 
-  const bucket = (data.readiness_bucket as ReadinessBucket | null) ?? null;
-  const q = qualitativeFromBucket(bucket);
   return {
     rmssdMs: data.rmssd_ms as number,
-    readiness: q ? labels[q] : null,
-    bucket,
+    bucket: (data.readiness_bucket as ReadinessBucket | null) ?? null,
   };
 }
 
@@ -157,12 +150,6 @@ export default async function TodayPage() {
   const member = (await getSession())!;
   const locale = await getLocale();
   const t = await getTranslations("Dashboard");
-  const tHrv = await getTranslations("Hrv.band.qualitative");
-  const chipLabels = {
-    ro: tHrv("ro"),
-    midt: tHrv("midt"),
-    lav: tHrv("lav"),
-  };
   const [stripCopy, dotsCopy] = await Promise.all([
     loadStripCopy(),
     loadDotsCopy(),
@@ -206,23 +193,26 @@ export default async function TodayPage() {
     (c) => c.reviewedAt && c.coachNotes
   ).length;
 
-  // Daily nutrition check-in. Renders only when there's a meal slot
-  // to surface; the component itself returns null on "no-plan".
-  const checkin = await getDailyCheckIn(member.id);
-
   // Tier promotion banner: surface latest unseen tier-up.
   const promotion = await getLatestUnseenPromotion(member.id);
 
-  // HRV readiness chip: latest synced reading, or a connect CTA.
-  const hrv = await getHrvChipData(member.id, chipLabels);
-
-  // Mind module tile (B-layer): surface today's state to the dashboard.
-  const [mindChecked, coachOutput, mentalSettings, prose] = await Promise.all([
+  // Morning signal inputs (C5) + today's adaptation (C1).
+  const [hrv, mindChecked, prose, intakeRaw, adaptation] = await Promise.all([
+    getHrvReading(member.id),
     hasMindCheckToday(member.id),
-    getTodayMentalCoachOutput(member.id),
-    getOrCreateMentalSettings(member.id),
     getTodayProse(member.id),
+    getDailyIntake(member.id),
+    getTodayAdaptation(member.id, today?.id ?? null),
   ]);
+
+  // Demo has no intake rows and no plan, so the food cell would show
+  // "0 kcal" without a goal. Use the demo profile's target, resolved
+  // the same way the demo meal plan resolves it (goal default when the
+  // profile has no explicit kcal target).
+  const targetKcal =
+    !connected && intakeRaw.targetKcal == null
+      ? resolveDailyTargets(await getOrCreateNutritionProfile(member.id)).kcal
+      : intakeRaw.targetKcal;
 
   const engineStrip = connected
     ? stripFromAvailableSignals({
@@ -246,221 +236,169 @@ export default async function TodayPage() {
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       <FirstTimeTour />
-      {/* Greeting */}
-      <header className="flex items-end justify-between gap-4 pt-2">
-        <div>
-          <div className="eyebrow mb-2">{t("greeting.eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2rem,7vw,3.5rem)] leading-[0.95]">
-            @{member.handle}
-          </h1>
-        </div>
-        <div className="text-right shrink-0">
-          <div className="eyebrow mb-1">{t("greeting.streakLabel")}</div>
-          <div className="numeric text-3xl">{stats?.streakDays ?? (connected ? 0 : 12)}</div>
-          <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">{t("greeting.streakUnit")}</div>
-        </div>
-      </header>
 
-      <TodayProse model={prose} />
-
-      <BodyMap />
-
-      {promotion ? (
-        <TierBanner
-          eventId={promotion.id}
-          fromTier={promotion.fromTier}
-          toTier={promotion.toTier}
-        />
-      ) : null}
-
-      <DailyCheckInCard checkin={checkin} variant="compact" />
-
-      <MindTile
-        hasMindCheckToday={mindChecked}
-        hasCoachOutputToday={!!coachOutput}
-        currentStreak={mentalSettings.current_streak_days}
+      {/* 1. greeting */}
+      <PageTitle
+        className="pt-2"
+        kicker={t("greeting.eyebrow")}
+        title={`@${member.handle}`}
+        action={
+          <div className="text-right">
+            <div className="eyebrow mb-1">{t("greeting.streakLabel")}</div>
+            <div className="numeric text-3xl">{stats?.streakDays ?? (connected ? 0 : 12)}</div>
+            <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">{t("greeting.streakUnit")}</div>
+          </div>
+        }
       />
 
-      <HrvChip hrv={hrv} eyebrow={t("hrvChip.eyebrow")} connect={t("hrvChip.connect")} unit={t("hrvChip.unit")} />
-
-      <ConnectDotsStream cards={insightCards} copy={dotsCopy} />
-
-      <InstallHint />
-
-      {reviewedCount > 0 ? (
-        <Link
-          href="/profile#form-checks"
-          data-domain="body"
-          className="block surface-2 rounded-xl px-5 py-4 lift"
-          style={{ borderColor: "var(--line-bright)" }}
+      {/* 2. todaySession */}
+      {today ? (
+        <Card
+          variant="primary"
+          domain="body"
+          as="section"
+          data-dashboard="todaySession"
+          aria-label={t("todaySession.ariaLabel")}
+          className="p-0 overflow-hidden"
         >
-          <div className="flex items-center gap-3">
-            <span className="pulse-dot" />
-            <div className="flex-1 min-w-0">
-              <div className="text-sm">
-                {t("formChecks.answeredBefore")}{" "}
-                <span className="text-fg">
-                  {t("formChecks.answeredCount", { count: reviewedCount })}
+          <div className="px-5 pt-5 pb-4 border-b hairline">
+            <span className="domain-stroke mb-3" aria-hidden />
+            <div className="flex items-center gap-2 mb-3 flex-wrap">
+              <span className="pulse-dot" />
+              <span className="eyebrow eyebrow-domain">{t("todaySession.eyebrow", { programCode: today.programCode, week: today.week })}</span>
+              {today.isDeload ? (
+                <span className="ml-auto numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+                  {t("todaySession.deload")}
                 </span>
-              </div>
-              <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-0.5">
-                {t("formChecks.readNotes")}
+              ) : null}
+            </div>
+            <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
+              {today.dayLabel}
+            </h2>
+            <p className="text-fg-dim text-sm md:text-base leading-relaxed">{today.title}</p>
+          </div>
+
+          <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
+
+          <div className="grid grid-cols-3 gap-px bg-line border-b hairline">
+            <div className="bg-bg-2 px-4 py-3">
+              <div className="eyebrow mb-1">{t("todaySession.exercises")}</div>
+              <div className="numeric text-2xl">{today.exerciseCount}</div>
+            </div>
+            <div className="bg-bg-2 px-4 py-3">
+              <div className="eyebrow mb-1">{t("todaySession.sets")}</div>
+              <div className="numeric text-2xl">{today.setCount}</div>
+            </div>
+            <div className="bg-bg-2 px-4 py-3">
+              <div className="eyebrow mb-1">{t("todaySession.estTime")}</div>
+              <div className="numeric text-2xl">
+                {today.estimatedMinutes}
+                <span className="text-fg-dim text-sm">{t("todaySession.minuteUnit")}</span>
               </div>
             </div>
-            <span className="text-fg-dim shrink-0" aria-hidden>
-              →
-            </span>
           </div>
-        </Link>
-      ) : null}
 
-      {/* Today's session */}
-      {today ? (
-      <section
-        aria-label={t("todaySession.ariaLabel")}
-        data-domain="body"
-        className="surface-2 rounded-2xl overflow-hidden"
-      >
-        <div className="px-5 pt-5 pb-4 border-b hairline">
-          <span className="domain-stroke mb-3" aria-hidden />
-          <div className="flex items-center gap-2 mb-3 flex-wrap">
-            <span className="pulse-dot" />
-            <span className="eyebrow eyebrow-domain">{t("todaySession.eyebrow", { programCode: today.programCode, week: today.week })}</span>
-            {today.isDeload ? (
-              <span className="ml-auto numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
-                {t("todaySession.deload")}
-              </span>
+          <ul className="divide-y hairline">
+            {today.exercises.map((ex, i) => {
+              const row = (
+                <>
+                  <span className="numeric text-fg-faint text-xs w-6">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="flex-1 text-fg/90 text-sm md:text-base truncate">{ex.name}</span>
+                  <span className="numeric text-fg-faint text-xs">{ex.setCount}{t("todaySession.setCountSuffix")}</span>
+                </>
+              );
+              return (
+                <li key={`${ex.name}-${i}`}>
+                  {ex.slug ? (
+                    <Link
+                      href={`/train/exercises/${ex.slug}`}
+                      className="px-5 py-3 flex items-center gap-4 lift"
+                    >
+                      {row}
+                    </Link>
+                  ) : (
+                    <div className="px-5 py-3 flex items-center gap-4">{row}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="p-4 lg:p-5 flex flex-col items-stretch gap-3">
+            <Link href={`/session/${today.id}`} className="btn btn-primary btn-xl">
+              {t("todaySession.start")}
+            </Link>
+            {adaptation ? (
+              <KeepOriginal
+                modifierId={adaptation.modifierId}
+                sessionId={today.id}
+                accepted={adaptation.acceptedByMember}
+              />
             ) : null}
           </div>
-          <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
-            {today.dayLabel}
-          </h2>
-          <p className="text-fg-dim text-sm md:text-base leading-relaxed">{today.title}</p>
-        </div>
-
-        <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
-
-        <div className="grid grid-cols-3 gap-px bg-line border-b hairline">
-          <div className="bg-bg-2 px-4 py-3">
-            <div className="eyebrow mb-1">{t("todaySession.exercises")}</div>
-            <div className="numeric text-2xl">{today.exerciseCount}</div>
-          </div>
-          <div className="bg-bg-2 px-4 py-3">
-            <div className="eyebrow mb-1">{t("todaySession.sets")}</div>
-            <div className="numeric text-2xl">{today.setCount}</div>
-          </div>
-          <div className="bg-bg-2 px-4 py-3">
-            <div className="eyebrow mb-1">{t("todaySession.estTime")}</div>
-            <div className="numeric text-2xl">
-              {today.estimatedMinutes}
-              <span className="text-fg-dim text-sm">{t("todaySession.minuteUnit")}</span>
-            </div>
-          </div>
-        </div>
-
-        <ul className="divide-y hairline">
-          {today.exercises.map((ex, i) => {
-            const row = (
-              <>
-                <span className="numeric text-fg-faint text-xs w-6">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="flex-1 text-fg/90 text-sm md:text-base truncate">{ex.name}</span>
-                <span className="numeric text-fg-faint text-xs">{ex.setCount}{t("todaySession.setCountSuffix")}</span>
-              </>
-            );
-            return (
-              <li key={`${ex.name}-${i}`}>
-                {ex.slug ? (
-                  <Link
-                    href={`/train/exercises/${ex.slug}`}
-                    className="px-5 py-3 flex items-center gap-4 lift"
-                  >
-                    {row}
-                  </Link>
-                ) : (
-                  <div className="px-5 py-3 flex items-center gap-4">{row}</div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-
-        <div className="p-4 lg:p-5">
-          <Link href={`/session/${today.id}`} className="btn btn-primary btn-xl">
-            {t("todaySession.start")}
-          </Link>
-        </div>
-      </section>
+        </Card>
       ) : (
-      <section
-        aria-label={t("todaySession.ariaLabel")}
-        data-domain="body"
-        data-today-empty=""
-        className="surface-2 rounded-2xl overflow-hidden"
-      >
-        <div className="px-5 pt-5 pb-4">
-          <span className="domain-stroke mb-3" aria-hidden />
-          <div className="eyebrow eyebrow-domain mb-3">{t("todaySession.emptyEyebrow")}</div>
-          <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
-            {t("todaySession.emptyTitle")}
-          </h2>
-          <p className="text-fg-dim text-sm md:text-base leading-relaxed">
-            {t("todaySession.emptyBody")}
-          </p>
-        </div>
-        <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
-        <div className="p-4 lg:p-5">
-          <Link href="/coaching" className="btn btn-primary btn-xl">
-            {t("todaySession.emptyCta")}
-          </Link>
-        </div>
-      </section>
+        <EmptyState
+          role="region"
+          aria-label={t("todaySession.ariaLabel")}
+          data-dashboard="todaySession"
+          data-domain="body"
+          data-today-empty=""
+          title={t("todaySession.emptyTitle")}
+          body={t("todaySession.emptyBody")}
+          actionHref="/coaching"
+          actionLabel={t("todaySession.emptyCta")}
+        />
       )}
 
-      {/* Quick stats */}
-      <section className="grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
-        <div className="bg-bg p-4 lg:p-5">
-          <div className="eyebrow mb-2">{t("stats.volume")}</div>
-          <div className="numeric text-2xl lg:text-3xl">
-            {stats ? formatVolume(stats.volumeKg) : connected ? "0" : "84.2K"}
-          </div>
-          <div className="text-[10px] font-mono text-fg-faint mt-1 flex items-center gap-1">
-            <span>{t("stats.volumeMeta")}</span>
-            {stats ? (
-              <TrendArrow current={stats.volumeKg} previous={stats.volumeKgPrev} t={t} />
-            ) : null}
-          </div>
-        </div>
-        <div className="bg-bg p-4 lg:p-5">
-          <div className="eyebrow mb-2">{t("stats.prs")}</div>
-          <div className="numeric text-2xl lg:text-3xl">
-            {stats ? String(stats.prs4w).padStart(2, "0") : connected ? "00" : "03"}
-          </div>
-          <div className="text-[10px] font-mono text-fg-faint mt-1 flex items-center gap-1">
-            <span>{t("stats.prsMeta")}</span>
-            {stats ? (
-              <TrendArrow current={stats.prs4w} previous={stats.prsPrev} t={t} />
-            ) : null}
-          </div>
-        </div>
-        <div className="bg-bg p-4 lg:p-5">
-          <div className="eyebrow mb-2">{t("stats.reps")}</div>
-          <div className="numeric text-2xl lg:text-3xl">
-            {stats ? formatReps(stats.repsBalance, locale) : connected ? "0" : "1.420"}
-          </div>
-          <div className="text-[10px] font-mono text-fg-faint mt-1">{member.tier}</div>
-        </div>
-      </section>
+      {/* 3. morningSignal */}
+      <MorningSignal
+        input={{
+          session: today ? { adapted: adaptation != null && adaptation.acceptedByMember !== false } : null,
+          hrv,
+          mindCheckedToday: mindChecked,
+          intake: { consumedKcal: intakeRaw.consumedKcal, targetKcal },
+        }}
+      />
 
-      {/* Upcoming */}
-      <section>
-        <div className="flex items-end justify-between mb-3">
-          <div className="eyebrow">{t("upcoming.title")}</div>
-          <Link href="/coaching" className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg">
-            {t("upcoming.seeWeek")}
+      {/* 4. munkNote */}
+      {reviewedCount > 0 ? (
+        <Card domain="body" className="p-0 overflow-hidden">
+          <Link href="/profile#form-checks" className="block px-5 py-4 lift">
+            <div className="flex items-center gap-3">
+              <span className="pulse-dot" />
+              <div className="flex-1 min-w-0">
+                <div className="text-sm">
+                  {t("formChecks.answeredBefore")}{" "}
+                  <span className="text-fg">
+                    {t("formChecks.answeredCount", { count: reviewedCount })}
+                  </span>
+                </div>
+                <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-0.5">
+                  {t("formChecks.readNotes")}
+                </div>
+              </div>
+              <span className="text-fg-dim shrink-0" aria-hidden>
+                →
+              </span>
+            </div>
           </Link>
-        </div>
+        </Card>
+      ) : null}
+
+      {/* 5. prose, with the cross-domain insight cards under it */}
+      <TodayProse model={prose} />
+      <ConnectDotsStream cards={insightCards} copy={dotsCopy} />
+
+      {/* 6. upcoming */}
+      <section data-dashboard="upcoming">
+        <SectionHeader
+          title={t("upcoming.title")}
+          href="/coaching"
+          linkLabel={t("upcoming.seeWeek")}
+        />
         {upcoming && upcoming.length > 0 ? (
           <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">
             {upcoming.map((row) => (
@@ -493,14 +431,48 @@ export default async function TodayPage() {
         )}
       </section>
 
-      {/* Crew */}
-      <section>
-        <div className="flex items-end justify-between mb-3">
-          <div className="eyebrow">{t("crew.title")}</div>
-          <Link href="/community" className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg">
-            {t("crew.seeFeed")}
-          </Link>
+      {/* 7. stats */}
+      <Card as="section" data-dashboard="stats" className="grid grid-cols-3 gap-4">
+        <div>
+          <Stat
+            label={t("stats.volume")}
+            value={stats ? formatVolume(stats.volumeKg) : connected ? "0" : "84.2K"}
+          />
+          <div className="text-[10px] font-mono text-fg-faint mt-1 flex items-center gap-1">
+            <span>{t("stats.volumeMeta")}</span>
+            {stats ? (
+              <TrendArrow current={stats.volumeKg} previous={stats.volumeKgPrev} t={t} />
+            ) : null}
+          </div>
         </div>
+        <div>
+          <Stat
+            label={t("stats.prs")}
+            value={stats ? String(stats.prs4w).padStart(2, "0") : connected ? "00" : "03"}
+          />
+          <div className="text-[10px] font-mono text-fg-faint mt-1 flex items-center gap-1">
+            <span>{t("stats.prsMeta")}</span>
+            {stats ? (
+              <TrendArrow current={stats.prs4w} previous={stats.prsPrev} t={t} />
+            ) : null}
+          </div>
+        </div>
+        <div>
+          <Stat
+            label={t("stats.reps")}
+            value={stats ? formatReps(stats.repsBalance, locale) : connected ? "0" : "1.420"}
+          />
+          <div className="text-[10px] font-mono text-fg-faint mt-1">{member.tier}</div>
+        </div>
+      </Card>
+
+      {/* 8. crew */}
+      <section data-dashboard="crew">
+        <SectionHeader
+          title={t("crew.title")}
+          href="/community"
+          linkLabel={t("crew.seeFeed")}
+        />
         {feed && feed.length > 0 ? (
           <ul className="space-y-2.5">
             {feed.map((row) => (
@@ -522,6 +494,18 @@ export default async function TodayPage() {
           </div>
         )}
       </section>
+
+      {/* 9. tierBanner */}
+      {promotion ? (
+        <TierBanner
+          eventId={promotion.id}
+          fromTier={promotion.fromTier}
+          toTier={promotion.toTier}
+        />
+      ) : null}
+
+      {/* 10. installHint */}
+      <InstallHint />
     </Container>
   );
 }
@@ -547,54 +531,6 @@ function CrewRow({
         </span>
       ) : null}
     </li>
-  );
-}
-
-/**
- * Compact HRV readiness chip. Links to `/hrv`. With a synced reading
- * it shows the latest RMSSD + a one-word readiness label; otherwise it
- * surfaces a "Forbind wearable" CTA (demo mode / no connection).
- */
-function HrvChip({
-  hrv,
-  eyebrow,
-  connect,
-  unit,
-}: {
-  hrv: HrvChipData | null;
-  eyebrow: string;
-  connect: string;
-  unit: string;
-}) {
-  return (
-    <Link
-      href="/hrv"
-      data-domain="heart"
-      className="block surface-2 rounded-lg px-5 py-4 lift group"
-    >
-      <div className="flex items-center gap-4">
-        <DomainMark domain="heart" className="size-6 text-domain shrink-0" />
-        <div className="flex-1 min-w-0">
-          <div className="eyebrow eyebrow-domain mb-1.5">{eyebrow}</div>
-          {hrv ? (
-            <div className="flex items-baseline gap-2">
-              <span className="numeric text-2xl lg:text-3xl">
-                {Math.round(hrv.rmssdMs)}
-                <span className="text-fg-dim text-sm ml-1">{unit}</span>
-              </span>
-              {hrv.readiness ? (
-                <span className="text-sm text-fg-dim">· {hrv.readiness}</span>
-              ) : null}
-            </div>
-          ) : (
-            <div className="text-sm text-fg/90">{connect}</div>
-          )}
-        </div>
-        <span className="text-fg-dim group-hover:text-fg shrink-0" aria-hidden>
-          →
-        </span>
-      </div>
-    </Link>
   );
 }
 

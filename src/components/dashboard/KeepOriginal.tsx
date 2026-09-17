@@ -1,6 +1,6 @@
 "use client";
 
-import { useOptimistic, useState, useTransition } from "react";
+import { useOptimistic, useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 
 import { setAdaptationResponseAction } from "@/app/(app)/session/[id]/actions";
@@ -18,6 +18,17 @@ export function nextKeepState(_prev: KeepState, event: KeepEvent): KeepState {
   return event.ok ? "kept" : "error";
 }
 
+/**
+ * Double-submit guard: the first call claims the in-flight slot, a
+ * second fast click before React re-renders the disabled button is
+ * dropped.
+ */
+export function claimKeepSubmit(inFlight: { current: boolean }): boolean {
+  if (inFlight.current) return false;
+  inFlight.current = true;
+  return true;
+}
+
 type Props = {
   modifierId: string;
   sessionId: string;
@@ -33,8 +44,10 @@ export default function KeepOriginal({ modifierId, sessionId, accepted }: Props)
     (_current, next) => next,
   );
   const [isPending, startTransition] = useTransition();
+  const inFlight = useRef(false);
 
   function keep() {
+    if (!claimKeepSubmit(inFlight)) return;
     setState((s) => nextKeepState(s, { type: "submit" }));
     startTransition(async () => {
       setOptimisticKept(true);
@@ -44,6 +57,8 @@ export default function KeepOriginal({ modifierId, sessionId, accepted }: Props)
         ok = res.ok;
       } catch {
         ok = false;
+      } finally {
+        inFlight.current = false;
       }
       startTransition(() => {
         setState((s) => nextKeepState(s, { type: "result", ok }));

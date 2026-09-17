@@ -7,7 +7,7 @@ vi.mock("@/app/(app)/session/[id]/actions", () => ({
 }));
 
 import { render } from "@/components/marketing/test-render";
-import KeepOriginal, { nextKeepState } from "./KeepOriginal";
+import KeepOriginal, { claimKeepSubmit, nextKeepState } from "./KeepOriginal";
 
 describe("KeepOriginal", () => {
   it("offers a ghost 'Behold original' while undecided", () => {
@@ -37,6 +37,16 @@ describe("nextKeepState", () => {
 
   it("shows the error and brings the button back on failure", () => {
     expect(nextKeepState("pending", { type: "result", ok: false })).toBe("error");
+  });
+});
+
+describe("claimKeepSubmit", () => {
+  it("lets only the first of two fast clicks through", () => {
+    const inFlight = { current: false };
+    expect(claimKeepSubmit(inFlight)).toBe(true);
+    expect(claimKeepSubmit(inFlight)).toBe(false);
+    inFlight.current = false;
+    expect(claimKeepSubmit(inFlight)).toBe(true);
   });
 });
 
