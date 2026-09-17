@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import Logo from "@/components/Logo";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 
 export async function generateMetadata() {
@@ -167,8 +168,7 @@ function Section({
     <section className="py-8 border-t hairline">
       <div className="grid md:grid-cols-12 gap-6">
         <div className="md:col-span-3">
-          <div className="eyebrow mb-2">{eyebrow}</div>
-          <h2 className="font-display text-2xl leading-tight">{title}</h2>
+          <SectionHeader eyebrow={eyebrow} title={title} />
         </div>
         <div className="md:col-span-9 space-y-4 text-fg/90 text-base leading-relaxed">
           {children}
