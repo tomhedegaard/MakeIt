@@ -16,8 +16,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: COMPANY.taglineShort,
     start_url: "/dashboard",
     display: "standalone",
-    background_color: "#0A0A0B",
-    theme_color: "#0A0A0B",
+    background_color: "#E7E9EB",
+    theme_color: "#E7E9EB",
     categories: ["health", "fitness", "lifestyle"],
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },

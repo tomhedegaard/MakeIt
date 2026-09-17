@@ -20,7 +20,7 @@ const config: CapacitorConfig = {
   appName: "MakeIt",
   // Local fallback shell — only shown if the remote app can't load.
   webDir: "native-shell",
-  backgroundColor: "#0A0A0B",
+  backgroundColor: "#E7E9EB",
   server: {
     url: "https://makeit.tomhedegaard.dk",
     allowNavigation: ["makeit.tomhedegaard.dk"],
@@ -32,6 +32,7 @@ const config: CapacitorConfig = {
     appendUserAgent: "MakeItApp/1 (android)",
   },
   plugins: {
+    // Splash and icon change with the next store release (spec D3, needs Tom's ok).
     SplashScreen: {
       backgroundColor: "#0A0A0B",
     },
