@@ -2,7 +2,7 @@
   "error": {
     "eyebrow": "Error · 500",
     "title": "Something went wrong.",
-    "body": "We couldn't load this page. It's not you — it's us. Try again, or head back to the start.",
+    "body": "We couldn't load this page. It's not you, it's us. Try again, or head back to the start.",
     "ref": "ref: {digest}",
     "retry": "Try again",
     "home": "Back to home"
@@ -12,9 +12,9 @@
     "redirectEyebrow": "One moment",
     "redirectTitle": "Sending you on…",
     "nutritionTitle": "Opening food…",
-    "nutritionBody": "Loading your plan — or setup, if this is your first visit.",
+    "nutritionBody": "Loading your plan, or setup if this is your first visit.",
     "mindTitle": "Opening Mind…",
-    "mindBody": "Loading your check — or the disclaimer, if this is your first visit."
+    "mindBody": "Loading your check, or the disclaimer if this is your first visit."
   },
   "cookieBanner": {
     "eyebrow": "Cookies",
