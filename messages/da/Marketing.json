@@ -876,6 +876,119 @@
       "privacy": "Privatliv",
       "terms": "Vilkår",
       "sample": "Tal og skærme på siden er eksempeldata."
+    },
+    "screens": {
+      "time": "05:31",
+      "program": "STR-12 · uge 4",
+      "dayTitle": "Dag A: Squat",
+      "engineStamp": "Motoren · 05:30",
+      "munkInitials": "MM",
+      "pause": "Pause",
+      "play": "Afspil",
+      "dashboard": {
+        "aria": "App-skærm, I dag: motoren har skrevet dagens pas om. Back squat topsæt fra 150 til 135 kg, fordi nattens HRV lå under dit bånd.",
+        "greeting": "God morgen",
+        "day": "Onsdag",
+        "streak": "Stribe 12 dage",
+        "sessionSub": "Squat · topsæt @ RPE 8, 3×3 backoff",
+        "exercisesValue": "5",
+        "setsValue": "16",
+        "timeValue": "58m",
+        "munkReply": "Mikael Munk har besvaret 1 form-check",
+        "volumeLabel": "Volumen 4 uger",
+        "volumeValue": "18.420 kg",
+        "prLabel": "PR'er",
+        "prValue": "3",
+        "repsLabel": "Reps",
+        "repsValue": "1.240"
+      },
+      "session": {
+        "aria": "App-skærm, live session i mørkt tema: back squat, sæt 3 af 3 på 135 kg, med knap til at logge sættet og optage det til Munk.",
+        "day": "Dag A",
+        "targetReps": "3 reps",
+        "targetRpe": "RPE 8",
+        "set": "Sæt {n}",
+        "setValue": "135 × 3",
+        "sendTo": "Sendes til coach Munk",
+        "restValue": "2:30"
+      },
+      "hrv": {
+        "aria": "App-skærm, HRV: 48 ms i morges mod et snit på 61 ms, under dit personlige bånd. Motoren letter dagens squat-topsæt.",
+        "title": "Restitution",
+        "avgValue": "61 ms",
+        "range": "14 nætter",
+        "sleepValue": "5t 12m",
+        "rhrLabel": "Hvilepuls",
+        "rhrValue": "54",
+        "sourceLabel": "Kilde"
+      },
+      "food": {
+        "aria": "App-skærm, Mad: dagens plan på en træningsdag med 2.740 kcal og 182 g protein, tre måltider og en indkøbsliste.",
+        "trainingDay": "Træningsdag",
+        "kcal": "2.740",
+        "kcalUnit": "kcal",
+        "protein": "182 g protein",
+        "breakfast": "Skyr, havre, blåbær",
+        "lunch": "Rugbrød, æg, avocado",
+        "dinner": "Laks, kartofler, bønner",
+        "shopping": "Indkøbsliste · 14 varer"
+      },
+      "mind": {
+        "aria": "App-skærm, Mind-check på 60 sekunder: energi, stress og fokus på en skala fra 1 til 5, en journal og de sidste 7 dage.",
+        "title": "Mind-check",
+        "journal": "Journal",
+        "journalEntry": "Sov kort, men hovedet er klart. Glæder mig til squat.",
+        "checkIn": "Tjek ind",
+        "week": "Sidste 7 dage"
+      },
+      "formCheck": {
+        "aria": "App-skærm, Form-check: medlemmets egen optagelse af sæt 3 ved siden af en referencebevægelse, og Munks underskrevne svar.",
+        "videoLabel": "Referencebevægelse: back squat",
+        "duration": "0:22",
+        "next": "Optag næste sæt"
+      },
+      "decision": {
+        "aria": "App-skærm, Motorens beslutning: dagens pas er skrevet om. Back squat topsæt fra 150 til 135 kg, backoff fra 128 til 115 kg. Hvorfor: søvn, HRV og stress. Du kan beholde den oprindelige plan.",
+        "heading": "Dagens pas er skrevet om.",
+        "topSet": "Topsæt",
+        "backoff": "Backoff 3×3",
+        "backoffFrom": "128 kg",
+        "backoffTo": "115 kg",
+        "timeTo": "52m",
+        "why": "Hvorfor",
+        "restOfWeek": "Resten af ugen",
+        "dayB": "Dag B: Bænk",
+        "dayBStatus": "Uændret",
+        "dayC": "Dag C: Dødløft",
+        "dayCStatus": "Vurderes torsdag"
+      },
+      "sleep": {
+        "aria": "App-skærm, Søvn: 5 timer 12 minutter i nat, 2 timer 18 minutter under målet, med søvnfaser og de sidste 7 nætter.",
+        "goal": "Mål 7 t 30 m, 2 t 18 m under",
+        "awake": "Vågen",
+        "rem": "REM",
+        "light": "Let",
+        "deep": "Dyb",
+        "start": "23:48",
+        "end": "05:02",
+        "inBed": "I seng",
+        "deepSleep": "Dyb søvn",
+        "deepValue": "38 m",
+        "remValue": "54 m",
+        "awakeValue": "2 gange",
+        "nights": "7 nætter",
+        "synced": "Synket fra Oura kl. 05:14"
+      },
+      "mindChecked": {
+        "aria": "App-skærm, Mind-check fra i går aftes: energi 3 af 5, stress 4 af 5, fokus 3 af 5.",
+        "heading": "Hovedet i går aftes.",
+        "energyValue": "3/5",
+        "stressValue": "4/5",
+        "focusValue": "3/5",
+        "trend": "Stress, 7 dage. Dit snit ligger på 2 af 5.",
+        "journalEntry": "Deadline flyttet til fredag. Sov dårligt efter kl. 03.",
+        "checkedIn": "Tjekket ind 21:40"
+      }
     }
   }
 }

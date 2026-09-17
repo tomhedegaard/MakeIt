@@ -876,6 +876,119 @@
       "privacy": "Privacy",
       "terms": "Terms",
       "sample": "Numbers and screens on this page are sample data."
+    },
+    "screens": {
+      "time": "05:31",
+      "program": "STR-12 · week 4",
+      "dayTitle": "Day A: Squat",
+      "engineStamp": "Engine · 05:30",
+      "munkInitials": "MM",
+      "pause": "Pause",
+      "play": "Play",
+      "dashboard": {
+        "aria": "App screen, Today: the engine has rewritten today's session. Back squat top set from 150 to 135 kg, because last night's HRV sat below your band.",
+        "greeting": "Good morning",
+        "day": "Wednesday",
+        "streak": "12 day streak",
+        "sessionSub": "Squat · top set @ RPE 8, 3×3 backoff",
+        "exercisesValue": "5",
+        "setsValue": "16",
+        "timeValue": "58m",
+        "munkReply": "Mikael Munk answered 1 form check",
+        "volumeLabel": "Volume 4 weeks",
+        "volumeValue": "18,420 kg",
+        "prLabel": "PRs",
+        "prValue": "3",
+        "repsLabel": "Reps",
+        "repsValue": "1,240"
+      },
+      "session": {
+        "aria": "App screen, live session in dark mode: back squat, set 3 of 3 at 135 kg, with a button to log the set and record it for Munk.",
+        "day": "Day A",
+        "targetReps": "3 reps",
+        "targetRpe": "RPE 8",
+        "set": "Set {n}",
+        "setValue": "135 × 3",
+        "sendTo": "Sent to coach Munk",
+        "restValue": "2:30"
+      },
+      "hrv": {
+        "aria": "App screen, HRV: 48 ms this morning against an average of 61 ms, below your personal band. The engine eases today's squat top set.",
+        "title": "Recovery",
+        "avgValue": "61 ms",
+        "range": "14 nights",
+        "sleepValue": "5h 12m",
+        "rhrLabel": "Resting HR",
+        "rhrValue": "54",
+        "sourceLabel": "Source"
+      },
+      "food": {
+        "aria": "App screen, Food: today's plan on a training day with 2,740 kcal and 182 g protein, three meals and a shopping list.",
+        "trainingDay": "Training day",
+        "kcal": "2,740",
+        "kcalUnit": "kcal",
+        "protein": "182 g protein",
+        "breakfast": "Skyr, oats, blueberries",
+        "lunch": "Rye bread, eggs, avocado",
+        "dinner": "Salmon, potatoes, beans",
+        "shopping": "Shopping list · 14 items"
+      },
+      "mind": {
+        "aria": "App screen, 60 second mind check: energy, stress and focus on a scale from 1 to 5, a journal and the last 7 days.",
+        "title": "Mind check",
+        "journal": "Journal",
+        "journalEntry": "Slept short, but my head is clear. Looking forward to squats.",
+        "checkIn": "Check in",
+        "week": "Last 7 days"
+      },
+      "formCheck": {
+        "aria": "App screen, Form check: the member's own recording of set 3 next to a reference movement, and Munk's signed reply.",
+        "videoLabel": "Reference movement: back squat",
+        "duration": "0:22",
+        "next": "Record next set"
+      },
+      "decision": {
+        "aria": "App screen, the engine's decision: today's session has been rewritten. Back squat top set from 150 to 135 kg, backoff from 128 to 115 kg. Why: sleep, HRV and stress. You can keep the original plan.",
+        "heading": "Today's session is rewritten.",
+        "topSet": "Top set",
+        "backoff": "Backoff 3×3",
+        "backoffFrom": "128 kg",
+        "backoffTo": "115 kg",
+        "timeTo": "52m",
+        "why": "Why",
+        "restOfWeek": "Rest of the week",
+        "dayB": "Day B: Bench",
+        "dayBStatus": "Unchanged",
+        "dayC": "Day C: Deadlift",
+        "dayCStatus": "Reviewed Thursday"
+      },
+      "sleep": {
+        "aria": "App screen, Sleep: 5 hours 12 minutes last night, 2 hours 18 minutes under your goal, with sleep stages and the last 7 nights.",
+        "goal": "Goal 7 h 30 m, 2 h 18 m under",
+        "awake": "Awake",
+        "rem": "REM",
+        "light": "Light",
+        "deep": "Deep",
+        "start": "23:48",
+        "end": "05:02",
+        "inBed": "In bed",
+        "deepSleep": "Deep sleep",
+        "deepValue": "38 m",
+        "remValue": "54 m",
+        "awakeValue": "2 times",
+        "nights": "7 nights",
+        "synced": "Synced from Oura at 05:14"
+      },
+      "mindChecked": {
+        "aria": "App screen, mind check from last night: energy 3 of 5, stress 4 of 5, focus 3 of 5.",
+        "heading": "Your head last night.",
+        "energyValue": "3/5",
+        "stressValue": "4/5",
+        "focusValue": "3/5",
+        "trend": "Stress, 7 days. Your average sits at 2 of 5.",
+        "journalEntry": "Deadline moved to Friday. Slept badly after 3 am.",
+        "checkedIn": "Checked in 21:40"
+      }
     }
   }
 }
