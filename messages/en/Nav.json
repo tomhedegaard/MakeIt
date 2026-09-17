@@ -20,7 +20,8 @@
     "logout": "Log out",
     "myProfile": "My profile",
     "unread": "{count} unread",
-    "mainNav": "Main navigation"
+    "mainNav": "Main navigation",
+    "menu": "Menu"
   },
   "tierBanner": {
     "eyebrow": "Tier-up",
@@ -46,9 +47,9 @@
         "body": "Every morning you open Today. Tap the big \"Start session\" card and you're off. Weights are set from your 1RMs."
       },
       "tabs": {
-        "eyebrow": "02 · Train / Crew / Reps / Me",
-        "title": "Bottom tab bar = the whole app.",
-        "body": "Train = your programs. Crew = feed with PRs + form checks. Reps = earn and redeem. Me = profile, lift history and coach notes from Mikael."
+        "eyebrow": "02 · Five tabs",
+        "title": "Five tabs carry the whole app.",
+        "body": "Today, Train, Food, Mind and Crew sit at the bottom. Me, Reps, HRV and Science live in the menu behind your initials, top right."
       },
       "formCheck": {
         "eyebrow": "03 · Form check",

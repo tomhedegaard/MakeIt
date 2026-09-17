@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -35,6 +36,9 @@ export default function AppShell({
 }) {
   const pathname = usePathname();
   const t = useTranslations("Nav");
+  const menuRef = useRef<HTMLDetailsElement>(null);
+  // <details> works without JS; with JS, close it once a link is chosen.
+  const closeMenu = () => menuRef.current?.removeAttribute("open");
   // Immersive mode for the active workout — hide chrome.
   const immersive = pathname?.startsWith("/session");
 
@@ -162,13 +166,46 @@ export default function AppShell({
                 </span>
               ) : null}
             </Link>
-            <Link
-              href="/profile"
-              className="size-9 rounded-full surface-2 flex items-center justify-center text-xs font-mono uppercase"
-              aria-label={t("shell.myProfile")}
-            >
-              {member.handle.slice(0, 2)}
-            </Link>
+            {/* Header menu (spec §6): the five tabs leave Me, Reps, HRV
+                and Science here. */}
+            <details ref={menuRef} data-mobile-menu className="relative">
+              <summary
+                className="size-9 rounded-full surface-2 flex items-center justify-center text-xs font-mono uppercase cursor-pointer list-none [&::-webkit-details-marker]:hidden"
+                aria-label={t("shell.myProfile")}
+              >
+                {member.handle.slice(0, 2)}
+              </summary>
+              <nav
+                aria-label={t("shell.menu")}
+                className="absolute right-0 top-full mt-2 w-48 rounded-lg border hairline bg-bg py-1"
+              >
+                <ul>
+                  {([
+                    { href: "/profile", labelKey: "me" },
+                    { href: "/reps", labelKey: "reps" },
+                    { href: "/hrv", labelKey: "hrv" },
+                    { href: "/science", labelKey: "science" },
+                  ] as const).map((item) => {
+                    const active = pathname?.startsWith(item.href);
+                    return (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          onClick={closeMenu}
+                          aria-current={active ? "page" : undefined}
+                          className={cn(
+                            "block px-4 py-3 text-sm transition-colors hover:bg-bg-3",
+                            active ? "text-fg" : "text-fg-dim"
+                          )}
+                        >
+                          {t(`links.${item.labelKey}`)}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
+            </details>
           </div>
         </header>
 
@@ -186,9 +223,9 @@ export default function AppShell({
           ) : null}
           {children}
         </main>
-        {/* In-flow on mobile so main's viewport ends above the 8-tab bar.
+        {/* In-flow on mobile so main's viewport ends above the tab bar.
             Fixed overlay was why #69's token bump never cleared Learn/Reps. */}
-        <MobileTabBar unreadMessages={unreadMessages} />
+        <MobileTabBar />
       </div>
     </div>
   );
