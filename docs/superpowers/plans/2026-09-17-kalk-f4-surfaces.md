@@ -24,19 +24,19 @@
 
 | Fakta | Kilde |
 |---|---|
-| 38 `page.tsx` under `(app)`. 17 af dem (ekskl. `/session`) har hverken `PageHeader` eller `PageTitle` og bygger selv eyebrow + `<h1 className="font-display text-[clamp(…)]">` | grep, liste i Task 8 |
+| 38 `page.tsx` under `(app)`. 14 af dem har hverken `PageHeader` eller `PageTitle` og bygger selv eyebrow + `<h1 className="font-display text-[clamp(…)]">`. `train/exercises/[slug]` nævner kun `PageHeader` i en kommentar og har også en håndbygget h1 (l. 115). Altså 15 sider | grep, liste i Task 8 |
 | `mind/check` redirecter, `mind/onboarding` delegerer til `MindDisclaimer` (bruger allerede `PageHeader`), `nutrition/setup` delegerer til `NutritionSetupView` (egen `<h1>` l. 14) | filerne |
 | `PageHeader` har sin egen titelskala `clamp(2.4rem,6vw,4.5rem)` og wrapper i `Container` | `src/components/app/PageHeader.tsx` |
 | 39 eyebrows står lige over en `<h2>` i 24 app-filer (mønster i Task 9) | node-scan |
-| 14 nummererede eyebrows i app-copy: 7 side-kickers (`Coaching`, `Community`, `Reps`, `Profile`, `Nutrition`, `Messages` + `Nav`s tour) og 7 tour-trin (`Nav.json` 01–04, `Mind.json` 01–03). Tourene har allerede progress-prikker | `messages/da/*.json`, `FirstTimeTour.tsx:93` |
+| 13 nummererede eyebrows pr. sprog i app-copy: 6 side-kickers (`Coaching`, `Community`, `Reps`, `Profile`, `Nutrition`, `Messages`) og 7 tour-trin (`Nav.json` 01–04, `Mind.json` 01–03). Tourene har allerede progress-prikker | `messages/da/*.json`, `FirstTimeTour.tsx:93` |
 | Ca. 230 tankestreger (–/—) i app-namespaces (da) og tilsvarende i en | grep |
-| Hardcodet dansk copy i HRV og Mind: `hrv/page.tsx`, `hrv/trends`, `hrv/learn/adaptive`, `mind/settings`, `components/hrv/*` (7 filer), `components/mind/*` (4 filer) | grep, liste i Task 12 |
+| Hardcodet dansk copy i HRV og Mind: 10 sider og 17 komponenter (liste i Task 12) | grep + review 2026-09-17 |
 | Mørke literals uden for mail/coach/klassisk landing: 22 steder i 18 filer | grep, liste i Task 4 |
 | `#C97B3E` (amber) bruges til sekundære muskler og aktive cues. `#4CAF7D`, `#E8703A`, `#4F86C6` er science-domænefarver fra prototypen | `ExerciseHero.tsx:21-25`, `AnatomyFigure.tsx:33-40`, `CuesList.tsx:60`, `SessionClient.tsx:639`, `lib/science/domains.ts:12-16` |
 | `AnatomyFigure3D` bruges kun i `/coach/system/anatomy` (uden for scope) | grep |
 | `Spotlight` bruges kun af den klassiske `marketing/Hero.tsx` (uden for scope) | grep |
 | Root-layoutet indlæser 6 fonte. Kalk-fontene har `preload: false` | `src/app/layout.tsx:12-57` |
-| `kalk-theme.test.ts` låser `:root --display-weight: 400` og Kalks font-override. Begge skal ændres i Task 1 | `src/lib/design/kalk-theme.test.ts:44-58` |
+| `kalk-theme.test.ts` låser `:root --display-weight: 400`, Kalks font-override og `--font-kalk-*`-variablerne. Alle tre tests skal ændres i Task 1 | `src/lib/design/kalk-theme.test.ts:45-61,91-99` |
 | `/coach/layout.tsx` har intet tema-scope og ingen viewport | fil |
 | `/onboarding/layout.tsx` har intet tema-scope, så onboarding er stadig mørk | fil |
 | Ingen kode styrer statusbaren. `@capacitor/status-bar` er i `Package.swift` og `capacitor.settings.gradle`. `Style.Dark = "DARK"` giver lys tekst, `Style.Light = "LIGHT"` mørk tekst | `node_modules/@capacitor/status-bar/dist/esm/definitions.d.ts:46-67` |
@@ -66,7 +66,7 @@
 | `src/components/native/NativeChrome.tsx` | Klientkomponent, kalder `syncStatusBar` ved navigation | **ny** |
 | `capacitor.config.ts`, `src/app/manifest.ts` | Kalk-baggrund | ændret |
 | `src/components/app/PageHeader.tsx` | Delegerer til `PageTitle` | ændret |
-| 17 sider + `NutritionSetupView.tsx` | `PageTitle` i stedet for egne titler | ændret |
+| 15 sider + `NutritionSetupView.tsx` | `PageTitle` i stedet for egne titler | ændret |
 | 24 filer | `SectionHeader` i stedet for eyebrow + h2 | ændret |
 | `messages/{da,en}/*.json` | Numre og tankestreger væk, ny HRV/Mind-copy | ændret |
 
@@ -77,7 +77,7 @@
 ### Task 1: Én typografisk stemme
 
 **Files:**
-- Modify: `src/lib/design/kalk-theme.test.ts:44-58`
+- Modify: `src/lib/design/kalk-theme.test.ts:45-61,91-99`
 - Modify: `src/app/layout.tsx:1-57,93-97`
 - Modify: `src/app/globals.css` (`:root`-display-blok l. ~71-75, Kalk-blok l. ~128-133, `.font-display`-kommentar l. ~270)
 
@@ -90,6 +90,8 @@
     expect(layout).toMatch(/Geist\(\{\s*variable: "--font-sans-stack"/);
     expect(layout).toMatch(/Geist_Mono\(\{\s*variable: "--font-mono-stack"/);
     expect(layout).not.toMatch(/preload: false/);
+    // Big Shoulders has no next/font metrics to auto-generate a fallback from.
+    expect(layout).toMatch(/Big_Shoulders\(\{[\s\S]*?adjustFontFallback: false/);
   });
 
   it("sets the Big Shoulders display treatment on :root, not per theme", () => {
@@ -103,7 +105,7 @@
   });
 ```
 
-Ret også filteret i "mirrors every Kalk colour token…" (det må gerne blive, som det er, da Kalk ikke længere har font-nøgler).
+Slet også testen "loads the Kalk families under the variables the theme points at" (l. 91-99). Dens `adjustFontFallback`-assertion er flyttet ind i den nye test ovenfor. "mirrors every Kalk colour token…" må blive, som den er.
 
 - [ ] **Step 2: Kør og se dem fejle.**
 Run: `npx vitest run src/lib/design/kalk-theme.test.ts`
@@ -289,12 +291,17 @@ git commit -m "feat(design): tokens til scrim, media og anatomi-figur i begge te
   - `src/components/chat/VideoRecorder.tsx:258,266,268,295`, `MessageBubble.tsx:63`
   - `src/app/(app)/profile/page.tsx:254`, `src/app/(app)/coach-school/lessons/[slug]/page.tsx:60`
 
-- [ ] **Step 1: Udvid porten.** Tilføj i `kalk-surface-gate.test.ts`:
+- [ ] **Step 1: Udvid porten.** Ret importerne øverst i `kalk-surface-gate.test.ts` til:
 
 ```ts
-import { readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+```
+
+og tilføj under `read`:
+
+```ts
 
 const SRC = fileURLToPath(new URL("../../", import.meta.url));
 
@@ -311,7 +318,10 @@ const OUT_OF_SCOPE = [
   /^components\/Spotlight\.tsx$/, /^components\/anatomy\/AnatomyFigure3D/, /^app\/coach\b/,
 ];
 // Browser-chrome metadata must be a literal (Next viewport API): Nat values are legitimate there.
-const CHROME_METADATA = ["app/layout.tsx", "app/(app)/session/[id]/page.tsx", "app/coach/layout.tsx"];
+// status-bar.ts (Task 5) paints the native bar and needs literal hex for the plugin.
+const CHROME_METADATA = [
+  "app/layout.tsx", "app/(app)/session/[id]/page.tsx", "app/coach/layout.tsx", "lib/native/status-bar.ts",
+];
 
 const DARK = /#0A0A0B|#F5F2EC|#111113|#18181B|#1F1F23|#A8A6A0|#56554F|#C97B3E|#4CAF7D|#E8703A|#4F86C6|rgba\(245,\s?242,\s?236|rgba\(10,\s?10,\s?11/i;
 const DARK_UTIL = /\b(bg-black|text-white|bg-white|text-black)(\/\d+)?\b/;
@@ -392,7 +402,7 @@ describe("syncStatusBar", () => {
     await expect(syncStatusBar(undefined, "light")).resolves.toBe(false);
   });
 
-  it("sets style and background once per scheme", async () => {
+  it("sets style and matching background", async () => {
     const plugin = { setStyle: vi.fn().mockResolvedValue(undefined), setBackgroundColor: vi.fn().mockResolvedValue(undefined) };
     await syncStatusBar(plugin, "light");
     expect(plugin.setStyle).toHaveBeenCalledWith({ style: "LIGHT" });
@@ -502,7 +512,7 @@ describe("native and PWA chrome (spec §6, D3)", () => {
 });
 ```
 
-- [ ] **Step 2: Kør** → FAIL. **Step 3:** ret de tre værdier, og tilføj en kommentar i `capacitor.config.ts` over splash: `// Splash and icon change with the next store release (spec D3, needs Tom's ok).` **Step 4:** kør → PASS (inkl. hele `kalk-surface-gate`).
+- [ ] **Step 2: Kør** → FAIL. **Step 3:** ret de tre værdier, og tilføj en kommentar i `capacitor.config.ts` på linjen **over** `SplashScreen: {` (ikke inde i objektet, ellers brydes regexen): `// Splash and icon change with the next store release (spec D3, needs Tom's ok).` **Step 4:** kør → PASS (inkl. hele `kalk-surface-gate`).
 
 - [ ] **Step 5: Commit.**
 ```bash
@@ -521,13 +531,11 @@ git commit -am "feat(native): Kalk-baggrund i shell-vindue og PWA-manifest"
 - Modify: `src/components/app/PageHeader.tsx`
 - Modify: `src/components/ui/primitives-layout.test.tsx`
 
-- [ ] **Step 1: Fejlende test** (tilføj i `primitives-layout.test.tsx`, brug den eksisterende `render`):
+- [ ] **Step 1: Fejlende test.** Tilføj `import PageHeader from "@/components/app/PageHeader";` øverst i `primitives-layout.test.tsx` (filen bruger `renderToStaticMarkup` direkte), og tilføj testen i en `describe`:
 
 ```tsx
-import PageHeader from "@/components/app/PageHeader";
-
 it("PageHeader renders through PageTitle's single scale", () => {
-  const html = render(<PageHeader eyebrow="Træn" title="Øvelser" subtitle="Alle løft" />);
+  const html = renderToStaticMarkup(<PageHeader eyebrow="Træn" title="Øvelser" subtitle="Alle løft" />);
   expect(html).toContain('data-size="page"');
   expect(html).toContain("Alle løft");
   expect(html).not.toContain("4.5rem");
@@ -566,7 +574,7 @@ export default function PageHeader({
 
 **Files:**
 - Modify: `src/lib/design/kalk-surface-gate.test.ts`
-- Modify: de 17 sider: `messages`, `science`, `buddy`, `buddy/why`, `coach-school`, `coach-school/sandbox`, `coach-school/live`, `coach-school/lessons/[slug]`, `community`, `nutrition`, `nutrition/preferences`, `nutrition/shopping`, `coaching`, `program/[code]` (alle under `src/app/(app)/`) samt `src/app/(app)/nutrition/setup/NutritionSetupView.tsx`
+- Modify: de 15 sider: `messages`, `science`, `buddy`, `buddy/why`, `coach-school`, `coach-school/sandbox`, `coach-school/live`, `coach-school/lessons/[slug]`, `community`, `nutrition`, `nutrition/preferences`, `nutrition/shopping`, `coaching`, `program/[code]`, `train/exercises/[slug]` (alle under `src/app/(app)/`) samt `src/app/(app)/nutrition/setup/NutritionSetupView.tsx`
 
 - [ ] **Step 1: Fejlende port.**
 
@@ -589,7 +597,7 @@ describe("one title scale on every app page (spec §6)", () => {
 });
 ```
 
-- [ ] **Step 2: Kør** → FAIL med præcis de 17 + `NutritionSetupView`.
+- [ ] **Step 2: Kør** → FAIL. "uses PageHeader or PageTitle" fejler på de 15 sider, "no hand-built display h1" på de samme 15 + `NutritionSetupView`.
 
 - [ ] **Step 3: Migrér én side ad gangen.** Mønsteret:
 
@@ -606,6 +614,7 @@ Regler:
 - Brug `PageTitle`, når siden selv har container og padding. Brug `PageHeader`, når siden starter direkte med indhold og mangler et topbånd.
 - Tomme tilstande og "ingen plan"-varianter, der har deres egen `<h1>` (fx `buddy`, `buddy/why`, der har to), får også `PageTitle`.
 - Titler med indlejret markup (fx `messages` l. 68, `program/[code]` l. 59-68 med chips i eyebrowen): `title` skal være en streng. Læg chips i `action` eller i en linje under titlen. Ændr ikke copy.
+- `train/exercises/[slug]` har en tæt, specialbygget header ved siden af video/anatomi-heroen (kommentar l. 75). Behold layoutet, og erstat kun `<h1>` (l. 115) og dens eyebrow med `<PageTitle size="compact" …>` på samme plads, over heroen.
 - Brug `size="compact"` på undersider (`buddy/why`, `coach-school/*`, `nutrition/preferences`, `nutrition/shopping`).
 
 Commit efter hver 3-4 sider: `refactor(app): PageTitle på <sider>`.
@@ -623,7 +632,10 @@ Commit efter hver 3-4 sider: `refactor(app): PageTitle på <sider>`.
 ```ts
 describe("section headers use SectionHeader (spec §6)", () => {
   const HAND_BUILT = /<(div|p|span)\s+className="eyebrow[^"]*"[^>]*>[\s\S]{0,160}?<\/\1>\s*<h2\b/;
-  const files = surfaceFiles.filter((p) => p.endsWith(".tsx") && !p.startsWith("components/ui/"));
+  // The F2 landing (components/marketing/kalk) has its own type scale and gates.
+  const files = surfaceFiles.filter(
+    (p) => p.endsWith(".tsx") && !p.startsWith("components/ui/") && !p.startsWith("components/marketing/"),
+  );
   it.each(files)("%s", (p) => {
     expect(readFileSync(join(SRC, p), "utf8")).not.toMatch(HAND_BUILT);
   });
@@ -651,7 +663,7 @@ Regler:
 
 Commit pr. område: `refactor(ui): SectionHeader i indstillinger og betaling`, `… i HRV`, `… i Mind`, osv.
 
-- [ ] **Step 4: Kør** `npx vitest run src/lib/design src/components src/app` → PASS.
+- [ ] **Step 4: Kør** `npx vitest run src/lib/design src/components src/app` → PASS. Hvis du har slettet eyebrow-nøgler, så tjek med `node -e` eller Task 11's lockstep-test (når den findes), at da og en stadig har samme nøgler.
 
 ---
 
@@ -700,7 +712,7 @@ describe("app copy gate (spec §5 taste rules, §8)", () => {
 });
 ```
 
-- [ ] **Step 2: Kør** → FAIL med 14 nøgler × 2 sprog.
+- [ ] **Step 2: Kør** → FAIL med 13 nøgler × 2 sprog.
 
 - [ ] **Step 3: Ret copy.** Fjern præfikset, behold ordet: `"02 — Træn"` → `"Træn"`, `"01 · I dag"` → `"I dag"`. Samme i en. Tjek i `FirstTimeTour.tsx` og `MindFirstTimeTour.tsx`, at progress-prikkerne stadig viser trinnet (de gør i dag, l. 93 hhv. tilsvarende).
 
@@ -747,37 +759,38 @@ describe("app copy gate (spec §5 taste rules, §8)", () => {
 
 **Files:**
 - Modify: `src/lib/i18n/app-copy-gate.test.ts`
-- Modify: `src/app/(app)/hrv/page.tsx`, `hrv/trends/page.tsx`, `hrv/learn/adaptive/page.tsx`, `mind/settings/page.tsx`
-- Modify: `src/components/hrv/{InsightCard,HrvSettingsSection,TrendChart,HrvWelcomeBonusToast,LifestyleLogCard,ReadinessLadder,ConnectionStatus,HrvMilestoneToast}.tsx`
-- Modify: `src/components/mind/{SessionRunner,SessionCard,WeeklyInsightsView,CirkelPostForm}.tsx`
+- Modify (sider under `src/app/(app)/`): `hrv/page.tsx`, `hrv/trends`, `hrv/insights`, `hrv/learn/adaptive`, `mind/settings`, `mind/cirkler`, `mind/sessions`, `mind/sessions/[slug]`, `mind/today`, `mind/weekly` (flere har hardcodet `title="…"` på `PageHeader`)
+- Modify: `src/components/hrv/{InsightCard,HrvSettingsSection,TrendChart,HrvWelcomeBonusToast,LifestyleLogCard,ReadinessLadder,ConnectionStatus,HrvMilestoneToast,HrvReadinessNudge}.tsx`
+- Modify: `src/components/mind/{SessionRunner,SessionCard,WeeklyInsightsView,CirkelPostForm,AudioPlayer,CirkelFeed,JournalHistory,MindCelebration}.tsx`
+- Listen er et udgangspunkt. Porten i Step 1 er den autoritative liste. Det er den største copy-opgave i F4, så del den i flere commits.
 - Modify: `messages/{da,en}/{Hrv,Mind}.json`
 
-- [ ] **Step 1: Fejlende port.**
+- [ ] **Step 1: Fejlende port.** Udvid importerne øverst i `app-copy-gate.test.ts` til `import { readFileSync, readdirSync, statSync } from "node:fs";`, `import { join } from "node:path";` og `import { fileURLToPath } from "node:url";`, og tilføj:
 
 ```ts
-import { readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
-import { fileURLToPath } from "node:url";
-
 describe("no hardcoded copy in HRV and Mind (review finding)", () => {
   const SRC = fileURLToPath(new URL("../../", import.meta.url));
   const dirs = ["app/(app)/hrv", "app/(app)/mind", "components/hrv", "components/mind"];
   const walk = (d: string): string[] =>
     readdirSync(d).flatMap((n) => (statSync(join(d, n)).isDirectory() ? walk(join(d, n)) : [join(d, n)]));
   const files = dirs.flatMap((d) => walk(join(SRC, d))).filter((f) => f.endsWith(".tsx") && !f.includes(".test."));
-  // JSX text with a real word, and user-facing string attributes.
-  const JSX_TEXT = />\s*[^<>{}\s][^<>{}]*[A-Za-zÆØÅæøå]{3,}[^<>{}]*</;
-  const ATTR = /\b(aria-label|title|placeholder|alt)="[^"]*[A-Za-zÆØÅæøå]{3,}[^"]*"/;
+  // JSX text: must follow a real tag (opening `<tag …>` or closing `</tag>`) and end at a tag,
+  // so TS generics (`useState<X>(null)`) and ternaries (`: null; return (<`) don't match.
+  const JSX_TEXT = /(?:<[a-zA-Z][\w.]*(?:\s[^<>]*)?>|<\/[\w.]+>)[ \t]*\n?[ \t]*[^<>{}\s][^<>{}]*[A-Za-zÆØÅæøå]{3,}[^<>{}]*<\/?[a-zA-Z]/;
+  const ATTR = /\b(aria-label|title|placeholder|alt|eyebrow|subtitle|label)="[^"]*[A-Za-zÆØÅæøå]{3,}[^"]*"/;
   // Metadata <title> with an id is a11y copy too; keep it in messages.
   it.each(files.map((f) => [f.slice(SRC.length), f]))("%s", (_n, f) => {
-    const src = readFileSync(f, "utf8").replace(/\{\/\*[\s\S]*?\*\/\}/g, "");
+    const src = readFileSync(f, "utf8")
+      .replace(/\{\/\*[\s\S]*?\*\/\}/g, "") // JSX comments
+      .replace(/\b\w+<[^<>()=]*>(?=\()/g, ""); // TS generics: useState<string | null>(
+    // Verified 2026-09-17 against today's files: 27 hits, all real copy, no generics.
     expect(src).not.toMatch(JSX_TEXT);
     expect(src).not.toMatch(ATTR);
   });
 });
 ```
 
-- [ ] **Step 2: Kør** → FAIL. Hvis porten rammer en falsk positiv (fx kode inde i `<code>`, et brand-navn som `Oura` alene), så indsnævr regexen med en navngiven undtagelse og en kommentar. Undtag aldrig en hel fil.
+- [ ] **Step 2: Kør** → FAIL på ca. 27 filer, alle med rigtig copy. Hvis porten rammer en falsk positiv (fx kode inde i `<code>`, et brand-navn som `Oura` alene), så indsnævr regexen med en navngiven undtagelse og en kommentar. Undtag aldrig en hel fil.
 
 - [ ] **Step 3: Flyt copy.** Nøgler under et underobjekt pr. fil, fx `Hrv.page.connectionLost`, `Hrv.learnAdaptive.example.eyebrow`, `Mind.weekly.title`. Engelsk oversættes (ingen tankestreger, samme tone som resten af `en/Hrv.json`). Server-sider bruger `getTranslations`, klientkomponenter `useTranslations`. Lister (`hrv/learn/adaptive` l. 146-157) bliver arrays via `t.raw("…")` eller nummererede nøgler, som resten af kodebasen gør (`grep -rn "t.raw" src | head`).
 
@@ -823,7 +836,7 @@ Gotchas fra F3:
 
 - [ ] **Step 1:** Start dev-serveren og log ind.
 - [ ] **Step 2:** Screenshot på 390 px og 1440 px, og tjek `console errors === 0`, på:
-  - de 17 migrerede sider fra Task 8 og `/nutrition/setup`,
+  - de 15 migrerede sider fra Task 8 og `/nutrition/setup`,
   - `/settings`, `/billing`, `/reps`, `/hrv`, `/hrv/trends`, `/hrv/learn/adaptive`, `/mind`, `/mind/settings`,
   - `/train/exercises/<slug>` med video **og** en øvelse uden klip (anatomi-fallback),
   - `/session/<id>` (Nat, ingen lys overscroll, aktiv cue har orange/krop-streg),
