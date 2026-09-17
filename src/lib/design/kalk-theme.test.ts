@@ -68,6 +68,14 @@ describe("Kalk theme gate (spec §3, §8)", () => {
     for (const k of kalkColours) expect(natLift, k).toHaveProperty(k);
   });
 
+  it("Nat-lift skal have samme værdier som Nat", () => {
+    const natLift = readThemeTokens(css, 'html:has(.theme-root[data-theme="nat"])');
+    const shared = Object.keys(natLift).filter((k) => k in nat);
+    for (const k of shared) {
+      expect(natLift[k].replace(/\s+/g, " "), k).toBe(nat[k].replace(/\s+/g, " "));
+    }
+  });
+
   it("lifts the theme to <html> so body background and overscroll follow", () => {
     expect(css).toContain('html:has(.theme-root[data-theme="kalk"])');
     expect(css).toContain('html:has(.theme-root[data-theme="nat"])');
