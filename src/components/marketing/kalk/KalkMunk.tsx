@@ -104,8 +104,8 @@ function FormCheckCard() {
         </p>
         <p className="font-display mb-8 mt-[18px] text-[clamp(28px,2.6vw,38px)] leading-[0.98]!">{c("final")}</p>
 
-        <div className="mt-auto flex items-end justify-between gap-3 border-t border-line pt-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.06em] text-fg-dim">
+        <div className="mt-auto flex flex-wrap-reverse items-end justify-between gap-x-3 gap-y-2 border-t border-line pt-4">
+          <p className="whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.06em] text-fg-dim">
             {c("signed")} · {c("answered")}
           </p>
           <Signature label={c("signatureLabel")} />

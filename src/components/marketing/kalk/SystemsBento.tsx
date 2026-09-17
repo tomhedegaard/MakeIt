@@ -62,7 +62,7 @@ export default function SystemsBento() {
         <Rule />
 
         <div className="mb-12 mt-[clamp(48px,6vw,90px)] flex flex-wrap items-end justify-between gap-8">
-          <h2 id="systems-heading" className="font-display max-w-[9em] text-[clamp(46px,6.4vw,96px)]">
+          <h2 id="systems-heading" className="font-display max-w-[8em] text-[clamp(46px,6.4vw,96px)]">
             {t("heading")}
           </h2>
           <p className="max-w-[46ch] text-[clamp(17px,1.35vw,20px)] text-fg-dim">{t("sub")}</p>
@@ -89,7 +89,7 @@ export default function SystemsBento() {
             </div>
             <p
               aria-label={`${t("body.stat")} ${t("body.statLabel")}`}
-              className="font-display absolute bottom-[-0.12em] right-[clamp(16px,2vw,30px)] text-[200px] leading-[0.8]! tracking-[-0.03em]! md:text-[clamp(200px,24vw,360px)]"
+              className="font-display absolute bottom-[-0.12em] right-[clamp(16px,2vw,30px)] text-[160px] leading-[0.8]! tracking-[-0.03em]! sm:text-[200px] md:text-[clamp(200px,24vw,360px)]"
             >
               {t("body.stat")}
               <small
