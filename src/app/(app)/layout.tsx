@@ -39,7 +39,7 @@ export default async function AppLayout({
   const unreadMessages = SUPABASE_ENABLED ? await getUnreadCount(member.id) : 0;
 
   return (
-    <ThemeScope theme="kalk" className="flex-1 flex flex-col">
+    <ThemeScope theme="kalk" className="flex flex-col h-dvh lg:h-auto lg:minh-dvh lg:flex-1">
       <AppShell
         member={member}
         unreadMessages={unreadMessages}

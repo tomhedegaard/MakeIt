@@ -8,6 +8,15 @@ const sessionLoading = readFileSync(new URL("./session/[id]/loading.tsx", import
 const appLoading = readFileSync(new URL("./loading.tsx", import.meta.url), "utf8");
 
 describe("app theme scopes (spec §2, §6)", () => {
+  it("gives the Kalk wrapper a definite mobile height so the tab bar stays pinned", () => {
+    // flex-1 (basis 0) in the auto-height body let the wrapper grow to
+    // content height, pushing the tab bar below the fold.
+    const cls = layout.match(/<ThemeScope theme="kalk" className="([^"]+)"/)?.[1] ?? "";
+    expect(cls.split(" ")).toEqual(expect.arrayContaining(["h-dvh", "lg:h-auto", "lg:minh-dvh", "lg:flex-1"]));
+    // Desktop keeps growing with content (sticky sidebar, page scroll).
+    expect(cls.split(" ")).not.toContain("flex-1");
+  });
+
   it("runs the member app in Kalk with a light browser chrome", () => {
     expect(layout).toContain('<ThemeScope theme="kalk"');
     expect(layout).toMatch(/export const viewport[\s\S]*?themeColor: "#E7E9EB"/);
