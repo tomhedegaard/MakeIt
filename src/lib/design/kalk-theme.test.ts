@@ -42,22 +42,29 @@ describe("Kalk theme gate (spec §3, §8)", () => {
     for (const t of DERIVED) expect(kalk[t]).toMatch(/color-mix/);
   });
 
-  it("swaps the three font stacks to the Kalk families", () => {
-    expect(kalk["--font-display-stack"]).toBe("var(--font-kalk-display)");
-    expect(kalk["--font-sans-stack"]).toBe("var(--font-kalk-sans)");
-    expect(kalk["--font-mono-stack"]).toBe("var(--font-kalk-mono)");
-    expect(kalk["--display-weight"]).toBe("800");
+  it("has one typographic voice: the stacks are the Kalk families everywhere", () => {
+    expect(layout).not.toMatch(/Inter|Archivo_Black|JetBrains_Mono/);
+    expect(layout).toMatch(/Big_Shoulders\(\{\s*variable: "--font-display-stack"/);
+    expect(layout).toMatch(/Geist\(\{\s*variable: "--font-sans-stack"/);
+    expect(layout).toMatch(/Geist_Mono\(\{\s*variable: "--font-mono-stack"/);
+    expect(layout).not.toMatch(/preload: false/);
+    // Big Shoulders has no next/font metrics to auto-generate a fallback from.
+    expect(layout).toMatch(/Big_Shoulders\(\{[\s\S]*?adjustFontFallback: false/);
+  });
+
+  it("sets the Big Shoulders display treatment on :root, not per theme", () => {
+    const root = readThemeTokens(css, ":root");
+    expect(root["--display-weight"]).toBe("800");
+    expect(root["--display-tracking"]).toBe("-0.005em");
+    expect(root["--display-leading"]).toBe("0.88");
+    expect(kalk["--display-weight"]).toBeUndefined();
+    expect(kalk["--font-display-stack"]).toBeUndefined();
+    expect(nat["--display-weight"]).toBeUndefined();
   });
 
   it("keeps Nat identical to today's dark base", () => {
     expect(nat["--bg"]).toBe("#0A0A0B");
     expect(nat["--fg"]).toBe("#F5F2EC");
-  });
-
-  it("lets display treatment follow the font, not the Nat colours", () => {
-    expect(readThemeTokens(css, ":root")["--display-weight"]).toBe("400");
-    // A Nat surface inside Kalk inherits Big Shoulders, so Nat must not reset the weight
-    expect(nat["--display-weight"]).toBeUndefined();
   });
 
   it("mirrors every Kalk colour token in the Nat <html> lift", () => {
@@ -86,15 +93,5 @@ describe("Kalk theme gate (spec §3, §8)", () => {
 
   it("gives inputs 16px on touch so iOS does not zoom (enables removing maximumScale)", () => {
     expect(css).toMatch(/@media \(pointer: coarse\)\s*\{[\s\S]*?\.input,\s*\.field\s*\{[\s\S]*?font-size:\s*16px/);
-  });
-
-  it("loads the Kalk families under the variables the theme points at", () => {
-    expect(layout).toMatch(/Big_Shoulders\(\{[\s\S]*?variable: "--font-kalk-display"/);
-    expect(layout).toMatch(/Geist\(\{[\s\S]*?variable: "--font-kalk-sans"/);
-    expect(layout).toMatch(/Geist_Mono\(\{[\s\S]*?variable: "--font-kalk-mono"/);
-    expect(layout).toContain("kalkDisplay.variable");
-    // Big Shoulders has no next/font metrics to auto-generate a fallback from;
-    // opt out explicitly instead of letting the build warn on every run.
-    expect(layout).toMatch(/Big_Shoulders\(\{[\s\S]*?adjustFontFallback: false/);
   });
 });

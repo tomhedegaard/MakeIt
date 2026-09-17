@@ -67,11 +67,12 @@
   --signal-ink: #F5F2EC;
 }
 
-/* Display treatment travels with the font stack, not with Nat colours. */
+/* Big Shoulders is the one display voice everywhere; the treatment lives
+ * on :root, not per theme. */
 :root {
-  --display-weight: 400;
-  --display-tracking: -0.025em;
-  --display-leading: 0.92;
+  --display-weight: 800;
+  --display-tracking: -0.005em;
+  --display-leading: 0.88;
 }
 
 /* ---------------------------------------------------------------- *
@@ -125,13 +126,6 @@ html:has(.theme-root[data-theme="kalk"]),
   --warn:   #854D0E;
   --danger: #B91C1C;
 
-  --font-display-stack: var(--font-kalk-display);
-  --font-sans-stack:    var(--font-kalk-sans);
-  --font-mono-stack:    var(--font-kalk-mono);
-
-  --display-weight: 800;
-  --display-tracking: -0.005em;
-  --display-leading: 0.88;
   --glow: rgba(255, 255, 255, 0.7);
   --vignette-edge: rgba(13, 15, 18, 0.06);
   --grain-blend: multiply;
@@ -267,8 +261,7 @@ html.cursor-custom * {
  * ---------------------------------------------------------------- */
 .font-display {
   font-family: var(--font-display), Impact, "Helvetica Neue", sans-serif;
-  /* Archivo Black ships one weight (400); Big Shoulders is variable.
-   * The theme picks the weight, synthesis stays off. */
+  /* Big Shoulders is variable; :root picks the weight, synthesis stays off. */
   font-weight: var(--display-weight);
   font-synthesis: none;
   letter-spacing: var(--display-tracking);
