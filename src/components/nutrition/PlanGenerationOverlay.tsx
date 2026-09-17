@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 /**
  * Full-screen overlay shown while Claude is generating a meal plan.
@@ -79,10 +80,9 @@ function PlanGenerationOverlayActive({
       aria-live="polite"
     >
       <div className="max-w-md mx-auto text-center px-6">
-        <div className="eyebrow mb-3">{t("eyebrow")}</div>
-        <h2 className="font-display text-[clamp(2rem,5vw,3rem)] leading-[0.95] mb-8">
-          {t("title")}
-        </h2>
+        <div className="flex justify-center mb-4">
+          <SectionHeader eyebrow={t("eyebrow")} title={t("title")} />
+        </div>
 
         {/* 3-dot loading indicator — staggered pulse, no fake % */}
         <div className="flex justify-center gap-2 mb-8" aria-hidden>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageTitle from "@/components/ui/PageTitle";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { getSession } from "@/lib/auth";
 import {
   getCurrentPlan,
@@ -28,10 +29,9 @@ export default async function ShoppingPage() {
       <Container className="py-6 lg:py-12 max-w-2xl space-y-6">
         <Header t={t} />
         <section className="surface-2 rounded-2xl p-6 lg:p-10 text-center">
-          <div className="eyebrow mb-3">{t("noPlanEyebrow")}</div>
-          <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-3">
-            {t("noPlanTitle")}
-          </h2>
+          <div className="flex justify-center">
+            <SectionHeader eyebrow={t("noPlanEyebrow")} title={t("noPlanTitle")} />
+          </div>
           <p className="text-fg-dim text-sm md:text-base max-w-md mx-auto mb-5">
             {t("noPlanBody")}
           </p>

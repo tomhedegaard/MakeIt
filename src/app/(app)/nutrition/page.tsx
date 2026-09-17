@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageTitle from "@/components/ui/PageTitle";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { getSession } from "@/lib/auth";
 import {
   currentIsoMonday,
@@ -284,10 +285,9 @@ function EmptyState({
   const resetLabel = describeNextAvailable(planLimit.nextAvailableAt);
   return (
     <section className="surface-2 rounded-2xl p-6 lg:p-10 text-center max-w-2xl mx-auto">
-      <div className="eyebrow mb-3">{t("page.emptyEyebrow", { week: weekStartLabel(weekStart) })}</div>
-      <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-3">
-        {t("page.emptyTitle")}
-      </h2>
+      <div className="flex justify-center">
+        <SectionHeader eyebrow={t("page.emptyEyebrow", { week: weekStartLabel(weekStart) })} title={t("page.emptyTitle")} />
+      </div>
       <p className="text-fg-dim text-sm md:text-base max-w-md mx-auto mb-5">
         {t("page.emptyBody")}
       </p>
@@ -417,16 +417,16 @@ function PlanView({
 
       {/* Today */}
       <section id={`day-${todayIndex}`}>
-        <div className="flex items-end justify-between mb-3">
-          <div>
-            <div className="eyebrow mb-1">{t("page.todayEyebrow", { day: t(`dayLabels.${DAY_KEYS[todayIndex]}`) })}</div>
-            <h2 className="font-display text-3xl md:text-4xl leading-[1]">
-              {today.length === 1
+        <div className="flex items-end justify-between gap-4">
+          <SectionHeader
+            eyebrow={t("page.todayEyebrow", { day: t(`dayLabels.${DAY_KEYS[todayIndex]}`) })}
+            title={
+              today.length === 1
                 ? t("page.todayMealsOne", { count: today.length })
-                : t("page.todayMealsOther", { count: today.length })}
-            </h2>
-          </div>
-          <span className="text-xs font-mono text-fg-faint">
+                : t("page.todayMealsOther", { count: today.length })
+            }
+          />
+          <span className="text-xs font-mono text-fg-faint shrink-0">
             {t("page.todayMacros", {
               kcal: today.reduce((s, m) => s + (m.estKcal ?? 0), 0),
               protein: today.reduce((s, m) => s + (m.estProteinG ?? 0), 0),
