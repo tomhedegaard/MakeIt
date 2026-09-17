@@ -26,10 +26,11 @@ describe("ScreenRack", () => {
     expect(buttons[1]).toContain('aria-label="Næste skærm"');
   });
 
-  it("starts at the first screen, so back is disabled", () => {
+  it("starts at the first screen, so back is aria-disabled but stays focusable", () => {
     const [prev, next] = html.match(/<button[^>]*>/g) ?? [];
-    expect(prev).toMatch(/\sdisabled=""/);
-    expect(next).not.toMatch(/\sdisabled=""/);
+    expect(prev).toContain('aria-disabled="true"');
+    expect(next).toContain('aria-disabled="false"');
+    for (const b of [prev, next]) expect(b).not.toMatch(/\sdisabled=""/);
   });
 
   it("snaps and uses no scroll listener", async () => {

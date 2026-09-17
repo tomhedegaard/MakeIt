@@ -24,7 +24,9 @@ const GUTTER =
  * Native CSS scroll-snap does the swiping; the buttons and arrow keys
  * move one screen at a time. Two IntersectionObservers on the first
  * and last screen disable the buttons at the ends, so there is no
- * scroll listener. Without JS the row still scrolls and snaps.
+ * scroll listener. The buttons use `aria-disabled`, not `disabled`, so
+ * keyboard focus stays on them at the ends. Without JS the row still
+ * scrolls and snaps.
  */
 export default function ScreenRack({
   id,
@@ -142,12 +144,13 @@ function RackButton({
       type="button"
       aria-controls={controls}
       aria-label={label}
-      disabled={disabled}
-      onClick={onClick}
+      aria-disabled={disabled}
+      onClick={disabled ? undefined : onClick}
       className={cn(
-        "grid size-[52px] cursor-pointer place-items-center rounded-full border border-line-bright bg-bg-2 text-fg",
+        "grid size-[52px] place-items-center rounded-full border border-line-bright bg-bg-2 text-fg",
         "transition-[background-color,color,opacity] duration-200 motion-reduce:transition-none",
-        "enabled:hover:bg-fg enabled:hover:text-bg disabled:cursor-default disabled:opacity-35",
+        "aria-disabled:cursor-default aria-disabled:opacity-35",
+        "cursor-pointer aria-[disabled=false]:hover:bg-fg aria-[disabled=false]:hover:text-bg",
       )}
     >
       <svg viewBox="0 0 20 20" aria-hidden="true" className="size-[18px]">
