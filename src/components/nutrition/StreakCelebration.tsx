@@ -32,7 +32,7 @@ export default function StreakCelebration({
     <AnimatePresence>
       {milestone != null ? (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center px-6 bg-scrim"
+          className="fixed inset-0 z-[100] flex items-center justify-center px-6 bg-bg/90"
           style={{ backdropFilter: "blur(8px)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
