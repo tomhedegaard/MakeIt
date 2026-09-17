@@ -16,7 +16,7 @@
     "coachBadge": "Coach",
     "coachConsole": "Konsol",
     "tier": "Niveau",
-    "demoBanner": "Demo · eksempeldata — ikke dit personlige crew",
+    "demoBanner": "Demo · eksempeldata, ikke dit personlige crew",
     "logout": "Log ud",
     "myProfile": "Min profil",
     "unread": "{count} ulæste",
@@ -26,7 +26,7 @@
   "tierBanner": {
     "eyebrow": "Tier-up",
     "title": "Du er rykket fra {fromTier} til {toTier}.",
-    "subtitle": "Nye perks låst op — se Reps-siden.",
+    "subtitle": "Nye perks låst op. Se Reps-siden.",
     "cta": "Se perks →",
     "close": "Luk"
   },

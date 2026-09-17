@@ -16,7 +16,7 @@
     "coachBadge": "Coach",
     "coachConsole": "Console",
     "tier": "Tier",
-    "demoBanner": "Demo · sample data — not your personal crew",
+    "demoBanner": "Demo · sample data, not your personal crew",
     "logout": "Log out",
     "myProfile": "My profile",
     "unread": "{count} unread",
@@ -26,7 +26,7 @@
   "tierBanner": {
     "eyebrow": "Tier-up",
     "title": "You moved up from {fromTier} to {toTier}.",
-    "subtitle": "New perks unlocked — check the Reps page.",
+    "subtitle": "New perks unlocked. Check the Reps page.",
     "cta": "See perks →",
     "close": "Close"
   },
