@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MOTOR_STEPS, activeStepFrom } from "./motor-story";
+import { MOTOR_STEPS, activeStepFrom, hiddenStates } from "./motor-story";
 
 describe("motor story", () => {
   it("tells the engine's order: sleep, hrv, stress, decision", () => {
@@ -18,5 +18,10 @@ describe("motor story", () => {
         { key: "stress", distanceToCentre: 40 },
       ]),
     ).toBe("stress");
+  });
+
+  it("hides every inactive phone from assistive tech on desktop only", () => {
+    expect(hiddenStates("hrv", true)).toEqual(["sleep", "stress", "decision"]);
+    expect(hiddenStates("hrv", false)).toEqual([]);
   });
 });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { MOTOR_STEPS, activeStepFrom, type MotorStepKey } from "@/lib/marketing/kalk/motor-story";
+import { MOTOR_STEPS, activeStepFrom, hiddenStates, type MotorStepKey } from "@/lib/marketing/kalk/motor-story";
 
 /**
  * Sticky phone beside the morning report (reference A `.rig`). The four
@@ -13,7 +13,8 @@ import { MOTOR_STEPS, activeStepFrom, type MotorStepKey } from "@/lib/marketing/
  * (`activeStepFrom`). No scroll listeners. Without JS the rig stays on
  * the decision. The active key is mirrored onto the block so the lines
  * can dim themselves with CSS. Below 1024 px the rig is `display:
- * contents`, so its states stack between the lines.
+ * contents`, so its states stack between the lines. `--rig-s`
+ * (globals.css) shrinks the rig on short viewports.
  */
 export default function MotorStoryRig({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -43,7 +44,7 @@ export default function MotorStoryRig({ children }: { children: ReactNode }) {
         root.dataset.active = next;
         setActive(next);
       },
-      { rootMargin: "-45% 0px -45% 0px", threshold: [0, 0.5, 1] },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
     );
     root.querySelectorAll<HTMLElement>("article[data-step]").forEach((line) => io.observe(line));
 
@@ -53,11 +54,33 @@ export default function MotorStoryRig({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  // On desktop only the active phone is visible, so hide the others
+  // from screen readers. Below 1024 px every phone is shown.
+  useEffect(() => {
+    const rig = ref.current;
+    if (!rig || typeof window.matchMedia !== "function") return;
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const states = rig.querySelectorAll<HTMLElement>("[data-state]");
+    const apply = () => {
+      const hidden = hiddenStates(active, desktop.matches);
+      states.forEach((state) => {
+        if (hidden.includes(state.dataset.state as MotorStepKey)) state.setAttribute("aria-hidden", "true");
+        else state.removeAttribute("aria-hidden");
+      });
+    };
+    apply();
+    desktop.addEventListener("change", apply);
+    return () => {
+      desktop.removeEventListener("change", apply);
+      states.forEach((state) => state.removeAttribute("aria-hidden"));
+    };
+  }, [active]);
+
   return (
     <div
       ref={ref}
       data-active={active}
-      className="group/rig contents lg:sticky lg:top-[max(1rem,calc(50svh-312px))] lg:mt-[calc(41vh-312px)] lg:block lg:aspect-[9/19.5] lg:w-[288px] lg:self-start lg:before:absolute lg:before:inset-0 lg:before:rounded-[16%/7.38%] lg:before:bg-fg"
+      className="group/rig contents lg:sticky lg:top-[max(1rem,calc(50svh_-_312px*var(--rig-s)))] lg:mt-[calc(41vh_-_312px*var(--rig-s))] lg:block lg:aspect-[9/19.5] lg:w-[calc(288px*var(--rig-s))] lg:self-start lg:before:absolute lg:before:inset-0 lg:before:rounded-[16%/7.38%] lg:before:bg-fg"
     >
       {children}
       <div aria-hidden="true" className="absolute inset-x-0 top-[calc(100%+46px)] hidden justify-center gap-1.5 lg:flex">

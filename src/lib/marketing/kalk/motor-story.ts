@@ -19,3 +19,8 @@ export function activeStepFrom(
   if (visible.length === 0) return "decision";
   return [...visible].sort((a, b) => a.distanceToCentre - b.distanceToCentre)[0].key;
 }
+
+/** Phone states screen readers should skip: on desktop only the active one is shown. */
+export function hiddenStates(active: MotorStepKey, isDesktop: boolean): MotorStepKey[] {
+  return isDesktop ? MOTOR_STEPS.map((s) => s.key).filter((key) => key !== active) : [];
+}

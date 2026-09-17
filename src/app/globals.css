@@ -802,6 +802,15 @@ nav.tabbar {
   color: var(--fg-dim);
 }
 
+/* Sticky motor rig: scale the phone down on short viewports. */
+[data-theme="kalk"] [data-motor-story] { --rig-s: 1; }
+@media (max-height: 760px) {
+  [data-theme="kalk"] [data-motor-story] { --rig-s: 0.88; }
+}
+@media (max-height: 660px) {
+  [data-theme="kalk"] [data-motor-story] { --rig-s: 0.76; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-theme="kalk"] .strike-signal::after {
     animation: none;

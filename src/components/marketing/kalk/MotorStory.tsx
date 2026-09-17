@@ -100,6 +100,7 @@ export default function MotorStory() {
                 data-state={step.key}
                 className={cn(
                   "mx-auto mb-16 w-fit lg:pointer-events-none lg:absolute lg:inset-0 lg:order-none lg:m-0 lg:opacity-0",
+                  "lg:origin-top-left lg:[transform:scale(var(--rig-s))]",
                   "transition-opacity duration-500 motion-reduce:transition-none",
                   STEP_STYLE[step.key].stateOrder,
                   STEP_STYLE[step.key].stateOn,

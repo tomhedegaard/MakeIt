@@ -26,4 +26,13 @@ describe("KalkHero", () => {
     expect(html).not.toContain("eyebrow");
     expect(html).not.toContain("data-stats");
   });
+
+  it("stacks the plate numbers above the phone until 1280 px", () => {
+    const plates = html.match(/<div[^>]*class="([^"]*)"[^>]*>\s*<span[^>]*strike-signal/)?.[1].split(" ") ?? [];
+    expect(plates).toContain("xl:absolute");
+    expect(plates.some((c) => c.startsWith("lg:"))).toBe(false);
+    expect(html).not.toMatch(/lg:flex-row/);
+    // Side by side from 1280 px: sized to fit left of the phone.
+    expect(html.match(/xl:text-\[clamp\(140px,12\.6vw,180px\)\]/g)).toHaveLength(2);
+  });
 });
