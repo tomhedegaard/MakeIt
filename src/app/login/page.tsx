@@ -1,7 +1,9 @@
+import type { Viewport } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Logo from "@/components/Logo";
 import LanguageSelector from "@/components/LanguageSelector";
+import ThemeScope from "@/components/ui/ThemeScope";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 import {
@@ -15,6 +17,12 @@ export async function generateMetadata() {
   const t = await getTranslations("Login");
   return { title: t("metaTitle", { product: COMPANY.product }) };
 }
+
+// Kalk pilot (spec 2026-09-17). Merges with the root viewport.
+export const viewport: Viewport = {
+  themeColor: "#E7E9EB",
+  colorScheme: "light",
+};
 
 type Tab = "magic" | "password" | "oauth";
 
@@ -39,54 +47,56 @@ export default async function LoginPage({
   const t = await getTranslations("Login");
 
   return (
-    <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-24">
-      <div className="absolute inset-0 -z-0 pointer-events-none">
-        <div className="absolute left-1/2 top-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(245,242,236,0.08),transparent_70%)] blur-2xl" />
-      </div>
-
-      <div className="relative z-10 w-full max-w-md">
-        <div className="mb-12 flex items-center justify-between">
-          <Link href="/" className="inline-block text-fg">
-            <Logo />
-          </Link>
-          <LanguageSelector />
+    <ThemeScope theme="kalk" className="flex-1 flex flex-col">
+      <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-24">
+        <div className="absolute inset-0 -z-0 pointer-events-none">
+          <div className="absolute left-1/2 top-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,var(--glow),transparent_70%)] blur-2xl" />
         </div>
 
-        <div className="eyebrow mb-3 flex items-center gap-2">
-          <span className="pulse-dot" /> {t("beta")}
-        </div>
-
-        <h1 className="font-display text-5xl md:text-6xl mb-4">
-          {t("headline.line1")}
-          <br /> {t("headline.line2")}
-        </h1>
-
-        {isMemberNext(next) ? (
-          <p className="mb-8 text-sm text-fg-dim leading-relaxed">{t("memberOnlyHint")}</p>
-        ) : null}
-
-        {sent ? (
-          <SentState email={email} />
-        ) : SUPABASE_ENABLED ? (
-          <SupabaseForm err={err} tab={tab} mode={mode as "signin" | "signup"} />
-        ) : (
-          <MockForm err={err} />
-        )}
-
-        {!sent ? (
-          <p className="mt-6 text-sm text-fg-dim">
-            {t("waitlistHint")}{" "}
-            <Link href="/#waitlist" className="underline hover:text-fg">
-              {t("waitlistLink")}
+        <div className="relative z-10 w-full max-w-md">
+          <div className="mb-12 flex items-center justify-between">
+            <Link href="/" className="inline-block text-fg">
+              <Logo />
             </Link>
-          </p>
-        ) : null}
+            <LanguageSelector />
+          </div>
 
-        <p className="mt-10 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
-          {SUPABASE_ENABLED ? t("statusConnected") : t("statusDemo")}
-        </p>
-      </div>
-    </main>
+          <div className="eyebrow mb-3 flex items-center gap-2">
+            <span className="pulse-dot" /> {t("beta")}
+          </div>
+
+          <h1 className="font-display text-5xl md:text-6xl mb-4">
+            {t("headline.line1")}
+            <br /> {t("headline.line2")}
+          </h1>
+
+          {isMemberNext(next) ? (
+            <p className="mb-8 text-sm text-fg-dim leading-relaxed">{t("memberOnlyHint")}</p>
+          ) : null}
+
+          {sent ? (
+            <SentState email={email} />
+          ) : SUPABASE_ENABLED ? (
+            <SupabaseForm err={err} tab={tab} mode={mode as "signin" | "signup"} />
+          ) : (
+            <MockForm err={err} />
+          )}
+
+          {!sent ? (
+            <p className="mt-6 text-sm text-fg-dim">
+              {t("waitlistHint")}{" "}
+              <Link href="/#waitlist" className="underline hover:text-fg">
+                {t("waitlistLink")}
+              </Link>
+            </p>
+          ) : null}
+
+          <p className="mt-10 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
+            {SUPABASE_ENABLED ? t("statusConnected") : t("statusDemo")}
+          </p>
+        </div>
+      </main>
+    </ThemeScope>
   );
 }
 

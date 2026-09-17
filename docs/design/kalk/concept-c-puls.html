@@ -1,0 +1,1168 @@
+<title>MakeIt · Puls</title>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@500;600;700;800&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#07080A; --s1:#0E1014; --s2:#151821;
+  --fg:#EEF0F3; --dim:#9098A6; --faint:#6B7280;
+  --l1:rgba(238,240,243,.08); --l2:rgba(238,240,243,.16);
+  --body:#FF9C41; --food:#45C487; --heart:#F2545B; --mind:#5B9DF5;
+  --display:'Unbounded', 'Arial Black', system-ui, sans-serif;
+  --sans:'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --rail:112px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--bg);scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:17px;line-height:1.55;overflow-x:clip;-webkit-font-smoothing:antialiased}
+img,svg{display:block}
+a{color:inherit}
+p{margin:0}
+h1,h2,h3{margin:0;font-weight:600}
+:focus-visible{outline:2px solid var(--fg);outline-offset:3px;border-radius:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* concept tag */
+.tag{position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:60;font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:rgba(21,24,33,.92);border:1px solid var(--l2);border-top:0;border-radius:0 0 10px 10px;padding:6px 12px 7px;white-space:nowrap;backdrop-filter:blur(6px)}
+
+/* page + rail */
+.page{position:relative;overflow-x:clip}
+.wrap{max-width:1240px;margin-inline:auto;padding-inline:16px}
+@media (min-width:700px){.wrap{padding-inline:32px}}
+.rail,.node{display:none}
+@media (min-width:1100px){
+  .page{padding-left:var(--rail)}
+  .rail{display:block;position:absolute;left:28px;top:120px;bottom:160px;width:56px;pointer-events:none}
+  .rail svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .rail-base path{stroke:rgba(238,240,243,.09)}
+  .rail-clip{position:absolute;inset:0;overflow:hidden}
+  .rail-in{position:absolute;inset:0}
+  .rail-head{display:none}
+  .node{display:block;position:absolute;left:-62px;top:var(--nt,6px);width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--dc,var(--fg));box-shadow:0 0 0 5px color-mix(in srgb,var(--dc,var(--fg)) 14%,transparent),0 0 22px color-mix(in srgb,var(--dc,var(--fg)) 18%,transparent);z-index:2}
+  .node::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:1px solid var(--dc,var(--fg));opacity:0}
+  .node b{position:absolute;top:22px;left:50%;transform:translateX(-50%);writing-mode:vertical-rl;font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+}
+
+/* nav */
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:92px;padding-top:18px}
+.logo{display:flex;align-items:baseline;gap:8px;text-decoration:none;font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-.02em}
+.logo span{font:500 12px/1 var(--mono);letter-spacing:.08em;color:var(--dim)}
+.nav-r{display:flex;align-items:center;gap:22px}
+.nav-r .live{font:500 11px/1 var(--mono);letter-spacing:.1em;color:var(--dim);display:none;align-items:center;gap:8px;text-transform:uppercase}
+.nav-r .live i{width:6px;height:6px;border-radius:50%;background:var(--heart);box-shadow:0 0 10px rgba(242,84,91,.6)}
+@media (min-width:700px){.nav-r .live{display:flex}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 26px;border-radius:999px;background:var(--fg);color:#07080A;font:500 13px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border:0;cursor:pointer;transition:transform .25s ease,box-shadow .25s ease;white-space:nowrap}
+.btn:hover{transform:translateY(-1px);box-shadow:0 10px 30px -12px rgba(238,240,243,.45)}
+.btn:active{transform:translateY(0)}
+.btn.sm{min-height:44px;padding:0 20px;font-size:12px}
+.tlink{font:500 14px/1.3 var(--sans);color:var(--fg);text-decoration:underline;text-decoration-color:var(--l2);text-underline-offset:6px;text-decoration-thickness:1px;transition:text-decoration-color .2s}
+.tlink:hover{text-decoration-color:var(--fg)}
+
+/* type */
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:500 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--l2)}
+h2{font-family:var(--display);font-weight:600;font-size:clamp(1.85rem,1.05rem + 2.9vw,3.35rem);line-height:1.06;letter-spacing:-.035em;text-wrap:balance}
+.lead{font-size:clamp(1.02rem,.95rem + .3vw,1.18rem);color:var(--dim);max-width:44ch;text-wrap:pretty}
+.meta{font:500 11px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+section{position:relative}
+.sec{padding-block:clamp(88px,10vw,150px)}
+
+/* ======== PHONE ======== */
+.ph{margin:0;display:flex;flex-direction:column;align-items:center;gap:14px}
+.cap{font:500 10.5px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint);text-align:center}
+.phone{--pw:240px;--dc:var(--fg);position:relative;width:var(--pw);aspect-ratio:9/19.5;font-size:calc(var(--pw) / 24);border-radius:3.9em;padding:.5em;background:linear-gradient(150deg,#353944 0%,#0E0F12 38%,#0B0C0F 70%,#2A2D35 100%);box-shadow:inset 0 0 0 .09em rgba(238,240,243,.2),0 0 0 .09em #000,0 3.4em 6em -2.4em rgba(0,0,0,.85);flex:none}
+.screen{position:relative;height:100%;border-radius:3.45em;overflow:hidden;background:radial-gradient(120% 60% at 50% 0%,#12151C 0%,#0A0B0E 60%);display:flex;flex-direction:column;color:var(--fg);font-family:var(--sans);line-height:1.3;text-align:left}
+.isl{position:absolute;top:1em;left:50%;width:7.4em;height:2.15em;margin-left:-3.7em;border-radius:2em;background:#000;z-index:3}
+.sb{flex:none;display:flex;justify-content:space-between;align-items:center;height:4.4em;padding:.9em 2.1em 0 2.6em}
+.sb time{font-weight:600;font-size:1.28em;letter-spacing:-.01em}
+.sb .ic{display:flex;gap:.45em;align-items:center}
+.sb svg{height:1.05em;fill:currentColor}
+.sb .i1{width:1.55em}.sb .i2{width:1.35em}.sb .i3{width:2.3em}
+.sc{flex:1;min-height:0;overflow:hidden;padding:.7em 1.5em 0;display:flex;flex-direction:column;gap:.95em}
+.tb{flex:none;display:grid;grid-template-columns:repeat(5,1fr);padding:.75em .5em 0;border-top:1px solid var(--l1);background:rgba(8,9,12,.92)}
+.tb span{display:flex;flex-direction:column;align-items:center;gap:.28em;font-size:.8em;color:#636A77;position:relative}
+.tb svg{width:1.9em;height:1.9em;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tb .on{color:var(--fg)}
+.tb .on::before{content:"";position:absolute;top:-.95em;width:1.6em;height:.18em;border-radius:1em;background:var(--dc)}
+.hi{flex:none;height:2.3em;display:grid;place-items:center;background:rgba(8,9,12,.92)}
+.hi::before{content:"";width:9em;height:.36em;border-radius:1em;background:rgba(238,240,243,.55)}
+.k{font-family:var(--mono);font-size:.74em;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:.5em}
+.tt{font-family:var(--display);font-weight:600;font-size:2.05em;letter-spacing:-.03em;line-height:1.02}
+.cd{background:rgba(21,24,33,.82);border:1px solid var(--l1);border-radius:1.4em;padding:1.05em 1.15em}
+.mn{font-family:var(--mono)}
+.dt{width:.62em;height:.62em;border-radius:50%;background:var(--dc);flex:none;box-shadow:0 0 .8em color-mix(in srgb,var(--dc) 45%,transparent)}
+.pb{display:flex;align-items:center;justify-content:center;height:3.3em;border-radius:3em;background:var(--fg);color:#07080A;font-family:var(--mono);font-size:.92em;font-weight:500;letter-spacing:.06em;text-transform:uppercase;flex:none}
+.pb.gh{background:transparent;color:var(--fg);border:1px solid var(--l2)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:.6em}
+.hd{display:flex;align-items:center;justify-content:space-between}
+.hd svg{width:1.6em;height:1.6em;fill:none;stroke:var(--fg);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.chip{display:inline-flex;align-items:center;gap:.45em;height:2.2em;padding:0 .85em;border-radius:2em;border:1px solid var(--l2);font-family:var(--mono);font-size:.72em;letter-spacing:.04em;white-space:nowrap}
+.ch svg{width:100%;height:auto;overflow:visible}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:.5em}
+.cell{border:1px solid var(--l1);border-radius:1.1em;padding:.75em .8em;background:rgba(14,16,20,.7)}
+.cell .v{font-family:var(--mono);font-size:1.3em;font-weight:500;margin-top:.25em;letter-spacing:-.02em}
+.cell .v small{font-size:.6em;color:var(--dim);margin-left:.15em}
+.disc{font-size:.72em;color:var(--dim);line-height:1.35}
+.hair{height:1px;background:var(--l1);flex:none}
+
+/* dashboard */
+.dash .sess{background:linear-gradient(180deg,rgba(255,156,65,.07),rgba(21,24,33,.85) 40%);border-color:rgba(255,156,65,.18)}
+.dash .sess .tt{font-size:1.9em;margin:.35em 0 .2em}
+.dash .fields{display:flex;gap:1.1em;margin:.8em 0 1em;font-family:var(--mono);font-size:.78em;color:var(--dim)}
+.dash .fields b{display:block;color:var(--fg);font-weight:500;font-size:1.35em;margin-top:.1em}
+.strike{display:flex;align-items:center;gap:.5em;font-family:var(--mono);font-size:.82em}
+.strike s{color:var(--dim)}
+/* session */
+.sess-top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:.76em;color:var(--dim)}
+.prog{display:grid;grid-template-columns:repeat(16,1fr);gap:.18em}
+.prog i{height:.32em;border-radius:1em;background:rgba(238,240,243,.12)}
+.prog i.d{background:var(--body)}
+.prog i.a{background:var(--fg)}
+.sets{display:flex;flex-direction:column;gap:.1em;font-family:var(--mono);font-size:.84em}
+.sets div{display:grid;grid-template-columns:3.2em 1fr auto;align-items:center;padding:.48em 0;border-bottom:1px solid var(--l1);color:var(--dim)}
+.sets .ok{color:var(--body)}
+.sets .cur{color:var(--fg)}
+.step{display:grid;grid-template-columns:repeat(2,1fr);gap:.55em}
+.step>div{border:1px solid var(--l2);border-radius:1.2em;padding:.6em .7em;display:flex;flex-direction:column;gap:.2em}
+.step .ctl{display:flex;align-items:center;justify-content:space-between}
+.step .ctl i{width:2em;height:2em;border-radius:50%;border:1px solid var(--l2);display:grid;place-items:center;font-style:normal;font-family:var(--mono);font-size:1em;color:var(--dim)}
+.step .ctl b{font-family:var(--mono);font-weight:500;font-size:1.55em}
+.rec{display:flex;align-items:center;gap:.7em;font-size:.8em;color:var(--dim);padding:.9em 0 .6em}
+.rec i{width:1.8em;height:1.8em;border-radius:50%;border:1.5px solid var(--heart);display:grid;place-items:center;flex:none}
+.rec i::before{content:"";width:.7em;height:.7em;border-radius:50%;background:var(--heart)}
+.rest{display:flex;align-items:center;gap:.6em}
+.ring{width:3.2em;height:3.2em;flex:none}
+/* motor diff */
+.diff>div{display:grid;grid-template-columns:1fr auto;gap:.2em .6em;padding:.75em 0;border-bottom:1px solid var(--l1)}
+.diff .nm{font-size:.92em}
+.diff .vals{font-family:var(--mono);font-size:.9em;display:flex;gap:.45em;align-items:center}
+.diff s{color:var(--faint)}
+.diff .nw{color:var(--fg);font-weight:500}
+.diff .why{grid-column:1/-1;font-size:.72em;color:var(--dim)}
+/* mad */
+.meal{display:grid;grid-template-columns:4.6em 1fr;gap:.5em;padding:.7em 0;border-bottom:1px solid var(--l1);font-size:.9em}
+.meal span{font-family:var(--mono);font-size:.78em;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;padding-top:.15em}
+/* sind */
+.scale{display:flex;flex-direction:column;gap:.45em}
+.segs{display:grid;grid-template-columns:repeat(5,1fr);gap:.3em}
+.segs i{height:2.3em;border-radius:.7em;border:1px solid var(--l1);background:rgba(238,240,243,.03)}
+.segs i.f{background:rgba(91,157,245,.16);border-color:rgba(91,157,245,.5)}
+/* form check */
+.vid{position:relative;border-radius:1.3em;overflow:hidden;aspect-ratio:4/3.3;background:radial-gradient(80% 70% at 60% 40%,#2A2D33,#0E0F12);border:1px solid var(--l1)}
+.vid svg{position:absolute;inset:0;width:100%;height:100%}
+.vid .ts{position:absolute;left:.7em;bottom:.7em}
+.bub{border-radius:1.3em 1.3em 1.3em .3em;background:#EEF0F3;color:#0A0B0E;padding:1em 1.1em;font-size:1.02em;line-height:1.35;font-weight:500}
+.sig-row{display:flex;align-items:center;justify-content:space-between;gap:.6em}
+.sig-row svg{width:7em;height:2.4em}
+
+/* ======== HERO ======== */
+.hero{padding:20px 0 40px;min-height:0}
+.hero h1{font-family:var(--display);font-weight:600;font-size:clamp(2rem,.9rem + 4.1vw,4.5rem);line-height:1.02;letter-spacing:-.045em;text-wrap:balance;max-width:15.2em}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:36px;margin-top:22px;position:relative}
+.hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;gap:26px;padding-top:6px}
+.hero-copy .lead{max-width:34ch;color:#B3B9C4}
+.cta-row{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.hchart{position:absolute;left:-10%;right:-20%;top:34%;height:52%;pointer-events:none;overflow:hidden;opacity:.5;-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 70%,transparent);mask-image:linear-gradient(90deg,transparent,#000 22%,#000 70%,transparent)}
+.hchart .grid{position:absolute;inset:0;background-image:linear-gradient(var(--l1) 1px,transparent 1px);background-size:100% 25%}
+.hchart .mv{position:absolute;inset:0;width:200%}
+.hchart svg{width:100%;height:100%}
+.hchart path{fill:none;stroke-width:1.4;vector-effect:non-scaling-stroke;stroke-opacity:.42}
+.stage{position:relative;height:440px;perspective:1600px;perspective-origin:50% 30%;z-index:1}
+.stage .ph{position:absolute;top:0}
+.stage .pl{left:0;top:48px;transform:rotateY(14deg);transform-origin:right center}
+.stage .pr{right:0;top:64px;transform:rotateY(-14deg);transform-origin:left center}
+.stage .pc{left:50%;transform:translateX(-50%);z-index:3}
+.stage .pl .phone,.stage .pr .phone{--pw:148px;filter:brightness(.82)}
+.stage .pc .phone{--pw:172px}
+.stage .cap{font-size:9px;max-width:96px;line-height:1.5}
+@media (min-width:700px){
+  .stage{height:600px}
+  .stage .pl .phone,.stage .pr .phone{--pw:212px}
+  .stage .pc .phone{--pw:244px}
+  .stage .cap{font-size:10.5px;max-width:none}
+}
+@media (min-width:1100px){
+  .hero-grid{grid-template-columns:minmax(0,1fr) 640px;gap:24px;margin-top:26px}
+  .stage{height:640px;margin-top:-4px}
+  .stage .pl{left:6px}
+  .stage .pr{right:6px}
+}
+@media (min-width:1100px) and (max-height:960px){
+  .stage{height:600px}
+}
+
+/* ======== 05:30 ======== */
+.m-head{display:grid;gap:22px;margin-bottom:48px}
+.m-head .lead{max-width:52ch}
+@media (min-width:1000px){.m-head{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);align-items:end;gap:64px}}
+.m-grid{display:grid;gap:48px}
+@media (min-width:1000px){.m-grid{grid-template-columns:minmax(0,1fr) 290px;gap:64px;align-items:start}.m-phone{position:sticky;top:90px}}
+.strip{border:1px solid var(--l1);border-radius:22px;background:linear-gradient(180deg,var(--s1),rgba(14,16,20,.4));padding:20px 18px 22px}
+@media (min-width:700px){.strip{padding:26px 28px 28px}}
+.strip-top{display:flex;justify-content:space-between;gap:12px;margin-bottom:18px}
+.strip svg{width:100%;height:auto;overflow:visible}
+.axis{position:relative;height:20px;margin-top:10px;font:500 11px/1 var(--mono);color:var(--dim)}
+.axis span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.axis .a0{transform:none}
+.axis .a3{transform:translateX(-100%)}
+.axis .hl{color:var(--fg)}
+@media (max-width:699px){.axis .hl{transform:translateX(-100%)}}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;font:500 11px/1 var(--mono);letter-spacing:.06em;color:var(--dim)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:16px;height:2px;background:var(--dc);border-radius:2px}
+.reads{display:grid;grid-template-columns:1fr;border-top:1px solid var(--l1);margin-top:26px}
+@media (min-width:700px){.reads{grid-template-columns:repeat(3,1fr)}}
+.read{padding:18px 0;border-bottom:1px solid var(--l1);display:grid;gap:6px}
+@media (min-width:700px){.read{padding:20px 20px 20px 0;border-bottom:0}.read+.read{padding-left:20px;border-left:1px solid var(--l1)}}
+.read .t{font:500 11px/1 var(--mono);letter-spacing:.1em;color:var(--dim);display:flex;gap:8px;align-items:center}
+.read .t i{width:7px;height:7px;border-radius:50%;background:var(--dc)}
+.read .v{font:500 1.3rem/1.2 var(--mono);letter-spacing:-.02em}
+.read .v small{font-size:.7em;color:var(--dim)}
+.read p{font-size:.9rem;color:var(--dim)}
+.decide{margin-top:34px;display:grid;gap:18px;padding:28px 0 0;border-top:1px solid var(--l2)}
+.decide .big{font-family:var(--display);font-weight:600;font-size:clamp(2.2rem,1.3rem + 3.6vw,4.6rem);letter-spacing:-.05em;line-height:1;display:flex;flex-wrap:wrap;align-items:baseline;gap:.1em .3em}
+.decide .big s{color:#4E545F;text-decoration-thickness:.06em;text-decoration-color:var(--heart)}
+.decide .big .ar{font-family:var(--mono);font-weight:400;font-size:.55em;color:var(--dim)}
+.decide p{max-width:52ch;color:var(--dim)}
+.decide p b{color:var(--fg);font-weight:500}
+
+/* ======== CHANNELS ======== */
+.sys-head{display:grid;gap:22px;padding-bottom:56px}
+@media (min-width:1000px){.sys-head{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:end;gap:64px}}
+.chan{position:relative;border-top:1px solid var(--l1)}
+.chan:last-of-type{border-bottom:1px solid var(--l1)}
+.chan .wrap{display:grid;gap:22px;padding-block:0 0}
+.sig{grid-column:1/-1;height:44px;overflow:hidden;margin-top:-1px;-webkit-mask-image:linear-gradient(90deg,#000 60%,transparent);mask-image:linear-gradient(90deg,#000 60%,transparent)}
+.sig .mv{width:200%;height:100%}
+.sig svg{width:100%;height:100%}
+.sig path{fill:none;stroke:var(--dc);stroke-width:1.5;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.c-meta{display:flex;flex-direction:row;gap:14px;align-items:baseline;flex-wrap:wrap}
+.c-name{font:500 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.c-name i{width:8px;height:8px;border-radius:50%;background:var(--dc);box-shadow:0 0 12px color-mix(in srgb,var(--dc) 55%,transparent)}
+.c-sub{font:500 11px/1.4 var(--mono);color:var(--faint);letter-spacing:.06em}
+.c-text h3{font-family:var(--display);font-weight:600;font-size:clamp(1.45rem,1rem + 1.4vw,2.1rem);letter-spacing:-.035em;line-height:1.1;margin-bottom:14px;text-wrap:balance}
+.c-text p{color:var(--dim);max-width:46ch}
+.c-list{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:0;max-width:420px}
+.c-list li{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-top:1px solid var(--l1);font:400 13px/1.3 var(--mono);color:var(--dim)}
+.c-list li b{color:var(--fg);font-weight:500;text-align:right}
+.crop-fig{margin:0;display:flex;flex-direction:column;align-items:center;gap:14px;justify-self:center}
+.crop{height:330px;width:270px;overflow:hidden;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
+.crop .phone{--pw:270px}
+.crop.up{display:flex;align-items:flex-end;-webkit-mask-image:linear-gradient(transparent,#000 30%);mask-image:linear-gradient(transparent,#000 30%)}
+.crop.mid{-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 70%,transparent)}
+.crop.mid .phone{margin-top:-58px}
+@media (min-width:1000px){
+  .chan .wrap{grid-template-columns:190px minmax(0,1fr) 290px;gap:28px 48px;align-items:start}
+  .c-meta{flex-direction:column;gap:10px;padding-top:6px}
+  .c-text{padding-bottom:40px}
+  .crop{height:380px;width:290px}
+  .crop .phone{--pw:290px}
+  .chan.flip .c-text{order:3}
+  .chan.flip .crop-fig{order:2}
+}
+.chan .wrap{padding-bottom:34px}
+
+/* ======== MUNK ======== */
+.munk .wrap{display:grid;gap:48px}
+@media (min-width:1000px){.munk .wrap{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr) 272px;gap:52px;align-items:center}}
+.munk h2{font-size:clamp(1.85rem,1rem + 2.1vw,2.75rem)}
+.comp{position:relative;aspect-ratio:4/5;border-radius:26px;overflow:hidden;background:linear-gradient(165deg,#1A1C20 0%,#0C0D0F 70%);border:1px solid var(--l1);max-width:520px}
+.comp .face{position:absolute;left:10%;right:10%;top:10%;bottom:10%;border-radius:16px;background:radial-gradient(70% 55% at 50% 38%,#2E3035 0%,#1B1C20 60%,#111215 100%)}
+.comp .face::after{content:"";position:absolute;inset:0;border-radius:inherit;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 4px)}
+.comp .mm{position:absolute;left:4%;bottom:-6%;font-family:var(--display);font-weight:800;font-size:clamp(8rem,17vw,16rem);line-height:.8;letter-spacing:-.06em;color:#EEF0F3;user-select:none}
+.comp .mm2{position:absolute;left:12%;bottom:2%;font-family:var(--display);font-weight:800;font-size:clamp(8rem,17vw,16rem);line-height:.8;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1px rgba(238,240,243,.4);user-select:none}
+.comp .cm2{position:absolute;right:22px;top:22px;text-align:right}
+.comp .rule{position:absolute;left:0;right:0;height:1px;background:rgba(238,240,243,.14)}
+.comp .cm{position:absolute;left:22px;top:22px;display:grid;gap:6px}
+.comp .cm b{font:600 15px/1.2 var(--sans);letter-spacing:-.01em}
+.flow{list-style:none;padding:0;margin:30px 0 0;display:grid}
+.flow li{display:grid;grid-template-columns:78px 1fr;gap:14px;padding:14px 0;border-top:1px solid var(--l1);align-items:baseline}
+.flow li:last-child{border-bottom:1px solid var(--l1)}
+.flow span{font:500 12px/1 var(--mono);color:var(--dim);letter-spacing:.06em}
+.flow b{font-weight:500}
+.munk .lead{margin-top:20px}
+.munk .eyebrow{margin-bottom:22px}
+
+/* ======== CREW ======== */
+.crew-head{display:grid;gap:22px;margin-bottom:48px}
+@media (min-width:1000px){.crew-head{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:end;gap:64px}}
+.graph{position:relative;border-top:1px solid var(--l2);border-bottom:1px solid var(--l1);padding:34px 0 42px}
+.gbox{position:relative}
+.gbox svg{width:100%;height:auto;overflow:visible}
+.gl{position:absolute;font:500 11px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.gl.t{transform:translateY(-140%);color:var(--fg)}
+.gl.t small{display:block;color:var(--faint);letter-spacing:.04em;text-transform:none;font-size:10.5px}
+.gl.x{bottom:-30px;transform:translateX(-50%);color:var(--dim);letter-spacing:.04em}
+.gl.me{transform:translate(6px,16px);color:var(--body)}
+.gl.cs{transform:translate(8px,-6px);color:var(--dim);text-transform:none;letter-spacing:.02em}
+@media (max-width:699px){.gl.t small,.gl.cs,.gl.xm{display:none}.gl{font-size:9.5px}}
+.tiers{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin-top:40px}
+@media (min-width:800px){.tiers{grid-template-columns:repeat(4,1fr)}}
+.tier{padding:20px 18px 20px 0;border-top:1px solid var(--l1)}
+@media (min-width:800px){.tier{border-top:0;padding:0 22px 0 0}.tier+.tier{padding-left:22px;border-left:1px solid var(--l1)}}
+.tier h3{font-family:var(--display);font-weight:600;font-size:1.25rem;letter-spacing:-.03em;margin-bottom:6px}
+.tier p{font-size:.9rem;color:var(--dim)}
+.tier .meta{margin-bottom:10px}
+.tier.on h3{color:var(--body)}
+.you{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;margin-top:36px;font:500 14px/1.3 var(--mono)}
+.you .bar{flex:1 1 220px;max-width:360px;height:3px;background:var(--l1);border-radius:3px;overflow:hidden}
+.you .bar i{display:block;height:100%;width:24.8%;background:var(--body)}
+.you span{color:var(--dim)}
+
+/* ======== VOICES ======== */
+.voices-head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:48px}
+.qs{display:grid;gap:18px}
+@media (min-width:900px){.qs{grid-template-columns:repeat(3,1fr);gap:22px;align-items:start}.q2{margin-top:96px}.q3{margin-top:38px}.q1 blockquote{padding-bottom:44px}.q3 blockquote{padding-bottom:40px}}
+.q{margin:0;border:1px solid var(--l1);border-radius:22px;background:var(--s1);padding:26px 26px 24px;position:relative;overflow:hidden}
+.q::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--dc) 70%,transparent),transparent)}
+.q svg{width:74px;height:18px;margin-bottom:22px}
+.q svg path{fill:none;stroke:var(--dc);stroke-width:1.5}
+.q blockquote{margin:0;font-size:clamp(1.05rem,1rem + .25vw,1.2rem);line-height:1.45;text-wrap:pretty}
+.q figcaption{margin-top:22px;display:flex;flex-wrap:wrap;gap:4px 10px;font:500 11.5px/1.3 var(--mono);color:var(--dim);letter-spacing:.04em}
+.q figcaption b{color:var(--fg);font-weight:500}
+
+/* ======== ACCESS ======== */
+.access-box{position:relative;border:1px solid var(--l2);border-radius:28px;background:radial-gradient(90% 120% at 100% 0%,#141722 0%,var(--s1) 55%);padding:40px 22px 130px;overflow:hidden;display:grid;gap:36px}
+@media (min-width:900px){.access-box{grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding:72px 64px 150px;gap:64px;align-items:end}}
+.conv{position:absolute;left:0;right:0;bottom:18px;width:100%;height:90px;opacity:.35;pointer-events:none}
+.conv path{fill:none;stroke-width:1.2;vector-effect:non-scaling-stroke}
+.access-box h2{font-size:clamp(2.3rem,1.3rem + 4vw,4.6rem)}
+.access-box .lead{margin-top:18px}
+form{display:grid;gap:12px;position:relative}
+label{font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.frow{display:flex;gap:10px;flex-wrap:wrap}
+input[type=email]{flex:1 1 240px;min-width:0;height:52px;border-radius:999px;border:1px solid var(--l2);background:var(--bg);color:var(--fg);padding:0 22px;font:400 16px/1 var(--sans);transition:border-color .2s}
+input[type=email]::placeholder{color:#656C79}
+input[type=email]:hover{border-color:rgba(238,240,243,.3)}
+input[type=email]:focus-visible{outline:2px solid var(--fg);outline-offset:2px;border-color:transparent}
+.frow .btn{min-height:52px}
+.fnote{font-size:.85rem;color:var(--dim)}
+.status{font:500 13px/1.4 var(--mono);color:var(--fg);min-height:1.4em}
+
+/* ======== FAQ ======== */
+.faq .wrap{display:grid;gap:36px}
+@media (min-width:1000px){.faq .wrap{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:64px}}
+details{border-top:1px solid var(--l1)}
+details:last-child{border-bottom:1px solid var(--l1)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 0;font-weight:500;font-size:1.05rem}
+summary::-webkit-details-marker{display:none}
+summary i{position:relative;width:14px;height:14px;flex:none;transition:transform .3s ease}
+summary i::before,summary i::after{content:"";position:absolute;left:0;right:0;top:50%;height:1.5px;margin-top:-.75px;background:var(--dim)}
+summary i::after{transform:rotate(90deg)}
+details[open] summary i{transform:rotate(45deg)}
+details p{color:var(--dim);padding:0 40px 24px 0;max-width:60ch}
+summary:hover{color:#fff}
+
+/* ======== FOOTER ======== */
+footer{border-top:1px solid var(--l1);padding:44px 0 56px}
+footer .wrap{display:grid;gap:28px}
+@media (min-width:900px){footer .wrap{grid-template-columns:1fr auto;align-items:end}}
+.slogan{font-family:var(--display);font-weight:700;font-size:clamp(1.3rem,1rem + 1vw,1.8rem);letter-spacing:-.03em;margin-top:14px}
+.flinks{display:flex;flex-wrap:wrap;gap:10px 26px;font-size:.95rem}
+.flinks a{text-decoration:none;color:var(--dim);display:inline-flex;min-height:44px;align-items:center}
+.flinks a:hover{color:var(--fg)}
+.fine{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;border-top:1px solid var(--l1);padding-top:22px}
+
+/* ======== MOTION ======== */
+@media (prefers-reduced-motion:no-preference){
+  .hchart .mv{animation:drift 70s linear infinite}
+  .sig .mv{animation:drift 38s linear infinite}
+  .chan:nth-of-type(2) .sig .mv{animation-duration:52s}
+  .chan:nth-of-type(3) .sig .mv{animation-duration:24s}
+  .chan:nth-of-type(4) .sig .mv{animation-duration:44s}
+  .stage .phone{animation:float 9s ease-in-out infinite}
+  .stage .pl .phone{animation-delay:-3s}
+  .stage .pr .phone{animation-delay:-6s}
+  .pulse{animation:beat 2.4s ease-out infinite;transform-box:fill-box;transform-origin:center}
+  .node::after{animation:ping 3.2s ease-out infinite}
+  .nav-r .live i{animation:blink 2.4s ease-in-out infinite}
+  @supports (animation-timeline: scroll()){
+    .rail-clip{animation:railO linear both;animation-timeline:scroll(root)}
+    .rail-in{animation:railI linear both;animation-timeline:scroll(root)}
+    .rail-head{display:block;position:absolute;inset:0;animation:railH linear both;animation-timeline:scroll(root)}
+    .rail-head::before{content:"";position:absolute;left:50%;top:-5px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--fg);box-shadow:0 0 0 4px rgba(238,240,243,.1),0 0 18px rgba(238,240,243,.5)}
+  }
+  @supports (animation-timeline: view()){
+    .rise{animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 55%}
+  }
+}
+@keyframes drift{to{transform:translateX(-50%)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes beat{0%{transform:scale(1);opacity:.7}70%,100%{transform:scale(3.2);opacity:0}}
+@keyframes ping{0%{transform:scale(1);opacity:.6}70%,100%{transform:scale(2.8);opacity:0}}
+@keyframes blink{50%{opacity:.35}}
+@keyframes railO{from{transform:translateY(-93%)}to{transform:translateY(0)}}
+@keyframes railI{from{transform:translateY(93%)}to{transform:translateY(0)}}
+@keyframes railH{from{transform:translateY(7%)}to{transform:translateY(100%)}}
+@keyframes rise{from{opacity:.2;transform:translateY(32px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-sig" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx=".7"/><rect x="5" y="5.5" width="3" height="6.5" rx=".7"/><rect x="10" y="3" width="3" height="9" rx=".7"/><rect x="15" y="0" width="3" height="12" rx=".7"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 16 12"><path d="M8 11.6 5.7 9.2a3.3 3.3 0 0 1 4.6 0zM3.3 6.9a6.6 6.6 0 0 1 9.4 0l-1.4 1.4a4.6 4.6 0 0 0-6.6 0zM.9 4.5a10 10 0 0 1 14.2 0l-1.4 1.4a8 8 0 0 0-11.4 0z"/></symbol>
+    <symbol id="i-bat" viewBox="0 0 27 12"><rect x=".6" y=".6" width="22" height="10.8" rx="3.2" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.1"/><rect x="2.3" y="2.3" width="15" height="7.4" rx="1.8"/><rect x="24.2" y="4" width="1.9" height="4" rx=".9" opacity=".45"/></symbol>
+    <symbol id="t-day" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></symbol>
+    <symbol id="t-train" viewBox="0 0 24 24"><path d="M6.5 7v10M17.5 7v10M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></symbol>
+    <symbol id="t-food" viewBox="0 0 24 24"><path d="M3.5 11h17a8.5 8.5 0 0 1-17 0zM9 7.5c0-1.5 1.5-1.5 1.5-3M13.5 7.5c0-1.5 1.5-1.5 1.5-3"/></symbol>
+    <symbol id="t-mind" viewBox="0 0 24 24"><path d="M2.5 12h3l2-5 3.5 10 3-8 2 3h5.5"/></symbol>
+    <symbol id="t-crew" viewBox="0 0 24 24"><path d="M4 19h4v-5H4zM10 19h4V9h-4zM16 19h4V4h-4z"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+  </defs>
+</svg>
+
+<div class="tag" aria-label="Koncept C, Puls">Koncept C · Puls</div>
+
+<div class="page">
+
+  <div class="rail" aria-hidden="true">
+    <svg class="rail-base" viewBox="0 0 40 1000" preserveAspectRatio="none"><path d="M19.5 0.0 L19.1 1.6 L20.4 3.2 L18.9 4.8 L20.1 6.4 L19.7 8.0 L18.9 9.6 L20.0 11.2 L18.8 12.8 L19.8 14.4 L18.9 16.0 L18.9 17.6 L19.8 19.2 L20.8 20.8 L19.0 22.4 L19.3 24.0 L20.3 25.6 L21.2 27.2 L20.2 28.8 L20.0 30.0 L17.5 31.0 L31.0 32.0 L12.0 33.0 L23.0 34.0 L20.0 35.0 L19.7 36.0 L21.2 37.6 L18.8 39.2 L20.9 40.8 L19.5 42.4 L19.1 44.0 L19.0 45.6 L19.5 47.2 L20.8 48.8 L19.2 50.4 L20.2 52.0 L20.4 53.6 L19.7 55.2 L20.1 56.8 L18.9 58.4 L18.9 60.0 L19.2 61.6 L20.5 63.2 L19.8 64.8 L19.5 66.4 L20.2 68.0 L19.9 69.6 L19.5 71.2 L20.8 72.8 L20.5 74.4 L19.3 76.0 L20.2 77.6 L20.1 79.2 L21.0 80.8 L20.6 82.4 L19.4 84.0 L21.2 85.6 L19.0 87.2 L19.8 88.8 L20.7 90.4 L19.1 92.0 L20.0 93.6 L18.8 95.2 L20.4 96.8 L20.7 98.4 L20.2 100.0 L21.0 101.6 L19.5 103.2 L20.5 104.8 L20.2 106.4 L20.2 108.0 L19.9 109.6 L20.9 111.2 L21.2 112.8 L19.9 114.4 L20.4 116.0 L18.9 117.6 L20.5 119.2 L20.0 120.0 L17.5 121.0 L31.0 122.0 L12.0 123.0 L23.0 124.0 L20.0 125.0 L20.4 126.0 L21.3 127.6 L20.8 129.2 L19.4 130.8 L19.7 132.4 L20.4 134.0 L18.8 135.6 L19.9 137.2 L19.1 138.8 L19.0 140.4 L18.9 142.0 L20.7 143.6 L19.0 145.2 L19.3 146.8 L19.7 148.4 L21.0 150.0 L18.9 151.6 L19.9 153.2 L20.1 154.8 L21.0 156.4 L20.8 158.0 L20.9 159.6 L19.4 161.2 L19.8 162.8 L19.6 164.4 L21.0 166.0 L21.2 167.6 L19.1 169.2 L19.2 170.8 L19.3 172.4 L19.3 174.0 L20.0 175.6 L20.2 177.2 L19.4 178.8 L18.7 180.4 L19.8 182.0 L19.7 183.6 L20.2 185.2 L21.2 186.8 L20.5 188.4 L20.0 190.0 L20.3 191.6 L20.5 193.2 L18.8 194.8 L21.0 196.4 L20.7 198.0 L21.0 199.6 L20.8 201.2 L19.7 202.8 L19.7 204.4 L20.0 205.0 L17.5 206.0 L31.0 207.0 L12.0 208.0 L23.0 209.0 L20.0 210.0 L19.0 211.0 L20.3 212.6 L18.9 214.2 L18.9 215.8 L19.2 217.4 L19.1 219.0 L19.6 220.6 L18.8 222.2 L18.7 223.8 L19.1 225.4 L19.0 227.0 L19.6 228.6 L18.8 230.2 L21.0 231.8 L20.3 233.4 L19.1 235.0 L19.4 236.6 L19.6 238.2 L19.6 239.8 L19.0 241.4 L20.9 243.0 L21.3 244.6 L19.9 246.2 L20.0 247.8 L18.9 249.4 L19.0 251.0 L19.6 252.6 L19.4 254.2 L20.9 255.8 L19.1 257.4 L18.8 259.0 L21.2 260.6 L20.1 262.2 L19.1 263.8 L20.1 265.4 L18.8 267.0 L20.1 268.6 L21.2 270.2 L20.9 271.8 L20.5 273.4 L19.4 275.0 L19.7 276.6 L19.1 278.2 L20.7 279.8 L20.1 281.4 L20.7 283.0 L19.6 284.6 L19.3 286.2 L20.8 287.8 L21.3 289.4 L20.0 290.0 L17.5 291.0 L31.0 292.0 L12.0 293.0 L23.0 294.0 L20.0 295.0 L20.9 296.0 L20.8 297.6 L20.8 299.2 L20.6 300.8 L19.3 302.4 L20.0 304.0 L19.6 305.6 L18.8 307.2 L18.8 308.8 L19.4 310.4 L19.4 312.0 L20.5 313.6 L21.2 315.2 L19.9 316.8 L21.1 318.4 L21.3 320.0 L21.2 321.6 L19.6 323.2 L19.3 324.8 L19.3 326.4 L19.2 328.0 L19.2 329.6 L20.3 331.2 L21.0 332.8 L20.9 334.4 L19.9 336.0 L20.4 337.6 L20.8 339.2 L18.9 340.8 L20.4 342.4 L21.1 344.0 L20.7 345.6 L20.7 347.2 L19.9 348.8 L19.2 350.4 L20.8 352.0 L19.6 353.6 L20.8 355.2 L21.2 356.8 L19.7 358.4 L19.7 360.0 L21.2 361.6 L20.6 363.2 L19.1 364.8 L19.0 366.4 L19.1 368.0 L21.1 369.6 L20.8 371.2 L19.1 372.8 L20.8 374.4 L21.2 376.0 L20.4 377.6 L19.6 379.2 L20.0 380.0 L17.5 381.0 L31.0 382.0 L12.0 383.0 L23.0 384.0 L20.0 385.0 L20.1 386.0 L19.0 387.6 L18.7 389.2 L21.2 390.8 L20.4 392.4 L20.1 394.0 L21.1 395.6 L19.8 397.2 L21.0 398.8 L20.8 400.4 L19.2 402.0 L19.4 403.6 L19.5 405.2 L19.3 406.8 L20.2 408.4 L19.4 410.0 L19.8 411.6 L19.0 413.2 L21.1 414.8 L19.6 416.4 L19.9 418.0 L20.2 419.6 L21.1 421.2 L19.8 422.8 L21.1 424.4 L20.0 426.0 L20.1 427.6 L20.1 429.2 L18.7 430.8 L19.8 432.4 L19.2 434.0 L18.7 435.6 L20.8 437.2 L19.1 438.8 L19.9 440.4 L20.6 442.0 L20.1 443.6 L19.5 445.2 L20.0 446.8 L20.1 448.4 L20.7 450.0 L19.0 451.6 L20.2 453.2 L19.3 454.8 L19.4 456.4 L20.7 458.0 L20.0 459.6 L20.2 461.2 L20.7 462.8 L21.1 464.4 L19.9 466.0 L20.3 467.6 L20.0 469.2 L20.0 470.0 L17.5 471.0 L31.0 472.0 L12.0 473.0 L23.0 474.0 L20.0 475.0 L20.0 476.0 L20.5 477.6 L19.9 479.2 L20.1 480.8 L19.9 482.4 L21.1 484.0 L20.5 485.6 L21.0 487.2 L21.1 488.8 L19.4 490.4 L20.2 492.0 L21.2 493.6 L20.9 495.2 L19.1 496.8 L19.0 498.4 L19.8 500.0 L18.9 501.6 L19.3 503.2 L18.9 504.8 L20.4 506.4 L20.7 508.0 L21.0 509.6 L19.1 511.2 L20.6 512.8 L20.4 514.4 L19.1 516.0 L21.0 517.6 L21.2 519.2 L19.3 520.8 L21.2 522.4 L19.7 524.0 L20.0 525.6 L21.3 527.2 L20.9 528.8 L19.1 530.4 L19.8 532.0 L20.0 533.6 L19.6 535.2 L19.2 536.8 L19.5 538.4 L20.6 540.0 L18.8 541.6 L20.1 543.2 L19.8 544.8 L18.7 546.4 L19.6 548.0 L20.3 549.6 L20.0 551.2 L18.9 552.8 L21.3 554.4 L20.7 556.0 L21.2 557.6 L19.0 559.2 L20.0 560.0 L17.5 561.0 L31.0 562.0 L12.0 563.0 L23.0 564.0 L20.0 565.0 L19.4 566.0 L18.8 567.6 L20.7 569.2 L19.4 570.8 L19.0 572.4 L19.8 574.0 L21.1 575.6 L20.8 577.2 L19.4 578.8 L19.1 580.4 L21.1 582.0 L20.2 583.6 L20.5 585.2 L18.9 586.8 L18.8 588.4 L20.5 590.0 L19.8 591.6 L18.9 593.2 L21.1 594.8 L20.3 596.4 L20.8 598.0 L18.9 599.6 L20.9 601.2 L18.9 602.8 L20.9 604.4 L19.9 606.0 L19.6 607.6 L20.1 609.2 L21.1 610.8 L19.4 612.4 L19.0 614.0 L20.1 615.6 L19.3 617.2 L19.0 618.8 L19.1 620.4 L18.8 622.0 L19.2 623.6 L19.5 625.2 L19.5 626.8 L20.7 628.4 L19.5 630.0 L20.0 631.6 L19.2 633.2 L19.6 634.8 L18.7 636.4 L19.4 638.0 L18.7 639.6 L20.6 641.2 L20.1 642.8 L19.2 644.4 L19.9 646.0 L21.1 647.6 L19.0 649.2 L20.0 650.0 L17.5 651.0 L31.0 652.0 L12.0 653.0 L23.0 654.0 L20.0 655.0 L20.8 656.0 L19.8 657.6 L20.0 659.2 L20.9 660.8 L19.7 662.4 L20.0 664.0 L20.5 665.6 L21.3 667.2 L19.6 668.8 L20.9 670.4 L20.5 672.0 L20.4 673.6 L19.8 675.2 L19.6 676.8 L18.8 678.4 L19.0 680.0 L18.9 681.6 L20.6 683.2 L19.4 684.8 L19.1 686.4 L18.9 688.0 L20.9 689.6 L21.0 691.2 L20.4 692.8 L19.4 694.4 L19.3 696.0 L19.5 697.6 L19.9 699.2 L19.1 700.8 L19.9 702.4 L19.4 704.0 L21.2 705.6 L21.2 707.2 L20.1 708.8 L19.3 710.4 L21.2 712.0 L19.5 713.6 L19.6 715.2 L18.7 716.8 L19.7 718.4 L19.9 720.0 L20.0 721.6 L19.2 723.2 L20.0 724.8 L18.7 726.4 L19.4 728.0 L18.9 729.6 L19.7 731.2 L18.8 732.8 L18.8 734.4 L19.5 736.0 L19.3 737.6 L20.2 739.2 L20.1 740.8 L20.7 742.4 L20.4 744.0 L20.0 745.0 L17.5 746.0 L31.0 747.0 L12.0 748.0 L23.0 749.0 L20.0 750.0 L20.6 751.0 L21.0 752.6 L19.7 754.2 L19.5 755.8 L21.3 757.4 L19.1 759.0 L20.6 760.6 L20.4 762.2 L18.8 763.8 L20.9 765.4 L21.0 767.0 L20.3 768.6 L20.6 770.2 L20.8 771.8 L19.1 773.4 L20.1 775.0 L20.0 776.6 L20.9 778.2 L20.8 779.8 L20.8 781.4 L20.2 783.0 L21.0 784.6 L20.5 786.2 L20.5 787.8 L19.3 789.4 L18.8 791.0 L19.0 792.6 L19.6 794.2 L19.0 795.8 L20.9 797.4 L20.2 799.0 L20.3 800.6 L20.3 802.2 L20.5 803.8 L20.0 805.4 L18.7 807.0 L20.8 808.6 L20.6 810.2 L20.0 811.8 L20.1 813.4 L20.4 815.0 L18.9 816.6 L20.6 818.2 L19.4 819.8 L18.9 821.4 L19.4 823.0 L20.6 824.6 L19.2 826.2 L20.6 827.8 L21.2 829.4 L20.0 831.0 L19.7 832.6 L19.9 834.2 L20.5 835.8 L20.7 837.4 L20.3 839.0 L20.0 840.0 L17.5 841.0 L31.0 842.0 L12.0 843.0 L23.0 844.0 L20.0 845.0 L20.4 846.0 L18.9 847.6 L19.1 849.2 L19.4 850.8 L20.6 852.4 L19.5 854.0 L20.2 855.6 L18.7 857.2 L18.9 858.8 L19.4 860.4 L20.4 862.0 L20.5 863.6 L20.5 865.2 L19.5 866.8 L20.0 868.4 L19.9 870.0 L19.9 871.6 L19.0 873.2 L21.0 874.8 L19.2 876.4 L21.2 878.0 L21.1 879.6 L18.7 881.2 L19.9 882.8 L20.8 884.4 L21.2 886.0 L19.9 887.6 L19.4 889.2 L19.2 890.8 L21.2 892.4 L19.2 894.0 L20.2 895.6 L19.1 897.2 L20.1 898.8 L21.2 900.4 L19.0 902.0 L20.8 903.6 L20.0 905.2 L21.0 906.8 L20.5 908.4 L19.3 910.0 L21.0 911.6 L20.0 913.2 L18.8 914.8 L18.7 916.4 L20.0 918.0 L19.9 919.6 L19.5 921.2 L19.1 922.8 L19.6 924.4 L19.5 926.0 L20.9 927.6 L18.7 929.2 L20.0 930.0 L17.5 931.0 L31.0 932.0 L12.0 933.0 L23.0 934.0 L20.0 935.0 L20.7 936.0 L20.9 937.6 L19.0 939.2 L21.1 940.8 L20.6 942.4 L21.0 944.0 L19.5 945.6 L19.7 947.2 L19.7 948.8 L21.3 950.4 L20.2 952.0 L19.6 953.6 L19.8 955.2 L19.4 956.8 L18.8 958.4 L19.0 960.0 L20.9 961.6 L19.4 963.2 L21.1 964.8 L19.3 966.4 L19.4 968.0 L20.0 969.6 L19.2 971.2 L19.7 972.8 L21.2 974.4 L21.0 976.0 L20.8 977.6 L20.3 979.2 L21.1 980.8 L21.1 982.4 L20.1 984.0 L20.6 985.6 L18.8 987.2 L20.6 988.8 L19.9 990.4 L20.7 992.0 L20.4 993.6 L19.4 995.2 L18.8 996.8 L21.1 998.4" fill="none" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>
+    <div class="rail-clip"><div class="rail-in">
+      <svg viewBox="0 0 40 1000" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="railg" x1="0" y1="0" x2="0" y2="1000" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#EEF0F3" stop-opacity=".25"/>
+            <stop offset=".07" stop-color="#EEF0F3"/>
+            <stop offset=".16" stop-color="#F2545B"/>
+            <stop offset=".30" stop-color="#F2545B"/>
+            <stop offset=".36" stop-color="#FF9C41"/>
+            <stop offset=".42" stop-color="#45C487"/>
+            <stop offset=".48" stop-color="#F2545B"/>
+            <stop offset=".54" stop-color="#5B9DF5"/>
+            <stop offset=".62" stop-color="#EEF0F3"/>
+            <stop offset=".74" stop-color="#FF9C41"/>
+            <stop offset=".84" stop-color="#45C487"/>
+            <stop offset=".92" stop-color="#5B9DF5"/>
+            <stop offset="1" stop-color="#EEF0F3" stop-opacity=".4"/>
+          </linearGradient>
+        </defs>
+        <path d="M19.5 0.0 L19.1 1.6 L20.4 3.2 L18.9 4.8 L20.1 6.4 L19.7 8.0 L18.9 9.6 L20.0 11.2 L18.8 12.8 L19.8 14.4 L18.9 16.0 L18.9 17.6 L19.8 19.2 L20.8 20.8 L19.0 22.4 L19.3 24.0 L20.3 25.6 L21.2 27.2 L20.2 28.8 L20.0 30.0 L17.5 31.0 L31.0 32.0 L12.0 33.0 L23.0 34.0 L20.0 35.0 L19.7 36.0 L21.2 37.6 L18.8 39.2 L20.9 40.8 L19.5 42.4 L19.1 44.0 L19.0 45.6 L19.5 47.2 L20.8 48.8 L19.2 50.4 L20.2 52.0 L20.4 53.6 L19.7 55.2 L20.1 56.8 L18.9 58.4 L18.9 60.0 L19.2 61.6 L20.5 63.2 L19.8 64.8 L19.5 66.4 L20.2 68.0 L19.9 69.6 L19.5 71.2 L20.8 72.8 L20.5 74.4 L19.3 76.0 L20.2 77.6 L20.1 79.2 L21.0 80.8 L20.6 82.4 L19.4 84.0 L21.2 85.6 L19.0 87.2 L19.8 88.8 L20.7 90.4 L19.1 92.0 L20.0 93.6 L18.8 95.2 L20.4 96.8 L20.7 98.4 L20.2 100.0 L21.0 101.6 L19.5 103.2 L20.5 104.8 L20.2 106.4 L20.2 108.0 L19.9 109.6 L20.9 111.2 L21.2 112.8 L19.9 114.4 L20.4 116.0 L18.9 117.6 L20.5 119.2 L20.0 120.0 L17.5 121.0 L31.0 122.0 L12.0 123.0 L23.0 124.0 L20.0 125.0 L20.4 126.0 L21.3 127.6 L20.8 129.2 L19.4 130.8 L19.7 132.4 L20.4 134.0 L18.8 135.6 L19.9 137.2 L19.1 138.8 L19.0 140.4 L18.9 142.0 L20.7 143.6 L19.0 145.2 L19.3 146.8 L19.7 148.4 L21.0 150.0 L18.9 151.6 L19.9 153.2 L20.1 154.8 L21.0 156.4 L20.8 158.0 L20.9 159.6 L19.4 161.2 L19.8 162.8 L19.6 164.4 L21.0 166.0 L21.2 167.6 L19.1 169.2 L19.2 170.8 L19.3 172.4 L19.3 174.0 L20.0 175.6 L20.2 177.2 L19.4 178.8 L18.7 180.4 L19.8 182.0 L19.7 183.6 L20.2 185.2 L21.2 186.8 L20.5 188.4 L20.0 190.0 L20.3 191.6 L20.5 193.2 L18.8 194.8 L21.0 196.4 L20.7 198.0 L21.0 199.6 L20.8 201.2 L19.7 202.8 L19.7 204.4 L20.0 205.0 L17.5 206.0 L31.0 207.0 L12.0 208.0 L23.0 209.0 L20.0 210.0 L19.0 211.0 L20.3 212.6 L18.9 214.2 L18.9 215.8 L19.2 217.4 L19.1 219.0 L19.6 220.6 L18.8 222.2 L18.7 223.8 L19.1 225.4 L19.0 227.0 L19.6 228.6 L18.8 230.2 L21.0 231.8 L20.3 233.4 L19.1 235.0 L19.4 236.6 L19.6 238.2 L19.6 239.8 L19.0 241.4 L20.9 243.0 L21.3 244.6 L19.9 246.2 L20.0 247.8 L18.9 249.4 L19.0 251.0 L19.6 252.6 L19.4 254.2 L20.9 255.8 L19.1 257.4 L18.8 259.0 L21.2 260.6 L20.1 262.2 L19.1 263.8 L20.1 265.4 L18.8 267.0 L20.1 268.6 L21.2 270.2 L20.9 271.8 L20.5 273.4 L19.4 275.0 L19.7 276.6 L19.1 278.2 L20.7 279.8 L20.1 281.4 L20.7 283.0 L19.6 284.6 L19.3 286.2 L20.8 287.8 L21.3 289.4 L20.0 290.0 L17.5 291.0 L31.0 292.0 L12.0 293.0 L23.0 294.0 L20.0 295.0 L20.9 296.0 L20.8 297.6 L20.8 299.2 L20.6 300.8 L19.3 302.4 L20.0 304.0 L19.6 305.6 L18.8 307.2 L18.8 308.8 L19.4 310.4 L19.4 312.0 L20.5 313.6 L21.2 315.2 L19.9 316.8 L21.1 318.4 L21.3 320.0 L21.2 321.6 L19.6 323.2 L19.3 324.8 L19.3 326.4 L19.2 328.0 L19.2 329.6 L20.3 331.2 L21.0 332.8 L20.9 334.4 L19.9 336.0 L20.4 337.6 L20.8 339.2 L18.9 340.8 L20.4 342.4 L21.1 344.0 L20.7 345.6 L20.7 347.2 L19.9 348.8 L19.2 350.4 L20.8 352.0 L19.6 353.6 L20.8 355.2 L21.2 356.8 L19.7 358.4 L19.7 360.0 L21.2 361.6 L20.6 363.2 L19.1 364.8 L19.0 366.4 L19.1 368.0 L21.1 369.6 L20.8 371.2 L19.1 372.8 L20.8 374.4 L21.2 376.0 L20.4 377.6 L19.6 379.2 L20.0 380.0 L17.5 381.0 L31.0 382.0 L12.0 383.0 L23.0 384.0 L20.0 385.0 L20.1 386.0 L19.0 387.6 L18.7 389.2 L21.2 390.8 L20.4 392.4 L20.1 394.0 L21.1 395.6 L19.8 397.2 L21.0 398.8 L20.8 400.4 L19.2 402.0 L19.4 403.6 L19.5 405.2 L19.3 406.8 L20.2 408.4 L19.4 410.0 L19.8 411.6 L19.0 413.2 L21.1 414.8 L19.6 416.4 L19.9 418.0 L20.2 419.6 L21.1 421.2 L19.8 422.8 L21.1 424.4 L20.0 426.0 L20.1 427.6 L20.1 429.2 L18.7 430.8 L19.8 432.4 L19.2 434.0 L18.7 435.6 L20.8 437.2 L19.1 438.8 L19.9 440.4 L20.6 442.0 L20.1 443.6 L19.5 445.2 L20.0 446.8 L20.1 448.4 L20.7 450.0 L19.0 451.6 L20.2 453.2 L19.3 454.8 L19.4 456.4 L20.7 458.0 L20.0 459.6 L20.2 461.2 L20.7 462.8 L21.1 464.4 L19.9 466.0 L20.3 467.6 L20.0 469.2 L20.0 470.0 L17.5 471.0 L31.0 472.0 L12.0 473.0 L23.0 474.0 L20.0 475.0 L20.0 476.0 L20.5 477.6 L19.9 479.2 L20.1 480.8 L19.9 482.4 L21.1 484.0 L20.5 485.6 L21.0 487.2 L21.1 488.8 L19.4 490.4 L20.2 492.0 L21.2 493.6 L20.9 495.2 L19.1 496.8 L19.0 498.4 L19.8 500.0 L18.9 501.6 L19.3 503.2 L18.9 504.8 L20.4 506.4 L20.7 508.0 L21.0 509.6 L19.1 511.2 L20.6 512.8 L20.4 514.4 L19.1 516.0 L21.0 517.6 L21.2 519.2 L19.3 520.8 L21.2 522.4 L19.7 524.0 L20.0 525.6 L21.3 527.2 L20.9 528.8 L19.1 530.4 L19.8 532.0 L20.0 533.6 L19.6 535.2 L19.2 536.8 L19.5 538.4 L20.6 540.0 L18.8 541.6 L20.1 543.2 L19.8 544.8 L18.7 546.4 L19.6 548.0 L20.3 549.6 L20.0 551.2 L18.9 552.8 L21.3 554.4 L20.7 556.0 L21.2 557.6 L19.0 559.2 L20.0 560.0 L17.5 561.0 L31.0 562.0 L12.0 563.0 L23.0 564.0 L20.0 565.0 L19.4 566.0 L18.8 567.6 L20.7 569.2 L19.4 570.8 L19.0 572.4 L19.8 574.0 L21.1 575.6 L20.8 577.2 L19.4 578.8 L19.1 580.4 L21.1 582.0 L20.2 583.6 L20.5 585.2 L18.9 586.8 L18.8 588.4 L20.5 590.0 L19.8 591.6 L18.9 593.2 L21.1 594.8 L20.3 596.4 L20.8 598.0 L18.9 599.6 L20.9 601.2 L18.9 602.8 L20.9 604.4 L19.9 606.0 L19.6 607.6 L20.1 609.2 L21.1 610.8 L19.4 612.4 L19.0 614.0 L20.1 615.6 L19.3 617.2 L19.0 618.8 L19.1 620.4 L18.8 622.0 L19.2 623.6 L19.5 625.2 L19.5 626.8 L20.7 628.4 L19.5 630.0 L20.0 631.6 L19.2 633.2 L19.6 634.8 L18.7 636.4 L19.4 638.0 L18.7 639.6 L20.6 641.2 L20.1 642.8 L19.2 644.4 L19.9 646.0 L21.1 647.6 L19.0 649.2 L20.0 650.0 L17.5 651.0 L31.0 652.0 L12.0 653.0 L23.0 654.0 L20.0 655.0 L20.8 656.0 L19.8 657.6 L20.0 659.2 L20.9 660.8 L19.7 662.4 L20.0 664.0 L20.5 665.6 L21.3 667.2 L19.6 668.8 L20.9 670.4 L20.5 672.0 L20.4 673.6 L19.8 675.2 L19.6 676.8 L18.8 678.4 L19.0 680.0 L18.9 681.6 L20.6 683.2 L19.4 684.8 L19.1 686.4 L18.9 688.0 L20.9 689.6 L21.0 691.2 L20.4 692.8 L19.4 694.4 L19.3 696.0 L19.5 697.6 L19.9 699.2 L19.1 700.8 L19.9 702.4 L19.4 704.0 L21.2 705.6 L21.2 707.2 L20.1 708.8 L19.3 710.4 L21.2 712.0 L19.5 713.6 L19.6 715.2 L18.7 716.8 L19.7 718.4 L19.9 720.0 L20.0 721.6 L19.2 723.2 L20.0 724.8 L18.7 726.4 L19.4 728.0 L18.9 729.6 L19.7 731.2 L18.8 732.8 L18.8 734.4 L19.5 736.0 L19.3 737.6 L20.2 739.2 L20.1 740.8 L20.7 742.4 L20.4 744.0 L20.0 745.0 L17.5 746.0 L31.0 747.0 L12.0 748.0 L23.0 749.0 L20.0 750.0 L20.6 751.0 L21.0 752.6 L19.7 754.2 L19.5 755.8 L21.3 757.4 L19.1 759.0 L20.6 760.6 L20.4 762.2 L18.8 763.8 L20.9 765.4 L21.0 767.0 L20.3 768.6 L20.6 770.2 L20.8 771.8 L19.1 773.4 L20.1 775.0 L20.0 776.6 L20.9 778.2 L20.8 779.8 L20.8 781.4 L20.2 783.0 L21.0 784.6 L20.5 786.2 L20.5 787.8 L19.3 789.4 L18.8 791.0 L19.0 792.6 L19.6 794.2 L19.0 795.8 L20.9 797.4 L20.2 799.0 L20.3 800.6 L20.3 802.2 L20.5 803.8 L20.0 805.4 L18.7 807.0 L20.8 808.6 L20.6 810.2 L20.0 811.8 L20.1 813.4 L20.4 815.0 L18.9 816.6 L20.6 818.2 L19.4 819.8 L18.9 821.4 L19.4 823.0 L20.6 824.6 L19.2 826.2 L20.6 827.8 L21.2 829.4 L20.0 831.0 L19.7 832.6 L19.9 834.2 L20.5 835.8 L20.7 837.4 L20.3 839.0 L20.0 840.0 L17.5 841.0 L31.0 842.0 L12.0 843.0 L23.0 844.0 L20.0 845.0 L20.4 846.0 L18.9 847.6 L19.1 849.2 L19.4 850.8 L20.6 852.4 L19.5 854.0 L20.2 855.6 L18.7 857.2 L18.9 858.8 L19.4 860.4 L20.4 862.0 L20.5 863.6 L20.5 865.2 L19.5 866.8 L20.0 868.4 L19.9 870.0 L19.9 871.6 L19.0 873.2 L21.0 874.8 L19.2 876.4 L21.2 878.0 L21.1 879.6 L18.7 881.2 L19.9 882.8 L20.8 884.4 L21.2 886.0 L19.9 887.6 L19.4 889.2 L19.2 890.8 L21.2 892.4 L19.2 894.0 L20.2 895.6 L19.1 897.2 L20.1 898.8 L21.2 900.4 L19.0 902.0 L20.8 903.6 L20.0 905.2 L21.0 906.8 L20.5 908.4 L19.3 910.0 L21.0 911.6 L20.0 913.2 L18.8 914.8 L18.7 916.4 L20.0 918.0 L19.9 919.6 L19.5 921.2 L19.1 922.8 L19.6 924.4 L19.5 926.0 L20.9 927.6 L18.7 929.2 L20.0 930.0 L17.5 931.0 L31.0 932.0 L12.0 933.0 L23.0 934.0 L20.0 935.0 L20.7 936.0 L20.9 937.6 L19.0 939.2 L21.1 940.8 L20.6 942.4 L21.0 944.0 L19.5 945.6 L19.7 947.2 L19.7 948.8 L21.3 950.4 L20.2 952.0 L19.6 953.6 L19.8 955.2 L19.4 956.8 L18.8 958.4 L19.0 960.0 L20.9 961.6 L19.4 963.2 L21.1 964.8 L19.3 966.4 L19.4 968.0 L20.0 969.6 L19.2 971.2 L19.7 972.8 L21.2 974.4 L21.0 976.0 L20.8 977.6 L20.3 979.2 L21.1 980.8 L21.1 982.4 L20.1 984.0 L20.6 985.6 L18.8 987.2 L20.6 988.8 L19.9 990.4 L20.7 992.0 L20.4 993.6 L19.4 995.2 L18.8 996.8 L21.1 998.4" fill="none" stroke="url(#railg)" stroke-width="1.5" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+      </svg>
+    </div></div>
+    <div class="rail-head"></div>
+  </div>
+
+  <header class="nav">
+    <div class="wrap">
+      <a class="logo" href="#top" aria-label="MakeIt HQ, til toppen">MakeIt <span>// HQ</span></a>
+      <div class="nav-r">
+        <span class="live"><i></i>Motoren kører · 05:31</span>
+        <a class="btn sm" href="#adgang">Få adgang</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="h-hero">
+      <span class="node" style="--dc:var(--fg);--nt:34px" aria-hidden="true"><b>Signal</b></span>
+      <div class="wrap">
+        <h1 id="h-hero">Din krop har allerede besluttet dagens pas.</h1>
+        <div class="hero-grid">
+          <div class="hchart" aria-hidden="true">
+            <div class="grid"></div>
+            <div class="mv">
+              <svg viewBox="0 0 2400 400" preserveAspectRatio="none">
+                <path d="M0.0 195.2 L12.0 199.3 L24.0 203.0 L36.0 205.9 L48.0 208.0 L60.0 209.0 L72.0 208.9 L84.0 207.8 L96.0 205.8 L108.0 203.1 L120.0 200.0 L132.0 196.7 L144.0 193.6 L156.0 191.0 L168.0 189.1 L180.0 188.0 L192.0 187.7 L204.0 188.3 L216.0 189.5 L228.0 191.3 L240.0 193.2 L252.0 195.1 L264.0 196.5 L276.0 197.3 L288.0 197.3 L300.0 196.2 L312.0 194.1 L324.0 191.0 L336.0 187.1 L348.0 182.5 L360.0 177.6 L372.0 172.7 L384.0 168.0 L396.0 164.0 L408.0 160.6 L420.0 158.3 L432.0 156.9 L444.0 156.4 L456.0 156.8 L468.0 157.8 L480.0 159.1 L492.0 160.5 L504.0 161.6 L516.0 162.2 L528.0 162.0 L540.0 161.0 L552.0 159.1 L564.0 156.3 L576.0 152.9 L588.0 148.9 L600.0 144.8 L612.0 140.7 L624.0 137.0 L636.0 134.1 L648.0 132.0 L660.0 131.0 L672.0 131.1 L684.0 132.2 L696.0 134.2 L708.0 136.9 L720.0 140.0 L732.0 143.3 L744.0 146.4 L756.0 149.0 L768.0 150.9 L780.0 152.0 L792.0 152.3 L804.0 151.7 L816.0 150.5 L828.0 148.7 L840.0 146.8 L852.0 144.9 L864.0 143.5 L876.0 142.7 L888.0 142.7 L900.0 143.8 L912.0 145.9 L924.0 149.0 L936.0 152.9 L948.0 157.5 L960.0 162.4 L972.0 167.3 L984.0 172.0 L996.0 176.0 L1008.0 179.4 L1020.0 181.7 L1032.0 183.1 L1044.0 183.6 L1056.0 183.2 L1068.0 182.2 L1080.0 180.9 L1092.0 179.5 L1104.0 178.4 L1116.0 177.8 L1128.0 178.0 L1140.0 179.0 L1152.0 180.9 L1164.0 183.7 L1176.0 187.1 L1188.0 191.1 L1200.0 195.2 L1212.0 199.3 L1224.0 203.0 L1236.0 205.9 L1248.0 208.0 L1260.0 209.0 L1272.0 208.9 L1284.0 207.8 L1296.0 205.8 L1308.0 203.1 L1320.0 200.0 L1332.0 196.7 L1344.0 193.6 L1356.0 191.0 L1368.0 189.1 L1380.0 188.0 L1392.0 187.7 L1404.0 188.3 L1416.0 189.5 L1428.0 191.3 L1440.0 193.2 L1452.0 195.1 L1464.0 196.5 L1476.0 197.3 L1488.0 197.3 L1500.0 196.2 L1512.0 194.1 L1524.0 191.0 L1536.0 187.1 L1548.0 182.5 L1560.0 177.6 L1572.0 172.7 L1584.0 168.0 L1596.0 164.0 L1608.0 160.6 L1620.0 158.3 L1632.0 156.9 L1644.0 156.4 L1656.0 156.8 L1668.0 157.8 L1680.0 159.1 L1692.0 160.5 L1704.0 161.6 L1716.0 162.2 L1728.0 162.0 L1740.0 161.0 L1752.0 159.1 L1764.0 156.3 L1776.0 152.9 L1788.0 148.9 L1800.0 144.8 L1812.0 140.7 L1824.0 137.0 L1836.0 134.1 L1848.0 132.0 L1860.0 131.0 L1872.0 131.1 L1884.0 132.2 L1896.0 134.2 L1908.0 136.9 L1920.0 140.0 L1932.0 143.3 L1944.0 146.4 L1956.0 149.0 L1968.0 150.9 L1980.0 152.0 L1992.0 152.3 L2004.0 151.7 L2016.0 150.5 L2028.0 148.7 L2040.0 146.8 L2052.0 144.9 L2064.0 143.5 L2076.0 142.7 L2088.0 142.7 L2100.0 143.8 L2112.0 145.9 L2124.0 149.0 L2136.0 152.9 L2148.0 157.5 L2160.0 162.4 L2172.0 167.3 L2184.0 172.0 L2196.0 176.0 L2208.0 179.4 L2220.0 181.7 L2232.0 183.1 L2244.0 183.6 L2256.0 183.2 L2268.0 182.2 L2280.0 180.9 L2292.0 179.5 L2304.0 178.4 L2316.0 177.8 L2328.0 178.0 L2340.0 179.0 L2352.0 180.9 L2364.0 183.7 L2376.0 187.1 L2388.0 191.1 L2400.0 195.2" stroke="#45C487"/>
+                <path d="M0.0 342.8 L12.0 343.2 L24.0 339.6 L36.0 332.5 L48.0 323.5 L60.0 314.7 L72.0 308.1 L84.0 304.8 L96.0 305.1 L108.0 308.0 L120.0 311.5 L132.0 313.7 L144.0 313.0 L156.0 308.7 L168.0 301.4 L180.0 292.4 L192.0 283.9 L204.0 277.9 L216.0 275.7 L228.0 277.5 L240.0 282.4 L252.0 288.7 L264.0 294.2 L276.0 297.3 L288.0 297.0 L300.0 293.8 L312.0 288.8 L324.0 284.2 L336.0 281.9 L348.0 283.2 L360.0 288.4 L372.0 296.8 L384.0 306.4 L396.0 315.3 L408.0 321.5 L420.0 324.1 L432.0 323.1 L444.0 319.8 L456.0 316.1 L468.0 314.0 L480.0 314.9 L492.0 319.3 L504.0 326.5 L516.0 334.7 L528.0 341.9 L540.0 346.1 L552.0 346.4 L564.0 342.7 L576.0 336.2 L588.0 328.8 L600.0 322.6 L612.0 319.2 L624.0 319.3 L636.0 322.1 L648.0 326.3 L660.0 329.9 L672.0 330.8 L684.0 328.1 L696.0 321.7 L708.0 312.6 L720.0 302.8 L732.0 294.4 L744.0 289.1 L756.0 287.6 L768.0 289.7 L780.0 293.8 L792.0 297.9 L804.0 300.2 L816.0 299.3 L828.0 295.1 L840.0 288.5 L852.0 281.4 L864.0 275.8 L876.0 273.5 L888.0 275.3 L900.0 280.8 L912.0 288.7 L924.0 296.9 L936.0 303.5 L948.0 307.0 L960.0 307.0 L972.0 304.3 L984.0 300.6 L996.0 297.9 L1008.0 298.0 L1020.0 301.7 L1032.0 308.9 L1044.0 318.1 L1056.0 327.5 L1068.0 335.0 L1080.0 338.9 L1092.0 338.8 L1104.0 335.4 L1116.0 330.3 L1128.0 325.5 L1140.0 322.9 L1152.0 323.5 L1164.0 327.3 L1176.0 333.0 L1188.0 338.9 L1200.0 342.8 L1212.0 343.2 L1224.0 339.6 L1236.0 332.5 L1248.0 323.5 L1260.0 314.7 L1272.0 308.1 L1284.0 304.8 L1296.0 305.1 L1308.0 308.0 L1320.0 311.5 L1332.0 313.7 L1344.0 313.0 L1356.0 308.7 L1368.0 301.4 L1380.0 292.4 L1392.0 283.9 L1404.0 277.9 L1416.0 275.7 L1428.0 277.5 L1440.0 282.4 L1452.0 288.7 L1464.0 294.2 L1476.0 297.3 L1488.0 297.0 L1500.0 293.8 L1512.0 288.8 L1524.0 284.2 L1536.0 281.9 L1548.0 283.2 L1560.0 288.4 L1572.0 296.8 L1584.0 306.4 L1596.0 315.3 L1608.0 321.5 L1620.0 324.1 L1632.0 323.1 L1644.0 319.8 L1656.0 316.1 L1668.0 314.0 L1680.0 314.9 L1692.0 319.3 L1704.0 326.5 L1716.0 334.7 L1728.0 341.9 L1740.0 346.1 L1752.0 346.4 L1764.0 342.7 L1776.0 336.2 L1788.0 328.8 L1800.0 322.6 L1812.0 319.2 L1824.0 319.3 L1836.0 322.1 L1848.0 326.3 L1860.0 329.9 L1872.0 330.8 L1884.0 328.1 L1896.0 321.7 L1908.0 312.6 L1920.0 302.8 L1932.0 294.4 L1944.0 289.1 L1956.0 287.6 L1968.0 289.7 L1980.0 293.8 L1992.0 297.9 L2004.0 300.2 L2016.0 299.3 L2028.0 295.1 L2040.0 288.5 L2052.0 281.4 L2064.0 275.8 L2076.0 273.5 L2088.0 275.3 L2100.0 280.8 L2112.0 288.7 L2124.0 296.9 L2136.0 303.5 L2148.0 307.0 L2160.0 307.0 L2172.0 304.3 L2184.0 300.6 L2196.0 297.9 L2208.0 298.0 L2220.0 301.7 L2232.0 308.9 L2244.0 318.1 L2256.0 327.5 L2268.0 335.0 L2280.0 338.9 L2292.0 338.8 L2304.0 335.4 L2316.0 330.3 L2328.0 325.5 L2340.0 322.9 L2352.0 323.5 L2364.0 327.3 L2376.0 333.0 L2388.0 338.9 L2400.0 342.8" stroke="#5B9DF5"/>
+                <path d="M0.0 250.0 L12.0 262.7 L24.0 273.8 L36.0 282.2 L48.0 287.0 L60.0 288.1 L72.0 286.1 L84.0 282.0 L96.0 277.1 L108.0 273.1 L120.0 270.9 L132.0 271.4 L144.0 274.7 L156.0 280.3 L168.0 287.0 L180.0 293.6 L192.0 298.5 L204.0 300.5 L216.0 298.8 L228.0 293.2 L240.0 284.1 L252.0 272.6 L264.0 260.2 L276.0 248.5 L288.0 238.7 L300.0 232.0 L312.0 228.7 L324.0 228.6 L336.0 230.8 L348.0 234.1 L360.0 237.1 L372.0 238.4 L384.0 237.1 L396.0 233.0 L408.0 226.1 L420.0 217.5 L432.0 208.5 L444.0 200.4 L456.0 194.9 L468.0 192.9 L480.0 194.8 L492.0 200.7 L504.0 209.6 L516.0 220.3 L528.0 231.3 L540.0 241.1 L552.0 248.4 L564.0 252.7 L576.0 253.9 L588.0 252.7 L600.0 250.0 L612.0 247.3 L624.0 246.1 L636.0 247.3 L648.0 251.6 L660.0 258.9 L672.0 268.7 L684.0 279.7 L696.0 290.4 L708.0 299.3 L720.0 305.2 L732.0 307.1 L744.0 305.1 L756.0 299.6 L768.0 291.5 L780.0 282.5 L792.0 273.9 L804.0 267.0 L816.0 262.9 L828.0 261.6 L840.0 262.9 L852.0 265.9 L864.0 269.2 L876.0 271.4 L888.0 271.3 L900.0 268.0 L912.0 261.3 L924.0 251.5 L936.0 239.8 L948.0 227.4 L960.0 215.9 L972.0 206.8 L984.0 201.2 L996.0 199.5 L1008.0 201.5 L1020.0 206.4 L1032.0 213.0 L1044.0 219.7 L1056.0 225.3 L1068.0 228.6 L1080.0 229.1 L1092.0 226.9 L1104.0 222.9 L1116.0 218.0 L1128.0 213.9 L1140.0 211.9 L1152.0 213.0 L1164.0 217.8 L1176.0 226.2 L1188.0 237.3 L1200.0 250.0 L1212.0 262.7 L1224.0 273.8 L1236.0 282.2 L1248.0 287.0 L1260.0 288.1 L1272.0 286.1 L1284.0 282.0 L1296.0 277.1 L1308.0 273.1 L1320.0 270.9 L1332.0 271.4 L1344.0 274.7 L1356.0 280.3 L1368.0 287.0 L1380.0 293.6 L1392.0 298.5 L1404.0 300.5 L1416.0 298.8 L1428.0 293.2 L1440.0 284.1 L1452.0 272.6 L1464.0 260.2 L1476.0 248.5 L1488.0 238.7 L1500.0 232.0 L1512.0 228.7 L1524.0 228.6 L1536.0 230.8 L1548.0 234.1 L1560.0 237.1 L1572.0 238.4 L1584.0 237.1 L1596.0 233.0 L1608.0 226.1 L1620.0 217.5 L1632.0 208.5 L1644.0 200.4 L1656.0 194.9 L1668.0 192.9 L1680.0 194.8 L1692.0 200.7 L1704.0 209.6 L1716.0 220.3 L1728.0 231.3 L1740.0 241.1 L1752.0 248.4 L1764.0 252.7 L1776.0 253.9 L1788.0 252.7 L1800.0 250.0 L1812.0 247.3 L1824.0 246.1 L1836.0 247.3 L1848.0 251.6 L1860.0 258.9 L1872.0 268.7 L1884.0 279.7 L1896.0 290.4 L1908.0 299.3 L1920.0 305.2 L1932.0 307.1 L1944.0 305.1 L1956.0 299.6 L1968.0 291.5 L1980.0 282.5 L1992.0 273.9 L2004.0 267.0 L2016.0 262.9 L2028.0 261.6 L2040.0 262.9 L2052.0 265.9 L2064.0 269.2 L2076.0 271.4 L2088.0 271.3 L2100.0 268.0 L2112.0 261.3 L2124.0 251.5 L2136.0 239.8 L2148.0 227.4 L2160.0 215.9 L2172.0 206.8 L2184.0 201.2 L2196.0 199.5 L2208.0 201.5 L2220.0 206.4 L2232.0 213.0 L2244.0 219.7 L2256.0 225.3 L2268.0 228.6 L2280.0 229.1 L2292.0 226.9 L2304.0 222.9 L2316.0 218.0 L2328.0 213.9 L2340.0 211.9 L2352.0 213.0 L2364.0 217.8 L2376.0 226.2 L2388.0 237.3 L2400.0 250.0" stroke="#FF9C41"/>
+                <path d="M0.0 136.8 L12.0 157.0 L24.0 157.8 L36.0 158.5 L48.0 163.5 L60.0 152.2 L72.0 137.1 L84.0 141.2 L96.0 147.6 L108.0 143.7 L120.0 148.7 L132.0 158.0 L144.0 146.4 L156.0 126.7 L168.0 118.8 L180.0 107.1 L192.0 88.6 L204.0 88.6 L216.0 100.2 L228.0 98.9 L240.0 96.0 L252.0 102.4 L264.0 95.9 L276.0 77.4 L288.0 74.4 L300.0 81.3 L312.0 80.7 L324.0 89.7 L336.0 113.9 L348.0 125.3 L360.0 123.1 L372.0 129.2 L384.0 132.8 L396.0 122.1 L408.0 121.9 L420.0 139.0 L432.0 148.2 L444.0 152.5 L456.0 167.8 L468.0 174.1 L480.0 159.1 L492.0 147.9 L504.0 145.4 L516.0 132.8 L528.0 122.8 L540.0 132.5 L552.0 139.0 L564.0 130.2 L576.0 126.6 L588.0 124.0 L600.0 103.2 L612.0 83.0 L624.0 82.2 L636.0 81.5 L648.0 76.5 L660.0 87.8 L672.0 102.9 L684.0 98.8 L696.0 92.4 L708.0 96.3 L720.0 91.3 L732.0 82.0 L744.0 93.6 L756.0 113.3 L768.0 121.2 L780.0 132.9 L792.0 151.4 L804.0 151.4 L816.0 139.8 L828.0 141.1 L840.0 144.0 L852.0 137.6 L864.0 144.1 L876.0 162.6 L888.0 165.6 L900.0 158.7 L912.0 159.3 L924.0 150.3 L936.0 126.1 L948.0 114.7 L960.0 116.9 L972.0 110.8 L984.0 107.2 L996.0 117.9 L1008.0 118.1 L1020.0 101.0 L1032.0 91.8 L1044.0 87.5 L1056.0 72.2 L1068.0 65.9 L1080.0 80.9 L1092.0 92.1 L1104.0 94.6 L1116.0 107.2 L1128.0 117.2 L1140.0 107.5 L1152.0 101.0 L1164.0 109.8 L1176.0 113.4 L1188.0 116.0 L1200.0 136.8 L1212.0 157.0 L1224.0 157.8 L1236.0 158.5 L1248.0 163.5 L1260.0 152.2 L1272.0 137.1 L1284.0 141.2 L1296.0 147.6 L1308.0 143.7 L1320.0 148.7 L1332.0 158.0 L1344.0 146.4 L1356.0 126.7 L1368.0 118.8 L1380.0 107.1 L1392.0 88.6 L1404.0 88.6 L1416.0 100.2 L1428.0 98.9 L1440.0 96.0 L1452.0 102.4 L1464.0 95.9 L1476.0 77.4 L1488.0 74.4 L1500.0 81.3 L1512.0 80.7 L1524.0 89.7 L1536.0 113.9 L1548.0 125.3 L1560.0 123.1 L1572.0 129.2 L1584.0 132.8 L1596.0 122.1 L1608.0 121.9 L1620.0 139.0 L1632.0 148.2 L1644.0 152.5 L1656.0 167.8 L1668.0 174.1 L1680.0 159.1 L1692.0 147.9 L1704.0 145.4 L1716.0 132.8 L1728.0 122.8 L1740.0 132.5 L1752.0 139.0 L1764.0 130.2 L1776.0 126.6 L1788.0 124.0 L1800.0 103.2 L1812.0 83.0 L1824.0 82.2 L1836.0 81.5 L1848.0 76.5 L1860.0 87.8 L1872.0 102.9 L1884.0 98.8 L1896.0 92.4 L1908.0 96.3 L1920.0 91.3 L1932.0 82.0 L1944.0 93.6 L1956.0 113.3 L1968.0 121.2 L1980.0 132.9 L1992.0 151.4 L2004.0 151.4 L2016.0 139.8 L2028.0 141.1 L2040.0 144.0 L2052.0 137.6 L2064.0 144.1 L2076.0 162.6 L2088.0 165.6 L2100.0 158.7 L2112.0 159.3 L2124.0 150.3 L2136.0 126.1 L2148.0 114.7 L2160.0 116.9 L2172.0 110.8 L2184.0 107.2 L2196.0 117.9 L2208.0 118.1 L2220.0 101.0 L2232.0 91.8 L2244.0 87.5 L2256.0 72.2 L2268.0 65.9 L2280.0 80.9 L2292.0 92.1 L2304.0 94.6 L2316.0 107.2 L2328.0 117.2 L2340.0 107.5 L2352.0 101.0 L2364.0 109.8 L2376.0 113.4 L2388.0 116.0 L2400.0 136.8" stroke="#F2545B"/>
+              </svg>
+            </div>
+          </div>
+          <div class="hero-copy">
+            <p class="lead">Motoren læser nattens HRV, søvn og mind-check kl. 05:30 og skriver passet om, før du står i centret.</p>
+            <div class="cta-row">
+              <a class="btn" href="#adgang">Få adgang</a>
+              <a class="tlink" href="#motor">Se hvordan motoren beslutter</a>
+            </div>
+          </div>
+
+          <div class="stage">
+            <!-- HRV -->
+            <figure class="ph pl">
+              <div class="phone" style="--dc:var(--heart)" role="img" aria-label="App-skærm, Hjerte: HRV i morges 48 ms mod et snit på 61 ms. Motoren letter dagens squat-topsæt.">
+                <div class="screen" aria-hidden="true">
+                  <div class="isl"></div>
+                  <div class="sb"><time>05:31</time><span class="ic"><svg class="i1"><use href="#i-sig"/></svg><svg class="i2"><use href="#i-wifi"/></svg><svg class="i3"><use href="#i-bat"/></svg></span></div>
+                  <div class="sc">
+                    <div class="hd"><svg><use href="#i-back"/></svg><span class="k">Hjerte · i nat</span><svg><use href="#i-more"/></svg></div>
+                    <div>
+                      <div class="k"><i class="dt"></i>HRV i morges</div>
+                      <div class="row" style="justify-content:flex-start;align-items:baseline;gap:.3em;margin-top:.2em"><span class="tt" style="font-size:3.6em;color:var(--heart)">48</span><span class="mn" style="color:var(--dim)">ms</span></div>
+                      <div class="mn" style="font-size:.8em;color:var(--dim)">Dit snit 61 ms</div>
+                    </div>
+                    <div class="ch">
+                      <svg viewBox="0 0 200 92">
+                        <defs><linearGradient id="hrva" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2545B" stop-opacity=".18"/><stop offset="1" stop-color="#F2545B" stop-opacity="0"/></linearGradient></defs>
+                        <rect x="0" y="18.3" width="200" height="27.4" fill="#EEF0F3" fill-opacity=".05"/>
+                        <line x1="0" x2="200" y1="32.0" y2="32.0" stroke="#EEF0F3" stroke-opacity=".25" stroke-dasharray="2 3"/>
+                        <path d="M0.0 29.7 L15.4 38.9 L30.8 25.1 L46.2 34.3 L61.5 20.6 L76.9 27.4 L92.3 36.6 L107.7 32.0 L123.1 22.9 L138.5 29.7 L153.8 41.1 L169.2 34.3 L184.6 45.7 L200.0 61.7 L200 80 L0 80 Z" fill="url(#hrva)"/>
+                        <path d="M0.0 29.7 L15.4 38.9 L30.8 25.1 L46.2 34.3 L61.5 20.6 L76.9 27.4 L92.3 36.6 L107.7 32.0 L123.1 22.9 L138.5 29.7 L153.8 41.1 L169.2 34.3 L184.6 45.7 L200.0 61.7" fill="none" stroke="#F2545B" stroke-width="1.6" stroke-linejoin="round"/>
+                        <circle cx="200.0" cy="61.7" r="3.2" fill="#0A0B0E" stroke="#F2545B" stroke-width="1.6"/>
+                        <text x="0" y="91" fill="#6B7280" font-family="IBM Plex Mono" font-size="7">14 NÆTTER</text>
+                        <text x="200" y="91" fill="#6B7280" font-family="IBM Plex Mono" font-size="7" text-anchor="end">I NAT</text>
+                      </svg>
+                    </div>
+                    <div class="cd" style="border-color:rgba(242,84,91,.18)">
+                      <div class="k" style="margin-bottom:.45em"><i class="dt"></i>Motoren · 05:30</div>
+                      <div style="font-size:.9em;line-height:1.35">Motoren læste nattens HRV under dit bånd og letter dagens squat-topsæt.</div>
+                    </div>
+                    <div class="grid3" style="grid-template-columns:repeat(2,1fr)">
+                      <div class="cell"><div class="k" style="font-size:.62em">Søvn</div><div class="v">6:10<small>t</small></div></div>
+                      <div class="cell"><div class="k" style="font-size:.62em">Hvilepuls</div><div class="v">58<small>bpm</small></div></div>
+                    </div>
+                    <div class="disc">HRV er et restitutions-signal, ikke en diagnose.</div>
+                  </div>
+                  <div class="tb"><span class="on"><svg><use href="#t-day"/></svg>I dag</span><span><svg><use href="#t-train"/></svg>Træn</span><span><svg><use href="#t-food"/></svg>Mad</span><span><svg><use href="#t-mind"/></svg>Sind</span><span><svg><use href="#t-crew"/></svg>Crew</span></div>
+                  <div class="hi"></div>
+                </div>
+              </div>
+              <figcaption class="cap">Hjerte · HRV</figcaption>
+            </figure>
+
+            <!-- SESSION -->
+            <figure class="ph pr">
+              <div class="phone" style="--dc:var(--body)" role="img" aria-label="App-skærm, live session: Back squat, mål 135 kg, 3 reps, RPE 8. Sæt 7 af 16.">
+                <div class="screen" aria-hidden="true">
+                  <div class="isl"></div>
+                  <div class="sb"><time>05:31</time><span class="ic"><svg class="i1"><use href="#i-sig"/></svg><svg class="i2"><use href="#i-wifi"/></svg><svg class="i3"><use href="#i-bat"/></svg></span></div>
+                  <div class="sc" style="gap:.85em">
+                    <div class="sess-top"><span>STR-12 · uge 4 · Dag A</span><span style="color:var(--fg)">7 / 16 sæt</span></div>
+                    <div class="prog"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="a"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                    <div>
+                      <div class="k">Øvelse 1 / 5</div>
+                      <div class="tt" style="font-size:2.3em;margin-top:.2em">Back squat</div>
+                    </div>
+                    <div class="cd" style="padding:.8em 1em">
+                      <div class="k">Mål</div>
+                      <div class="mn" style="font-size:1.2em;margin-top:.2em;font-weight:500">135 kg · 3 reps · RPE 8</div>
+                    </div>
+                    <div class="sets">
+                      <div class="ok"><span>1</span><span>60 kg × 5</span><span>✓</span></div>
+                      <div class="ok"><span>2</span><span>100 kg × 3</span><span>✓</span></div>
+                      <div class="cur"><span>3</span><span>135 kg × 3</span><span>nu</span></div>
+                    </div>
+                    <div class="step">
+                      <div><span class="k">Vægt</span><div class="ctl"><i>−</i><b>135</b><i>+</i></div></div>
+                      <div><span class="k">Reps</span><div class="ctl"><i>−</i><b>3</b><i>+</i></div></div>
+                    </div>
+                    <div class="pb">Log sæt →</div>
+                    <div class="row" style="font-size:.82em">
+                      <span class="rest"><svg class="ring" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="rgba(238,240,243,.12)" stroke-width="2.5"/><circle cx="18" cy="18" r="15" fill="none" stroke="#FF9C41" stroke-width="2.5" stroke-dasharray="94" stroke-dashoffset="30" stroke-linecap="round" transform="rotate(-90 18 18)"/></svg><span><span class="k">Hvil</span><b class="mn" style="font-size:1.25em;font-weight:500">2:30</b></span></span>
+                    </div>
+                  </div>
+                  <div class="rec" style="padding-inline:1.5em;border-top:1px solid var(--l1)"><i></i>Optag sæt 3 · Sendes til coach Munk</div>
+                  <div class="hi"></div>
+                </div>
+              </div>
+              <figcaption class="cap">Krop · Live session</figcaption>
+            </figure>
+
+            <!-- DASHBOARD -->
+            <figure class="ph pc">
+              <div class="phone dash" style="--dc:var(--body)" role="img" aria-label="App-skærm, I dag: God morgen, stribe 12 dage. Dagens session STR-12 uge 4, Dag A: Squat. Topsæt sænket fra 150 til 135 kg. Mikael Munk har besvaret 1 form-check.">
+                <div class="screen" aria-hidden="true">
+                  <div class="isl"></div>
+                  <div class="sb"><time>05:31</time><span class="ic"><svg class="i1"><use href="#i-sig"/></svg><svg class="i2"><use href="#i-wifi"/></svg><svg class="i3"><use href="#i-bat"/></svg></span></div>
+                  <div class="sc">
+                    <div class="row">
+                      <div><div class="k">God morgen</div><div class="tt" style="font-size:1.75em;margin-top:.15em">Anton</div></div>
+                      <span class="chip"><i class="dt"></i>Stribe 12 dage</span>
+                    </div>
+                    <div class="cd sess">
+                      <div class="k">Dagens session · STR-12 · uge 4</div>
+                      <div class="tt">Dag A: Squat</div>
+                      <div style="font-size:.84em;color:var(--dim)">Squat · Top set @ RPE 8, 3×3 backoff</div>
+                      <div class="fields"><span>Øvelser<b>5</b></span><span>Sæt<b>16</b></span><span>Est. tid<b>58m</b></span></div>
+                      <div class="strike" style="margin-bottom:.9em"><i class="dt" style="--dc:var(--heart)"></i><span style="color:var(--dim)">Topsæt</span><s>150 kg</s><span>→ 135 kg</span></div>
+                      <div class="pb">Start pas →</div>
+                    </div>
+                    <div class="row cd" style="padding:.75em 1em;justify-content:flex-start;gap:.7em">
+                      <span style="width:2.2em;height:2.2em;border-radius:50%;background:#EEF0F3;color:#0A0B0E;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:.7em;letter-spacing:-.06em;flex:none">MM</span>
+                      <span style="font-size:.84em;line-height:1.3">Mikael Munk har besvaret 1 form-check</span>
+                    </div>
+                    <div class="grid3">
+                      <div class="cell"><div class="k" style="font-size:.62em">Volumen</div><div class="v" style="font-size:1.05em">18.420<small>kg</small></div><svg viewBox="0 0 100 26" style="width:100%;margin-top:.3em"><path d="M0.0 21.2 L9.1 18.5 L18.2 19.9 L27.3 15.8 L36.4 13.0 L45.5 14.4 L54.5 10.2 L63.6 7.5 L72.7 9.2 L81.8 6.1 L90.9 4.8 L100.0 3.7" fill="none" stroke="#FF9C41" stroke-width="1.8"/></svg><div class="k" style="font-size:.56em;margin-top:.2em">4 uger</div></div>
+                      <div class="cell"><div class="k" style="font-size:.62em">PR'er</div><div class="v">3</div></div>
+                      <div class="cell"><div class="k" style="font-size:.62em">Reps</div><div class="v" style="font-size:1.05em">1.240</div></div>
+                    </div>
+                    <div class="cd" style="padding:.8em 1em">
+                      <div class="row"><span class="k">Morgenens signal</span><span class="mn" style="font-size:.7em;color:var(--dim)">05:30</span></div>
+                      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.4em;margin-top:.6em;font-family:var(--mono);font-size:.7em">
+                        <span style="--dc:var(--body);display:flex;align-items:center;gap:.4em"><i class="dt"></i>Krop</span>
+                        <span style="--dc:var(--food);display:flex;align-items:center;gap:.4em"><i class="dt"></i>Mad</span>
+                        <span style="--dc:var(--heart);display:flex;align-items:center;gap:.4em;color:var(--heart)"><i class="dt"></i>Hjerte lav</span>
+                        <span style="--dc:var(--mind);display:flex;align-items:center;gap:.4em"><i class="dt"></i>Sind</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tb"><span class="on"><svg><use href="#t-day"/></svg>I dag</span><span><svg><use href="#t-train"/></svg>Træn</span><span><svg><use href="#t-food"/></svg>Mad</span><span><svg><use href="#t-mind"/></svg>Sind</span><span><svg><use href="#t-crew"/></svg>Crew</span></div>
+                  <div class="hi"></div>
+                </div>
+              </div>
+              <figcaption class="cap">I dag · Dashboard</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05:30 -->
+    <section class="sec" id="motor" aria-labelledby="h-motor">
+      <span class="node" style="--dc:var(--heart)" aria-hidden="true"><b>05:30</b></span>
+      <div class="wrap">
+        <div class="m-head rise">
+          <h2 id="h-motor">05:30. Passet bliver skrevet om, mens du sover.</h2>
+          <p class="lead">Motoren samler nattens signaler til én beslutning. Du vågner til et pas, der passer til den krop, du faktisk har i dag.</p>
+        </div>
+
+        <div class="m-grid">
+          <div>
+            <div class="strip rise">
+              <div class="strip-top"><span class="meta">I nat · 23:40 → 06:45</span><span class="meta" style="color:var(--faint)">Eksempeldata</span></div>
+              <svg viewBox="0 0 1000 214" aria-hidden="true">
+                <line x1="40" x2="960" y1="49.0" y2="49.0" stroke="#EEF0F3" stroke-opacity=".18" stroke-dasharray="3 5"/>
+                <line x1="40" x2="960" y1="72.0" y2="72.0" stroke="#EEF0F3" stroke-opacity=".18" stroke-dasharray="3 5"/>
+                <text x="964" y="49.0" dy="3.5" fill="#6B7280" font-family="IBM Plex Mono" font-size="10">67</text>
+                <text x="964" y="72.0" dy="3.5" fill="#6B7280" font-family="IBM Plex Mono" font-size="10">55</text>
+                <line x1="40" x2="960" y1="206" y2="206" stroke="#EEF0F3" stroke-opacity=".16"/>
+                <path d="M40.0 140.0 L94.1 140.0 L94.1 172.0 L137.4 172.0 L137.4 188.0 L234.8 188.0 L234.8 172.0 L299.8 172.0 L299.8 156.0 L343.1 156.0 L343.1 172.0 L418.8 172.0 L418.8 188.0 L483.8 188.0 L483.8 172.0 L559.5 172.0 L559.5 156.0 L613.6 156.0 L613.6 172.0 L700.2 172.0 L700.2 156.0 L743.5 156.0 L743.5 172.0 L776.0 172.0 L776.0 140.0 L797.6 140.0" fill="none" stroke="#5B9DF5" stroke-opacity=".75" stroke-width="1.6" stroke-linejoin="round"/>
+                <path d="M40.0 67.6 L50.8 66.5 L61.6 66.5 L72.5 66.7 L83.3 64.1 L94.1 60.7 L104.9 62.6 L115.8 61.6 L126.6 63.1 L137.4 62.5 L148.2 63.2 L159.1 65.1 L169.9 66.6 L180.7 67.4 L191.5 63.6 L202.4 63.3 L213.2 64.8 L224.0 61.7 L234.8 58.7 L245.6 59.9 L256.5 62.8 L267.3 64.7 L278.1 66.7 L288.9 66.6 L299.8 68.2 L310.6 68.4 L321.4 68.4 L332.2 66.5 L343.1 63.0 L353.9 61.3 L364.7 62.1 L375.5 62.7 L386.4 62.5 L397.2 63.2 L408.0 64.1 L418.8 66.4 L429.6 66.8 L440.5 62.8 L451.3 65.0 L462.1 64.4 L472.9 63.0 L483.8 60.8 L494.6 63.4 L505.4 65.2 L516.2 66.8 L527.1 67.3 L537.9 67.6 L548.7 64.8 L559.5 63.5 L570.4 62.6 L581.2 67.5 L592.0 71.3 L602.8 70.0 L613.6 68.1 L624.5 69.5 L635.3 70.1 L646.1 74.4 L656.9 75.4 L667.8 72.9 L678.6 71.8 L689.4 71.1 L700.2 69.9 L711.1 73.9 L721.9 77.9 L732.7 80.8 L743.5 80.9 L754.4 80.1 L765.2 78.1 L776.0 78.1 L786.8 78.8 L797.6 85.4" fill="none" stroke="#F2545B" stroke-width="2" stroke-linejoin="round"/>
+                <line x1="40" x2="40" y1="10" y2="206" stroke="#5B9DF5" stroke-opacity=".5"/>
+                <circle cx="40" cy="140" r="5" fill="#07080A" stroke="#5B9DF5" stroke-width="2"/>
+                <line x1="797.6" x2="797.6" y1="0" y2="206" stroke="#EEF0F3" stroke-opacity=".55"/>
+                <circle class="pulse" cx="797.6" cy="85.4" r="6" fill="none" stroke="#F2545B" stroke-width="1.5"/>
+                <circle cx="797.6" cy="85.4" r="5" fill="#F2545B"/>
+                <text x="797.6" y="85.4" dx="-12" dy="22" fill="#EEF0F3" font-family="IBM Plex Mono" font-size="13" text-anchor="end">48 ms</text>
+                <line x1="960.0" x2="960.0" y1="10" y2="206" stroke="#FF9C41" stroke-opacity=".5"/>
+                <circle cx="960.0" cy="120" r="5" fill="#07080A" stroke="#FF9C41" stroke-width="2"/>
+              </svg>
+              <div class="axis" aria-hidden="true">
+                <span class="a0" style="left:4%">23:40</span>
+                <span class="xm" style="left:36.5%">02:00</span>
+                <span class="hl" style="left:79.76%">05:30</span>
+                <span class="a3" style="left:96.00%">06:45</span>
+              </div>
+              <div class="legend" aria-hidden="true">
+                <span style="--dc:var(--heart)"><i></i>HRV, ms</span>
+                <span style="--dc:var(--mind)"><i></i>Søvnfaser</span>
+                <span style="--dc:rgba(238,240,243,.4)"><i style="background:repeating-linear-gradient(90deg,rgba(238,240,243,.5) 0 3px,transparent 3px 6px)"></i>Dit bånd</span>
+              </div>
+
+              <div class="reads">
+                <div class="read" style="--dc:var(--mind)">
+                  <span class="t"><i></i>23:40 · Mind-check</span>
+                  <span class="v">Stress 2/5</span>
+                  <p>Energi 3/5, fokus 4/5. Hovedet er fint.</p>
+                </div>
+                <div class="read" style="--dc:var(--mind)">
+                  <span class="t"><i></i>Søvn</span>
+                  <span class="v">6 t 10 m</span>
+                  <p>50 minutter under din uge. To opvågninger.</p>
+                </div>
+                <div class="read" style="--dc:var(--heart)">
+                  <span class="t"><i></i>05:30 · HRV</span>
+                  <span class="v">48 ms <small>/ snit 61</small></span>
+                  <p>Under dit bånd for første gang i 11 dage.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="decide rise">
+              <span class="meta">05:30 · Beslutning · Back squat topsæt</span>
+              <div class="big" aria-label="Topsæt ændret fra 150 kilo til 135 kilo"><s>150 kg</s><span class="ar" aria-hidden="true">→</span><span>135 kg</span></div>
+              <p><b>06:45. Du låser dig ind i centret.</b> Passet ligger klar, backoff-sættene er fulgt med ned, og du kan se præcis hvorfor. Du kan altid vælge den oprindelige plan.</p>
+            </div>
+          </div>
+
+          <div class="m-phone">
+            <figure class="ph">
+              <div class="phone" style="--pw:270px;--dc:var(--heart)" role="img" aria-label="App-skærm, Motoren 05:30: passet er skrevet om. Back squat topsæt fra 150 til 135 kg, backoff 3 gange 3 fra 125 til 115 kg. HRV 48 ms under båndet 55 til 67 ms.">
+                <div class="screen" aria-hidden="true">
+                  <div class="isl"></div>
+                  <div class="sb"><time>05:31</time><span class="ic"><svg class="i1"><use href="#i-sig"/></svg><svg class="i2"><use href="#i-wifi"/></svg><svg class="i3"><use href="#i-bat"/></svg></span></div>
+                  <div class="sc">
+                    <div class="hd"><svg><use href="#i-back"/></svg><span class="k">Motoren · 05:30</span><svg><use href="#i-more"/></svg></div>
+                    <div class="tt" style="font-size:1.9em">Passet er skrevet om.</div>
+                    <div class="cd" style="display:grid;grid-template-columns:auto 1fr;gap:.2em .9em;align-items:center;border-color:rgba(242,84,91,.2)">
+                      <svg viewBox="0 0 40 40" style="width:3.4em;grid-row:span 2"><circle cx="20" cy="20" r="17" fill="none" stroke="rgba(238,240,243,.1)" stroke-width="3"/><circle cx="20" cy="20" r="17" fill="none" stroke="#F2545B" stroke-width="3" stroke-dasharray="107" stroke-dashoffset="35" stroke-linecap="round" transform="rotate(-90 20 20)"/><text x="20" y="24" text-anchor="middle" fill="#EEF0F3" font-family="IBM Plex Mono" font-size="11" font-weight="500">48</text></svg>
+                      <span class="k" style="color:var(--fg)">HRV under bånd</span>
+                      <span class="mn" style="font-size:.78em;color:var(--dim)">48 ms · bånd 55 til 67</span>
+                    </div>
+                    <div class="diff">
+                      <div><span class="nm">Back squat, topsæt</span><span class="vals"><s>150</s>→<span class="nw" style="color:var(--heart)">135 kg</span></span><span class="why">3 reps · RPE 8 holdes</span></div>
+                      <div><span class="nm">Backoff 3×3</span><span class="vals"><s>125</s>→<span class="nw">115 kg</span></span><span class="why">Følger topsættet</span></div>
+                      <div><span class="nm">Rumænsk dødløft</span><span class="vals"><span class="nw" style="color:var(--dim)">Uændret</span></span></div>
+                      <div><span class="nm">Est. tid</span><span class="vals"><s>62m</s>→<span class="nw">58m</span></span></div>
+                    </div>
+                    <div class="pb">Start pas →</div>
+                    <div class="pb gh">Behold den oprindelige plan</div>
+                  </div>
+                  <div class="tb"><span class="on"><svg><use href="#t-day"/></svg>I dag</span><span><svg><use href="#t-train"/></svg>Træn</span><span><svg><use href="#t-food"/></svg>Mad</span><span><svg><use href="#t-mind"/></svg>Sind</span><span><svg><use href="#t-crew"/></svg>Crew</span></div>
+                  <div class="hi"></div>
+                </div>
+              </div>
+              <figcaption class="cap">Motoren · Omskrevet pas</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOUR SYSTEMS -->
+    <section class="sec" style="padding-bottom:0" aria-labelledby="h-sys">
+      <div class="wrap">
+        <div class="sys-head rise">
+          <h2 id="h-sys">Fire signaler. Ét pas.</h2>
+          <p class="lead">Krop, Mad, Hjerte og Sind bliver læst sammen hver morgen. Ingen af dem bestemmer alene, og du ser altid hvilket signal der vejede tungest.</p>
+        </div>
+      </div>
+
+      <div class="chan" style="--dc:var(--body)">
+        <span class="node" style="--dc:var(--body);--nt:16px" aria-hidden="true"><b>Krop</b></span>
+        <div class="wrap">
+          <div class="sig" aria-hidden="true"><div class="mv"><svg viewBox="0 0 2400 40" preserveAspectRatio="none"><path d="M0.0 30.0 L20.0 30.0 L20.0 8.0 L34.0 8.0 L34.0 30.0 L48.0 30.0 L48.0 8.0 L62.0 8.0 L62.0 30.0 L76.0 30.0 L76.0 8.0 L90.0 8.0 L90.0 30.0 L170.0 30.0 L170.0 8.0 L184.0 8.0 L184.0 30.0 L198.0 30.0 L198.0 8.0 L212.0 8.0 L212.0 30.0 L226.0 30.0 L226.0 8.0 L240.0 8.0 L240.0 30.0 L320.0 30.0 L320.0 8.0 L334.0 8.0 L334.0 30.0 L348.0 30.0 L348.0 8.0 L362.0 8.0 L362.0 30.0 L376.0 30.0 L376.0 8.0 L390.0 8.0 L390.0 30.0 L470.0 30.0 L470.0 8.0 L484.0 8.0 L484.0 30.0 L498.0 30.0 L498.0 8.0 L512.0 8.0 L512.0 30.0 L526.0 30.0 L526.0 8.0 L540.0 8.0 L540.0 30.0 L620.0 30.0 L620.0 8.0 L634.0 8.0 L634.0 30.0 L648.0 30.0 L648.0 8.0 L662.0 8.0 L662.0 30.0 L676.0 30.0 L676.0 8.0 L690.0 8.0 L690.0 30.0 L770.0 30.0 L770.0 8.0 L784.0 8.0 L784.0 30.0 L798.0 30.0 L798.0 8.0 L812.0 8.0 L812.0 30.0 L826.0 30.0 L826.0 8.0 L840.0 8.0 L840.0 30.0 L920.0 30.0 L920.0 8.0 L934.0 8.0 L934.0 30.0 L948.0 30.0 L948.0 8.0 L962.0 8.0 L962.0 30.0 L976.0 30.0 L976.0 8.0 L990.0 8.0 L990.0 30.0 L1070.0 30.0 L1070.0 8.0 L1084.0 8.0 L1084.0 30.0 L1098.0 30.0 L1098.0 8.0 L1112.0 8.0 L1112.0 30.0 L1126.0 30.0 L1126.0 8.0 L1140.0 8.0 L1140.0 30.0 L1220.0 30.0 L1220.0 8.0 L1234.0 8.0 L1234.0 30.0 L1248.0 30.0 L1248.0 8.0 L1262.0 8.0 L1262.0 30.0 L1276.0 30.0 L1276.0 8.0 L1290.0 8.0 L1290.0 30.0 L1370.0 30.0 L1370.0 8.0 L1384.0 8.0 L1384.0 30.0 L1398.0 30.0 L1398.0 8.0 L1412.0 8.0 L1412.0 30.0 L1426.0 30.0 L1426.0 8.0 L1440.0 8.0 L1440.0 30.0 L1520.0 30.0 L1520.0 8.0 L1534.0 8.0 L1534.0 30.0 L1548.0 30.0 L1548.0 8.0 L1562.0 8.0 L1562.0 30.0 L1576.0 30.0 L1576.0 8.0 L1590.0 8.0 L1590.0 30.0 L1670.0 30.0 L1670.0 8.0 L1684.0 8.0 L1684.0 30.0 L1698.0 30.0 L1698.0 8.0 L1712.0 8.0 L1712.0 30.0 L1726.0 30.0 L1726.0 8.0 L1740.0 8.0 L1740.0 30.0 L1820.0 30.0 L1820.0 8.0 L1834.0 8.0 L1834.0 30.0 L1848.0 30.0 L1848.0 8.0 L1862.0 8.0 L1862.0 30.0 L1876.0 30.0 L1876.0 8.0 L1890.0 8.0 L1890.0 30.0 L1970.0 30.0 L1970.0 8.0 L1984.0 8.0 L1984.0 30.0 L1998.0 30.0 L1998.0 8.0 L2012.0 8.0 L2012.0 30.0 L2026.0 30.0 L2026.0 8.0 L2040.0 8.0 L2040.0 30.0 L2120.0 30.0 L2120.0 8.0 L2134.0 8.0 L2134.0 30.0 L2148.0 30.0 L2148.0 8.0 L2162.0 8.0 L2162.0 30.0 L2176.0 30.0 L2176.0 8.0 L2190.0 8.0 L2190.0 30.0 L2270.0 30.0 L2270.0 8.0 L2284.0 8.0 L2284.0 30.0 L2298.0 30.0 L2298.0 8.0 L2312.0 8.0 L2312.0 30.0 L2326.0 30.0 L2326.0 8.0 L2340.0 8.0 L2340.0 30.0 L2400.0 30.0"/></svg></div></div>
+          <div class="c-meta"><span class="c-name"><i></i>Krop</span><span class="c-sub">Træn · STR-12</span></div>
+          <div class="c-text">
+            <h3>Et program der ved, hvor du er i ugen.</h3>
+            <p>Blokke på seks uger, topsæt på RPE, backoff der følger med. Deload-ugen kommer, når tallene siger det.</p>
+            <ul class="c-list">
+              <li>Uge<b>4 af 6</b></li>
+              <li>Volumen, 4 uger<b>18.420 kg</b></li>
+              <li>Form-checks<b>Sendes til Munk</b></li>
+            </ul>
+          </div>
+          <figure class="crop-fig">
+            <div class="crop">
+              <div class="phone" style="--dc:var(--body)" role="img" aria-label="App-skærm, Træn: program STR-12 uge 4 af 6, ugestrip med gennemførte pas og ugentlig volumen.">
+                <div class="screen" aria-hidden="true">
+                  <div class="isl"></div>
+                  <div class="sb"><time>05:31</time><span class="ic"><svg class="i1"><use href="#i-sig"/></svg><svg class="i2"><use href="#i-wifi"/></svg><svg class="i3"><use href="#i-bat"/></svg></span></div>
+                  <div class="sc">
+                    <div class="k">Træn</div>
+                    <div class="tt">STR-12</div>
+                    <div class="row"><span class="mn" style="font-size:.8em;color:var(--dim)">Uge 4 af 6 · styrke</span><span class="chip" style="border-color:rgba(255,156,65,.35)">Dag A i dag</span></div>
+                    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:.35em;text-align:center" class="mn">
+                      <div style="font-size:.7em;color:var(--dim)">M<div style="margin-top:.4em;height:2.4em;border-radius:.7em;background:rgba(255,156,65,.14);border:1px solid rgba(255,156,65,.4)"></div></div>
+                      <div style="font-size:.7em;color:var(--dim)">T<div style="margin-top:.4em;height:2.4em;border-radius:.7em;border:1px solid var(--l1)"></div></div>
+                      <div style="font-size:.7em;color:var(--dim)">O<div style="margin-top:.4em;height:2.4em;border-radius:.7em;background:rgba(255,156,65,.14);border:1px solid rgba(255,156,65,.4)"></div></div>
+                      <div style="font-size:.7em;color:var(--fg)">T<div style="margin-top:.4em;height:2.4em;border-radius:.7em;border:1.5px solid var(--fg)"></div></div>
+                      <div style="font-size:.7em;color:var(--dim)">F<div style="margin-top:.4em;height:2.4em;border-radius:.7em;border:1px dashed var(--l2)"></div></div>
+                      <div style="font-size:.7em;color:var(--dim)">L<div style="margin-top:.4em;height:2.4em;border-radius:.7em;border:1px dashed var(--l2)"></div></div>
+                      <div style="font-size:.7em;color:var(--dim)">S<div style="margin-top:.4em;height:2.4em;border-radius:.7em;border:1px solid var(--l1)"></div></div>
+                    </div>
+                    <div class="cd">
+                      <div class="row"><span class="k">Volumen pr. uge</span><span class="mn" style="font-size:.8em">18,4 t kg</span></div>
+                      <svg viewBox="0 0 200 72" style="width:100%;margin-top:.6em"><g fill="#FF9C41"><rect x="7" y="20.2" width="16" height="39.8" rx="3"/><rect x="41" y="17.7" width="16" height="42.3" rx="3"/><rect x="75" y="15.2" width="16" height="44.8" rx="3"/><rect x="109" y="29.2" width="16" height="30.8" rx="3" opacity=".35"/><rect x="143" y="11.8" width="16" height="48.2" rx="3"/><rect x="177" y="8.5" width="16" height="51.5" rx="3"/></g><text x="113" y="71" fill="#6B7280" font-family="IBM Plex Mono" font-size="7" text-anchor="middle">DELOAD</text></svg>
+                    </div>
+                    <div class="sets" style="font-size:.9em">
+                      <div class="cur"><span>A</span><span>Squat · 16 sæt</span><span>58m</span></div>
+                      <div><span>B</span><span>Bænk · 14 sæt</span><span>52m</span></div>
+                      <div><span>C</span><span>Dødløft · 12 sæt</span><span>55m</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <figcaption class="cap">Krop · Træn</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="chan flip" style="--dc:var(--food)">
+        <span class="node" style="--dc:var(--food);--nt:16px" aria-hidden="true"><b>Mad</b></span>
+        <div class="wrap">
+          <div class="sig" aria-hidden="true"><div class="mv"><svg viewBox="0 0 2400 40" preserveAspectRatio="none"><path d="M0.0 20.0 L6.0 22.1 L12.0 24.1 L18.0 25.8 L24.0 27.0 L30.0 27.8 L36.0 28.2 L42.0 28.2 L48.0 27.9 L54.0 27.5 L60.0 27.1 L66.0 26.9 L72.0 27.0 L78.0 27.4 L84.0 28.1 L90.0 29.1 L96.0 30.2 L102.0 31.4 L108.0 32.4 L114.0 33.0 L120.0 33.3 L126.0 33.1 L132.0 32.4 L138.0 31.2 L144.0 29.6 L150.0 27.8 L156.0 25.9 L162.0 24.1 L168.0 22.6 L174.0 21.4 L180.0 20.5 L186.0 20.1 L192.0 19.9 L198.0 20.0 L204.0 20.1 L210.0 20.0 L216.0 19.8 L222.0 19.2 L228.0 18.3 L234.0 16.9 L240.0 15.3 L246.0 13.5 L252.0 11.6 L258.0 9.9 L264.0 8.4 L270.0 7.3 L276.0 6.8 L282.0 6.7 L288.0 7.1 L294.0 7.9 L300.0 9.0 L306.0 10.2 L312.0 11.2 L318.0 12.2 L324.0 12.8 L330.0 13.1 L336.0 13.0 L342.0 12.8 L348.0 12.4 L354.0 12.0 L360.0 11.8 L366.0 11.9 L372.0 12.4 L378.0 13.3 L384.0 14.7 L390.0 16.5 L396.0 18.6 L402.0 20.7 L408.0 22.8 L414.0 24.7 L420.0 26.3 L426.0 27.4 L432.0 28.0 L438.0 28.2 L444.0 28.1 L450.0 27.8 L456.0 27.4 L462.0 27.0 L468.0 26.9 L474.0 27.1 L480.0 27.6 L486.0 28.4 L492.0 29.5 L498.0 30.6 L504.0 31.7 L510.0 32.6 L516.0 33.2 L522.0 33.3 L528.0 32.9 L534.0 32.0 L540.0 30.7 L546.0 29.0 L552.0 27.2 L558.0 25.3 L564.0 23.6 L570.0 22.1 L576.0 21.1 L582.0 20.4 L588.0 20.0 L594.0 19.9 L600.0 20.0 L606.0 20.1 L612.0 20.0 L618.0 19.6 L624.0 18.9 L630.0 17.9 L636.0 16.4 L642.0 14.7 L648.0 12.8 L654.0 11.0 L660.0 9.3 L666.0 8.0 L672.0 7.1 L678.0 6.7 L684.0 6.8 L690.0 7.4 L696.0 8.3 L702.0 9.4 L708.0 10.5 L714.0 11.6 L720.0 12.4 L726.0 12.9 L732.0 13.1 L738.0 13.0 L744.0 12.6 L750.0 12.2 L756.0 11.9 L762.0 11.8 L768.0 12.0 L774.0 12.6 L780.0 13.7 L786.0 15.3 L792.0 17.2 L798.0 19.3 L804.0 21.4 L810.0 23.5 L816.0 25.3 L822.0 26.7 L828.0 27.6 L834.0 28.1 L840.0 28.2 L846.0 28.0 L852.0 27.6 L858.0 27.2 L864.0 27.0 L870.0 26.9 L876.0 27.2 L882.0 27.8 L888.0 28.8 L894.0 29.8 L900.0 31.0 L906.0 32.1 L912.0 32.9 L918.0 33.3 L924.0 33.2 L930.0 32.7 L936.0 31.6 L942.0 30.1 L948.0 28.4 L954.0 26.5 L960.0 24.7 L966.0 23.1 L972.0 21.7 L978.0 20.8 L984.0 20.2 L990.0 20.0 L996.0 19.9 L1002.0 20.0 L1008.0 20.1 L1014.0 19.9 L1020.0 19.5 L1026.0 18.6 L1032.0 17.4 L1038.0 15.9 L1044.0 14.1 L1050.0 12.2 L1056.0 10.4 L1062.0 8.8 L1068.0 7.6 L1074.0 6.9 L1080.0 6.7 L1086.0 7.0 L1092.0 7.6 L1098.0 8.6 L1104.0 9.8 L1110.0 10.9 L1116.0 11.9 L1122.0 12.6 L1128.0 13.0 L1134.0 13.1 L1140.0 12.9 L1146.0 12.5 L1152.0 12.1 L1158.0 11.8 L1164.0 11.8 L1170.0 12.2 L1176.0 13.0 L1182.0 14.2 L1188.0 15.9 L1194.0 17.9 L1200.0 20.0 L1206.0 22.1 L1212.0 24.1 L1218.0 25.8 L1224.0 27.0 L1230.0 27.8 L1236.0 28.2 L1242.0 28.2 L1248.0 27.9 L1254.0 27.5 L1260.0 27.1 L1266.0 26.9 L1272.0 27.0 L1278.0 27.4 L1284.0 28.1 L1290.0 29.1 L1296.0 30.2 L1302.0 31.4 L1308.0 32.4 L1314.0 33.0 L1320.0 33.3 L1326.0 33.1 L1332.0 32.4 L1338.0 31.2 L1344.0 29.6 L1350.0 27.8 L1356.0 25.9 L1362.0 24.1 L1368.0 22.6 L1374.0 21.4 L1380.0 20.5 L1386.0 20.1 L1392.0 19.9 L1398.0 20.0 L1404.0 20.1 L1410.0 20.0 L1416.0 19.8 L1422.0 19.2 L1428.0 18.3 L1434.0 16.9 L1440.0 15.3 L1446.0 13.5 L1452.0 11.6 L1458.0 9.9 L1464.0 8.4 L1470.0 7.3 L1476.0 6.8 L1482.0 6.7 L1488.0 7.1 L1494.0 7.9 L1500.0 9.0 L1506.0 10.2 L1512.0 11.2 L1518.0 12.2 L1524.0 12.8 L1530.0 13.1 L1536.0 13.0 L1542.0 12.8 L1548.0 12.4 L1554.0 12.0 L1560.0 11.8 L1566.0 11.9 L1572.0 12.4 L1578.0 13.3 L1584.0 14.7 L1590.0 16.5 L1596.0 18.6 L1602.0 20.7 L1608.0 22.8 L1614.0 24.7 L1620.0 26.3 L1626.0 27.4 L1632.0 28.0 L1638.0 28.2 L1644.0 28.1 L1650.0 27.8 L1656.0 27.4 L1662.0 27.0 L1668.0 26.9 L1674.0 27.1 L1680.0 27.6 L1686.0 28.4 L1692.0 29.5 L1698.0 30.6 L1704.0 31.7 L1710.0 32.6 L1716.0 33.2 L1722.0 33.3 L1728.0 32.9 L1734.0 32.0 L1740.0 30.7 L1746.0 29.0 L1752.0 27.2 L1758.0 25.3 L1764.0 23.6 L1770.0 22.1 L1776.0 21.1 L1782.0 20.4 L1788.0 20.0 L1794.0 19.9 L1800.0 20.0 L1806.0 20.1 L1812.0 20.0 L1818.0 19.6 L1824.0 18.9 L1830.0 17.9 L1836.0 16.4 L1842.0 14.7 L1848.0 12.8 L1854.0 11.0 L1860.0 9.3 L1866.0 8.0 L1872.0 7.1 L1878.0 6.7 L1884.0 6.8 L1890.0 7.4 L1896.0 8.3 L1902.0 9.4 L1908.0 10.5 L1914.0 11.6 L1920.0 12.4 L1926.0 12.9 L1932.0 13.1 L1938.0 13.0 L1944.0 12.6 L1950.0 12.2 L1956.0 11.9 L1962.0 11.8 L1968.0 12.0 L1974.0 12.6 L1980.0 13.7 L1986.0 15.3 L1992.0 17.2 L1998.0 19.3 L2004.0 21.4 L2010.0 23.5 L2016.0 25.3 L2022.0 26.7 L2028.0 27.6 L2034.0 28.1 L2040.0 28.2 L2046.0 28.0 L2052.0 27.6 L2058.0 27.2 L2064.0 27.0 L2070.0 26.9 L2076.0 27.2 L2082.0 27.8 L2088.0 28.8 L2094.0 29.8 L2100.0 31.0 L2106.0 32.1 L2112.0 32.9 L2118.0 33.3 L2124.0 33.2 L2130.0 32.7 L2136.0 31.6 L2142.0 30.1 L2148.0 28.4 L2154.0 26.5 L2160.0 24.7 L2166.0 23.1 L2172.0 21.7 L2178.0 20.8 L2184.0 20.2 L2190.0 20.0 L2196.0 19.9 L2202.0 20.0 L2208.0 20.1 L2214.0 19.9 L2220.0 19.5 L2226.0 18.6 L2232.0 17.4 L2238.0 15.9 L2244.0 14.1 L2250.0 12.2 L2256.0 10.4 L2262.0 8.8 L2268.0 7.6 L2274.0 6.9 L2280.0 6.7 L2286.0 7.0 L2292.0 7.6 L2298.0 8.6 L2304.0 9.8 L2310.0 10.9 L2316.0 11.9 L2322.0 12.6 L2328.0 13.0 L2334.0 13.1 L2340.0 12.9 L2346.0 12.5 L2352.0 12.1 L2358.0 11.8 L2364.0 11.8 L2370.0 12.2 L2376.0 13.0 L2382.0 14.2 L2388.0 15.9 L2394.0 17.9 L2400.0 20.0"/></svg></div></div>
+          <div class="c-meta"><span class="c-name"><i></i>Mad</span><span class="c-sub">Måltidsplan · indkøb</span></div>
+          <div class="c-text">
+            <h3>Rigtig mad. En indkøbsliste, ikke en app til at veje ris.</h3>
+            <p>Planen følger dine træningsdage. Indkøbslisten bygger sig selv fra ugens måltider, og protein rammer målet uden pulver.</p>
+            <ul class="c-list">
+              <li>I dag<b>2.740 kcal</b></li>
+              <li>Protein<b>182 g</b></li>
+              <li>Indkøb<b>14 varer, 1 butik</b></li>
+            </ul>
+          </div>
+          <figure class="crop-fig">
+            <div class="crop">
+              <div class="phone" style="--dc:var(--food)" role="img" aria-label="App-skærm, Mad: Brændstof. 2.740 kcal og 182 g protein. Morgen skyr, havre og blåbær. Frokost rugbrød, æg og avocado. Aften laks, kartofler og bønner.">
+                <div class="screen" aria-hidden="true">
+                  <div class="isl"></div>
+                  <div class="sb"><time>05:31</time><span class="ic"><svg class="i1"><use href="#i-sig"/></svg><svg class="i2"><use href="#i-wifi"/></svg><svg class="i3"><use href="#i-bat"/></svg></span></div>
+                  <div class="sc">
+                    <div class="k"><i class="dt"></i>Mad</div>
+                    <div class="tt" style="font-size:2.4em">Brændstof.</div>
+                    <div style="font-size:.88em;color:var(--dim);line-height:1.4">Olivenolie og smør, ikke rapsolie. Skyr og hytteost, ikke proteinbarer.</div>
+                    <div class="cd" style="display:grid;grid-template-columns:auto 1fr;gap:1em;align-items:center">
+                      <svg viewBox="0 0 44 44" style="width:4.6em"><circle cx="22" cy="22" r="18" fill="none" stroke="rgba(238,240,243,.1)" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="#45C487" stroke-width="4" stroke-dasharray="113" stroke-dashoffset="28" stroke-linecap="round" transform="rotate(-90 22 22)"/></svg>
+                      <div><div class="mn" style="font-size:1.3em;font-weight:500">2.740 kcal</div><div class="mn" style="font-size:.85em;color:var(--dim)">182 g protein</div></div>
+                    </div>
+                    <div>
+                      <div class="meal"><span>Morgen</span>Skyr, havre, blåbær</div>
+                      <div class="meal"><span>Frokost</span>Rugbrød, æg, avocado</div>
+                      <div class="meal"><span>Aften</span>Laks, kartofler, bønner</div>
+                    </div>
+                    <div class="row cd" style="padding:.8em 1em"><span style="font-size:.88em">Indkøb · 14 varer</span><span class="mn" style="font-size:.9em">→</span></div>
+                  </div>
+                  <div class="tb" style="--dc:var(--food)"><span><svg><use href="#t-day"/></svg>I dag</span><span><svg><use href="#t-train"/></svg>Træn</span><span class="on"><svg><use href="#t-food"/></svg>Mad</span><span><svg><use href="#t-mind"/></svg>Sind</span><span><svg><use href="#t-crew"/></svg>Crew</span></div>
+                  <div class="hi"></div>
+                </div>
+              </div>
+            </div>
+            <figcaption class="cap">Mad · Dagens plan</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="chan" style="--dc:var(--heart)">
+        <span class="node" style="--dc:var(--heart);--nt:16px" aria-hidden="true"><b>Hjerte</b></span>
+        <div class="wrap">
+          <div class="sig" aria-hidden="true"><div class="mv"><svg viewBox="0 0 2400 40" preserveAspectRatio="none"><path d="M0.0 20.0 L30.0 20.0 L40.0 17.0 L48.0 20.0 L54.0 23.0 L58.0 3.0 L63.0 34.0 L67.0 20.0 L85.0 20.0 L97.0 15.0 L109.0 20.0 L150.0 20.0 L160.0 17.0 L168.0 20.0 L174.0 23.0 L178.0 3.0 L183.0 34.0 L187.0 20.0 L205.0 20.0 L217.0 15.0 L229.0 20.0 L270.0 20.0 L280.0 17.0 L288.0 20.0 L294.0 23.0 L298.0 3.0 L303.0 34.0 L307.0 20.0 L325.0 20.0 L337.0 15.0 L349.0 20.0 L390.0 20.0 L400.0 17.0 L408.0 20.0 L414.0 23.0 L418.0 3.0 L423.0 34.0 L427.0 20.0 L445.0 20.0 L457.0 15.0 L469.0 20.0 L510.0 20.0 L520.0 17.0 L528.0 20.0 L534.0 23.0 L538.0 3.0 L543.0 34.0 L547.0 20.0 L565.0 20.0 L577.0 15.0 L589.0 20.0 L630.0 20.0 L640.0 17.0 L648.0 20.0 L654.0 23.0 L658.0 3.0 L663.0 34.0 L667.0 20.0 L685.0 20.0 L697.0 15.0 L709.0 20.0 L750.0 20.0 L760.0 17.0 L768.0 20.0 L774.0 23.0 L778.0 3.0 L783.0 34.0 L787.0 20.0 L805.0 20.0 L817.0 15.0 L829.0 20.0 L870.0 20.0 L880.0 17.0 L888.0 20.0 L894.0 23.0 L898.0 3.0 L903.0 34.0 L907.0 20.0 L925.0 20.0 L937.0 15.0 L949.0 20.0 L990.0 20.0 L1000.0 17.0 L1008.0 20.0 L1014.0 23.0 L1018.0 3.0 L1023.0 34.0 L1027.0 20.0 L1045.0 20.0 L1057.0 15.0 L1069.0 20.0 L1110.0 20.0 L1120.0 17.0 L1128.0 20.0 L1134.0 23.0 L1138.0 3.0 L1143.0 34.0 L1147.0 20.0 L1165.0 20.0 L1177.0 15.0 L1189.0 20.0 L1230.0 20.0 L1240.0 17.0 L1248.0 20.0 L1254.0 23.0 L1258.0 3.0 L1263.0 34.0 L1267.0 20.0 L1285.0 20.0 L1297.0 15.0 L1309.0 20.0 L1350.0 20.0 L1360.0 17.0 L1368.0 20.0 L1374.0 23.0 L1378.0 3.0 L1383.0 34.0 L1387.0 20.0 L1405.0 20.0 L1417.0 15.0 L1429.0 20.0 L1470.0 20.0 L1480.0 17.0 L1488.0 20.0 L1494.0 23.0 L1498.0 3.0 L1503.0 34.0 L1507.0 20.0 L1525.0 20.0 L1537.0 15.0 L1549.0 20.0 L1590.0 20.0 L1600.0 17.0 L1608.0 20.0 L1614.0 23.0 L1618.0 3.0 L1623.0 34.0 L1627.0 20.0 L1645.0 20.0 L1657.0 15.0 L1669.0 20.0 L1710.0 20.0 L1720.0 17.0 L1728.0 20.0 L1734.0 23.0 L1738.0 3.0 L1743.0 34.0 L1747.0 20.0 L1765.0 20.0 L1777.0 15.0 L1789.0 20.0 L1830.0 20.0 L1840.0 17.0 L1848.0 20.0 L1854.0 23.0 L1858.0 3.0 L1863.0 34.0 L1867.0 20.0 L1885.0 20.0 L1897.0 15.0 L1909.0 20.0 L1950.0 20.0 L1960.0 17.0 L1968.0 20.0 L1974.0 23.0 L1978.0 3.0 L1983.0 34.0 L1987.0 20.0 L2005.0 20.0 L2017.0 15.0 L2029.0 20.0 L2070.0 20.0 L2080.0 17.0 L2088.0 20.0 L2094.0 23.0 L2098.0 3.0 L2103.0 34.0 L2107.0 20.0 L2125.0 20.0 L2137.0 15.0 L2149.0 20.0 L2190.0 20.0 L2200.0 17.0 L2208.0 20.0 L2214.0 23.0 L2218.0 3.0 L2223.0 34.0 L2227.0 20.0 L2245.0 20.0 L2257.0 15.0 L2269.0 20.0 L2310.0 20.0 L2320.0 17.0 L2328.0 20.0 L2334.0 23.0 L2338.0 3.0 L2343.0 34.0 L2347.0 20.0 L2365.0 20.0 L2377.0 15.0 L2389.0 20.0 L2400.0 20.0"/></svg></div></div>
+          <div class="c-meta"><span class="c-name"><i></i>Hjerte</span><span class="c-sub">HRV · søvn · hvilepuls</span></div>
+          <div class="c-text">
+            <h3>Dit eget bånd, ikke et gennemsnit fra internettet.</h3>
+            <p>Motoren lærer din normale HRV over 14 nætter og reagerer kun, når du falder uden for den. Virker med WHOOP, Oura, Polar og Apple Watch.</p>
+            <ul class="c-list">
+              <li>Dit bånd<b>55 til 67 ms</b></li>
+              <li>I nat<b>48 ms</b></li>
+              <li>Status<b>Restitutions-signal</b></li>
+            </ul>
+          </div>
+          <figure class="crop-fig">
+            <div class="crop mid">
+              <div class="phone" style="--dc:var(--heart)" role="img" aria-label="App-skærm, Hjerte: 14 nætters søvn og HRV. Bånd 55 til 67 ms. I nat 48 ms og 6 timer 10 minutters søvn.">
+                <div class="screen" aria-hidden="true">
+                  <div class="isl"></div>
+                  <div class="sb"><time>05:31</time><span class="ic"><svg class="i1"><use href="#i-sig"/></svg><svg class="i2"><use href="#i-wifi"/></svg><svg class="i3"><use href="#i-bat"/></svg></span></div>
+                  <div class="sc">
+                    <div class="k"><i class="dt"></i>Hjerte</div>
+                    <div class="tt">Restitution</div>
+                    <div class="row"><span class="chip" style="border-color:rgba(242,84,91,.35)">14 nætter</span><span class="chip">30 dage</span><span class="chip">90 dage</span></div>
+                    <div class="cd">
+                      <div class="row"><span class="k">HRV og søvn</span><span class="mn" style="font-size:.78em;color:var(--dim)">bånd 55 til 67</span></div>
+                      <svg viewBox="0 0 200 74" style="width:100%;margin-top:.8em;overflow:visible"><rect x="0" y="6" width="200" height="16" fill="#EEF0F3" fill-opacity=".05"/><g fill="#EEF0F3" fill-opacity=".12"><rect x="2.0" y="33.6" width="9" height="36.4" rx="2"/><rect x="16.3" y="38.8" width="9" height="31.2" rx="2"/><rect x="30.6" y="28.4" width="9" height="41.6" rx="2"/><rect x="44.9" y="49.2" width="9" height="20.8" rx="2"/><rect x="59.1" y="35.3" width="9" height="34.7" rx="2"/><rect x="73.4" y="24.9" width="9" height="45.1" rx="2"/><rect x="87.7" y="37.1" width="9" height="32.9" rx="2"/><rect x="102.0" y="30.1" width="9" height="39.9" rx="2"/><rect x="116.3" y="44.0" width="9" height="26.0" rx="2"/><rect x="130.6" y="31.9" width="9" height="38.1" rx="2"/><rect x="144.9" y="38.8" width="9" height="31.2" rx="2"/><rect x="159.1" y="35.3" width="9" height="34.7" rx="2"/><rect x="173.4" y="45.7" width="9" height="24.3" rx="2"/><rect x="187.7" y="49.2" width="9" height="20.8" rx="2"/></g><path d="M6.5 17.6 L20.8 20.3 L35.1 13.5 L49.4 21.7 L63.6 16.2 L77.9 9.4 L92.2 19.0 L106.5 14.9 L120.8 20.3 L135.1 16.2 L149.4 21.7 L163.6 19.0 L177.9 24.4 L192.2 33.9" fill="none" stroke="#F2545B" stroke-width="1.7" stroke-linejoin="round"/><circle cx="192.2" cy="33.9" r="3" fill="#F2545B"/></svg>
+                    </div>
+                    <div class="grid3" style="grid-template-columns:repeat(2,1fr)">
+                      <div class="cell"><div class="k" style="font-size:.62em">HRV i nat</div><div class="v" style="color:var(--heart)">48<small>ms</small></div></div>
+                      <div class="cell"><div class="k" style="font-size:.62em">Søvn</div><div class="v">6:10<small>t</small></div></div>
+                      <div class="cell"><div class="k" style="font-size:.62em">Hvilepuls</div><div class="v">58<small>bpm</small></div></div>
+                      <div class="cell"><div class="k" style="font-size:.62em">Kilde</div><div class="v" style="font-size:1em">Oura</div></div>
+                    </div>
+                    <div class="disc">HRV er et restitutions-signal, ikke en diagnose.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <figcaption class="cap">Hjerte · Restitution</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="chan flip" style="--dc:var(--mind)">
+        <span class="node" style="--dc:var(--mind);--nt:16px" aria-hidden="true"><b>Sind</b></span>
+        <div class="wrap">
+          <div class="sig" aria-hidden="true"><div class="mv"><svg viewBox="0 0 2400 40" preserveAspectRatio="none"><path d="M0.0 23.4 L4.0 25.9 L8.0 27.4 L12.0 27.5 L16.0 26.3 L20.0 24.2 L24.0 21.9 L28.0 20.1 L32.0 19.3 L36.0 19.6 L40.0 20.7 L44.0 22.3 L48.0 23.6 L52.0 24.5 L56.0 24.8 L60.0 24.7 L64.0 24.7 L68.0 25.2 L72.0 26.3 L76.0 28.1 L80.0 29.9 L84.0 31.3 L88.0 31.6 L92.0 30.6 L96.0 28.4 L100.0 25.4 L104.0 22.3 L108.0 19.9 L112.0 18.6 L116.0 18.6 L120.0 19.5 L124.0 20.9 L128.0 22.1 L132.0 22.6 L136.0 22.5 L140.0 21.9 L144.0 21.2 L148.0 20.8 L152.0 21.1 L156.0 21.8 L160.0 22.6 L164.0 23.0 L168.0 22.5 L172.0 20.9 L176.0 18.2 L180.0 15.0 L184.0 12.0 L188.0 9.9 L192.0 9.1 L196.0 9.6 L200.0 11.2 L204.0 13.3 L208.0 15.1 L212.0 16.2 L216.0 16.5 L220.0 16.2 L224.0 15.7 L228.0 15.4 L232.0 15.7 L236.0 16.4 L240.0 17.4 L244.0 18.0 L248.0 17.9 L252.0 16.8 L256.0 14.9 L260.0 12.7 L264.0 10.8 L268.0 9.9 L272.0 10.4 L276.0 12.3 L280.0 15.1 L284.0 18.2 L288.0 20.9 L292.0 22.7 L296.0 23.4 L300.0 23.4 L304.0 22.9 L308.0 22.6 L312.0 22.7 L316.0 23.4 L320.0 24.2 L324.0 24.9 L328.0 24.9 L332.0 24.1 L336.0 22.5 L340.0 20.7 L344.0 19.3 L348.0 18.9 L352.0 19.7 L356.0 21.8 L360.0 24.7 L364.0 27.6 L368.0 29.9 L372.0 31.1 L376.0 31.0 L380.0 29.9 L384.0 28.4 L388.0 26.9 L392.0 25.9 L396.0 25.5 L400.0 25.4 L404.0 25.3 L408.0 24.7 L412.0 23.4 L416.0 21.5 L420.0 19.5 L424.0 17.9 L428.0 17.3 L432.0 17.9 L436.0 19.6 L440.0 21.9 L444.0 24.1 L448.0 25.6 L452.0 25.8 L456.0 24.7 L460.0 22.6 L464.0 20.1 L468.0 17.8 L472.0 16.1 L476.0 15.3 L480.0 15.0 L484.0 15.0 L488.0 14.6 L492.0 13.8 L496.0 12.6 L500.0 11.2 L504.0 10.3 L508.0 10.4 L512.0 11.5 L516.0 13.6 L520.0 16.2 L524.0 18.6 L528.0 20.2 L532.0 20.4 L536.0 19.4 L540.0 17.4 L544.0 15.1 L548.0 13.2 L552.0 12.1 L556.0 12.0 L560.0 12.7 L564.0 13.8 L568.0 14.7 L572.0 15.2 L576.0 15.2 L580.0 15.1 L584.0 15.2 L588.0 16.1 L592.0 17.9 L596.0 20.5 L600.0 23.4 L604.0 25.9 L608.0 27.4 L612.0 27.5 L616.0 26.3 L620.0 24.2 L624.0 21.9 L628.0 20.1 L632.0 19.3 L636.0 19.6 L640.0 20.7 L644.0 22.3 L648.0 23.6 L652.0 24.5 L656.0 24.8 L660.0 24.7 L664.0 24.7 L668.0 25.2 L672.0 26.3 L676.0 28.1 L680.0 29.9 L684.0 31.3 L688.0 31.6 L692.0 30.6 L696.0 28.4 L700.0 25.4 L704.0 22.3 L708.0 19.9 L712.0 18.6 L716.0 18.6 L720.0 19.5 L724.0 20.9 L728.0 22.1 L732.0 22.6 L736.0 22.5 L740.0 21.9 L744.0 21.2 L748.0 20.8 L752.0 21.1 L756.0 21.8 L760.0 22.6 L764.0 23.0 L768.0 22.5 L772.0 20.9 L776.0 18.2 L780.0 15.0 L784.0 12.0 L788.0 9.9 L792.0 9.1 L796.0 9.6 L800.0 11.2 L804.0 13.3 L808.0 15.1 L812.0 16.2 L816.0 16.5 L820.0 16.2 L824.0 15.7 L828.0 15.4 L832.0 15.7 L836.0 16.4 L840.0 17.4 L844.0 18.0 L848.0 17.9 L852.0 16.8 L856.0 14.9 L860.0 12.7 L864.0 10.8 L868.0 9.9 L872.0 10.4 L876.0 12.3 L880.0 15.1 L884.0 18.2 L888.0 20.9 L892.0 22.7 L896.0 23.4 L900.0 23.4 L904.0 22.9 L908.0 22.6 L912.0 22.7 L916.0 23.4 L920.0 24.2 L924.0 24.9 L928.0 24.9 L932.0 24.1 L936.0 22.5 L940.0 20.7 L944.0 19.3 L948.0 18.9 L952.0 19.7 L956.0 21.8 L960.0 24.7 L964.0 27.6 L968.0 29.9 L972.0 31.1 L976.0 31.0 L980.0 29.9 L984.0 28.4 L988.0 26.9 L992.0 25.9 L996.0 25.5 L1000.0 25.4 L1004.0 25.3 L1008.0 24.7 L1012.0 23.4 L1016.0 21.5 L1020.0 19.5 L1024.0 17.9 L1028.0 17.3 L1032.0 17.9 L1036.0 19.6 L1040.0 21.9 L1044.0 24.1 L1048.0 25.6 L1052.0 25.8 L1056.0 24.7 L1060.0 22.6 L1064.0 20.1 L1068.0 17.8 L1072.0 16.1 L1076.0 15.3 L1080.0 15.0 L1084.0 15.0 L1088.0 14.6 L1092.0 13.8 L1096.0 12.6 L1100.0 11.2 L1104.0 10.3 L1108.0 10.4 L1112.0 11.5 L1116.0 13.6 L1120.0 16.2 L1124.0 18.6 L1128.0 20.2 L1132.0 20.4 L1136.0 19.4 L1140.0 17.4 L1144.0 15.1 L1148.0 13.2 L1152.0 12.1 L1156.0 12.0 L1160.0 12.7 L1164.0 13.8 L1168.0 14.7 L1172.0 15.2 L1176.0 15.2 L1180.0 15.1 L1184.0 15.2 L1188.0 16.1 L1192.0 17.9 L1196.0 20.5 L1200.0 23.4 L1204.0 25.9 L1208.0 27.4 L1212.0 27.5 L1216.0 26.3 L1220.0 24.2 L1224.0 21.9 L1228.0 20.1 L1232.0 19.3 L1236.0 19.6 L1240.0 20.7 L1244.0 22.3 L1248.0 23.6 L1252.0 24.5 L1256.0 24.8 L1260.0 24.7 L1264.0 24.7 L1268.0 25.2 L1272.0 26.3 L1276.0 28.1 L1280.0 29.9 L1284.0 31.3 L1288.0 31.6 L1292.0 30.6 L1296.0 28.4 L1300.0 25.4 L1304.0 22.3 L1308.0 19.9 L1312.0 18.6 L1316.0 18.6 L1320.0 19.5 L1324.0 20.9 L1328.0 22.1 L1332.0 22.6 L1336.0 22.5 L1340.0 21.9 L1344.0 21.2 L1348.0 20.8 L1352.0 21.1 L1356.0 21.8 L1360.0 22.6 L1364.0 23.0 L1368.0 22.5 L1372.0 20.9 L1376.0 18.2 L1380.0 15.0 L1384.0 12.0 L1388.0 9.9 L1392.0 9.1 L1396.0 9.6 L1400.0 11.2 L1404.0 13.3 L1408.0 15.1 L1412.0 16.2 L1416.0 16.5 L1420.0 16.2 L1424.0 15.7 L1428.0 15.4 L1432.0 15.7 L1436.0 16.4 L1440.0 17.4 L1444.0 18.0 L1448.0 17.9 L1452.0 16.8 L1456.0 14.9 L1460.0 12.7 L1464.0 10.8 L1468.0 9.9 L1472.0 10.4 L1476.0 12.3 L1480.0 15.1 L1484.0 18.2 L1488.0 20.9 L1492.0 22.7 L1496.0 23.4 L1500.0 23.4 L1504.0 22.9 L1508.0 22.6 L1512.0 22.7 L1516.0 23.4 L1520.0 24.2 L1524.0 24.9 L1528.0 24.9 L1532.0 24.1 L1536.0 22.5 L1540.0 20.7 L1544.0 19.3 L1548.0 18.9 L1552.0 19.7 L1556.0 21.8 L1560.0 24.7 L1564.0 27.6 L1568.0 29.9 L1572.0 31.1 L1576.0 31.0 L1580.0 29.9 L1584.0 28.4 L1588.0 26.9 L1592.0 25.9 L1596.0 25.5 L1600.0 25.4 L1604.0 25.3 L1608.0 24.7 L1612.0 23.4 L1616.0 21.5 L1620.0 19.5 L1624.0 17.9 L1628.0 17.3 L1632.0 17.9 L1636.0 19.6 L1640.0 21.9 L1644.0 24.1 L1648.0 25.6 L1652.0 25.8 L1656.0 24.7 L1660.0 22.6 L1664.0 20.1 L1668.0 17.8 L1672.0 16.1 L1676.0 15.3 L1680.0 15.0 L1684.0 15.0 L1688.0 14.6 L1692.0 13.8 L1696.0 12.6 L1700.0 11.2 L1704.0 10.3 L1708.0 10.4 L1712.0 11.5 L1716.0 13.6 L1720.0 16.2 L1724.0 18.6 L1728.0 20.2 L1732.0 20.4 L1736.0 19.4 L1740.0 17.4 L1744.0 15.1 L1748.0 13.2 L1752.0 12.1 L1756.0 12.0 L1760.0 12.7 L1764.0 13.8 L1768.0 14.7 L1772.0 15.2 L1776.0 15.2 L1780.0 15.1 L1784.0 15.2 L1788.0 16.1 L1792.0 17.9 L1796.0 20.5 L1800.0 23.4 L1804.0 25.9 L1808.0 27.4 L1812.0 27.5 L1816.0 26.3 L1820.0 24.2 L1824.0 21.9 L1828.0 20.1 L1832.0 19.3 L1836.0 19.6 L1840.0 20.7 L1844.0 22.3 L1848.0 23.6 L1852.0 24.5 L1856.0 24.8 L1860.0 24.7 L1864.0 24.7 L1868.0 25.2 L1872.0 26.3 L1876.0 28.1 L1880.0 29.9 L1884.0 31.3 L1888.0 31.6 L1892.0 30.6 L1896.0 28.4 L1900.0 25.4 L1904.0 22.3 L1908.0 19.9 L1912.0 18.6 L1916.0 18.6 L1920.0 19.5 L1924.0 20.9 L1928.0 22.1 L1932.0 22.6 L1936.0 22.5 L1940.0 21.9 L1944.0 21.2 L1948.0 20.8 L1952.0 21.1 L1956.0 21.8 L1960.0 22.6 L1964.0 23.0 L1968.0 22.5 L1972.0 20.9 L1976.0 18.2 L1980.0 15.0 L1984.0 12.0 L1988.0 9.9 L1992.0 9.1 L1996.0 9.6 L2000.0 11.2 L2004.0 13.3 L2008.0 15.1 L2012.0 16.2 L2016.0 16.5 L2020.0 16.2 L2024.0 15.7 L2028.0 15.4 L2032.0 15.7 L2036.0 16.4 L2040.0 17.4 L2044.0 18.0 L2048.0 17.9 L2052.0 16.8 L2056.0 14.9 L2060.0 12.7 L2064.0 10.8 L2068.0 9.9 L2072.0 10.4 L2076.0 12.3 L2080.0 15.1 L2084.0 18.2 L2088.0 20.9 L2092.0 22.7 L2096.0 23.4 L2100.0 23.4 L2104.0 22.9 L2108.0 22.6 L2112.0 22.7 L2116.0 23.4 L2120.0 24.2 L2124.0 24.9 L2128.0 24.9 L2132.0 24.1 L2136.0 22.5 L2140.0 20.7 L2144.0 19.3 L2148.0 18.9 L2152.0 19.7 L2156.0 21.8 L2160.0 24.7 L2164.0 27.6 L2168.0 29.9 L2172.0 31.1 L2176.0 31.0 L2180.0 29.9 L2184.0 28.4 L2188.0 26.9 L2192.0 25.9 L2196.0 25.5 L2200.0 25.4 L2204.0 25.3 L2208.0 24.7 L2212.0 23.4 L2216.0 21.5 L2220.0 19.5 L2224.0 17.9 L2228.0 17.3 L2232.0 17.9 L2236.0 19.6 L2240.0 21.9 L2244.0 24.1 L2248.0 25.6 L2252.0 25.8 L2256.0 24.7 L2260.0 22.6 L2264.0 20.1 L2268.0 17.8 L2272.0 16.1 L2276.0 15.3 L2280.0 15.0 L2284.0 15.0 L2288.0 14.6 L2292.0 13.8 L2296.0 12.6 L2300.0 11.2 L2304.0 10.3 L2308.0 10.4 L2312.0 11.5 L2316.0 13.6 L2320.0 16.2 L2324.0 18.6 L2328.0 20.2 L2332.0 20.4 L2336.0 19.4 L2340.0 17.4 L2344.0 15.1 L2348.0 13.2 L2352.0 12.1 L2356.0 12.0 L2360.0 12.7 L2364.0 13.8 L2368.0 14.7 L2372.0 15.2 L2376.0 15.2 L2380.0 15.1 L2384.0 15.2 L2388.0 16.1 L2392.0 17.9 L2396.0 20.5 L2400.0 23.4"/></svg></div></div>
+          <div class="c-meta"><span class="c-name"><i></i>Sind</span><span class="c-sub">Mind-check · journal</span></div>
+          <div class="c-text">
+            <h3>60 sekunder, der tæller med i planen.</h3>
+            <p>Energi, stress og fokus på en skala fra 1 til 5. En kort journal, hvis du vil. Motoren bruger det som et signal på linje med HRV.</p>
+            <ul class="c-list">
+              <li>Energi<b>3/5</b></li>
+              <li>Stress<b>2/5</b></li>
+              <li>Fokus<b>4/5</b></li>
+            </ul>
+          </div>
+          <figure class="crop-fig">
+            <div class="crop">
+              <div class="phone" style="--dc:var(--mind)" role="img" aria-label="App-skærm, Sind: Mind-check. 60 sekunder. Hvordan har hovedet det i dag? Energi 3 af 5, stress 2 af 5, fokus 4 af 5. Knap: Tjek ind.">
+                <div class="screen" aria-hidden="true">
+                  <div class="isl"></div>
+                  <div class="sb"><time>05:31</time><span class="ic"><svg class="i1"><use href="#i-sig"/></svg><svg class="i2"><use href="#i-wifi"/></svg><svg class="i3"><use href="#i-bat"/></svg></span></div>
+                  <div class="sc" style="gap:1.1em">
+                    <div class="k"><i class="dt"></i>Sind</div>
+                    <div class="tt">Mind-check</div>
+                    <div style="font-size:.92em;color:var(--dim);line-height:1.4">60 sekunder. Hvordan har hovedet det i dag?</div>
+                    <div class="scale"><div class="row"><span style="font-size:.88em">Energi</span><span class="mn" style="font-size:.85em">3/5</span></div><div class="segs"><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i></div></div>
+                    <div class="scale"><div class="row"><span style="font-size:.88em">Stress</span><span class="mn" style="font-size:.85em">2/5</span></div><div class="segs"><i class="f"></i><i class="f"></i><i></i><i></i><i></i></div></div>
+                    <div class="scale"><div class="row"><span style="font-size:.88em">Fokus</span><span class="mn" style="font-size:.85em">4/5</span></div><div class="segs"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></div></div>
+                    <div class="pb">Tjek ind</div>
+                    <div class="row cd" style="padding:.8em 1em"><span style="font-size:.85em;color:var(--dim)">Journal · valgfri</span><span class="mn" style="font-size:.9em">→</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <figcaption class="cap">Sind · Mind-check</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- MUNK -->
+    <section class="sec munk" aria-labelledby="h-munk">
+      <span class="node" style="--dc:var(--fg)" aria-hidden="true"><b>Munk</b></span>
+      <div class="wrap">
+        <div class="comp rise" aria-hidden="true">
+          <div class="face"></div>
+          <div class="rule" style="top:26%"></div>
+          <div class="rule" style="top:74%"></div>
+          <div class="mm2">M</div>
+          <div class="mm">M</div>
+          <div class="cm"><span class="meta">Hovedcoach</span><b>Mikael Munk</b></div>
+          <div class="cm2 meta">Form-checks<br>svar &lt; 24 t</div>
+        </div>
+        <div class="rise">
+          <span class="eyebrow">Mennesket bag</span>
+          <h2 id="h-munk">Maskinen skriver udkastet. Munk skriver under.</h2>
+          <p class="lead">Du optager et sæt. AI skriver et første svar. Mikael Munk læser det, retter det og sætter sit navn under. Intet svar går ud uden ham.</p>
+          <ol class="flow">
+            <li><span>+0 t</span><b>Du optager sæt 3 i appen</b></li>
+            <li><span>+4 min</span><b>AI udkaster et svar</b></li>
+            <li><span>+6 t</span><b>Munk redigerer og skriver under</b></li>
+            <li><span>Maks</span><b>24 timer, hver gang</b></li>
+          </ol>
+        </div>
+        <figure class="ph">
+          <div class="phone" style="--pw:262px;--dc:var(--body)" role="img" aria-label="App-skærm, form-check svar på back squat sæt 3: Knæene falder ind i bunden. Tænk: skub gulvet fra hinanden. Underskrevet Munk, svaret på 6 timer.">
+            <div class="screen" aria-hidden="true">
+              <div class="isl"></div>
+              <div class="sb"><time>05:31</time><span class="ic"><svg class="i1"><use href="#i-sig"/></svg><svg class="i2"><use href="#i-wifi"/></svg><svg class="i3"><use href="#i-bat"/></svg></span></div>
+              <div class="sc">
+                <div class="hd"><svg><use href="#i-back"/></svg><span class="k">Form-check</span><svg><use href="#i-more"/></svg></div>
+                <div class="mn" style="font-size:.8em;color:var(--dim)">Form-check · Back squat · sæt 3</div>
+                <div class="vid">
+                  <svg viewBox="0 0 160 132">
+                    <g stroke="#EEF0F3" stroke-opacity=".08"><line x1="0" x2="160" y1="112" y2="112"/></g>
+                    <g fill="none" stroke="#EEF0F3" stroke-opacity=".7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="40" x2="120" y1="38" y2="38" stroke-width="3"/>
+                      <circle cx="80" cy="30" r="7"/>
+                      <path d="M80 38 L78 66 L60 80 L66 110 M78 66 L98 80 L92 110"/>
+                    </g>
+                    <circle cx="60" cy="80" r="6" fill="none" stroke="#FF9C41" stroke-width="1.6"/>
+                    <circle cx="98" cy="80" r="6" fill="none" stroke="#FF9C41" stroke-width="1.6"/>
+                    <path d="M66 82 L70 86 M92 82 L88 86" stroke="#FF9C41" stroke-width="1.6" stroke-linecap="round"/>
+                    <circle cx="80" cy="66" r="13" fill="rgba(7,8,10,.55)" stroke="#EEF0F3" stroke-opacity=".6"/>
+                    <path d="M77 60 L86 66 L77 72 Z" fill="#EEF0F3"/>
+                  </svg>
+                  <span class="chip ts" style="background:rgba(7,8,10,.7)">0:04 · bund</span>
+                </div>
+                <div class="bub">Knæene falder ind i bunden. Tænk: skub gulvet fra hinanden.</div>
+                <div class="sig-row">
+                  <div>
+                    <svg viewBox="0 0 80 26"><path d="M3 18c6-12 9-14 10-8s-2 10 3 4 6-12 8-6-1 9 4 5 5-7 8-4 3 4 8 1 10-3 14-2" fill="none" stroke="#EEF0F3" stroke-width="1.4" stroke-linecap="round"/></svg>
+                    <div class="mn" style="font-size:.78em;margin-top:.2em">Munk · svaret på 6 t</div>
+                  </div>
+                  <span class="chip">Redigeret</span>
+                </div>
+                <div class="disc">AI-udkast, rettet og underskrevet af din coach.</div>
+              </div>
+              <div class="tb" style="--dc:var(--body)"><span><svg><use href="#t-day"/></svg>I dag</span><span class="on"><svg><use href="#t-train"/></svg>Træn</span><span><svg><use href="#t-food"/></svg>Mad</span><span><svg><use href="#t-mind"/></svg>Sind</span><span><svg><use href="#t-crew"/></svg>Crew</span></div>
+              <div class="hi"></div>
+            </div>
+          </div>
+          <figcaption class="cap">Træn · Form-check svar</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- CREW -->
+    <section class="sec" style="padding-top:40px" aria-labelledby="h-crew">
+      <span class="node" style="--dc:var(--body)" aria-hidden="true"><b>Reps</b></span>
+      <div class="wrap">
+        <div class="crew-head rise">
+          <h2 id="h-crew">Du stiger ved at møde op. Ikke ved at betale.</h2>
+          <p class="lead">Reps kommer fra sessions, form-checks, PR'er og hjælp til andre. Når du når Beast, åbner Coach School, hvor du lærer at svare andre løftere.</p>
+        </div>
+
+        <div class="graph rise">
+          <div class="gbox">
+            <svg viewBox="0 0 1000 400" aria-hidden="true">
+              <defs>
+                <linearGradient id="cg" x1="60" x2="320" y1="0" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF9C41" stop-opacity=".3"/><stop offset="1" stop-color="#FF9C41"/></linearGradient>
+              </defs>
+              <g stroke="#EEF0F3" stroke-opacity=".08">
+                <line x1="60" x2="980" y1="340" y2="340"/><line x1="60" x2="980" y1="260" y2="260"/><line x1="60" x2="980" y1="170" y2="170"/><line x1="60" x2="980" y1="70" y2="70"/>
+                <line x1="60" x2="60" y1="40" y2="380" stroke-opacity=".16"/>
+              </g>
+              <g stroke="#EEF0F3" stroke-opacity=".2" stroke-dasharray="2 5">
+                <line x1="287.2" x2="287.2" y1="40" y2="380"/>
+                <line x1="568.1" x2="568.1" y1="40" y2="380"/>
+                <line x1="940.0" x2="940.0" y1="40" y2="380"/>
+              </g>
+              <path d="M60.0 340.0 L287.2 340.0 L287.2 260.0 L568.1 260.0 L568.1 170.0 L940.0 170.0 L940.0 70.0 L980.0 70.0" fill="none" stroke="#EEF0F3" stroke-opacity=".28" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M313.0 260.0 L568.1 260.0 L568.1 170.0" fill="none" stroke="#FF9C41" stroke-opacity=".55" stroke-width="2" stroke-dasharray="5 6"/>
+              <path d="M60.0 340.0 L287.2 340.0 L287.2 260.0 L313.0 260.0" fill="none" stroke="url(#cg)" stroke-width="3" stroke-linejoin="round"/>
+              <circle class="pulse" cx="313.0" cy="260" r="7" fill="none" stroke="#FF9C41" stroke-width="1.5"/>
+              <circle cx="313.0" cy="260" r="6" fill="#FF9C41"/>
+              <circle cx="568.1" cy="170" r="5" fill="#07080A" stroke="#EEF0F3" stroke-opacity=".7" stroke-width="1.5"/>
+            </svg>
+            <span class="gl t" style="left:6%;top:85%">Lifter<small>0 reps</small></span>
+            <span class="gl t" style="left:29.5%;top:65%">Athlete<small>1.000 reps</small></span>
+            <span class="gl t" style="left:57.6%;top:42.5%">Beast<small>5.000 reps</small></span>
+            <span class="gl t" style="left:auto;right:6%;top:17.5%;text-align:right">Legend<small>15.000 reps</small></span>
+            <span class="gl me" style="left:31.30%;top:65%">Du er her</span>
+            <span class="gl cs" style="left:56.81%;top:30%">Coach School åbner</span>
+            <span class="gl x" style="left:6%">0</span>
+            <span class="gl x xm" style="left:28.72%">1.000</span>
+            <span class="gl x" style="left:56.81%">5.000</span>
+            <span class="gl x" style="left:94.00%">15.000 reps</span>
+          </div>
+        </div>
+
+        <div class="you rise">
+          <b style="font-weight:500">Athlete · 1.240 / 5.000 reps</b>
+          <div class="bar" aria-hidden="true"><i></i></div>
+          <span>Beast om ca. 7 mdr.</span>
+        </div>
+
+        <div class="tiers">
+          <div class="tier"><div class="meta">Start</div><h3>Lifter</h3><p>Du logger pas og sender dine første form-checks.</p></div>
+          <div class="tier on"><div class="meta">Stabil</div><h3>Athlete</h3><p>Du har rytmen. Motoren kender dit bånd.</p></div>
+          <div class="tier"><div class="meta">Coach School</div><h3>Beast</h3><p>Du lærer at svare andre, med Munk bag dig.</p></div>
+          <div class="tier"><div class="meta">Få</div><h3>Legend</h3><p>Du bærer crewet. Andre kender dit navn.</p></div>
+        </div>
+        <p class="meta" style="margin-top:28px;color:var(--faint)">Grænser og tider er eksempeldata</p>
+      </div>
+    </section>
+
+    <!-- VOICES -->
+    <section class="sec" style="padding-top:40px" aria-labelledby="h-voices">
+      <span class="node" style="--dc:var(--food)" aria-hidden="true"><b>Crew</b></span>
+      <div class="wrap">
+        <div class="voices-head rise">
+          <h2 id="h-voices">Fra crewet.</h2>
+          <span class="meta" style="color:var(--faint)">Eksempelcitater</span>
+        </div>
+        <div class="qs">
+          <figure class="q q1 rise" style="--dc:var(--heart)">
+            <svg viewBox="0 0 74 18" aria-hidden="true"><path d="M0 9h20l3-5 4 11 3-6h44"/></svg>
+            <blockquote>Første gang motoren tog 15 kilo af, var jeg sur. To uger senere satte jeg PR.</blockquote>
+            <figcaption><b>Rasmus</b><span>Athlete · siden marts 2026</span></figcaption>
+          </figure>
+          <figure class="q q2 rise" style="--dc:var(--body)">
+            <svg viewBox="0 0 74 18" aria-hidden="true"><path d="M0 14h10V5h8v9h8V5h8v9h40"/></svg>
+            <blockquote>Munks svar på min squat var ni ord. De hjalp mere end et år med videoer.</blockquote>
+            <figcaption><b>Line</b><span>Beast · siden november 2025</span></figcaption>
+          </figure>
+          <figure class="q q3 rise" style="--dc:var(--food)">
+            <svg viewBox="0 0 74 18" aria-hidden="true"><path d="M0 9c9-9 18-9 27 0s18 9 27 0 14-6 20-3"/></svg>
+            <blockquote>Skyr, rugbrød, laks. Jeg har aldrig spist så enkelt og løftet så tungt.</blockquote>
+            <figcaption><b>Jonas</b><span>Lifter · siden juni 2026</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCESS -->
+    <section class="sec" id="adgang" style="padding-top:40px" aria-labelledby="h-access">
+      <span class="node" style="--dc:var(--mind)" aria-hidden="true"><b>Adgang</b></span>
+      <div class="wrap">
+        <div class="access-box rise">
+          <svg class="conv" viewBox="0 0 1000 90" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 6 C500 6 700 45 1000 45" stroke="#FF9C41"/>
+            <path d="M0 32 C500 32 700 45 1000 45" stroke="#45C487"/>
+            <path d="M0 58 C500 58 700 45 1000 45" stroke="#F2545B"/>
+            <path d="M0 84 C500 84 700 45 1000 45" stroke="#5B9DF5"/>
+          </svg>
+          <div>
+            <h2 id="h-access">Få adgang.</h2>
+            <p class="lead">Invite-only. Pladser åbnes i små hold.</p>
+          </div>
+          <form id="wl" action="#" method="post" novalidate>
+            <label for="email">Din email</label>
+            <div class="frow">
+              <input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="navn@eksempel.dk" required aria-describedby="wl-note wl-status">
+              <button class="btn" type="submit">Skriv mig op</button>
+            </div>
+            <p class="fnote" id="wl-note">Vi skriver kun, når der er en plads til dig. Ingen nyhedsbreve.</p>
+            <p class="status" id="wl-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="sec faq" style="padding-top:40px" aria-labelledby="h-faq">
+      <span class="node" style="--dc:var(--dim)" aria-hidden="true"><b>FAQ</b></span>
+      <div class="wrap">
+        <h2 id="h-faq" class="rise">Spørgsmål.</h2>
+        <div>
+          <details>
+            <summary>Hvad koster det?<i aria-hidden="true"></i></summary>
+            <p>Der er ingen offentlig pris endnu. Du hører den, før du siger ja til en plads.</p>
+          </details>
+          <details>
+            <summary>Hvilke ure virker med motoren?<i aria-hidden="true"></i></summary>
+            <p>WHOOP, Oura, Polar og Apple Watch. Apple Watch kobles på via iPhone-appen.</p>
+          </details>
+          <details>
+            <summary>Kan jeg sige nej til et omskrevet pas?<i aria-hidden="true"></i></summary>
+            <p>Ja. Du ser altid, hvad motoren ændrede og hvorfor, og du kan vælge den oprindelige plan.</p>
+          </details>
+          <details>
+            <summary>Er HRV en diagnose?<i aria-hidden="true"></i></summary>
+            <p>Nej. HRV er et restitutions-signal, ikke en diagnose. Motoren bruger det til at dosere træning.</p>
+          </details>
+          <details>
+            <summary>Hvem svarer på mine form-checks?<i aria-hidden="true"></i></summary>
+            <p>AI skriver et udkast. Mikael Munk redigerer og skriver under inden for 24 timer.</p>
+          </details>
+          <details>
+            <summary>Hvorfor er det invite-only?<i aria-hidden="true"></i></summary>
+            <p>Fordi Munk selv skriver under på svarene. Derfor åbner vi i små hold.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div>
+        <a class="logo" href="#top">MakeIt <span>// HQ</span></a>
+        <p class="slogan">Made for those who lift.</p>
+      </div>
+      <nav class="flinks" aria-label="Sidefod">
+        <a href="#privatliv">Privatliv</a>
+        <a href="#vilkaar">Vilkår</a>
+        <a href="mailto:munk@nowmakeit.eu">munk@nowmakeit.eu</a>
+      </nav>
+      <div class="fine">
+        <span class="meta" style="color:var(--faint)">Tal, skærme og citater er eksempeldata</span>
+        <span class="meta" style="color:var(--faint)">© 2026 MakeIt // HQ</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var f=document.getElementById('wl');
+  if(!f)return;
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var i=document.getElementById('email'),s=document.getElementById('wl-status');
+    var v=(i.value||'').trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+      i.setAttribute('aria-invalid','true');
+      s.textContent='Skriv en gyldig email, fx navn@eksempel.dk.';
+      i.focus();
+      return;
+    }
+    i.removeAttribute('aria-invalid');
+    s.textContent='Du står på listen. Vi skriver, når dit hold åbner.';
+    f.reset();
+  });
+})();
+</script>
