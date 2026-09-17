@@ -884,6 +884,6 @@ Findes allerede i `AdaptationCard`, så der er ikke noget motor-spor. F2 viser k
 
 - [x] F1 Fundament (2026-09-17, branch `claude/kalk-redesign`)
 - [x] F2 Landing (#102, bag `LANDING_VARIANT`; Preview-env sat 2026-09-17)
-- [ ] F3 App-kerne
+- [x] F3 App-kerne (2026-09-17)
 - [ ] F4 App-flader
 - [ ] F5 Assets (Tom)

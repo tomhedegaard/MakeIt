@@ -838,12 +838,12 @@ Run. Expected: FAIL på `maximumScale` og eventuelle literals.
 
 ## Status
 
-- [ ] Task 1 Card, SectionHeader, PageTitle
-- [ ] Task 2 EmptyState, Stat, Field
-- [ ] Task 3 Tema på app og session
-- [ ] Task 4 Fem faner og mobilmenu
-- [ ] Task 5 Behold original på dashboardet
-- [ ] Task 6 Morgenens signal
-- [ ] Task 7 I dag først
-- [ ] Task 8 Zoom og literals
-- [ ] Task 9 Verifikation (kræver Toms login i browser-panelet)
+- [x] Task 1 Card, SectionHeader, PageTitle
+- [x] Task 2 EmptyState, Stat, Field
+- [x] Task 3 Tema på app og session
+- [x] Task 4 Fem faner og mobilmenu
+- [x] Task 5 Behold original på dashboardet
+- [x] Task 6 Morgenens signal
+- [x] Task 7 I dag først
+- [x] Task 8 Zoom og literals
+- [x] Task 9 Verifikation (2026-09-17, Tom loggede ind; demo på 390/1024/1440)
