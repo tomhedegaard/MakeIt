@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import Card from "./Card";
 import SectionHeader from "./SectionHeader";
 import PageTitle from "./PageTitle";
+import PageHeader from "@/components/app/PageHeader";
 
 describe("Card", () => {
   it("is a quiet token surface by default", () => {
@@ -53,5 +54,14 @@ describe("PageTitle", () => {
     expect(page).toContain('data-size="page"');
     expect(compact).toContain('data-size="compact"');
     expect(page).toContain("font-display");
+  });
+});
+
+describe("PageHeader", () => {
+  it("PageHeader renders through PageTitle's single scale", () => {
+    const html = renderToStaticMarkup(<PageHeader eyebrow="Træn" title="Øvelser" subtitle="Alle løft" />);
+    expect(html).toContain('data-size="page"');
+    expect(html).toContain("Alle løft");
+    expect(html).not.toContain("4.5rem");
   });
 });
