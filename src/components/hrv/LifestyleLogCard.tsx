@@ -281,7 +281,7 @@ export default function LifestyleLogCard({
             disabled={pending}
             onChange={(e) => changeSleep(e.target.value)}
             aria-label={t("sleepAria")}
-            className="w-24 disabled:opacity-50"
+            className="input w-24 disabled:opacity-50"
           />
           <span className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
             {t("hours")}

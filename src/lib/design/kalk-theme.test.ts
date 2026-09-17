@@ -89,7 +89,10 @@ describe("Kalk theme gate (spec §3, §8)", () => {
   });
 
   it("gives inputs 16px on touch so iOS does not zoom (enables removing maximumScale)", () => {
-    expect(css).toMatch(/@media \(pointer: coarse\)\s*\{[\s\S]*?\.input,\s*\.field\s*\{[\s\S]*?font-size:\s*16px/);
+    // The query also lists a max-width fallback for phone viewports that
+    // do not report a coarse pointer (desktop responsive mode, webviews).
+    expect(css).toMatch(/@media \(pointer: coarse\)[^{]*\{[\s\S]*?\.input,\s*\.field\s*\{[\s\S]*?font-size:\s*16px/);
+    expect(css).toMatch(/@media \(pointer: coarse\), \(max-width: 40rem\)/);
   });
 
   const NEW_TOKENS = ["--scrim", "--media", "--anatomy-body", "--anatomy-edge", "--anatomy-idle", "--anatomy-accent"];

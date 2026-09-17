@@ -536,8 +536,11 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 .field::placeholder { color: var(--fg-faint); }
 
 /* iOS zooms on focus below 16px. With this, the root viewport can
- * drop maximumScale and let people pinch-zoom (WCAG 1.4.4). */
-@media (pointer: coarse) {
+ * drop maximumScale and let people pinch-zoom (WCAG 1.4.4).
+ * The width query is the belt to (pointer: coarse)'s braces: a phone
+ * viewport that does not report a coarse pointer (desktop responsive
+ * mode, some in-app webviews) gets the 16px floor too. */
+@media (pointer: coarse), (max-width: 40rem) {
   .input,
   .field { font-size: 16px; }
 }
