@@ -236,7 +236,7 @@ function makeProteinBooster(
     dayIndex,
     slot,
     kind,
-    title: "Skyr — protein-top",
+    title: "Skyr · protein-top",
     description: "Ekstra protein så dagen rammer dit mål. Skyr, ingen tilsat sukker.",
     ingredients: [{ name: "skyr", amount: scaleAmount(BOOSTER.grams, scale), unit: "g" }],
     steps: ["Hæld skyr i en skål og spis."],
@@ -257,7 +257,7 @@ function makeProteinBooster(
 
 export function fallbackPlanNotes(weekStart: string, targets: DailyMacroTargets): string {
   return (
-    `Skaleret standardplan for uge ${weekStart} — AI-udkastet nåede ikke i mål, ` +
+    `Skaleret standardplan for uge ${weekStart}. AI-udkastet nåede ikke i mål, ` +
     `så portionerne er tilpasset ${targets.kcal} kcal / ${targets.proteinG}g protein. ` +
     `MakeIt-allowlist: ingen rapsolie, intet UPF, intet tilsat sukker.`
   );
