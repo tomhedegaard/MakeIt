@@ -17,6 +17,7 @@ import FAQ from "@/components/marketing/FAQ";
 import MunkSection from "@/components/marketing/MunkSection";
 import MarketingFooter from "@/components/marketing/Footer";
 import Marquee from "@/components/Marquee";
+import RevealObserver from "@/components/RevealObserver";
 
 export default async function Home() {
   const marquee = await getTranslations("Marketing.marquee");
@@ -71,6 +72,10 @@ export default async function Home() {
         <FAQ />
       </main>
       <MarketingFooter />
+      {/* Mounted last and inside the page segment: its effect runs
+          after every [data-reveal] section here has hydrated, so the
+          class mutations never race React's hydration diff. */}
+      <RevealObserver />
     </>
   );
 }
