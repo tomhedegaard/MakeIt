@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import BreathingRing from "./BreathingRing";
 import AudioPlayer from "./AudioPlayer";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { completeMentalSessionAction } from "@/app/(app)/mind/today/actions";
 
 interface SessionRunnerProps {
@@ -76,8 +77,7 @@ export default function SessionRunner({
   if (!running) {
     return (
       <div className="rounded-2xl border hairline bg-bg-2/40 p-6 md:p-8 space-y-4">
-        <div className="eyebrow">Dagens session</div>
-        <h2 className="font-display text-2xl md:text-3xl">{title}</h2>
+        <SectionHeader eyebrow="Dagens session" title={title} />
         {subtitle ? <p className="text-fg-dim">{subtitle}</p> : null}
         <p className="text-fg-dim text-sm">
           {Math.round(durationSeconds / 60)} min · {visualPattern.replace(/_/g, " ")}
@@ -108,9 +108,8 @@ export default function SessionRunner({
       className="fixed inset-0 z-50 bg-bg flex flex-col"
     >
       <div className="flex items-center justify-between p-6 border-b hairline">
-        <div>
-          <div className="eyebrow">Mind · session</div>
-          <h2 className="font-display text-xl">{title}</h2>
+        <div className="-mb-4">
+          <SectionHeader eyebrow="Mind · session" title={title} />
         </div>
         <button
           type="button"

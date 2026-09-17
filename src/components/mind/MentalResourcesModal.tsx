@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { escalateMentalSafetyAction } from "@/app/(app)/mind/journal/escalate-actions";
 
 /**
@@ -82,15 +83,7 @@ function MentalResourcesDialog({ onClose }: { onClose: () => void }) {
       <div className="max-w-lg w-full rounded-2xl border hairline bg-bg-2 p-8 space-y-6">
         {mode === "resources" ? (
           <>
-            <div>
-              <div className="eyebrow mb-3">{t("eyebrow")}</div>
-              <h2
-                id="mental-resources-title"
-                className="font-display text-2xl md:text-3xl"
-              >
-                {t("title")}
-              </h2>
-            </div>
+            <SectionHeader id="mental-resources-title" eyebrow={t("eyebrow")} title={t("title")} />
 
             <p className="text-fg-dim leading-relaxed">{t("body")}</p>
 
@@ -119,15 +112,7 @@ function MentalResourcesDialog({ onClose }: { onClose: () => void }) {
 
         {mode === "escalate" ? (
           <form action={submitEscalation} className="space-y-5">
-            <div>
-              <div className="eyebrow mb-3">{t("escalateEyebrow")}</div>
-              <h2
-                id="mental-resources-title"
-                className="font-display text-2xl md:text-3xl"
-              >
-                {t("escalateTitle")}
-              </h2>
-            </div>
+            <SectionHeader id="mental-resources-title" eyebrow={t("escalateEyebrow")} title={t("escalateTitle")} />
             <p className="text-fg-dim text-sm leading-relaxed">{t("escalateBody")}</p>
             <CrisisLines t={t} />
             <textarea
@@ -170,15 +155,11 @@ function MentalResourcesDialog({ onClose }: { onClose: () => void }) {
 
         {mode === "sent" ? (
           <>
-            <div>
-              <div className="eyebrow mb-3">{t("sentEyebrow")}</div>
-              <h2
-                id="mental-resources-title"
-                className="font-display text-2xl md:text-3xl"
-              >
-                {persisted ? t("sentTitle") : t("sentDemoTitle")}
-              </h2>
-            </div>
+            <SectionHeader
+              id="mental-resources-title"
+              eyebrow={t("sentEyebrow")}
+              title={persisted ? t("sentTitle") : t("sentDemoTitle")}
+            />
             <p className="text-fg-dim leading-relaxed">
               {persisted ? t("sentBody") : t("sentDemoBody")}
             </p>
