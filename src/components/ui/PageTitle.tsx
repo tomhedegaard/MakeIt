@@ -16,8 +16,8 @@ export default function PageTitle({
   className?: string;
 }) {
   return (
-    <header data-size={size} className={cn("flex items-end justify-between gap-4", className)}>
-      <div className="min-w-0">
+    <header data-size={size} className={cn("flex flex-wrap items-end justify-between gap-4", className)}>
+      <div className="min-w-0 flex-1 basis-48">
         {kicker ? <p className="eyebrow eyebrow-domain mb-2">{kicker}</p> : null}
         <h1
           className={cn(

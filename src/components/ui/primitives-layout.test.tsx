@@ -55,6 +55,15 @@ describe("PageTitle", () => {
     expect(compact).toContain('data-size="compact"');
     expect(page).toContain("font-display");
   });
+
+  it("wraps so a wide action drops below the title instead of squeezing it (spec §6)", () => {
+    const html = renderToStaticMarkup(
+      <PageTitle title="Reps" action={<div className="min-w-[220px]">Saldo</div>} />,
+    );
+    expect(html).toMatch(/class="[^"]*flex-wrap[^"]*items-end[^"]*justify-between[^"]*"/);
+    expect(html).toMatch(/class="[^"]*min-w-0[^"]*flex-1[^"]*basis-48[^"]*"/);
+    expect(html).toContain('class="shrink-0"');
+  });
 });
 
 describe("PageHeader", () => {
