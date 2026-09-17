@@ -88,6 +88,16 @@ Skalaen har seks trin og er identisk med reviewets forslag: Display, Title, Head
 - **Rack-grid:** en tynd kg-lineal (`.rule`) som strukturelement mellem landingssektioner og i telefonernes skalaer. Den er et Kalk-signaturelement og må kun bruges, hvor den markerer en sektionsgrænse.
 - **Mørk blok:** højst én pr. side (Hjerte-cellen i bento eller Adgang-panelet). Den bruger Nat-tokens via `data-theme="nat"` og er aldrig en hardcodet farve.
 
+### 3.4 Øvelsesvisuals: MoveKit, aldrig tegnede figurer
+
+Tom har købt MoveKit, et bibliotek med 206 renderede 3D-øvelsesklip i `MoveKit/`. Klippene er gitignored og fylder 468 MB. 19 af dem er allerede konverteret og ligger i `public/exercise-demos/`, hvor `ExerciseDemo`, `SessionExerciseDemo` og `ExerciseHero` bruger dem via `resolveDemoAssets`.
+
+- **Brugsregel:** Kalk viser aldrig håndtegnede pindefigurer eller SVG-kroppe til øvelser. Alle øvelsesvisuals kommer fra MoveKit-loopet (`demo_asset_url`). Findes der intet klip, bruges den eksisterende fallback `AnatomyFigure`.
+- **Farve:** klippenes baggrund er en lys, varm grå (`#DFE2D3` til `#F5F7E9`), altså næsten Kalk. På lyse flader vises de på `--bg-2` med `mix-blend-mode: multiply`, så baggrunden smelter ind. På Nat-flader (`/session`) vises de som et lyst indlagt kort, som i dag. Den røde muskelmarkering er klippets egen anatomi-farve og tæller ikke som domæne- eller signalfarve.
+- **Form-check:** medlemmets **egen optagelse** er hovedsagen. MoveKit-loopet vises ved siden af som "Reference" med samme øvelse. Et MoveKit-klip må aldrig fremstå som medlemmets video.
+- **Bevægelse:** et loop afspilles kun, når det er i syne (IntersectionObserver). Det holder pause ved reduceret bevægelse og har en synlig pause-knap, når det kører længere end 5 sekunder.
+- **Kendte huller:** `front-squat` har intet klip. De 188 øvelsesudkast fra migration 0052 har metadata men ingen hostede videoer endnu, og hosting (`public/` eller Supabase Storage) er stadig en åben beslutning. MoveKit er et lukket katalog uden rig, så nye øvelser kræver en custom-render. Interaktiv 3D er et separat v2-spor (`docs/EXERCISE_3D_RESEARCH.md`).
+
 ## 4. Hvad vi tager fra A og C
 
 Hver idé er vurderet på designværdi (fortæller den produktets kerne bedre?) og pris (bryder den Kalks enhed?).
@@ -156,6 +166,7 @@ Anker-ID'er bevares: `#crew`, `#engine`, `#tiers`, `#waitlist`, `#faq`. Nye ID'e
 | D4 | H1 på dansk ("Bygget til dem der løfter.") og det engelske slogan i footeren | **Ja.** |
 | D5 | "412 aktive medlemmer" | **Fjernes.** Kalk-hero har ingen stats-bånd. |
 | D6 | Tre ægte citater med fornavn, tier og startmåned | **Tom skaffer dem.** Indtil da vises sektionen ikke i produktion (feature-flag). |
+| D9 | Hosting af de 188 MoveKit-klip (`public/` ca. 57 MB eller Supabase Storage) | **Supabase Storage** bag den eksisterende `demo_asset_url`-kontrakt. `public/` beholder de 19 bundlede til offline. |
 | D8 | Skal medlemmer kunne afvise motorens ændring (C1)? Det kræver en migration (status `declined`), en server action og en regel for, hvad motoren lærer af et nej. | **Ja, men som eget spor med CTO-agenten.** Kalk-UI'et reserverer pladsen. Landingen lover det ikke, før det er i produktion. |
 | D7 | Portræt af Munk | **Book et shoot.** Kalk klarer sig med ordmærke og monogram indtil da. |
 

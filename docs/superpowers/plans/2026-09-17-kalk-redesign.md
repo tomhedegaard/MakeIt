@@ -811,6 +811,8 @@ De næste faser får hver deres detaljerede plan, når F1 er leveret. Rammerne h
 
 **Delt:** `src/components/marketing/phone/PhoneFrame.tsx` og én fil pr. skærm (`DashboardScreen`, `SessionScreen`, `HrvScreen`, `FoodScreen`, `MindScreen`, `FormCheckScreen`, `DecisionScreen`). De skal kunne udskiftes med ægte skærmbilleder, når F5 lander.
 
+**Øvelsesvisuals (spec §3.4):** skærmene og Munk-sektionen bruger de bundlede MoveKit-loops fra `/exercise-demos/*` via `resolveDemoAssets`. Der må ikke være SVG-figurer. Loopet vises på `--bg-2` med `mix-blend-mode: multiply` og afspilles kun, når det er i syne. Et nyt, delt `DemoLoop`-komponent med IntersectionObserver, reduceret bevægelse og pause-knap bruges både her og af `ExerciseDemo` i F3. Referencen er koncept B v2, hvor pindefiguren er erstattet af `back-squat`-loopet.
+
 **Copy:** ny nøglegruppe `Marketing.kalk.*` i da og en. De gamle nøgler slettes først, når de gamle komponenter er fjernet.
 
 **Udrulning:** `src/app/page.tsx` renderer Kalk-landingen bag et build-flag, mens den gamle side lever videre. Flaget slås til efter Toms godkendelse på preview.
@@ -843,6 +845,8 @@ Hver primitiv får en render-test.
 **Dashboard:** rækkefølgen omlægges til hilsen, dagens pas, `MorningSignal` (C5, ny komponent), besked fra Munk og resten. A2-chips genbruger data fra `engine-strip.ts` og `AdaptiveReasonStrip`.
 
 **Navigation:** `MobileTabBar` får 5 faner, og den døde ulæst-badge fjernes. `AppShell` får avatar-menuen "Mig" og en HRV-indgang via `MorningSignal`. Den aktive indikator bruger `--signal`.
+
+**Øvelser:** `ExerciseDemo` og `SessionExerciseDemo` flyttes over på `DemoLoop` fra F2. På Kalk-flader bruges multiply-blend. Form-check-skærmen viser medlemmets optagelse først og MoveKit-referencen bagefter (spec §3.4).
 
 **Tema:** `(app)/layout.tsx` wrapper i `ThemeScope theme="kalk"`. `session/[id]/page.tsx` wrapper i `ThemeScope theme="nat"`. `/coach` røres ikke.
 
