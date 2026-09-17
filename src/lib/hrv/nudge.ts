@@ -80,6 +80,6 @@ export function nudgeCopy(
   return {
     eyebrow: "HRV LAV I DAG",
     body:
-      "Din readiness er under dit normalområde. Overvej at gå let — drop top-sættene eller stop tidligt hvis kroppen siger fra.",
+      "Din readiness er under dit normalområde. Overvej at gå let: drop top-sættene eller stop tidligt hvis kroppen siger fra.",
   };
 }

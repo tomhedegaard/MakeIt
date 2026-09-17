@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { pricing } from "@/lib/pricing";
 import { TODAY_SESSION, totalSets } from "@/lib/workout";
 import { getSession } from "@/lib/auth";
@@ -96,11 +98,8 @@ export default async function TrainPage() {
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
-      <header className="pt-2 pb-1">
-        <div className="eyebrow eyebrow-domain mb-2">{t("header.eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
-          {t("header.title")}
-        </h1>
+      <div className="pt-2 pb-1">
+        <PageTitle kicker={t("header.eyebrow")} title={t("header.title")} />
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
           <span data-identity="coach" className="eyebrow">{t("header.coachChip")}</span>
           <span data-identity="motor" className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
@@ -110,7 +109,7 @@ export default async function TrainPage() {
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
           {t("header.subtitle")}
         </p>
-      </header>
+      </div>
 
       {/* Week strip — horizontal scroll on mobile */}
       <section
@@ -217,10 +216,7 @@ export default async function TrainPage() {
         className="surface-2 rounded-2xl overflow-hidden"
       >
         <div className="px-5 pt-5 pb-4">
-          <div className="eyebrow mb-3">{t("today.emptyEyebrow")}</div>
-          <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
-            {t("today.emptyTitle")}
-          </h2>
+          <SectionHeader eyebrow={t("today.emptyEyebrow")} title={t("today.emptyTitle")} />
           <p className="text-fg-dim text-sm md:text-base">{t("today.emptyBody")}</p>
         </div>
         <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />

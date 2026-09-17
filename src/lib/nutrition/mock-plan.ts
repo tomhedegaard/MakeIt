@@ -117,7 +117,7 @@ const CATALOG: Template[] = [
     id: "m-havregroed",
     slot: "morgen",
     title: "Havregrød med blåbær og mandler",
-    description: "Langsomme kulhydrater — perfekt til tunge træningsdage.",
+    description: "Langsomme kulhydrater: perfekt til tunge træningsdage.",
     ingredients: [
       { name: "stålskårne havregryn", amount: 60, unit: "g" },
       { name: "mælk", amount: 2, unit: "dl" },
@@ -328,7 +328,7 @@ const CATALOG: Template[] = [
     id: "f-fiskefrikadeller",
     slot: "frokost",
     title: "Fiskefrikadeller med ærtepuré og rugbrød",
-    description: "Husmandskost gjort moderne — torsk, ærter, citron, dild.",
+    description: "Husmandskost gjort moderne: torsk, ærter, citron, dild.",
     ingredients: [
       { name: "torskefilet", amount: 200, unit: "g" },
       { name: "æg", amount: 1, unit: "stk" },
@@ -619,7 +619,7 @@ const CATALOG: Template[] = [
     id: "a-kikaerte-tagine",
     slot: "aften",
     title: "Kikærte-tagine med søde kartofler",
-    description: "En times simren — fryser godt, mætter meget.",
+    description: "En times simren: fryser godt, mætter meget.",
     ingredients: [
       { name: "kogte kikærter", amount: 300, unit: "g" },
       { name: "søde kartofler", amount: 300, unit: "g" },
@@ -808,7 +808,7 @@ export function generateMockPlan(opts: {
       `Plan genereret for uge ${opts.weekStart}. ` +
       `Fisk: ${countFish(dayPicks.flat())} måltider (mål ${fishCap}). ` +
       `Portioner skaleret til ${targets.kcal} kcal / ${targets.proteinG}g protein. ` +
-      `Bygget på MakeIt-allowlist — ingen rapsolie, intet UPF, intet tilsat sukker.`,
+      `Bygget på MakeIt-allowlist: ingen rapsolie, intet UPF, intet tilsat sukker.`,
     meals: scaleMealsToDailyTargets(meals, targets),
   };
 }

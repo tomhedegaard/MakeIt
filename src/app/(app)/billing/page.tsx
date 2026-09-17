@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { getSession } from "@/lib/auth";
 import { pricing } from "@/lib/pricing";
 import { STRIPE_ENABLED } from "@/lib/stripe";
@@ -38,12 +39,7 @@ export default async function BillingPage({
         <Container className="py-8 lg:py-12 space-y-6">
           <section className="surface-2 rounded-2xl overflow-hidden">
             <div className="px-5 py-5 flex items-center justify-between gap-4">
-              <div>
-                <div className="eyebrow mb-1">{t("crew.eyebrow")}</div>
-                <h2 className="font-display text-2xl md:text-3xl">
-                  {t("crew.title")}
-                </h2>
-              </div>
+              <SectionHeader eyebrow={t("crew.eyebrow")} title={t("crew.title")} className="mb-0" />
               <StatusPill sub={crew} t={t} />
             </div>
             {crew?.currentPeriodEnd ? (
@@ -59,12 +55,7 @@ export default async function BillingPage({
           {oneOnOne ? (
             <section className="surface-2 rounded-2xl overflow-hidden">
               <div className="px-5 py-5 flex items-center justify-between gap-4">
-                <div>
-                  <div className="eyebrow mb-1">{t("oneOnOne.eyebrow")}</div>
-                  <h2 className="font-display text-2xl md:text-3xl">
-                    {t("oneOnOne.title")}
-                  </h2>
-                </div>
+                <SectionHeader eyebrow={t("oneOnOne.eyebrow")} title={t("oneOnOne.title")} className="mb-0" />
                 <StatusPill sub={oneOnOne} t={t} />
               </div>
             </section>
@@ -109,12 +100,7 @@ export default async function BillingPage({
         {/* Crew membership */}
         <section className="surface-2 rounded-2xl overflow-hidden">
           <div className="px-5 py-5 border-b hairline flex items-center justify-between gap-4">
-            <div>
-              <div className="eyebrow mb-1">{t("crew.eyebrow")}</div>
-              <h2 className="font-display text-2xl md:text-3xl">
-                {t("crew.title")}
-              </h2>
-            </div>
+            <SectionHeader eyebrow={t("crew.eyebrow")} title={t("crew.title")} className="mb-0" />
             <StatusPill sub={crew} t={t} />
           </div>
 
@@ -125,7 +111,7 @@ export default async function BillingPage({
               value={
                 crew?.currentPeriodEnd
                   ? new Date(crew.currentPeriodEnd).toLocaleDateString("da-DK")
-                  : "—"
+                  : "-"
               }
             />
           </div>
@@ -152,12 +138,7 @@ export default async function BillingPage({
         {/* 1:1 add-on */}
         <section className="surface-2 rounded-2xl overflow-hidden">
           <div className="px-5 py-5 border-b hairline flex items-center justify-between gap-4">
-            <div>
-              <div className="eyebrow mb-1">{t("oneOnOne.eyebrow")}</div>
-              <h2 className="font-display text-2xl md:text-3xl">
-                {t("oneOnOne.title")}
-              </h2>
-            </div>
+            <SectionHeader eyebrow={t("oneOnOne.eyebrow")} title={t("oneOnOne.title")} className="mb-0" />
             <StatusPill sub={oneOnOne} t={t} />
           </div>
 

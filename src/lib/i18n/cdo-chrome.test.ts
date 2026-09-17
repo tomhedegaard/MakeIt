@@ -123,8 +123,8 @@ describe("CDO DA/EN chrome — Mind-check", () => {
   it("keeps Mind.check title/slider keys in lockstep", () => {
     const da = daMind.check as Record<string, string>;
     const en = enMind.check as Record<string, string>;
-    expect(da.titleNew).toBe("Mind-check — 60 sek.");
-    expect(en.titleNew).toBe("Mind-check — 60 sec.");
+    expect(da.titleNew).toBe("Mind-check · 60 sek.");
+    expect(en.titleNew).toBe("Mind-check · 60 sec.");
     expect(da.subtitleNew).toMatch(/^Tre sliders/);
     expect(en.subtitleNew).toMatch(/^Three sliders/);
     expect(da.energy).toBe("Energi");
@@ -151,7 +151,7 @@ describe("CDO DA/EN chrome — Mind-check", () => {
     expect(page).toContain('getTranslations("Mind.graph")');
     expect(page).toContain("tGraph(");
     const graphSrc = read("src/components/mind/MentalGraph.tsx");
-    expect(graphSrc).not.toContain("Mental graf — sidste 30 dage");
+    expect(graphSrc).not.toContain("Mental graf · sidste 30 dage");
     expect(graphSrc).toContain("copy.title");
   });
 

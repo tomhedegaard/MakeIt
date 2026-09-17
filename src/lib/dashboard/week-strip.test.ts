@@ -4,6 +4,7 @@ import { pickDashboardTodaySession } from "./pick-today-session";
 import {
   buildWeekStrip,
   compressSessionLabel,
+  normalizeDayLabel,
   type WeekStripSession,
 } from "./week-strip";
 
@@ -133,5 +134,62 @@ describe("compressSessionLabel", () => {
   it("keeps the lift name after the em-dash", () => {
     expect(compressSessionLabel("Dag A — Squat", "Squat fokus")).toBe("Squat");
     expect(compressSessionLabel("Dag B — Bench", "")).toBe("Bench");
+  });
+
+  it("accepts en-dash, interpunct and plain hyphen as separator", () => {
+    expect(compressSessionLabel("Dag A – Squat", "")).toBe("Squat");
+    expect(compressSessionLabel("Dag A · Squat", "")).toBe("Squat");
+    expect(compressSessionLabel("Dag A - Squat", "")).toBe("Squat");
+  });
+
+  it("falls back to the first word when there is no separator", () => {
+    expect(compressSessionLabel("Squat fokus", "")).toBe("Squat");
+    expect(compressSessionLabel(null, "Bench dag")).toBe("Bench");
+  });
+
+  it("does not split on a hyphen inside a compound word", () => {
+    expect(compressSessionLabel("Dødløft-teknik", "")).toBe("Dødløft-tekn");
+  });
+
+  it("prefers the em-dash when several separators are present", () => {
+    expect(compressSessionLabel("Dag A · nej — Squat", "")).toBe("Squat");
+  });
+
+  it("returns a plain hyphen when nothing is left", () => {
+    expect(compressSessionLabel(null, "")).toBe("-");
+  });
+});
+
+describe("normalizeDayLabel", () => {
+  it("swaps a stored em or en dash separator for ·", () => {
+    expect(normalizeDayLabel("Dag A — Squat")).toBe("Dag A · Squat");
+    expect(normalizeDayLabel("Dag A – Squat")).toBe("Dag A · Squat");
+    expect(normalizeDayLabel("Dag A—Squat")).toBe("Dag A · Squat");
+    expect(normalizeDayLabel("Dag A - Squat")).toBe("Dag A · Squat");
+  });
+
+  it("leaves a label that already uses · alone", () => {
+    expect(normalizeDayLabel("Dag A · Squat")).toBe("Dag A · Squat");
+    expect(normalizeDayLabel("Squat fokus")).toBe("Squat fokus");
+  });
+
+  it("does not split a compound word on its hyphen", () => {
+    expect(normalizeDayLabel("Dødløft-teknik")).toBe("Dødløft-teknik");
+  });
+
+  it("drops a leading or trailing separator instead of stranding it", () => {
+    expect(normalizeDayLabel("— Squat")).toBe("Squat");
+    expect(normalizeDayLabel("Dag A —")).toBe("Dag A");
+  });
+
+  it("normalises every separator in the label", () => {
+    expect(normalizeDayLabel("Dag A — Squat – tungt")).toBe(
+      "Dag A · Squat · tungt",
+    );
+  });
+
+  it("trims and survives an empty label", () => {
+    expect(normalizeDayLabel("  Dag A — Squat  ")).toBe("Dag A · Squat");
+    expect(normalizeDayLabel("")).toBe("");
   });
 });

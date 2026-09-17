@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import { getMyBuddy } from "@/lib/data/buddy";
 
 /**
@@ -31,15 +32,12 @@ export default async function BuddyWhyPage() {
   if (!buddy || !buddy.pairingReason) {
     return (
       <Container className="py-6 lg:py-12 space-y-6">
-        <header className="pt-2">
-          <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-            {t("whyTitleEmpty")}
-          </h1>
+        <div className="pt-2">
+          <PageTitle size="compact" kicker={t("eyebrow")} title={t("whyTitleEmpty")} />
           <p className="mt-2 text-fg-dim text-sm">
             {t("whyEmptyBody")}
           </p>
-        </header>
+        </div>
         <Link href="/buddy" className="btn">
           {t("backToBuddy")}
         </Link>
@@ -55,13 +53,14 @@ export default async function BuddyWhyPage() {
 
   return (
     <Container className="py-6 lg:py-12 space-y-6">
-      <header className="pt-2">
-        <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {t("whyTitle", { handle: buddy.buddyHandle })}
-        </h1>
+      <div className="pt-2">
+        <PageTitle
+          size="compact"
+          kicker={t("eyebrow")}
+          title={t("whyTitle", { handle: buddy.buddyHandle })}
+        />
         <p className="mt-2 text-fg-dim text-sm">{t("whyIntro")}</p>
-      </header>
+      </div>
 
       <ol className="space-y-3 list-none">
         {factors.map((code, i) => (

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import {
   loadLessonsForMember,
   type LessonForList,
@@ -36,7 +37,7 @@ function groupByTier(
 }
 
 function fmtDuration(seconds: number | null): string {
-  if (!seconds) return "—";
+  if (!seconds) return "-";
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
   return `${m}m ${s.toString().padStart(2, "0")}s`;
@@ -49,13 +50,10 @@ export default async function CoachSchoolTreePage() {
 
   return (
     <Container className="py-6 lg:py-12 space-y-6">
-      <header className="pt-2">
-        <div className="eyebrow mb-2">{t("tree.eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {t("tree.title")}
-        </h1>
+      <div className="pt-2">
+        <PageTitle size="compact" kicker={t("tree.eyebrow")} title={t("tree.title")} />
         <p className="mt-2 text-fg-dim text-sm">{t("tree.subtitle")}</p>
-      </header>
+      </div>
 
       {lessons.length === 0 ? (
         <div className="surface-2 rounded-lg p-6 text-center">

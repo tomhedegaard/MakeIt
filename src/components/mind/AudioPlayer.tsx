@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 /**
  * Minimal HTML5 audio player for mental sessions (B-layer voice-agnostic).
@@ -17,6 +18,7 @@ import { useEffect, useRef, useState } from "react";
  * to be the always-available default.
  */
 export default function AudioPlayer({ src, durationSeconds }: { src: string; durationSeconds: number }) {
+  const t = useTranslations("Mind.audio");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -87,7 +89,7 @@ export default function AudioPlayer({ src, durationSeconds }: { src: string; dur
       <button
         type="button"
         onClick={toggle}
-        aria-label={playing ? "Pause audio" : "Afspil audio"}
+        aria-label={playing ? t("pause") : t("play")}
         className="size-9 rounded-full bg-fg text-bg flex items-center justify-center shrink-0 hover:opacity-90 transition-opacity"
       >
         {playing ? (
@@ -109,7 +111,7 @@ export default function AudioPlayer({ src, durationSeconds }: { src: string; dur
         step={0.1}
         value={currentTime}
         onChange={scrub}
-        aria-label="Søg i audio"
+        aria-label={t("seek")}
         className="flex-1 accent-fg"
       />
 

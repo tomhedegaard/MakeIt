@@ -11,7 +11,7 @@ describe("HrvTrendsEmpty", () => {
         eyebrow: "Restitution",
         title: "Ingen målinger endnu",
         body: "Forbind dit wearable, så nattens HRV synker automatisk.",
-        disclaimer: "HRV er et restitutions-signal — ikke en diagnose.",
+        disclaimer: "HRV er et restitutions-signal, ikke en diagnose.",
         cta: createElement("button", { type: "button" }, "Forbind dit wearable"),
       }),
     );

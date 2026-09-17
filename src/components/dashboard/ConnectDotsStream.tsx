@@ -4,6 +4,7 @@ import { useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
 import MotorGlyph from "@/components/adaptive/MotorGlyph";
 import DomainMark, { type Domain } from "@/components/brand/DomainMark";
+import SectionHeader from "@/components/ui/SectionHeader";
 import type {
   InsightCardId,
   InsightCardModel,
@@ -116,10 +117,7 @@ export default function ConnectDotsStream({
   return (
     <section data-adapt-dots="" aria-label={copy.title} className="space-y-3">
       <div>
-        <div className="eyebrow mb-1">{copy.eyebrow}</div>
-        <h2 className="font-display text-2xl md:text-3xl leading-none">
-          {copy.title}
-        </h2>
+        <SectionHeader eyebrow={copy.eyebrow} title={copy.title} />
         <p data-engine-gloss="" className="mt-2 text-sm text-fg-dim leading-relaxed max-w-md">
           {copy.gloss}
         </p>

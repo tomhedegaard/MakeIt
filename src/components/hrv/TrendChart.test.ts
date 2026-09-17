@@ -1,6 +1,17 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("next-intl", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("next-intl")>();
+  const { default: messages } = await import("../../../messages/da");
+  return {
+    ...actual,
+    useLocale: () => "da",
+    useTranslations: (namespace?: string) =>
+      actual.createTranslator({ locale: "da", messages, namespace: namespace as never }),
+  };
+});
 
 import TrendChart from "./TrendChart";
 import { demoEmptySeries, demoSteadySeries } from "@/lib/hrv/demo-series";
@@ -27,5 +38,6 @@ describe("TrendChart", () => {
     expect(html).not.toContain('r="2.5"');
     expect(html).not.toContain('r="3"');
     expect(html).toContain("stroke-dasharray");
+    expect(html).toContain("<title id=\"trendchart-title\">HRV-trend</title>");
   });
 });

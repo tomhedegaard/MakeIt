@@ -1,21 +1,21 @@
 {
-  "metaTitle": "Sign in — {product}",
+  "metaTitle": "Sign in · {product}",
   "errors": {
-    "1": "Something went wrong — try again",
+    "1": "Something went wrong. Try again",
     "missing": "Email is required",
     "invite": "Invalid invite code",
     "need_invite": "New accounts need a valid invite code",
-    "otp": "Could not send email — try again",
+    "otp": "Could not send email. Try again",
     "pw_short": "Password must be at least 8 characters",
-    "exists": "Email is already registered — sign in instead",
-    "signup": "Could not create account — try again",
+    "exists": "Email is already registered. Sign in instead",
+    "signup": "Could not create account. Try again",
     "creds": "Wrong email or password",
-    "signin": "Could not sign in — try again",
-    "oauth": "OAuth flow failed — try again",
+    "signin": "Could not sign in. Try again",
+    "oauth": "OAuth flow failed. Try again",
     "provider": "Unknown provider",
     "callback": "Login link expired or invalid",
     "disabled": "Backend not connected",
-    "fallback": "Something went wrong — try again"
+    "fallback": "Something went wrong. Try again"
   },
   "beta": "Closed Beta · Invite only",
   "headline": {
@@ -30,7 +30,7 @@
   "mock": {
     "intro": "Enter your invite code to get access. Don't have one? Write to ",
     "inviteCodeLabel": "Invite code",
-    "invalidCode": "Invalid code — try again",
+    "invalidCode": "Invalid code. Try again",
     "submit": "Get access",
     "testCodesLabel": "Test codes: "
   },

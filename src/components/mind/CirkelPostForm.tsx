@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { postToCirkelAction } from "@/app/(app)/mind/cirkler/actions";
 
 export default function CirkelPostForm({
@@ -9,6 +10,7 @@ export default function CirkelPostForm({
 }: {
   cirkelId: string;
 }) {
+  const t = useTranslations("Mind.cirkelForm");
   const [body, setBody] = useState("");
   const [share, setShare] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +38,7 @@ export default function CirkelPostForm({
       <input type="hidden" name="cirkel_id" value={cirkelId} />
       <input type="hidden" name="share_mind_check" value={share ? "1" : "0"} />
 
-      <div className="eyebrow">Ugens check-in</div>
+      <div className="eyebrow">{t("eyebrow")}</div>
 
       <textarea
         name="body"
@@ -45,7 +47,7 @@ export default function CirkelPostForm({
         maxLength={600}
         rows={4}
         required
-        placeholder="Hvordan står ugen — kort?"
+        placeholder={t("placeholder")}
         className="w-full rounded-xl bg-bg/60 border hairline px-4 py-3 text-base resize-none focus:outline-none focus:border-fg/40"
       />
       <div className="flex items-center justify-between text-xs text-fg-dim">
@@ -56,9 +58,9 @@ export default function CirkelPostForm({
             onChange={(e) => setShare(e.target.checked)}
             className="accent-fg"
           />
-          Del mit dagens mind-check signal (energi/stress/fokus) med cirklet
+          {t("shareLabel")}
         </label>
-        <span className="tabular-nums">{body.length} / 600</span>
+        <span className="tabular-nums">{t("counter", { count: body.length, max: 600 })}</span>
       </div>
 
       {error ? (
@@ -73,7 +75,7 @@ export default function CirkelPostForm({
           disabled={pending || body.trim().length === 0}
           className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
         >
-          {pending ? "Sender..." : saved ? "Sendt — opdater næste uge" : "Post i cirklet"}
+          {pending ? t("sending") : saved ? t("sent") : t("submit")}
         </button>
       </div>
     </form>

@@ -103,7 +103,7 @@ export async function GET(request: Request) {
       const next = streak + 1;
       const count = await sendPushToMemberWithClient(admin, memberId, {
         title: `1 dag fra din ${next}-dages streak`,
-        body: `Log dagens måltid før midnat — så er den i hus. +50 Reps venter.`,
+        body: `Log dagens måltid før midnat, så er den i hus. +50 Reps venter.`,
         url: "/nutrition",
         tag: "streak-nudge",
       });

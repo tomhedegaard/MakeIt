@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 /**
  * Honest empty state for `/hrv/trends` when the member has zero readings.
@@ -25,10 +26,7 @@ export default function HrvTrendsEmpty({
       className="surface-2 rounded-2xl overflow-hidden"
     >
       <div className="px-6 py-7 md:px-8 md:py-10 border-b hairline">
-        <div className="eyebrow eyebrow-domain mb-3">{eyebrow}</div>
-        <h2 className="font-display text-3xl md:text-4xl leading-[1.02] mb-3">
-          {title}
-        </h2>
+        <SectionHeader eyebrow={eyebrow} title={title} />
         <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-md">
           {body}
         </p>

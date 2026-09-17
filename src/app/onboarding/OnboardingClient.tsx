@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
 import PlanGenerationOverlay from "@/components/nutrition/PlanGenerationOverlay";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { cn } from "@/lib/utils";
 import {
   isNextRedirectError,
@@ -167,7 +168,7 @@ export default function OnboardingClient({
                 </Grid>
               </Section>
 
-              <Section eyebrow={t("step1.levelEyebrow")} title={t("step1.levelTitle")}>
+              <Section title={t("step1.levelTitle")}>
                 <Grid>
                   {LEVEL_IDS.map((id) => (
                     <Choice
@@ -184,7 +185,7 @@ export default function OnboardingClient({
                 </Grid>
               </Section>
 
-              <Section eyebrow={t("step1.freqEyebrow")} title={t("step1.freqTitle")}>
+              <Section title={t("step1.freqTitle")}>
                 <div className="grid grid-cols-3 gap-2">
                   {FREQ_OPTS.map((f) => (
                     <button
@@ -231,28 +232,28 @@ export default function OnboardingClient({
               <div className="grid grid-cols-2 gap-3">
                 <NumField
                   label={t("step2.squat")}
-                  placeholder="—"
+                  placeholder="-"
                   value={maxSquat}
                   onChange={setMaxSquat}
                   disabled={pending}
                 />
                 <NumField
                   label={t("step2.bench")}
-                  placeholder="—"
+                  placeholder="-"
                   value={maxBench}
                   onChange={setMaxBench}
                   disabled={pending}
                 />
                 <NumField
                   label={t("step2.deadlift")}
-                  placeholder="—"
+                  placeholder="-"
                   value={maxDeadlift}
                   onChange={setMaxDeadlift}
                   disabled={pending}
                 />
                 <NumField
                   label={t("step2.ohp")}
-                  placeholder="—"
+                  placeholder="-"
                   value={maxOhp}
                   onChange={setMaxOhp}
                   disabled={pending}
@@ -410,11 +411,10 @@ function Intro({ eyebrow, title, sub }: { eyebrow: string; title: string; sub: s
   );
 }
 
-function Section({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) {
+function Section({ eyebrow, title, children }: { eyebrow?: string; title: string; children: React.ReactNode }) {
   return (
     <section>
-      <div className="eyebrow mb-2">{eyebrow}</div>
-      <h2 className="font-display text-2xl md:text-3xl mb-4">{title}</h2>
+      <SectionHeader eyebrow={eyebrow} title={title} />
       {children}
     </section>
   );
@@ -523,10 +523,10 @@ function Summary({
 }) {
   const t = useTranslations("Onboarding");
   const rows = [
-    { k: t("summary.goal"),  v: goal ? t(`goals.${goal}.title`) : "—" },
-    { k: t("summary.level"), v: level ? t(`levels.${level}.title`) : "—" },
+    { k: t("summary.goal"),  v: goal ? t(`goals.${goal}.title`) : "-" },
+    { k: t("summary.level"), v: level ? t(`levels.${level}.title`) : "-" },
     { k: t("summary.freq"),  v: t("freqOption", { days: freq }) },
-    { k: t("summary.equip"), v: equip ? t(`equipment.${equip}.title`) : "—" },
+    { k: t("summary.equip"), v: equip ? t(`equipment.${equip}.title`) : "-" },
   ];
   return (
     <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">

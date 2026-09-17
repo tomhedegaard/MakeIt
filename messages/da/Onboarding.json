@@ -1,17 +1,17 @@
 {
-  "metaTitle": "Velkommen — MakeIt // HQ",
+  "metaTitle": "Velkommen · MakeIt // HQ",
   "goals": {
     "strength": {
       "title": "Strength",
-      "sub": "Squat, bench, DL — bygge til nye PR'er"
+      "sub": "Squat, bench, DL: bygge til nye PR'er"
     },
     "hypertrophy": {
       "title": "Hypertrofi",
-      "sub": "Volumen og masse — flere reps, mere arbejde"
+      "sub": "Volumen og masse: flere reps, mere arbejde"
     },
     "hybrid": {
       "title": "Powerbuilding",
-      "sub": "Begge dele — tunge top sets + accessory"
+      "sub": "Begge dele: tunge top sets + accessory"
     },
     "deadlift_spec": {
       "title": "Deadlift spec.",
@@ -25,17 +25,17 @@
     },
     "intermediate": {
       "title": "Mellem",
-      "sub": "1-3 år — kender RPE og periodisering"
+      "sub": "1-3 år. Kender RPE og periodisering"
     },
     "advanced": {
       "title": "Avanceret",
-      "sub": "3+ år — kender din krops respons godt"
+      "sub": "3+ år. Kender din krops respons godt"
     }
   },
   "equipment": {
     "full": {
       "title": "Fuldt center",
-      "sub": "Adgang til alt — kabler, maskiner, plads"
+      "sub": "Adgang til alt: kabler, maskiner, plads"
     },
     "home_rack": {
       "title": "Hjemme + rack",
@@ -54,9 +54,7 @@
     "errorBanner": "Vælg en option i hver gruppe.",
     "goalEyebrow": "Mål",
     "goalTitle": "Hvad sigter du efter?",
-    "levelEyebrow": "Niveau",
     "levelTitle": "Hvor er du henne?",
-    "freqEyebrow": "Frekvens",
     "freqTitle": "Hvor ofte træner du?",
     "equipEyebrow": "Udstyr",
     "equipTitle": "Hvad har du adgang til?"
@@ -64,7 +62,7 @@
   "step2": {
     "introEyebrow": "Maxes",
     "introTitle": "Hvor stærk er du i dag?",
-    "introSub": "Indtast dit ~1RM for hver løft hvis du kender det. Spring over hvis ikke — vi bruger gennemsnit til dit niveau som start.",
+    "introSub": "Indtast dit ~1RM for hver løft, hvis du kender det. Spring over, hvis ikke. Så bruger vi gennemsnit til dit niveau som start.",
     "squat": "Squat",
     "bench": "Bench",
     "deadlift": "Deadlift",
@@ -76,12 +74,12 @@
     "introTitle": "Noget vi skal vide?",
     "introSub": "Skader, mobilitetsproblemer eller ting du gerne vil arbejde rundt om. Helt valgfrit.",
     "injuriesLabel": "Skader / noter",
-    "injuriesPlaceholder": "F.eks. Lidt anstrengt højre skulder — undgå behind-the-neck press.",
+    "injuriesPlaceholder": "F.eks. Lidt anstrengt højre skulder, undgå behind-the-neck press.",
     "footnote": "Bagefter ligger første session på I dag.",
     "submitTiming": "Et øjeblik · Motoren lægger din første uge",
     "errorSave": "Vi kunne ikke gemme din profil. Prøv igen.",
     "errorAuth": "Din session udløb. Log ind og prøv igen.",
-    "errorGen": "Programmet blev ikke bygget. Prøv Færdig igen — din profil er gemt.",
+    "errorGen": "Programmet blev ikke bygget. Prøv Færdig igen. Din profil er gemt.",
     "errorFreq": "Vælg hvor ofte du træner."
   },
   "programOverlay": {
@@ -90,13 +88,13 @@
     "stage3": "Bygger uge 1-sessioner",
     "stage4": "Skriver sæt og vægte",
     "stage5": "Lægger passene i kalenderen",
-    "stage6": "Næsten klar — sidste tjek",
+    "stage6": "Næsten klar: sidste tjek",
     "eyebrow": "Bygger program",
     "title": "Motoren lægger din første uge.",
     "stageProgress": "{label}…",
     "elapsed": "{elapsed}s · bliv på siden",
-    "overtime": "Tager lidt længere end normalt — bliv på siden",
-    "stayOnPage": "Bliv på siden — vi sender dig til I dag, når programmet findes"
+    "overtime": "Tager lidt længere end normalt. Bliv på siden",
+    "stayOnPage": "Bliv på siden. Vi sender dig til I dag, når programmet findes"
   },
   "summary": {
     "goal": "Mål",

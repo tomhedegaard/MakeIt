@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { cn } from "@/lib/utils";
 import { startWearableConnect } from "@/app/(app)/hrv/connect-actions";
 
@@ -71,8 +72,7 @@ function WearableConnectBody() {
 
   return (
     <SheetContent>
-      <div className="eyebrow mb-2">{t("eyebrow")}</div>
-      <h2 className="font-display text-3xl mb-1">{t("title")}</h2>
+      <SectionHeader eyebrow={t("eyebrow")} title={t("title")} />
       <p className="text-fg-dim text-sm mb-6">{t("body")}</p>
 
       <div className="grid gap-3">

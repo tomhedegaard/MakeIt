@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import LessonForm from "@/components/coach-school/LessonForm";
 import { loadLessonBySlug } from "@/lib/data/lessons";
 
@@ -12,7 +13,7 @@ import { loadLessonBySlug } from "@/lib/data/lessons";
  * Spec: docs/superpowers/specs/2026-05-25-crew-coaching-pyramid-v0-design.md §8
  */
 function fmtDuration(seconds: number | null): string {
-  if (!seconds) return "—";
+  if (!seconds) return "-";
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
   return `${m}m ${s.toString().padStart(2, "0")}s`;
@@ -38,16 +39,13 @@ export default async function CoachSchoolLessonPage({
         {t("lesson.backToTree")}
       </Link>
 
-      <header className="pt-2">
-        <div className="eyebrow mb-2">
-          {t(`tree.tierHeader.${lesson.requiredTier}`)}
-          {" · "}
-          {fmtDuration(lesson.durationSec)}
-        </div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {lesson.titleDa}
-        </h1>
-      </header>
+      <div className="pt-2">
+        <PageTitle
+          size="compact"
+          kicker={`${t(`tree.tierHeader.${lesson.requiredTier}`)} · ${fmtDuration(lesson.durationSec)}`}
+          title={lesson.titleDa}
+        />
+      </div>
 
       {/* Video — v0 placeholder when the bucket URL isn't yet recorded. */}
       <section className="surface rounded-xl overflow-hidden bg-bg-3">
@@ -57,7 +55,7 @@ export default async function CoachSchoolLessonPage({
             controls
             playsInline
             preload="metadata"
-            className="w-full max-h-[420px] object-contain bg-black"
+            className="w-full max-h-[420px] object-contain bg-media"
           />
         ) : (
           <div className="aspect-video flex items-center justify-center text-fg-faint text-sm">

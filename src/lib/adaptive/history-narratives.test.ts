@@ -172,7 +172,7 @@ describe("formatHistoryDate", () => {
     expect(out.toLowerCase()).toMatch(/maj/);
   });
 
-  it("returns em-dash for invalid input", () => {
-    expect(formatHistoryDate("not a date")).toBe("—");
+  it("returns plain hyphen for invalid input", () => {
+    expect(formatHistoryDate("not a date")).toBe("-");
   });
 });

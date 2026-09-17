@@ -107,7 +107,7 @@ function mapSessionRowToCard(data: SessionRow): TodayCard {
   const week = data.week ?? 1;
   return {
     id: data.id,
-    programCode: program?.code ?? "—",
+    programCode: program?.code ?? "-",
     programName: program?.name,
     week,
     isDeload: week > 0 && week % 4 === 0,

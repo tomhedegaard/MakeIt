@@ -1,6 +1,6 @@
 {
   "header": {
-    "eyebrow": "02 — Træn",
+    "eyebrow": "Træn",
     "title": "Din uge.",
     "subtitle": "Motoren planlægger vægtene. Munk skriver under når det kræver et menneske.",
     "coachChip": "Coach · Mikael Munk",
@@ -29,15 +29,15 @@
     "minuteUnit": "m",
     "start": "Start pas →",
     "mock": {
-      "dayLabel": "Dag A — Squat",
-      "title": "Squat — Top set @ RPE 8, 3×3 backoff"
+      "dayLabel": "Dag A · Squat",
+      "title": "Squat · Top set @ RPE 8, 3×3 backoff"
     },
     "generated": {
       "squatFocus": "Squat-fokus og bagside"
     },
     "emptyEyebrow": "I dag",
     "emptyTitle": "Vælg et program",
-    "emptyBody": "Start her — så bygger vi ugen. Ingen demo-pas.",
+    "emptyBody": "Start her, så bygger vi ugen. Ingen demo-pas.",
     "emptyCta": "Se programmer"
   },
   "active": {
@@ -60,7 +60,7 @@
     "engine": "Motor",
     "engineName": "Adaptive Engine",
     "level": "Niveau",
-    "levelFallback": "—",
+    "levelFallback": "-",
     "continue": "Fortsæt →",
     "details": "Detaljer",
     "mock": {
@@ -103,7 +103,7 @@
     "starting": "Starter…",
     "start": "Start program",
     "unavailable": "Ikke klar endnu",
-    "emptyDays": "Programmet har ingen dage endnu — start er ikke muligt.",
+    "emptyDays": "Programmet har ingen dage endnu. Start er ikke muligt.",
     "status": {
       "calling": "Kalder server…",
       "ok": "Startet."
@@ -112,7 +112,7 @@
       "empty_days": "Programmet har ingen dage at generere sessioner fra.",
       "not_allowed": "Programmet kan ikke startes.",
       "not_found": "Programmet blev ikke fundet.",
-      "unavailable": "Ingen forbindelse — prøv igen.",
+      "unavailable": "Ingen forbindelse. Prøv igen.",
       "failed": "Kunne ikke starte programmet."
     }
   }

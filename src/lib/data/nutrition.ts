@@ -226,7 +226,7 @@ export async function saveNutritionProfile(
 
 export async function getPlanForWeek(memberId: string, weekStart: string): Promise<Plan | null> {
   const supabase = await createClient();
-  if (!supabase) return null;
+  if (!supabase) return buildDemoPlan(memberId, weekStart);
 
   const { data: plan } = await supabase
     .from("nutrition_plans")
@@ -257,6 +257,45 @@ export async function getCurrentPlan(memberId: string): Promise<Plan | null> {
  * for now the deterministic mock generator covers both demo mode
  * and the "generate plan" CTA before the AI key is set.
  * ---------------------------------------------------------------- */
+
+/**
+ * Demo mode has no `nutrition_plans` table to read from — synthesize
+ * a stable in-memory plan from the deterministic mock generator so
+ * the meal dashboard, log sheet, and shopping list are exercisable
+ * without a backend. Same memberId + weekStart always yields the
+ * same plan (fixed profile, fixed generatedAt derived from the week).
+ */
+function buildDemoPlan(memberId: string, weekStart: string): Plan {
+  const profile: NutritionProfile = {
+    memberId,
+    ...DEFAULT_PROFILE,
+    updatedAt: `${weekStart}T00:00:00.000Z`,
+  };
+  const planShape = generateMockPlan({ profile, weekStart });
+  const planId = `demo-${weekStart}`;
+  return {
+    id: planId,
+    memberId,
+    weekStart,
+    dailyKcal: planShape.targets.kcal,
+    dailyProteinG: planShape.targets.proteinG,
+    dailyCarbsG: planShape.targets.carbsG,
+    dailyFatG: planShape.targets.fatG,
+    generator: "mock",
+    generatorModel: null,
+    notes: planShape.notes,
+    generatedAt: `${weekStart}T00:00:00.000Z`,
+    meals: planShape.meals.map((m, i) => ({
+      ...m,
+      id: `demo-meal-${i}`,
+      planId,
+      imageUrl: null,
+      imageThumbUrl: null,
+      imageAttributionName: null,
+      imageAttributionUrl: null,
+    })),
+  };
+}
 
 export async function generatePlan(
   memberId: string,

@@ -16,6 +16,7 @@ import RpeSelect from "@/components/ui/RpeSelect";
 import RestTimer from "@/components/ui/RestTimer";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
+import SectionHeader from "@/components/ui/SectionHeader";
 import FormCheckThread from "@/components/form-check/FormCheckThread";
 import {
   demoFormQueueItems,
@@ -308,7 +309,7 @@ export default function SessionClient({
           </div>
           <div className="bg-bg-2 p-4 text-center">
             <div className="eyebrow mb-1">{t("targets.rpe")}</div>
-            <div className="numeric text-xl">{set.targetRpe ? set.targetRpe : "—"}</div>
+            <div className="numeric text-xl">{set.targetRpe ? set.targetRpe : "-"}</div>
           </div>
         </section>
 
@@ -428,8 +429,7 @@ export default function SessionClient({
       <Sheet open={doneOpen} onOpenChange={setDoneOpen}>
         <SheetContent>
           <div className="text-center pb-4">
-            <div className="eyebrow mb-3">{t("done.eyebrow")}</div>
-            <h2 className="font-display text-4xl mb-2">{t("done.title")}</h2>
+            <SectionHeader eyebrow={t("done.eyebrow")} title={t("done.title")} className="justify-center" />
             <p className="text-fg-dim text-sm mb-6 px-2">
               {t("done.body", { sets: completedSets })}
             </p>
@@ -636,7 +636,7 @@ function ExerciseSection({
                       key={i}
                       data-active={isActive}
                       className={`flex gap-2 text-sm leading-snug pl-2 -ml-2 border-l-2 transition-colors duration-200 ${
-                        isActive ? "border-l-[#C97B3E] text-fg" : "border-l-transparent"
+                        isActive ? "border-l-body text-fg" : "border-l-transparent"
                       }`}
                     >
                       <span

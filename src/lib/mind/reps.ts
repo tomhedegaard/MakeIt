@@ -42,11 +42,11 @@ export const MIND_REPS_TABLE: Record<
   Record<string, { delta: number; reason: string }>
 > = {
   mind_check_streak: {
-    "3d": { delta: 5, reason: "Mind-check stribe — 3 dage" },
-    "7d": { delta: 20, reason: "Mind-check stribe — 7 dage" },
-    "30d": { delta: 100, reason: "Mind-check stribe — 30 dage" },
-    "90d": { delta: 300, reason: "Mind-check stribe — 90 dage" },
-    "180d": { delta: 700, reason: "Mind-check stribe — 180 dage" },
+    "3d": { delta: 5, reason: "Mind-check stribe: 3 dage" },
+    "7d": { delta: 20, reason: "Mind-check stribe: 7 dage" },
+    "30d": { delta: 100, reason: "Mind-check stribe: 30 dage" },
+    "90d": { delta: 300, reason: "Mind-check stribe: 90 dage" },
+    "180d": { delta: 700, reason: "Mind-check stribe: 180 dage" },
   },
   mental_session_completed: {
     hero: { delta: 10, reason: "Mental session gennemført" },

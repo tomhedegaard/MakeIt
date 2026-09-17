@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPublishedScienceItems } from "@/lib/data/science";
+import PageTitle from "@/components/ui/PageTitle";
 import ScienceFeed from "./ScienceFeed";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -18,16 +19,15 @@ export default async function SciencePage() {
 
   return (
     <div className="mx-auto max-w-[860px] px-6 pt-12 lg:pt-16">
-      <header>
-        <p className="eyebrow">{t("eyebrow")}</p>
-        <h1 className="font-display mt-2 text-4xl sm:text-5xl">{t("title")}</h1>
+      <div>
+        <PageTitle kicker={t("eyebrow")} title={t("title")} />
         <p className="mt-3 max-w-[60ch] text-fg-dim">
           {t("subtitle")}{" "}
           <a href="/science/feed.xml" className="border-b border-fg-dim text-fg hover:border-fg">
             {t("rss")}
           </a>
         </p>
-      </header>
+      </div>
 
       <ScienceFeed items={items} />
 

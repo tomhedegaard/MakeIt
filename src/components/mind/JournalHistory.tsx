@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import type { JournalEntry } from "@/lib/mind/types";
 
 /**
@@ -6,13 +7,9 @@ import type { JournalEntry } from "@/lib/mind/types";
  * publicly — that's for safety telemetry, not member-facing UI.
  */
 export default function JournalHistory({ entries }: { entries: JournalEntry[] }) {
+  const t = useTranslations("Mind.journalHistory");
   if (entries.length === 0) {
-    return (
-      <p className="text-fg-dim leading-relaxed">
-        Ingen poster endnu. Hver dag du skriver én, optjener du Reps —
-        og bygger en stribe der låser tier-perks op.
-      </p>
-    );
+    return <p className="text-fg-dim leading-relaxed">{t("empty")}</p>;
   }
 
   return (
@@ -21,7 +18,7 @@ export default function JournalHistory({ entries }: { entries: JournalEntry[] })
         <article key={e.id} className="space-y-2">
           <div className="flex items-baseline gap-3">
             <time className="font-display text-lg tabular-nums" dateTime={e.logged_date}>
-              {formatDanishDate(e.logged_date)}
+              {formatShortDate(e.logged_date, t)}
             </time>
             {e.prompt ? (
               <span className="text-fg-dim text-sm italic">{e.prompt}</span>
@@ -36,13 +33,12 @@ export default function JournalHistory({ entries }: { entries: JournalEntry[] })
   );
 }
 
-function formatDanishDate(iso: string): string {
-  const months = [
-    "jan", "feb", "mar", "apr", "maj", "jun",
-    "jul", "aug", "sep", "okt", "nov", "dec",
-  ];
+/** `12. maj` in Danish, `12 May` in English: both come from messages. */
+function formatShortDate(
+  iso: string,
+  t: ReturnType<typeof useTranslations<"Mind.journalHistory">>,
+): string {
+  const months = t.raw("months") as string[];
   const d = new Date(iso + "T00:00:00Z");
-  const day = d.getUTCDate();
-  const m = months[d.getUTCMonth()] ?? "";
-  return `${day}. ${m}`;
+  return t("date", { day: d.getUTCDate(), month: months[d.getUTCMonth()] ?? "" });
 }

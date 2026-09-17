@@ -74,7 +74,7 @@ export default function LogMealButton({
             type="button"
             aria-label={t("closeLabel")}
             onClick={() => setOpen(false)}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-scrim backdrop-blur-sm"
           />
           <form
             ref={formRef}

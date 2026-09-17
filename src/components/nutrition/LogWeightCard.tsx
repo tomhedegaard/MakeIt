@@ -111,7 +111,7 @@ export default function LogWeightCard({
                 step="0.1"
                 inputMode="decimal"
                 autoFocus
-                placeholder="—"
+                placeholder="-"
                 className="field text-xl numeric pr-12"
                 autoComplete="off"
               />

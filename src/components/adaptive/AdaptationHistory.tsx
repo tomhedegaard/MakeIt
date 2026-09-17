@@ -43,7 +43,7 @@ export default function AdaptationHistory({
         <p className="text-sm text-fg-dim leading-relaxed">
           Motoren starter når dit HRV-baseline er klart og du har slået
           adaptiv tilpasning til. Når den begynder at justere dine
-          sessioner, ser du dem her — så du kan se hvad der virkede.
+          sessioner, ser du dem her, så du kan se hvad der virkede.
         </p>
       </section>
     );

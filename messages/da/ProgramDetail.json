@@ -1,5 +1,5 @@
 {
-  "metaFallback": "Program — MakeIt",
+  "metaFallback": "Program · MakeIt",
   "breadcrumb": "Træn",
   "meta": {
     "weeks": "Uger",
@@ -11,8 +11,8 @@
   },
   "template": {
     "eyebrow": "Programstruktur",
-    "title": "Skabelon for ugen — gentages i {weeks} uger med progressivt overload.",
-    "body": "Hver dag herunder er den samme uge efter uge — kun belastning, reps og deload skifter. Hver 4. uge er deload."
+    "title": "Skabelon for ugen. Gentages i {weeks} uger med progressivt overload.",
+    "body": "Hver dag herunder er den samme uge efter uge. Kun belastning, reps og deload skifter. Hver 4. uge er deload."
   },
   "day": {
     "position": "Dag {position}",

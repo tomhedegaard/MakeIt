@@ -60,7 +60,7 @@ export default function MessageBubble({
             controls
             playsInline
             preload="metadata"
-            className="block w-full h-auto max-h-[480px] bg-black"
+            className="block w-full h-auto max-h-[480px] bg-media"
           />
         ) : null}
 

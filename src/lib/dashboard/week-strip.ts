@@ -50,6 +50,50 @@ export type WeekDay = {
 
 export type WeekStripSession = TodaySessionCandidate;
 
+/**
+ * Day-label separators, most preferred first.
+ *
+ * Labels are written "Dag A · Squat" today, but rows stored before the
+ * taste pass still arrive from the database as "Dag A — Squat", so both
+ * have to parse. The plain hyphen needs whitespace on both sides, or
+ * "Dødløft-teknik" would split inside the word.
+ */
+const DAY_LABEL_SEPARATORS = [
+  /—\s*(.+)$/,
+  /–\s*(.+)$/,
+  /·\s*(.+)$/,
+  /\s-\s+(.+)$/,
+];
+
+/** Text after the day-label separator, or `null` when there is none. */
+export function dayLabelTail(label: string): string | null {
+  for (const separator of DAY_LABEL_SEPARATORS) {
+    const tail = label.match(separator)?.[1]?.trim();
+    if (tail) return tail;
+  }
+  return null;
+}
+
+/**
+ * A stored day label as member copy: "Dag A — Squat" becomes
+ * "Dag A · Squat".
+ *
+ * Labels are written with "·" today, but rows saved before the taste
+ * pass still arrive from the database with a dash separator, and
+ * today-prose renders the label verbatim. Normalise at render time
+ * rather than migrating the table.
+ */
+export function normalizeDayLabel(label: string): string {
+  return label
+    .replace(/\s*[—–]\s*/g, " · ")
+    // A plain hyphen only separates with whitespace on both sides,
+    // or "Dødløft-teknik" would split inside the word.
+    .replace(/\s+-\s+/g, " · ")
+    .replace(/^\s*·\s*/, "")
+    .replace(/\s*·\s*$/, "")
+    .trim();
+}
+
 export function compressSessionLabel(
   dayLabel: string | null,
   title: string,
@@ -58,12 +102,11 @@ export function compressSessionLabel(
     (s): s is string => typeof s === "string" && s.length > 0,
   );
   for (const c of candidates) {
-    const m = c.match(/—\s*(.+)$/);
-    const tail = m ? m[1] : c;
+    const tail = dayLabelTail(c) ?? c;
     const word = tail.trim().split(/\s+/)[0] ?? tail;
     if (word) return word.slice(0, 12);
   }
-  return "—";
+  return "-";
 }
 
 /**
@@ -83,7 +126,12 @@ export function buildWeekStrip(input: {
 
   const byDate = new Map<
     string,
-    { id: string; dayLabel: string | null; title: string; status: SessionStatus }
+    {
+      id: string;
+      dayLabel: string | null;
+      title: string;
+      status: SessionStatus;
+    }
   >();
   for (const s of input.sessions) {
     if (!s.scheduledFor || !weekIsos.includes(s.scheduledFor)) continue;

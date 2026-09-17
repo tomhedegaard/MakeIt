@@ -61,7 +61,8 @@ describe("pickDashboardTodaySession — tomtesty2 mismatch", () => {
       mind: { checkedToday: true },
     });
     expect(model.lines[0]?.key).toBe("sessionAssignedWithLabel");
-    expect(model.lines[0]?.params).toEqual({ label: "Dag A — Squat" });
+    // The row still holds the stored dash; prose normalises it on render.
+    expect(model.lines[0]?.params).toEqual({ label: "Dag A · Squat" });
   });
 
   it("keeps header + card on Dag A on the onboarding calendar day", () => {

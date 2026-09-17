@@ -34,7 +34,7 @@ Det nuværende "strength editorial"-sprog er konsekvent, men det er mørkt, reda
 **Kalk bliver et tema-scope, ikke en ny kodebase.** Tokens beholder deres navne. Et nyt scope `[data-theme="kalk"]` giver dem lyse værdier og skifter fontene. Et andet scope `[data-theme="nat"]` bevarer det mørke sprog til de bevidst mørke zoner. Alle komponenter, der allerede bruger tokens, skifter tema uden ændringer.
 
 - **Kalk (lyst):** landingssiden, login, onboarding og hele medlemsappen.
-- **Nat (mørkt):** live-sessionen `/session/[id]` ("session-tilstand er altid mørk") og `/coach/*` i v1.
+- **Nat (mørkt):** live-sessionen `/session/[id]` ("session-tilstand er altid mørk") og `/coach/*` i v1. Begge sætter temaet eksplicit med `ThemeScope theme="nat"` (F4).
 - Udrulningen sker flade for flade ved at sætte `data-theme="kalk"` på et layout. Intet skifter, før det bliver slået til.
 - **Fonte følger `<html>`, ikke farvescopet.** En Nat-flade inde i Kalk (fx `/session`) bruger Kalk-fontene med mørke farver. Det giver én typografisk stemme. `ThemeScope` er kun til hele sider og layouts, og en mørk blok inde i en side bruger `data-theme="nat"` uden `.theme-root`.
 

@@ -65,7 +65,7 @@ export default function OffPlanLogButton() {
             type="button"
             aria-label="Luk"
             onClick={() => setOpen(false)}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-scrim backdrop-blur-sm"
           />
           <form
             ref={formRef}
@@ -79,7 +79,7 @@ export default function OffPlanLogButton() {
                   Spiste noget andet
                 </h3>
                 <p className="text-xs text-fg-faint mt-1">
-                  Et hurtigt estimat tæller med — ærlighed slår en brudt streak.
+                  Et hurtigt estimat tæller med. Ærlighed slår en brudt streak.
                 </p>
               </div>
               <button

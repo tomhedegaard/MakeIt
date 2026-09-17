@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { getSession } from "@/lib/auth";
 import {
   currentIsoMonday,
@@ -109,32 +111,32 @@ export default async function NutritionPage({
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
-      <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="eyebrow eyebrow-domain mb-2">{t("page.eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
-            {t("page.title")}
-          </h1>
-          <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-            {t("page.intro")}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <OffPlanLogButton />
-          <Link
-            href="/nutrition/shopping"
-            className="btn btn-sm"
-          >
-            {t("page.shoppingLink")}
-          </Link>
-          <Link
-            href="/nutrition/preferences"
-            className="btn btn-ghost btn-sm"
-          >
-            {t("page.preferencesLink")}
-          </Link>
-        </div>
-      </header>
+      <div className="pt-2">
+        <PageTitle
+          kicker={t("page.eyebrow")}
+          title={t("page.title")}
+          action={
+            <div className="flex flex-wrap items-center gap-2">
+              <OffPlanLogButton />
+              <Link
+                href="/nutrition/shopping"
+                className="btn btn-sm"
+              >
+                {t("page.shoppingLink")}
+              </Link>
+              <Link
+                href="/nutrition/preferences"
+                className="btn btn-ghost btn-sm"
+              >
+                {t("page.preferencesLink")}
+              </Link>
+            </div>
+          }
+        />
+        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+          {t("page.intro")}
+        </p>
+      </div>
 
       {err === "quota_plan" || err === "quota_swap" ? (
         <QuotaBanner
@@ -283,10 +285,11 @@ function EmptyState({
   const resetLabel = describeNextAvailable(planLimit.nextAvailableAt);
   return (
     <section className="surface-2 rounded-2xl p-6 lg:p-10 text-center max-w-2xl mx-auto">
-      <div className="eyebrow mb-3">{t("page.emptyEyebrow", { week: weekStartLabel(weekStart) })}</div>
-      <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-3">
-        {t("page.emptyTitle")}
-      </h2>
+      <SectionHeader
+        eyebrow={t("page.emptyEyebrow", { week: weekStartLabel(weekStart) })}
+        title={t("page.emptyTitle")}
+        className="justify-center"
+      />
       <p className="text-fg-dim text-sm md:text-base max-w-md mx-auto mb-5">
         {t("page.emptyBody")}
       </p>
@@ -373,10 +376,10 @@ function PlanView({
     <>
       {/* Macro / meta strip */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline rounded-lg overflow-hidden">
-        <Stat label={t("page.statKcal")} value={plan.dailyKcal ?? "—"} />
-        <Stat label={t("page.statProtein")} value={plan.dailyProteinG ?? "—"} />
-        <Stat label={t("page.statCarbs")} value={plan.dailyCarbsG ?? "—"} />
-        <Stat label={t("page.statFat")} value={plan.dailyFatG ?? "—"} />
+        <Stat label={t("page.statKcal")} value={plan.dailyKcal ?? "-"} />
+        <Stat label={t("page.statProtein")} value={plan.dailyProteinG ?? "-"} />
+        <Stat label={t("page.statCarbs")} value={plan.dailyCarbsG ?? "-"} />
+        <Stat label={t("page.statFat")} value={plan.dailyFatG ?? "-"} />
       </section>
 
       {/* Week strip */}
@@ -405,7 +408,7 @@ function PlanView({
                     {t("page.meals")}
                   </div>
                   <div className="numeric text-[11px] text-fg-dim mt-1.5">
-                    {dayKcal > 0 ? `${dayKcal} kcal` : "—"}
+                    {dayKcal > 0 ? `${dayKcal} kcal` : "-"}
                   </div>
                 </a>
               </li>
@@ -416,16 +419,17 @@ function PlanView({
 
       {/* Today */}
       <section id={`day-${todayIndex}`}>
-        <div className="flex items-end justify-between mb-3">
-          <div>
-            <div className="eyebrow mb-1">{t("page.todayEyebrow", { day: t(`dayLabels.${DAY_KEYS[todayIndex]}`) })}</div>
-            <h2 className="font-display text-3xl md:text-4xl leading-[1]">
-              {today.length === 1
+        <div className="flex items-end justify-between gap-4">
+          <SectionHeader
+            eyebrow={t("page.todayEyebrow", { day: t(`dayLabels.${DAY_KEYS[todayIndex]}`) })}
+            title={
+              today.length === 1
                 ? t("page.todayMealsOne", { count: today.length })
-                : t("page.todayMealsOther", { count: today.length })}
-            </h2>
-          </div>
-          <span className="text-xs font-mono text-fg-faint">
+                : t("page.todayMealsOther", { count: today.length })
+            }
+            className="mb-0"
+          />
+          <span className="text-xs font-mono text-fg-faint shrink-0">
             {t("page.todayMacros", {
               kcal: today.reduce((s, m) => s + (m.estKcal ?? 0), 0),
               protein: today.reduce((s, m) => s + (m.estProteinG ?? 0), 0),

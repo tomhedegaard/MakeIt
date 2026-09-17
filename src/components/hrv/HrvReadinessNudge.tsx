@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { nudgeCopy, NUDGE_HREF } from "@/lib/hrv/nudge";
 
 type Props = {
@@ -16,6 +17,7 @@ type Props = {
  * and are unit-tested there — the component is presentation only.
  */
 export default function HrvReadinessNudge({ nudge }: Props) {
+  const t = useTranslations("Hrv.nudge");
   if (!nudge) return null;
 
   const { eyebrow, body } = nudgeCopy(nudge.bucket);
@@ -33,7 +35,7 @@ export default function HrvReadinessNudge({ nudge }: Props) {
         href={NUDGE_HREF}
         className="inline-block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim lift touch-app"
       >
-        Se HRV →
+        {t("cta")}
       </Link>
     </section>
   );

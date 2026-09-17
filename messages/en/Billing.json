@@ -5,9 +5,9 @@
     "subtitle": "Manage your Crew membership and 1:1 add-on. All changes take effect on your next billing date."
   },
   "banners": {
-    "success": "Thanks — your payment went through.",
-    "canceled": "Checkout cancelled — nothing was charged.",
-    "demo": "Demo mode — Stripe isn't connected. Add <code>STRIPE_SECRET_KEY</code> + price IDs to enable checkout.",
+    "success": "Thanks. Your payment went through.",
+    "canceled": "Checkout cancelled. Nothing was charged.",
+    "demo": "Demo mode: Stripe isn't connected. Add <code>STRIPE_SECRET_KEY</code> + price IDs to enable checkout.",
     "error": "Something went wrong during checkout ({err}). Try again, or drop us a line."
   },
   "crew": {

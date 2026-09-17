@@ -36,7 +36,7 @@
   },
   "exit": {
     "title": "End session?",
-    "description": "Your logged sets are already saved — you can pick it up later.",
+    "description": "Your logged sets are already saved. You can pick it up later.",
     "stay": "Stay",
     "confirm": "End"
   },
@@ -46,10 +46,10 @@
     "openDetails": "Open exercise details",
     "seeFull": "See the full exercise →",
     "demo": "See the move",
-    "demoAria": "See the move — {lift}",
+    "demoAria": "See the move: {lift}",
     "demoPlay": "Play the move",
     "formCheck": "Record set {set}",
-    "formCheckSub": "Goes to coach Munk — bound to {lift}",
+    "formCheckSub": "Goes to coach Munk, bound to {lift}",
     "moreCues": " · {count} more cues",
     "duration": "Record →",
     "thread": {
@@ -64,11 +64,11 @@
   "restTimer": {
     "ariaLabel": "Rest",
     "title": "Rest",
-    "description": "Next set in {time} — grab a sip of water.",
+    "description": "Next set in {time}. Grab a sip of water.",
     "skip": "Skip"
   },
   "rpe": {
-    "label": "RPE — how heavy did it feel?",
+    "label": "RPE: how heavy did it feel?",
     "ariaLabel": "RPE"
   },
   "preview": {

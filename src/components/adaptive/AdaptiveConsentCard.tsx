@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 
 import { enableAdaptiveEngineAction } from "@/app/(app)/hrv/actions";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 type Props = {
   /**
@@ -57,15 +58,11 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
       aria-labelledby="adaptive-consent-heading"
       className="surface-2 rounded-2xl p-6 lg:p-7 space-y-4 border hairline"
     >
-      <div>
-        <div className="eyebrow mb-2">Nyt for dig</div>
-        <h2
-          id="adaptive-consent-heading"
-          className="font-display text-2xl leading-tight"
-        >
-          Din baseline er klar — vil du have din session tilpasset hver dag?
-        </h2>
-      </div>
+      <SectionHeader
+        id="adaptive-consent-heading"
+        eyebrow="Nyt for dig"
+        title="Din baseline er klar. Vil du have din session tilpasset hver dag?"
+      />
 
       <div className="text-sm text-fg-dim leading-relaxed space-y-3">
         <p>

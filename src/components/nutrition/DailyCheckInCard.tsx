@@ -123,15 +123,15 @@ export default function DailyCheckInCard({
       {variant === "full" && checkin.meal ? (
         <div className="px-5 pb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-mono">
           <span className="text-fg-dim">
-            {t("kcal", { value: checkin.meal.estKcal ?? "—" })}
+            {t("kcal", { value: checkin.meal.estKcal ?? "-" })}
           </span>
           <span className="text-fg-faint" aria-hidden>·</span>
           <span className="text-fg-dim">
-            {t("protein", { value: checkin.meal.estProteinG ?? "—" })}
+            {t("protein", { value: checkin.meal.estProteinG ?? "-" })}
           </span>
           <span className="text-fg-faint" aria-hidden>·</span>
           <span className="text-fg-dim">
-            {t("prep", { value: checkin.meal.prepMinutes ?? "—" })}
+            {t("prep", { value: checkin.meal.prepMinutes ?? "-" })}
           </span>
         </div>
       ) : null}

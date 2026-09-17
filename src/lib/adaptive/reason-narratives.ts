@@ -130,8 +130,8 @@ const READINESS_BUCKET_LABELS: Record<ReadinessBucket, string> = {
 export function formatReadinessBucket(
   bucket: ReadinessBucket | null
 ): string {
-  if (bucket === null) return "—";
-  return READINESS_BUCKET_LABELS[bucket] ?? "—";
+  if (bucket === null) return "-";
+  return READINESS_BUCKET_LABELS[bucket] ?? "-";
 }
 
 const FEELING_LABELS: Record<FeelingState, string> = {
@@ -142,18 +142,18 @@ const FEELING_LABELS: Record<FeelingState, string> = {
 };
 
 export function formatFeelingState(state: FeelingState | null): string {
-  if (state === null) return "—";
-  return FEELING_LABELS[state] ?? "—";
+  if (state === null) return "-";
+  return FEELING_LABELS[state] ?? "-";
 }
 
 /**
- * Format sleep hours as "5t12m". Null returns em-dash. Negative or
- * non-finite values return em-dash. >12h is rounded down to 12h to
+ * Format sleep hours as "5t12m". Null returns a plain hyphen. Negative or
+ * non-finite values return a plain hyphen. >12h is rounded down to 12h to
  * keep the chip width predictable (extreme self-reports are
  * outliers we don't need to display precisely).
  */
 export function formatSleepHours(hours: number | null): string {
-  if (hours === null || !Number.isFinite(hours) || hours <= 0) return "—";
+  if (hours === null || !Number.isFinite(hours) || hours <= 0) return "-";
   const capped = Math.min(12, hours);
   const wholeHours = Math.floor(capped);
   const minutes = Math.round((capped - wholeHours) * 60);
@@ -163,7 +163,7 @@ export function formatSleepHours(hours: number | null): string {
 
 /**
  * Format the top-set RPE delta as "8.5 vs 8 (+0.5)". Both values
- * required — null in either input returns em-dash. Delta sign is
+ * required: null in either input returns a plain hyphen. Delta sign is
  * always shown (positive overshoot is the signal we care about).
  */
 export function formatRpeDelta(
@@ -176,7 +176,7 @@ export function formatRpeDelta(
     !Number.isFinite(logged) ||
     !Number.isFinite(target)
   ) {
-    return "—";
+    return "-";
   }
   const delta = logged - target;
   const sign = delta > 0 ? "+" : delta < 0 ? "−" : "±";

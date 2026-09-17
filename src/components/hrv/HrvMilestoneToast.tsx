@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { markHrvMilestoneSeen } from "@/app/(app)/hrv/connect-actions";
 import type { MilestoneDay } from "@/lib/hrv/progress";
 
@@ -21,6 +22,7 @@ type Props = {
  * not confetti. We stay in the same restrained register.
  */
 export function HrvMilestoneToast({ unseen }: Props) {
+  const t = useTranslations("Hrv.toast");
   const [visible, setVisible] = useState(unseen !== null);
 
   useEffect(() => {
@@ -46,15 +48,15 @@ export function HrvMilestoneToast({ unseen }: Props) {
       data-testid="hrv-milestone-toast"
     >
       <span className="flex-1">
-        {unseen.milestone}-dages HRV-streak nået. +{unseen.reps} Reps tilføjet.
+        {t("milestone", { days: unseen.milestone, reps: unseen.reps })}
       </span>
       <button
         type="button"
         onClick={() => setVisible(false)}
         className="text-xs text-fg-dim"
-        aria-label="Luk besked"
+        aria-label={t("closeAria")}
       >
-        Luk
+        {t("close")}
       </button>
     </div>
   );

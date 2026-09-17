@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
@@ -25,6 +25,7 @@ export default async function HrvInsightsPage() {
   if (!member) redirect("/login");
 
   const t = await getTranslations("Hrv.insights");
+  const locale = await getLocale();
   const insight = await getLatestWeeklyInsight(member.id);
 
   return (
@@ -37,7 +38,11 @@ export default async function HrvInsightsPage() {
       <Container className="py-8 lg:py-12 space-y-8">
         <HrvSubNav />
 
-        {insight === null ? <StateEmpty /> : <StatePopulated insight={insight} />}
+        {insight === null ? (
+          <StateEmpty t={t} />
+        ) : (
+          <StatePopulated insight={insight} t={t} locale={locale} />
+        )}
       </Container>
     </>
   );
@@ -47,12 +52,13 @@ export default async function HrvInsightsPage() {
 /* Empty — no insight row yet (also demo mode)                      */
 /* ---------------------------------------------------------------- */
 
-function StateEmpty() {
+type InsightsT = Awaited<ReturnType<typeof getTranslations<"Hrv.insights">>>;
+
+function StateEmpty({ t }: { t: InsightsT }) {
   return (
     <article className="max-w-prose">
       <p className="text-fg-dim text-sm md:text-base leading-relaxed">
-        Din første ugentlige indsigt skrives søndag aften, så snart du har 14
-        dages data fra dit wearable.
+        {t("empty")}
       </p>
     </article>
   );
@@ -62,17 +68,25 @@ function StateEmpty() {
 /* Populated — a stored weekly insight                              */
 /* ---------------------------------------------------------------- */
 
-function StatePopulated({ insight }: { insight: WeeklyInsight }) {
+function StatePopulated({
+  insight,
+  t,
+  locale,
+}: {
+  insight: WeeklyInsight;
+  t: InsightsT;
+  locale: string;
+}) {
   const provenance =
     insight.claudeModelId === "template-fallback"
-      ? "Skrevet automatisk."
-      : "Skrevet af MakeIt-coachen.";
+      ? t("provenanceAuto")
+      : t("provenanceCoach");
 
   // `weekStart` is a date-only string; the "T00:00:00" suffix forces
   // local-midnight parsing so the date doesn't slip a day in negative-offset
   // timezones. Same guard as src/lib/email/templates/weekly-digest.ts.
   const weekLabel = new Date(insight.weekStart + "T00:00:00").toLocaleDateString(
-    "da-DK",
+    locale,
     { day: "numeric", month: "long" },
   );
 
@@ -91,7 +105,7 @@ function StatePopulated({ insight }: { insight: WeeklyInsight }) {
       </div>
 
       <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-        {provenance} Uge fra {weekLabel}.
+        {provenance} {t("weekFrom", { date: weekLabel })}
       </p>
     </div>
   );

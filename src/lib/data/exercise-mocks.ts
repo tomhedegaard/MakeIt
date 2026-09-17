@@ -69,7 +69,7 @@ export const MOCK_EXERCISES: Exercise[] = [
     tertiaryMuscles: ["abs", "adductors", "calves_back"],
     cues: [
       "Bryst op og spændt mave før du drukner under baren.",
-      "Knæ sporer tæerne — pres dem aktivt ud.",
+      "Knæ sporer tæerne. Pres dem aktivt ud.",
       "Sid lavt: hofte under knæ.",
       "Driv gulvet væk og lås ud uden hyperextension.",
       "Træk vejret ind i bunden, pust ud på vej op.",
@@ -81,7 +81,7 @@ export const MOCK_EXERCISES: Exercise[] = [
       },
       {
         title: "Bryst kollapser frem",
-        body: "Mister bar-position. Hold albuerne ind under baren og pres brystet op — bagsiden skal være stiv.",
+        body: "Mister bar-position. Hold albuerne ind under baren og pres brystet op. Bagsiden skal være stiv.",
       },
       {
         title: "Hælen letter",
@@ -89,7 +89,7 @@ export const MOCK_EXERCISES: Exercise[] = [
       },
     ],
     whyMatters:
-      "Bygger benstyrke fra bunden og tvinger hele kæden — core, ryg, hofte — til at arbejde samtidig.",
+      "Bygger benstyrke fra bunden og tvinger hele kæden (core, ryg, hofte) til at arbejde samtidig.",
     setup:
       "Bar i high-bar position på øvre traps. Fødderne skulderbredde, lille udadrotation. Spændt mave før liften.",
     progression:
@@ -131,16 +131,16 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["glutes", "abs"],
     tertiaryMuscles: ["lower_back", "calves_back", "adductors"],
     cues: [
-      "Albuerne højt og pegende fremad — kollaberer de, kollaberer brystet.",
-      "Torso lodret — ingen lean fremover.",
+      "Albuerne højt og pegende fremad. Kollaberer de, kollaberer brystet.",
+      "Torso lodret, ingen lean fremover.",
       "Knæene må gerne ride forbi tæerne.",
       "Mave hård som en murstensvæg gennem hele liften.",
-      "Bunden lav — hofte under knæ uden hælen letter.",
+      "Bunden lav: hofte under knæ uden hælen letter.",
     ],
     mistakes: [
       {
         title: "Albuerne falder",
-        body: "Baren ruller af og forreste løft kollapser. Træn front-rack mobility — håndleds- og skulderfleksibilitet er forudsætningen.",
+        body: "Baren ruller af og forreste løft kollapser. Træn front-rack mobility. Håndleds- og skulderfleksibilitet er forudsætningen.",
       },
       {
         title: "Fremoverlæn",
@@ -148,7 +148,7 @@ export const MOCK_EXERCISES: Exercise[] = [
       },
     ],
     whyMatters:
-      "Den mest quad-dominerende stang-øvelse vi har — bygger oprejst styrke og kræver brutal core.",
+      "Den mest quad-dominerende stang-øvelse vi har. Bygger oprejst styrke og kræver brutal core.",
     setup:
       "Bar i front rack på forreste delts. Albuer høje. Stance lidt smallere end back squat.",
     progression: "Tempo (3 sek nedad + 2 sek pause i bund). Eller pause front squat.",
@@ -189,24 +189,24 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["lats", "traps", "quads"],
     tertiaryMuscles: ["forearms", "abs", "calves_back"],
     cues: [
-      "Lats engageret — træk baren ind i kroppen, ikke væk fra den.",
+      "Lats engageret. Træk baren ind i kroppen, ikke væk fra den.",
       "Stang over midtfod ved opstart.",
-      "Skuldre lige over baren — ikke bag.",
+      "Skuldre lige over baren, ikke bag.",
       "Pres gulvet væk, ikke træk baren op.",
       "Lås hofterne ud i toppen uden hyperextension.",
     ],
     mistakes: [
       {
         title: "Hofte skyder op først",
-        body: "Du laver en stiff-leg pull med dårligt knæ-engagement. Cue: pres gulvet væk — knæ og hofte ekstenderer samtidig.",
+        body: "Du laver en stiff-leg pull med dårligt knæ-engagement. Cue: pres gulvet væk, knæ og hofte ekstenderer samtidig.",
       },
       {
         title: "Rygsænkning ved lockout",
-        body: "Hofterne overstrækker bagud. Stop ved hip extension neutral — ingen lean back.",
+        body: "Hofterne overstrækker bagud. Stop ved hip extension neutral, ingen lean back.",
       },
     ],
     whyMatters:
-      "Den øvelse der bedst tester hele bagsiden — fra hælen til nakken. Bygger den styrke der overfører til alt.",
+      "Den øvelse der bedst tester hele bagsiden, fra hælen til nakken. Bygger den styrke der overfører til alt.",
     setup:
       "Bar over midtfod. Skin tæt på baren. Grip lige uden for benene. Træk slæk ud af baren før liften.",
     progression: "Pause-deadlift 2 cm over gulv, eller deficit pull for ekstra range.",
@@ -247,20 +247,20 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["lower_back", "lats"],
     tertiaryMuscles: ["forearms", "abs", "traps"],
     cues: [
-      "Knæene let bøjede — låses ind i den vinkel.",
+      "Knæene let bøjede, låst ind i den vinkel.",
       "Hofterne tilbage, ikke ned. Stang skinger ned langs lår.",
-      "Lats engageret — bar holdes tæt på kroppen.",
-      "Stop når hamstrings siger stop — ikke når baren rammer gulv.",
+      "Lats engageret, bar holdes tæt på kroppen.",
+      "Stop når hamstrings siger stop, ikke når baren rammer gulv.",
       "Lås ved at presse hofterne fremad mod stangen.",
     ],
     mistakes: [
       {
         title: "Knæ bøjer for meget",
-        body: "Bliver til en deadlift. Hold knævinklen konstant — det er hofte-bevægelse, ikke knæ-bevægelse.",
+        body: "Bliver til en deadlift. Hold knævinklen konstant. Det er hofte-bevægelse, ikke knæ-bevægelse.",
       },
       {
         title: "Baren glider fremad",
-        body: "Hamstrings bliver inaktive. Tænk bar nøjagtig på låret — som om du skraber lårhårene væk.",
+        body: "Hamstrings bliver inaktive. Tænk bar nøjagtig på låret, som om du skraber lårhårene væk.",
       },
     ],
     whyMatters:
@@ -305,8 +305,8 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["forearms"],
     tertiaryMuscles: ["abs", "lats"],
     cues: [
-      "Skuldre tilbage og ned — pres dem ind i bænken.",
-      "Ben i gulvet, hofte aktiv — bench er en helkrops-øvelse.",
+      "Skuldre tilbage og ned. Pres dem ind i bænken.",
+      "Ben i gulvet, hofte aktiv. Bench er en helkrops-øvelse.",
       "Baren ned til midten af brystet, albuer omkring 45° ud.",
       "Pust ud på vej op, hold core spændt hele vejen.",
       "Lås albuerne uden at miste skulder-position.",
@@ -364,7 +364,7 @@ export const MOCK_EXERCISES: Exercise[] = [
     tertiaryMuscles: ["abs", "lats"],
     cues: [
       "Pause 1-2 sekunder med bar rørende brystet.",
-      "Bevar al spænding i pausen — slap aldrig af.",
+      "Bevar al spænding i pausen. Slap aldrig af.",
       "Eksplosiv koncentrisk lige efter pausen.",
       "Albuer og scapula låst hele vejen.",
       "Pust først ud efter low-mid point.",
@@ -372,7 +372,7 @@ export const MOCK_EXERCISES: Exercise[] = [
     mistakes: [
       {
         title: "Bouncer ud af pausen",
-        body: "Eliminerer hele pointen. Markér pausen visuelt — coachen tæller højt, eller læg en chip på brystet.",
+        body: "Eliminerer hele pointen. Markér pausen visuelt: coachen tæller højt, eller læg en chip på brystet.",
       },
       {
         title: "Slapper af i pausen",
@@ -420,16 +420,16 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["chest", "traps"],
     tertiaryMuscles: ["abs", "forearms"],
     cues: [
-      "Stang i front rack — albuer let foran baren.",
-      "Spændt mave og glutes — som en stående plank.",
+      "Stang i front rack, albuer let foran baren.",
+      "Spændt mave og glutes, som en stående plank.",
       "Træk hovedet tilbage så baren passerer ansigt.",
       "Stang ender direkte over midtfod, ikke fremover.",
-      "Ingen ben-drive — strict pres hele vejen.",
+      "Ingen ben-drive, strict pres hele vejen.",
     ],
     mistakes: [
       {
         title: "Ryglæn",
-        body: "Bench press på gulv — fjerner OHP intentet. Hold core spændt og torso lodret.",
+        body: "Bench press på gulv, og det fjerner OHP intentet. Hold core spændt og torso lodret.",
       },
       {
         title: "Stang ender fremover",
@@ -477,7 +477,7 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["chest", "traps", "quads", "glutes"],
     tertiaryMuscles: ["abs", "forearms", "calves_back"],
     cues: [
-      "Dip lille — knæ blødt, ikke et squat.",
+      "Dip lille: knæ blødt, ikke et squat.",
       "Drive eksplosivt fra benene op gennem stangen.",
       "Hovedet trækkes tilbage så baren passerer ansigt.",
       "Lås benene FØR du låser armene over hovedet.",
@@ -486,7 +486,7 @@ export const MOCK_EXERCISES: Exercise[] = [
     mistakes: [
       {
         title: "For dybt dip",
-        body: "Bliver til en thruster. Dip skal være 5-10 cm — knæene må aldrig forbi 30°.",
+        body: "Bliver til en thruster. Dip skal være 5-10 cm. Knæene må aldrig forbi 30°.",
       },
       {
         title: "Forward lean",
@@ -541,11 +541,11 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["rear_delts", "forearms"],
     tertiaryMuscles: ["traps", "abs"],
     cues: [
-      "Hænge fuld stræk i bunden — ingen genvej.",
+      "Hænge fuld stræk i bunden, ingen genvej.",
       "Træk albuerne ned mod hofterne, ikke op.",
       "Bryst hen til baren, ikke hagen.",
       "Skulderblade engageret før armene begynder at trække.",
-      "Kontrolleret nedad — eccentric tæller dobbelt.",
+      "Kontrolleret nedad. Eccentric tæller dobbelt.",
     ],
     mistakes: [
       {
@@ -554,7 +554,7 @@ export const MOCK_EXERCISES: Exercise[] = [
       },
       {
         title: "Halv range",
-        body: "Stop ikke ved hagen — bryst skal røre baren. Halv-pull = halv adaptation.",
+        body: "Stop ikke ved hagen. Bryst skal røre baren. Halv-pull = halv adaptation.",
       },
     ],
     whyMatters:
@@ -598,8 +598,8 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["biceps", "traps"],
     tertiaryMuscles: ["forearms", "lower_back", "abs"],
     cues: [
-      "Hofte fast — kun overkrop bevæger sig.",
-      "Ryggen flad — ingen lordose eller kyfose.",
+      "Hofte fast, kun overkrop bevæger sig.",
+      "Ryggen flad, ingen lordose eller kyfose.",
       "Træk til nedre bryst, ikke navlen.",
       "Albuerne pegende lige bagud, ikke ud til siden.",
       "Pause kort i toppen før kontrolleret nedad.",
@@ -607,7 +607,7 @@ export const MOCK_EXERCISES: Exercise[] = [
     mistakes: [
       {
         title: "Hoftesving (kipping row)",
-        body: "Mister al upper-back stimulus. Hold over-krops vinklen konstant — kun arme og scapula bevæger sig.",
+        body: "Mister al upper-back stimulus. Hold over-krops vinklen konstant, kun arme og scapula bevæger sig.",
       },
       {
         title: "Ryg-rund i bunden",
@@ -656,11 +656,11 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["hamstrings", "adductors"],
     tertiaryMuscles: ["abs", "calves_back", "lower_back"],
     cues: [
-      "Lange skridt — bagerste knæ må aldrig touch gulvet i high tempo set.",
-      "Lodret torso — ingen fremoverlæn.",
+      "Lange skridt. Bagerste knæ må aldrig touch gulvet i high tempo set.",
+      "Lodret torso, ingen fremoverlæn.",
       "Tryk fra hælen på forreste fod.",
       "Forreste knæ over (ikke forbi) ankel.",
-      "Smooth overgang mellem hvert skridt — ingen pause.",
+      "Smooth overgang mellem hvert skridt, ingen pause.",
     ],
     mistakes: [
       {
@@ -669,13 +669,13 @@ export const MOCK_EXERCISES: Exercise[] = [
       },
       {
         title: "Torso falder fremover",
-        body: "Aktiverer lænd i stedet for benene. Hold brystet højt — som om en streng trækker dig op fra issen.",
+        body: "Aktiverer lænd i stedet for benene. Hold brystet højt, som om en streng trækker dig op fra issen.",
       },
     ],
     whyMatters:
       "Unilateral ben-træning. Fanger hvor venstre/højre er ude af balance og bygger funktionel single-leg styrke.",
     setup:
-      "Bar i back-squat position eller dumbbells i hænderne. Lang gangbane — minimum 8-10 meter.",
+      "Bar i back-squat position eller dumbbells i hænderne. Lang gangbane, minimum 8-10 meter.",
     progression: "Reverse lunge med pause i bunden, eller bulgarian split squat.",
     regression: "Static split squat uden vandring.",
     displayOrder: 110,
@@ -714,8 +714,8 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["obliques"],
     tertiaryMuscles: ["forearms"],
     cues: [
-      "Kontrolleret tempo — 2 sek op, 2 sek ned.",
-      "Ingen sving — start fra full dead hang.",
+      "Kontrolleret tempo: 2 sek op, 2 sek ned.",
+      "Ingen sving, start fra full dead hang.",
       "Træk knæ til bryst, ikke til hofte.",
       "Hold pause i toppen før eccentric.",
       "Pust ud på vej op, ind på vej ned.",
@@ -723,15 +723,15 @@ export const MOCK_EXERCISES: Exercise[] = [
     mistakes: [
       {
         title: "Momentum",
-        body: "Du svinger benene op. Test: kan du pause i toppen 1 sekund? Hvis nej — slow it down.",
+        body: "Du svinger benene op. Test: kan du pause i toppen 1 sekund? Hvis nej, slow it down.",
       },
       {
         title: "Halv range",
-        body: "Knæene når kun til hofte. Sigt mod bryst-niveau — det er hvor abs faktisk skal arbejde.",
+        body: "Knæene når kun til hofte. Sigt mod bryst-niveau. Det er hvor abs faktisk skal arbejde.",
       },
     ],
     whyMatters:
-      "Bygger funktionel core-styrke der direkte overfører til squat, deadlift og OHP — alt hvor du skal holde spænding.",
+      "Bygger funktionel core-styrke der direkte overfører til squat, deadlift og OHP, alt hvor du skal holde spænding.",
     setup: "Hænge fra pull-up bar. Spændt core fra start. Skulderblade ikke fuldt slap.",
     progression: "Hanging leg raise (straight legs) eller toes-to-bar.",
     regression: "Knee raise på captain's chair eller dipping bars.",
@@ -772,15 +772,15 @@ export const MOCK_EXERCISES: Exercise[] = [
     tertiaryMuscles: ["quads", "lower_back"],
     cues: [
       "Skulderblade ind på bænk, øjne på loft i toppen.",
-      "Hagen ned mod bryst — ingen hovedhyperextension.",
+      "Hagen ned mod bryst, ingen hovedhyperextension.",
       "Pres knæene let udad gennem hele liften.",
-      "Lås hofterne — bækken neutral i toppen, ingen overstrækning.",
+      "Lås hofterne: bækken neutral i toppen, ingen overstrækning.",
       "1-2 sek pause i toppen før kontrolleret nedad.",
     ],
     mistakes: [
       {
         title: "Hyperextension i toppen",
-        body: "Lænden tager over for glutes. Pres hagen mod brystet og spænd maven i toppen — bækken skal være neutral.",
+        body: "Lænden tager over for glutes. Pres hagen mod brystet og spænd maven i toppen. Bækken skal være neutral.",
       },
       {
         title: "Fødderne for tæt på krop",
@@ -788,7 +788,7 @@ export const MOCK_EXERCISES: Exercise[] = [
       },
     ],
     whyMatters:
-      "Den øvelse der rammer glutes hårdest — uden den ryg- og knæ-stress squat og deadlift har.",
+      "Den øvelse der rammer glutes hårdest, uden den ryg- og knæ-stress squat og deadlift har.",
     setup:
       "Skulderbladene mod en bænk. Bar over hoftekam med en pad. Fødderne plantet hofte-brede.",
     progression: "Single-leg hip thrust eller pause hip thrust.",
@@ -833,7 +833,7 @@ export const MOCK_EXERCISES: Exercise[] = [
       "Hænder under skuldre, fingre pegende frem.",
       "Albuer omkring 45° ud, ikke 90°.",
       "Bryst rører gulvet før du presser op.",
-      "Spændt mave og glutes hele tiden — ingen hængerøv.",
+      "Spændt mave og glutes hele tiden, ingen hængerøv.",
     ],
     mistakes: [
       {
@@ -886,10 +886,10 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["front_delts"],
     tertiaryMuscles: ["forearms", "abs"],
     cues: [
-      "Skuldre nede fra ørerne — ikke shruggede.",
+      "Skuldre nede fra ørerne, ikke shruggede.",
       "Krop let leaned forward = bryst-fokus, lodret = triceps-fokus.",
       "Albuerne 45° ud (bryst) eller tæt på krop (triceps).",
-      "Albuer ned til 90°, ikke dybere — skulder-sikkerhed.",
+      "Albuer ned til 90°, ikke dybere (skulder-sikkerhed).",
       "Lås ud fuldt uden at miste skulderposition.",
     ],
     mistakes: [
@@ -903,7 +903,7 @@ export const MOCK_EXERCISES: Exercise[] = [
       },
     ],
     whyMatters:
-      "Den eneste lodrette push der rammer både bryst og triceps tungt — og kræver intet andet end to barer.",
+      "Den eneste lodrette push der rammer både bryst og triceps tungt, og kræver intet andet end to barer.",
     setup:
       "Parallelbars eller dipping station. Krop fri af gulvet, ben krydset bagud eller lige ned.",
     progression: "Weighted dip via dipping belt.",
@@ -945,10 +945,10 @@ export const MOCK_EXERCISES: Exercise[] = [
     tertiaryMuscles: ["glutes", "front_delts"],
     cues: [
       "Albuer under skuldre, underarme parallelt.",
-      "Krop ret linje — hofte hverken oppe eller ned.",
+      "Krop ret linje: hofte hverken oppe eller ned.",
       "Spændt mave som om du venter på et slag.",
-      "Glutes spændt hårdt — fjerner load fra lænden.",
-      "Træk hagen let ind — ingen kink i nakken.",
+      "Glutes spændt hårdt. Det fjerner load fra lænden.",
+      "Træk hagen let ind, ingen kink i nakken.",
     ],
     mistakes: [
       {
@@ -994,10 +994,10 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["forearms"],
     tertiaryMuscles: ["front_delts"],
     cues: [
-      "Albuerne LÅSER ved siden — de bevæger sig ikke en cm.",
+      "Albuerne LÅSER ved siden. De bevæger sig ikke en cm.",
       "Stang fra fuld stræk til hage-højde.",
       "Pause kort i toppen, squeeze biceps.",
-      "Kontrolleret nedad — 2 sek minimum.",
+      "Kontrolleret nedad: 2 sek minimum.",
       "Ingen body sway, ingen back arch.",
     ],
     mistakes: [
@@ -1007,7 +1007,7 @@ export const MOCK_EXERCISES: Exercise[] = [
       },
       {
         title: "Albuer flytter sig fremover",
-        body: "Front delts tager over. Hold albuerne fast ved siden — som om de er limede til ribbene.",
+        body: "Front delts tager over. Hold albuerne fast ved siden, som om de er limede til ribbene.",
       },
     ],
     whyMatters: "Isolerer biceps direkte. Mest effektive måde at bygge arm-størrelse på.",
@@ -1050,10 +1050,10 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["forearms"],
     tertiaryMuscles: ["chest", "lats"],
     cues: [
-      "Albuerne LÅSER ved siden — de bevæger sig ikke.",
+      "Albuerne LÅSER ved siden. De bevæger sig ikke.",
       "Start fra 90° i albuen, pres ned til fuld stræk.",
-      "Lock-out i bunden — squeeze 1 sek.",
-      "Kontrolleret nedad eccentric — 2 sek.",
+      "Lock-out i bunden, squeeze 1 sek.",
+      "Kontrolleret nedad eccentric: 2 sek.",
       "Lats spændt for at låse albue-position.",
     ],
     mistakes: [
@@ -1063,11 +1063,11 @@ export const MOCK_EXERCISES: Exercise[] = [
       },
       {
         title: "Brug af kropsvægt",
-        body: "Du bøjer dig fremover og smider vægten ned. Stå oprejst — stangens vægt skal bevæges af triceps alene.",
+        body: "Du bøjer dig fremover og smider vægten ned. Stå oprejst. Stangens vægt skal bevæges af triceps alene.",
       },
     ],
     whyMatters:
-      "Isolerer triceps — bygger lockout-styrken der overfører til bench og overhead press.",
+      "Isolerer triceps og bygger lockout-styrken der overfører til bench og overhead press.",
     setup:
       "Cable maskine med rope eller V-bar. Stå oprejst tæt på maskine. Albuer fast ved siden.",
     progression: "Rope pushdown med spread i bunden, eller single-arm pushdown.",
@@ -1108,10 +1108,10 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["traps", "rear_delts"],
     tertiaryMuscles: ["forearms"],
     cues: [
-      "Albuer let bøjede — hold den vinkel konstant.",
+      "Albuer let bøjede. Hold den vinkel konstant.",
       "Hæv til skulderhøjde, ikke højere.",
       "Førerkant er lillefingeren, ikke tommelfinger.",
-      "Kontrolleret tempo — ingen swing.",
+      "Kontrolleret tempo, ingen swing.",
       "Pause kort i toppen, kontrolleret ned.",
     ],
     mistakes: [
@@ -1121,7 +1121,7 @@ export const MOCK_EXERCISES: Exercise[] = [
       },
       {
         title: "Tommelfinger i toppen pegende op",
-        body: "Aktiverer front delts. Hold lillefinger højere end tommel — det targeterer side delt.",
+        body: "Aktiverer front delts. Hold lillefinger højere end tommel. Det targeterer side delt.",
       },
     ],
     whyMatters: "Eneste isolerede øvelse for side-delts. Bygger skulder-bredde og 3D look.",
@@ -1164,16 +1164,16 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["calves_front"],
     tertiaryMuscles: ["glutes", "abs"],
     cues: [
-      "Fuld stræk i bunden — strækkes, mærkes.",
+      "Fuld stræk i bunden: strækkes, mærkes.",
       "Hæv på storetåballen, ikke yderkant.",
-      "Pause 1-2 sek i top — squeeze.",
-      "Lige knæ — ingen bouncing eller bøjning.",
-      "Kontrolleret nedad — 2 sek.",
+      "Pause 1-2 sek i top, squeeze.",
+      "Lige knæ, ingen bouncing eller bøjning.",
+      "Kontrolleret nedad: 2 sek.",
     ],
     mistakes: [
       {
         title: "Halv range",
-        body: "Hæver kun 5 cm. Calves har enorm range — brug den eller drop øvelsen.",
+        body: "Hæver kun 5 cm. Calves har enorm range. Brug den eller drop øvelsen.",
       },
       {
         title: "Bouncing",

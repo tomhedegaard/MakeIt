@@ -106,11 +106,11 @@ export async function maybeApplyKcalAdjustment(
     if (actual > target + tolerance) {
       // Wrong direction or too slow — cut deeper
       delta = -STEP;
-      reason = `Vægt-trend ${actual > 0 ? "+" : ""}${actual} kg/uge — sænker ${STEP} kcal`;
+      reason = `Vægt-trend ${actual > 0 ? "+" : ""}${actual} kg/uge: sænker ${STEP} kcal`;
     } else if (actual < target * 1.5 - tolerance) {
       // Dropping too fast — risk muscle loss
       delta = +STEP;
-      reason = `Faldt for hurtigt (${actual} kg/uge) — øger ${STEP} kcal`;
+      reason = `Faldt for hurtigt (${actual} kg/uge): øger ${STEP} kcal`;
     }
   }
 
@@ -118,7 +118,7 @@ export async function maybeApplyKcalAdjustment(
   if (goal === "maintain") {
     if (Math.abs(actual) > tolerance) {
       delta = actual > 0 ? -STEP : +STEP;
-      reason = `Vægt ${actual > 0 ? "+" : ""}${actual} kg/uge — justerer ${delta > 0 ? "+" : ""}${delta} kcal`;
+      reason = `Vægt ${actual > 0 ? "+" : ""}${actual} kg/uge: justerer ${delta > 0 ? "+" : ""}${delta} kcal`;
     }
   }
 
@@ -127,10 +127,10 @@ export async function maybeApplyKcalAdjustment(
   if (goal === "mass") {
     if (actual < target - tolerance) {
       delta = +STEP;
-      reason = `Vægt-trend ${actual > 0 ? "+" : ""}${actual} kg/uge — øger ${STEP} kcal`;
+      reason = `Vægt-trend ${actual > 0 ? "+" : ""}${actual} kg/uge: øger ${STEP} kcal`;
     } else if (actual > target * 2 + tolerance) {
       delta = -STEP;
-      reason = `Stiger for hurtigt (+${actual} kg/uge) — sænker ${STEP} kcal for renere bulk`;
+      reason = `Stiger for hurtigt (+${actual} kg/uge): sænker ${STEP} kcal for renere bulk`;
     }
   }
 

@@ -42,11 +42,24 @@ describe("Kalk theme gate (spec §3, §8)", () => {
     for (const t of DERIVED) expect(kalk[t]).toMatch(/color-mix/);
   });
 
-  it("swaps the three font stacks to the Kalk families", () => {
-    expect(kalk["--font-display-stack"]).toBe("var(--font-kalk-display)");
-    expect(kalk["--font-sans-stack"]).toBe("var(--font-kalk-sans)");
-    expect(kalk["--font-mono-stack"]).toBe("var(--font-kalk-mono)");
-    expect(kalk["--display-weight"]).toBe("800");
+  it("has one typographic voice: the stacks are the Kalk families everywhere", () => {
+    expect(layout).not.toMatch(/Inter|Archivo_Black|JetBrains_Mono/);
+    expect(layout).toMatch(/Big_Shoulders\(\{\s*variable: "--font-display-stack"/);
+    expect(layout).toMatch(/Geist\(\{\s*variable: "--font-sans-stack"/);
+    expect(layout).toMatch(/Geist_Mono\(\{\s*variable: "--font-mono-stack"/);
+    expect(layout).not.toMatch(/preload: false/);
+    // Big Shoulders has no next/font metrics to auto-generate a fallback from.
+    expect(layout).toMatch(/Big_Shoulders\(\{[\s\S]*?adjustFontFallback: false/);
+  });
+
+  it("sets the Big Shoulders display treatment on :root, not per theme", () => {
+    const root = readThemeTokens(css, ":root");
+    expect(root["--display-weight"]).toBe("800");
+    expect(root["--display-tracking"]).toBe("-0.005em");
+    expect(root["--display-leading"]).toBe("0.88");
+    expect(kalk["--display-weight"]).toBeUndefined();
+    expect(kalk["--font-display-stack"]).toBeUndefined();
+    expect(nat["--display-weight"]).toBeUndefined();
   });
 
   it("keeps Nat identical to today's dark base", () => {
@@ -54,18 +67,9 @@ describe("Kalk theme gate (spec §3, §8)", () => {
     expect(nat["--fg"]).toBe("#F5F2EC");
   });
 
-  it("lets display treatment follow the font, not the Nat colours", () => {
-    expect(readThemeTokens(css, ":root")["--display-weight"]).toBe("400");
-    // A Nat surface inside Kalk inherits Big Shoulders, so Nat must not reset the weight
-    expect(nat["--display-weight"]).toBeUndefined();
-  });
-
   it("mirrors every Kalk colour token in the Nat <html> lift", () => {
     const natLift = readThemeTokens(css, 'html:has(.theme-root[data-theme="nat"])');
-    const kalkColours = Object.keys(kalk).filter(
-      (k) => !k.startsWith("--font-") && !k.startsWith("--display-"),
-    );
-    for (const k of kalkColours) expect(natLift, k).toHaveProperty(k);
+    for (const k of Object.keys(kalk)) expect(natLift, k).toHaveProperty(k);
   });
 
   it("keeps the Nat <html> lift value-identical to Nat", () => {
@@ -85,16 +89,34 @@ describe("Kalk theme gate (spec §3, §8)", () => {
   });
 
   it("gives inputs 16px on touch so iOS does not zoom (enables removing maximumScale)", () => {
-    expect(css).toMatch(/@media \(pointer: coarse\)\s*\{[\s\S]*?\.input,\s*\.field\s*\{[\s\S]*?font-size:\s*16px/);
+    // The query also lists a max-width fallback for phone viewports that
+    // do not report a coarse pointer (desktop responsive mode, webviews).
+    expect(css).toMatch(/@media \(pointer: coarse\)[^{]*\{[\s\S]*?\.input,\s*\.field\s*\{[\s\S]*?font-size:\s*16px/);
+    expect(css).toMatch(/@media \(pointer: coarse\), \(max-width: 40rem\)/);
   });
 
-  it("loads the Kalk families under the variables the theme points at", () => {
-    expect(layout).toMatch(/Big_Shoulders\(\{[\s\S]*?variable: "--font-kalk-display"/);
-    expect(layout).toMatch(/Geist\(\{[\s\S]*?variable: "--font-kalk-sans"/);
-    expect(layout).toMatch(/Geist_Mono\(\{[\s\S]*?variable: "--font-kalk-mono"/);
-    expect(layout).toContain("kalkDisplay.variable");
-    // Big Shoulders has no next/font metrics to auto-generate a fallback from;
-    // opt out explicitly instead of letting the build warn on every run.
-    expect(layout).toMatch(/Big_Shoulders\(\{[\s\S]*?adjustFontFallback: false/);
+  const NEW_TOKENS = ["--scrim", "--media", "--anatomy-body", "--anatomy-edge", "--anatomy-idle", "--anatomy-accent"];
+
+  it.each(NEW_TOKENS)("%s exists in Kalk, Nat and the Nat lift", (t) => {
+    const natLift = readThemeTokens(css, 'html:has(.theme-root[data-theme="nat"])');
+    expect(kalk[t], "kalk").toBeDefined();
+    expect(nat[t], "nat").toBeDefined();
+    expect(natLift[t], "lift").toBeDefined();
   });
+
+  it("exposes scrim and media as Tailwind colours", () => {
+    expect(css).toMatch(/--color-scrim:\s*var\(--scrim\)/);
+    expect(css).toMatch(/--color-media:\s*var\(--media\)/);
+  });
+
+  it("gives the anatomy accent 3:1 as a graphic on Kalk --bg-2", () => {
+    expect(contrastRatio(kalk["--anatomy-accent"], kalk["--bg-2"])).toBeGreaterThanOrEqual(3);
+  });
+
+  it.each(["--mind-energy", "--mind-stress", "--mind-focus"])(
+    "%s reaches 3:1 as chart ink on Kalk --bg and --bg-2",
+    (t) => {
+      for (const s of SURFACES) expect(contrastRatio(kalk[t], kalk[s])).toBeGreaterThanOrEqual(3);
+    },
+  );
 });

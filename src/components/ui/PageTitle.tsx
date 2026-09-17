@@ -16,8 +16,8 @@ export default function PageTitle({
   className?: string;
 }) {
   return (
-    <header data-size={size} className={cn("flex items-end justify-between gap-4", className)}>
-      <div className="min-w-0">
+    <div data-size={size} className={cn("flex flex-wrap items-end justify-between gap-4", className)}>
+      <div className="min-w-0 flex-1 basis-48">
         {kicker ? <p className="eyebrow eyebrow-domain mb-2">{kicker}</p> : null}
         <h1
           className={cn(
@@ -28,7 +28,10 @@ export default function PageTitle({
           {title}
         </h1>
       </div>
-      {action ? <div className="shrink-0">{action}</div> : null}
-    </header>
+      {/* shrink-0 keeps a small action (streak badge) beside the title;
+          max-w-full stops a wide one (the Kost action row) from spilling
+          past the viewport once it has wrapped onto its own line. */}
+      {action ? <div className="shrink-0 max-w-full">{action}</div> : null}
+    </div>
   );
 }

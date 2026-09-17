@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { intlLocaleTag } from "@/i18n/config";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { redeemRewardAction } from "./actions";
 import type { Reward } from "@/lib/data/rewards";
 
@@ -78,8 +79,7 @@ export default function RedeemButton({
         <SheetContent>
           {stage === "confirm" ? (
             <>
-              <div className="eyebrow mb-2">{t("confirmEyebrow")}</div>
-              <h2 className="font-display text-2xl mb-2">{reward.name}</h2>
+              <SectionHeader eyebrow={t("confirmEyebrow")} title={reward.name} />
               {reward.description ? (
                 <p className="text-fg-dim text-sm mb-5">{reward.description}</p>
               ) : null}
@@ -138,8 +138,7 @@ export default function RedeemButton({
 
           {stage === "success" ? (
             <div className="text-center py-2">
-              <div className="eyebrow mb-3">{t("successEyebrow")}</div>
-              <h2 className="font-display text-3xl mb-2">{t("successTitle")}</h2>
+              <SectionHeader eyebrow={t("successEyebrow")} title={t("successTitle")} className="justify-center" />
               <p className="text-fg-dim text-sm mb-6 px-2">
                 {t("successBody")}
               </p>
@@ -165,8 +164,7 @@ export default function RedeemButton({
 
           {stage === "error" ? (
             <div className="text-center py-2">
-              <div className="eyebrow mb-3">{t("errorEyebrow")}</div>
-              <h2 className="font-display text-2xl mb-2">{errorReason}</h2>
+              <SectionHeader eyebrow={t("errorEyebrow")} title={errorReason} className="justify-center" />
               <p className="text-fg-dim text-sm mb-6">
                 {t("errorBody")}
               </p>

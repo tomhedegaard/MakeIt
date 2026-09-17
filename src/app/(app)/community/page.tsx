@@ -1,5 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
+import SectionHeader from "@/components/ui/SectionHeader";
 import PostComposer from "@/components/community/PostComposer";
 import PostCard from "@/components/community/PostCard";
 import RealtimeIndicator from "@/components/community/RealtimeIndicator";
@@ -20,7 +22,7 @@ const STORIES = [
 const MOCK_FEED: FeedPost[] = [
   {
     id: "m1", who: "@nina_dl", tier: "Beast",
-    content: "Ny DL PR — 175 kg @ 68 kg BW. Brugte sorte StrapIts, hænderne overlevede.",
+    content: "Ny DL PR: 175 kg @ 68 kg BW. Brugte sorte StrapIts, hænderne overlevede.",
     tag: "PR", isPr: true, whenLabel: "2m",
     reactionsCount: 84, commentsCount: 12, reactedByMe: false,
   },
@@ -32,13 +34,13 @@ const MOCK_FEED: FeedPost[] = [
   },
   {
     id: "m3", who: "@maria.lift", tier: "Beast",
-    content: "Form-check video uploadet — bench-pause med 90 kg. Tager gerne kommentarer.",
+    content: "Form-check video uploadet: bench-pause med 90 kg. Tager gerne kommentarer.",
     tag: "Form-check", isPr: false, formcheck: true, whenLabel: "3t",
     reactionsCount: 28, commentsCount: 8, reactedByMe: false,
   },
   {
     id: "m4", who: "@Munk", tier: "Legend",
-    content: "Limited cuff-farve drops på fredag — kun for crewet. Olive er tilbage.",
+    content: "Limited cuff-farve drops på fredag, kun for crewet. Olive er tilbage.",
     tag: null, isPr: false, whenLabel: "5t",
     reactionsCount: 122, commentsCount: 31, reactedByMe: false,
   },
@@ -73,25 +75,25 @@ export default async function CrewPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <RealtimeIndicator />
       {/* Header + post composer */}
-      <header className="flex items-end justify-between gap-4 pt-2">
-        <div>
-          <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
-            {t("title")}
-          </h1>
-        </div>
-        <PostComposer
-          trigger={
-            <button
-              type="button"
-              className="btn btn-primary btn-sm"
-              aria-label={t("shareAria")}
-            >
-              {t("shareButton")}
-            </button>
+      <div className="pt-2">
+        <PageTitle
+          kicker={t("eyebrow")}
+          title={t("title")}
+          action={
+            <PostComposer
+              trigger={
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  aria-label={t("shareAria")}
+                >
+                  {t("shareButton")}
+                </button>
+              }
+            />
           }
         />
-      </header>
+      </div>
 
       {/* Story strip — demo only. Connected members see an
           honest empty line until we have a real trained-today query. */}
@@ -181,10 +183,7 @@ export default async function CrewPage() {
       </section>
       ) : (
       <section className="surface-2 rounded-2xl overflow-hidden px-5 py-6">
-        <div className="eyebrow mb-2">{t("challengeEmptyEyebrow")}</div>
-        <h2 className="font-display text-2xl md:text-3xl leading-[1] mb-2">
-          {t("challengeEmptyTitle")}
-        </h2>
+        <SectionHeader eyebrow={t("challengeEmptyEyebrow")} title={t("challengeEmptyTitle")} />
         <p className="text-fg-dim text-sm max-w-md">{t("challengeEmptyBody")}</p>
       </section>
       )}

@@ -43,10 +43,10 @@
   },
   "card": {
     "primaryPrefix": "Primær: ",
-    "metaEmpty": "—"
+    "metaEmpty": "-"
   },
   "formCheck": {
-    "limitReached": "AI form-check — månedlig grænse nået",
+    "limitReached": "AI form-check: månedlig grænse nået",
     "test": "Test din form med AI",
     "stats": "{cues} cues · {mistakes} typiske fejl",
     "used": " · {used}/{limit} brugt",

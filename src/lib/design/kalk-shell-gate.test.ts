@@ -28,12 +28,17 @@ describe("no iOS focus zoom on touch", () => {
   it.each([
     ["chat Composer textarea", "../../components/chat/Composer.tsx", "textarea"],
     ["CounterfactualSliders select", "../../components/adaptive/CounterfactualSliders.tsx", "select"],
+    ["log-meal Noter textarea", "../../app/(app)/nutrition/LogMealButton.tsx", "textarea"],
+    ["lifestyle sleep input", "../../components/hrv/LifestyleLogCard.tsx", "input"],
   ])("%s is 16px on small screens", (_name, path, tag) => {
     const classes = tagClass(read(path), tag);
     expect(classes.length).toBeGreaterThan(0);
     for (const c of classes) {
       const tokens = c.split(/\s+/);
+      // sr-only fields are visually hidden (toggle checkboxes, honeypots),
+      // so Safari never zooms to them.
       const ok = tokens.includes("input") || tokens.includes("field") ||
+        tokens.includes("sr-only") ||
         (tokens.includes("text-base") && !tokens.includes("text-sm"));
       expect(ok, c).toBe(true);
     }

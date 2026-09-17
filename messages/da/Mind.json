@@ -9,39 +9,39 @@
   },
   "disclaimer": {
     "eyebrow": "Mind · Søjle 5",
-    "title": "Mental sundhed — vores 5. søjle.",
+    "title": "Mental sundhed. Vores 5. søjle.",
     "intro": "Ægte sundhed er fysisk OG psykisk. /mind er din daglige mentale check-in, dit private journal, dit sessions-bibliotek og en daglig refleksion skrevet af Motoren.",
-    "important_title": "Vigtigt — læs én gang.",
-    "important_body": "MakeIt's Mind-modul er IKKE klinisk behandling. Det er træning af mentale vaner — sammenlignelig med vejrtrækning, journaling og refleksion, ikke med terapi eller medicin. Hvis du har det meget skidt, eller hvis du tænker på at gøre skade på dig selv eller andre, så tal med et menneske der kan hjælpe nu.",
+    "important_title": "Vigtigt: læs én gang.",
+    "important_body": "MakeIt's Mind-modul er IKKE klinisk behandling. Det er træning af mentale vaner, sammenlignelig med vejrtrækning, journaling og refleksion, ikke med terapi eller medicin. Hvis du har det meget skidt, eller hvis du tænker på at gøre skade på dig selv eller andre, så tal med et menneske der kan hjælpe nu.",
     "resources_title": "Hvis det brænder",
     "resources_livslinien": "Livslinien · 70 201 201 (døgnet rundt)",
     "resources_emergency": "Akut hjælp · 112",
     "resources_doctor": "Din egen læge eller psykiatrisk skadestue",
     "privacy_title": "Sådan håndterer vi dine data",
-    "privacy_journal": "Munk, coaches og andre medlemmer kan ikke læse din journal (kun du i appen). Et uddrag kan sendes til Anthropic (Claude) for krise-tekstmoderering. Det er en databehandler — ikke en coach.",
+    "privacy_journal": "Munk, coaches og andre medlemmer kan ikke læse din journal (kun du i appen). Et uddrag kan sendes til Anthropic (Claude) for krise-tekstmoderering. Det er en databehandler, ikke en coach.",
     "privacy_mind_check": "Dit mind-check er privat som default. Når du rykker tier, kan du vælge at dele dit signal med din buddy. Begge skal sige ja. En valgfri note kan indgå i den daglige mental-coach hos Anthropic.",
     "privacy_journal_label": "Journal",
     "privacy_mind_check_label": "Mind-check",
     "privacy_ai_label": "Motoren",
-    "privacy_ai": "Motoren (databehandler: Anthropic) læser dit mind-check inkl. valgfri note, HRV og træningsuge — ikke din journal-brødtekst — for at skrive dig en daglig refleksion. Output gemmes så du kan læse den igen. Anthropic er processor, ikke en coach.",
-    "accept": "Jeg har forstået — fortsæt",
-    "accepted": "Tak — modulet er åbnet."
+    "privacy_ai": "Motoren (databehandler: Anthropic) læser dit mind-check inkl. valgfri note, HRV og træningsuge (ikke din journal-brødtekst) for at skrive dig en daglig refleksion. Output gemmes så du kan læse den igen. Anthropic er processor, ikke en coach.",
+    "accept": "Jeg har forstået. Fortsæt",
+    "accepted": "Tak. Modulet er åbnet."
   },
   "safety": {
     "eyebrow": "Mind · sikkerhed",
     "title": "Vi så noget der bekymrer os.",
-    "body": "Du skrev noget der lyder som om du har det rigtig svært lige nu. Du behøver ikke gøre noget med os her — det vigtigste er at du taler med et menneske der kan hjælpe.",
+    "body": "Du skrev noget der lyder som om du har det rigtig svært lige nu. Du behøver ikke gøre noget med os her. Det vigtigste er, at du taler med et menneske der kan hjælpe.",
     "ifBurning": "Hvis det brænder",
     "livslinien": "Livslinien · 70 201 201",
     "livslinienHours": "(døgnet rundt)",
     "emergency": "Akut hjælp · 112",
     "doctor": "Din egen læge eller psykiatrisk skadestue",
-    "privacy": "Din journal-post er gemt. Munk og coaches ser den ikke. Et uddrag kan være sendt til Anthropic til moderering — ikke til coaching.",
+    "privacy": "Din journal-post er gemt. Munk og coaches ser den ikke. Et uddrag kan være sendt til Anthropic til moderering, ikke til coaching.",
     "tellMunk": "Skriv til Munk",
-    "close": "Tak — luk",
+    "close": "Tak, luk",
     "escalateEyebrow": "Mind · skriv til Munk",
     "escalateTitle": "Skriv selv hvad du vil dele.",
-    "escalateBody": "Munk ser KUN det du skriver her. Aldrig din journal. En styrkecoach er ikke en krisevagt — Livslinien og 112 er stadig det rigtige hvis det brænder.",
+    "escalateBody": "Munk ser KUN det du skriver her. Aldrig din journal. En styrkecoach er ikke en krisevagt. Livslinien og 112 er stadig det rigtige, hvis det brænder.",
     "escalatePlaceholder": "Fx: 'Jeg har det svært i øjeblikket. Kunne vi tale i denne uge?'",
     "back": "Tilbage",
     "send": "Gem til Munk",
@@ -54,7 +54,7 @@
     "sentClose": "Luk",
     "errorNotAuthed": "Du er ikke logget ind.",
     "errorInvalid": "Beskeden kunne ikke sendes. Prøv igen.",
-    "errorTooShort": "Skriv lidt mere — mindst 4 tegn.",
+    "errorTooShort": "Skriv lidt mere, mindst 4 tegn.",
     "errorTooLong": "Beskeden er for lang.",
     "errorRls": "Beskeden kunne ikke gemmes. Ring til Livslinien hvis du har brug for hjælp nu.",
     "errorWrite": "Beskeden kunne ikke gemmes. Prøv igen, eller ring til Livslinien.",
@@ -62,8 +62,8 @@
   },
   "journal": {
     "eyebrow": "Mind · Journal",
-    "titleNew": "Journal — privat.",
-    "titleUpdate": "Journal — opdater.",
+    "titleNew": "Journal · privat.",
+    "titleUpdate": "Journal · opdater.",
     "subtitleNew": "Tre ord eller tre afsnit. Munk og coaches ser den ikke. Anthropic kan se et uddrag til krise-tekstmoderering.",
     "subtitleUpdate": "Du har skrevet i dag. Du kan opdatere indtil midnat.",
     "promptEyebrow": "Dagens prompt",
@@ -72,13 +72,54 @@
     "saving": "Gemmer...",
     "update": "Opdater",
     "save": "Gem post",
-    "saved": "Gemt — Munk og coaches ser den ikke.",
+    "saved": "Gemt. Munk og coaches ser den ikke.",
     "history": "Tidligere poster"
   },
   "settingsPage": {
     "eyebrow": "Mind · Indstillinger",
     "title": "Privatliv + notifikationer.",
-    "subtitle": "Munk og coaches ser ikke din journal-brødtekst. Anthropic kan se et uddrag til moderering. Resten kan du tænde og slukke for."
+    "subtitle": "Munk og coaches ser ikke din journal-brødtekst. Anthropic kan se et uddrag til moderering. Resten kan du tænde og slukke for.",
+    "metaTitle": "Indstillinger · Mind · MakeIt",
+    "crew": {
+      "title": "Crew-deling",
+      "body": "Hvad din buddy og dit cirkel ser. Begge sider skal sige ja."
+    },
+    "buddyShare": {
+      "title": "Del mind-check med min buddy",
+      "description": "Din buddy ser dit signal (energi/stress/fokus) som tal, aldrig din journal. Kræver at buddy også siger ja.",
+      "noBuddy": "Du har ingen aktiv buddy lige nu.",
+      "tierLocked": "Athlete-tier låser dette op."
+    },
+    "cirkelAggregate": {
+      "title": "Del aggregeret signal med mit cirkel",
+      "description": "Cirklets gennemsnit ser dit 7-dages snit. Ingen daglige tal."
+    },
+    "cirkelDaily": {
+      "title": "Del daglige tal med mit cirkel",
+      "description": "Avanceret: dine daglige mind-check tal er synlige i cirklet. Kun hvis du virkelig vil."
+    },
+    "cirkelLocked": "Beast-tier låser cirkler op (MH-10).",
+    "aiCoach": {
+      "title": "AI mental coach",
+      "rowTitle": "AI-coach daglige refleksion",
+      "rowDescription": "AI læser din mind-check, HRV og uge og skriver en kort daglig refleksion. Ingen adgang til din journal."
+    },
+    "notifications": {
+      "title": "Notifikationer",
+      "evening": {
+        "title": "Aften-mind-check nudge",
+        "description": "20:00 lokal tid hvis du endnu ikke har tjekket ind."
+      },
+      "morning": {
+        "title": "Morgen-refleksion push",
+        "description": "06:30 lokal tid. AI-coachens daglige refleksion."
+      },
+      "buddy": {
+        "title": "Buddy-mental check-in",
+        "description": "Hvis du og din buddy ikke har interageret i 7 dage og I begge har sagt ja til deling."
+      }
+    },
+    "streak": "Streak: {current} dage · længste: {longest} dage."
   },
   "tile": {
     "waitingTitle": "Mind-check venter",
@@ -94,13 +135,13 @@
   "reflection": {
     "eyebrow": "Motor",
     "title": "Motor · Adaptive Engine",
-    "gloss": "Motoren skriver refleksionen — Munk er din coach"
+    "gloss": "Motoren skriver refleksionen. Munk er din coach"
   },
   "check": {
     "metaTitle": "Mind-check · MakeIt",
     "eyebrow": "Mind · Søjle 5",
-    "titleNew": "Mind-check — 60 sek.",
-    "titleUpdate": "Mind-check — opdater.",
+    "titleNew": "Mind-check · 60 sek.",
+    "titleUpdate": "Mind-check · opdater.",
     "subtitleNew": "Tre sliders. Én sætning hvis du har lyst. Det tager kortere tid end at vente på din næste sæt.",
     "subtitleUpdate": "Du har tjekket ind i dag. Du kan opdatere indtil midnat.",
     "streakCurrent": "dages stribe",
@@ -120,19 +161,19 @@
     "save": "Gem mind-check",
     "update": "Opdater",
     "saving": "Gemmer...",
-    "savedHint": "Tjekket ind i dag — du kan opdatere senere."
+    "savedHint": "Tjekket ind i dag. Du kan opdatere senere."
   },
   "redirect": {
     "eyebrow": "Mind",
     "title": "Åbner Mind…",
-    "body": "Tjekker om du har sagt ja til disclaimer — så sender vi dig videre."
+    "body": "Tjekker om du har sagt ja til disclaimer. Så sender vi dig videre."
   },
   "graph": {
-    "title": "Mental graf — sidste 30 dage",
+    "title": "Mental graf · sidste 30 dage",
     "energy": "Energi",
     "calm": "Ro (omvendt stress)",
     "focus": "Fokus",
-    "aria": "Mental graf — energi, ro, fokus de seneste 30 dage"
+    "aria": "Mental graf: energi, ro, fokus de seneste 30 dage"
   },
   "tour": {
     "skip": "Spring over",
@@ -140,20 +181,182 @@
     "begin": "Begynd →",
     "steps": {
       "pillar": {
-        "eyebrow": "01 · Mind",
-        "title": "Søjle 5 — den mentale maskine.",
-        "body": "Du har lige bygget vanen op fysisk. Nu går vi i gang med hovedet. Tre minutter at sætte sig ind i — så er du i gang."
+        "eyebrow": "Mind",
+        "title": "Søjle 5: den mentale maskine.",
+        "body": "Du har lige bygget vanen op fysisk. Nu går vi i gang med hovedet. Tre minutter at sætte sig ind i, så er du i gang."
       },
       "check": {
-        "eyebrow": "02 · Mind-check",
+        "eyebrow": "Mind-check",
         "title": "60 sek/dag. Tre sliders.",
         "body": "Energi, stress, fokus. Det bygger en mental graf parallelt med din HRV. Når dine mind-check viser belastning, justerer Adaptive Engine din næste session."
       },
       "library": {
-        "eyebrow": "03 · AI-coach + bibliotek",
+        "eyebrow": "AI-coach + bibliotek",
         "title": "Dagens refleksion er klar 06:30.",
-        "body": "AI-coach læser dit mind-check, HRV og uge — skriver en kort daglig refleksion. Plus 8 sessioner i biblioteket: vejrtrækning, fokus, recovery, debrief."
+        "body": "AI-coach læser dit mind-check, HRV og uge og skriver en kort daglig refleksion. Plus 8 sessioner i biblioteket: vejrtrækning, fokus, recovery, debrief."
       }
     }
+  },
+  "todayPage": {
+    "metaTitle": "I dag · Mind · MakeIt",
+    "eyebrow": "Mind · I dag",
+    "title": "Dagens refleksion.",
+    "subtitle": "Personlig refleksion + session, bygget til din mind-check, HRV og uge."
+  },
+  "weeklyPage": {
+    "metaTitle": "Din uge · Mind · MakeIt",
+    "eyebrow": "Mind · Din uge",
+    "title": "Sidste 7 dage.",
+    "subtitle": "Mandage 18:00 lokal tid sender vi en mental uge-resumé som push."
+  },
+  "sessionsPage": {
+    "metaTitle": "Sessions · Mind · MakeIt",
+    "eyebrow": "Mind · Sessions",
+    "title": "Bibliotek.",
+    "subtitle": "Vejrtrækning, fokus, recovery, debrief. Vælg én. 1-5 minutter pr. session.",
+    "category": {
+      "breathing": {
+        "heading": "Vejrtrækning",
+        "subtitle": "Box breath, coherence, lang udånding. For ro og HRV."
+      },
+      "focus": {
+        "heading": "Fokus",
+        "subtitle": "Pre-session priming + genstart efter pause."
+      },
+      "recovery": {
+        "heading": "Recovery",
+        "subtitle": "Vind ned efter beast-mode. Sov bedre."
+      },
+      "debrief": {
+        "heading": "Debrief",
+        "subtitle": "Efter sessionen: hvad lærte du?"
+      }
+    }
+  },
+  "sessionPage": {
+    "backToLibrary": "← Tilbage til bibliotek"
+  },
+  "cirklerPage": {
+    "metaTitle": "Cirkler · Mind · MakeIt",
+    "eyebrow": "Mind · Cirkler",
+    "locked": {
+      "title": "Beast-tier låser cirkler op.",
+      "subtitle": "Cirkler er små grupper (3-6 medlemmer) der laver ugentlige check-ins. Når du rykker til Beast, åbner det her sig.",
+      "body": "Indtil da: hold fast i mind-check og journal hver dag. Det er sådan Reps bygges op."
+    },
+    "empty": {
+      "title": "Ingen cirkel endnu.",
+      "subtitle": "Munk opretter cirkler i grupper på 3-6. Du får besked når du er paret med en."
+    },
+    "subtitle": "{count} medlemmer · asynkron ugentlig check-in",
+    "multi": "Du er medlem af {count} cirkler. Multi-cirkel-skifte kommer i en fast follow-up."
+  },
+  "audio": {
+    "play": "Afspil audio",
+    "pause": "Pause audio",
+    "seek": "Søg i audio"
+  },
+  "cirkelFeed": {
+    "empty": "Ingen poster i cirklet endnu. Vær den første denne uge, én sætning er nok.",
+    "energy": "energi {value}/5",
+    "stress": "stress {value}/5",
+    "focus": "fokus {value}/5",
+    "ago": {
+      "now": "lige nu",
+      "hours": "{count} t siden",
+      "days": "{count, plural, one {# dag} other {# dage}} siden"
+    }
+  },
+  "cirkelForm": {
+    "eyebrow": "Ugens check-in",
+    "placeholder": "Hvordan står ugen, kort?",
+    "shareLabel": "Del mit dagens mind-check signal (energi/stress/fokus) med cirklet",
+    "counter": "{count} / {max}",
+    "sending": "Sender...",
+    "sent": "Sendt. Opdater næste uge",
+    "submit": "Post i cirklet"
+  },
+  "journalHistory": {
+    "empty": "Ingen poster endnu. Hver dag du skriver én, optjener du Reps og bygger en stribe der låser tier-perks op.",
+    "date": "{day}. {month}",
+    "months": [
+      "jan",
+      "feb",
+      "mar",
+      "apr",
+      "maj",
+      "jun",
+      "jul",
+      "aug",
+      "sep",
+      "okt",
+      "nov",
+      "dec"
+    ]
+  },
+  "celebration": {
+    "reps": "+{reps} Reps",
+    "dismiss": "Tak, luk",
+    "kind": {
+      "first_check": {
+        "eyebrow": "Mind · første mind-check",
+        "title": "Du gjorde det.",
+        "body": "Velkommen i mental-data. Hver dag du tjekker ind, bygger du grafen og giver Adaptive Engine mere at arbejde med."
+      },
+      "streak_3": {
+        "eyebrow": "Mind · 3-dages stribe",
+        "title": "Tre dage i streg.",
+        "body": "Det er der vanen sætter sig. Fortsæt. Næste milestone er 7 dage og +20 Reps."
+      },
+      "streak_7": {
+        "eyebrow": "Mind · 7-dages stribe",
+        "title": "Hel uge i mål.",
+        "body": "Du er nu blandt de medlemmer der bygger mental data konsistent. Næste: 30 dage og +100 Reps."
+      },
+      "streak_30": {
+        "eyebrow": "Mind · 30-dages stribe",
+        "title": "30 dage. Solidt.",
+        "body": "En måneds mental data. Nu kan AI-coach reelt se mønstre i din uge. +100 Reps + milestone-bonus tikkede ind."
+      },
+      "streak_90": {
+        "eyebrow": "Mind · 90-dages stribe",
+        "title": "90 dage. Det er en praksis.",
+        "body": "Du har bygget mental sundhed som en disciplin. Det her er stadig den hårdeste del. Du gjorde det."
+      }
+    }
+  },
+  "sessionCard": {
+    "category": {
+      "breathing": "Vejrtrækning",
+      "focus": "Fokus",
+      "recovery": "Recovery",
+      "debrief": "Debrief"
+    },
+    "minutes": "{minutes} min",
+    "completed": "✓ Gennemført"
+  },
+  "runner": {
+    "eyebrow": "Dagens session",
+    "meta": "{minutes} min · {pattern}",
+    "done": "✓ Gennemført i dag. Gå videre.",
+    "start": "Start session →",
+    "overlayEyebrow": "Mind · session",
+    "close": "Luk",
+    "saving": "Gemmer...",
+    "finish": "Færdig, gem"
+  },
+  "weekly": {
+    "eyebrow": "Din mentale uge",
+    "numbers": "Tal i ugen",
+    "energy": "Energi",
+    "stress": "Stress",
+    "focus": "Fokus",
+    "activity": "Aktivitet",
+    "mindCheck": "Mind-check",
+    "sessions": "Sessioner",
+    "journal": "Journal",
+    "delta": "{delta} vs sidste uge",
+    "unchanged": "uændret",
+    "footer": "Sammenlignet med ugen før. Mandage 18:00 sender vi dig en mental uge-resumé som push. Du kan slå det fra på <link>/mind/settings</link>."
   }
 }

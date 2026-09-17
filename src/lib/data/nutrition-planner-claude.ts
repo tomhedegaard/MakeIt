@@ -64,14 +64,14 @@ type ParsedPlan = z.infer<typeof PlanSchema>;
 
 const ALLOWLIST_BLOCK = flattenAllowlist();
 
-const SYSTEM_PROMPT = `Du er head nutrition-coach for MakeIt // HQ — en dansk styrketræningsplatform.
+const SYSTEM_PROMPT = `Du er head nutrition-coach for MakeIt // HQ, en dansk styrketræningsplatform.
 Du planlægger ugentlige måltidsplaner for medlemmer der træner styrke 3-5 gange om ugen.
 
 # Brand-stemme
 
 ${BRAND_VOICE}
 
-# Politik (HARD CONSTRAINTS — ingen undtagelser)
+# Politik (HARD CONSTRAINTS, ingen undtagelser)
 
 INGEN raffinerede frøolier: solsikkeolie, rapsolie, majsolie, sojaolie, vindrueolie,
 bomuldsfrøolie, saflorolie, "vegetabilsk olie", margarine. Brug olivenolie, smør,
@@ -87,7 +87,7 @@ INGEN high-fructose corn syrup, fruktose-glukose sirup, isoglukose, maltodextrin
 
 Honning og ahornsirup i små mængder OK. Kakao 70%+ OK.
 
-# Allowlist — vælg hovedingredienser herfra når muligt
+# Allowlist: vælg hovedingredienser herfra når muligt
 
 ${ALLOWLIST_BLOCK}
 
@@ -132,7 +132,7 @@ Sæt carbDensity på hvert måltid:
   - "standard": 30-60g carbs
   - "high":     >60g carbs (havregrød, ris-bowl, søde kartofler)
 
-Sigt efter at lægge "high"-måltider på 2-3 dage om ugen — dem hvor medlemmet
+Sigt efter at lægge "high"-måltider på 2-3 dage om ugen, dem hvor medlemmet
 typisk har de tunge sessioner. Hvis du ikke kender træningskalender, antag
 mandag og torsdag er tunge.
 
@@ -158,8 +158,13 @@ Cooking level: 'basic' = max 4 trin, 'intermediate' = op til 6, 'advanced' = op 
 Husstand: ingredient-mængder skal være per portion (1 person). Vi multiplicerer
 selv i indkøbslisten.
 
-Fish/week: respektér grænsen — antallet af måltider med fed fisk (laks, makrel,
+Fish/week: respektér grænsen. Antallet af måltider med fed fisk (laks, makrel,
 sild, sardiner, ørred, ansjoser) må ikke overstige profile.fishPerWeek.
+
+# Medlemsvendt tekst
+
+Brug ALDRIG tankestreg (— eller –) i title, description, notes eller
+trin. Brug kolon, punktum, komma eller parentes.
 
 # Output
 
@@ -293,7 +298,7 @@ function buildUserMessage(opts: GeneratePlanOpts): string {
     `  fishPerWeek: ${profile.fishPerWeek}`,
     `  dailyKcalTarget: ${profile.dailyKcalTarget ?? "auto (sæt fra goal)"}`,
     `  dailyProteinGTarget: ${profile.dailyProteinGTarget ?? "auto"}`,
-    `  cookDays: ${profile.cookDays.length ? profile.cookDays.join(", ") : "ikke angivet — antag weekend"}`,
+    `  cookDays: ${profile.cookDays.length ? profile.cookDays.join(", ") : "ikke angivet, antag weekend"}`,
     "",
     `Allergier (HARD-stop): ${profile.allergies.length ? profile.allergies.join(", ") : "ingen"}`,
     `Dislikes: ${profile.dislikes.length ? profile.dislikes.join(", ") : "ingen"}`,
@@ -301,16 +306,16 @@ function buildUserMessage(opts: GeneratePlanOpts): string {
     "",
     `Træningsdage denne uge: ${trainingLine}`,
     `Skip-dage (spring måltider over): ${skipLine}`,
-    `Meal-prep mode: ${mealPrepMode ? "JA — genbrug 2-3 måltider strategisk på tværs af ugen så frokost mandag og onsdag fx er det samme. Aftensmad tirsdag/torsdag det samme. Færre unikke meals = mindre prep + indkøb." : "Nej — varieret hver dag"}`,
+    `Meal-prep mode: ${mealPrepMode ? "JA: genbrug 2-3 måltider strategisk på tværs af ugen så frokost mandag og onsdag fx er det samme. Aftensmad tirsdag/torsdag det samme. Færre unikke meals = mindre prep + indkøb." : "Nej, varieret hver dag"}`,
     "",
     "MACRO-BIAS PER DAG:",
     "  Træningsdag: planlæg ÉT high-carb meal (typisk frokost eller aften post-træning, carbDensity='high'),",
     "    og giv det dagens største carbs-portion. Andre meals 'standard'. Højere total kcal.",
     "  Hviledag:    alle meals 'standard' eller 'low' carbDensity, lavere total carbs.",
-    "    Slet ikke fjern carbs — protein + grønt stiger lidt for samme mæthed.",
+    "    Slet ikke fjern carbs, protein + grønt stiger lidt for samme mæthed.",
     "  Skip-dag:    udlad alle slots for dagen. Generér 0 meals for skip-day-indekset.",
     "",
-    `Dagligt mål (HARD): ${profile.dailyKcalTarget ?? "auto"} kcal / ${profile.dailyProteinGTarget ?? "auto"}g protein. Hver dags meal-sum SKAL ramme det — skalér portioner.`,
+    `Dagligt mål (HARD): ${profile.dailyKcalTarget ?? "auto"} kcal / ${profile.dailyProteinGTarget ?? "auto"}g protein. Hver dags meal-sum SKAL ramme det, så skalér portioner.`,
     "",
     "Generér ugeplanen og returnér via submit_plan.",
   ];

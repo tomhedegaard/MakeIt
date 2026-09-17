@@ -3,8 +3,10 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import ConnectionStatus from "@/components/hrv/ConnectionStatus";
 import WearableConnectSheet from "@/components/hrv/WearableConnectSheet";
+import SectionHeader from "@/components/ui/SectionHeader";
 import {
   setPrimaryConnection,
   setCycleTracking,
@@ -28,6 +30,7 @@ export default function HrvSettingsSection({
 }: {
   hrv: HrvSettings;
 }) {
+  const t = useTranslations("Hrv.settingsSection");
   const router = useRouter();
   const { connections } = hrv;
 
@@ -56,7 +59,7 @@ export default function HrvSettingsSection({
       if (res.ok) {
         router.refresh();
       } else {
-        setPrimaryError("Kunne ikke gøre primær — prøv igen.");
+        setPrimaryError(t("primaryError"));
       }
     });
   }
@@ -68,11 +71,11 @@ export default function HrvSettingsSection({
     startCycle(async () => {
       const res = await setCycleTracking(next);
       if (res.ok) {
-        setCycleMsg("✓ Gemt");
+        setCycleMsg(t("saved"));
         window.setTimeout(() => setCycleMsg(null), 2200);
       } else {
         setCycleEnabled(prev);
-        setCycleMsg("Kunne ikke gemme — prøv igen.");
+        setCycleMsg(t("saveError"));
       }
     });
   }
@@ -84,37 +87,33 @@ export default function HrvSettingsSection({
     startNudge(async () => {
       const res = await setSessionSuggestionEnabled(next);
       if (res.ok) {
-        setNudgeMsg("✓ Gemt");
+        setNudgeMsg(t("saved"));
         window.setTimeout(() => setNudgeMsg(null), 2200);
       } else {
         setNudgeEnabled(prev);
-        setNudgeMsg("Kunne ikke gemme — prøv igen.");
+        setNudgeMsg(t("saveError"));
       }
     });
   }
 
   return (
     <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-5">
-      <div>
-        <div className="eyebrow mb-1">HRV</div>
-        <h2 className="font-display text-2xl">Wearables og recovery</h2>
-      </div>
+      <SectionHeader eyebrow={t("eyebrow")} title={t("title")} />
 
       {/* Wearable connections */}
       <div className="space-y-3">
-        <div className="eyebrow">Forbundne wearables</div>
+        <div className="eyebrow">{t("connected")}</div>
         {connections.length === 0 ? (
           <div className="rounded-xl border hairline px-4 py-4 space-y-3">
             <p className="text-sm text-fg-dim leading-relaxed">
-              Du har ingen wearable forbundet. Forbind én, så synker MakeIt
-              din HRV automatisk hver morgen.
+              {t("empty")}
             </p>
             <button
               type="button"
               className="btn btn-sm"
               onClick={() => setSheetOpen(true)}
             >
-              Forbind wearable
+              {t("connect")}
             </button>
           </div>
         ) : (
@@ -129,7 +128,7 @@ export default function HrvSettingsSection({
                     onClick={() => makePrimary(connection.id)}
                     disabled={primaryPending}
                   >
-                    {primaryPending ? "Gemmer…" : "Gør primær"}
+                    {primaryPending ? t("saving") : t("makePrimary")}
                   </button>
                 ) : null}
               </li>
@@ -150,11 +149,8 @@ export default function HrvSettingsSection({
       <ul className="divide-y hairline border-t hairline">
         <li className="py-3 flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <div className="text-sm">Cyklus-tracking</div>
-            <div className="text-xs text-fg-dim mt-0.5">
-              Justér din baseline for menstruationscyklussen, så din readiness
-              tager højde for de naturlige HRV-udsving.
-            </div>
+            <div className="text-sm">{t("cycle.title")}</div>
+            <div className="text-xs text-fg-dim mt-0.5">{t("cycle.body")}</div>
           </div>
           <label className="shrink-0 cursor-pointer touch-app">
             <input
@@ -183,11 +179,8 @@ export default function HrvSettingsSection({
         </li>
         <li className="py-3 flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <div className="text-sm">Vis HRV-nudge på workouts</div>
-            <div className="text-xs text-fg-dim mt-0.5">
-              Når din readiness er lav i dag, ser du en kort note øverst på dagens
-              session. Slå fra, hvis du hellere vil have ro.
-            </div>
+            <div className="text-sm">{t("nudge.title")}</div>
+            <div className="text-xs text-fg-dim mt-0.5">{t("nudge.body")}</div>
           </div>
           <label className="shrink-0 cursor-pointer touch-app">
             <input
@@ -237,7 +230,7 @@ export default function HrvSettingsSection({
         href="/hrv"
         className="block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim lift"
       >
-        Se din fulde HRV →
+        {t("seeAll")}
       </Link>
 
       <WearableConnectSheet open={sheetOpen} onOpenChange={setSheetOpen} />

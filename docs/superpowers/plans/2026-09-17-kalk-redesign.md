@@ -866,7 +866,9 @@ Hver primitiv får en render-test.
 
 **Native:** `NativeBridge` sætter statusbar-stil ud fra `color-scheme` på `<html>`. `capacitor.config.ts` `backgroundColor` bliver `#E7E9EB`. Splash og ikon følger først ved næste butiksudgivelse (D3), og kun med Toms accept.
 
-**Oprydning:** om Inter, Archivo Black og JetBrains Mono skal fjernes, er en beslutning til Tom ved F4-start. Anbefalingen er, at Nat beholder Kalk-fontene med mørke farver, så der kun er én typografisk stemme.
+**Oprydning:** Inter, Archivo Black og JetBrains Mono er fjernet. **Besluttet af Tom 2026-09-17:** én typografisk stemme. Nat bruger Kalk-fontene med mørke farver, og `--font-*-stack` peger direkte på Big Shoulders, Geist og Geist Mono på `:root`. Den klassiske landing skifter derfor også font.
+
+**`/coach`:** eksplicit `ThemeScope theme="nat"` (**besluttet af Tom 2026-09-17**), så konsollen ikke afhænger af `:root`-defaults.
 
 ### F5 Assets
 
@@ -885,5 +887,5 @@ Findes allerede i `AdaptationCard`, så der er ikke noget motor-spor. F2 viser k
 - [x] F1 Fundament (2026-09-17, branch `claude/kalk-redesign`)
 - [x] F2 Landing (#102, bag `LANDING_VARIANT`; Preview-env sat 2026-09-17)
 - [x] F3 App-kerne (2026-09-17)
-- [ ] F4 App-flader
+- [x] F4 App-flader (2026-09-17, branch `claude/kalk-f4-surfaces`)
 - [ ] F5 Assets (Tom)

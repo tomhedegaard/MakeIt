@@ -6,14 +6,13 @@
   },
   "errors": {
     "handle_invalid": "Handle must start with a letter (a-z) and be 2-31 characters (a-z, 0-9, _, ., -).",
-    "handle_taken": "That handle is already taken — try another.",
+    "handle_taken": "That handle is already taken. Try another.",
     "auth": "You are not signed in.",
-    "unknown": "Something went wrong — please try again.",
+    "unknown": "Something went wrong. Please try again.",
     "service_key_missing": "Account deletion requires server configuration that is not set up.",
-    "prefs_save": "Could not save — please try again."
+    "prefs_save": "Could not save. Please try again."
   },
   "profile": {
-    "eyebrow": "Profile",
     "title": "How the crew sees you",
     "handleLabel": "Handle",
     "displayNameLabel": "Display name",
@@ -23,7 +22,6 @@
     "save": "Save profile"
   },
   "notifications": {
-    "eyebrow": "Notifications",
     "title": "When we may reach out to you",
     "pushTitle": "Push reminders",
     "pushDescription": "A notification on your phone when it is time to log a meal or start a session. Requires you to allow notifications in the browser.",
@@ -32,22 +30,20 @@
     "mentionLabel": "@mentions",
     "mentionSub": "Email when a crew member mentions you in a comment.",
     "digestLabel": "Weekly digest",
-    "digestSub": "Monday morning — top PRs, new members, the challenge of the month.",
+    "digestSub": "Monday morning: top PRs, new members, the challenge of the month.",
     "tierUpLabel": "Tier-up notifications",
     "tierUpSub": "When you cross from Lifter → Athlete → Beast → Legend.",
     "save": "Save preferences"
   },
   "account": {
-    "eyebrow": "Account",
     "title": "Behind the scenes",
     "email": "Email",
     "tier": "Tier",
     "memberSince": "Member since"
   },
   "data": {
-    "eyebrow": "Data",
     "title": "Export your own rows",
-    "description": "Download a JSON file with the member-owned rows we can read under your login: profile, training, journal, mind-check, mental coach, HRV, nutrition, messages, weight, community, Reps and form checks. Not “everything in the universe” — your own rows. GDPR art. 20.",
+    "description": "Download a JSON file with the member-owned rows we can read under your login: profile, training, journal, mind-check, mental coach, HRV, nutrition, messages, weight, community, Reps and form checks. Not “everything in the universe”, just your own rows. GDPR art. 20.",
     "exportNoteConnected": "Personal data export from {product}. Contains your own member rows we can read under your login (RLS). Contact {email} if something is missing or looks wrong.",
     "exportNoteDemo": "Demo mode has no connected database. This file is empty of member rows. Art. 20 export of your real rows requires connected mode.",
     "exportOmitted": "These tables could not be read in this export: {tables}.",

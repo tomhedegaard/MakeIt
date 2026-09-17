@@ -68,8 +68,8 @@ describe("CDO DA/EN bodycopy — Today / Train / Reps", () => {
     };
     expect(da.start).toBe("Start pas →");
     expect(en.start).toBe("Start session →");
-    expect(da.mock.dayLabel).toBe("Dag A — Squat");
-    expect(en.mock.dayLabel).toBe("Day A — Squat");
+    expect(da.mock.dayLabel).toBe("Dag A · Squat");
+    expect(en.mock.dayLabel).toBe("Day A · Squat");
   });
 
   it("wires /dashboard session + minutes + HRV unit from Dashboard keys", () => {
@@ -483,6 +483,6 @@ describe("CDO DA/EN bodycopy — seed / demo catalog fixtures", () => {
     expect(repsPage).toContain("shop.mock.");
     const daAdaptive = loadJson("messages/da/Adaptive.json");
     const gloss = (daAdaptive.strip as { gloss: string }).gloss;
-    expect(gloss).toBe("Adaptive Engine tilpasser ugen — Munk er din coach");
+    expect(gloss).toBe("Adaptive Engine tilpasser ugen. Munk er din coach");
   });
 });

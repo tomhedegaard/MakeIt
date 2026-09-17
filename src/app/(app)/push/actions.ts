@@ -106,7 +106,7 @@ export async function sendTestPushAction(): Promise<{
   if (!member) return { ok: false, sent: 0, reason: "not authed" };
 
   const sent = await sendPushToMember(member.id, {
-    title: "MakeIt — testbesked",
+    title: "MakeIt · testbesked",
     body: "Push virker. Daglige check-in påmindelser kommer kl. 8.",
     url: "/dashboard",
     tag: "test",

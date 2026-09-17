@@ -53,10 +53,10 @@ describe("CDO identity — Munk (coach) vs Motor (engine)", () => {
     expect(daStrip.munkRole).toBe("Coach");
     expect(enStrip.munkRole).toBe("Coach");
     expect(daStrip.gloss).toBe(
-      "Adaptive Engine tilpasser ugen — Munk er din coach",
+      "Adaptive Engine tilpasser ugen. Munk er din coach",
     );
     expect(enStrip.gloss).toBe(
-      "Adaptive Engine adapts the week — Munk is your coach",
+      "Adaptive Engine adapts the week. Munk is your coach",
     );
 
     const daDots = daAdaptive.dots as Record<string, unknown>;

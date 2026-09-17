@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import type { ReadinessBucket } from "@/lib/hrv/types";
 
@@ -25,14 +26,6 @@ const LADDER_ORDER: ReadinessBucket[] = [
   "high",
   "very_high",
 ];
-
-const BUCKET_LABELS: Record<ReadinessBucket, string> = {
-  very_low: "Meget under din norm",
-  low: "Under din norm",
-  normal: "I dit normale område",
-  high: "Over din norm",
-  very_high: "Meget over din norm",
-};
 
 type SegmentTone = "filled" | "outline" | "sketch" | "neutral";
 
@@ -66,6 +59,7 @@ export default function ReadinessLadder({
 }: {
   bucket: ReadinessBucket | null;
 }) {
+  const t = useTranslations("Hrv.readinessLadder");
   // Render top-down for the DOM/visual stack (very_high first).
   const segments = [...LADDER_ORDER].reverse();
 
@@ -76,8 +70,8 @@ export default function ReadinessLadder({
         role="img"
         aria-label={
           bucket === null
-            ? "Readiness-stige — venter på baseline"
-            : `Readiness: ${BUCKET_LABELS[bucket]}`
+            ? t("ariaWaiting")
+            : t("aria", { label: t(`bucket.${bucket}`) })
         }
       >
         {segments.map((segment) => {
@@ -91,7 +85,7 @@ export default function ReadinessLadder({
                 TONE_CLASSES[tone],
               )}
             >
-              <span className="sr-only">{BUCKET_LABELS[segment]}</span>
+              <span className="sr-only">{t(`bucket.${segment}`)}</span>
             </div>
           );
         })}
@@ -99,11 +93,11 @@ export default function ReadinessLadder({
 
       {bucket === null ? (
         <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint leading-relaxed">
-          Readiness kommer når din baseline er klar
+          {t("waiting")}
         </p>
       ) : (
         <p className="font-display text-base leading-tight text-fg">
-          {BUCKET_LABELS[bucket]}
+          {t(`bucket.${bucket}`)}
         </p>
       )}
     </div>

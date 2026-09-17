@@ -9,39 +9,39 @@
   },
   "disclaimer": {
     "eyebrow": "Mind · Pillar 5",
-    "title": "Mental health — our 5th pillar.",
+    "title": "Mental health. Our 5th pillar.",
     "intro": "Real health is physical AND mental. /mind is your daily mental check-in, your private journal, your sessions library, and a daily reflection written by the Motor.",
-    "important_title": "Important — read once.",
-    "important_body": "MakeIt's Mind module is NOT clinical treatment. It's training mental habits — comparable to breathwork, journaling, and reflection. NOT a substitute for therapy or medication. If you're in a bad place, or thinking about harming yourself or others, talk to a real human who can help right now.",
+    "important_title": "Important: read once.",
+    "important_body": "MakeIt's Mind module is NOT clinical treatment. It's training mental habits, comparable to breathwork, journaling, and reflection. NOT a substitute for therapy or medication. If you're in a bad place, or thinking about harming yourself or others, talk to a real human who can help right now.",
     "resources_title": "If it's burning",
     "resources_livslinien": "Livslinien · 70 201 201 (Denmark, 24/7)",
     "resources_emergency": "Emergency · 112 (EU) / 911 (US)",
     "resources_doctor": "Your doctor or the psychiatric ER",
     "privacy_title": "How we handle your data",
-    "privacy_journal": "Munk, coaches and other members cannot read your journal (only you in the app). An excerpt may be sent to Anthropic (Claude) for crisis-text moderation. That is a processor — not a coach.",
+    "privacy_journal": "Munk, coaches and other members cannot read your journal (only you in the app). An excerpt may be sent to Anthropic (Claude) for crisis-text moderation. That is a processor, not a coach.",
     "privacy_mind_check": "Your mind-check is private by default. When you tier up, you can choose to share your signal with your buddy. Both must opt in. An optional note may be included in the daily mental coach at Anthropic.",
     "privacy_journal_label": "Journal",
     "privacy_mind_check_label": "Mind-check",
     "privacy_ai_label": "The Motor",
-    "privacy_ai": "The Motor (processor: Anthropic) reads your mind-check including optional note, HRV, and training week — not your journal body — to write you a daily reflection. Output is stored so you can re-read it. Anthropic is a processor, not a coach.",
-    "accept": "I understand — continue",
-    "accepted": "Thank you — the module is open."
+    "privacy_ai": "The Motor (processor: Anthropic) reads your mind-check including optional note, HRV, and training week (not your journal body) to write you a daily reflection. Output is stored so you can re-read it. Anthropic is a processor, not a coach.",
+    "accept": "I understand. Continue",
+    "accepted": "Thank you. The module is open."
   },
   "safety": {
     "eyebrow": "Mind · safety",
     "title": "We saw something that worries us.",
-    "body": "You wrote something that sounds like you're having a really hard time right now. You don't need to do anything with us here — the important thing is talking to a person who can help.",
+    "body": "You wrote something that sounds like you're having a really hard time right now. You don't need to do anything with us here. The important thing is talking to a person who can help.",
     "ifBurning": "If it's burning",
     "livslinien": "Livslinien · 70 201 201",
     "livslinienHours": "(Denmark, 24/7)",
     "emergency": "Emergency · 112",
     "doctor": "Your doctor or the psychiatric ER",
-    "privacy": "Your journal entry is saved. Munk and coaches cannot see it. An excerpt may have been sent to Anthropic for moderation — not for coaching.",
+    "privacy": "Your journal entry is saved. Munk and coaches cannot see it. An excerpt may have been sent to Anthropic for moderation, not for coaching.",
     "tellMunk": "Write to Munk",
-    "close": "Thanks — close",
+    "close": "Thanks, close",
     "escalateEyebrow": "Mind · write to Munk",
     "escalateTitle": "Write yourself what you want to share.",
-    "escalateBody": "Munk sees ONLY what you write here. Never your journal. A strength coach is not a crisis service — Livslinien and 112 are still the right call if it's burning.",
+    "escalateBody": "Munk sees ONLY what you write here. Never your journal. A strength coach is not a crisis service. Livslinien and 112 are still the right call if it's burning.",
     "escalatePlaceholder": "E.g. 'I'm having a hard time right now. Could we talk this week?'",
     "back": "Back",
     "send": "Save for Munk",
@@ -54,7 +54,7 @@
     "sentClose": "Close",
     "errorNotAuthed": "You are not signed in.",
     "errorInvalid": "The message could not be sent. Try again.",
-    "errorTooShort": "Write a little more — at least 4 characters.",
+    "errorTooShort": "Write a little more, at least 4 characters.",
     "errorTooLong": "The message is too long.",
     "errorRls": "The message could not be saved. Call Livslinien if you need help now.",
     "errorWrite": "The message could not be saved. Try again, or call Livslinien.",
@@ -62,8 +62,8 @@
   },
   "journal": {
     "eyebrow": "Mind · Journal",
-    "titleNew": "Journal — private.",
-    "titleUpdate": "Journal — update.",
+    "titleNew": "Journal · private.",
+    "titleUpdate": "Journal · update.",
     "subtitleNew": "Three words or three paragraphs. Munk and coaches cannot see it. Anthropic may see an excerpt for crisis-text moderation.",
     "subtitleUpdate": "You have written today. You can update until midnight.",
     "promptEyebrow": "Today's prompt",
@@ -72,13 +72,54 @@
     "saving": "Saving...",
     "update": "Update",
     "save": "Save entry",
-    "saved": "Saved — Munk and coaches cannot see it.",
+    "saved": "Saved. Munk and coaches cannot see it.",
     "history": "Earlier entries"
   },
   "settingsPage": {
     "eyebrow": "Mind · Settings",
     "title": "Privacy + notifications.",
-    "subtitle": "Munk and coaches cannot see your journal body. Anthropic may see an excerpt for moderation. The rest you can turn on and off."
+    "subtitle": "Munk and coaches cannot see your journal body. Anthropic may see an excerpt for moderation. The rest you can turn on and off.",
+    "metaTitle": "Settings · Mind · MakeIt",
+    "crew": {
+      "title": "Crew sharing",
+      "body": "What your buddy and your circle see. Both sides have to say yes."
+    },
+    "buddyShare": {
+      "title": "Share mind check with my buddy",
+      "description": "Your buddy sees your signal (energy/stress/focus) as numbers, never your journal. Requires your buddy to say yes too.",
+      "noBuddy": "You have no active buddy right now.",
+      "tierLocked": "Athlete tier unlocks this."
+    },
+    "cirkelAggregate": {
+      "title": "Share aggregate signal with my circle",
+      "description": "The circle average sees your 7-day mean. No daily numbers."
+    },
+    "cirkelDaily": {
+      "title": "Share daily numbers with my circle",
+      "description": "Advanced: your daily mind check numbers are visible in the circle. Only if you really want to."
+    },
+    "cirkelLocked": "Beast tier unlocks circles (MH-10).",
+    "aiCoach": {
+      "title": "AI mental coach",
+      "rowTitle": "AI coach daily reflection",
+      "rowDescription": "The AI reads your mind check, HRV and week and writes a short daily reflection. No access to your journal."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "evening": {
+        "title": "Evening mind check nudge",
+        "description": "20:00 local time if you have not checked in yet."
+      },
+      "morning": {
+        "title": "Morning reflection push",
+        "description": "06:30 local time. The AI coach's daily reflection."
+      },
+      "buddy": {
+        "title": "Buddy mental check-in",
+        "description": "If you and your buddy have not interacted for 7 days and you both said yes to sharing."
+      }
+    },
+    "streak": "Streak: {current} days · longest: {longest} days."
   },
   "tile": {
     "waitingTitle": "Mind-check waiting",
@@ -94,13 +135,13 @@
   "reflection": {
     "eyebrow": "Motor",
     "title": "Motor · Adaptive Engine",
-    "gloss": "The Motor writes the reflection — Munk is your coach"
+    "gloss": "The Motor writes the reflection. Munk is your coach"
   },
   "check": {
     "metaTitle": "Mind-check · MakeIt",
     "eyebrow": "Mind · Pillar 5",
-    "titleNew": "Mind-check — 60 sec.",
-    "titleUpdate": "Mind-check — update.",
+    "titleNew": "Mind-check · 60 sec.",
+    "titleUpdate": "Mind-check · update.",
     "subtitleNew": "Three sliders. One sentence if you want. Faster than waiting for your next set.",
     "subtitleUpdate": "You checked in today. You can update until midnight.",
     "streakCurrent": "day streak",
@@ -120,19 +161,19 @@
     "save": "Save mind-check",
     "update": "Update",
     "saving": "Saving...",
-    "savedHint": "Checked in today — you can update later."
+    "savedHint": "Checked in today. You can update later."
   },
   "redirect": {
     "eyebrow": "Mind",
     "title": "Opening Mind…",
-    "body": "Checking whether you have accepted the disclaimer — then we send you on."
+    "body": "Checking whether you have accepted the disclaimer. Then we send you on."
   },
   "graph": {
-    "title": "Mental graph — last 30 days",
+    "title": "Mental graph · last 30 days",
     "energy": "Energy",
     "calm": "Calm (inverted stress)",
     "focus": "Focus",
-    "aria": "Mental graph — energy, calm, focus over the last 30 days"
+    "aria": "Mental graph: energy, calm, focus over the last 30 days"
   },
   "tour": {
     "skip": "Skip",
@@ -140,20 +181,182 @@
     "begin": "Begin →",
     "steps": {
       "pillar": {
-        "eyebrow": "01 · Mind",
-        "title": "Pillar 5 — the mental machine.",
-        "body": "You just built the physical habit. Now we start on the head. Three minutes to get oriented — then you are in."
+        "eyebrow": "Mind",
+        "title": "Pillar 5: the mental machine.",
+        "body": "You just built the physical habit. Now we start on the head. Three minutes to get oriented, then you are in."
       },
       "check": {
-        "eyebrow": "02 · Mind-check",
+        "eyebrow": "Mind-check",
         "title": "60 sec/day. Three sliders.",
         "body": "Energy, stress, focus. It builds a mental graph parallel to your HRV. When your mind-checks show strain, the Adaptive Engine adjusts your next session."
       },
       "library": {
-        "eyebrow": "03 · AI coach + library",
+        "eyebrow": "AI coach + library",
         "title": "Today's reflection is ready at 06:30.",
-        "body": "The AI coach reads your mind-check, HRV and week — writes a short daily reflection. Plus 8 sessions in the library: breathwork, focus, recovery, debrief."
+        "body": "The AI coach reads your mind-check, HRV and week and writes a short daily reflection. Plus 8 sessions in the library: breathwork, focus, recovery, debrief."
       }
     }
+  },
+  "todayPage": {
+    "metaTitle": "Today · Mind · MakeIt",
+    "eyebrow": "Mind · Today",
+    "title": "Today's reflection.",
+    "subtitle": "Personal reflection + session, built from your mind check, HRV and week."
+  },
+  "weeklyPage": {
+    "metaTitle": "Your week · Mind · MakeIt",
+    "eyebrow": "Mind · Your week",
+    "title": "Last 7 days.",
+    "subtitle": "Mondays at 18:00 local time we send a mental week summary as a push."
+  },
+  "sessionsPage": {
+    "metaTitle": "Sessions · Mind · MakeIt",
+    "eyebrow": "Mind · Sessions",
+    "title": "Library.",
+    "subtitle": "Breathing, focus, recovery, debrief. Pick one. 1-5 minutes per session.",
+    "category": {
+      "breathing": {
+        "heading": "Breathing",
+        "subtitle": "Box breath, coherence, long exhale. For calm and HRV."
+      },
+      "focus": {
+        "heading": "Focus",
+        "subtitle": "Pre-session priming + restart after a break."
+      },
+      "recovery": {
+        "heading": "Recovery",
+        "subtitle": "Wind down after beast mode. Sleep better."
+      },
+      "debrief": {
+        "heading": "Debrief",
+        "subtitle": "After the session: what did you learn?"
+      }
+    }
+  },
+  "sessionPage": {
+    "backToLibrary": "← Back to library"
+  },
+  "cirklerPage": {
+    "metaTitle": "Circles · Mind · MakeIt",
+    "eyebrow": "Mind · Circles",
+    "locked": {
+      "title": "Beast tier unlocks circles.",
+      "subtitle": "Circles are small groups (3-6 members) doing weekly check-ins. When you move up to Beast, this opens.",
+      "body": "Until then: keep up the mind check and journal every day. That is how Reps are built."
+    },
+    "empty": {
+      "title": "No circle yet.",
+      "subtitle": "Munk creates circles in groups of 3-6. You get a message when you are paired with one."
+    },
+    "subtitle": "{count} members · asynchronous weekly check-in",
+    "multi": "You are a member of {count} circles. Multi-circle switching comes in a fast follow-up."
+  },
+  "audio": {
+    "play": "Play audio",
+    "pause": "Pause audio",
+    "seek": "Seek in audio"
+  },
+  "cirkelFeed": {
+    "empty": "No posts in the circle yet. Be the first this week, one sentence is enough.",
+    "energy": "energy {value}/5",
+    "stress": "stress {value}/5",
+    "focus": "focus {value}/5",
+    "ago": {
+      "now": "just now",
+      "hours": "{count} h ago",
+      "days": "{count, plural, one {# day} other {# days}} ago"
+    }
+  },
+  "cirkelForm": {
+    "eyebrow": "This week's check-in",
+    "placeholder": "How is the week going, briefly?",
+    "shareLabel": "Share today's mind check signal (energy/stress/focus) with the circle",
+    "counter": "{count} / {max}",
+    "sending": "Sending...",
+    "sent": "Sent. Update next week",
+    "submit": "Post in the circle"
+  },
+  "journalHistory": {
+    "empty": "No entries yet. Every day you write one, you earn Reps and build a streak that unlocks tier perks.",
+    "date": "{day} {month}",
+    "months": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ]
+  },
+  "celebration": {
+    "reps": "+{reps} Reps",
+    "dismiss": "Thanks, close",
+    "kind": {
+      "first_check": {
+        "eyebrow": "Mind · first mind check",
+        "title": "You did it.",
+        "body": "Welcome to mental data. Every day you check in, you build the graph and give the Adaptive Engine more to work with."
+      },
+      "streak_3": {
+        "eyebrow": "Mind · 3-day streak",
+        "title": "Three days straight.",
+        "body": "That is where the habit settles. Keep going. The next milestone is 7 days and +20 Reps."
+      },
+      "streak_7": {
+        "eyebrow": "Mind · 7-day streak",
+        "title": "A whole week done.",
+        "body": "You are now among the members building mental data consistently. Next: 30 days and +100 Reps."
+      },
+      "streak_30": {
+        "eyebrow": "Mind · 30-day streak",
+        "title": "30 days. Solid.",
+        "body": "A month of mental data. Now the AI coach can really see patterns in your week. +100 Reps + milestone bonus landed."
+      },
+      "streak_90": {
+        "eyebrow": "Mind · 90-day streak",
+        "title": "90 days. That is a practice.",
+        "body": "You have built mental health as a discipline. This is still the hardest part. You did it."
+      }
+    }
+  },
+  "sessionCard": {
+    "category": {
+      "breathing": "Breathing",
+      "focus": "Focus",
+      "recovery": "Recovery",
+      "debrief": "Debrief"
+    },
+    "minutes": "{minutes} min",
+    "completed": "✓ Completed"
+  },
+  "runner": {
+    "eyebrow": "Today's session",
+    "meta": "{minutes} min · {pattern}",
+    "done": "✓ Completed today. Move on.",
+    "start": "Start session →",
+    "overlayEyebrow": "Mind · session",
+    "close": "Close",
+    "saving": "Saving...",
+    "finish": "Done, save"
+  },
+  "weekly": {
+    "eyebrow": "Your mental week",
+    "numbers": "Numbers this week",
+    "energy": "Energy",
+    "stress": "Stress",
+    "focus": "Focus",
+    "activity": "Activity",
+    "mindCheck": "Mind check",
+    "sessions": "Sessions",
+    "journal": "Journal",
+    "delta": "{delta} vs last week",
+    "unchanged": "unchanged",
+    "footer": "Compared with the week before. Mondays at 18:00 we send you a mental week summary as a push. You can turn it off at <link>/mind/settings</link>."
   }
 }

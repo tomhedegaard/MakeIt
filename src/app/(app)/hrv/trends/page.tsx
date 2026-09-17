@@ -41,15 +41,6 @@ const BUCKET_ORDER: ReadinessBucket[] = [
   "very_high",
 ];
 
-/** Danish labels for each readiness bucket. */
-const BUCKET_LABEL: Record<ReadinessBucket, string> = {
-  very_low: "Langt under",
-  low: "Under",
-  normal: "Normal",
-  high: "Over",
-  very_high: "Langt over",
-};
-
 /** Window, in days, for the readiness-bucket distribution. */
 const DISTRIBUTION_DAYS = 30;
 
@@ -97,7 +88,7 @@ export default async function HrvTrendsPage() {
         ) : state === "provisional" ? (
           <StateProvisional series={series} copy={bandCopy} />
         ) : (
-          <StateActive series={series} copy={bandCopy} />
+          <StateActive series={series} copy={bandCopy} t={t} />
         )}
       </Container>
     </>
@@ -141,9 +132,11 @@ function StateProvisional({
 function StateActive({
   series,
   copy,
+  t,
 }: {
   series: ChartReading[];
   copy: Awaited<ReturnType<typeof loadHrvBandCopy>>;
+  t: Awaited<ReturnType<typeof getTranslations<"Hrv.trends">>>;
 }) {
   const dist = bucketDistribution(series);
   const band = buildHrvBandView(series);
@@ -199,7 +192,7 @@ function StateActive({
 
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-6 py-5 md:px-8 border-b hairline">
-          <span className="eyebrow">Readiness-fordeling</span>
+          <span className="eyebrow">{t("distribution.eyebrow")}</span>
         </div>
         <div className="px-6 py-7 md:px-8 md:py-9 space-y-3">
           {BUCKET_ORDER.map((bucket) => {
@@ -208,7 +201,7 @@ function StateActive({
             return (
               <div key={bucket} className="flex items-center gap-4">
                 <span className="text-xs text-fg-dim w-24 shrink-0">
-                  {BUCKET_LABEL[bucket]}
+                  {t(`distribution.bucket.${bucket}`)}
                 </span>
                 <div className="flex-1 h-2 rounded-full bg-line overflow-hidden">
                   <div
@@ -223,14 +216,14 @@ function StateActive({
             );
           })}
           <p className="text-fg-dim text-sm leading-relaxed pt-3">
-            {dist.total > 0 ? (
-              <>
-                Dine sidste {DISTRIBUTION_DAYS} dage: {dist.normalPct}% normal,{" "}
-                {dist.underPct}% under, {dist.overPct}% over.
-              </>
-            ) : (
-              <>Ingen readiness-data i de sidste {DISTRIBUTION_DAYS} dage.</>
-            )}
+            {dist.total > 0
+              ? t("distribution.summary", {
+                  days: DISTRIBUTION_DAYS,
+                  normal: dist.normalPct,
+                  under: dist.underPct,
+                  over: dist.overPct,
+                })
+              : t("distribution.none", { days: DISTRIBUTION_DAYS })}
           </p>
         </div>
       </section>

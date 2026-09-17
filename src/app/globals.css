@@ -65,13 +65,24 @@
   --grain-blend: overlay;
   --grain-opacity: 0.55;
   --signal-ink: #F5F2EC;
+
+  /* Scrim (modal backdrop) and media letterbox */
+  --scrim: rgba(0, 0, 0, 0.7);
+  --media: #000000;
+
+  /* Anatomy figure — muscle map illustration */
+  --anatomy-body:   #1A1A1C; /* silhuet */
+  --anatomy-edge:   #3A3A3E; /* kant, led, hoved */
+  --anatomy-idle:   #222226; /* ikke-trænede muskler */
+  --anatomy-accent: #C97B3E; /* sekundære/tertiære muskler */
 }
 
-/* Display treatment travels with the font stack, not with Nat colours. */
+/* Big Shoulders is the one display voice everywhere; the treatment lives
+ * on :root, not per theme. */
 :root {
-  --display-weight: 400;
-  --display-tracking: -0.025em;
-  --display-leading: 0.92;
+  --display-weight: 800;
+  --display-tracking: -0.005em;
+  --display-leading: 0.88;
 }
 
 /* ---------------------------------------------------------------- *
@@ -125,17 +136,20 @@ html:has(.theme-root[data-theme="kalk"]),
   --warn:   #854D0E;
   --danger: #B91C1C;
 
-  --font-display-stack: var(--font-kalk-display);
-  --font-sans-stack:    var(--font-kalk-sans);
-  --font-mono-stack:    var(--font-kalk-mono);
-
-  --display-weight: 800;
-  --display-tracking: -0.005em;
-  --display-leading: 0.88;
   --glow: rgba(255, 255, 255, 0.7);
   --vignette-edge: rgba(13, 15, 18, 0.06);
   --grain-blend: multiply;
   --grain-opacity: 0.35;
+
+  /* Scrim (modal backdrop) and media letterbox */
+  --scrim: rgba(13, 15, 18, 0.45);
+  --media: #0D0F12;
+
+  /* Anatomy figure — muscle map illustration */
+  --anatomy-body:   #DCDFE2; /* silhuet */
+  --anatomy-edge:   #B4B9C0; /* kant, led, hoved */
+  --anatomy-idle:   #CDD1D6; /* ikke-trænede muskler */
+  --anatomy-accent: #A8380B; /* sekundære/tertiære muskler (= --body) */
 }
 
 /* A Nat surface inside a Kalk layout (e.g. /session) wins at <html>.
@@ -163,6 +177,8 @@ html:has(.theme-root[data-theme="nat"]) {
   --glow: rgba(245, 242, 236, 0.08);
   --grain-blend: overlay; --grain-opacity: 0.55;
   --vignette-edge: rgba(0, 0, 0, 0.45);
+  --scrim: rgba(0, 0, 0, 0.7); --media: #000000;
+  --anatomy-body: #1A1A1C; --anatomy-edge: #3A3A3E; --anatomy-idle: #222226; --anatomy-accent: #C97B3E;
 }
 
 .theme-root { background: var(--bg); color: var(--fg); }
@@ -188,6 +204,8 @@ html:has(.theme-root[data-theme="nat"]) {
   --color-line-bright: var(--line-bright);
   --color-steel:       var(--steel);
   --color-signal:      var(--signal);
+  --color-scrim:       var(--scrim);
+  --color-media:       var(--media);
 
   /* Domain accents */
   --color-heart:      var(--heart);
@@ -267,8 +285,7 @@ html.cursor-custom * {
  * ---------------------------------------------------------------- */
 .font-display {
   font-family: var(--font-display), Impact, "Helvetica Neue", sans-serif;
-  /* Archivo Black ships one weight (400); Big Shoulders is variable.
-   * The theme picks the weight, synthesis stays off. */
+  /* Big Shoulders is variable; :root picks the weight, synthesis stays off. */
   font-weight: var(--display-weight);
   font-synthesis: none;
   letter-spacing: var(--display-tracking);
@@ -519,8 +536,11 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 .field::placeholder { color: var(--fg-faint); }
 
 /* iOS zooms on focus below 16px. With this, the root viewport can
- * drop maximumScale and let people pinch-zoom (WCAG 1.4.4). */
-@media (pointer: coarse) {
+ * drop maximumScale and let people pinch-zoom (WCAG 1.4.4).
+ * The width query is the belt to (pointer: coarse)'s braces: a phone
+ * viewport that does not report a coarse pointer (desktop responsive
+ * mode, some in-app webviews) gets the 16px floor too. */
+@media (pointer: coarse), (max-width: 40rem) {
   .input,
   .field { font-size: 16px; }
 }

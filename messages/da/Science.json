@@ -3,7 +3,7 @@
   "metaDescription": "Nyeste troværdige forskning: kost, motion og mentalt velvære.",
   "eyebrow": "MakeIt // HQ · Science",
   "title": "Nyeste viden, filtreret hårdt.",
-  "subtitle": "Troværdig forskning om kost, motion og mentalt velvære — kun meta-analyser, systematiske reviews og RCT'er fra whitelistede tidsskrifter. Opdateres automatisk hver dag.",
+  "subtitle": "Troværdig forskning om kost, motion og mentalt velvære. Kun meta-analyser, systematiske reviews og RCT'er fra whitelistede tidsskrifter. Opdateres automatisk hver dag.",
   "rss": "RSS",
   "filters": {
     "all": "Alle",
@@ -23,5 +23,5 @@
   "caveatLabel": "Forbehold",
   "openAccess": "Open Access",
   "readSource": "Læs kilden →",
-  "disclaimer": "Forskningsresumeer — ikke individuel sundheds- eller kostrådgivning."
+  "disclaimer": "Forskningsresumeer, ikke individuel sundheds- eller kostrådgivning."
 }

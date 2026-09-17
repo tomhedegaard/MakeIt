@@ -1,6 +1,6 @@
 {
   "page": {
-    "eyebrow": "03 — Crew",
+    "eyebrow": "Crew",
     "title": "Crew-feed.",
     "shareAria": "Del med crewet",
     "shareButton": "+ Del",
@@ -15,7 +15,7 @@
     "challengeRewardLabel": "Belønning",
     "challengeRewardValue": "Limited sølv-cuff + 1.000 Reps",
     "challengeStatusLabel": "Status",
-    "challengeStatusValue": "Tilmeldt — på vej",
+    "challengeStatusValue": "Tilmeldt · på vej",
     "challengeStatusEmpty": "Ikke tilmeldt",
     "feedEyebrow": "Crew-feed",
     "feedCount": "{count} opslag",
@@ -25,13 +25,13 @@
     "challengeEmptyEyebrow": "Crew-udfordring",
     "challengeEmptyTitle": "Ingen aktiv udfordring.",
     "challengeEmptyBody": "Når crewet kører en rigtig volumen-udfordring, vises den her. Vi finder ikke på tal.",
-    "leaderboardEmpty": "Ingen rangliste endnu — den vises når der er rigtige løft.",
+    "leaderboardEmpty": "Ingen rangliste endnu. Den vises, når der er rigtige løft.",
     "storiesEmpty": "Ingen i crewet har trænet i dag endnu.",
     "leaderboardEyebrow": "Rangliste",
     "leaderboardTitle": "Top atleter",
     "leaderboardMonth": "Maj 2026",
     "meetEyebrow": "Næste IRL-møde",
-    "meetTitle": "Open House — Amagerbro",
+    "meetTitle": "Open House · Amagerbro",
     "meetDescription": "Lørdag 24/05 · København · Træning, kaffe, og en sneak peek af nye produkter.",
     "meetRsvp": "RSVP",
     "meetReadMore": "Læs mere",
@@ -46,7 +46,7 @@
     "commentsOther": "Kommentarer",
     "share": "Del",
     "loadingComments": "Henter kommentarer…",
-    "noComments": "Ingen kommentarer endnu — vær den første.",
+    "noComments": "Ingen kommentarer endnu. Vær den første.",
     "commentPlaceholder": "Skriv en kommentar… brug @handle for at tagge",
     "sending": "…",
     "send": "Send",
@@ -64,13 +64,13 @@
     "placeholderFormCheck": "Beskriv hvad du gerne vil have feedback på...",
     "placeholderDefault": "Skriv noget til crewet...",
     "addVideo": "Tilføj video",
-    "addVideoSub": "Optag eller upload — AI form-check inkluderet",
+    "addVideoSub": "Optag eller upload. AI form-check inkluderet",
     "cancel": "Annullér",
     "sending": "Sender…",
     "submit": "Del →"
   },
   "realtime": {
-    "newPostsOne": "{count} nyt opslag — opdatér",
-    "newPostsOther": "{count} nye opslag — opdatér"
+    "newPostsOne": "{count} nyt opslag · opdatér",
+    "newPostsOther": "{count} nye opslag · opdatér"
   }
 }
