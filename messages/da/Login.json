@@ -1,21 +1,21 @@
 {
-  "metaTitle": "Log ind — {product}",
+  "metaTitle": "Log ind · {product}",
   "errors": {
-    "1": "Noget gik galt — prøv igen",
+    "1": "Noget gik galt. Prøv igen",
     "missing": "Email kræves",
     "invite": "Ugyldig invite-kode",
     "need_invite": "Ny konto kræver en gyldig invite-kode",
-    "otp": "Kunne ikke sende mail — prøv igen",
+    "otp": "Kunne ikke sende mail. Prøv igen",
     "pw_short": "Passwordet skal være mindst 8 tegn",
-    "exists": "Email er allerede registreret — log ind i stedet",
-    "signup": "Kunne ikke oprette konto — prøv igen",
+    "exists": "Email er allerede registreret. Log ind i stedet",
+    "signup": "Kunne ikke oprette konto. Prøv igen",
     "creds": "Forkert email eller password",
-    "signin": "Kunne ikke logge ind — prøv igen",
-    "oauth": "OAuth-flow fejlede — prøv igen",
+    "signin": "Kunne ikke logge ind. Prøv igen",
+    "oauth": "OAuth-flow fejlede. Prøv igen",
     "provider": "Ukendt provider",
     "callback": "Login-link udløbet eller ugyldigt",
     "disabled": "Backend ikke tilkoblet",
-    "fallback": "Noget gik galt — prøv igen"
+    "fallback": "Noget gik galt. Prøv igen"
   },
   "beta": "Closed Beta · Invite only",
   "headline": {
@@ -30,7 +30,7 @@
   "mock": {
     "intro": "Indtast din invite-kode for at få adgang. Har du ikke en? Skriv til ",
     "inviteCodeLabel": "Invite-kode",
-    "invalidCode": "Ugyldig kode — prøv igen",
+    "invalidCode": "Ugyldig kode. Prøv igen",
     "submit": "Få adgang",
     "testCodesLabel": "Test-koder: "
   },
