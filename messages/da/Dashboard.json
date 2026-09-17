@@ -119,5 +119,33 @@
     "bodyAndroid": "Installér MakeIt som app — fuld skærm, hurtigere start og notifikationer.",
     "install": "Installér",
     "dismiss": "Ikke nu"
+  },
+  "morningSignal": {
+    "label": "Morgenens signal",
+    "kcal": "kcal",
+    "labels": {
+      "body": "Krop",
+      "heart": "Hjerte",
+      "mind": "Sind",
+      "food": "Mad"
+    },
+    "values": {
+      "adapted": "Tilpasset",
+      "planned": "Klar",
+      "measured": "Målt",
+      "noSession": "Intet pas",
+      "belowBand": "Under bånd",
+      "inBand": "I bånd",
+      "aboveBand": "Over bånd",
+      "noReading": "Ingen måling",
+      "checkIn": "Tjek ind",
+      "checkedIn": "Tjekket ind",
+      "eaten": "Spist i dag"
+    },
+    "sr": {
+      "status": "{label}. {status}.",
+      "value": "{label}. {status}. {value} {unit}.",
+      "valueOf": "{label}. {status}. {value} af {of} {unit}."
+    }
   }
 }
