@@ -68,7 +68,7 @@ describe("Kalk theme gate (spec §3, §8)", () => {
     for (const k of kalkColours) expect(natLift, k).toHaveProperty(k);
   });
 
-  it("Nat-lift skal have samme værdier som Nat", () => {
+  it("keeps the Nat <html> lift value-identical to Nat", () => {
     const natLift = readThemeTokens(css, 'html:has(.theme-root[data-theme="nat"])');
     const shared = Object.keys(natLift).filter((k) => k in nat);
     for (const k of shared) {
