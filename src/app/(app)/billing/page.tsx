@@ -39,7 +39,7 @@ export default async function BillingPage({
         <Container className="py-8 lg:py-12 space-y-6">
           <section className="surface-2 rounded-2xl overflow-hidden">
             <div className="px-5 py-5 flex items-center justify-between gap-4">
-              <SectionHeader eyebrow={t("crew.eyebrow")} title={t("crew.title")} />
+              <SectionHeader eyebrow={t("crew.eyebrow")} title={t("crew.title")} className="mb-0" />
               <StatusPill sub={crew} t={t} />
             </div>
             {crew?.currentPeriodEnd ? (
@@ -55,7 +55,7 @@ export default async function BillingPage({
           {oneOnOne ? (
             <section className="surface-2 rounded-2xl overflow-hidden">
               <div className="px-5 py-5 flex items-center justify-between gap-4">
-                <SectionHeader eyebrow={t("oneOnOne.eyebrow")} title={t("oneOnOne.title")} />
+                <SectionHeader eyebrow={t("oneOnOne.eyebrow")} title={t("oneOnOne.title")} className="mb-0" />
                 <StatusPill sub={oneOnOne} t={t} />
               </div>
             </section>
@@ -100,7 +100,7 @@ export default async function BillingPage({
         {/* Crew membership */}
         <section className="surface-2 rounded-2xl overflow-hidden">
           <div className="px-5 py-5 border-b hairline flex items-center justify-between gap-4">
-            <SectionHeader eyebrow={t("crew.eyebrow")} title={t("crew.title")} />
+            <SectionHeader eyebrow={t("crew.eyebrow")} title={t("crew.title")} className="mb-0" />
             <StatusPill sub={crew} t={t} />
           </div>
 
@@ -138,7 +138,7 @@ export default async function BillingPage({
         {/* 1:1 add-on */}
         <section className="surface-2 rounded-2xl overflow-hidden">
           <div className="px-5 py-5 border-b hairline flex items-center justify-between gap-4">
-            <SectionHeader eyebrow={t("oneOnOne.eyebrow")} title={t("oneOnOne.title")} />
+            <SectionHeader eyebrow={t("oneOnOne.eyebrow")} title={t("oneOnOne.title")} className="mb-0" />
             <StatusPill sub={oneOnOne} t={t} />
           </div>
 

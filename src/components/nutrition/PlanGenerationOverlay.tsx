@@ -80,9 +80,7 @@ function PlanGenerationOverlayActive({
       aria-live="polite"
     >
       <div className="max-w-md mx-auto text-center px-6">
-        <div className="flex justify-center mb-4">
-          <SectionHeader eyebrow={t("eyebrow")} title={t("title")} />
-        </div>
+        <SectionHeader eyebrow={t("eyebrow")} title={t("title")} className="justify-center" />
 
         {/* 3-dot loading indicator — staggered pulse, no fake % */}
         <div className="flex justify-center gap-2 mb-8" aria-hidden>

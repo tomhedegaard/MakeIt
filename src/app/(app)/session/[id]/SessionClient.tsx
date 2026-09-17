@@ -429,9 +429,7 @@ export default function SessionClient({
       <Sheet open={doneOpen} onOpenChange={setDoneOpen}>
         <SheetContent>
           <div className="text-center pb-4">
-            <div className="flex justify-center">
-              <SectionHeader eyebrow={t("done.eyebrow")} title={t("done.title")} />
-            </div>
+            <SectionHeader eyebrow={t("done.eyebrow")} title={t("done.title")} className="justify-center" />
             <p className="text-fg-dim text-sm mb-6 px-2">
               {t("done.body", { sets: completedSets })}
             </p>

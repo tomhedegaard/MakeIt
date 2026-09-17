@@ -44,6 +44,20 @@ describe("SectionHeader", () => {
   it("omits the link without href", () => {
     expect(renderToStaticMarkup(<SectionHeader title="X" />)).not.toContain("<a");
   });
+
+  it("merges a className so callers can override the default mb-4 (twMerge semantics)", () => {
+    const html = renderToStaticMarkup(<SectionHeader title="X" className="mb-0" />);
+    expect(html).not.toMatch(/\bmb-4\b/);
+    expect(html).toMatch(/\bmb-0\b/);
+  });
+
+  it("lets callers add layout classes like justify-center without dropping the base row classes", () => {
+    const html = renderToStaticMarkup(<SectionHeader title="X" className="justify-center" />);
+    expect(html).toContain("justify-center");
+    expect(html).not.toMatch(/\bjustify-between\b/);
+    expect(html).toMatch(/\bflex\b/);
+    expect(html).toMatch(/\bitems-end\b/);
+  });
 });
 
 describe("PageTitle", () => {

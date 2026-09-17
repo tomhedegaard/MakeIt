@@ -138,9 +138,7 @@ export default function RedeemButton({
 
           {stage === "success" ? (
             <div className="text-center py-2">
-              <div className="flex justify-center">
-                <SectionHeader eyebrow={t("successEyebrow")} title={t("successTitle")} />
-              </div>
+              <SectionHeader eyebrow={t("successEyebrow")} title={t("successTitle")} className="justify-center" />
               <p className="text-fg-dim text-sm mb-6 px-2">
                 {t("successBody")}
               </p>
@@ -166,9 +164,7 @@ export default function RedeemButton({
 
           {stage === "error" ? (
             <div className="text-center py-2">
-              <div className="flex justify-center">
-                <SectionHeader eyebrow={t("errorEyebrow")} title={errorReason} />
-              </div>
+              <SectionHeader eyebrow={t("errorEyebrow")} title={errorReason} className="justify-center" />
               <p className="text-fg-dim text-sm mb-6">
                 {t("errorBody")}
               </p>

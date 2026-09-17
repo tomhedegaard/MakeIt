@@ -108,9 +108,7 @@ export default function SessionRunner({
       className="fixed inset-0 z-50 bg-bg flex flex-col"
     >
       <div className="flex items-center justify-between p-6 border-b hairline">
-        <div className="-mb-4">
-          <SectionHeader eyebrow="Mind · session" title={title} />
-        </div>
+        <SectionHeader eyebrow="Mind · session" title={title} className="mb-0" />
         <button
           type="button"
           onClick={() => setRunning(false)}

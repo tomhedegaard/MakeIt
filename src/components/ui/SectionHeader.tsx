@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export default function SectionHeader({
   eyebrow,
@@ -6,15 +7,17 @@ export default function SectionHeader({
   href,
   linkLabel,
   id,
+  className,
 }: {
   eyebrow?: string;
   title: string;
   href?: string;
   linkLabel?: string;
   id?: string;
+  className?: string;
 }) {
   return (
-    <div className="mb-4 flex items-end justify-between gap-4">
+    <div className={cn("mb-4 flex items-end justify-between gap-4", className)}>
       <div className="min-w-0">
         {eyebrow ? <p className="eyebrow eyebrow-domain mb-2">{eyebrow}</p> : null}
         <h2 id={id} className="font-display text-2xl">{title}</h2>

@@ -285,9 +285,11 @@ function EmptyState({
   const resetLabel = describeNextAvailable(planLimit.nextAvailableAt);
   return (
     <section className="surface-2 rounded-2xl p-6 lg:p-10 text-center max-w-2xl mx-auto">
-      <div className="flex justify-center">
-        <SectionHeader eyebrow={t("page.emptyEyebrow", { week: weekStartLabel(weekStart) })} title={t("page.emptyTitle")} />
-      </div>
+      <SectionHeader
+        eyebrow={t("page.emptyEyebrow", { week: weekStartLabel(weekStart) })}
+        title={t("page.emptyTitle")}
+        className="justify-center"
+      />
       <p className="text-fg-dim text-sm md:text-base max-w-md mx-auto mb-5">
         {t("page.emptyBody")}
       </p>
@@ -425,6 +427,7 @@ function PlanView({
                 ? t("page.todayMealsOne", { count: today.length })
                 : t("page.todayMealsOther", { count: today.length })
             }
+            className="mb-0"
           />
           <span className="text-xs font-mono text-fg-faint shrink-0">
             {t("page.todayMacros", {
