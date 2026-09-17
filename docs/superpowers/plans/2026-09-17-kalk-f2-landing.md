@@ -954,16 +954,16 @@ Egen PR.
 
 ## Status
 
-- [ ] Task 1 Variant og skal
-- [ ] Task 2 Copy og port
-- [ ] Task 3 Tiers og motor-data
-- [ ] Task 4 DemoLoop
-- [ ] Task 5 Telefon og skærme
-- [ ] Task 6 Nav og hero
-- [ ] Task 7 MotorStory
-- [ ] Task 8 Bento og rack
-- [ ] Task 9 Munk og crew
-- [ ] Task 10 Adgang, FAQ, footer, stemmer
-- [ ] Task 11 Kildeporte
-- [ ] Task 12 Verifikation og Preview
+- [x] Task 1 Variant og skal
+- [x] Task 2 Copy og port
+- [x] Task 3 Tiers og motor-data
+- [x] Task 4 DemoLoop
+- [x] Task 5 Telefon og skærme
+- [x] Task 6 Nav og hero
+- [x] Task 7 MotorStory
+- [x] Task 8 Bento og rack
+- [x] Task 9 Munk og crew
+- [x] Task 10 Adgang, FAQ, footer, stemmer
+- [x] Task 11 Kildeporte
+- [x] Task 12 Verifikation (demo og produktions-build, 2026-09-17). Vercel Preview-env afventer Tom.
 - [ ] Task 13 Skift (efter godkendelse)
