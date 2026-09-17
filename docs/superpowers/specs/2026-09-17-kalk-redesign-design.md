@@ -153,7 +153,7 @@ Anker-ID'er bevares: `#crew`, `#engine`, `#tiers`, `#waitlist`, `#faq`. Nye ID'e
   - C5 morgenens signal,
   - besked fra Munk,
   - resten.
-- **Fem faner:** I dag, Træn, Mad, Sind, Crew. "Mig" flytter til avataren i headeren. HRV nås via morgenens signal, Reps under Crew og Forskning under Mig. Aktiv fane markeres med en orange streg (`--signal`) og ikon i `--fg`.
+- **Fem faner:** I dag, Træn, Mad, Mind, Crew. Fanen hedder fortsat "Mind" som resten af produktet. En omdøbning til "Sind" er en separat beslutning. "Mig" flytter til avataren i headeren. HRV nås via morgenens signal, Reps under Crew og Forskning under Mig. Aktiv fane markeres med en orange streg (`--signal`) og ikon i `--fg`.
 - **Seks primitiver** fra reviewet: `PageTitle`, `SectionHeader`, `Card`, `EmptyState`, `Stat` og `Field`. De bygges i Kalk og virker i Nat, fordi de kun bruger tokens.
 - **Nat-zoner:** `/session/[id]` sættes eksplicit til `data-theme="nat"`. Den sættes ikke bare "ikke kalk", fordi den ligger under et Kalk-layout.
 - **Native shells:** statusbar-stil og baggrund følger temaet. Splash og ikon ændres først ved næste butiksudgivelse (§7 D3).
