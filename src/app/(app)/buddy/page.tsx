@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import ReactionButtons from "@/components/buddy/ReactionButtons";
 import { getMyBuddy } from "@/lib/data/buddy";
 import type { ReadinessBucket } from "@/lib/hrv/types";
@@ -52,10 +53,7 @@ export default async function BuddyPage() {
     return (
       <Container className="py-6 lg:py-12 space-y-6">
         <header className="pt-2">
-          <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-            {t("titleEmpty")}
-          </h1>
+          <PageTitle kicker={t("eyebrow")} title={t("titleEmpty")} />
           <p className="mt-2 text-fg-dim text-sm">{t("emptyBody")}</p>
         </header>
       </Container>
@@ -65,10 +63,10 @@ export default async function BuddyPage() {
   return (
     <Container className="py-6 lg:py-12 space-y-6">
       <header className="pt-2">
-        <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {t("titleWithHandle", { handle: buddy.buddyHandle })}
-        </h1>
+        <PageTitle
+          kicker={t("eyebrow")}
+          title={t("titleWithHandle", { handle: buddy.buddyHandle })}
+        />
         <p className="mt-2 text-fg-dim text-sm">
           {t("subtitle", { tier: buddy.buddyTier })}
         </p>

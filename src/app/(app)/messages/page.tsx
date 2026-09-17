@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import { getSession } from "@/lib/auth";
 import {
   getHeadCoachId,
@@ -63,17 +64,19 @@ export default async function MessagesPage() {
 
   return (
     <Container className="py-6 lg:py-12">
-      <header className="pt-2 pb-4 mb-4 border-b hairline">
-        <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {coachHandle
-            ? t("titleWithCoach", { handle: coachHandle })
-            : t("titleFallback")}
-        </h1>
+      <div className="pt-2 pb-4 mb-4 border-b hairline">
+        <PageTitle
+          kicker={t("eyebrow")}
+          title={
+            coachHandle
+              ? t("titleWithCoach", { handle: coachHandle })
+              : t("titleFallback")
+          }
+        />
         <p className="mt-2 text-fg-dim text-sm max-w-md">
           {t("subtitle")}
         </p>
-      </header>
+      </div>
 
       <DualStreamMessages
         munk={SUPABASE_ENABLED ? [] : demo.munk}

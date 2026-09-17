@@ -54,6 +54,23 @@ describe("native and PWA chrome (spec §6, D3)", () => {
   });
 });
 
+describe("one title scale on every app page (spec §6)", () => {
+  const APP = join(SRC, "app/(app)");
+  // Pages that render no title of their own: live session (Nat, no chrome), redirects, delegates.
+  const EXEMPT = new Set(["session/[id]/page.tsx", "mind/check/page.tsx", "mind/onboarding/page.tsx", "nutrition/setup/page.tsx"]);
+  const pages = walk(APP).map((p) => relative(APP, p)).filter((p) => p.endsWith("page.tsx") && !EXEMPT.has(p));
+
+  it.each(pages)("%s uses PageHeader or PageTitle", (p) => {
+    const src = readFileSync(join(APP, p), "utf8");
+    expect(src).toMatch(/<(PageHeader|PageTitle)\b/);
+  });
+
+  it.each([...pages, "nutrition/setup/NutritionSetupView.tsx"])("%s has no hand-built display h1", (p) => {
+    const src = readFileSync(join(APP, p), "utf8");
+    expect(src).not.toMatch(/<h1[^>]*font-display/);
+  });
+});
+
 describe("theme scopes (spec §2)", () => {
   it("/coach is explicitly Nat with dark browser chrome", () => {
     const src = read("app/coach/layout.tsx");
