@@ -6,11 +6,11 @@
   },
   "errors": {
     "handle_invalid": "Kaldenavn skal starte med et bogstav (a-z) og være 2-31 tegn (a-z, 0-9, _, ., -).",
-    "handle_taken": "Kaldenavn er allerede taget — prøv et andet.",
+    "handle_taken": "Kaldenavn er allerede taget. Prøv et andet.",
     "auth": "Du er ikke logget ind.",
-    "unknown": "Noget gik galt — prøv igen.",
+    "unknown": "Noget gik galt. Prøv igen.",
     "service_key_missing": "Konto-sletning kræver server-konfiguration der ikke er sat op.",
-    "prefs_save": "Kunne ikke gemme — prøv igen."
+    "prefs_save": "Kunne ikke gemme. Prøv igen."
   },
   "profile": {
     "title": "Hvordan crewet ser dig",
@@ -30,7 +30,7 @@
     "mentionLabel": "@mentions",
     "mentionSub": "Mail når et crew-medlem nævner dig i en kommentar.",
     "digestLabel": "Ugentlig digest",
-    "digestSub": "Mandag morgen — top PR'er, nye medlemmer, månedens challenge.",
+    "digestSub": "Mandag morgen: top PR'er, nye medlemmer, månedens challenge.",
     "tierUpLabel": "Tier-up notifikationer",
     "tierUpSub": "Når du krydser fra Lifter → Athlete → Beast → Legend.",
     "save": "Gem præferencer"
@@ -44,7 +44,7 @@
   },
   "data": {
     "title": "Eksportér dine egne rækker",
-    "description": "Download en JSON-fil med de medlemsrækker vi kan læse under dit login: profil, træning, journal, mind-check, mental coach, HRV, ernæring, beskeder, vægt, community, Reps og form-checks. Ikke «alt i universet» — dine egne rækker. GDPR art. 20.",
+    "description": "Download en JSON-fil med de medlemsrækker vi kan læse under dit login: profil, træning, journal, mind-check, mental coach, HRV, ernæring, beskeder, vægt, community, Reps og form-checks. Ikke «alt i universet», kun dine egne rækker. GDPR art. 20.",
     "exportNoteConnected": "Personlig dataeksport fra {product}. Indeholder dine egne medlemsrækker vi kan læse under dit login (RLS). Kontakt {email} hvis noget mangler eller ser forkert ud.",
     "exportNoteDemo": "Demo-mode har ingen connected database. Denne fil er tom for medlemsrækker. Art. 20-eksport af dine rigtige rækker kræver connected mode.",
     "exportOmitted": "Disse tabeller kunne ikke læses i denne eksport: {tables}.",
