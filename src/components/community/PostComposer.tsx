@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { createPostAction } from "@/app/(app)/community/actions";
 
 export default function PostComposer({
@@ -50,12 +51,7 @@ export default function PostComposer({
       <Sheet open={open} onOpenChange={setOpen}>
         <span onClick={() => setOpen(true)}>{trigger}</span>
         <SheetContent>
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <div className="eyebrow mb-1">{t("eyebrow")}</div>
-              <h2 className="font-display text-2xl">{t("title")}</h2>
-            </div>
-          </div>
+          <SectionHeader eyebrow={t("eyebrow")} title={t("title")} />
 
           <div className="pillgroup mb-4">
             {(["PR", "Note", "Form-check"] as const).map((tagOption) => (

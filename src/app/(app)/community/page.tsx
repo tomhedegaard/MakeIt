@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageTitle from "@/components/ui/PageTitle";
+import SectionHeader from "@/components/ui/SectionHeader";
 import PostComposer from "@/components/community/PostComposer";
 import PostCard from "@/components/community/PostCard";
 import RealtimeIndicator from "@/components/community/RealtimeIndicator";
@@ -182,10 +183,7 @@ export default async function CrewPage() {
       </section>
       ) : (
       <section className="surface-2 rounded-2xl overflow-hidden px-5 py-6">
-        <div className="eyebrow mb-2">{t("challengeEmptyEyebrow")}</div>
-        <h2 className="font-display text-2xl md:text-3xl leading-[1] mb-2">
-          {t("challengeEmptyTitle")}
-        </h2>
+        <SectionHeader eyebrow={t("challengeEmptyEyebrow")} title={t("challengeEmptyTitle")} />
         <p className="text-fg-dim text-sm max-w-md">{t("challengeEmptyBody")}</p>
       </section>
       )}
