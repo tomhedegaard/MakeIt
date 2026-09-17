@@ -5,9 +5,9 @@
     "subtitle": "Administrér dit Crew-medlemskab og 1:1 add-on. Alle ændringer træder i kraft ved næste faktureringsdato."
   },
   "banners": {
-    "success": "Tak — din betaling gik igennem.",
-    "canceled": "Checkout afbrudt — intet er trukket.",
-    "demo": "Demo mode — Stripe er ikke koblet på. Tilføj <code>STRIPE_SECRET_KEY</code> + price-ID'er for at aktivere checkout.",
+    "success": "Tak. Din betaling gik igennem.",
+    "canceled": "Checkout afbrudt. Intet er trukket.",
+    "demo": "Demo mode: Stripe er ikke koblet på. Tilføj <code>STRIPE_SECRET_KEY</code> + price-ID'er for at aktivere checkout.",
     "error": "Noget gik galt under checkout ({err}). Prøv igen, eller skriv til os."
   },
   "crew": {
