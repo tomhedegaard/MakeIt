@@ -17,6 +17,19 @@ export function statusBarStyleFor(colorScheme: string): StatusBarStyle {
   return colorScheme.trim() === "light" ? "LIGHT" : "DARK";
 }
 
+/**
+ * Reads the active theme straight from the DOM instead of the computed
+ * `color-scheme` (which is derived via `html:has(.theme-root[data-theme=…])`
+ * in globals.css — `:has()` is absent in older Android WebViews). Mirrors
+ * the CSS cascade: the Nat rule is declared after the Kalk one, so Nat wins
+ * when both are present; "dark" is also the fallback when neither is found.
+ */
+export function schemeFromDocument(doc: Pick<Document, "querySelector">): "light" | "dark" {
+  if (doc.querySelector('.theme-root[data-theme="nat"]')) return "dark";
+  if (doc.querySelector('.theme-root[data-theme="kalk"]')) return "light";
+  return "dark";
+}
+
 export async function syncStatusBar(plugin: StatusBarPlugin | undefined, colorScheme: string): Promise<boolean> {
   if (!plugin) return false;
   const style = statusBarStyleFor(colorScheme);
