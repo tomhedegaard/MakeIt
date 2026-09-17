@@ -19,6 +19,7 @@ export default function DemoLoop({
   playLabel,
   className,
   tag,
+  compact = false,
 }: {
   src: string;
   label: string;
@@ -27,22 +28,26 @@ export default function DemoLoop({
   className?: string;
   /** Optional overlay label, e.g. "Reference". */
   tag?: string;
+  /** Smaller pause control for loops inside a marketing phone. */
+  compact?: boolean;
 }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [userPaused, setUserPaused] = useState(false);
   const { webm, mp4, poster } = resolveDemoAssets(src);
 
+  // Playback inputs live in a ref so toggling pause does not rebuild
+  // the observers (and briefly forget that the loop is in view).
+  const playback = useRef({ inView: false, reducedMotion: false, ready: false, userPaused: false });
+  const syncRef = useRef<() => void>(() => {});
+
   useEffect(() => {
     const wrap = wrapRef.current;
     const video = videoRef.current;
     if (!wrap || !video) return;
+    const state = playback.current;
+    state.ready = video.readyState >= 2;
 
-    const state = {
-      inView: false,
-      reducedMotion: false,
-      ready: video.readyState >= 3,
-    };
     const motion =
       typeof window.matchMedia === "function"
         ? window.matchMedia("(prefers-reduced-motion: reduce)")
@@ -50,14 +55,18 @@ export default function DemoLoop({
     state.reducedMotion = motion?.matches ?? false;
 
     const sync = () => {
-      if (shouldPlay({ ...state, userPaused })) {
+      // preload="metadata" keeps the page light, but some browsers
+      // never buffer further on their own; ask for data once in view.
+      if (state.inView && !state.ready && video.preload !== "auto") video.preload = "auto";
+      if (shouldPlay(state)) {
         video.play().catch(() => {
-          /* Autoplay can be refused; the poster stays. */
+          /* Playback can be refused; the poster stays. */
         });
       } else if (!video.paused) {
         video.pause();
       }
     };
+    syncRef.current = sync;
 
     const onMotion = (e: MediaQueryListEvent) => {
       state.reducedMotion = e.matches;
@@ -81,14 +90,22 @@ export default function DemoLoop({
     }
 
     motion?.addEventListener("change", onMotion);
+    video.addEventListener("loadeddata", onReady);
     video.addEventListener("canplay", onReady);
     sync();
 
     return () => {
+      syncRef.current = () => {};
       observer?.disconnect();
       motion?.removeEventListener("change", onMotion);
+      video.removeEventListener("loadeddata", onReady);
       video.removeEventListener("canplay", onReady);
     };
+  }, []);
+
+  useEffect(() => {
+    playback.current.userPaused = userPaused;
+    syncRef.current();
   }, [userPaused]);
 
   return (
@@ -118,7 +135,11 @@ export default function DemoLoop({
         type="button"
         aria-pressed={userPaused}
         onClick={() => setUserPaused((p) => !p)}
-        className="btn btn-sm absolute right-3 top-3"
+        className={
+          compact
+            ? "btn btn-sm absolute right-2 top-2 h-7! px-2.5! text-[9px]!"
+            : "btn btn-sm absolute right-3 top-3"
+        }
       >
         {userPaused ? playLabel : pauseLabel}
       </button>
