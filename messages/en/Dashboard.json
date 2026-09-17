@@ -8,7 +8,7 @@
     "streakUnit": "days"
   },
   "figure": {
-    "ariaLabel": "Body map — mind, heart, body and food",
+    "ariaLabel": "Body map: mind, heart, body and food",
     "eyebrow": "Body map",
     "mind": "Mind",
     "heart": "Heart",
@@ -32,8 +32,8 @@
     "setCountSuffix": "× sets",
     "start": "Start session →",
     "mock": {
-      "dayLabel": "Day A — Squat",
-      "title": "Squat — Top set @ RPE 8, 3×3 backoff"
+      "dayLabel": "Day A · Squat",
+      "title": "Squat · Top set @ RPE 8, 3×3 backoff"
     },
     "generated": {
       "squatFocus": "Squat focus and the posterior chain"
@@ -64,7 +64,7 @@
       "tomorrowLabel": "Tomorrow",
       "tomorrowTitle": "Pause bench, ring row, push press",
       "thuLabel": "Thu",
-      "thuTitle": "Deadlift — building to 90% of 1RM",
+      "thuTitle": "Deadlift · building to 90% of 1RM",
       "friLabel": "Fri",
       "friTitle": "Hypertrophy: quads + shoulders"
     }
@@ -72,7 +72,7 @@
   "crew": {
     "title": "Crew right now",
     "seeFeed": "See feed →",
-    "empty": "The crew is quiet right now — be the first to share.",
+    "empty": "The crew is quiet right now. Be the first to share.",
     "share": "+ Share",
     "prBadge": "★ PR",
     "mock": {
@@ -94,7 +94,7 @@
   "todayProse": {
     "ariaLabel": "Today",
     "eyebrow": "Today",
-    "hrvLav": "HRV is low this morning — take it easy at the top.",
+    "hrvLav": "HRV is low this morning. Take it easy at the top.",
     "hrvRo": "HRV is settled. Your body is with you today.",
     "hrvMidt": "HRV sits in your middle band.",
     "sessionAssigned": "There is a session waiting today.",
@@ -115,8 +115,8 @@
   "installHint": {
     "eyebrow": "Get the app",
     "title": "MakeIt on your home screen",
-    "bodyIos": "Tap the Share icon in Safari and choose “Add to Home Screen” — MakeIt opens as an app and you can turn on notifications.",
-    "bodyAndroid": "Install MakeIt as an app — full screen, faster launch and notifications.",
+    "bodyIos": "Tap the Share icon in Safari and choose “Add to Home Screen”. MakeIt then opens as an app and you can turn on notifications.",
+    "bodyAndroid": "Install MakeIt as an app: full screen, faster launch and notifications.",
     "install": "Install",
     "dismiss": "Not now"
   },

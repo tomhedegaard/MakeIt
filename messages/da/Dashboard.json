@@ -8,7 +8,7 @@
     "streakUnit": "dage"
   },
   "figure": {
-    "ariaLabel": "Kropskort — sind, hjerte, krop og kost",
+    "ariaLabel": "Kropskort: sind, hjerte, krop og kost",
     "eyebrow": "Kropskort",
     "mind": "Sind",
     "heart": "Hjerte",
@@ -32,8 +32,8 @@
     "setCountSuffix": "× sæt",
     "start": "Start pas →",
     "mock": {
-      "dayLabel": "Dag A — Squat",
-      "title": "Squat — Top set @ RPE 8, 3×3 backoff"
+      "dayLabel": "Dag A · Squat",
+      "title": "Squat · Top set @ RPE 8, 3×3 backoff"
     },
     "generated": {
       "squatFocus": "Squat-fokus og bagside"
@@ -64,7 +64,7 @@
       "tomorrowLabel": "I morgen",
       "tomorrowTitle": "Pause-bench, ringe-row, push-press",
       "thuLabel": "Tor",
-      "thuTitle": "Deadlift — opbygning til 90% af 1RM",
+      "thuTitle": "Deadlift · opbygning til 90% af 1RM",
       "friLabel": "Fre",
       "friTitle": "Hypertrofi: kvadriceps + skulder"
     }
@@ -72,7 +72,7 @@
   "crew": {
     "title": "Crew lige nu",
     "seeFeed": "Se feed →",
-    "empty": "Crewet er stille lige nu — vær den første til at dele.",
+    "empty": "Crewet er stille lige nu. Vær den første til at dele.",
     "share": "+ Del",
     "prBadge": "★ PR",
     "mock": {
@@ -94,7 +94,7 @@
   "todayProse": {
     "ariaLabel": "I dag",
     "eyebrow": "I dag",
-    "hrvLav": "HRV er lav i morges — tag det roligt i toppen.",
+    "hrvLav": "HRV er lav i morges. Tag det roligt i toppen.",
     "hrvRo": "HRV er i ro. Kroppen er med dig i dag.",
     "hrvMidt": "HRV ligger i dit midterste bånd.",
     "sessionAssigned": "Der står et pas klar i dag.",
@@ -115,8 +115,8 @@
   "installHint": {
     "eyebrow": "Få appen",
     "title": "MakeIt på hjemmeskærmen",
-    "bodyIos": "Tryk på Del-ikonet i Safari og vælg “Føj til hjemmeskærm” — så åbner MakeIt som app, og du kan slå notifikationer til.",
-    "bodyAndroid": "Installér MakeIt som app — fuld skærm, hurtigere start og notifikationer.",
+    "bodyIos": "Tryk på Del-ikonet i Safari og vælg “Føj til hjemmeskærm”. Så åbner MakeIt som app, og du kan slå notifikationer til.",
+    "bodyAndroid": "Installér MakeIt som app: fuld skærm, hurtigere start og notifikationer.",
     "install": "Installér",
     "dismiss": "Ikke nu"
   },
