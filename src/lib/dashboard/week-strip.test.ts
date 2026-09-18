@@ -115,7 +115,7 @@ describe("buildWeekStrip — pick outside the calendar ISO week", () => {
       }),
     ];
 
-    const weekOnly = rows.filter((s) => s.scheduledFor >= "2026-09-07");
+    const weekOnly = rows.filter((s) => (s.scheduledFor ?? "") >= "2026-09-07");
     const wrong = pickDashboardTodaySession(weekOnly, "2026-09-09");
     expect(wrong?.dayLabel).toBe("Dag B — Bench");
 

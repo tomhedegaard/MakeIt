@@ -691,8 +691,24 @@
       "link": "See how the engine works",
       "plateOld": "150",
       "plateNew": "135",
-      "plateUnit": "kg",
-      "phoneCaption": "Today. The engine rewrote the session."
+      "plateUnit": "kg"
+    },
+    "demo": {
+      "todayLabel": "Today",
+      "sleepLabel": "Sleep",
+      "hrvLabel": "HRV",
+      "stressLabel": "Stress",
+      "hrvUnit": "ms",
+      "stressUnit": "/5",
+      "bandNote": "Demo band. In the app the band becomes your own, measured against your own baseline.",
+      "sessionTitle": "Back squat",
+      "topSetLabel": "Top set",
+      "keepOriginal": "Keep original",
+      "liveRegionPrefix": "Today's session updated:",
+      "whySleep": "Sleep {hours}",
+      "whyHrv": "HRV {ms} ms",
+      "accessoryDropped": "{count} accessory sets dropped",
+      "unchanged": "The session stands unchanged."
     },
     "engine": {
       "eyebrow": "Every morning",
@@ -746,7 +762,15 @@
       },
       "keepOriginal": "Keep original",
       "keepOriginalNote": "You always see why, and you can always keep the original plan.",
-      "disclaimer": "HRV is a recovery signal, not a diagnosis."
+      "disclaimer": "HRV is a recovery signal, not a diagnosis.",
+      "bounds": {
+        "heading": "The engine's boundaries",
+        "lowerTopSet": "Lowers the top set",
+        "lowerVolume": "Lowers volume",
+        "lighterVariant": "Suggests a lighter variant",
+        "shorten": "Shortens the session"
+      },
+      "escalation": "The engine never touches pauses or deloads. Those always go to Munk first."
     },
     "systems": {
       "heading": "Four systems. One session.",
@@ -756,7 +780,8 @@
         "heading": "The program moves with you.",
         "text": "Four week blocks. Top set, backoff and rest set by the engine every morning.",
         "stat": "16",
-        "statLabel": "Sets today"
+        "statLabel": "Sets today",
+        "clipLabel": "Deadlift, top set."
       },
       "food": {
         "kicker": "Food",
@@ -871,6 +896,10 @@
       "inviteOnly": {
         "q": "Why is it invite only?",
         "a": "Because Munk himself signs off on the answers. That is why we open in small groups."
+      },
+      "demo": {
+        "q": "Is the homepage demo the real engine?",
+        "a": "Yes, the same engine. The sliders call the same function that adjusts your real session every morning. The numbers never leave your browser."
       }
     },
     "footer": {

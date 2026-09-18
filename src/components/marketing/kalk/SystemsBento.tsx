@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
+import DemoLoop from "@/components/marketing/DemoLoop";
 import SessionScreen from "@/components/marketing/phone/screens/SessionScreen";
 import HrvScreen from "@/components/marketing/phone/screens/HrvScreen";
 import FoodScreen from "@/components/marketing/phone/screens/FoodScreen";
@@ -73,6 +74,15 @@ export default function SystemsBento() {
             <CellKicker domain="body">{t("body.kicker")}</CellKicker>
             <CellHeading>{t("body.heading")}</CellHeading>
             <p className="mt-3 max-w-[36ch] text-base text-fg-dim">{t("body.text")}</p>
+            <DemoLoop
+              src="/exercise-demos/deadlift.webm"
+              label={t("body.clipLabel")}
+              pauseLabel={s("pause")}
+              playLabel={s("play")}
+              tint="body"
+              compact
+              className="absolute right-[clamp(20px,2.4vw,34px)] top-[clamp(20px,2.4vw,34px)] hidden h-[108px] w-[152px] md:block"
+            />
             <div
               data-kg-ticks
               data-domain="body"

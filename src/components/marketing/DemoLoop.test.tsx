@@ -21,4 +21,22 @@ describe("DemoLoop", () => {
     expect(html).toContain('aria-label="Back squat"');
     expect(html).toMatch(/<button[^>]*aria-pressed="false"[^>]*>Pause<\/button>/);
   });
+
+  it("er uændret uden tint", () => {
+    expect(html).not.toMatch(/data-tint/);
+  });
+
+  it("lægger et tokenbaseret tint-lag over klippet med tint", () => {
+    const tinted = renderToStaticMarkup(
+      <DemoLoop
+        src="/exercise-demos/back-squat.webm"
+        label="Back squat"
+        pauseLabel="Pause"
+        playLabel="Afspil"
+        tint="body"
+      />,
+    );
+    expect(tinted).toMatch(/data-tint="body"/);
+    expect(tinted).not.toMatch(/#[0-9a-f]{6}/i);
+  });
 });

@@ -240,9 +240,9 @@ describe("demoTodayProseInput", () => {
     expect(fixture.hrv.hasReading).toBe(true);
     expect(fixture.hrv.qualitative).toBe("lav");
     expect(fixture.hrv.outOfBand).toBe(true);
-    expect(fixture.session.state).toBe("assigned");
-    expect(fixture.session.dayLabel).toMatch(/Squat/i);
-    expect(fixture.mind.checkedToday).toBe(true);
+    expect(fixture.session?.state).toBe("assigned");
+    expect(fixture.session?.dayLabel).toMatch(/Squat/i);
+    expect(fixture.mind?.checkedToday).toBe(true);
 
     const model = buildTodayProse(fixture);
     expect(keysOf(model)).toEqual(["hrvLav", "sessionAssignedWithLabel"]);
