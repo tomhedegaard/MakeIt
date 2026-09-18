@@ -81,3 +81,20 @@ describe("motor-paritet (spec §8)", () => {
     }
   });
 });
+
+describe("klientgrafen holdes ren (spec §9)", () => {
+  const read = (rel: string) => readFileSync(new URL(rel, import.meta.url), "utf8");
+
+  it.each([
+    ["engine-demo.ts", "./engine-demo.ts"],
+    ["engine.ts", "../../adaptive/engine.ts"],
+    ["reason-narratives.ts", "../../adaptive/reason-narratives.ts"],
+    ["mock-scenarios.ts", "../../adaptive/mock-scenarios.ts"],
+    ["hrv/types.ts", "../../hrv/types.ts"],
+  ])("%s trækker intet server-only eller node-indbygget med", (_name, rel) => {
+    const src = read(rel);
+    expect(src).not.toMatch(/from "server-only"/);
+    expect(src).not.toMatch(/from "node:/);
+    expect(src).not.toMatch(/from "@\/lib\/supabase/);
+  });
+});
