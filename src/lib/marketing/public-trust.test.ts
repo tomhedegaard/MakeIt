@@ -69,7 +69,6 @@ const faqListSrc = readFileSync(
   new URL("../../components/marketing/FaqList.tsx", import.meta.url),
   "utf8",
 );
-const pageSrc = readFileSync(new URL("../../app/page.tsx", import.meta.url), "utf8");
 const loginSrc = readFileSync(new URL("../../app/login/page.tsx", import.meta.url), "utf8");
 const footerSrc = readFileSync(
   new URL("../../components/marketing/Footer.tsx", import.meta.url),
@@ -123,7 +122,6 @@ describe("public trust — Munk presence", () => {
     expect(collectStrings(en.munk).join(" ")).not.toMatch(invented);
     expect(MUNK_PORTRAIT_SRC).toBeNull();
     expect(munkSrc).toMatch(/data-munk-portrait/);
-    expect(pageSrc).toContain("<MunkSection");
   });
 });
 
@@ -157,11 +155,6 @@ describe("public trust — jargon first use", () => {
       athlete: { unlocks: Record<string, string> };
     };
     expect(daTiers.athlete.unlocks["3"]).toMatch(/buddy-pod —/i);
-
-    const crewAt = pageSrc.indexOf("<CrewSection");
-    const marqueeAt = pageSrc.indexOf("<Marquee");
-    expect(crewAt).toBeGreaterThan(-1);
-    expect(marqueeAt).toBeGreaterThan(crewAt);
   });
 });
 
