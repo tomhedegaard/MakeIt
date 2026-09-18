@@ -246,7 +246,10 @@ html:has(.theme-root[data-theme="nat"]) {
 * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
 html { color-scheme: dark; }
-html, body { height: 100%; }
+/* html/body keep their natural (auto) height. Lenis used to force
+ * this on every page; the shells depend on it: the member app pins
+ * itself with h-dvh on mobile and grows with content on desktop
+ * (sticky sidebar), and a 100% body would cap it at one screen. */
 
 body {
   background: var(--bg);

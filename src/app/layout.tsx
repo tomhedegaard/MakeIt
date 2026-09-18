@@ -61,7 +61,7 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${sans.variable} ${display.variable} ${mono.variable} h-full antialiased`}
+      className={`${sans.variable} ${display.variable} ${mono.variable} antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col grain vignette">
