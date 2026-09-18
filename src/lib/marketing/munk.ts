@@ -12,7 +12,7 @@
  * Missing approved asset: a portrait of Mikael Munk. Do not invent
  * a photo, biography, years of experience, or achievements.
  * When an approved image exists, set MUNK_PORTRAIT_SRC to its
- * public path and render it from MunkSection.
+ * public path; KalkMunk renders it.
  */
 export const MUNK_PORTRAIT_SRC: string | null = null;
 
