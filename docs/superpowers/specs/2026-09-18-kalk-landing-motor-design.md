@@ -186,3 +186,16 @@ Alt bygges i kode. Ingen AI-genererede billeder.
 - Kalk-spec: `docs/superpowers/specs/2026-09-17-kalk-redesign-design.md`
 - Motorens regler: `src/lib/adaptive/engine.ts`, `docs/PLATFORM_OVERVIEW.md`
 - Domænefarver: `docs/DOMAIN_COLOR_SYSTEM.md`
+
+---
+
+## 11. Status
+
+**Leveret 2026-09-18** på branchen `claude/kalk-landing-motor`.
+
+- Heroen kører appens rigtige `evaluateAdaptation` i browseren. De tre skyder-tilstande giver `top_set_reduction` (135 kg), `volume_reduction` (to accessory-sæt droppet) og `no_change`, verificeret i browseren.
+- E4 er gennemført: `DemoLoop` har fået et valgfrit tint-lag.
+- **Afvigelse fra §4:** kun Krop-cellen i bentoen fik et klip. Mad og Sind fik først et, men en planke ved siden af makrofordelingen og en knæløftning ved siden af et mentalt check-in læste som fyld. MoveKit har kun løfteklip, så de to celler står uden.
+- **Afvigelse fra §3.4:** "Behold original" står som en rolig linje, ikke som en pille. Den er ikke klikbar på landingen, og et dødt element, der ligner en knap, er værre end en linje.
+- Telefonens synlige overskrift er "I dag". `liveRegionPrefix` udtales kun af skærmlæsere.
+
