@@ -897,6 +897,10 @@
       "inviteOnly": {
         "q": "Why is it invite only?",
         "a": "Because Munk himself signs off on the answers. That is why we open in small groups."
+      },
+      "demo": {
+        "q": "Is the homepage demo the real engine?",
+        "a": "Yes, the same engine. The sliders call the same function that adjusts your real session every morning. The numbers never leave your browser."
       }
     },
     "footer": {

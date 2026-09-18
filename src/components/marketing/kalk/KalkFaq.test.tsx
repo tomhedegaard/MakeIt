@@ -13,9 +13,10 @@ describe("KalkFaq", () => {
     expect(html).toContain(k.heading);
   });
 
-  it("lists inviteOnly first, then the five reused classic answers, in order", () => {
+  it("lists inviteOnly first, then the demo question, then the five reused classic answers, in order", () => {
     const order = [
       k.inviteOnly.q,
+      k.demo.q,
       items.advanced.q,
       items.wearables.q,
       items.optOutAdaptive.q,
@@ -30,8 +31,8 @@ describe("KalkFaq", () => {
     }
   });
 
-  it("shows all six without a show-more button", () => {
-    expect(html.match(/<details/g)).toHaveLength(6);
+  it("shows all seven without a show-more button", () => {
+    expect(html.match(/<details/g)).toHaveLength(7);
     expect(html).not.toContain("<button");
   });
 

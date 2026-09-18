@@ -897,6 +897,10 @@
       "inviteOnly": {
         "q": "Hvorfor er det invite-only?",
         "a": "Fordi Munk selv skriver under på svarene. Derfor åbner vi i små hold."
+      },
+      "demo": {
+        "q": "Er demoen på forsiden den rigtige motor?",
+        "a": "Ja, samme motor. Skyderne kalder den funktion der justerer dit rigtige pas hver morgen. Tallene forlader aldrig din browser."
       }
     },
     "footer": {

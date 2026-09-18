@@ -5,10 +5,11 @@ import FaqList, { type FaqItem } from "@/components/marketing/FaqList";
 const REUSED_KEYS = ["advanced", "wearables", "optOutAdaptive", "responseTime", "hrvScore"] as const;
 
 /**
- * Kalk FAQ (reference B `.faq-grid`): the one new invite-only question
- * plus five answers reused from the classic FAQ. `FaqList` (Task 5)
- * already renders the accordion; `initialCount={6}` shows every item,
- * so its own "show all" button never appears.
+ * Kalk FAQ (reference B `.faq-grid`): the invite-only question, the
+ * question about the hero demo, plus five answers reused from the
+ * classic FAQ. `FaqList` (Task 5) already renders the accordion;
+ * `initialCount` matches the item count, so its own "show all" button
+ * never appears.
  */
 export default function KalkFaq() {
   const t = useTranslations("Marketing.kalk.faq");
@@ -17,6 +18,7 @@ export default function KalkFaq() {
 
   const ITEMS: FaqItem[] = [
     { q: t("inviteOnly.q"), a: t("inviteOnly.a") },
+    { q: t("demo.q"), a: t("demo.a") },
     ...REUSED_KEYS.map((key) => ({ q: items(`${key}.q`), a: items(`${key}.a`) })),
   ];
 
@@ -31,7 +33,11 @@ export default function KalkFaq() {
             <p className="mt-[22px] max-w-[40ch] text-[clamp(17px,1.35vw,20px)] text-fg-dim">{t("sub")}</p>
           </div>
 
-          <FaqList items={ITEMS} initialCount={6} showAllLabel={faq("showAll", { count: ITEMS.length })} />
+          <FaqList
+            items={ITEMS}
+            initialCount={ITEMS.length}
+            showAllLabel={faq("showAll", { count: ITEMS.length })}
+          />
         </div>
       </div>
     </section>

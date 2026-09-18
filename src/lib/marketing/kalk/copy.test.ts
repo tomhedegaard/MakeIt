@@ -63,4 +63,11 @@ describe("Marketing.kalk copy gate (spec §5, §8)", () => {
   it("siger at demo-båndet er et eksempel, ikke et løfte", () => {
     expect((da.demo as Record<string, string>).bandNote).toMatch(/dit eget|din egen/i);
   });
+
+  it("svarer på om demoen er den rigtige motor", () => {
+    const faq = da.faq as Record<string, unknown>;
+    const blob = JSON.stringify(faq);
+    expect(blob).toMatch(/samme motor|den rigtige motor/i);
+    expect(blob).toMatch(/forlader aldrig|sendes ikke/i);
+  });
 });
