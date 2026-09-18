@@ -790,8 +790,7 @@
         "macro": "2.740 kcal · 182 g protein",
         "p": "Protein",
         "c": "Kulhydrat",
-        "f": "Fedt",
-        "clipLabel": "Planke, kropsvægt."
+        "f": "Fedt"
       },
       "heart": {
         "kicker": "Hjerte",
@@ -806,8 +805,7 @@
         "text": "60 sekunder. Hvordan har hovedet det i dag?",
         "energy": "Energi",
         "stress": "Stress",
-        "focus": "Fokus",
-        "clipLabel": "Hængende knæløft."
+        "focus": "Fokus"
       },
       "rack": {
         "heading": "Appen, i dagslys.",

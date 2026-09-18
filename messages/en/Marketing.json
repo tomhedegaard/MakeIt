@@ -790,8 +790,7 @@
         "macro": "2,740 kcal · 182 g protein",
         "p": "Protein",
         "c": "Carbs",
-        "f": "Fat",
-        "clipLabel": "Plank, bodyweight."
+        "f": "Fat"
       },
       "heart": {
         "kicker": "Heart",
@@ -806,8 +805,7 @@
         "text": "60 seconds. How is your head today?",
         "energy": "Energy",
         "stress": "Stress",
-        "focus": "Focus",
-        "clipLabel": "Hanging knee raise."
+        "focus": "Focus"
       },
       "rack": {
         "heading": "The app, in daylight.",
