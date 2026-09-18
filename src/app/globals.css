@@ -828,6 +828,48 @@ nav.tabbar {
   color: var(--fg-dim);
 }
 
+/* Motor-demoens skydere. Tommelfingeren fylder 44 px, så målfladen er
+ * en finger bred, mens prikken der tegnes i den er lille nok til at
+ * sporet stadig kan læses. Tokens only. */
+[data-theme="kalk"] .kalk-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+[data-theme="kalk"] .kalk-range:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+[data-theme="kalk"] .kalk-range::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--line-strong);
+}
+[data-theme="kalk"] .kalk-range::-moz-range-track {
+  height: 2px;
+  background: var(--line-strong);
+}
+[data-theme="kalk"] .kalk-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 44px;
+  height: 44px;
+  margin-top: -21px;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, var(--fg) 0 8px, var(--bg) 9px 13px, transparent 14px);
+}
+[data-theme="kalk"] .kalk-range::-moz-range-thumb {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, var(--fg) 0 8px, var(--bg) 9px 13px, transparent 14px);
+}
+
 /* Sticky motor rig: scale the phone down on short viewports. */
 [data-theme="kalk"] [data-motor-story] { --rig-s: 1; }
 @media (max-height: 760px) {

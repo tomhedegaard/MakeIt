@@ -26,6 +26,8 @@ export type DemoSliders = {
 
 export const HRV_RANGE = { min: 42, max: 86 } as const;
 export const SLEEP_RANGE = { min: 3, max: 9, step: 0.5 } as const;
+/** Mind-checkets skala. Fra og med 4 sætter demoen `feelingLast3d`. */
+export const STRESS_RANGE = { min: 1, max: 5, step: 1 } as const;
 
 /** Standardtilstanden giver en sænkning, så første indtryk ikke er en tom skærm. */
 export const DEMO_DEFAULTS: DemoSliders = { sleep: 5, hrv: 46, stress: 4 };
