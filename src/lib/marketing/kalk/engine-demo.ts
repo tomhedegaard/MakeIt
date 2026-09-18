@@ -1,7 +1,8 @@
-import type { EngineInput } from "@/lib/adaptive/types";
+import { evaluateAdaptation } from "@/lib/adaptive/engine";
+import { explainerScenarioInput } from "@/lib/adaptive/mock-scenarios";
+import type { CandidateDecision, EngineInput } from "@/lib/adaptive/types";
 // ReadinessBucket bor i hrv-typerne. adaptive/types re-eksporterer den ikke.
 import type { ReadinessBucket } from "@/lib/hrv/types";
-import { explainerScenarioInput } from "@/lib/adaptive/mock-scenarios";
 
 /**
  * Landingens bro til den rigtige motor (spec 2026-09-18 §3).
@@ -53,5 +54,37 @@ export function buildDemoInput(sliders: DemoSliders): EngineInput {
       sleepHoursAvg2d: sliders.sleep,
       feelingLast3d: sliders.stress >= 4 ? "stressed" : null,
     },
+  };
+}
+
+/**
+ * Topsættets vægt er landingens egen visning: motoren har intet
+ * vægtfelt (`NextSessionExerciseInfo`), kun en handling og en procent.
+ */
+export const DEMO_TOP_SET_KG = 150;
+
+/** Motoren sætter i dag altid 10 %, men feltet er valgfrit i typen. */
+const FALLBACK_PERCENT = 10;
+
+export type DemoResult = {
+  decision: CandidateDecision;
+  /** Vægten telefonen viser efter motorens svar. */
+  topSetKg: number;
+  /** Sandt når topsættet faktisk er ændret, så 150 kan streges ud. */
+  changed: boolean;
+  /** Kun sat ved volume_reduction. */
+  accessorySetsDropped: number | null;
+};
+
+export function runDemo(sliders: DemoSliders): DemoResult {
+  const decision = evaluateAdaptation(buildDemoInput(sliders));
+  const reduced = decision.action === "top_set_reduction";
+  const percent = decision.params.percent ?? FALLBACK_PERCENT;
+  return {
+    decision,
+    topSetKg: reduced ? Math.round(DEMO_TOP_SET_KG * (1 - percent / 100)) : DEMO_TOP_SET_KG,
+    changed: reduced,
+    accessorySetsDropped:
+      decision.action === "volume_reduction" ? decision.params.accessorySetsDropped ?? null : null,
   };
 }
