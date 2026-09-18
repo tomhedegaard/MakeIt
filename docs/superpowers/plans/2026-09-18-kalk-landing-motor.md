@@ -118,7 +118,9 @@ Expected: FAIL, "Cannot find module './engine-demo'".
 
 ```ts
 // src/lib/marketing/kalk/engine-demo.ts
-import type { EngineInput, ReadinessBucket } from "@/lib/adaptive/types";
+import type { EngineInput } from "@/lib/adaptive/types";
+// ReadinessBucket bor i hrv-typerne. adaptive/types re-eksporterer den ikke.
+import type { ReadinessBucket } from "@/lib/hrv/types";
 import { explainerScenarioInput } from "@/lib/adaptive/mock-scenarios";
 
 /**
@@ -311,6 +313,7 @@ describe("klientgrafen holdes ren (spec §9)", () => {
     ["engine.ts", "../../adaptive/engine.ts"],
     ["reason-narratives.ts", "../../adaptive/reason-narratives.ts"],
     ["mock-scenarios.ts", "../../adaptive/mock-scenarios.ts"],
+    ["hrv/types.ts", "../../hrv/types.ts"],
   ])("%s trækker intet server-only eller node-indbygget med", (_name, rel) => {
     const src = read(rel);
     expect(src).not.toMatch(/from "server-only"/);
@@ -357,11 +360,12 @@ git commit -m "test(landing): porten fanger nye runtime-afhængigheder i demoens
 
 - [ ] **Step 2: Kør.** `npx vitest run src/lib/marketing/kalk/copy.test.ts` → FAIL.
 
-- [ ] **Step 3: Skriv copy.** Under `kalk` i **begge** sprogfiler, nøgle for nøgle (dansk vist; engelsk oversættes i samme tone som resten af `en/Marketing.json`). Ingen tankestreger:
+- [ ] **Step 3: Skriv copy.** Under `kalk` i **begge** sprogfiler, nøgle for nøgle (dansk vist; engelsk oversættes i samme tone som resten af `en/Marketing.json`). Ingen tankestreger.
+
+**Ingen `eyebrow`-nøgle.** `kalk` har allerede præcis tre (`engine`, `crew`, `access`), og copy-porten tillader højst tre (`copy.test.ts:32`). Demoen får ingen.
 
 ```json
 "demo": {
-  "eyebrow": "Prøv motoren",
   "sleepLabel": "Søvn",
   "hrvLabel": "HRV",
   "stressLabel": "Stress",
@@ -457,7 +461,8 @@ export default function EngineDemo() {
         {/* Søvn */}
         <div>
           <div className="flex items-baseline justify-between">
-            <label htmlFor="demo-sleep" className="eyebrow">{t("sleepLabel")}</label>
+            {/* Ikke klassen "eyebrow": KalkHero.test.tsx kræver, at heroen ikke har en. */}
+            <label htmlFor="demo-sleep" className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-dim">{t("sleepLabel")}</label>
             <span className="font-display text-3xl">{hours}</span>
           </div>
           <input
@@ -476,8 +481,40 @@ export default function EngineDemo() {
         <p className="font-mono text-[11px] leading-relaxed text-fg-faint">{t("bandNote")}</p>
       </div>
 
-      <div aria-live="polite" className="…telefonramme…">
-        {/* Topsæt, forklaring, chips og Behold original — se §3.4 i specen */}
+      <div aria-live="polite" className="w-full max-w-[300px] rounded-[44px] bg-fg p-2.5">
+        <div className="overflow-hidden rounded-[36px] bg-bg">
+          <div className="border-b border-line px-5 pb-3 pt-6">
+            <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-fg-dim">{t("liveRegionPrefix")}</p>
+            <p className="font-display mt-1.5 text-3xl">{t("sessionTitle")}</p>
+          </div>
+          <div className="flex flex-col gap-3.5 px-5 pb-6 pt-4">
+            <div className="rounded-[14px] border border-line-strong bg-bg-2 p-4">
+              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-fg-dim">{t("topSetLabel")}</p>
+              <p className="mt-2 flex items-baseline gap-2.5">
+                {result.changed ? (
+                  <span className="strike-signal font-display text-3xl text-fg-faint">{DEMO_TOP_SET_KG}</span>
+                ) : null}
+                <span className="font-display text-5xl">{result.topSetKg}</span>
+                <span className="font-mono text-xs text-fg-dim">kg</span>
+              </p>
+              <p className="mt-2.5 text-xs leading-relaxed text-fg-dim">{result.decision.explanationDa}</p>
+            </div>
+
+            {result.accessorySetsDropped ? (
+              <p className="text-[13px] text-fg-dim">{t("accessoryDropped", { count: result.accessorySetsDropped })}</p>
+            ) : null}
+            {result.decision.action === "no_change" ? (
+              <p className="text-[13px] text-fg-dim">{t("unchanged")}</p>
+            ) : null}
+
+            <div className="flex gap-2">
+              <span className="rounded-full border border-line-strong px-2.5 py-1.5 font-mono text-[9px] tracking-[0.08em] text-fg-dim">{t("whySleep", { hours })}</span>
+              <span className="rounded-full border border-line-strong px-2.5 py-1.5 font-mono text-[9px] tracking-[0.08em] text-fg-dim">{t("whyHrv", { ms: sliders.hrv })}</span>
+            </div>
+
+            <p className="rounded-full border border-line-strong px-3 py-2.5 text-center font-mono text-[10px] uppercase tracking-[0.1em]">{t("keepOriginal")}</p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -485,10 +522,12 @@ export default function EngineDemo() {
 ```
 
 Krav, som testen og specen låser:
+- **Brug ikke klassen `eyebrow` nogen steder i komponenten.** Heroen skal fortsat kunne bestå `KalkHero.test.tsx:26` (`expect(html).not.toContain("eyebrow")`).
 - Skyderne har `min`, `max`, `step` fra modulet, aldrig hardkodede tal.
 - Hvert `<input>` har `id` og et `<label htmlFor>`; målfladen er mindst 44 px (styl tommelfingeren i `globals.css` sammen med resten af Kalk, ikke inline).
 - Telefonpanelet ligger i `aria-live="polite"` og starter med `t("liveRegionPrefix")`, så en skærmlæser hører hvad der ændrede sig.
-- Ved `changed` vises 150 overstreget i `--signal` og den nye vægt i `--fg`.
+- Ved `changed` vises 150 med klassen `strike-signal` (findes allerede i `globals.css`) og den nye vægt i `--fg`.
+- "Behold original" er **tekst, ikke en knap**: den findes i appen, men gør intet på landingen, og en død knap er værre end en linje.
 - Ved `volume_reduction` vises `t("accessoryDropped", { count })`.
 - Ved `no_change` vises `t("unchanged")`.
 - Forklaringen er `result.decision.explanationDa`. Skriv **ikke** ny forklarings-copy.
@@ -508,7 +547,7 @@ git commit -m "feat(landing): motor-demoen som klient-ø i hero"
 - Modify: `src/components/marketing/kalk/KalkHero.tsx`
 - Modify: `src/components/marketing/kalk/KalkHero.test.tsx`
 
-- [ ] **Step 1: Udvid hero-testen.**
+- [ ] **Step 1: Ret hero-testen.** Tre eksisterende tests beskriver skive-tallene og skal **fjernes**, fordi det, de beskriver, ikke længere findes: "strikes 150 in signal and sets 135 beside it" (`:18`), "shows the dashboard phone" (`:23`) og "stacks the plate numbers above the phone until 1280 px" (`:33`). Behold "has no eyebrow and no stats band". Tilføj derefter:
 
 ```tsx
   it("beholder H1 og den ene sætning", () => {
@@ -523,7 +562,9 @@ git commit -m "feat(landing): motor-demoen som klient-ø i hero"
 
 - [ ] **Step 2: Kør** → FAIL.
 
-- [ ] **Step 3: Implementér.** Venstre kolonne (H1, sub, CTA, tekstlink) står uændret. Højre kolonne: fjern `STAGE_LINES`, skive-tallene og `DashboardScreen`, og indsæt `<EngineDemo />`. Behold kolonnens ramme (`border-l`, højde, padding), så hero-rytmen er den samme. Slet de nu ubrugte copy-nøgler `plateOld`, `plateNew`, `plateUnit`, `phoneCaption` i **begge** sprogfiler, og kør copy-porten.
+- [ ] **Step 3: Implementér.** Venstre kolonne (H1, sub, CTA, tekstlink) står uændret. Højre kolonne: fjern `STAGE_LINES`, skive-tallene og `DashboardScreen`, og indsæt `<EngineDemo />`. Behold kolonnens ramme (`border-l`, højde, padding), så hero-rytmen er den samme.
+
+**Slet kun `phoneCaption`.** `plateOld`, `plateNew` og `plateUnit` bruges stadig af `Rule.tsx:12`, `SystemsBento.tsx:45`, `phone/screens/SessionScreen.tsx:13,38` og `phone/screens/DashboardScreen.tsx:38-40`. Grep før du sletter noget som helst: `grep -rn "plateOld\|plateNew\|plateUnit\|phoneCaption" src/`.
 
 - [ ] **Step 4: Kør.** `npx vitest run src/components/marketing src/lib/marketing` → PASS.
 
@@ -558,11 +599,15 @@ Plus en CSS-test i `src/lib/design/kalk-theme.test.ts`:
 
 ```ts
 it("nattens kurve har et statisk slutbillede ved reduceret bevægelse", () => {
-  expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.night-curve__path[\s\S]*?stroke-dashoffset:\s*0/);
+  // Ankret til ÉN blok: [^}]* krydser ikke en afsluttende klammer, så
+  // reglen skal ligge inde i reduced-motion-blokken for at testen består.
+  expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)\s*\{[^@]*?\.night-curve__path\s*\{[^}]*stroke-dashoffset:\s*0/);
 });
 ```
 
 - [ ] **Step 2: Kør** → FAIL.
+
+**Vigtigt:** `MotorStory.tsx:203-247` har allerede en `NightStrip` med tre `<circle>` og copy under `engine.night.*`. `NightCurve` **erstatter** den. Genbrug copy-nøglerne, flyt dem ikke, og slet `NightStrip`, så siden ikke får to nattegrafer.
 
 - [ ] **Step 3: Implementér.** `NightCurve` er en serverkomponent med én `<path>` og tre `<circle>` (23:40, 05:30, 06:45). Animationen er ren CSS: `stroke-dasharray`/`stroke-dashoffset` på `.night-curve__path`, som kører, når `MotorStory` sætter `data-in-view="true"` på blokken. Genbrug `IntersectionObserver`-mønsteret fra `MotorStoryRig` frem for at skrive et nyt. Ved `prefers-reduced-motion: reduce` sættes `stroke-dashoffset: 0` og ingen overgang.
 
@@ -582,11 +627,16 @@ git commit -m "feat(landing): nattens kurve tegner sig, når den kommer i syne"
 
 - [ ] **Step 1: Test.** Fire grænser, og "Behold original" nævnt som medlemmets ret.
 
+"Behold original" står der allerede (`MotorStory.tsx:116`, testet i `MotorStory.test.tsx:25,47`), så den påstand er grøn i forvejen. Test det nye:
+
 ```tsx
-it("viser hvad motoren må og ikke må", () => {
+it("viser motorens fire grænser", () => {
   const html = render(<MotorStory />);
-  expect(html).toMatch(/Behold original/);
   expect((html.match(/data-bound/g) ?? []).length).toBe(4);
+});
+
+it("siger at pause og deload går til Munk først", () => {
+  expect(render(<MotorStory />)).toMatch(/Munk/);
 });
 ```
 
@@ -614,13 +664,22 @@ git commit -m "feat(landing): motorens grænser står sort på hvidt"
 
 - [ ] **Step 1: Test.** `tint` er valgfri og ændrer intet, når den ikke er sat.
 
+`DemoLoop` kræver `src`, `label`, `pauseLabel` og `playLabel` (`DemoLoop.tsx:16-32`), og den eksisterende testfil kalder `renderToStaticMarkup` direkte. Følg det mønster:
+
 ```tsx
+const props = {
+  src: "/exercise-demos/back-squat.webm",
+  label: "Back squat",
+  pauseLabel: "Pause",
+  playLabel: "Afspil",
+};
+
 it("er uændret uden tint", () => {
-  expect(render(<DemoLoop slug="back-squat" />)).not.toMatch(/data-tint/);
+  expect(renderToStaticMarkup(<DemoLoop {...props} />)).not.toMatch(/data-tint/);
 });
 
 it("lægger et tokenbaseret tint-lag over klippet med tint", () => {
-  const html = render(<DemoLoop slug="back-squat" tint="body" />);
+  const html = renderToStaticMarkup(<DemoLoop {...props} tint="body" />);
   expect(html).toMatch(/data-tint="body"/);
   expect(html).not.toMatch(/#[0-9a-f]{6}/i);
 });
@@ -662,7 +721,7 @@ git commit -m "feat(landing): MoveKit-klip i bentoens lyse celler"
 ### Task 11: FAQ om demoen
 
 **Files:**
-- Modify: `src/components/marketing/kalk/KalkFaq.tsx`, `src/lib/marketing/faq-items.ts` (tjek hvor listen bor)
+- Modify: `src/components/marketing/kalk/KalkFaq.tsx` (Kalks FAQ samles her af `Marketing.kalk.faq.*` plus genbrugte nøgler fra `Marketing.faq.items`. `src/lib/marketing/faq-items.ts` bruges **ikke** af Kalk)
 - Modify: `messages/{da,en}/Marketing.json`
 
 - [ ] **Step 1: Test.** Spørgsmålet findes, og svaret siger, at intet sendes.
@@ -680,7 +739,7 @@ it("svarer på om demoen er den rigtige motor", () => {
 
 - [ ] **Step 5: Commit.**
 ```bash
-git add src/components/marketing/kalk/KalkFaq.tsx messages src/lib/marketing
+git add src/components/marketing/kalk/KalkFaq.tsx messages
 git commit -m "feat(copy): FAQ forklarer at demoen er den rigtige motor"
 ```
 
@@ -706,7 +765,7 @@ Protokol: `docs/PLATFORM_OVERVIEW.md` §8. Landingen kræver **ikke** login, men
 npm test
 npm run lint
 npm run build
-npx tsc --noEmit 2>&1 | grep -c "error TS"   # skal være ≤ 7
+npx tsc --noEmit 2>&1 | grep -c "error TS"   # baseline er 7, alle i gamle testfiler. Stiger tallet, er det en regression
 ```
 
 - [ ] **Step 2: Opdatér specen** med et Status-afsnit: hvad der er leveret, og at E4 (tint-laget) er implementeret.
