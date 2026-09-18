@@ -64,7 +64,7 @@ Skyderne giver tre værdier. En ny ren modul-fil `src/lib/marketing/kalk/engine-
 | Skyder | Interval | Mapper til |
 |---|---|---|
 | Søvn | 3,0-9,0 t, trin 0,5 | `lifestyle.sleepHoursAvg2d` |
-| HRV | 28-86 ms, trin 1 | `latestReading.readinessBucket` via båndet i §3.3 |
+| HRV | 42-86 ms, trin 1 | `latestReading.readinessBucket` via demo-båndet i §3.3 |
 | Stress | 1-5 | `lifestyle.feelingLast3d`: 4-5 → `stressed`, 3 → `null`, 1-2 → `null` |
 
 Grundlaget er **ikke** et nyt literal, men `explainerScenarioInput()` fra `src/lib/adaptive/mock-scenarios.ts`, som allerede er testlåst og driver motoren på `/hrv/learn/adaptive`. `engine-demo.ts` kopierer det og overskriver kun fire felter: `latestReading.readinessBucket`, `latestReading.measuredAt` (sat til `now` minus 1 time, så målingen altid er frisk), `lifestyle.sleepHoursAvg2d` og `lifestyle.feelingLast3d`. Historikfelterne neutraliseres: `veryLowDaysLast5: 0`, `rpeDriftLast14d: null`, ingen sprungne sessioner, ingen form-check under 6.
@@ -109,7 +109,7 @@ Inden for skyderens rækkevidde kan motoren svare fire ting. Alle fire skal have
 | `top_set_reduction` | `low` plus mindst ét livsstilssignal | Topsættet overstreget og sat ned med motorens procent |
 | `volume_reduction` | `low` uden livsstilssignaler | Topsættet står, accessory-sæt bliver valgfri |
 | `no_change` | `normal` eller `high` | Passet står uændret, med en linje om at alt er inden for båndet |
-| Eskalering til Munk | hvis motoren sætter `humanReviewRecommended` | En linje om, at Munk kigger på det, før noget ændres |
+| Eskalering til Munk | hvis motoren sætter `humanReviewRecommended` | En linje om, at Munk kigger på det, før noget ændres. Skyderen kan ikke nå dertil i dag, men skærmen findes som sikkerhedsnet, hvis appens regler ændrer sig |
 
 **Den vigtige ærlighed:** med `normal` eller `high` bucket ændrer søvn og stress alene ikke svaret. Det er ikke en fejl i demoen, det er motorens faktiske regel, og copy siger det: "HRV er det, der åbner døren. Søvn og stress afgør, hvor meget."
 
