@@ -263,23 +263,6 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--bg-elev); border-radius: 8px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--line-bright); }
 
-/* Lenis smooth scroll */
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-stopped { overflow: hidden; }
-
-/* Custom cursor — the .cursor-custom class is applied by
- * <CustomCursor> after gating on (hover: hover) + (pointer: fine),
- * so touch + assistive setups keep the native cursor. We hide it
- * on all elements (not just html) because button/anchor styles
- * elsewhere set `cursor: pointer` which would otherwise re-show
- * the system cursor on top of our custom one. */
-html.cursor-custom,
-html.cursor-custom * {
-  cursor: none !important;
-}
-
 /* ---------------------------------------------------------------- *
  * Type system — strength editorial
  * ---------------------------------------------------------------- */
@@ -365,12 +348,6 @@ html:has(.theme-root[data-theme="nat"]) .grain::before {
 
 @media (prefers-reduced-motion: reduce) {
   .grain::before { animation: none; }
-  [data-reveal],
-  html.reveal-js [data-reveal]:not(.is-visible) {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
 }
 
 .vignette::after {
@@ -379,73 +356,11 @@ html:has(.theme-root[data-theme="nat"]) .grain::before {
   background: radial-gradient(120% 80% at 50% 0%, transparent 40%, var(--vignette-edge) 100%);
 }
 
-.divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--line-strong) 20%, var(--line-strong) 80%, transparent);
-}
-
-/* Marquee */
-@keyframes marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.marquee-track {
-  animation: marquee 38s linear infinite;
-  will-change: transform;
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none; }
-}
-
 /* Focus ring */
 *:focus-visible {
   outline: 2px solid var(--fg);
   outline-offset: 2px;
   border-radius: 4px;
-}
-
-/* Reveal-on-scroll — progressive enhancement.
- * Nodes are readable by default (opacity 1). JS may add
- * .reveal-pending only to off-screen nodes after it has marked
- * in-view / hash / reduced-motion content as .is-visible.
- * Never leave normal copy at ~15% contrast. */
-[data-reveal] {
-  opacity: 1;
-  transform: none;
-  transition: opacity 900ms cubic-bezier(.2,.7,.2,1), transform 900ms cubic-bezier(.2,.7,.2,1);
-}
-[data-reveal].reveal-pending:not(.is-visible) {
-  opacity: 0;
-  transform: translateY(24px);
-}
-[data-reveal].is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-reveal],
-  [data-reveal].reveal-pending:not(.is-visible) {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
-
-/* Marketing sticky card — clears the fixed h-14 header.
- * Sticky only from the lg breakpoint (same as the two-column tiers
- * layout) so the card stays in document flow on phones. */
-@media (min-width: 64rem) {
-  .marketing-sticky-card {
-    position: sticky;
-    top: calc(var(--header-h) + 1.75rem);
-    z-index: 10;
-  }
-}
-
-/* Solid marketing nav sheet — page content must not bleed through. */
-.marketing-nav-sheet {
-  background: var(--bg);
 }
 
 /* Buttons */
@@ -562,7 +477,6 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   --tabbar-h:    calc(var(--tabbar-pad-y) * 2 + var(--tabbar-row-h));
   --tabbar-clearance: 36px;
   --tabbar-stack: calc(var(--tabbar-h) + var(--safe-bottom));
-  --header-h:    3.5rem; /* marketing + app fixed header (h-14) */
 }
 
 .h-dvh   { height: 100dvh; }
