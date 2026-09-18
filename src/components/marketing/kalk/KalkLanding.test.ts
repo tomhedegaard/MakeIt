@@ -19,8 +19,10 @@ describe("KalkLanding shell", () => {
     expect([...at].sort((a, b) => a - b)).toEqual(at);
   });
 
-  it("is selected by the variant helper on /", () => {
-    expect(page).toContain("getLandingVariant()");
-    expect(page).toContain("<KalkLanding");
+  it("is rendered unconditionally on / with a light viewport", () => {
+    expect(page).toContain("return <KalkLanding />");
+    expect(page).not.toMatch(/getLandingVariant|LANDING_VARIANT|ClassicLanding/);
+    expect(page).toMatch(/export const viewport[^=]*=\s*\{[^}]*themeColor:\s*"#E7E9EB"/);
+    expect(page).toMatch(/colorScheme:\s*"light"/);
   });
 });

@@ -1,6 +1,6 @@
 /**
- * Public Reps tiers. Single source for the marketing surfaces
- * (RepsSimulator, TierJourney, Kalk CrewPlates). Member tier itself
+ * Public Reps tiers. Single source for the marketing surface
+ * (Kalk CrewPlates). Member tier itself
  * is stored on members.tier; these floors are the published ladder.
  */
 export const TIERS = [

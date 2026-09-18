@@ -966,4 +966,4 @@ Egen PR.
 - [x] Task 10 Adgang, FAQ, footer, stemmer
 - [x] Task 11 Kildeporte
 - [x] Task 12 Verifikation (demo og produktions-build, 2026-09-17). Vercel Preview-env afventer Tom.
-- [ ] Task 13 Skift (efter godkendelse)
+- [x] Task 13 Skift (PR #105)

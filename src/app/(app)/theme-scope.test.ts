@@ -47,4 +47,10 @@ describe("app theme scopes (spec §2, §6)", () => {
     expect(appLoading).toContain("<AppLoadingSkeleton");
     expect(appLoading).toContain("<LoadingTheme");
   });
+  it("keeps html/body at auto height so the desktop shell grows with content", () => {
+    const css = readFileSync(new URL("../globals.css", import.meta.url), "utf8");
+    const root = readFileSync(new URL("../layout.tsx", import.meta.url), "utf8");
+    expect(css).not.toMatch(/html,\s*body\s*\{\s*height:\s*100%/);
+    expect(root).not.toMatch(/className=\{`[^`]*\bh-full\b/);
+  });
 });

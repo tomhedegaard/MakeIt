@@ -1,15 +1,18 @@
 import { useTranslations } from "next-intl";
 import FaqList, { type FaqItem } from "@/components/marketing/FaqList";
+import type { FaqItemKey } from "@/lib/marketing/faq-items";
 
-/** Classic `Marketing.faq.items` keys reused as-is, no copy fork. */
-const REUSED_KEYS = ["advanced", "wearables", "optOutAdaptive", "responseTime", "hrvScore"] as const;
+/** `Marketing.faq.items` keys reused as-is, no copy fork. */
+const REUSED_KEYS = [
+  "advanced", "wearables", "optOutAdaptive", "responseTime", "hrvScore",
+] as const satisfies readonly FaqItemKey[];
 
 /**
  * Kalk FAQ (reference B `.faq-grid`): the invite-only question, the
- * question about the hero demo, plus five answers reused from the
- * classic FAQ. `FaqList` (Task 5) already renders the accordion;
- * `initialCount` matches the item count, so its own "show all" button
- * never appears.
+ * question about the hero demo, plus five answers from the shared
+ * `Marketing.faq.items` catalogue. `FaqList` (Task 5) already renders
+ * the accordion; `initialCount` matches the item count, so its own
+ * "show all" button never appears.
  */
 export default function KalkFaq() {
   const t = useTranslations("Marketing.kalk.faq");

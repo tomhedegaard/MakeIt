@@ -53,36 +53,19 @@ function collectStrings(value: unknown): string[] {
   return Object.values(value).flatMap(collectStrings);
 }
 
-const heroSrc = readFileSync(
-  new URL("../../components/marketing/Hero.tsx", import.meta.url),
-  "utf8",
-);
-const navSrc = readFileSync(
-  new URL("../../components/marketing/MarketingNav.tsx", import.meta.url),
-  "utf8",
-);
-const faqSrc = readFileSync(
-  new URL("../../components/marketing/FAQ.tsx", import.meta.url),
-  "utf8",
-);
+const kalkSrc = (file: string) =>
+  readFileSync(new URL(`../../components/marketing/kalk/${file}`, import.meta.url), "utf8");
+const heroSrc = kalkSrc("KalkHero.tsx");
+const navSrc = kalkSrc("KalkNav.tsx");
+const faqSrc = kalkSrc("KalkFaq.tsx");
 const faqListSrc = readFileSync(
   new URL("../../components/marketing/FaqList.tsx", import.meta.url),
   "utf8",
 );
-const pageSrc = readFileSync(new URL("../../app/page.tsx", import.meta.url), "utf8");
 const loginSrc = readFileSync(new URL("../../app/login/page.tsx", import.meta.url), "utf8");
-const footerSrc = readFileSync(
-  new URL("../../components/marketing/Footer.tsx", import.meta.url),
-  "utf8",
-);
-const tierSrc = readFileSync(
-  new URL("../../components/marketing/TierJourney.tsx", import.meta.url),
-  "utf8",
-);
-const munkSrc = readFileSync(
-  new URL("../../components/marketing/MunkSection.tsx", import.meta.url),
-  "utf8",
-);
+
+const daKalk = da.kalk as Record<string, Record<string, unknown>>;
+const enKalk = en.kalk as Record<string, Record<string, unknown>>;
 
 describe("public trust — FAQ count", () => {
   it("derives the show-all count from the live item list", () => {
@@ -94,7 +77,7 @@ describe("public trust — FAQ count", () => {
     expect(enFaq.showAll).toContain("{count}");
     expect(faqSrc).toMatch(/showAll[\s\S]*count:\s*ITEMS\.length/);
     expect(faqListSrc).not.toMatch(/hiddenCount/);
-    expect(faq.showAll).not.toMatch(/\((10|8)\)/);
+    expect(faq.showAll).not.toMatch(/\((10|8|6)\)/);
   });
 });
 
@@ -106,62 +89,32 @@ describe("public trust — locale lockstep", () => {
 
 describe("public trust — Munk presence", () => {
   it("keeps da/en Munk keys in lockstep and stays within known facts", () => {
-    expect(keysOf(da.munk)).toEqual(keysOf(en.munk));
-    const munk = da.munk as {
-      name: string;
-      role: string;
-      body: string;
-      photoPending: string;
-    };
-    expect(munk.name).toBe("Mikael Munk");
-    expect(munk.role).toMatch(/head coach/i);
-    expect(munk.body).toMatch(/form-check/i);
-    expect(munk.body).toMatch(/AI/i);
-    expect(munk.photoPending).toMatch(/portræt|portrait/i);
+    expect(keysOf(daKalk.munk)).toEqual(keysOf(enKalk.munk));
+    const munk = daKalk.munk as { sub: string; portraitAlt: string; card: { draftLabel: string } };
+    const enMunk = enKalk.munk as { sub: string };
+    expect(munk.sub).toMatch(/Mikael Munk/);
+    expect(munk.sub).toMatch(/hovedcoach/i);
+    expect(enMunk.sub).toMatch(/head coach/i);
+    expect(munk.portraitAlt).toMatch(/Mikael Munk/);
+    expect(munk.card.draftLabel).toMatch(/AI/);
     const invented = /år i branchen|world champion|olympi|certificeret|phd|tidligere landshold/i;
-    expect(collectStrings(da.munk).join(" ")).not.toMatch(invented);
-    expect(collectStrings(en.munk).join(" ")).not.toMatch(invented);
+    expect(collectStrings(daKalk.munk).join(" ")).not.toMatch(invented);
+    expect(collectStrings(enKalk.munk).join(" ")).not.toMatch(invented);
     expect(MUNK_PORTRAIT_SRC).toBeNull();
-    expect(munkSrc).toMatch(/data-munk-portrait/);
-    expect(pageSrc).toContain("<MunkSection");
   });
 });
 
 describe("public trust — jargon first use", () => {
-  it("glosses Motor, Tiers, Reps, open brain and buddy-pod in first body copy", () => {
-    const daGive = da.giveForward as {
-      intro: string;
-      receive: { body: string };
-      coach: { body: string };
-    };
-    const enGive = en.giveForward as {
-      intro: string;
-      receive: { body: string };
-      coach: { body: string };
-    };
-    expect(daGive.intro).toMatch(/tiers er niveauer/i);
-    expect(enGive.intro).toMatch(/tiers are levels/i);
-    expect(daGive.receive.body).toMatch(/regel-lag/i);
-    expect(enGive.receive.body).toMatch(/rule layer/i);
-    expect(daGive.coach.body).toMatch(/reps — point/i);
-    expect(enGive.coach.body).toMatch(/reps — points/i);
-    expect(daGive.coach.body).toMatch(/pod — en lille gruppe/i);
-    expect(enGive.coach.body).toMatch(/pod — a small group/i);
+  it("glosses the engine and reps where the landing first uses them", () => {
+    const daHero = daKalk.hero as { sub: string };
+    const enHero = enKalk.hero as { sub: string };
+    expect(daHero.sub).toMatch(/^Motoren læser/);
+    expect(enHero.sub).toMatch(/^The engine reads/);
 
-    const daCrew = da.crew as { items: { internal: { v: string } } };
-    const enCrew = en.crew as { items: { internal: { v: string } } };
-    expect(daCrew.items.internal.v).toMatch(/^Åben hjerne:/);
-    expect(enCrew.items.internal.v).toMatch(/^Open brain:/);
-
-    const daTiers = da.tiers as {
-      athlete: { unlocks: Record<string, string> };
-    };
-    expect(daTiers.athlete.unlocks["3"]).toMatch(/buddy-pod —/i);
-
-    const crewAt = pageSrc.indexOf("<CrewSection");
-    const marqueeAt = pageSrc.indexOf("<Marquee");
-    expect(crewAt).toBeGreaterThan(-1);
-    expect(marqueeAt).toBeGreaterThan(crewAt);
+    const daCrew = daKalk.crew as { sub: string };
+    const enCrew = enKalk.crew as { sub: string };
+    expect(daCrew.sub).toMatch(/^Reps optjenes ved/);
+    expect(enCrew.sub).toMatch(/^Reps are earned by/);
   });
 });
 
@@ -189,19 +142,12 @@ describe("public trust — primary CTA", () => {
     expect(PUBLIC_APP_STORE_HREF).toBeNull();
 
     expect(heroSrc).toContain("PUBLIC_WAITLIST_HREF");
-    expect(heroSrc).toContain("PUBLIC_LEARN_HREF");
-    expect(heroSrc).not.toMatch(/ctaTertiary/);
-    expect(heroSrc).not.toMatch(/href=["']\/login["']/);
-    const heroCopy = da.hero as Record<string, unknown>;
-    expect(heroCopy).not.toHaveProperty("ctaTertiary");
-    expect(heroCopy).not.toHaveProperty("waitlistLink");
+    expect(heroSrc).not.toMatch(/PUBLIC_LOGIN_HREF|href=["']\/login["']/);
 
     expect(navSrc).toContain("PUBLIC_WAITLIST_HREF");
     expect(navSrc).toContain("PUBLIC_LOGIN_HREF");
-    expect(navSrc).toMatch(/btn-primary[\s\S]*getAccess|getAccess[\s\S]*btn-primary/);
+    expect(navSrc).toMatch(/href=\{PUBLIC_WAITLIST_HREF\}[^>]*btn-primary/);
 
-    expect(footerSrc).toContain("PUBLIC_WAITLIST_HREF");
-    expect(tierSrc).toContain("PUBLIC_WAITLIST_HREF");
     expect(loginSrc).toMatch(/\/#waitlist/);
     expect(daLogin.waitlistLink).toMatch(/venteliste/i);
     expect(enLogin.waitlistLink).toMatch(/waitlist/i);

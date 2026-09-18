@@ -38,7 +38,7 @@ export default function MorningSignal({ input }: { input: MorningSignalInput }) 
             <Link
               href={cell.href}
               data-domain={cell.domain}
-              className="flex h-full min-w-0 flex-col gap-1 rounded-xl border hairline bg-bg-2 p-3 lift touch-app"
+              className="relative flex h-full min-w-0 flex-col gap-1 rounded-xl border hairline bg-bg-2 p-3 lift touch-app"
             >
               <span className="sr-only">{sentence(cell)}</span>
               <span aria-hidden className="flex min-w-0 flex-col gap-1">

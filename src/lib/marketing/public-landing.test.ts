@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { MEMBER_LOGIN_HREF, PUBLIC_ACCESS_HREF } from "./public-cta";
 
@@ -11,11 +11,19 @@ const en = JSON.parse(
   readFileSync(new URL("../../../messages/en/Marketing.json", import.meta.url), "utf8"),
 ) as Record<string, unknown>;
 
+const kalkDir = new URL("../../components/marketing/kalk/", import.meta.url);
+const kalkSources = readdirSync(kalkDir)
+  .filter((f) => f.endsWith(".tsx") && !f.includes(".test."))
+  .map((f) => [f, readFileSync(new URL(f, kalkDir), "utf8")] as const);
+
 function walkStrings(value: unknown): string[] {
   if (typeof value === "string") return [value];
   if (!value || typeof value !== "object") return [];
   return Object.values(value as Record<string, unknown>).flatMap(walkStrings);
 }
+
+/** Every Marketing group the live landing renders (Kalk + reused FAQ). */
+const liveCopy = [da.kalk, da.faq, en.kalk, en.faq].flatMap(walkStrings).join("\n");
 
 describe("public landing honesty", () => {
   it("sends new visitors to the existing waitlist, not a blind login", () => {
@@ -23,43 +31,18 @@ describe("public landing honesty", () => {
     expect(MEMBER_LOGIN_HREF).toBe("/login");
   });
 
-  it("keeps da/en value keys in lockstep after the beta rewrite", () => {
-    const daValue = da.value as Record<string, unknown>;
-    const enValue = en.value as Record<string, unknown>;
-    expect(Object.keys(daValue).sort()).toEqual(Object.keys(enValue).sort());
-    expect(daValue.betaNext).toEqual(expect.any(String));
-    expect(daValue.betaCta).toEqual(expect.any(String));
-    expect(daValue.marketFraction).toBeUndefined();
-    expect(enValue.marketFraction).toBeUndefined();
+  it("does not invent a price or claim a market fraction in the public beta state", () => {
+    expect(liveCopy).not.toMatch(/brøkdel|markedssnit|fraction of the market/i);
+    expect(liveCopy).not.toMatch(/\[XX\]|\[YY\]|\[ZZ\]/);
+    expect(liveCopy).not.toMatch(/kr\.?\s?\d|DKK|€\s?\d|\$\d/i);
   });
 
-  it("does not invent a price or claim a market fraction in the public beta state", () => {
-    const daValue = da.value as {
-      positioningSub: string;
-      betaNext: string;
-      betaCta: string;
-      priceLockNote: string;
-    };
-    const enValue = en.value as {
-      positioningSub: string;
-      betaNext: string;
-      betaCta: string;
-      priceLockNote: string;
-    };
-    const blob = [
-      daValue.positioningSub,
-      daValue.betaNext,
-      daValue.betaCta,
-      daValue.priceLockNote,
-      enValue.positioningSub,
-      enValue.betaNext,
-      enValue.betaCta,
-      enValue.priceLockNote,
-    ].join("\n");
-    expect(blob).not.toMatch(/brøkdel|markedssnit|fraction of the market/i);
-    expect(blob).not.toMatch(/\[XX\]|\[YY\]|\[ZZ\]/);
-    expect(daValue.betaNext).toMatch(/ventelisten|køen/i);
-    expect(enValue.betaNext).toMatch(/waitlist/i);
+  it("keeps invite scarcity on the access CTA, no free trial", () => {
+    const daKalk = da.kalk as { access: Record<string, string> };
+    const enKalk = en.kalk as { access: Record<string, string> };
+    expect(daKalk.access.sub).toMatch(/invite/i);
+    expect(enKalk.access.sub).toMatch(/invite/i);
+    expect(liveCopy).not.toMatch(/gratis|prøveperiode|free trial/i);
   });
 
   it("keeps vendor names out of public marketing copy", () => {
@@ -67,12 +50,12 @@ describe("public landing honesty", () => {
     expect(blob).not.toMatch(/Claude/i);
   });
 
-  it("keeps reveal content readable unless JS marks a node pending", () => {
-    expect(css).toMatch(/\[data-reveal\] \{[\s\S]*?opacity: 1;/);
-    expect(css).toMatch(/\[data-reveal\]\.reveal-pending:not\(\.is-visible\)/);
+  it("renders landing copy without waiting for JS to reveal it", () => {
+    for (const [file, src] of kalkSources) {
+      expect(src, file).not.toMatch(/data-reveal|reveal-pending/);
+      expect(src, file).not.toMatch(/initial=\{\{\s*opacity:\s*0/);
+    }
     expect(css).toMatch(/prefers-reduced-motion:\s*reduce/);
-    expect(css).toMatch(/\.marketing-nav-sheet \{[\s\S]*?background:\s*var\(--bg\)/);
-    expect(css).toMatch(/\.marketing-sticky-card \{[\s\S]*?top:\s*calc\(var\(--header-h\) \+ 1\.75rem\)/);
   });
 
   it("points login visitors without a code to the waitlist", () => {
@@ -88,12 +71,14 @@ describe("public landing honesty", () => {
     expect(enLogin.waitlistLink).toMatch(/waitlist/i);
   });
 
-  it("states form-check as AI draft, not a named vendor or lone human coach", () => {
-    const daApp = da.app as { phone: { formCheckDetail: string } };
-    const enApp = en.app as { phone: { formCheckDetail: string } };
-    expect(daApp.phone.formCheckDetail).toMatch(/AI-draft/i);
-    expect(enApp.phone.formCheckDetail).toMatch(/AI draft/i);
-    expect(daApp.phone.formCheckDetail).not.toMatch(/Claude/i);
-    expect(enApp.phone.formCheckDetail).not.toMatch(/Claude/i);
+  it("states form-check as AI draft signed by a human, not a named vendor", () => {
+    const daMunk = (da.kalk as { munk: { card: { draftLabel: string }; flow: { label: string }[] } }).munk;
+    const enMunk = (en.kalk as { munk: { card: { draftLabel: string }; flow: { label: string }[] } }).munk;
+    expect(daMunk.card.draftLabel).toMatch(/AI-udkast/i);
+    expect(enMunk.card.draftLabel).toMatch(/AI draft/i);
+    expect(daMunk.flow.map((s) => s.label).join(" ")).toMatch(/Munk retter og skriver under/);
+    expect(enMunk.flow.map((s) => s.label).join(" ")).toMatch(/Munk corrects and signs off/);
+    expect(walkStrings(daMunk).join(" ")).not.toMatch(/Claude/i);
+    expect(walkStrings(enMunk).join(" ")).not.toMatch(/Claude/i);
   });
 });

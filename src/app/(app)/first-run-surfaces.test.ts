@@ -101,7 +101,6 @@ describe("leftover first-run surfaces after #66", () => {
     expect(shell).toContain("pb-tabbar");
     expect(shell).toContain("overflow-y-auto");
     expect(shell).toContain("min-h-0");
-    expect(shell).toContain("data-lenis-prevent");
     const bar = readFileSync(join(root, "src/components/app/MobileTabBar.tsx"), "utf8");
     expect(bar).toContain("--tabbar-stack");
     expect(bar).toContain("ResizeObserver");
