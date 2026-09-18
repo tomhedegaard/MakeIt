@@ -21,6 +21,18 @@ describe("EngineDemo", () => {
     expect(html).toMatch(/aria-live="polite"/);
   });
 
+  it("viser en statisk kicker, ikke opdateringstekst, for seende", () => {
+    const phone = html.slice(html.indexOf('aria-live="polite"'), html.indexOf("sr-only"));
+    expect(phone).toContain("I dag");
+    expect(phone).not.toContain("Dagens pas opdateret");
+  });
+
+  it("giver skærmlæsere det opdaterede topsæt i en skjult tekst", () => {
+    const srOnly = html.slice(html.indexOf('class="sr-only"'));
+    expect(srOnly).toContain("Dagens pas opdateret:");
+    expect(srOnly).toContain("150");
+  });
+
   it("siger at båndet er et demo-bånd", () => {
     expect(html).toMatch(/Demo-bånd/);
   });

@@ -694,6 +694,7 @@
       "plateUnit": "kg"
     },
     "demo": {
+      "todayLabel": "I dag",
       "sleepLabel": "Søvn",
       "hrvLabel": "HRV",
       "stressLabel": "Stress",

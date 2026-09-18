@@ -29,6 +29,18 @@ export default function EngineDemo() {
   const set = (patch: Partial<DemoSliders>) => setSliders((s) => ({ ...s, ...patch }));
   const hours = `${Math.floor(sliders.sleep)} t ${sliders.sleep % 1 === 0 ? "00" : "30"} m`;
 
+  // Skærmlæsere skal høre, hvad der ændrede sig; seende ser et rent kort
+  // med en statisk kicker. `liveRegionPrefix` hører kun hjemme her.
+  const announcement = [
+    t("liveRegionPrefix"),
+    `${t("topSetLabel")} ${result.topSetKg} kg`,
+    result.accessorySetsDropped
+      ? t("accessoryDropped", { count: result.accessorySetsDropped })
+      : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <div className="flex w-full flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
       <div className="flex w-full flex-col gap-5 lg:max-w-[320px]">
@@ -65,8 +77,9 @@ export default function EngineDemo() {
       <div aria-live="polite" className="w-full max-w-[300px] rounded-[44px] bg-fg p-2.5">
         <div className="overflow-hidden rounded-[36px] bg-bg">
           <div className="border-b border-line px-5 pb-3 pt-6">
-            <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-fg-dim">{t("liveRegionPrefix")}</p>
+            <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-fg-dim">{t("todayLabel")}</p>
             <p className="font-display mt-1.5 text-3xl">{t("sessionTitle")}</p>
+            <span className="sr-only">{announcement}</span>
           </div>
           <div className="flex flex-col gap-3.5 px-5 pb-6 pt-4">
             <div className="rounded-[14px] border border-line-strong bg-bg-2 p-4">
