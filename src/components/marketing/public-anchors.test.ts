@@ -1,46 +1,39 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { PUBLIC_LEARN_HREF, PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
 
-const footer = readFileSync(new URL("./Footer.tsx", import.meta.url), "utf8");
-const nav = readFileSync(new URL("./MarketingNav.tsx", import.meta.url), "utf8");
-const playground = readFileSync(
-  new URL("./AdaptivePlaygroundPublic.tsx", import.meta.url),
-  "utf8",
-);
-const css = readFileSync(new URL("../../app/globals.css", import.meta.url), "utf8");
-const hero = readFileSync(new URL("./Hero.tsx", import.meta.url), "utf8");
+const kalkDir = new URL("./kalk/", import.meta.url);
+const sources = readdirSync(kalkDir)
+  .filter((f) => f.endsWith(".tsx") && !f.includes(".test."))
+  .map((f) => [f, readFileSync(new URL(f, kalkDir), "utf8")] as const);
+const all = sources.map(([, s]) => s).join("\n");
 
-describe("marketing public anchors", () => {
-  it("points footer universe links at real landing ids", () => {
-    expect(footer).not.toMatch(/href="#coaching"/);
-    expect(footer).not.toMatch(/href="#community"/);
-    expect(footer).not.toMatch(/href="#reps"/);
-    expect(footer).toMatch(/href="#pillar-munk-multiplier"/);
-    expect(footer).toMatch(/href="#tiers"/);
-    expect(footer).toMatch(/href="#crew"/);
+const ids = new Set([...all.matchAll(/\bid="([\w-]+)"/g)].map((m) => m[1]));
+const anchors = [...all.matchAll(/href(?:=|:\s*)"#([\w-]+)"/g)].map((m) => m[1]);
+
+describe("Kalk landing anchors", () => {
+  it("points every in-page link at an id the landing renders", () => {
+    expect(anchors.length).toBeGreaterThan(0);
+    for (const a of anchors) expect(ids, `#${a}`).toContain(a);
   });
 
-  it("points nav Coaching at the coaching pillar, not the engine playground", () => {
-    expect(nav).toMatch(/href: "#pillar-munk-multiplier",\s*key: "coaching"/);
-    expect(nav).toMatch(/href: "#engine"/);
+  it("resolves the public CTA anchors on /", () => {
+    for (const href of [PUBLIC_WAITLIST_HREF, PUBLIC_LEARN_HREF]) {
+      expect(href.startsWith("/#"), href).toBe(true);
+      expect(ids, href).toContain(href.slice(2));
+    }
   });
 
-  it("does not bait-and-switch the engine CTA onto an authed explainer", () => {
-    expect(playground).not.toMatch(/href="\/hrv\/learn\/adaptive"/);
-    expect(playground).toMatch(/href="\/login\?next=\/hrv\/learn\/adaptive"/);
-    expect(playground).toMatch(/ctaMembersOnly/);
+  it("links only to public routes, never straight into the member app", () => {
+    const routes = [...all.matchAll(/href="(\/[^"#]*)/g)].map((m) => m[1]);
+    for (const r of routes) expect(["/", "/privacy", "/terms", "/login"], r).toContain(r);
   });
 });
 
-describe("reveal fail-open", () => {
-  it("does not hide [data-reveal] until JS opts in", () => {
-    expect(css).toMatch(/html\.reveal-js \[data-reveal\]:not\(\.is-visible\)/);
-    expect(css).not.toMatch(/\/\* Reveal-on-scroll \*\/\s*\[data-reveal\] \{\s*opacity: 0;/);
-  });
-
-  it("renders hero primary copy without a hidden Framer initial state", () => {
-    expect(hero).toContain("<HeroCopy />");
-    expect(hero).not.toMatch(/initial=\{\{ opacity: 0/);
-    expect(hero).not.toMatch(/hidden: \{ y: "110%", opacity: 0/);
+describe("Kalk hero fail-open", () => {
+  it("renders the hero copy without a hidden Framer initial state", () => {
+    const hero = readFileSync(new URL("./kalk/KalkHero.tsx", import.meta.url), "utf8");
+    expect(hero).toContain("<h1");
+    expect(hero).not.toMatch(/framer-motion|initial=\{\{\s*opacity:\s*0/);
   });
 });
