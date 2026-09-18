@@ -779,7 +779,8 @@
         "heading": "The program moves with you.",
         "text": "Four week blocks. Top set, backoff and rest set by the engine every morning.",
         "stat": "16",
-        "statLabel": "Sets today"
+        "statLabel": "Sets today",
+        "clipLabel": "Deadlift, top set."
       },
       "food": {
         "kicker": "Food",
@@ -788,7 +789,8 @@
         "macro": "2,740 kcal · 182 g protein",
         "p": "Protein",
         "c": "Carbs",
-        "f": "Fat"
+        "f": "Fat",
+        "clipLabel": "Plank, bodyweight."
       },
       "heart": {
         "kicker": "Heart",
@@ -803,7 +805,8 @@
         "text": "60 seconds. How is your head today?",
         "energy": "Energy",
         "stress": "Stress",
-        "focus": "Focus"
+        "focus": "Focus",
+        "clipLabel": "Hanging knee raise."
       },
       "rack": {
         "heading": "The app, in daylight.",

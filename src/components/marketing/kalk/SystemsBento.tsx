@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
+import DemoLoop from "@/components/marketing/DemoLoop";
 import SessionScreen from "@/components/marketing/phone/screens/SessionScreen";
 import HrvScreen from "@/components/marketing/phone/screens/HrvScreen";
 import FoodScreen from "@/components/marketing/phone/screens/FoodScreen";
@@ -73,6 +74,15 @@ export default function SystemsBento() {
             <CellKicker domain="body">{t("body.kicker")}</CellKicker>
             <CellHeading>{t("body.heading")}</CellHeading>
             <p className="mt-3 max-w-[36ch] text-base text-fg-dim">{t("body.text")}</p>
+            <DemoLoop
+              src="/exercise-demos/deadlift.webm"
+              label={t("body.clipLabel")}
+              pauseLabel={s("pause")}
+              playLabel={s("play")}
+              tint="body"
+              compact
+              className="absolute right-[clamp(20px,2.4vw,34px)] top-[clamp(20px,2.4vw,34px)] hidden h-[108px] w-[152px] md:block"
+            />
             <div
               data-kg-ticks
               data-domain="body"
@@ -107,18 +117,29 @@ export default function SystemsBento() {
             <blockquote className="font-display mt-[18px] text-[clamp(24px,2.1vw,30px)] leading-none!">
               {t("food.quote")}
             </blockquote>
-            <div data-domain="food" className="mt-auto pt-7">
-              <p className="font-mono text-[12px] uppercase tracking-[0.06em]">{t("food.macro")}</p>
-              <div aria-hidden="true" className="mt-2.5 flex h-3.5 gap-[3px] overflow-hidden rounded">
-                {MACROS.map((m) => (
-                  <i key={m.key} style={{ flex: m.flex }} className={cn("block", m.tone)} />
-                ))}
+            <div data-domain="food" className="mt-auto flex items-end justify-between gap-4 pt-7">
+              <div className="min-w-0 flex-1">
+                <p className="font-mono text-[12px] uppercase tracking-[0.06em]">{t("food.macro")}</p>
+                <div aria-hidden="true" className="mt-2.5 flex h-3.5 gap-[3px] overflow-hidden rounded">
+                  {MACROS.map((m) => (
+                    <i key={m.key} style={{ flex: m.flex }} className={cn("block", m.tone)} />
+                  ))}
+                </div>
+                <div aria-hidden="true" className="mt-2 flex justify-between font-mono text-[11px] text-fg-dim">
+                  {MACROS.map((m) => (
+                    <span key={m.key}>{t(`food.${m.key}`)}</span>
+                  ))}
+                </div>
               </div>
-              <div aria-hidden="true" className="mt-2 flex justify-between font-mono text-[11px] text-fg-dim">
-                {MACROS.map((m) => (
-                  <span key={m.key}>{t(`food.${m.key}`)}</span>
-                ))}
-              </div>
+              <DemoLoop
+                src="/exercise-demos/plank.webm"
+                label={t("food.clipLabel")}
+                pauseLabel={s("pause")}
+                playLabel={s("play")}
+                tint="food"
+                compact
+                className="h-[92px] w-[92px] flex-none"
+              />
             </div>
           </Cell>
 
@@ -155,6 +176,15 @@ export default function SystemsBento() {
             <CellKicker domain="mind">{t("mind.kicker")}</CellKicker>
             <CellHeading>{t("mind.heading")}</CellHeading>
             <p className="mt-3 max-w-[36ch] text-base text-fg-dim">{t("mind.text")}</p>
+            <DemoLoop
+              src="/exercise-demos/khr.webm"
+              label={t("mind.clipLabel")}
+              pauseLabel={s("pause")}
+              playLabel={s("play")}
+              tint="mind"
+              compact
+              className="absolute right-[clamp(20px,2.4vw,34px)] top-[clamp(20px,2.4vw,34px)] hidden h-[108px] w-[152px] md:block"
+            />
             <MindScales />
           </Cell>
         </div>

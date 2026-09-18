@@ -779,7 +779,8 @@
         "heading": "Programmet flytter sig med dig.",
         "text": "Blokke på fire uger. Topsæt, backoff og hvil sat af motoren hver morgen.",
         "stat": "16",
-        "statLabel": "Sæt i dag"
+        "statLabel": "Sæt i dag",
+        "clipLabel": "Dødløft, topsæt."
       },
       "food": {
         "kicker": "Mad",
@@ -788,7 +789,8 @@
         "macro": "2.740 kcal · 182 g protein",
         "p": "Protein",
         "c": "Kulhydrat",
-        "f": "Fedt"
+        "f": "Fedt",
+        "clipLabel": "Planke, kropsvægt."
       },
       "heart": {
         "kicker": "Hjerte",
@@ -803,7 +805,8 @@
         "text": "60 sekunder. Hvordan har hovedet det i dag?",
         "energy": "Energi",
         "stress": "Stress",
-        "focus": "Fokus"
+        "focus": "Fokus",
+        "clipLabel": "Hængende knæløft."
       },
       "rack": {
         "heading": "Appen, i dagslys.",

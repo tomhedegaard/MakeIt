@@ -45,6 +45,14 @@ describe("SystemsBento", () => {
     expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}\b|rgba?\(/);
   });
 
+  it("giver de tre lyse celler et klip og lader den mørke være", () => {
+    // Scoped to the bento grid: the rack below it already carries one
+    // video of its own (the form-check screen), which is not this cell.
+    expect((bento.match(/<video/g) ?? []).length).toBe(3);
+    const heart = bento.slice(bento.indexOf('data-theme="nat"'));
+    expect(heart.slice(0, 400)).not.toMatch(/<video/);
+  });
+
   it("renders the rack with five screens", () => {
     const rack = html.slice(html.indexOf("data-rack"));
     expect(rack).toMatch(/<ul[^>]*tabindex="0"/);
