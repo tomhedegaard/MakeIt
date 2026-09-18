@@ -36,62 +36,20 @@ export default function PhoneFrame({
   className?: string;
   children: ReactNode;
 }) {
-  const t = useTranslations("Marketing.kalk");
-  const nav = useTranslations("Nav.links");
-  const tabLabel: Record<PhoneTab, string> = {
-    today: nav("today"),
-    train: nav("train"),
-    food: nav("food"),
-    mind: t("systems.mind.kicker"),
-    crew: nav("crew"),
-  };
-
   const screen = (
     <div
       role={interactive ? "group" : "img"}
       aria-label={label}
       className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--pw)*0.13)] bg-bg text-[11px] leading-[1.4] text-fg"
     >
-      <div
-        aria-hidden="true"
-        className="flex h-[42px] flex-none items-center justify-between pl-[26px] pr-[22px] pt-1 text-[12px] font-semibold"
-      >
-        <span>{t("screens.time")}</span>
-        <StatusGlyph />
-      </div>
+      <PhoneStatusBar />
       <div
         aria-hidden={interactive ? undefined : true}
         className="flex min-h-0 flex-1 flex-col gap-[9px] overflow-hidden px-[14px] pt-1.5 *:flex-none"
       >
         {children}
       </div>
-      <div
-        aria-hidden="true"
-        className={cn(
-          "relative grid flex-none grid-cols-5 border-t border-line px-2 pb-5 pt-2",
-          dark ? "bg-bg-3" : "bg-bg-2",
-        )}
-      >
-        {TABS.map((key) => {
-          const on = key === tab;
-          return (
-            <span
-              key={key}
-              className={cn(
-                "relative flex flex-col items-center gap-[3px] pt-[5px] font-mono text-[8px] tracking-[0.04em]",
-                on ? "font-medium text-fg" : "text-fg-dim",
-              )}
-            >
-              {on ? (
-                <i className="absolute -top-[9px] h-[3px] w-[22px] rounded-b-[3px] bg-signal" />
-              ) : null}
-              <TabGlyph tab={key} />
-              {tabLabel[key]}
-            </span>
-          );
-        })}
-        <i className="absolute bottom-1.5 left-1/2 h-1 w-[34%] -translate-x-1/2 rounded-[3px] bg-fg opacity-85" />
-      </div>
+      <PhoneTabBar tab={tab} dark={dark} />
     </div>
   );
 
@@ -116,6 +74,78 @@ export default function PhoneFrame({
         aria-hidden="true"
         className="absolute left-1/2 top-[calc(var(--pw)*0.032_+_9px)] z-10 h-6 w-[31%] -translate-x-1/2 rounded-[14px] bg-fg"
       />
+    </div>
+  );
+}
+
+/**
+ * The drawn status bar at the top of a screen. Exported because the
+ * hero's motor demo builds its own frame (it owns the `aria-live`
+ * region and must drop the whole frame below `lg`), and the chrome
+ * should be drawn in exactly one place.
+ */
+export function PhoneStatusBar({ className }: { className?: string }) {
+  const t = useTranslations("Marketing.kalk");
+  return (
+    <div
+      aria-hidden="true"
+      className={cn(
+        "flex h-[42px] flex-none items-center justify-between pl-[26px] pr-[22px] pt-1 text-[12px] font-semibold",
+        className,
+      )}
+    >
+      <span>{t("screens.time")}</span>
+      <StatusGlyph />
+    </div>
+  );
+}
+
+/** The drawn tab bar at the foot of a screen. Exported for the same reason. */
+export function PhoneTabBar({
+  tab,
+  dark = false,
+  className,
+}: {
+  tab?: PhoneTab;
+  dark?: boolean;
+  className?: string;
+}) {
+  const t = useTranslations("Marketing.kalk");
+  const nav = useTranslations("Nav.links");
+  const tabLabel: Record<PhoneTab, string> = {
+    today: nav("today"),
+    train: nav("train"),
+    food: nav("food"),
+    mind: t("systems.mind.kicker"),
+    crew: nav("crew"),
+  };
+
+  return (
+    <div
+      aria-hidden="true"
+      className={cn(
+        "relative grid flex-none grid-cols-5 border-t border-line px-2 pb-5 pt-2",
+        dark ? "bg-bg-3" : "bg-bg-2",
+        className,
+      )}
+    >
+      {TABS.map((key) => {
+        const on = key === tab;
+        return (
+          <span
+            key={key}
+            className={cn(
+              "relative flex flex-col items-center gap-[3px] pt-[5px] font-mono text-[8px] tracking-[0.04em]",
+              on ? "font-medium text-fg" : "text-fg-dim",
+            )}
+          >
+            {on ? <i className="absolute -top-[9px] h-[3px] w-[22px] rounded-b-[3px] bg-signal" /> : null}
+            <TabGlyph tab={key} />
+            {tabLabel[key]}
+          </span>
+        );
+      })}
+      <i className="absolute bottom-1.5 left-1/2 h-1 w-[34%] -translate-x-1/2 rounded-[3px] bg-fg opacity-85" />
     </div>
   );
 }
