@@ -815,6 +815,26 @@ nav.tabbar {
   animation: kalk-strike 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.5s both;
 }
 
+/* Motor-demoens ene bevaegelse (hero). EngineDemo taeller topsaettet ned
+ * fra 150 med rAF og saetter `data-motion`: "armed" naar JS lever men
+ * kortet endnu ikke er i syne, "run" naar det er. Uden JS staar
+ * attributten ikke, og stregen tegnes som for ved mount. */
+[data-theme="kalk"] [data-demo-card] .strike-signal::after {
+  animation-delay: 0.12s;
+  animation-duration: 0.62s;
+}
+[data-theme="kalk"] [data-demo-card][data-motion="armed"] .strike-signal::after {
+  animation-play-state: paused;
+}
+[data-theme="kalk"] [data-demo-card][data-motion="run"] .kalk-topset {
+  display: inline-block;
+  animation: kalk-topset-land 0.7s cubic-bezier(0.2, 0, 0.1, 1) both;
+}
+@keyframes kalk-topset-land {
+  from { opacity: 0.55; transform: translateY(-0.04em); }
+  to   { opacity: 1; transform: none; }
+}
+
 /* Kg ruler above a section, like the holes in a rack. */
 [data-theme="kalk"] .kalk-rule {
   display: flex;
@@ -899,5 +919,8 @@ nav.tabbar {
   [data-theme="kalk"] .night-curve__path {
     stroke-dashoffset: 0;
     transition: none;
+  }
+  [data-theme="kalk"] [data-demo-card][data-motion="run"] .kalk-topset {
+    animation: none;
   }
 }

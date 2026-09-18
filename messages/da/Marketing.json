@@ -695,6 +695,7 @@
     },
     "demo": {
       "todayLabel": "I dag",
+      "tryIt": "Prøv selv: flyt en skyder.",
       "sleepLabel": "Søvn",
       "hrvLabel": "HRV",
       "stressLabel": "Stress",
