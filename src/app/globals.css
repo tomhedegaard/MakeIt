@@ -879,9 +879,25 @@ nav.tabbar {
   [data-theme="kalk"] [data-motor-story] { --rig-s: 0.76; }
 }
 
+/* Night curve: hidden until NightCurveReveal (a small IntersectionObserver
+ * island, same shape as the motor rig's) marks the figure in view, then
+ * draws itself once via stroke-dashoffset. */
+[data-theme="kalk"] .night-curve__path {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  transition: stroke-dashoffset 1.6s ease-out;
+}
+[data-theme="kalk"] [data-night-curve][data-in-view="true"] .night-curve__path {
+  stroke-dashoffset: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-theme="kalk"] .strike-signal::after {
     animation: none;
     transform: rotate(-8deg);
+  }
+  [data-theme="kalk"] .night-curve__path {
+    stroke-dashoffset: 0;
+    transition: none;
   }
 }

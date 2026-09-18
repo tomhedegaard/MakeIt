@@ -119,4 +119,12 @@ describe("Kalk theme gate (spec §3, §8)", () => {
       for (const s of SURFACES) expect(contrastRatio(kalk[t], kalk[s])).toBeGreaterThanOrEqual(3);
     },
   );
+
+  it("nattens kurve har et statisk slutbillede ved reduceret bevægelse", () => {
+    // Anchored to ONE block: [^}]* does not cross a closing brace, so
+    // the rule has to sit inside the reduced-motion block for this to pass.
+    expect(css).toMatch(
+      /@media \(prefers-reduced-motion: reduce\)\s*\{[^@]*?\.night-curve__path\s*\{[^}]*stroke-dashoffset:\s*0/,
+    );
+  });
 });
