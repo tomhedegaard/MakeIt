@@ -20,6 +20,7 @@ export default function DemoLoop({
   className,
   tag,
   compact = false,
+  tint,
 }: {
   src: string;
   label: string;
@@ -30,6 +31,8 @@ export default function DemoLoop({
   tag?: string;
   /** Smaller pause control for loops inside a marketing phone. */
   compact?: boolean;
+  /** Optional domain wash over the clip, e.g. inside the Kalk bento. */
+  tint?: "body" | "food" | "mind";
 }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -126,6 +129,9 @@ export default function DemoLoop({
         <source src={webm} type="video/webm" />
         <source src={mp4} type="video/mp4" />
       </video>
+      {tint ? (
+        <div aria-hidden="true" data-tint={tint} data-domain={tint} className="absolute inset-0 bg-domain-tint" />
+      ) : null}
       {tag ? (
         <span className="absolute bottom-2 left-2 rounded-md bg-fg px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.08em] text-bg">
           {tag}

@@ -50,4 +50,12 @@ describe("MotorStory", () => {
     expect(html.match(/class="eyebrow/g)).toHaveLength(1);
     expect(html).toContain(da.Marketing.kalk.engine.eyebrow);
   });
+
+  it("viser motorens fire grænser", () => {
+    expect((html.match(/data-bound/g) ?? []).length).toBe(4);
+  });
+
+  it("siger at pause og deload går til Munk først", () => {
+    expect(html).toMatch(/Munk/);
+  });
 });
