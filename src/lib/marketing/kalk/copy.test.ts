@@ -50,4 +50,17 @@ describe("Marketing.kalk copy gate (spec §5, §8)", () => {
     expect(d.nav.cta).toBe(d.hero.cta);
     expect(d.hero.cta).toBe("Få adgang");
   });
+
+  it("har copy til motor-demoen", () => {
+    const demo = da.demo as Record<string, string>;
+    expect(demo.sleepLabel).toBeTruthy();
+    expect(demo.hrvLabel).toBeTruthy();
+    expect(demo.stressLabel).toBeTruthy();
+    expect(demo.bandNote).toMatch(/demo/i);
+    expect(demo.keepOriginal).toBeTruthy();
+  });
+
+  it("siger at demo-båndet er et eksempel, ikke et løfte", () => {
+    expect((da.demo as Record<string, string>).bandNote).toMatch(/dit eget|din egen/i);
+  });
 });

@@ -694,6 +694,22 @@
       "plateUnit": "kg",
       "phoneCaption": "Today. The engine rewrote the session."
     },
+    "demo": {
+      "sleepLabel": "Sleep",
+      "hrvLabel": "HRV",
+      "stressLabel": "Stress",
+      "hrvUnit": "ms",
+      "stressUnit": "/5",
+      "bandNote": "Demo band. In the app the band becomes your own, measured against your own baseline.",
+      "sessionTitle": "Back squat",
+      "topSetLabel": "Top set",
+      "keepOriginal": "Keep original",
+      "liveRegionPrefix": "Today's session updated:",
+      "whySleep": "Sleep {hours}",
+      "whyHrv": "HRV {ms} ms",
+      "accessoryDropped": "{count} accessory sets dropped",
+      "unchanged": "The session stands unchanged."
+    },
     "engine": {
       "eyebrow": "Every morning",
       "heading": "The session gets rewritten while you sleep.",

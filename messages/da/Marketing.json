@@ -694,6 +694,22 @@
       "plateUnit": "kg",
       "phoneCaption": "I dag. Motoren har skrevet passet om."
     },
+    "demo": {
+      "sleepLabel": "Søvn",
+      "hrvLabel": "HRV",
+      "stressLabel": "Stress",
+      "hrvUnit": "ms",
+      "stressUnit": "/5",
+      "bandNote": "Demo-bånd. I appen bliver båndet dit eget, målt mod din egen baseline.",
+      "sessionTitle": "Back squat",
+      "topSetLabel": "Topsæt",
+      "keepOriginal": "Behold original",
+      "liveRegionPrefix": "Dagens pas opdateret:",
+      "whySleep": "Søvn {hours}",
+      "whyHrv": "HRV {ms} ms",
+      "accessoryDropped": "{count} accessory-sæt droppet",
+      "unchanged": "Passet står uændret."
+    },
     "engine": {
       "eyebrow": "Hver morgen",
       "heading": "Passet bliver skrevet om, mens du sover.",
