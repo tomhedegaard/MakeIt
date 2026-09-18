@@ -691,8 +691,7 @@
       "link": "Se hvordan motoren virker",
       "plateOld": "150",
       "plateNew": "135",
-      "plateUnit": "kg",
-      "phoneCaption": "I dag. Motoren har skrevet passet om."
+      "plateUnit": "kg"
     },
     "demo": {
       "sleepLabel": "Søvn",

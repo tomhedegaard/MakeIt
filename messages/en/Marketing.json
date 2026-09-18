@@ -691,8 +691,7 @@
       "link": "See how the engine works",
       "plateOld": "150",
       "plateNew": "135",
-      "plateUnit": "kg",
-      "phoneCaption": "Today. The engine rewrote the session."
+      "plateUnit": "kg"
     },
     "demo": {
       "sleepLabel": "Sleep",
