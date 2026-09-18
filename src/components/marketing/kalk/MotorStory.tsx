@@ -84,6 +84,8 @@ export default function MotorStory() {
           <NightCurve />
         </div>
 
+        <EngineBounds />
+
         <div
           data-motor-story
           className="group/rr mt-16 flex flex-col lg:mt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-[clamp(40px,7vw,120px)]"
@@ -118,6 +120,31 @@ export default function MotorStory() {
         </p>
       </div>
     </section>
+  );
+}
+
+/** What the engine is, and is not, allowed to touch on its own. */
+const BOUNDS = ["lowerTopSet", "lowerVolume", "lighterVariant", "shorten"] as const;
+
+function EngineBounds() {
+  const t = useTranslations("Marketing.kalk.engine");
+
+  return (
+    <div className="mt-12 lg:mt-16">
+      <h3 className="font-mono text-[11px] uppercase tracking-[0.1em] text-fg-dim">{t("bounds.heading")}</h3>
+      <ul className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
+        {BOUNDS.map((bound) => (
+          <li
+            key={bound}
+            data-bound={bound}
+            className="border-t border-line-strong pt-3 text-[clamp(16px,1.3vw,19px)]"
+          >
+            {t(`bounds.${bound}`)}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-5 max-w-[52ch] text-[clamp(16px,1.3vw,19px)] text-fg-dim">{t("escalation")}</p>
+    </div>
   );
 }
 

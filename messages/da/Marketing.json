@@ -761,7 +761,15 @@
       },
       "keepOriginal": "Behold original",
       "keepOriginalNote": "Du ser altid hvorfor, og du kan altid beholde den oprindelige plan.",
-      "disclaimer": "HRV er et restitutionssignal, ikke en diagnose."
+      "disclaimer": "HRV er et restitutionssignal, ikke en diagnose.",
+      "bounds": {
+        "heading": "Motorens grænser",
+        "lowerTopSet": "Sænker topsættet",
+        "lowerVolume": "Sænker volumen",
+        "lighterVariant": "Foreslår en lettere variant",
+        "shorten": "Afkorter passet"
+      },
+      "escalation": "Pause og deload rører motoren ikke. De går altid til Munk først."
     },
     "systems": {
       "heading": "Fire systemer. Ét pas.",

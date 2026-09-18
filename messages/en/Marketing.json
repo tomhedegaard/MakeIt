@@ -761,7 +761,15 @@
       },
       "keepOriginal": "Keep original",
       "keepOriginalNote": "You always see why, and you can always keep the original plan.",
-      "disclaimer": "HRV is a recovery signal, not a diagnosis."
+      "disclaimer": "HRV is a recovery signal, not a diagnosis.",
+      "bounds": {
+        "heading": "The engine's boundaries",
+        "lowerTopSet": "Lowers the top set",
+        "lowerVolume": "Lowers volume",
+        "lighterVariant": "Suggests a lighter variant",
+        "shorten": "Shortens the session"
+      },
+      "escalation": "The engine never touches pauses or deloads. Those always go to Munk first."
     },
     "systems": {
       "heading": "Four systems. One session.",
