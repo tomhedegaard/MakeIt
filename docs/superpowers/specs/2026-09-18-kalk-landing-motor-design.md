@@ -67,11 +67,17 @@ Skyderne giver tre værdier. En ny ren modul-fil `src/lib/marketing/kalk/engine-
 | HRV | 42-86 ms, trin 1 | `latestReading.readinessBucket` via demo-båndet i §3.3 |
 | Stress | 1-5 | `lifestyle.feelingLast3d`: 4-5 → `stressed`, 3 → `null`, 1-2 → `null` |
 
-Grundlaget er **ikke** et nyt literal, men `explainerScenarioInput()` fra `src/lib/adaptive/mock-scenarios.ts`, som allerede er testlåst og driver motoren på `/hrv/learn/adaptive`. `engine-demo.ts` kopierer det og overskriver kun fire felter: `latestReading.readinessBucket`, `latestReading.measuredAt` (sat til `now` minus 1 time, så målingen altid er frisk), `lifestyle.sleepHoursAvg2d` og `lifestyle.feelingLast3d`. Historikfelterne neutraliseres: `veryLowDaysLast5: 0`, `rpeDriftLast14d: null`, ingen sprungne sessioner, ingen form-check under 6.
+Grundlaget er **ikke** et nyt literal, men `explainerScenarioInput()` fra `src/lib/adaptive/mock-scenarios.ts`, som allerede er testlåst og driver motoren på `/hrv/learn/adaptive`. `engine-demo.ts` kopierer det og overskriver **præcis tre felter**:
 
-**Hvorfor genbrug:** de resterende felter beskriver historik, en besøgende ikke har, og et færdigt scenarie holder landingen i sync med appens eget eksempel.
+1. `latestReading.readinessBucket`
+2. `lifestyle.sleepHoursAvg2d`
+3. `lifestyle.feelingLast3d`
 
-**Topsættets vægt lever ikke i motoren.** `NextSessionExerciseInfo` har intet vægtfelt: motoren svarer med en handling og en procent. Landingen viser 150 kg som sin egen visning og regner den nye vægt ud af motorens procentsats. Det siges i copy: tallet er et eksempel, procenten er motorens.
+**Alt andet bliver stående, og det er med vilje.** Scenariets historik er allerede harmløs og udløser ingen regel: `veryLowDaysLast5: 1` (tærsklen er 3), `rpeDriftLast14d: 0.3` (tærsklen er 1,5), RPE-afvigelse 0,5 (tærsklen er 1,0), ingen sprungne sessioner og ingen form-checks. Der skal derfor ikke "neutraliseres" noget.
+
+**Rør ikke ved `measuredAt` eller `now`.** Scenariet har målingen 05:30 og `now` 07:00, altså halvanden time gammel og langt inden for grænsen på 36 timer. Sætter man `measuredAt` til den rigtige nutid, mens `now` bliver stående som scenariets mock-tid, bliver alderen negativ, og motoren svarer `stale_reading` og `no_change` ved **alle** skyder-positioner. Demoen ville se død ud.
+
+**Topsættets vægt lever ikke i motoren.** `NextSessionExerciseInfo` har intet vægtfelt. Motoren svarer med en handling og `decision.params.percent`, som er valgfri og i dag altid 10 ved en topsæt-sænkning (`engine.ts:242`, typen tillader 5, 10 og 15). Landingen viser 150 kg som sin egen visning, regner den nye vægt ud af procenten og falder tilbage til 10 %, hvis feltet mangler. Det siges i copy: tallet er et eksempel, procenten er motorens.
 
 ### 3.3 Det ene sted landingen digter: ms til bucket
 
@@ -96,7 +102,7 @@ Copy under skyderen siger det direkte: "Demo-bånd. I appen bliver båndet dit e
 - de berørte øvelser, hvor valgfri accessory tones ned,
 - forklaringen fra motoren (`decision.explanationDa`, bygget af `buildTopSetExplanation`),
 - "Behold original" som sekundær handling (ikke funktionel på landingen, men synlig, fordi den findes i appen),
-- to hvorfor-chips med de tal, den besøgende selv satte.
+- to hvorfor-chips med de tal, den besøgende selv satte. Ved stress på 3 eller derunder er `feelingLast3d` `null`, og `formatFeelingState` giver "-". Chippen viser i stedet søvn og HRV, så der aldrig står en tom værdi.
 
 Chippene bruger de eksisterende hjælpere i `reason-narratives.ts` (`labelForReason`, `formatReadinessBucket`, `formatSleepHours`, `formatFeelingState`). Der skrives ingen ny forklarings-copy.
 
@@ -107,9 +113,9 @@ Inden for skyderens rækkevidde kan motoren svare fire ting. Alle fire skal have
 | Svar | Hvornår | Hvad telefonen viser |
 |---|---|---|
 | `top_set_reduction` | `low` plus mindst ét livsstilssignal | Topsættet overstreget og sat ned med motorens procent |
-| `volume_reduction` | `low` uden livsstilssignaler | Topsættet står, accessory-sæt bliver valgfri |
+| `volume_reduction` | `low`, søvn på 5,5 timer eller mere og stress på 3 eller derunder | Topsættet står. Motoren dropper to accessory-sæt (`params.accessorySetsDropped`), og skærmen siger "droppet", ikke "valgfri" |
 | `no_change` | `normal` eller `high` | Passet står uændret, med en linje om at alt er inden for båndet |
-| Eskalering til Munk | hvis motoren sætter `humanReviewRecommended` | En linje om, at Munk kigger på det, før noget ændres. Skyderen kan ikke nå dertil i dag, men skærmen findes som sikkerhedsnet, hvis appens regler ændrer sig |
+| Eskalering til Munk | hvis motoren sætter `humanReviewRecommended` | En linje om, at Munk kigger på det, før noget ændres. **Skyderen kan ikke nå dertil**, fordi mindst tre signaler er nødvendige, og demoen kan højst give to. Skærmen bygges som sikkerhedsnet, hvis appens regler ændrer sig, og testes derfor med et konstrueret input, ikke via skyderne |
 
 **Den vigtige ærlighed:** med `normal` eller `high` bucket ændrer søvn og stress alene ikke svaret. Det er ikke en fejl i demoen, det er motorens faktiske regel, og copy siger det: "HRV er det, der åbner døren. Søvn og stress afgør, hvor meget."
 
@@ -142,7 +148,7 @@ Alt bygges i kode. Ingen AI-genererede billeder.
 ## 6. Bevægelse, ydelse og tilgængelighed
 
 - **Bevægelse:** kun CSS-overgange plus `IntersectionObserver`. Hvert greb har et statisk slutbillede ved `prefers-reduced-motion`.
-- **Ydelse:** ingen nye afhængigheder. Motoren er ren funktion, så et træk i en skyder koster en enkelt render. Hero-fladen må ikke vokse: LCP-elementet forbliver H1, og videoer i syne er `preload="none"` med poster.
+- **Ydelse:** ingen nye afhængigheder. Motoren er ren funktion, så et træk i en skyder koster en enkelt render. Hero-fladen må ikke vokse, og LCP-elementet forbliver H1. `DemoLoop` styrer allerede sin egen indlæsning: `preload="metadata"`, som først skifter til `auto`, når klippet er i syne. Den adfærd ændres ikke.
 - **Tilgængelighed:** skyderne er `<input type="range">` med `<label>`, tastaturstyring og målflader på mindst 44 px. Det omskrevne pas ligger i en `aria-live="polite"`-region, så en skærmlæser hører ændringen. Kontrasten følger Kalks eksisterende port.
 - **Ingen backend:** demoen sender intet. Ingen tal fra en besøgende forlader browseren, og det siges i FAQ'en.
 
@@ -157,9 +163,9 @@ Alt bygges i kode. Ingen AI-genererede billeder.
 
 ## 8. Kvalitetsporte
 
-- **Motor-paritet:** en test viser, at landingen importerer `evaluateAdaptation` fra `@/lib/adaptive/engine`. Grep-porten er snæver: den fejler, hvis `engine-demo.ts` indeholder en af motorens **navngivne tærskelværdier** (5.5, 1.5, 1.0, 2, 6, 36), ikke ved ethvert tal.
+- **Motor-paritet:** en test viser, at landingen importerer `evaluateAdaptation` fra `@/lib/adaptive/engine`. Grep-porten matcher **hele taltokens** (`\b5\.5\b`, `\b1\.5\b`, `\b1\.0\b`, `\b36\b`) i `engine-demo.ts`. De bare tal 2 og 6 udelades, fordi de optræder inde i demoens egne ms-værdier som 42, 46 og 86 og ville få porten til at fejle på sig selv.
 - **Bro-test:** `engine-demo.ts` testes for de tre buckets skyderen kan nå, for at 41 ms og derunder ikke kan vælges, for tærsklen ved 5,5 timers søvn og for at stress 4-5 giver `stressed`.
-- **Beslutnings-test:** fire kendte input giver de fire svar i §3.5, og standardtilstanden (5,0 t, 46 ms, stress 4) giver `top_set_reduction`. Testen fejler, hvis en ændring i appens motor ændrer et af svarene.
+- **Beslutnings-test:** tre skyder-tilstande giver de tre svar, skyderne kan nå (`top_set_reduction`, `volume_reduction`, `no_change`), og standardtilstanden (5,0 t, 46 ms, stress 4) giver `top_set_reduction`. Eskaleringsskærmen testes separat med et konstrueret `CandidateDecision`. Testen fejler, hvis en ændring i appens motor ændrer et af svarene.
 - **Copy:** eksisterende `kalk/copy.test.ts` udvides med de nye nøgler. Ingen tankestreger, da og en i takt.
 - **Kontrast og tema:** eksisterende porte.
 - **Bevægelse:** test for at hvert nyt greb har en `prefers-reduced-motion`-gren.
@@ -169,7 +175,7 @@ Alt bygges i kode. Ingen AI-genererede billeder.
 
 | Risiko | Håndtering |
 |---|---|
-| Motoren svarer "ingen ændring", når HRV er normal, uanset søvn og stress | Det er motorens rigtige regel og siges i copy (§3.5). Standardtilstanden ligger under båndet, så det første indtryk er en ændring, og beslutnings-testen låser de fire svar. |
+| Motoren svarer "ingen ændring", når HRV er normal, uanset søvn og stress | Det er motorens rigtige regel og siges i copy (§3.5). Standardtilstanden ligger under båndet, så det første indtryk er en ændring, og beslutnings-testen låser de tre svar. |
 | En ændring i appens motor ændrer landingen uden at nogen opdager det | Beslutnings-testen kører i CI og fejler, hvis de tre scenarier skifter svar. |
 | Klientbundtet vokser | `engine.ts` og `reason-narratives.ts` er type-only i deres imports, så de trækker intet runtime med. Porten er en statisk import-vandring, der fejler ved en ny runtime-afhængighed i demoens graf. Repoet har ingen bundle-måling i dag, og vi tilføjer ikke et værktøj for det her. |
 | Demoen læses som et løfte om præcise tal | Copy siger eksempelbånd, og FAQ'en forklarer, at intet sendes nogen steder. |
