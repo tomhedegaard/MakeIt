@@ -24,4 +24,11 @@ describe("EngineDemo", () => {
   it("siger at båndet er et demo-bånd", () => {
     expect(html).toMatch(/Demo-bånd/);
   });
+
+  it("viser 'behold original' som en linje, ikke en knap", () => {
+    const phone = html.slice(html.indexOf('aria-live="polite"'));
+    expect(phone).toContain("Behold original");
+    expect(phone).not.toMatch(/<button/);
+    expect(phone).not.toMatch(/<a[ >]/);
+  });
 });

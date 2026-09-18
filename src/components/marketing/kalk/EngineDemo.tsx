@@ -100,10 +100,10 @@ export default function EngineDemo() {
             </div>
 
             {/* Tekst, ikke en knap: valget findes i appen, men gør intet her,
-                og en død knap er værre end en linje. */}
-            <p className="rounded-full border border-line-strong px-3 py-2.5 text-center font-mono text-[10px] uppercase tracking-[0.1em]">
-              {t("keepOriginal")}
-            </p>
+                og en død knap er værre end en linje. Derfor ingen pille,
+                ingen kant rundt, ingen centrering, kun en hårfin streg
+                over, som resten af telefonens brødtekst. */}
+            <p className="border-t border-line pt-3 text-left text-[12px] text-fg-dim">{t("keepOriginal")}</p>
           </div>
         </div>
       </div>
