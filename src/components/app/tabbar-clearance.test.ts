@@ -25,7 +25,6 @@ describe("AppShell tab-bar clearance", () => {
       /main[\s\S]*overflow-y-auto[\s\S]*pb-tabbar[\s\S]*lg:overflow-visible[\s\S]*lg:pb-0/,
     );
     expect(shell).toContain("min-h-0");
-    expect(shell).toContain("data-lenis-prevent");
     expect(shell).toContain("shrink-0");
     expect(shell).not.toMatch(/header className="lg:hidden[^"]*sticky/);
     // Tab bar is a sibling *after* main, inside the column — not a

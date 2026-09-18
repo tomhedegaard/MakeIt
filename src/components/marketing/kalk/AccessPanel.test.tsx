@@ -32,7 +32,7 @@ describe("AccessPanel", () => {
     expect(inputTag).toContain('inputMode="email"');
   });
 
-  it("has a polite status region and the WaitlistSection honeypot", () => {
+  it("has a polite status region and the company honeypot", () => {
     expect(html).toMatch(/aria-live="polite"/);
     expect(html).toMatch(/<input[^>]*name="company"[^>]*>/);
     const honeypot = html.match(/<input[^>]*name="company"[^>]*>/)?.[0] ?? "";

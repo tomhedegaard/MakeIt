@@ -3,9 +3,7 @@ import { Big_Shoulders, Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 import "./globals.css";
-import SmoothScroll from "@/components/SmoothScroll";
 import CookieBanner from "@/components/marketing/CookieBanner";
-import CustomCursor from "@/components/CustomCursor";
 import SWRegister from "@/components/pwa/SWRegister";
 import NativeChrome from "@/components/native/NativeChrome";
 import { COMPANY } from "@/lib/company";
@@ -63,13 +61,11 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${sans.variable} ${display.variable} ${mono.variable} h-full antialiased`}
+      className={`${sans.variable} ${display.variable} ${mono.variable} antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col grain vignette">
         <NextIntlClientProvider>
-          <SmoothScroll />
-          <CustomCursor />
           <SWRegister />
           <NativeChrome />
           {children}

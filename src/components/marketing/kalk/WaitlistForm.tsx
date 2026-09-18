@@ -5,11 +5,11 @@ import { useLocale, useTranslations } from "next-intl";
 import { joinWaitlistAction } from "@/app/waitlist-actions";
 
 /**
- * Access-panel waitlist form (reference B `.form`). Same action and
- * `company` honeypot as `WaitlistSection`, but the status stays a
- * single `aria-live="polite"` line instead of swapping the whole
- * panel for a "done" card, since this block also carries the eyebrow
- * and the device-compatibility copy above it.
+ * Access-panel waitlist form (reference B `.form`): `joinWaitlistAction`
+ * with a `company` honeypot. The status stays a single
+ * `aria-live="polite"` line instead of swapping the whole panel for a
+ * "done" card, since this block also carries the eyebrow and the
+ * device-compatibility copy above it.
  */
 export default function WaitlistForm() {
   const t = useTranslations("Marketing.kalk.access");

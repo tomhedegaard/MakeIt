@@ -50,4 +50,10 @@ describe("MorningSignal", () => {
     expect(empty).toContain("Ingen måling");
     expect(empty).toContain("Tjekket ind");
   });
+  it("contains its sr-only sentences so they cannot extend the page (links are positioned)", () => {
+    const html = render(<MorningSignal input={input} />);
+    const links = html.match(/<a [^>]*class="[^"]*"/g) ?? [];
+    expect(links.length).toBe(4);
+    for (const a of links) expect(a).toMatch(/class="relative /);
+  });
 });

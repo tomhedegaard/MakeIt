@@ -244,7 +244,6 @@ export default function AppShell({
 
         <main
           className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain pb-tabbar lg:overflow-visible lg:pb-0"
-          data-lenis-prevent
         >
           {demoMode ? (
             <div

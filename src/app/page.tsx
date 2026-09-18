@@ -1,95 +1,12 @@
 import type { Viewport } from "next";
-import { getTranslations } from "next-intl/server";
-import { getLandingVariant } from "@/lib/marketing/landing-variant";
 import KalkLanding from "@/components/marketing/kalk/KalkLanding";
-import MarketingNav from "@/components/marketing/MarketingNav";
-import Hero from "@/components/marketing/Hero";
-import WorksWith from "@/components/marketing/WorksWith";
-import CrewSection from "@/components/marketing/CrewSection";
-import AdaptivePlaygroundPublic from "@/components/marketing/AdaptivePlaygroundPublic";
-import PillarsSection from "@/components/marketing/PillarsSection";
-import TierJourney from "@/components/marketing/TierJourney";
-import DomainIndexSection from "@/components/marketing/DomainIndexSection";
-import GiveForwardSection from "@/components/marketing/GiveForwardSection";
-import LandingLoop from "@/components/marketing/LandingLoop";
-import AppShowcase from "@/components/marketing/AppShowcase";
-import ValueSection from "@/components/marketing/ValueSection";
-import WaitlistSection from "@/components/marketing/WaitlistSection";
-import Testimonials from "@/components/marketing/Testimonials";
-import FAQ from "@/components/marketing/FAQ";
-import MunkSection from "@/components/marketing/MunkSection";
-import MarketingFooter from "@/components/marketing/Footer";
-import Marquee from "@/components/Marquee";
-import RevealObserver from "@/components/RevealObserver";
 
-export function generateViewport(): Viewport {
-  return getLandingVariant() === "kalk"
-    ? { themeColor: "#E7E9EB", colorScheme: "light" }
-    : {};
-}
+// Kalk is a light page scope on a dark-default root layout.
+export const viewport: Viewport = {
+  themeColor: "#E7E9EB",
+  colorScheme: "light",
+};
 
-export default async function Home() {
-  if (getLandingVariant() === "kalk") return <KalkLanding />;
-  return <ClassicLanding />;
-}
-
-async function ClassicLanding() {
-  const marquee = await getTranslations("Marketing.marquee");
-
-  return (
-    <>
-      <MarketingNav />
-      <main className="relative z-10 flex-1">
-        <Hero />
-        {/* De to sektioner der rammer først, rammer bredest: farvekoden
-            introducerer de fire sundhedsdomæner (krop · mad · hjerte ·
-            sind) med det samme, så den nysgerrige forstår 360-vinklen
-            før noget andet — og crew-pyramiden fortæller hvorfor
-            platformen vokser organisk. Begge betalte sig tidligere først
-            af langt nede: Farvekoden lå mellem TierJourney og
-            AppShowcase, og give-videre-historien fandtes kun som
-            unlocks på Beast/Legend i TierJourney. */}
-        <DomainIndexSection />
-        <GiveForwardSection />
-        {/* UX-audit C3: udstyrs-brands ude af marquee'en — landingen
-            sælger platformen, ikke shoppen. */}
-        <WorksWith />
-        <CrewSection />
-        <MunkSection />
-        <Marquee
-          items={[
-            marquee("hrvAware"),
-            marquee("aiCoach"),
-            marquee("openBrain"),
-            marquee("madeIn"),
-            marquee("city"),
-            marquee("closedBeta"),
-            marquee("forTheCrew"),
-          ]}
-        />
-        <AdaptivePlaygroundPublic />
-        {/* Pris/value rykket op (Scanfit-teardown): prisankeret og
-            "hvad er det" skal ses uden at scrolle gennem alle seks
-            pillars. */}
-        <ValueSection />
-        <PillarsSection />
-        <TierJourney />
-        {/* Three-beat product loop: Program → Form-check, then
-            AppShowcase opens on Helhed (MarketingBodyMap) and keeps
-            the eight phones as a quieter evidence gallery. */}
-        <LandingLoop />
-        <AppShowcase />
-        {/* UX-audit C5: OriginSection (StrapIt-fabrikshistorien) er
-            taget af landingen — den hører til på webshoppen. */}
-        <Testimonials />
-        <WaitlistSection />
-        <FAQ />
-      </main>
-      <MarketingFooter />
-      {/* Mounted last and inside the page segment: its effect runs
-          after every [data-reveal] section here has hydrated, so the
-          class mutations never race React's hydration diff. */}
-      <RevealObserver />
-    </>
-  );
+export default function Home() {
+  return <KalkLanding />;
 }

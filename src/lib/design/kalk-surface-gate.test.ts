@@ -14,10 +14,10 @@ function walk(dir: string): string[] {
   });
 }
 
-// Member surfaces. Coach console, mail, classic landing and the 3D coach spike are out of scope (spec header).
+// Member surfaces. Coach console, mail, non-Kalk marketing and the 3D coach spike are out of scope (spec header).
 const OUT_OF_SCOPE = [
   /^app\/coach\//, /^components\/coach\//, /^lib\/email\//, /^components\/marketing\/(?!kalk\/)/,
-  /^components\/Spotlight\.tsx$/, /^components\/anatomy\/AnatomyFigure3D/,
+  /^components\/anatomy\/AnatomyFigure3D/,
 ];
 // Browser-chrome metadata must be a literal (Next viewport API): Nat values are legitimate there.
 // status-bar.ts (Task 5) paints the native bar and needs literal hex for the plugin.

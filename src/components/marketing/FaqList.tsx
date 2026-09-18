@@ -33,17 +33,7 @@ export default function FaqList({
     <div className="md:col-span-7">
       <ul className="border-t hairline">
         {visible.map((item, i) => (
-          // Kun de server-renderede punkter får data-reveal:
-          // RevealObserver scanner DOM'en én gang ved mount, så
-          // punkter der først dukker op ved "vis alle" aldrig ville få
-          // .is-visible — og ville stå på opacity 0 for evigt.
-          <li
-            key={item.q}
-            {...(i < initialCount
-              ? { "data-reveal": "", style: { transitionDelay: `${i * 60}ms` } }
-              : {})}
-            className="border-b hairline"
-          >
+          <li key={item.q} className="border-b hairline">
             <details className="group">
               <summary
                 className="flex items-start gap-4 py-5 cursor-pointer list-none touch-app"
