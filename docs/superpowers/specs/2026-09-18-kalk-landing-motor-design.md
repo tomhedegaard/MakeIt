@@ -15,10 +15,17 @@
 |---|---|
 | `evaluateAdaptation(input: EngineInput): CandidateDecision` er ren: kun type-imports, ingen DB, ingen `server-only` | `src/lib/adaptive/engine.ts:29-65` |
 | `EngineInput` kan bygges syntetisk. Felterne er `adaptiveProgramEnabled`, `latestReading` (`measuredAt`, `warmUpState`, `readinessBucket`, `isSick`), `veryLowDaysLast5`, `rpeDriftLast14d`, `lifestyle` (`sleepHoursAvg2d`, `alcoholLast2d`, `feelingLast3d`), `recentSessions`, `recentFormChecks`, `daysSinceHeavyLift`, `nextSession`, `now` | `src/lib/adaptive/types.ts:54-165` |
-| Motoren læser **ikke** rå HRV-millisekunder. Den læser `readinessBucket` (en bucket) plus livsstil | `engine.ts`, `types.ts:119-124` |
+| Motoren læser **ikke** rå HRV-millisekunder. Den læser `readinessBucket` plus livsstil | `engine.ts`, `types.ts:119-124` |
+| Buckets er **relative**, ikke absolutte: `classifyReadiness` sammenligner 7-dages snit med 60-dages baseline ± SWC og giver fem buckets, inklusive `very_high`. Der findes ingen ms-grænser i appen | `src/lib/hrv/baseline.ts:60-79`, `src/lib/hrv/types.ts:10-15` |
+| `EngineInput` kræver også `memberId`, og `nextSession` kræver `sessionId`, `scheduledFor`, `title`, `week` og øvelser med `sessionExerciseId`, `position` og `hasLighterVariant`. **Der findes intet vægtfelt** i `NextSessionExerciseInfo` | `types.ts:86-108` |
+| `explainerScenarioInput()` er et færdigt, testlåst `EngineInput`, som i dag driver den rigtige motor på `/hrv/learn/adaptive` | `src/lib/adaptive/mock-scenarios.ts:36`, `src/app/(app)/hrv/learn/adaptive/page.tsx` |
+| Den danske sætning hedder `decision.explanationDa` og bygges af `buildTopSetExplanation` i `engine.ts`. `formatExplanationDa` findes ikke (kun som forældet kommentar i `types.ts:170`) | `engine.ts` |
+| `very_low` rammer en hård regel før livsstil overhovedet læses: motoren foreslår `paused_session` med `humanReviewRecommended: true` | `engine.ts` |
+| `DemoLoop` sætter selv `mix-blend-multiply` over `bg-bg-2`. Der er ingen duotone-tone, og `className` rammer kun yderelementet | `src/components/marketing/DemoLoop.tsx` |
+| Hjerte-cellen i bentoen er `data-theme="nat"`, hvor multiply ville udslette klippet | `SystemsBento.tsx:39,125` |
 | Lav søvn er en tærskel i motoren: gennemsnit under 5,5 timer over to dage | `engine.ts:38` (`LOW_SLEEP_THRESHOLD_HOURS`) |
 | Stress og træthed kommer ind som `feelingLast3d` i mængden `{tired, stressed}` | `engine.ts:53` (`LOW_FEELING_STATES`) |
-| Motorens grænser: den må sænke topsæt, gøre accessory valgfri, foreslå en lettere variant og afkorte. Pause, deload og eskalering kræver Munk | spec 2026-09-17 §4 C1, `hrv/learn/adaptive` |
+| Motorens grænser: den må sænke topsæt, sænke volumen, gøre accessory valgfri, foreslå en lettere variant og afkorte. Pause og deload **foreslår** den, men de markeres til Munk og gennemføres først med hans accept | `engine.ts`, spec 2026-09-17 §4 C1 |
 | Landingen ligger bag `LANDING_VARIANT` og består af otte sektioner i `src/components/marketing/kalk/` | `KalkLanding.tsx`, `src/lib/marketing/landing-variant.ts` |
 | `DemoLoop` afspiller MoveKit-klip kun i syne, holder pause ved reduceret bevægelse og har en synlig pause-knap | `src/components/marketing/DemoLoop.tsx` |
 | 19 MoveKit-klip ligger bundlet som `.webm`, `.mp4` og et `-poster.jpg` | `public/exercise-demos/` |
@@ -60,33 +67,53 @@ Skyderne giver tre værdier. En ny ren modul-fil `src/lib/marketing/kalk/engine-
 | HRV | 28-86 ms, trin 1 | `latestReading.readinessBucket` via båndet i §3.3 |
 | Stress | 1-5 | `lifestyle.feelingLast3d`: 4-5 → `stressed`, 3 → `null`, 1-2 → `null` |
 
-Resten af inputtet er faste, ærlige demo-værdier: `adaptiveProgramEnabled: true`, frisk måling (`now` minus 1 time), `warmUpState: "active"`, `isSick: false`, `veryLowDaysLast5: 0`, `rpeDriftLast14d: null`, ingen manglende sessioner, ingen form-check-bekymring, og én kommende session "Back squat" med et topsæt på 150 kg.
+Grundlaget er **ikke** et nyt literal, men `explainerScenarioInput()` fra `src/lib/adaptive/mock-scenarios.ts`, som allerede er testlåst og driver motoren på `/hrv/learn/adaptive`. `engine-demo.ts` kopierer det og overskriver kun fire felter: `latestReading.readinessBucket`, `latestReading.measuredAt` (sat til `now` minus 1 time, så målingen altid er frisk), `lifestyle.sleepHoursAvg2d` og `lifestyle.feelingLast3d`. Historikfelterne neutraliseres: `veryLowDaysLast5: 0`, `rpeDriftLast14d: null`, ingen sprungne sessioner, ingen form-check under 6.
 
-**Hvorfor faste værdier:** de felter beskriver historik, som en besøgende ikke har. De sættes til det neutrale, så det, den besøgende trækker i, er det eneste, der flytter beslutningen.
+**Hvorfor genbrug:** de resterende felter beskriver historik, en besøgende ikke har, og et færdigt scenarie holder landingen i sync med appens eget eksempel.
 
-### 3.3 Det ene sted landingen oversætter
+**Topsættets vægt lever ikke i motoren.** `NextSessionExerciseInfo` har intet vægtfelt: motoren svarer med en handling og en procent. Landingen viser 150 kg som sin egen visning og regner den nye vægt ud af motorens procentsats. Det siges i copy: tallet er et eksempel, procenten er motorens.
 
-Motoren læser buckets, ikke millisekunder. Landingen viser millisekunder, fordi det er det tal, folk kender fra deres ur. Oversættelsen er landingens eget ansvar og skal testes:
+### 3.3 Det ene sted landingen digter: ms til bucket
+
+Appen har **ingen** absolutte ms-grænser. `classifyReadiness` sammenligner dit eget 7-dages snit med din egen 60-dages baseline (`src/lib/hrv/baseline.ts:60-79`). En besøgende har hverken baseline eller historik, så landingen har brug for et tal, folk kan genkende fra deres ur.
+
+Landingen bruger derfor et **demo-bånd**, som er landingens egen fiktion og ikke en påstand om appen:
 
 | HRV på skyderen | `readinessBucket` |
 |---|---|
-| under 42 ms | `very_low` |
 | 42-51 ms | `low` |
 | 52-74 ms | `normal` |
-| over 74 ms | `high` |
+| 75-86 ms | `high` |
 
-Båndet 52-74 ms vises som tekst under skyderen, så tallet aldrig står uforklaret. Det er et **eksempelbånd**, ikke et løfte: copy siger "dit bånd bliver dit eget, når appen har lært dig at kende".
+Skyderen går fra **42 til 86 ms**. `very_low` er med vilje uden for rækkevidde: den udløser motorens hårde regel om `paused_session` før livsstil overhovedet læses, og en pause er Munks beslutning, ikke en demo-pointe. `very_high` er også udeladt, fordi den ikke ændrer svaret i forhold til `high`.
+
+Copy under skyderen siger det direkte: "Demo-bånd. I appen bliver båndet dit eget, målt mod din egen baseline." Bro-testen låser, at mapningen kun findes ét sted, og at den er landingens, ikke appens.
 
 ### 3.4 Fra beslutning til skærm
 
 `CandidateDecision` giver `action`, `confidence`, reason-koder og en dansk forklaring. Telefonen viser:
 - topsættet, med 150 overstreget i orange når motoren har ændret det,
 - de berørte øvelser, hvor valgfri accessory tones ned,
-- forklaringen fra motoren,
+- forklaringen fra motoren (`decision.explanationDa`, bygget af `buildTopSetExplanation`),
 - "Behold original" som sekundær handling (ikke funktionel på landingen, men synlig, fordi den findes i appen),
 - to hvorfor-chips med de tal, den besøgende selv satte.
 
-Reason-koder oversættes med de eksisterende hjælpere i `reason-narratives.ts`, ikke med ny copy.
+Chippene bruger de eksisterende hjælpere i `reason-narratives.ts` (`labelForReason`, `formatReadinessBucket`, `formatSleepHours`, `formatFeelingState`). Der skrives ingen ny forklarings-copy.
+
+### 3.5 Fire svar, fire skærme
+
+Inden for skyderens rækkevidde kan motoren svare fire ting. Alle fire skal have en skærm, ellers ser demoen i stedet ud til at være i stykker:
+
+| Svar | Hvornår | Hvad telefonen viser |
+|---|---|---|
+| `top_set_reduction` | `low` plus mindst ét livsstilssignal | Topsættet overstreget og sat ned med motorens procent |
+| `volume_reduction` | `low` uden livsstilssignaler | Topsættet står, accessory-sæt bliver valgfri |
+| `no_change` | `normal` eller `high` | Passet står uændret, med en linje om at alt er inden for båndet |
+| Eskalering til Munk | hvis motoren sætter `humanReviewRecommended` | En linje om, at Munk kigger på det, før noget ændres |
+
+**Den vigtige ærlighed:** med `normal` eller `high` bucket ændrer søvn og stress alene ikke svaret. Det er ikke en fejl i demoen, det er motorens faktiske regel, og copy siger det: "HRV er det, der åbner døren. Søvn og stress afgør, hvor meget."
+
+Standardtilstanden er **5,0 timer, 46 ms, stress 4**, som giver `top_set_reduction`. Det første indtryk er altså en ændring, ikke en tom skærm.
 
 ## 4. Sektionerne
 
@@ -94,7 +121,7 @@ Reason-koder oversættes med de eksisterende hjælpere i `reason-narratives.ts`,
 |---|---|---|
 | 1 | **Hero** | H1 og sætning uændret. Højre side bliver riggen: tre skydere, telefonen, båndet. Vægtskive-tallene 150/135 flytter ind i telefonen som det, motoren ændrer. |
 | 2 | **Motor** | Beviset udfoldes: nattens tidslinje 23:40 → 05:30 → 06:45 som en SVG-kurve, der tegner sig i syne, og de fire grænser for hvad motoren må. "Behold original" forklares her. |
-| 3 | **Fire systemer** | Bento beholdes. De fire celler får MoveKit-klip som duotone-flader i stedet for tomme kort. Hjerte-cellen forbliver den ene mørke blok. |
+| 3 | **Fire systemer** | Bento beholdes. De **tre lyse** celler får MoveKit-klip gennem `DemoLoop`. Hjerte-cellen forbliver den ene mørke blok **uden klip**, fordi multiply udsletter et klip på mørk baggrund. |
 | 4 | **Munk** | Uændret struktur. Tidsstempler og signatur strammes typografisk. |
 | 5 | **Crewet** | Uændret. Skiver, markører og reps-måler. |
 | 6 | **Stemmer** | Uændret og fortsat skjult i produktion, indtil D6 er løst. |
@@ -109,7 +136,7 @@ Alt bygges i kode. Ingen AI-genererede billeder.
 
 - **Riggen:** SVG. Skiver, lineal og stang tegnes som vektor i Kalks tokens, så de er skarpe på alle skærme og skifter farve med temaet.
 - **Nattens kurve:** én SVG-sti med `stroke-dasharray`, der tegner sig, når sektionen kommer i syne.
-- **MoveKit:** de bundlede klip bruges som duotone-flader gennem den eksisterende `DemoLoop`. På lyse flader vises de med `mix-blend-mode: multiply`, som §3.4 i Kalk-specen kræver. Ingen tegnede figurer.
+- **MoveKit:** de bundlede klip vises gennem den eksisterende `DemoLoop`, som allerede sætter `mix-blend-multiply` over `bg-bg-2`. Der er **ingen duotone-tone i dag**; vil vi have en tonet flade, kræver det en lille ændring i `DemoLoop.tsx` (et valgfrit tint-lag), og den ændring hører med i planen. Ingen tegnede figurer.
 - **Munks signatur:** den eksisterende SVG.
 
 ## 6. Bevægelse, ydelse og tilgængelighed
@@ -126,12 +153,13 @@ Alt bygges i kode. Ingen AI-genererede billeder.
 | E1 | Skal demoen have en "prøv med mine tal"-tilstand, der spørger om rigtige data? | **Nej.** Det er en tilmelding i forklædning og koster tillid. |
 | E2 | Skal båndet 52-74 ms stå som eksempel eller som gennemsnit for crewet? | **Eksempel.** Vi har ikke tal at stå inde for, og et påstået gennemsnit er en påstand vi ikke kan bevise. |
 | E3 | Skal demoen huske skyderne mellem besøg? | **Nej i v1.** YAGNI. |
+| E4 | Skal `DemoLoop` have et tint-lag, så klippene kan vises som duotone? | **Ja, som et valgfrit lag.** Uden det er cellerne rå videoklip på en lys flade. |
 
 ## 8. Kvalitetsporte
 
-- **Motor-paritet:** en test viser, at landingen importerer `evaluateAdaptation` fra `@/lib/adaptive/engine` og ikke definerer egne tærskler. Grep-porten fejler, hvis der dukker et tal op i demo-modulet, som også findes i motoren.
-- **Bro-test:** `engine-demo.ts` testes for alle fire buckets, for tærsklen ved 5,5 timers søvn og for at stress 4-5 giver `stressed`.
-- **Beslutnings-test:** tre kendte scenarier (dårlig nat, normal nat, stærk nat) giver henholdsvis en sænkning, ingen ændring og ingen sænkning.
+- **Motor-paritet:** en test viser, at landingen importerer `evaluateAdaptation` fra `@/lib/adaptive/engine`. Grep-porten er snæver: den fejler, hvis `engine-demo.ts` indeholder en af motorens **navngivne tærskelværdier** (5.5, 1.5, 1.0, 2, 6, 36), ikke ved ethvert tal.
+- **Bro-test:** `engine-demo.ts` testes for de tre buckets skyderen kan nå, for at 41 ms og derunder ikke kan vælges, for tærsklen ved 5,5 timers søvn og for at stress 4-5 giver `stressed`.
+- **Beslutnings-test:** fire kendte input giver de fire svar i §3.5, og standardtilstanden (5,0 t, 46 ms, stress 4) giver `top_set_reduction`. Testen fejler, hvis en ændring i appens motor ændrer et af svarene.
 - **Copy:** eksisterende `kalk/copy.test.ts` udvides med de nye nøgler. Ingen tankestreger, da og en i takt.
 - **Kontrast og tema:** eksisterende porte.
 - **Bevægelse:** test for at hvert nyt greb har en `prefers-reduced-motion`-gren.
@@ -141,9 +169,9 @@ Alt bygges i kode. Ingen AI-genererede billeder.
 
 | Risiko | Håndtering |
 |---|---|
-| Motoren svarer "ingen ændring" for de fleste skyder-kombinationer, så demoen virker død | Standardtilstanden sættes til en nat under båndet, så det første indtryk er en ændring. Bro-testen låser, at mindst tre kombinationer giver tre forskellige svar. |
+| Motoren svarer "ingen ændring", når HRV er normal, uanset søvn og stress | Det er motorens rigtige regel og siges i copy (§3.5). Standardtilstanden ligger under båndet, så det første indtryk er en ændring, og beslutnings-testen låser de fire svar. |
 | En ændring i appens motor ændrer landingen uden at nogen opdager det | Beslutnings-testen kører i CI og fejler, hvis de tre scenarier skifter svar. |
-| Klientbundtet vokser, fordi `engine.ts` trækker typer og hjælpere med | Kun `evaluateAdaptation` og `reason-narratives` importeres. En bundle-test holder demoen under 8 KB gzip. |
+| Klientbundtet vokser | `engine.ts` og `reason-narratives.ts` er type-only i deres imports, så de trækker intet runtime med. Porten er en statisk import-vandring, der fejler ved en ny runtime-afhængighed i demoens graf. Repoet har ingen bundle-måling i dag, og vi tilføjer ikke et værktøj for det her. |
 | Demoen læses som et løfte om præcise tal | Copy siger eksempelbånd, og FAQ'en forklarer, at intet sendes nogen steder. |
 
 ## 10. Referencer
