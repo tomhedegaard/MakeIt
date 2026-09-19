@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import PhoneFrame from "../PhoneFrame";
-import { Card, Headline, Kicker, Label, Pill } from "./parts";
+import { Card, Headline, Kicker, Label, Pill, Row } from "./parts";
 
 const SCALES = [
   { key: "energy", filled: 3 },
@@ -12,12 +12,12 @@ const SCALES = [
 const WEEK = [22, 28, 18, 28, 34, 24, 22];
 
 /** Sind: the 60 second mind-check (reference B "Sind"). */
-export default function MindScreen({ width }: { width?: number }) {
+export default function MindScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
   const t = useTranslations("Marketing.kalk");
   const s = useTranslations("Marketing.kalk.screens");
 
   return (
-    <PhoneFrame label={s("mind.aria")} tab="mind" width={width}>
+    <PhoneFrame label={s("mind.aria")} tab="mind" width={width} scroll={scroll}>
       <div>
         <Kicker domain="mind">{t("systems.mind.kicker")}</Kicker>
         <Headline className="text-[34px]">{s("mind.title")}</Headline>
@@ -81,6 +81,16 @@ export default function MindScreen({ width }: { width?: number }) {
           ))}
         </svg>
       </Card>
+      {scroll ? (
+        <>
+          <Card>
+            <Label>{s("mind.suggestLabel")}</Label>
+            <p className="mt-1 font-display text-[20px]">{s("mind.suggest")}</p>
+            <p className="text-[10.5px] text-fg-dim">{s("mind.suggestSub")}</p>
+          </Card>
+          <Row k={s("mind.streakLabel")} v={s("mind.streak")} last />
+        </>
+      ) : null}
     </PhoneFrame>
   );
 }

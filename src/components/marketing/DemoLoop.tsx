@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { resolveDemoAssets } from "@/lib/data/demo-assets";
 import { shouldPlay } from "@/lib/marketing/demo-loop";
+import { cn } from "@/lib/utils";
 
 /**
  * Looping exercise demo for the marketing pages (spec 2026-09-17 §3.4).
@@ -147,7 +148,9 @@ export default function DemoLoop({
   return (
     <div
       ref={wrapRef}
-      className={`relative overflow-hidden rounded-[14px] bg-bg-2 ${className ?? ""}`}
+      // cn, not a template string: a caller that places the loop with
+      // `absolute` must win over the default `relative`.
+      className={cn("relative overflow-hidden rounded-[14px] bg-bg-2", className)}
     >
       <video
         ref={videoRef}

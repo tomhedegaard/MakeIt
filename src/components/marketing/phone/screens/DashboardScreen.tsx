@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 import PhoneFrame from "../PhoneFrame";
 import {
   Avatar,
@@ -14,15 +15,19 @@ import {
   Swap,
 } from "./parts";
 
+/** Today is Wednesday; days B, C and D fall Friday to Sunday. */
+const TODAY = 2;
+const PLANNED = [4, 5, 6];
+
 /** I dag: the engine has rewritten today's session (reference B hero phone). */
-export default function DashboardScreen({ width = 300 }: { width?: number }) {
+export default function DashboardScreen({ width = 300, scroll = false }: { width?: number; scroll?: boolean }) {
   const t = useTranslations("Marketing.kalk");
   const s = useTranslations("Marketing.kalk.screens");
   const d = useTranslations("Dashboard.todaySession");
   const h = useTranslations("Hrv.band");
 
   return (
-    <PhoneFrame label={s("dashboard.aria")} tab="today" width={width}>
+    <PhoneFrame label={s("dashboard.aria")} tab="today" width={width} scroll={scroll}>
       <div className="flex items-end justify-between gap-2 pt-0.5">
         <div>
           <Kicker>{s("dashboard.greeting")}</Kicker>
@@ -81,6 +86,40 @@ export default function DashboardScreen({ width = 300 }: { width?: number }) {
           </div>
         ))}
       </div>
+      {scroll ? (
+        <>
+          <div>
+            <Label className="mb-1.5 justify-between">
+              <span>{s("dashboard.weekLabel")}</span>
+              <span>{s("dashboard.weekNote")}</span>
+            </Label>
+            <div className="grid grid-cols-7 gap-1">
+              {s("dashboard.weekDays")
+                .split(" ")
+                .map((day, i) => (
+                  <span
+                    key={i}
+                    className={cn(
+                      "grid h-[30px] place-items-center rounded-[8px] border font-mono text-[9px]",
+                      i === TODAY ? "border-fg bg-fg text-bg" : PLANNED.includes(i) ? "border-line-strong" : "border-line text-fg-dim",
+                    )}
+                  >
+                    {day}
+                  </span>
+                ))}
+            </div>
+          </div>
+          <Card>
+            <Label>{s("dashboard.tomorrowLabel")}</Label>
+            <p className="mt-1 font-display text-[20px]">{s("dashboard.tomorrow")}</p>
+            <p className="text-[10.5px] text-fg-dim">{s("dashboard.tomorrowSub")}</p>
+          </Card>
+          <Card>
+            <Label>{s("dashboard.mealLabel")}</Label>
+            <p className="mt-1 text-[10.5px] font-medium">{s("dashboard.meal")}</p>
+          </Card>
+        </>
+      ) : null}
     </PhoneFrame>
   );
 }

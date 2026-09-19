@@ -3,6 +3,7 @@ import { render } from "../test-render";
 import da from "../../../../messages/da/index";
 import { TIERS, progressToNext } from "@/lib/marketing/tiers";
 import CrewPlates from "./CrewPlates";
+import { nextTabIndex } from "./TierLadder";
 
 const html = render(<CrewPlates />);
 const c = da.Marketing.kalk.crew;
@@ -51,5 +52,37 @@ describe("CrewPlates", () => {
   it("lists how reps are earned and uses no hardcoded colours", () => {
     for (const label of Object.values(c.earn)) expect(html).toContain(label.replace("'", "&#x27;"));
     expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}\b|rgba?\(/);
+  });
+
+  it("makes the four tiers a tablist that opens on the member's own tier", () => {
+    expect(html).toMatch(new RegExp(`role="tablist"[^>]*aria-label="${c.ladder.listLabel}"`));
+    expect(html.match(/role="tab"/g)).toHaveLength(4);
+    expect(html).toMatch(/aria-selected="true"[^>]*data-tier="athlete"/);
+    expect(html.match(/aria-selected="true"/g)).toHaveLength(1);
+    expect(html).toMatch(/data-plate="athlete"[^>]*data-selected="true"/);
+  });
+
+  it("shows what the chosen tier unlocks, taken from the app's Reps page", () => {
+    const panel = html.slice(html.indexOf('role="tabpanel"'));
+    expect(panel).toContain('data-tier-panel="athlete"');
+    for (const perk of da.Reps.tiers.list.Athlete.perks) expect(panel).toContain(perk);
+    expect(panel).toContain("1.000+ reps");
+  });
+
+  it("ends in a call to action to the waitlist, named for the tier", () => {
+    const panel = html.slice(html.indexOf('role="tabpanel"'));
+    expect(panel).toMatch(/<a[^>]*href="\/#waitlist"[^>]*>Start mod Athlete/);
+    expect(panel).toContain(c.ladder.ctaNote);
+  });
+});
+
+describe("nextTabIndex", () => {
+  it("wraps with the arrow keys and jumps with Home and End", () => {
+    expect(nextTabIndex("ArrowRight", 3, 4)).toBe(0);
+    expect(nextTabIndex("ArrowLeft", 0, 4)).toBe(3);
+    expect(nextTabIndex("ArrowDown", 1, 4)).toBe(2);
+    expect(nextTabIndex("Home", 2, 4)).toBe(0);
+    expect(nextTabIndex("End", 0, 4)).toBe(3);
+    expect(nextTabIndex("Enter", 1, 4)).toBeNull();
   });
 });

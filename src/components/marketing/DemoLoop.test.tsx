@@ -23,6 +23,15 @@ describe("DemoLoop", () => {
     expect(html).toMatch(/<button[^>]*aria-pressed="false"[^>]*>Afspil<\/button>/);
   });
 
+  it("lets a caller position the loop: absolute replaces the default relative", () => {
+    const placed = renderToStaticMarkup(
+      <DemoLoop src="/exercise-demos/deadlift.webm" label="Dødløft" pauseLabel="Pause" playLabel="Afspil" className="absolute right-4" />,
+    );
+    const wrap = placed.match(/^<div class="([^"]*)"/)?.[1] ?? "";
+    expect(wrap.split(" ")).toContain("absolute");
+    expect(wrap.split(" ")).not.toContain("relative");
+  });
+
   it("er uændret uden tint", () => {
     expect(html).not.toMatch(/data-tint/);
   });

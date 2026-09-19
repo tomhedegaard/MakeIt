@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import PhoneFrame from "../PhoneFrame";
-import { Card, Headline, Kicker, Label, Pill } from "./parts";
+import { Card, EngineNote, Headline, Kicker, Label, Pill } from "./parts";
 
 const SCALES = [
   { key: "energy", value: "energyValue", filled: 3, fill: "bg-mind-energy", strong: false },
@@ -12,12 +12,12 @@ const SCALES = [
 const STRESS_LINE = "M8 60L52 60L96 44L140 60L184 60L228 44L272 12";
 
 /** Sind: last night's mind-check (reference A state 3). */
-export default function MindCheckedScreen({ width }: { width?: number }) {
+export default function MindCheckedScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
   const t = useTranslations("Marketing.kalk");
   const s = useTranslations("Marketing.kalk.screens");
 
   return (
-    <PhoneFrame label={s("mindChecked.aria")} tab="mind" width={width}>
+    <PhoneFrame label={s("mindChecked.aria")} tab="mind" width={width} scroll={scroll}>
       <div data-domain="mind" className="mt-1">
         <Kicker domain="mind" dot>
           {t("systems.mind.kicker")} · {s("mind.title")}
@@ -72,6 +72,13 @@ export default function MindCheckedScreen({ width }: { width?: number }) {
       </Card>
 
       <Pill ghost>{s("mindChecked.checkedIn")}</Pill>
+      {scroll ? (
+        <>
+          <EngineNote stamp={s("mindChecked.engineLabel")}>
+            <p className="mt-[5px] text-[10.5px] leading-[1.38]">{s("mindChecked.engine")}</p>
+          </EngineNote>
+        </>
+      ) : null}
     </PhoneFrame>
   );
 }

@@ -6,7 +6,7 @@ import { Card, Chip, Headline, Kicker, Label, Pill, Row } from "./parts";
  * Motoren: the rewritten session (reference A state 4), with the
  * why-chips (A2) and "Behold original" as the secondary action (C1).
  */
-export default function DecisionScreen({ width }: { width?: number }) {
+export default function DecisionScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
   const t = useTranslations("Marketing.kalk");
   const s = useTranslations("Marketing.kalk.screens");
   const d = useTranslations("Dashboard.todaySession");
@@ -19,7 +19,7 @@ export default function DecisionScreen({ width }: { width?: number }) {
   ];
 
   return (
-    <PhoneFrame label={s("decision.aria")} tab="train" width={width}>
+    <PhoneFrame label={s("decision.aria")} tab="train" width={width} scroll={scroll}>
       <div data-domain="body" className="mt-1">
         <Kicker domain="body" dot>
           {s("engineStamp")}
@@ -77,6 +77,14 @@ export default function DecisionScreen({ width }: { width?: number }) {
       </div>
 
       <p className="text-[9.5px] leading-[1.4] text-fg-dim">{t("engine.disclaimer")}</p>
+      {scroll ? (
+        <>
+          <Card>
+            <Label>{s("decision.historyLabel")}</Label>
+            <p className="mt-1 text-[10.5px] leading-[1.38]">{s("decision.history")}</p>
+          </Card>
+        </>
+      ) : null}
     </PhoneFrame>
   );
 }

@@ -1,18 +1,18 @@
 import { useTranslations } from "next-intl";
 import PhoneFrame from "../PhoneFrame";
-import { Card, EngineNote, Fields, Headline, Kicker, Label } from "./parts";
+import { Card, EngineNote, Fields, Headline, Kicker, Label, Row } from "./parts";
 
 const HRV_LINE =
   "M0 32 L18.5 21.3 L36.9 26.7 L55.4 16 L73.8 29.3 L92.3 24 L110.8 18.7 L129.2 34.7 L147.7 26.7 L166.2 21.3 L184.6 40 L203.1 48 L221.5 53.3 L236 58.7";
 
 /** Hjerte: HRV against the member's own band (reference B "HRV"). */
-export default function HrvScreen({ width }: { width?: number }) {
+export default function HrvScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
   const t = useTranslations("Marketing.kalk");
   const s = useTranslations("Marketing.kalk.screens");
   const h = useTranslations("Hrv.band");
 
   return (
-    <PhoneFrame label={s("hrv.aria")} tab="today" width={width}>
+    <PhoneFrame label={s("hrv.aria")} tab="today" width={width} scroll={scroll}>
       <div>
         <Kicker domain="heart">{t("systems.heart.kicker")}</Kicker>
         <Headline>{s("hrv.title")}</Headline>
@@ -78,6 +78,17 @@ export default function HrvScreen({ width }: { width?: number }) {
       />
 
       <p className="text-[9.5px] leading-[1.4] text-fg-dim">{t("engine.disclaimer")}</p>
+      {scroll ? (
+        <>
+          <div>
+            <Label className="mb-1">{s("hrv.morningsLabel")}</Label>
+            <Row k={s("hrv.m1")} v={s("hrv.m1v")} />
+            <Row k={s("hrv.m2")} v={s("hrv.m2v")} />
+            <Row k={s("hrv.m3")} v={s("hrv.m3v")} />
+            <Row k={s("hrv.m4")} v={s("hrv.m4v")} last />
+          </div>
+        </>
+      ) : null}
     </PhoneFrame>
   );
 }

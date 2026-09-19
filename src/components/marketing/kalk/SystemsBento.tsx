@@ -1,17 +1,50 @@
 import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import DemoLoop from "@/components/marketing/DemoLoop";
-import SessionScreen from "@/components/marketing/phone/screens/SessionScreen";
+import DashboardScreen from "@/components/marketing/phone/screens/DashboardScreen";
+import SleepScreen from "@/components/marketing/phone/screens/SleepScreen";
 import HrvScreen from "@/components/marketing/phone/screens/HrvScreen";
-import FoodScreen from "@/components/marketing/phone/screens/FoodScreen";
-import MindScreen from "@/components/marketing/phone/screens/MindScreen";
+import DecisionScreen from "@/components/marketing/phone/screens/DecisionScreen";
+import SessionScreen from "@/components/marketing/phone/screens/SessionScreen";
 import FormCheckScreen from "@/components/marketing/phone/screens/FormCheckScreen";
+import CoachScreen from "@/components/marketing/phone/screens/CoachScreen";
+import ProgressScreen from "@/components/marketing/phone/screens/ProgressScreen";
+import BlockScreen from "@/components/marketing/phone/screens/BlockScreen";
+import FoodScreen from "@/components/marketing/phone/screens/FoodScreen";
+import ShoppingScreen from "@/components/marketing/phone/screens/ShoppingScreen";
+import MindScreen from "@/components/marketing/phone/screens/MindScreen";
+import BreathScreen from "@/components/marketing/phone/screens/BreathScreen";
+import MindCheckedScreen from "@/components/marketing/phone/screens/MindCheckedScreen";
+import CrewScreen from "@/components/marketing/phone/screens/CrewScreen";
 import type { Domain } from "@/components/marketing/phone/screens/parts";
 import { cn } from "@/lib/utils";
 import Rule from "./Rule";
 import ScreenRack from "./ScreenRack";
 
 const RACK_PHONE_WIDTH = 272;
+
+/**
+ * One member's day, in order: the morning, the engine's call, the
+ * session and the coach, then the programme, food, mind and the crew.
+ * Every screen scrolls inside its frame, as the app does.
+ */
+const RACK_SCREENS = [
+  { key: "dashboard", Screen: DashboardScreen },
+  { key: "sleep", Screen: SleepScreen },
+  { key: "hrv", Screen: HrvScreen },
+  { key: "decision", Screen: DecisionScreen },
+  { key: "session", Screen: SessionScreen },
+  { key: "formCheck", Screen: FormCheckScreen },
+  { key: "coach", Screen: CoachScreen },
+  { key: "progress", Screen: ProgressScreen },
+  { key: "block", Screen: BlockScreen },
+  { key: "food", Screen: FoodScreen },
+  { key: "shopping", Screen: ShoppingScreen },
+  { key: "mind", Screen: MindScreen },
+  { key: "breath", Screen: BreathScreen },
+  { key: "mindChecked", Screen: MindCheckedScreen },
+  { key: "crew", Screen: CrewScreen },
+] as const;
 
 /** Today's 16 sets: 7 done at the top set, then backoff and lighter work. */
 const SET_TICKS = [
@@ -45,13 +78,10 @@ export default function SystemsBento() {
   const hrv = useTranslations("Marketing.kalk.engine.steps.hrv");
   const unit = useTranslations("Marketing.kalk.hero")("plateUnit");
 
-  const screens = [
-    { key: "session", node: <SessionScreen width={RACK_PHONE_WIDTH} /> },
-    { key: "hrv", node: <HrvScreen width={RACK_PHONE_WIDTH} /> },
-    { key: "food", node: <FoodScreen width={RACK_PHONE_WIDTH} /> },
-    { key: "mind", node: <MindScreen width={RACK_PHONE_WIDTH} /> },
-    { key: "formCheck", node: <FormCheckScreen width={RACK_PHONE_WIDTH} /> },
-  ];
+  const screens = RACK_SCREENS.map(({ key, Screen }) => ({
+    key,
+    node: <Screen width={RACK_PHONE_WIDTH} scroll />,
+  }));
 
   return (
     <section
@@ -81,7 +111,7 @@ export default function SystemsBento() {
               playLabel={s("play")}
               tint="body"
               compact
-              className="absolute right-[clamp(20px,2.4vw,34px)] top-[clamp(20px,2.4vw,34px)] hidden h-[108px] w-[152px] md:block"
+              className="absolute right-[clamp(20px,2.4vw,34px)] top-[clamp(20px,2.4vw,34px)] hidden aspect-[720/398] w-[196px] border border-line md:block"
             />
             <div
               data-kg-ticks
