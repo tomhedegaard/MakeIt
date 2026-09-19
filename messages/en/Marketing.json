@@ -99,6 +99,7 @@
     },
     "demo": {
       "todayLabel": "Today",
+      "tryIt": "Try it yourself: move a slider.",
       "sleepLabel": "Sleep",
       "hrvLabel": "HRV",
       "stressLabel": "Stress",
