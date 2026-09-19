@@ -3,12 +3,14 @@
 import { useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import ExerciseDemo from "@/components/exercise/ExerciseDemo";
+import ExerciseLoop from "@/components/exercise/ExerciseLoop";
 import CuesList from "@/components/exercise/CuesList";
 import { MUSCLE_LABELS, type MuscleGroup, type AnatomyView } from "@/lib/data/muscle-groups";
 import type { AnatomyGender } from "@/lib/data/anatomy/paths";
 import type { ExercisePhase } from "@/lib/data/exercises";
 
 type Props = {
+  name: string;
   primary: MuscleGroup[];
   secondary: MuscleGroup[];
   tertiary: MuscleGroup[];
@@ -25,12 +27,14 @@ const TIER_COLOR = {
 } as const;
 
 /**
- * Hero block on the exercise detail page. Pairs the demo (video,
- * phase-animated figure, or static figure — picked by ExerciseDemo)
- * with the ordered coaching cues. View + gender toggles are local
- * UI state on the figure modes; the video mode ignores them.
+ * Hero block on the exercise detail page. With a 3D loop, the loop is
+ * the hero: full width like the landing's form-check card, cues and
+ * muscles below, the cue list following the video's phases. Without
+ * one, the drawn figure (phase-animated or static, picked by
+ * ExerciseDemo) sits beside the cues with its view and gender toggles.
  */
 export default function ExerciseHero({
+  name,
   primary,
   secondary,
   tertiary,
@@ -41,17 +45,40 @@ export default function ExerciseHero({
 }: Props) {
   const [view, setView] = useState<AnatomyView>(defaultView);
   const [gender, setGender] = useState<AnatomyGender>("male");
-  // Active phase index drives the cue list highlight. Stays null in
-  // video / static-figure modes (no rep cycle to sync against); the
-  // PhaseAnimator emits 0 on mount and on every advance.
+  // Active phase index drives the cue list highlight. The 3D loop and
+  // the PhaseAnimator both report it; the static figure leaves it null
+  // (no rep cycle to sync against).
   const [activePhaseIdx, setActivePhaseIdx] = useState<number | null>(null);
   // Stable identity so PhaseAnimator's onPhaseChange-effect doesn't
   // re-fire on every render of this component.
-  const handlePhaseChange = useCallback(
-    (idx: number) => setActivePhaseIdx(idx),
-    [],
-  );
+  const handlePhaseChange = useCallback((idx: number) => setActivePhaseIdx(idx), []);
   const t = useTranslations("Train.hero");
+
+  const details = (
+    <>
+      <div>
+        <div className="eyebrow mb-4">{t("howTo")}</div>
+        <CuesList cues={cues} phases={phases} activePhaseIdx={activePhaseIdx} />
+      </div>
+      <MuscleChips primary={primary} secondary={secondary} tertiary={tertiary} title={t("musclesInvolved")} />
+    </>
+  );
+
+  if (demoAssetUrl) {
+    return (
+      <div className="space-y-8 md:space-y-10">
+        <ExerciseLoop
+          url={demoAssetUrl}
+          phases={phases}
+          label={t("demoAria", { lift: name })}
+          playLabel={t("demoPlay")}
+          pauseLabel={t("demoPause")}
+          onPhaseChange={handlePhaseChange}
+        />
+        <div className="grid gap-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:gap-12 items-start">{details}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid gap-8 md:grid-cols-[auto_1fr] md:gap-12 items-start">
@@ -59,7 +86,7 @@ export default function ExerciseHero({
       <div className="flex flex-col items-center gap-4">
         <div className="surface-2 rounded-2xl p-6 lg:p-8">
           <ExerciseDemo
-            demoAssetUrl={demoAssetUrl}
+            demoAssetUrl={null}
             phases={phases}
             primary={primary}
             secondary={secondary}
@@ -70,28 +97,24 @@ export default function ExerciseHero({
           />
         </div>
 
-        {/* Toggles — hidden when a real video plays since orientation
-            is baked into the asset. */}
-        {!demoAssetUrl ? (
-          <div className="flex flex-col gap-2 w-full max-w-[260px]">
-            <ToggleRow
-              options={[
-                { v: "front", label: t("viewFront") },
-                { v: "back", label: t("viewBack") },
-              ]}
-              value={view}
-              onChange={(v) => setView(v as AnatomyView)}
-            />
-            <ToggleRow
-              options={[
-                { v: "male", label: t("genderMale") },
-                { v: "female", label: t("genderFemale") },
-              ]}
-              value={gender}
-              onChange={(v) => setGender(v as AnatomyGender)}
-            />
-          </div>
-        ) : null}
+        <div className="flex flex-col gap-2 w-full max-w-[260px]">
+          <ToggleRow
+            options={[
+              { v: "front", label: t("viewFront") },
+              { v: "back", label: t("viewBack") },
+            ]}
+            value={view}
+            onChange={(v) => setView(v as AnatomyView)}
+          />
+          <ToggleRow
+            options={[
+              { v: "male", label: t("genderMale") },
+              { v: "female", label: t("genderFemale") },
+            ]}
+            value={gender}
+            onChange={(v) => setGender(v as AnatomyGender)}
+          />
+        </div>
 
         <div className="flex items-center gap-4 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
           <Dot color={TIER_COLOR.primary} label={t("tierPrimary")} />
@@ -101,23 +124,7 @@ export default function ExerciseHero({
       </div>
 
       {/* Cues column */}
-      <div className="space-y-6">
-        <div>
-          <div className="eyebrow mb-4">{t("howTo")}</div>
-          <CuesList
-            cues={cues}
-            phases={phases}
-            activePhaseIdx={activePhaseIdx}
-          />
-        </div>
-
-        <MuscleChips
-          primary={primary}
-          secondary={secondary}
-          tertiary={tertiary}
-          title={t("musclesInvolved")}
-        />
-      </div>
+      <div className="space-y-6">{details}</div>
     </div>
   );
 }
@@ -152,11 +159,7 @@ function ToggleRow({
 function Dot({ color, label }: { color: string; label: string }) {
   return (
     <span className="flex items-center gap-1.5">
-      <span
-        className="size-2 rounded-full"
-        style={{ background: color }}
-        aria-hidden
-      />
+      <span className="size-2 rounded-full" style={{ background: color }} aria-hidden />
       {label}
     </span>
   );
@@ -193,15 +196,7 @@ function MuscleChips({
   );
 }
 
-function Chip({
-  label,
-  color,
-  dark = false,
-}: {
-  label: string;
-  color: string;
-  dark?: boolean;
-}) {
+function Chip({ label, color, dark = false }: { label: string; color: string; dark?: boolean }) {
   return (
     <span
       className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs"

@@ -39,7 +39,10 @@
     "tierTertiary": "Tertiary",
     "howTo": "How to do it",
     "musclesInvolved": "Muscles involved",
-    "currentPhase": "Active phase"
+    "currentPhase": "Active phase",
+    "demoPlay": "Play",
+    "demoPause": "Pause",
+    "demoAria": "3D demo of {lift}, with the working muscles highlighted"
   },
   "card": {
     "primaryPrefix": "Primary: ",

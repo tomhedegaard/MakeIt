@@ -39,7 +39,10 @@
     "tierTertiary": "Tertiær",
     "howTo": "Sådan udfører du den",
     "musclesInvolved": "Muskler involveret",
-    "currentPhase": "Aktiv fase"
+    "currentPhase": "Aktiv fase",
+    "demoPlay": "Afspil",
+    "demoPause": "Pause",
+    "demoAria": "3D-demo af {lift}, de arbejdende muskler er markeret"
   },
   "card": {
     "primaryPrefix": "Primær: ",
