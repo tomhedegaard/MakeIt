@@ -15,6 +15,8 @@ export function rackBehavior(reducedMotion: boolean): ScrollBehavior {
   return reducedMotion ? "auto" : "smooth";
 }
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
 /** Track padding that lines the first screen up with the 1360 px page column. */
 const GUTTER =
   "px-[max(1rem,calc((100%_-_1360px)/2_+_1rem))] scroll-px-[max(1rem,calc((100%_-_1360px)/2_+_1rem))] md:px-[max(2rem,calc((100%_-_1360px)/2_+_2rem))] md:scroll-px-[max(2rem,calc((100%_-_1360px)/2_+_2rem))]";
@@ -22,9 +24,9 @@ const GUTTER =
 /**
  * Swipeable row of app screens (reference B `.rack`, `.track`, `.rbtn`).
  * Native CSS scroll-snap does the swiping; the buttons and arrow keys
- * move one screen at a time. Two IntersectionObservers on the first
- * and last screen disable the buttons at the ends, so there is no
- * scroll listener. The buttons use `aria-disabled`, not `disabled`, so
+ * move one screen at a time. One IntersectionObserver tracks which
+ * screens are fully in view: that drives the position counter and
+ * disables the buttons at the ends, so there is no scroll listener. The buttons use `aria-disabled`, not `disabled`, so
  * keyboard focus stays on them at the ends. Without JS the row still
  * scrolls and snaps.
  */
@@ -48,29 +50,33 @@ export default function ScreenRack({
   tag?: string;
 }) {
   const trackRef = useRef<HTMLUListElement>(null);
-  const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(false);
+  const [visible, setVisible] = useState<number[]>([0]);
+  const total = items.length;
+  // How far in the visitor has seen: the last screen fully in view.
+  const seenTo = visible.length ? Math.max(...visible) : 0;
+  const atStart = visible.includes(0);
+  const atEnd = visible.includes(total - 1);
 
   useEffect(() => {
     const track = trackRef.current;
-    const first = track?.firstElementChild;
-    const last = track?.lastElementChild;
-    if (!track || !first || !last || typeof IntersectionObserver === "undefined") return;
+    if (!track || typeof IntersectionObserver === "undefined") return;
+    const lis = Array.from(track.children);
+    const seen = new Set<number>();
 
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          const inFull = entry.intersectionRatio > 0.9;
-          if (entry.target === first) setAtStart(inFull);
-          if (entry.target === last) setAtEnd(inFull);
+          const i = lis.indexOf(entry.target);
+          if (entry.intersectionRatio > 0.9) seen.add(i);
+          else seen.delete(i);
         }
+        setVisible([...seen]);
       },
       { root: track, threshold: [0, 0.9, 1] },
     );
-    io.observe(first);
-    io.observe(last);
+    for (const li of lis) io.observe(li);
     return () => io.disconnect();
-  }, []);
+  }, [total]);
 
   function go(dir: 1 | -1) {
     const track = trackRef.current;
@@ -94,6 +100,9 @@ export default function ScreenRack({
       <div className="mx-auto flex max-w-[1360px] flex-wrap items-end justify-between gap-6 px-4 md:px-8">
         {head}
         <div className="flex items-center gap-2.5">
+          <span aria-hidden="true" data-rack-count className="mr-1 font-mono text-[11px] tabular-nums tracking-[0.08em] text-fg-dim">
+            {pad(seenTo + 1)} / {pad(total)}
+          </span>
           {tag ? (
             <span className="rounded-full border border-line-bright px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-fg-dim">
               {tag}

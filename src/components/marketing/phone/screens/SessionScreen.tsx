@@ -1,12 +1,12 @@
 import { useTranslations } from "next-intl";
 import PhoneFrame from "../PhoneFrame";
-import { Label, Pill } from "./parts";
+import { Label, Pill, Row } from "./parts";
 
 /**
  * Træn, live session (reference B "Session (dark)"). Design rule: the
  * session state is always dark, so the frame always gets `dark`.
  */
-export default function SessionScreen({ width }: { width?: number }) {
+export default function SessionScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
   const t = useTranslations("Marketing.kalk");
   const s = useTranslations("Marketing.kalk.screens");
   const se = useTranslations("Session");
@@ -14,7 +14,7 @@ export default function SessionScreen({ width }: { width?: number }) {
   const setValue = s("session.setValue");
 
   return (
-    <PhoneFrame label={s("session.aria")} tab="train" width={width} dark>
+    <PhoneFrame label={s("session.aria")} tab="train" width={width} scroll={scroll} dark>
       <div className="flex items-center justify-between">
         <Label>{s("program")}</Label>
         <Label>{s("session.day")}</Label>
@@ -127,6 +127,20 @@ export default function SessionScreen({ width }: { width?: number }) {
       <Label className="-mt-1 justify-end">
         {se("cta.rest")} {s("session.restValue")}
       </Label>
+      {scroll ? (
+        <>
+          <div>
+            <Label className="mb-1">{s("session.nextLabel")}</Label>
+            {([1, 2, 3, 4] as const).map((n) => (
+              <Row key={n} k={s(`session.next${n}`)} v={s(`session.next${n}v`)} last={n === 4} className="border-line-strong" />
+            ))}
+          </div>
+          <div className="rounded-[14px] border border-dashed border-line-strong px-2.5 py-2">
+            <Label>{s("session.noteLabel")}</Label>
+            <p className="mt-1 text-[10.5px]">{s("session.note")}</p>
+          </div>
+        </>
+      ) : null}
     </PhoneFrame>
   );
 }

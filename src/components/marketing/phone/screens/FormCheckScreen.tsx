@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 import DemoLoop from "../../DemoLoop";
 import PhoneFrame from "../PhoneFrame";
-import { Avatar, Chip, Headline, Kicker, Pill } from "./parts";
+import { Avatar, Chip, Headline, Kicker, Label, Pill, Row } from "./parts";
 
 export const FORM_CHECK_DEMO_SRC = "/exercise-demos/back-squat.webm";
 
@@ -13,12 +13,12 @@ export const FORM_CHECK_DEMO_SRC = "/exercise-demos/back-squat.webm";
  * The loop has a real pause control, so the frame is `interactive` and
  * this screen hides its own static parts from assistive tech.
  */
-export default function FormCheckScreen({ width }: { width?: number }) {
+export default function FormCheckScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
   const s = useTranslations("Marketing.kalk.screens");
   const card = useTranslations("Marketing.kalk.munk.card");
 
   return (
-    <PhoneFrame label={s("formCheck.aria")} tab="train" width={width} interactive>
+    <PhoneFrame label={s("formCheck.aria")} tab="train" width={width} scroll={scroll} interactive>
       <div aria-hidden="true">
         <Kicker>{card("kicker")}</Kicker>
         <Headline>{card("lift")}</Headline>
@@ -61,6 +61,18 @@ export default function FormCheckScreen({ width }: { width?: number }) {
 
         <Pill>{s("formCheck.next")}</Pill>
       </div>
+      {scroll ? (
+        <>
+          <div aria-hidden="true">
+            <Label className="mb-1">{s("formCheck.historyLabel")}</Label>
+            <Row k={s("formCheck.h1")} v={s("formCheck.h1v")} />
+            <Row k={s("formCheck.h2")} v={s("formCheck.h2v")} />
+            <Row k={s("formCheck.h3")} v={s("formCheck.h3v")} />
+            <Row k={s("formCheck.h4")} v={s("formCheck.h4v")} />
+            <Row k={s("formCheck.h5")} v={s("formCheck.h5v")} last />
+          </div>
+        </>
+      ) : null}
     </PhoneFrame>
   );
 }

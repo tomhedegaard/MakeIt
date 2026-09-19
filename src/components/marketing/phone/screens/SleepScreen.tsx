@@ -16,12 +16,12 @@ const STAGE_Y = [
 const NIGHTS = [18, 12, 22, 16, 20, 26, 30];
 
 /** Søvn i nat (reference A state 1). */
-export default function SleepScreen({ width }: { width?: number }) {
+export default function SleepScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
   const t = useTranslations("Marketing.kalk");
   const s = useTranslations("Marketing.kalk.screens");
 
   return (
-    <PhoneFrame label={s("sleep.aria")} tab="today" width={width}>
+    <PhoneFrame label={s("sleep.aria")} tab="today" width={width} scroll={scroll}>
       <div data-domain="mind" className="mt-1">
         <Kicker domain="mind" dot>
           {t("engine.steps.sleep.label")} · {t("engine.night.label")}
@@ -76,6 +76,14 @@ export default function SleepScreen({ width }: { width?: number }) {
       </Card>
 
       <p className="text-[9.5px] leading-[1.4] text-fg-dim">{s("sleep.synced")}</p>
+      {scroll ? (
+        <>
+          <Card>
+            <Label>{s("sleep.tipLabel")}</Label>
+            <p className="mt-1 text-[10.5px] leading-[1.38]">{s("sleep.tip")}</p>
+          </Card>
+        </>
+      ) : null}
     </PhoneFrame>
   );
 }

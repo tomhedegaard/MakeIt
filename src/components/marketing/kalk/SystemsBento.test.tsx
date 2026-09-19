@@ -53,14 +53,20 @@ describe("SystemsBento", () => {
     expect(heart).not.toMatch(/<video/);
   });
 
-  it("renders the rack with five screens", () => {
+  it("renders the rack with fifteen scrollable screens", () => {
     const rack = html.slice(html.indexOf("data-rack"));
     expect(rack).toMatch(/<ul[^>]*tabindex="0"/);
     expect(rack).toMatch(new RegExp(`<ul[^>]*aria-label="${k.systems.rack.listLabel}"`));
-    expect(rack.match(/<li[\s>]/g)).toHaveLength(5);
+    expect(rack.match(/<li[\s>]/g)).toHaveLength(15);
+    expect(rack.match(/data-phone-scroll/g)).toHaveLength(15);
+    expect(rack).toContain("01 / 15");
     const s = k.screens;
-    for (const label of [s.session.aria, s.hrv.aria, s.food.aria, s.mind.aria, s.formCheck.aria]) {
-      expect(rack).toContain(`aria-label="${label}"`);
+    for (const label of [
+      s.dashboard.aria, s.sleep.aria, s.hrv.aria, s.decision.aria, s.session.aria,
+      s.formCheck.aria, s.coach.aria, s.progress.aria, s.block.aria, s.food.aria,
+      s.shopping.aria, s.mind.aria, s.breath.aria, s.mindChecked.aria, s.crew.aria,
+    ]) {
+      expect(rack).toContain(`aria-label="${label.replaceAll("'", "&#x27;")}"`);
     }
   });
 });

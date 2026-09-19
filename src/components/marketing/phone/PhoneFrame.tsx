@@ -18,6 +18,12 @@ const TABS: readonly PhoneTab[] = ["today", "train", "food", "mind", "crew"];
  *
  * `dark` wraps the screen in a plain `data-theme="nat"` block (no
  * `.theme-root`, spec §2), so one screen can be dark on a Kalk page.
+ *
+ * `scroll` lets the content run past the fold, as in the app: the
+ * screen scrolls inside the frame and fades out above the tab bar.
+ * The scroller is focusable so arrow keys work, which makes the frame
+ * a labelled group rather than an image. Overscroll is left on auto,
+ * so a wheel at the end of a screen carries on down the page.
  */
 export default function PhoneFrame({
   label,
@@ -25,6 +31,7 @@ export default function PhoneFrame({
   dark = false,
   width = 280,
   interactive = false,
+  scroll = false,
   className,
   children,
 }: {
@@ -33,22 +40,40 @@ export default function PhoneFrame({
   dark?: boolean;
   width?: number;
   interactive?: boolean;
+  scroll?: boolean;
   className?: string;
   children: ReactNode;
 }) {
+  const content = "flex flex-col gap-[9px] px-[14px] pt-1.5 *:flex-none";
   const screen = (
     <div
-      role={interactive ? "group" : "img"}
+      role={interactive || scroll ? "group" : "img"}
       aria-label={label}
       className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--pw)*0.13)] bg-bg text-[11px] leading-[1.4] text-fg"
     >
       <PhoneStatusBar />
-      <div
-        aria-hidden={interactive ? undefined : true}
-        className="flex min-h-0 flex-1 flex-col gap-[9px] overflow-hidden px-[14px] pt-1.5 *:flex-none"
-      >
-        {children}
-      </div>
+      {scroll ? (
+        <div
+          data-phone-scroll
+          tabIndex={0}
+          className={cn(
+            "min-h-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+            "[mask-image:linear-gradient(to_bottom,black_calc(100%_-_28px),transparent)]",
+            "focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-fg",
+          )}
+        >
+          <div aria-hidden={interactive ? undefined : true} className={cn(content, "pb-8")}>
+            {children}
+          </div>
+        </div>
+      ) : (
+        <div
+          aria-hidden={interactive ? undefined : true}
+          className={cn(content, "min-h-0 flex-1 overflow-hidden")}
+        >
+          {children}
+        </div>
+      )}
       <PhoneTabBar tab={tab} dark={dark} />
     </div>
   );

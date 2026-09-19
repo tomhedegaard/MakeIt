@@ -1,9 +1,17 @@
 import { useTranslations } from "next-intl";
 import PhoneFrame from "../PhoneFrame";
-import { Card, Chevron, Dot, Headline, Kicker, Label } from "./parts";
+import { Card, Chevron, Dot, Headline, Kicker, Label, Pill, Row } from "./parts";
+
+/** Protein per meal as bar heights: morning, lunch, dinner, snack. */
+const PROTEIN = [
+  { key: "pMorning", h: 34 },
+  { key: "pLunch", h: 30 },
+  { key: "pDinner", h: 42 },
+  { key: "pSnack", h: 24 },
+] as const;
 
 /** Mad: today's plan and the shopping list (reference B "Mad"). */
-export default function FoodScreen({ width }: { width?: number }) {
+export default function FoodScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
   const t = useTranslations("Marketing.kalk");
   const s = useTranslations("Marketing.kalk.screens");
   const nav = useTranslations("Nav.links");
@@ -16,7 +24,7 @@ export default function FoodScreen({ width }: { width?: number }) {
   ];
 
   return (
-    <PhoneFrame label={s("food.aria")} tab="food" width={width}>
+    <PhoneFrame label={s("food.aria")} tab="food" width={width} scroll={scroll}>
       <div>
         <Kicker domain="food">{t("systems.food.kicker")}</Kicker>
         <Headline className="text-[34px]">{t("systems.food.heading")}</Headline>
@@ -63,6 +71,26 @@ export default function FoodScreen({ width }: { width?: number }) {
         <span className="flex-1 font-medium">{s("food.shopping")}</span>
         <Chevron />
       </Card>
+      {scroll ? (
+        <>
+          <div>
+            <Row k={s("food.snackLabel")} v={s("food.snack")} />
+            <Row k={s("food.waterLabel")} v={s("food.waterValue")} last />
+          </div>
+          <Pill ghost>{s("food.swap")}</Pill>
+          <Card>
+            <Label>{s("food.proteinLabel")}</Label>
+            <div data-domain="food" className="mt-2 grid grid-cols-4 items-end gap-2">
+              {PROTEIN.map((p) => (
+                <div key={p.key} className="flex flex-col items-center gap-1">
+                  <i style={{ height: p.h }} className="block w-full rounded-[3px] bg-domain" />
+                  <span className="font-mono text-[8.5px] text-fg-dim">{s(`food.${p.key}`)}</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </>
+      ) : null}
     </PhoneFrame>
   );
 }
