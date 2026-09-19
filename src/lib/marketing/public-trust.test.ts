@@ -108,8 +108,8 @@ describe("public trust — jargon first use", () => {
   it("glosses the engine and reps where the landing first uses them", () => {
     const daHero = daKalk.hero as { sub: string };
     const enHero = enKalk.hero as { sub: string };
-    expect(daHero.sub).toMatch(/^Motoren læser/);
-    expect(enHero.sub).toMatch(/^The engine reads/);
+    expect(daHero.sub).toMatch(/^HQ, appens hjerne, læser/);
+    expect(enHero.sub).toMatch(/^HQ, the app's brain, reads/);
 
     const daCrew = daKalk.crew as { sub: string };
     const enCrew = enKalk.crew as { sub: string };

@@ -22,8 +22,8 @@
       "eyebrow": "Dit normalområde"
     },
     "engine": {
-      "below": "Motoren læste nattens HRV under dit bånd og letter dagens squat-topsæt.",
-      "above": "Motoren læste nattens HRV over dit bånd. Kroppen er klar, og dagens pas kører som planlagt."
+      "below": "HQ læste nattens HRV under dit bånd og letter dagens squat-topsæt.",
+      "above": "HQ læste nattens HRV over dit bånd. Kroppen er klar, og dagens pas kører som planlagt."
     },
     "disclaimer": "HRV er et restitutions-signal, ikke en diagnose.",
     "legendBand": "Dit bånd",
@@ -157,11 +157,11 @@
   },
   "learnAdaptive": {
     "eyebrow": "Recovery",
-    "title": "Hvordan motoren tænker",
+    "title": "Hvordan HQ tænker",
     "subtitle": "Se hele beslutningskæden bag en daglig session-tilpasning, og prøv selv at ændre signalerne.",
     "hero": {
-      "p1": "Den adaptive motor justerer dagens session ud fra fire ting: din HRV-måling, din søvn, sidste sessions RPE, og dine seneste form-checks. Den fyrer hver morgen klokken 05:30, og du ser resultatet når du åbner sessionen.",
-      "p2": "Vi viser dig hele tankegangen. Hvad motoren så, hvilken regel der fyrede, og hvad Munks AI-assistent eventuelt justerede. Du kan også trække i et signal og se hvad motoren ville have valgt i stedet."
+      "p1": "HQ justerer dagens session ud fra fire ting: din HRV-måling, din søvn, sidste sessions RPE, og dine seneste form-checks. Den fyrer hver morgen klokken 05:30, og du ser resultatet når du åbner sessionen.",
+      "p2": "Vi viser dig hele tankegangen. Hvad HQ så, hvilken regel der fyrede, og hvad Munks AI-assistent eventuelt justerede. Du kan også trække i et signal og se hvad HQ ville have valgt i stedet."
     },
     "example": {
       "eyebrow": "Eksempel · sådan ser kortet ud",
@@ -169,16 +169,16 @@
       "meta": "Automatisk · baseret på din HRV",
       "accept": "OK, kør tilpasset",
       "keep": "Behold original",
-      "note": "(Knapperne er deaktiverede her. Du finder det rigtige kort i din session når motoren er aktiv.)"
+      "note": "(Knapperne er deaktiverede her. Du finder det rigtige kort i din session når HQ er aktiv.)"
     },
     "reasoningEyebrow": "Tankegangen bag",
     "playground": {
       "eyebrow": "Prøv selv",
-      "body": "Træk i en slider og se motorens beslutning ændre sig live. Det hele kører i din browser: der er ingen API-kald, intet spinner-vent. Det er muligt fordi motoren er en ren funktion."
+      "body": "Træk i en slider og se HQ's beslutning ændre sig live. Det hele kører i din browser: der er ingen API-kald, intet spinner-vent. Det er muligt fordi HQ er en ren funktion."
     },
     "bounds": {
-      "title": "Hvad må motoren?",
-      "engineTitle": "Motoren selv",
+      "title": "Hvad må HQ?",
+      "engineTitle": "HQ selv",
       "engine": [
         "Reducere topsæt-vægten",
         "Markere accessory-sæt som valgfri",

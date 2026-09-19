@@ -49,7 +49,7 @@ type Props = {
  * Reasoning detail panel (T2) — rendered inside the AdaptationCard's
  * "Vis tankegang" disclosure. Three stacked subpanels:
  *
- *   1. Hvad motoren så  — signal rows from the hydrated EngineInput
+ *   1. Hvad HQ så  — signal rows from the hydrated EngineInput
  *   2. Hvilken regel fyrede  — narrateRule output
  *   3. Hvad Munks assistent justerede  — only when reasoningOutput
  *      is non-null
@@ -82,7 +82,7 @@ export default function ReasoningDetailPanel({
       {/* ------------------------------------------------------------ */}
       <section aria-labelledby="reasoning-signals-heading">
         <h3 id="reasoning-signals-heading" className="eyebrow mb-3">
-          Hvad motoren så
+          Hvad HQ så
         </h3>
         <ul className="space-y-1.5">
           <SignalRow

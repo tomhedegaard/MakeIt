@@ -1,8 +1,8 @@
 {
   "strip": {
     "why": "Hvorfor",
-    "role": "Motor",
-    "attribution": "Motor · Adaptive Engine",
+    "role": "HQ",
+    "attribution": "HQ · Adaptive Engine",
     "gloss": "Adaptive Engine tilpasser ugen. Munk er din coach",
     "munkRole": "Coach",
     "munkNoteLabel": "Note fra Munk",
@@ -30,7 +30,7 @@
     "moreAbout": "Sig mere om",
     "dismiss": "Skjul",
     "snooze": "I morgen",
-    "motorAttribution": "Motor · Adaptive Engine",
+    "motorAttribution": "HQ · Adaptive Engine",
     "domains": {
       "heart": "Hjerte",
       "body": "Krop",
@@ -39,7 +39,7 @@
     },
     "cards": {
       "heart_body_low": {
-        "sentence": "Nattens HRV ligger under dit bånd. Motoren letter dagens topsæt.",
+        "sentence": "Nattens HRV ligger under dit bånd. HQ letter dagens topsæt.",
         "cta": "Åbn dagens pas"
       },
       "heart_body_ro": {
@@ -55,7 +55,7 @@
         "cta": "Se kosten"
       },
       "mind_body_check": {
-        "sentence": "Sindet er ikke tjekket ind. Dagens pas venter på det signal, før Motoren kan justere.",
+        "sentence": "Sindet er ikke tjekket ind. Dagens pas venter på det signal, før HQ kan justere.",
         "cta": "Tag mind-check"
       }
     }

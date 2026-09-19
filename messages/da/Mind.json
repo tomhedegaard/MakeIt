@@ -10,7 +10,7 @@
   "disclaimer": {
     "eyebrow": "Mind · Søjle 5",
     "title": "Mental sundhed. Vores 5. søjle.",
-    "intro": "Ægte sundhed er fysisk OG psykisk. /mind er din daglige mentale check-in, dit private journal, dit sessions-bibliotek og en daglig refleksion skrevet af Motoren.",
+    "intro": "Ægte sundhed er fysisk OG psykisk. /mind er din daglige mentale check-in, dit private journal, dit sessions-bibliotek og en daglig refleksion skrevet af HQ.",
     "important_title": "Vigtigt: læs én gang.",
     "important_body": "MakeIt's Mind-modul er IKKE klinisk behandling. Det er træning af mentale vaner, sammenlignelig med vejrtrækning, journaling og refleksion, ikke med terapi eller medicin. Hvis du har det meget skidt, eller hvis du tænker på at gøre skade på dig selv eller andre, så tal med et menneske der kan hjælpe nu.",
     "resources_title": "Hvis det brænder",
@@ -22,8 +22,8 @@
     "privacy_mind_check": "Dit mind-check er privat som default. Når du rykker tier, kan du vælge at dele dit signal med din buddy. Begge skal sige ja. En valgfri note kan indgå i den daglige mental-coach hos Anthropic.",
     "privacy_journal_label": "Journal",
     "privacy_mind_check_label": "Mind-check",
-    "privacy_ai_label": "Motoren",
-    "privacy_ai": "Motoren (databehandler: Anthropic) læser dit mind-check inkl. valgfri note, HRV og træningsuge (ikke din journal-brødtekst) for at skrive dig en daglig refleksion. Output gemmes så du kan læse den igen. Anthropic er processor, ikke en coach.",
+    "privacy_ai_label": "HQ",
+    "privacy_ai": "HQ (databehandler: Anthropic) læser dit mind-check inkl. valgfri note, HRV og træningsuge (ikke din journal-brødtekst) for at skrive dig en daglig refleksion. Output gemmes så du kan læse den igen. Anthropic er processor, ikke en coach.",
     "accept": "Jeg har forstået. Fortsæt",
     "accepted": "Tak. Modulet er åbnet."
   },
@@ -126,16 +126,16 @@
     "waitingSub": "60 sek. Tre sliders. Det tager kortere tid end at vente på næste sæt.",
     "waitingCta": "Start nu",
     "readyTitle": "Dagens refleksion klar",
-    "readySub": "Motoren har skrevet ud fra dit signal i dag.",
+    "readySub": "HQ har skrevet ud fra dit signal i dag.",
     "readyCta": "Læs",
     "streakTitle": "Stribe: {days} dage",
     "streakSub": "Bliv på den. Næste milepæl er +20 Reps ved 7 dage.",
     "streakCta": "Til Mind"
   },
   "reflection": {
-    "eyebrow": "Motor",
-    "title": "Motor · Adaptive Engine",
-    "gloss": "Motoren skriver refleksionen. Munk er din coach"
+    "eyebrow": "HQ",
+    "title": "HQ · Adaptive Engine",
+    "gloss": "HQ skriver refleksionen. Munk er din coach"
   },
   "check": {
     "metaTitle": "Mind-check · MakeIt",

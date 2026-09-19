@@ -46,10 +46,10 @@ describe("CDO identity — Munk (coach) vs Motor (engine)", () => {
     const daStrip = daAdaptive.strip as Record<string, unknown>;
     const enStrip = enAdaptive.strip as Record<string, unknown>;
     expect(keysOf(daStrip)).toEqual(keysOf(enStrip));
-    expect(daStrip.role).toBe("Motor");
-    expect(enStrip.role).toBe("Motor");
-    expect(daStrip.attribution).toBe("Motor · Adaptive Engine");
-    expect(enStrip.attribution).toBe("Motor · Adaptive Engine");
+    expect(daStrip.role).toBe("HQ");
+    expect(enStrip.role).toBe("HQ");
+    expect(daStrip.attribution).toBe("HQ · Adaptive Engine");
+    expect(enStrip.attribution).toBe("HQ · Adaptive Engine");
     expect(daStrip.munkRole).toBe("Coach");
     expect(enStrip.munkRole).toBe("Coach");
     expect(daStrip.gloss).toBe(
@@ -75,10 +75,10 @@ describe("CDO identity — Munk (coach) vs Motor (engine)", () => {
     expect(en.munkRole).toBe("Coach");
     expect(da.munkSub).toBe("Mikael Munk · person");
     expect(en.munkSub).toBe("Mikael Munk · person");
-    expect(da.motorRole).toBe("Motor");
-    expect(en.motorRole).toBe("Motor");
-    expect(da.motorTitle).toBe("Motor · Adaptive Engine");
-    expect(en.motorTitle).toBe("Motor · Adaptive Engine");
+    expect(da.motorRole).toBe("HQ");
+    expect(en.motorRole).toBe("HQ");
+    expect(da.motorTitle).toBe("HQ · Adaptive Engine");
+    expect(en.motorTitle).toBe("HQ · Adaptive Engine");
     expect(da.motorSub).toBe("Adaptive Engine · system");
     expect(en.motorSub).toBe("Adaptive Engine · system");
 
@@ -97,19 +97,19 @@ describe("CDO identity — Munk (coach) vs Motor (engine)", () => {
     const en = enCoaching.header as Record<string, string>;
     expect(da.coachChip).toBe("Coach · Mikael Munk");
     expect(en.coachChip).toBe("Coach · Mikael Munk");
-    expect(da.motorChip).toBe("Motor · Adaptive Engine");
-    expect(en.motorChip).toBe("Motor · Adaptive Engine");
+    expect(da.motorChip).toBe("HQ · Adaptive Engine");
+    expect(en.motorChip).toBe("HQ · Adaptive Engine");
     expect(da.subtitle).toBe(
-      "Motoren planlægger vægtene. Munk skriver under når det kræver et menneske.",
+      "HQ planlægger vægtene. Munk skriver under når det kræver et menneske.",
     );
     expect(en.subtitle).toBe(
-      "The Motor plans the weights. Munk signs off when it needs a human.",
+      "HQ plans the weights. Munk signs off when it needs a human.",
     );
 
     const daLib = daCoaching.library as Record<string, string>;
     const enLib = enCoaching.library as Record<string, string>;
-    expect(daLib.engine).toBe("Motor");
-    expect(enLib.engine).toBe("Motor");
+    expect(daLib.engine).toBe("HQ");
+    expect(enLib.engine).toBe("HQ");
     expect(daLib.engineName).toBe("Adaptive Engine");
     expect(enLib.engineName).toBe("Adaptive Engine");
   });
@@ -118,10 +118,10 @@ describe("CDO identity — Munk (coach) vs Motor (engine)", () => {
     const da = daMind.reflection as Record<string, string>;
     const en = enMind.reflection as Record<string, string>;
     expect(keysOf(da)).toEqual(keysOf(en));
-    expect(da.eyebrow).toBe("Motor");
-    expect(en.eyebrow).toBe("Motor");
-    expect(da.title).toBe("Motor · Adaptive Engine");
-    expect(en.title).toBe("Motor · Adaptive Engine");
+    expect(da.eyebrow).toBe("HQ");
+    expect(en.eyebrow).toBe("HQ");
+    expect(da.title).toBe("HQ · Adaptive Engine");
+    expect(en.title).toBe("HQ · Adaptive Engine");
     expect(da.gloss).toMatch(/Munk er din coach/);
     expect(en.gloss).toMatch(/Munk is your coach/);
     expect(da.gloss.toLowerCase()).not.toContain("mind-coach");

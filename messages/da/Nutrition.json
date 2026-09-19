@@ -3,7 +3,7 @@
   "page": {
     "eyebrow": "Mad",
     "title": "Brændstof.",
-    "intro": "Motoren lægger ugens måltider inden for brand-rammen. Olivenolie og smør, ikke rapsolie. Skyr og hytteost, ikke proteinbarer. Hele varer.",
+    "intro": "HQ lægger ugens måltider inden for brand-rammen. Olivenolie og smør, ikke rapsolie. Skyr og hytteost, ikke proteinbarer. Hele varer.",
     "shoppingLink": "Indkøbsliste",
     "preferencesLink": "Indstillinger",
     "kcalAdjustEyebrow": "Auto-justering",
@@ -15,7 +15,7 @@
     "quotaBody": "Du har brugt din kvota for {label}-handlinger ({dailyUsed}/{dailyMax} i dag, {weeklyUsed}/{weeklyMax} denne uge).",
     "quotaNext": " Næste tilgængelig <strong>{reset}</strong>.",
     "emptyEyebrow": "Ingen plan for uge {week}",
-    "emptyTitle": "Sæt rammen, så bygger Motoren.",
+    "emptyTitle": "Sæt rammen, så bygger HQ.",
     "emptyBody": "Når du har sat allergier, dislikes og foretrukne ingredienser, genererer vi en uge-plan med 21 måltider, indkøbsliste og prep-skema.",
     "emptyGenerate": "Generér ugeplan",
     "emptyPreferences": "Sæt indstillinger →",
@@ -40,7 +40,7 @@
     "generatedByClaude": "AI-udkast",
     "generatedLocally": "Regelbaseret plan (skaleret til dit mål)",
     "fallbackEyebrow": "Ikke et AI-udkast",
-    "fallbackBody": "Motoren nåede ikke at færdiggøre AI-udkastet inden for tiden. Vi har lagt en skaleret standardplan, der rammer dine daglige kcal- og proteinmål. Ikke et ujusteret katalog."
+    "fallbackBody": "HQ nåede ikke at færdiggøre AI-udkastet inden for tiden. Vi har lagt en skaleret standardplan, der rammer dine daglige kcal- og proteinmål. Ikke et ujusteret katalog."
   },
   "dayLabels": {
     "mon": "Man",

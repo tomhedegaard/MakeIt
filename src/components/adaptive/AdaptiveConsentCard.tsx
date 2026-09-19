@@ -71,7 +71,7 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
           kort søvn → topsæt-vægten reduceres 10% i dag.
         </p>
         <p>
-          <strong className="text-fg">Hvad motoren må selv:</strong> reducere
+          <strong className="text-fg">Hvad HQ må selv:</strong> reducere
           topsæt-vægten, markere accessory-sæt som valgfri, foreslå en lettere
           variant af hovedløftet.
         </p>
@@ -100,7 +100,7 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
         href="/hrv/learn/adaptive"
         className="inline-block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg lift touch-app"
       >
-        Hvordan motoren tænker →
+        Hvordan HQ tænker →
       </Link>
     </section>
   );

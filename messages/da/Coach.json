@@ -63,7 +63,7 @@
       },
       "engine": {
         "label": "Engine",
-        "empty": "Ingen flag fra motoren."
+        "empty": "Ingen flag fra HQ."
       }
     }
   },
@@ -76,12 +76,12 @@
     "sectionTitle": "Hvem har brug for dig",
     "count": "{count, plural, one {# der venter} other {# der venter}}",
     "emptyTitle": "Stille.",
-    "emptyBody": "Ingen åbne sager. Form-checks, HRV, motoren og Safety er tomme — og ingen er stille i 15 dage.",
+    "emptyBody": "Ingen åbne sager. Form-checks, HRV, HQ og Safety er tomme — og ingen er stille i 15 dage.",
     "emptyDemoHint": "Demo — listen er tom fordi der ikke er mock-signaler åbne.",
     "safetyUnreadable": "Safety-tabellen kan ikke læses (migration 0057 eller RLS). Det er ikke det samme som nul sager.",
     "chipMentalSafety": "Safety",
     "chipHrv": "HRV",
-    "chipAdaptive": "Motor",
+    "chipAdaptive": "HQ",
     "chipFormCheck": "{exercise}",
     "chipFormCheckFallback": "Form-check",
     "chipStale": "{days} dage",
@@ -359,7 +359,7 @@
     "codes": {
       "hrv_cluster_day": "HRV-klynge",
       "rpe_drift_program_week": "RPE-drift",
-      "engine_reject_streak": "Motor-afvisning",
+      "engine_reject_streak": "HQ-afvisning",
       "form_check_decline": "Form-fald"
     }
   }
