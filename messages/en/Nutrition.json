@@ -3,7 +3,7 @@
   "page": {
     "eyebrow": "Food",
     "title": "Fuel.",
-    "intro": "The Motor lays out the week's meals inside the brand frame. Olive oil and butter, not rapeseed oil. Skyr and cottage cheese, not protein bars. Whole foods.",
+    "intro": "HQ lays out the week's meals inside the brand frame. Olive oil and butter, not rapeseed oil. Skyr and cottage cheese, not protein bars. Whole foods.",
     "shoppingLink": "Shopping list",
     "preferencesLink": "Settings",
     "kcalAdjustEyebrow": "Auto-adjust",
@@ -15,7 +15,7 @@
     "quotaBody": "You've used your quota for {label} actions ({dailyUsed}/{dailyMax} today, {weeklyUsed}/{weeklyMax} this week).",
     "quotaNext": " Next available <strong>{reset}</strong>.",
     "emptyEyebrow": "No plan for week {week}",
-    "emptyTitle": "Set the frame, and the Motor builds.",
+    "emptyTitle": "Set the frame, and HQ builds.",
     "emptyBody": "Once you've set allergies, dislikes and preferred ingredients, we generate a weekly plan with 21 meals, a shopping list and a prep schedule.",
     "emptyGenerate": "Generate weekly plan",
     "emptyPreferences": "Set your settings →",
@@ -40,7 +40,7 @@
     "generatedByClaude": "AI draft",
     "generatedLocally": "Rule-based plan (scaled to your targets)",
     "fallbackEyebrow": "Not an AI draft",
-    "fallbackBody": "The Motor did not finish the AI draft in time. We served a scaled standard plan that hits your daily kcal and protein targets. Not an unadjusted catalog."
+    "fallbackBody": "HQ did not finish the AI draft in time. We served a scaled standard plan that hits your daily kcal and protein targets. Not an unadjusted catalog."
   },
   "dayLabels": {
     "mon": "Mon",

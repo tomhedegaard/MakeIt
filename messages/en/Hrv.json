@@ -22,8 +22,8 @@
       "eyebrow": "Your normal range"
     },
     "engine": {
-      "below": "The engine read last night's HRV below your band and eases today's squat top set.",
-      "above": "The engine read last night's HRV above your band. The body is ready, and today's session runs as planned."
+      "below": "HQ read last night's HRV below your band and eases today's squat top set.",
+      "above": "HQ read last night's HRV above your band. The body is ready, and today's session runs as planned."
     },
     "disclaimer": "HRV is a recovery signal, not a diagnosis.",
     "legendBand": "Your band",
@@ -157,11 +157,11 @@
   },
   "learnAdaptive": {
     "eyebrow": "Recovery",
-    "title": "How the engine thinks",
+    "title": "How HQ thinks",
     "subtitle": "See the full decision chain behind a daily session adjustment, and try changing the signals yourself.",
     "hero": {
-      "p1": "The adaptive engine adjusts today's session from four things: your HRV reading, your sleep, last session's RPE, and your latest form checks. It fires every morning at 05:30, and you see the result when you open the session.",
-      "p2": "We show you the whole line of thought. What the engine saw, which rule fired, and what Munk's AI assistant may have adjusted. You can also pull on a signal and see what the engine would have chosen instead."
+      "p1": "HQ adjusts today's session from four things: your HRV reading, your sleep, last session's RPE, and your latest form checks. It fires every morning at 05:30, and you see the result when you open the session.",
+      "p2": "We show you the whole line of thought. What HQ saw, which rule fired, and what Munk's AI assistant may have adjusted. You can also pull on a signal and see what HQ would have chosen instead."
     },
     "example": {
       "eyebrow": "Example · what the card looks like",
@@ -169,16 +169,16 @@
       "meta": "Automatic · based on your HRV",
       "accept": "OK, run adjusted",
       "keep": "Keep original",
-      "note": "(The buttons are disabled here. You find the real card in your session when the engine is active.)"
+      "note": "(The buttons are disabled here. You find the real card in your session when HQ is active.)"
     },
     "reasoningEyebrow": "The reasoning behind it",
     "playground": {
       "eyebrow": "Try it yourself",
-      "body": "Drag a slider and watch the engine's decision change live. It all runs in your browser: no API calls, no spinner wait. That works because the engine is a pure function."
+      "body": "Drag a slider and watch HQ's decision change live. It all runs in your browser: no API calls, no spinner wait. That works because HQ is a pure function."
     },
     "bounds": {
-      "title": "What may the engine do?",
-      "engineTitle": "The engine alone",
+      "title": "What may HQ do?",
+      "engineTitle": "HQ alone",
       "engine": [
         "Reduce the top set weight",
         "Mark accessory sets as optional",

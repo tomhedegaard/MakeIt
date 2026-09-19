@@ -266,7 +266,7 @@ describe("buildMorningHeadline — urgent", () => {
       baseInputs({ openAdaptiveEscalations: 3 })
     );
     expect(buildMorningHeadline(payload)).toBe(
-      "Kræver dig nu: 3 eskaleringer fra motoren."
+      "Kræver dig nu: 3 eskaleringer fra HQ."
     );
   });
 
@@ -281,7 +281,7 @@ describe("buildMorningHeadline — urgent", () => {
       })
     );
     expect(buildMorningHeadline(payload)).toBe(
-      "Kræver dig nu: 2 medlemmer med vedvarende lav HRV · 1 eskalering fra motoren."
+      "Kræver dig nu: 2 medlemmer med vedvarende lav HRV · 1 eskalering fra HQ."
     );
   });
 });

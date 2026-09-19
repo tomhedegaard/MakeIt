@@ -2,9 +2,9 @@
   "header": {
     "eyebrow": "Train",
     "title": "Your week.",
-    "subtitle": "The Motor plans the weights. Munk signs off when it needs a human.",
+    "subtitle": "HQ plans the weights. Munk signs off when it needs a human.",
     "coachChip": "Coach · Mikael Munk",
-    "motorChip": "Motor · Adaptive Engine"
+    "motorChip": "HQ · Adaptive Engine"
   },
   "week": {
     "ariaLabel": "Week overview",
@@ -56,8 +56,8 @@
     "eyebrow": "Programs",
     "activeBadge": "Active · week {week}",
     "coach": "Coach",
-    "coachFallback": "The Motor",
-    "engine": "Motor",
+    "coachFallback": "HQ",
+    "engine": "HQ",
     "engineName": "Adaptive Engine",
     "level": "Level",
     "levelFallback": "-",

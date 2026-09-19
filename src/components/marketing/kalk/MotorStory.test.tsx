@@ -18,7 +18,7 @@ describe("MotorStory", () => {
 
   it("renders all four phone states", () => {
     for (const label of [aria.sleep.aria, aria.hrv.aria, aria.mindChecked.aria, aria.decision.aria]) {
-      expect(html).toContain(`aria-label="${label}"`);
+      expect(html).toContain(`aria-label="${label.replaceAll("'", "&#x27;")}"`);
     }
   });
 

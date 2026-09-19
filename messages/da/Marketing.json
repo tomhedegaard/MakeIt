@@ -61,7 +61,7 @@
         "a": "Tryk 'Spiste noget andet' i Nutrition-feedet, beskriv kort hvad du spiste, og det logges som off-plan måltid. Ingen straf, ingen scolding — bare data. Coachen ser det i ugesignalerne, så næste uges planlægning bliver mere realistisk i stedet for at ignorere virkeligheden."
       },
       "openBrainWhy": {
-        "q": "Hvorfor viser I motoren offentligt?",
+        "q": "Hvorfor viser I HQ offentligt?",
         "a": "Fordi tillid bygges på transparens. Vores rule-layer er 300 linjer Pure TypeScript som vi viser dig her på landingpagen — du kan trække i sliderne og se hvad den ville have valgt. Konkurrenter kan kopiere rules på en dag; de kan ikke kopiere 6 måneders audit-logs, baselines og Munk-i-loop UX. Vores moat er flywheel'en, ikke et hemmeligt API."
       },
       "coCoach": {
@@ -74,14 +74,14 @@
       },
       "optOutAdaptive": {
         "q": "Hvad sker hvis jeg ikke vil have AI-tilpasninger?",
-        "a": "Du har altid kontrollen. Du kan deaktivere adaptive tilpasninger fra HRV-indstillingerne (programmet kører så som planlagt uden daglige justeringer), og selv hvis du har dem slået til kan du afvise hver enkelt tilpasning med 'Behold original' direkte i sessionen. Motoren er en mening, ikke en kommando."
+        "a": "Du har altid kontrollen. Du kan deaktivere adaptive tilpasninger fra HRV-indstillingerne (programmet kører så som planlagt uden daglige justeringer), og selv hvis du har dem slået til kan du afvise hver enkelt tilpasning med 'Behold original' direkte i sessionen. HQ er en mening, ikke en kommando."
       }
     },
     "showAll": "Vis alle spørgsmål ({count})"
   },
   "kalk": {
     "nav": {
-      "engine": "Motoren",
+      "engine": "Sådan virker HQ",
       "systems": "Systemer",
       "munk": "Munk",
       "crew": "Crew",
@@ -90,9 +90,9 @@
     },
     "hero": {
       "heading": "Bygget til dem der løfter.",
-      "sub": "Motoren læser din nat og skriver dagens pas om, før du står under stangen.",
+      "sub": "HQ, appens hjerne, læser din nat og skriver dagens pas om, før du står under stangen.",
       "cta": "Få adgang",
-      "link": "Se hvordan motoren virker",
+      "link": "Se hvordan HQ virker",
       "plateOld": "150",
       "plateNew": "135",
       "plateUnit": "kg"
@@ -118,7 +118,7 @@
     "engine": {
       "eyebrow": "Hver morgen",
       "heading": "Passet bliver skrevet om, mens du sover.",
-      "sub": "Motoren læser nattens HRV, søvn, mind-check og dine seneste pas. Så justerer den vægt og volumen.",
+      "sub": "HQ læser nattens HRV, søvn, mind-check og dine seneste pas. Så justerer den vægt og volumen.",
       "night": {
         "label": "I nat",
         "sample": "Eksempeldata",
@@ -156,7 +156,7 @@
         },
         "decision": {
           "time": "05:30:07",
-          "source": "Motoren",
+          "source": "HQ",
           "label": "Beslutning",
           "value": "Topsæt ned",
           "lift": "Back squat",
@@ -169,13 +169,13 @@
       "keepOriginalNote": "Du ser altid hvorfor, og du kan altid beholde den oprindelige plan.",
       "disclaimer": "HRV er et restitutionssignal, ikke en diagnose.",
       "bounds": {
-        "heading": "Motorens grænser",
+        "heading": "HQ's grænser",
         "lowerTopSet": "Sænker topsættet",
         "lowerVolume": "Sænker volumen",
         "lighterVariant": "Foreslår en lettere variant",
         "shorten": "Afkorter passet"
       },
-      "escalation": "Pause og deload rører motoren ikke. De går altid til Munk først."
+      "escalation": "Pause og deload rører HQ ikke. De går altid til Munk først."
     },
     "systems": {
       "heading": "Fire systemer. Ét pas.",
@@ -183,7 +183,7 @@
       "body": {
         "kicker": "Krop",
         "heading": "Programmet flytter sig med dig.",
-        "text": "Blokke på fire uger. Topsæt, backoff og hvil sat af motoren hver morgen.",
+        "text": "Blokke på fire uger. Topsæt, backoff og hvil sat af HQ hver morgen.",
         "stat": "16",
         "statLabel": "Sæt i dag",
         "clipLabel": "Dødløft, topsæt."
@@ -312,8 +312,8 @@
         "a": "Fordi Munk selv skriver under på svarene. Derfor åbner vi i små hold."
       },
       "demo": {
-        "q": "Er demoen på forsiden den rigtige motor?",
-        "a": "Ja, samme motor. Skyderne kalder den funktion der justerer dit rigtige pas hver morgen. Tallene forlader aldrig din browser."
+        "q": "Er demoen på forsiden det rigtige HQ?",
+        "a": "Ja, samme HQ. Skyderne kalder den funktion der justerer dit rigtige pas hver morgen. Tallene forlader aldrig din browser."
       }
     },
     "footer": {
@@ -326,12 +326,12 @@
       "time": "05:31",
       "program": "STR-12 · uge 4",
       "dayTitle": "Dag A: Squat",
-      "engineStamp": "Motoren · 05:30",
+      "engineStamp": "HQ · 05:30",
       "munkInitials": "MM",
       "pause": "Pause",
       "play": "Afspil",
       "dashboard": {
-        "aria": "App-skærm, I dag: motoren har skrevet dagens pas om. Back squat topsæt fra 150 til 135 kg, fordi nattens HRV lå under dit bånd.",
+        "aria": "App-skærm, I dag: HQ har skrevet dagens pas om. Back squat topsæt fra 150 til 135 kg, fordi nattens HRV lå under dit bånd.",
         "greeting": "God morgen",
         "day": "Onsdag",
         "streak": "Stribe 12 dage",
@@ -377,7 +377,7 @@
         "note": "Sæt 2 føltes tungt i bunden."
       },
       "hrv": {
-        "aria": "App-skærm, HRV: 48 ms i morges mod et snit på 61 ms, under dit personlige bånd. Motoren letter dagens squat-topsæt.",
+        "aria": "App-skærm, HRV: 48 ms i morges mod et snit på 61 ms, under dit personlige bånd. HQ letter dagens squat-topsæt.",
         "title": "Restitution",
         "avgValue": "61 ms",
         "range": "14 nætter",
@@ -447,7 +447,7 @@
         "h5v": "Filmet fra siden, tak"
       },
       "decision": {
-        "aria": "App-skærm, Motorens beslutning: dagens pas er skrevet om. Back squat topsæt fra 150 til 135 kg, backoff fra 128 til 115 kg. Hvorfor: søvn, HRV og stress. Du kan beholde den oprindelige plan.",
+        "aria": "App-skærm, HQ's beslutning: dagens pas er skrevet om. Back squat topsæt fra 150 til 135 kg, backoff fra 128 til 115 kg. Hvorfor: søvn, HRV og stress. Du kan beholde den oprindelige plan.",
         "heading": "Dagens pas er skrevet om.",
         "topSet": "Topsæt",
         "backoff": "Backoff 3×3",
@@ -460,7 +460,7 @@
         "dayBStatus": "Uændret",
         "dayC": "Dag C: Dødløft",
         "dayCStatus": "Vurderes torsdag",
-        "historyLabel": "Sidst motoren lettede",
+        "historyLabel": "Sidst HQ lettede",
         "history": "Uge 2: du klarede 150 × 3 fire dage efter."
       },
       "sleep": {
@@ -479,7 +479,7 @@
         "awakeValue": "2 gange",
         "nights": "7 nætter",
         "synced": "Synket fra Oura kl. 05:14",
-        "tipLabel": "Motorens note",
+        "tipLabel": "HQ's note",
         "tip": "To korte nætter i træk. Seng kl. 22:15 i aften giver dig otte timer."
       },
       "mindChecked": {
@@ -491,7 +491,7 @@
         "trend": "Stress, 7 dage. Dit snit ligger på 2 af 5.",
         "journalEntry": "Deadline flyttet til fredag. Sov dårligt efter kl. 03.",
         "checkedIn": "Tjekket ind 21:40",
-        "engineLabel": "Motoren · 21:41",
+        "engineLabel": "HQ · 21:41",
         "engine": "Stress 4 af 5 tæller med i morgen tidlig, sammen med søvn og HRV."
       },
       "coach": {
@@ -501,7 +501,7 @@
         "m1": "Så dit sæt 3. Knæene falder lidt ind i bunden.",
         "m2": "Tænk: skub gulvet fra hinanden. Samme vægt torsdag.",
         "me1": "Tak. Skal jeg sænke vægten?",
-        "m3": "Nej. Motoren har allerede lettet topsættet. Hold 135.",
+        "m3": "Nej. HQ har allerede lettet topsættet. Hold 135.",
         "me2": "Fedt, jeg optager igen torsdag.",
         "signed": "Svaret på 6 t · Mikael Munk",
         "input": "Skriv til Munk",
@@ -509,7 +509,7 @@
         "me0": "Har optaget sæt 3. Kan du kigge på knæene?",
         "clip": "Form-check · sæt 3 · 0:22",
         "today": "I dag",
-        "m4": "Og husk: søvn før tungt pas. Motoren kan ikke løfte for dig."
+        "m4": "Og husk: søvn før tungt pas. HQ kan ikke løfte for dig."
       },
       "progress": {
         "aria": "App-skærm, fremgang: back squat estimeret 1RM er steget fra 148 til 162 kg på 12 uger, med tre nye PR'er og volumen per uge.",

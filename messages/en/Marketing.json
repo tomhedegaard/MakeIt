@@ -57,7 +57,7 @@
         "a": "Every Sunday evening we correlate your week's RMSSD against your lifestyle tags (sleep, alcohol, stress, illness) and send one short observation — in Danish, never diagnoses, never made-up numbers. Example: 'Sleeping under 7h for three nights drags RMSSD down by ~8%.' The full history lives at /hrv/insights."
       },
       "openBrainWhy": {
-        "q": "Why do you show the engine publicly?",
+        "q": "Why do you show HQ publicly?",
         "a": "Because trust is built on transparency. Our rule layer is 300 lines of pure TypeScript that we show you right here on the landing page — drag the sliders and watch what it would have chosen. Competitors can copy the rules in a day; they cannot copy 6 months of audit logs, baselines, and Munk-in-the-loop UX. The moat is the flywheel, not a secret API."
       },
       "coCoach": {
@@ -70,7 +70,7 @@
       },
       "optOutAdaptive": {
         "q": "What if I don't want AI adjustments?",
-        "a": "You always have control. You can disable adaptive adjustments from the HRV settings (the program then runs as planned without daily tweaks), and even with them on you can reject each individual adjustment with 'Keep original' directly in the session. The engine is an opinion, not a command."
+        "a": "You always have control. You can disable adaptive adjustments from the HRV settings (the program then runs as planned without daily tweaks), and even with them on you can reject each individual adjustment with 'Keep original' directly in the session. HQ is an opinion, not a command."
       },
       "offPlanNutrition": {
         "q": "What do I do if I eat something that's not in the meal plan?",
@@ -81,7 +81,7 @@
   },
   "kalk": {
     "nav": {
-      "engine": "Engine",
+      "engine": "How HQ works",
       "systems": "Systems",
       "munk": "Munk",
       "crew": "Crew",
@@ -90,9 +90,9 @@
     },
     "hero": {
       "heading": "Built for those who lift.",
-      "sub": "The engine reads your night and rewrites today's session before you get under the bar.",
+      "sub": "HQ, the app's brain, reads your night and rewrites today's session before you get under the bar.",
       "cta": "Get access",
-      "link": "See how the engine works",
+      "link": "See how HQ works",
       "plateOld": "150",
       "plateNew": "135",
       "plateUnit": "kg"
@@ -118,7 +118,7 @@
     "engine": {
       "eyebrow": "Every morning",
       "heading": "The session gets rewritten while you sleep.",
-      "sub": "The engine reads last night's HRV, sleep, mind check and your recent sessions. Then it adjusts weight and volume.",
+      "sub": "HQ reads last night's HRV, sleep, mind check and your recent sessions. Then it adjusts weight and volume.",
       "night": {
         "label": "Last night",
         "sample": "Sample data",
@@ -156,7 +156,7 @@
         },
         "decision": {
           "time": "05:30:07",
-          "source": "Engine",
+          "source": "HQ",
           "label": "Decision",
           "value": "Top set down",
           "lift": "Back squat",
@@ -169,13 +169,13 @@
       "keepOriginalNote": "You always see why, and you can always keep the original plan.",
       "disclaimer": "HRV is a recovery signal, not a diagnosis.",
       "bounds": {
-        "heading": "The engine's boundaries",
+        "heading": "HQ's boundaries",
         "lowerTopSet": "Lowers the top set",
         "lowerVolume": "Lowers volume",
         "lighterVariant": "Suggests a lighter variant",
         "shorten": "Shortens the session"
       },
-      "escalation": "The engine never touches pauses or deloads. Those always go to Munk first."
+      "escalation": "HQ never touches pauses or deloads. Those always go to Munk first."
     },
     "systems": {
       "heading": "Four systems. One session.",
@@ -183,7 +183,7 @@
       "body": {
         "kicker": "Body",
         "heading": "The program moves with you.",
-        "text": "Four week blocks. Top set, backoff and rest set by the engine every morning.",
+        "text": "Four week blocks. Top set, backoff and rest set by HQ every morning.",
         "stat": "16",
         "statLabel": "Sets today",
         "clipLabel": "Deadlift, top set."
@@ -312,8 +312,8 @@
         "a": "Because Munk himself signs off on the answers. That is why we open in small groups."
       },
       "demo": {
-        "q": "Is the homepage demo the real engine?",
-        "a": "Yes, the same engine. The sliders call the same function that adjusts your real session every morning. The numbers never leave your browser."
+        "q": "Is the homepage demo the real HQ?",
+        "a": "Yes, the same HQ. The sliders call the same function that adjusts your real session every morning. The numbers never leave your browser."
       }
     },
     "footer": {
@@ -326,12 +326,12 @@
       "time": "05:31",
       "program": "STR-12 · week 4",
       "dayTitle": "Day A: Squat",
-      "engineStamp": "Engine · 05:30",
+      "engineStamp": "HQ · 05:30",
       "munkInitials": "MM",
       "pause": "Pause",
       "play": "Play",
       "dashboard": {
-        "aria": "App screen, Today: the engine has rewritten today's session. Back squat top set from 150 to 135 kg, because last night's HRV sat below your band.",
+        "aria": "App screen, Today: HQ has rewritten today's session. Back squat top set from 150 to 135 kg, because last night's HRV sat below your band.",
         "greeting": "Good morning",
         "day": "Wednesday",
         "streak": "12 day streak",
@@ -377,7 +377,7 @@
         "note": "Set 2 felt heavy at the bottom."
       },
       "hrv": {
-        "aria": "App screen, HRV: 48 ms this morning against an average of 61 ms, below your personal band. The engine eases today's squat top set.",
+        "aria": "App screen, HRV: 48 ms this morning against an average of 61 ms, below your personal band. HQ eases today's squat top set.",
         "title": "Recovery",
         "avgValue": "61 ms",
         "range": "14 nights",
@@ -447,7 +447,7 @@
         "h5v": "Filmed from the side, thanks"
       },
       "decision": {
-        "aria": "App screen, the engine's decision: today's session has been rewritten. Back squat top set from 150 to 135 kg, backoff from 128 to 115 kg. Why: sleep, HRV and stress. You can keep the original plan.",
+        "aria": "App screen, HQ's decision: today's session has been rewritten. Back squat top set from 150 to 135 kg, backoff from 128 to 115 kg. Why: sleep, HRV and stress. You can keep the original plan.",
         "heading": "Today's session is rewritten.",
         "topSet": "Top set",
         "backoff": "Backoff 3×3",
@@ -460,7 +460,7 @@
         "dayBStatus": "Unchanged",
         "dayC": "Day C: Deadlift",
         "dayCStatus": "Reviewed Thursday",
-        "historyLabel": "Last time the engine eased off",
+        "historyLabel": "Last time HQ eased off",
         "history": "Week 2: you made 150 × 3 four days later."
       },
       "sleep": {
@@ -479,7 +479,7 @@
         "awakeValue": "2 times",
         "nights": "7 nights",
         "synced": "Synced from Oura at 05:14",
-        "tipLabel": "Engine note",
+        "tipLabel": "HQ note",
         "tip": "Two short nights in a row. Bed at 22:15 tonight gives you eight hours."
       },
       "mindChecked": {
@@ -491,7 +491,7 @@
         "trend": "Stress, 7 days. Your average sits at 2 of 5.",
         "journalEntry": "Deadline moved to Friday. Slept badly after 3 am.",
         "checkedIn": "Checked in 21:40",
-        "engineLabel": "Engine · 21:41",
+        "engineLabel": "HQ · 21:41",
         "engine": "Stress 4 of 5 counts tomorrow morning, together with sleep and HRV."
       },
       "coach": {
@@ -501,7 +501,7 @@
         "m1": "Saw your set 3. The knees cave a little at the bottom.",
         "m2": "Think: spread the floor apart. Same weight Thursday.",
         "me1": "Thanks. Should I lower the weight?",
-        "m3": "No. The engine already eased the top set. Stay at 135.",
+        "m3": "No. HQ already eased the top set. Stay at 135.",
         "me2": "Great, I'll film again Thursday.",
         "signed": "Replied in 6 h · Mikael Munk",
         "input": "Write to Munk",
@@ -509,7 +509,7 @@
         "me0": "Filmed set 3. Can you look at the knees?",
         "clip": "Form check · set 3 · 0:22",
         "today": "Today",
-        "m4": "And remember: sleep before a heavy session. The engine can't lift for you."
+        "m4": "And remember: sleep before a heavy session. HQ can't lift for you."
       },
       "progress": {
         "aria": "App screen, progress: back squat estimated 1RM has risen from 148 to 162 kg over 12 weeks, with three new PRs and weekly volume.",

@@ -3,14 +3,14 @@
     "eyebrow": "Messages",
     "titleWithCoach": "Chat with @{handle}",
     "titleFallback": "Your coach",
-    "subtitle": "Munk is your coach. Motor is Adaptive Engine: the system, not a person."
+    "subtitle": "Munk is your coach. HQ is Adaptive Engine: the system, not a person."
   },
   "streams": {
     "munkRole": "Coach",
     "munkTitle": "Munk",
     "munkSub": "Mikael Munk · person",
-    "motorRole": "Motor",
-    "motorTitle": "Motor · Adaptive Engine",
+    "motorRole": "HQ",
+    "motorTitle": "HQ · Adaptive Engine",
     "motorSub": "Adaptive Engine · system",
     "propose": "@propose",
     "voice": "Voice note"

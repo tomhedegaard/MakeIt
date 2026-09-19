@@ -284,7 +284,7 @@ export default function CounterfactualSliders({
 
         {/* ----------------- Result ----------------- */}
         <div className="surface-3 rounded-lg p-3 border hairline space-y-1.5">
-          <div className="eyebrow text-fg-faint">Motoren ville have valgt</div>
+          <div className="eyebrow text-fg-faint">HQ ville have valgt</div>
           {decisionMatches && !sliderTouched ? (
             <ResultBlock
               headline="Samme beslutning"

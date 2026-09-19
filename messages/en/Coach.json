@@ -62,8 +62,8 @@
         "empty": "No films waiting."
       },
       "engine": {
-        "label": "Engine",
-        "empty": "No flags from the Motor."
+        "label": "HQ",
+        "empty": "No flags from HQ."
       }
     }
   },
@@ -76,12 +76,12 @@
     "sectionTitle": "Who needs you",
     "count": "{count, plural, one {# waiting} other {# waiting}}",
     "emptyTitle": "Quiet.",
-    "emptyBody": "Nothing is open. Form-checks, HRV, the engine and Safety are empty — and nobody has been quiet for 15 days.",
+    "emptyBody": "Nothing is open. Form-checks, HRV, HQ and Safety are empty — and nobody has been quiet for 15 days.",
     "emptyDemoHint": "Demo — the list is empty because no mock signals are open.",
     "safetyUnreadable": "The Safety table cannot be read (migration 0057 or RLS). That is not the same as zero cases.",
     "chipMentalSafety": "Safety",
     "chipHrv": "HRV",
-    "chipAdaptive": "Engine",
+    "chipAdaptive": "HQ",
     "chipFormCheck": "{exercise}",
     "chipFormCheckFallback": "Form-check",
     "chipStale": "{days} days",
@@ -359,7 +359,7 @@
     "codes": {
       "hrv_cluster_day": "HRV cluster",
       "rpe_drift_program_week": "RPE drift",
-      "engine_reject_streak": "Engine reject",
+      "engine_reject_streak": "HQ reject",
       "form_check_decline": "Form decline"
     }
   }
