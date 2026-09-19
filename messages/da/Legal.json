@@ -3,7 +3,7 @@
     "metaTitle": "Privacy Policy — {product}",
     "eyebrow": "Privacy Policy",
     "title": "Hvad vi gemmer.",
-    "introUpdated": "Senest opdateret: august 2026 · Dataansvarlig: ",
+    "introUpdated": "Senest opdateret: september 2026 · Dataansvarlig: ",
     "introCvrFallback": "CVR er endnu ikke offentliggjort — selskabet er under registrering. Kontakt",
     "s01": {
       "eyebrow": "01",
@@ -65,6 +65,10 @@
         "technical": {
           "k": "Tekniske data",
           "v": "Session-cookie, IP-adresse til log-formål, request-tidspunkter."
+        },
+        "askHq": {
+          "k": "Spørg HQ (forsiden)",
+          "v": "Bruger du chatten på forsiden, sendes dine spørgsmål og samtalen til vores AI-databehandler (se sektion 03) for at blive besvaret. Vi gemmer ikke samtalen; den findes kun i din browser, til du lukker siden. Din IP-adresse bruges kortvarigt i serverens hukommelse til at begrænse misbrug og gemmes ikke. Skriv ikke helbreds- eller personoplysninger i chatten. Den gælder også for besøgende uden konto."
         }
       }
     },
@@ -88,6 +92,10 @@
         "legal": {
           "k": "Opfylde lovkrav",
           "v": "Bogføring, GDPR-rettigheder, sikkerhed."
+        },
+        "askHq": {
+          "k": "Besvare spørgsmål på forsiden",
+          "v": "Svar i \"Spørg HQ\"-chatten til besøgende, der overvejer MakeIt, og beskyttelse af chatten mod misbrug (legitim interesse)."
         }
       }
     },
@@ -110,7 +118,7 @@
         },
         "anthropic": {
           "k": "Anthropic (Claude)",
-          "v": "AI-program-generation, form-check-vurdering, krise-tekstmoderering af journaluddrag (Haiku), og den daglige mental-coach ud fra mind-check inkl. valgfri note (Sonnet). Svar i \"Spørg HQ\"-chatten på forsiden (spørgsmålene gemmes ikke hos os). Anthropic er databehandler. I deres business-tier gemmes prompts/output ikke udover request-livscyklussen."
+          "v": "AI-program-generation, form-check-vurdering, krise-tekstmoderering af journaluddrag (Haiku), den daglige mental-coach ud fra mind-check inkl. valgfri note (Sonnet) og svarene i \"Spørg HQ\"-chatten på forsiden (Haiku). Anthropic er databehandler. I deres business-tier gemmes prompts/output ikke udover request-livscyklussen."
         }
       },
       "outro": "Vi sælger aldrig dine data. Vi deler dem ikke til markedsføring uden eksplicit samtykke."

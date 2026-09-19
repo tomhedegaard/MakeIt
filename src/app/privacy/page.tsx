@@ -55,6 +55,7 @@ export default async function PrivacyPage() {
               [t("s01.items.social.k"), t("s01.items.social.v")],
               [t("s01.items.reps.k"), t("s01.items.reps.v")],
               [t("s01.items.technical.k"), t("s01.items.technical.v")],
+              [t("s01.items.askHq.k"), t("s01.items.askHq.v")],
             ]}
           />
         </Section>
@@ -66,6 +67,7 @@ export default async function PrivacyPage() {
               [t("s02.items.deliver.k"), t("s02.items.deliver.v")],
               [t("s02.items.notify.k"), t("s02.items.notify.v")],
               [t("s02.items.improve.k"), t("s02.items.improve.v")],
+              [t("s02.items.askHq.k"), t("s02.items.askHq.v")],
               [t("s02.items.legal.k"), t("s02.items.legal.v")],
             ]}
           />

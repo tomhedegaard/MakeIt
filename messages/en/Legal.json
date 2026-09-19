@@ -3,7 +3,7 @@
     "metaTitle": "Privacy Policy — {product}",
     "eyebrow": "Privacy Policy",
     "title": "What we store.",
-    "introUpdated": "Last updated: August 2026 · Data controller: ",
+    "introUpdated": "Last updated: September 2026 · Data controller: ",
     "introCvrFallback": "CVR is not yet published — the company is being registered. Contact",
     "s01": {
       "eyebrow": "01",
@@ -65,6 +65,10 @@
         "technical": {
           "k": "Technical data",
           "v": "Session cookie, IP address for logging purposes, request timestamps."
+        },
+        "askHq": {
+          "k": "Ask HQ (homepage)",
+          "v": "If you use the chat on the homepage, your questions and the conversation are sent to our AI processor (see section 03) to be answered. We do not store the conversation; it exists only in your browser until you close the page. Your IP address is used briefly in the server's memory to limit abuse and is not stored. Please do not enter health or personal information in the chat. This also applies to visitors without an account."
         }
       }
     },
@@ -88,6 +92,10 @@
         "legal": {
           "k": "Meet legal requirements",
           "v": "Accounting, GDPR rights, security."
+        },
+        "askHq": {
+          "k": "Answer questions on the homepage",
+          "v": "Answers in the \"Ask HQ\" chat for visitors considering MakeIt, and protecting the chat against abuse (legitimate interest)."
         }
       }
     },
@@ -110,7 +118,7 @@
         },
         "anthropic": {
           "k": "Anthropic (Claude)",
-          "v": "AI program generation, form-check assessment, crisis-text moderation of journal excerpts (Haiku), and the daily mental coach from your mind-check including optional note (Sonnet). Answers in the \"Ask HQ\" chat on the homepage (questions are not stored by us). Anthropic is a processor. On their business tier, prompts/output are not stored beyond the request lifecycle."
+          "v": "AI program generation, form-check assessment, crisis-text moderation of journal excerpts (Haiku), the daily mental coach from your mind-check including optional note (Sonnet) and the answers in the \"Ask HQ\" chat on the homepage (Haiku). Anthropic is a processor. On their business tier, prompts/output are not stored beyond the request lifecycle."
         }
       },
       "outro": "We never sell your data. We don't share it for marketing without explicit consent."
