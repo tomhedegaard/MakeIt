@@ -17,7 +17,7 @@ const SEED_MINI = readFileSync(join(process.cwd(), "supabase/seed.sql"), "utf8")
 
 function slugsOnDisk(): string[] {
   return readdirSync(DEMO_DIR)
-    .filter((f) => f.endsWith(".webm"))
+    .filter((f) => f.endsWith(".webm") && !f.endsWith("-portrait.webm"))
     .map((f) => f.slice(0, -".webm".length))
     .sort();
 }
@@ -57,6 +57,17 @@ describe("resolveDemoAssets", () => {
       poster: "/exercise-demos/lunge-poster.jpg",
     });
   });
+
+  it("derives the 9:16 portrait trio next to the landscape one", () => {
+    expect(resolveDemoAssets("/exercise-demos/back-squat.webm?v=2", "portrait")).toEqual({
+      webm: "/exercise-demos/back-squat-portrait.webm?v=2",
+      mp4: "/exercise-demos/back-squat-portrait.mp4?v=2",
+      poster: "/exercise-demos/back-squat-portrait-poster.jpg?v=2",
+    });
+    expect(resolveDemoAssets("https://x.test/exercise-demos/band-row.webm", "landscape").webm).toBe(
+      "https://x.test/exercise-demos/band-row.webm",
+    );
+  });
 });
 
 describe("bundled v1 demo loops", () => {
@@ -67,6 +78,10 @@ describe("bundled v1 demo loops", () => {
     for (const slug of disk) {
       expect(existsSync(join(DEMO_DIR, `${slug}.mp4`))).toBe(true);
       expect(existsSync(join(DEMO_DIR, `${slug}-poster.jpg`))).toBe(true);
+      // Every loop also ships in 9:16 for vertical surfaces.
+      for (const f of [`${slug}-portrait.webm`, `${slug}-portrait.mp4`, `${slug}-portrait-poster.jpg`]) {
+        expect(existsSync(join(DEMO_DIR, f)), f).toBe(true);
+      }
     }
   });
 
