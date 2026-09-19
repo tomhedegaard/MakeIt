@@ -126,7 +126,7 @@ export default function EngineDemo() {
     .join(" ");
 
   return (
-    <div className="flex w-full flex-col gap-5 lg:flex-row lg:items-start lg:gap-10">
+    <div className="flex w-full flex-col gap-5 lg:flex-row lg:items-start lg:gap-6 xl:gap-10">
       <div className="order-2 flex w-full flex-col gap-5 lg:order-1 lg:max-w-[320px]">
         {/* Ikke klassen "eyebrow": KalkHero.test.tsx kræver, at heroen ikke har en. */}
         <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-dim lg:hidden">
@@ -252,11 +252,12 @@ function Slider({
 }) {
   return (
     <div>
-      <div className="flex items-baseline justify-between gap-3">
+      {/* Wraps the value under the label rather than breaking it, where the column is narrow. */}
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3">
         <label htmlFor={id} className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-dim">
           {label}
         </label>
-        <span className="font-display text-3xl">
+        <span className="font-display whitespace-nowrap text-[clamp(20px,1.9vw,30px)]">
           {display}
           {unit ? <small className="ml-1 font-mono text-xs text-fg-dim">{unit}</small> : null}
         </span>
