@@ -4,6 +4,7 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { getProvider } from "@/lib/hrv/wearables/registry";
 import { encryptToken, decryptToken } from "@/lib/hrv/wearables/crypto";
 import { syncConnection } from "@/lib/hrv/wearables/sync";
+import { priorLnRmssdForConnection } from "@/lib/hrv/prior";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -71,16 +72,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           ? decryptToken(conn.refresh_token, encKey)
           : null;
 
-      // Step 4b: prior lnRMSSD series scoped to THIS connection, chronological.
-      const { data: priorRows, error: priorError } = await supabase
-        .from("hrv_readings")
-        .select("ln_rmssd")
-        .eq("connection_id", conn.id)
-        .order("measured_at", { ascending: true });
-      if (priorError) {
-        throw new Error(`prior readings query failed: ${priorError.message}`);
-      }
-      const priorLnRmssd = (priorRows ?? []).map((r) => r.ln_rmssd);
+      // Step 4b: prior lnRMSSD series scoped to THIS connection, chronological,
+      // without sick days. Throws on a failed read, like before.
+      const priorLnRmssd = await priorLnRmssdForConnection(supabase, conn.id);
 
       // Step 4b': most recent stored provider_recorded_at for dedup.
       const { data: lastReadingRows, error: lastReadingError } = await supabase
