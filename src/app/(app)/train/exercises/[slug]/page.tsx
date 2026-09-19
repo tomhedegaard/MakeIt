@@ -127,6 +127,7 @@ export default async function ExerciseDetailPage({
       <Container className="py-10 md:py-14 space-y-14">
         {/* Hero: figure + cues */}
         <ExerciseHero
+          name={ex.name}
           primary={ex.primaryMuscles}
           secondary={ex.secondaryMuscles}
           tertiary={ex.tertiaryMuscles}
