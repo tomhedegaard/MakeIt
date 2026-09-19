@@ -12,6 +12,7 @@ export async function generateMetadata() {
 export default async function CoachExercisesPage() {
   const exercises = await listAllExercisesForCoach();
   const t = await getTranslations("CoachStudio.exercises");
+  const draftsToReview = exercises.filter((ex) => !ex.isPublished && ex.demoAssetUrl).length;
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
@@ -24,6 +25,12 @@ export default async function CoachExercisesPage() {
           {t("intro")}
         </p>
       </header>
+
+      {draftsToReview > 0 ? (
+        <Link href="/coach/exercises/review" className="btn btn-primary">
+          {t("review.open", { count: draftsToReview })}
+        </Link>
+      ) : null}
 
       <NewExerciseForm />
 
