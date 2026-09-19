@@ -10,7 +10,11 @@ import { shouldPlay } from "@/lib/marketing/demo-loop";
  * The markup never autoplays: the effect starts playback only while the
  * loop is on screen, the video can play, motion is allowed and the
  * visitor has not paused it. With reduced motion the poster frame is the
- * static end state. The render's light ground multiplies into the card.
+ * static end state, until the visitor presses play — an explicit gesture
+ * outranks the preference. The control reports what the element is
+ * actually doing (the `play`/`pause` events), never what we intended, so
+ * a browser that refuses autoplay still offers a working play button.
+ * The render's light ground multiplies into the card.
  */
 export default function DemoLoop({
   src,
@@ -36,13 +40,20 @@ export default function DemoLoop({
 }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [userPaused, setUserPaused] = useState(false);
+  // Real playback, mirrored from the element's own events — this drives
+  // the label, so the button can never claim to pause a still frame.
+  const [playing, setPlaying] = useState(false);
   const { webm, mp4, poster } = resolveDemoAssets(src);
 
   // Playback inputs live in a ref so toggling pause does not rebuild
   // the observers (and briefly forget that the loop is in view).
-  const playback = useRef({ inView: false, reducedMotion: false, ready: false, userPaused: false });
-  const syncRef = useRef<() => void>(() => {});
+  const playback = useRef({
+    inView: false,
+    reducedMotion: false,
+    ready: false,
+    userPaused: false,
+    userRequested: false,
+  });
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -50,6 +61,7 @@ export default function DemoLoop({
     if (!wrap || !video) return;
     const state = playback.current;
     state.ready = video.readyState >= 2;
+    setPlaying(!video.paused);
 
     const motion =
       typeof window.matchMedia === "function"
@@ -63,14 +75,14 @@ export default function DemoLoop({
       if (state.inView && !state.ready && video.preload !== "auto") video.preload = "auto";
       if (shouldPlay(state)) {
         video.play().catch(() => {
-          /* Playback can be refused; the poster stays. */
+          /* Playback can be refused; the poster and the play label stay. */
         });
-      } else if (!video.paused) {
+      } else if (!video.paused && !shouldPlay({ ...state, ready: true })) {
+        // Readiness gates starting playback, never stopping it: a clip the
+        // visitor just asked for must not be paused while it buffers.
         video.pause();
       }
     };
-    syncRef.current = sync;
-
     const onMotion = (e: MediaQueryListEvent) => {
       state.reducedMotion = e.matches;
       sync();
@@ -79,6 +91,8 @@ export default function DemoLoop({
       state.ready = true;
       sync();
     };
+    const onPlay = () => setPlaying(true);
+    const onPause = () => setPlaying(false);
 
     let observer: IntersectionObserver | null = null;
     if (typeof IntersectionObserver === "function") {
@@ -95,21 +109,40 @@ export default function DemoLoop({
     motion?.addEventListener("change", onMotion);
     video.addEventListener("loadeddata", onReady);
     video.addEventListener("canplay", onReady);
+    video.addEventListener("play", onPlay);
+    video.addEventListener("pause", onPause);
     sync();
 
     return () => {
-      syncRef.current = () => {};
       observer?.disconnect();
       motion?.removeEventListener("change", onMotion);
       video.removeEventListener("loadeddata", onReady);
       video.removeEventListener("canplay", onReady);
+      video.removeEventListener("play", onPlay);
+      video.removeEventListener("pause", onPause);
     };
   }, []);
 
-  useEffect(() => {
-    playback.current.userPaused = userPaused;
-    syncRef.current();
-  }, [userPaused]);
+  // Safari on iOS only honours play() inside the gesture that asked for
+  // it, so the element is driven here and the policy flags follow.
+  const toggle = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    const state = playback.current;
+    if (!video.paused) {
+      video.pause();
+      state.userPaused = true;
+      state.userRequested = false;
+    } else {
+      video.play().catch(() => {
+        /* Playback can be refused; the label stays on play. */
+      });
+      state.userPaused = false;
+      // An explicit request outranks reduced motion from here on.
+      state.userRequested = true;
+      state.ready = video.readyState >= 2;
+    }
+  };
 
   return (
     <div
@@ -139,15 +172,15 @@ export default function DemoLoop({
       ) : null}
       <button
         type="button"
-        aria-pressed={userPaused}
-        onClick={() => setUserPaused((p) => !p)}
+        aria-pressed={playing}
+        onClick={toggle}
         className={
           compact
             ? "btn btn-sm absolute right-2 top-2 h-7! px-2.5! text-[9px]!"
             : "btn btn-sm absolute right-3 top-3"
         }
       >
-        {userPaused ? playLabel : pauseLabel}
+        {playing ? pauseLabel : playLabel}
       </button>
     </div>
   );
