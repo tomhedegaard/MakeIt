@@ -430,21 +430,23 @@
         "streak": "9 days of mind-checks"
       },
       "formCheck": {
-        "aria": "App screen, Form check: the member's own recording of set 3 next to a reference movement, and Munk's signed reply.",
-        "videoLabel": "Reference movement: back squat",
+        "aria": "App screen, Form check: the member's own recording of set 3 on the bench press next to a reference movement, and Munk's signed reply.",
+        "videoLabel": "Reference movement: bench press",
         "duration": "0:22",
         "next": "Record next set",
         "historyLabel": "Earlier replies",
         "h1": "Set 1",
-        "h1v": "Depth is good",
+        "h1v": "The bar lands in the same spot",
         "h2": "Set 2",
-        "h2v": "Keep the chest up",
+        "h2v": "Shoulder blades pinned",
         "h3": "Week 3",
-        "h3v": "Knees out, nice",
+        "h3v": "Feet in the floor, good",
         "h4": "Week 2",
-        "h4v": "Hips first, good",
+        "h4v": "Pause on the chest, good",
         "h5": "Week 1",
-        "h5v": "Filmed from the side, thanks"
+        "h5v": "Filmed from the side, thanks",
+        "lift": "Bench press · set 3",
+        "final": "The elbows flare at the bottom. Think: bend the bar, elbows down towards the ribs."
       },
       "decision": {
         "aria": "App screen, HQ's decision: today's session has been rewritten. Back squat top set from 150 to 135 kg, backoff from 128 to 115 kg. Why: sleep, HRV and stress. You can keep the original plan.",

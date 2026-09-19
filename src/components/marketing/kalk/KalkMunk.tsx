@@ -1,8 +1,10 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import DemoLoop from "@/components/marketing/DemoLoop";
-import { FORM_CHECK_DEMO_SRC } from "@/components/marketing/phone/screens/FormCheckScreen";
 import { MUNK_HANDLE, MUNK_PORTRAIT_SRC } from "@/lib/marketing/munk";
+
+/** Munk's card plays the back squat; the rack's form-check screen plays the bench. */
+const MUNK_DEMO_SRC = "/exercise-demos/back-squat.webm";
 
 type FlowStep = { t: string; label: string };
 
@@ -84,7 +86,7 @@ function FormCheckCard() {
       className="grid overflow-hidden rounded-[14px] border border-line bg-bg-2 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
     >
       <DemoLoop
-        src={FORM_CHECK_DEMO_SRC}
+        src={MUNK_DEMO_SRC}
         label={s("formCheck.videoLabel")}
         pauseLabel={s("pause")}
         playLabel={s("play")}

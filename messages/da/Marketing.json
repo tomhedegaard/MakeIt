@@ -430,21 +430,23 @@
         "streak": "9 dage med mind-check"
       },
       "formCheck": {
-        "aria": "App-skærm, Form-check: medlemmets egen optagelse af sæt 3 ved siden af en referencebevægelse, og Munks underskrevne svar.",
-        "videoLabel": "Referencebevægelse: back squat",
+        "aria": "App-skærm, Form-check: medlemmets egen optagelse af sæt 3 på bænkpres ved siden af en referencebevægelse, og Munks underskrevne svar.",
+        "videoLabel": "Referencebevægelse: bænkpres",
         "duration": "0:22",
         "next": "Optag næste sæt",
         "historyLabel": "Tidligere svar",
         "h1": "Sæt 1",
-        "h1v": "Dybden er god",
+        "h1v": "Stangen rammer samme sted",
         "h2": "Sæt 2",
-        "h2v": "Hold brystet oppe",
+        "h2v": "Skulderbladene samlet",
         "h3": "Uge 3",
-        "h3v": "Knæ ud, fint",
+        "h3v": "Fødderne i gulvet, fint",
         "h4": "Uge 2",
-        "h4v": "Hofterne først, godt",
+        "h4v": "Pause på brystet, godt",
         "h5": "Uge 1",
-        "h5v": "Filmet fra siden, tak"
+        "h5v": "Filmet fra siden, tak",
+        "lift": "Bænkpres · sæt 3",
+        "final": "Albuerne skyder ud i bunden. Tænk: bøj stangen, albuerne ned mod ribbenene."
       },
       "decision": {
         "aria": "App-skærm, HQ's beslutning: dagens pas er skrevet om. Back squat topsæt fra 150 til 135 kg, backoff fra 128 til 115 kg. Hvorfor: søvn, HRV og stress. Du kan beholde den oprindelige plan.",
