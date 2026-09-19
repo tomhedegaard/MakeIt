@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
+import { getSession } from "@/lib/auth";
 import type { ExerciseMistake } from "@/lib/data/exercises";
 import type { ExercisePhase } from "@/lib/data/exercises";
 
@@ -165,4 +166,40 @@ export async function uploadDemoAssetAction(input: {
   revalidatePath("/train/exercises");
   revalidatePath(`/train/exercises/${input.slug}`);
   return { ok: true, demoAssetUrl };
+}
+
+/* ---------------------------------------------------------------- *
+ * Publish — the review queue's one-click approve (and its undo)
+ * ---------------------------------------------------------------- */
+
+/**
+ * Flips only `is_published` on one exercise. RLS already limits writes
+ * to coaches (0036); the session check makes that explicit here too,
+ * since this is the fastest way to put an exercise in front of members.
+ */
+export async function setExercisePublishedAction(input: {
+  id: string;
+  slug: string;
+  published: boolean;
+}): Promise<{ ok: boolean; error?: string }> {
+  const member = await getSession();
+  if (!member?.isCoach) return { ok: false, error: "Kun coaches kan publicere øvelser" };
+  if (!SUPABASE_ENABLED) return { ok: true };
+
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "Ingen forbindelse" };
+
+  const { data, error } = await supabase
+    .from("exercises")
+    .update({ is_published: input.published })
+    .eq("id", input.id)
+    .select("id");
+
+  if (error) return { ok: false, error: error.message };
+  if (!data || data.length === 0) return { ok: false, error: "Øvelsen blev ikke opdateret" };
+
+  revalidatePath("/coach/exercises");
+  revalidatePath("/train/exercises");
+  revalidatePath(`/train/exercises/${input.slug}`);
+  return { ok: true };
 }
