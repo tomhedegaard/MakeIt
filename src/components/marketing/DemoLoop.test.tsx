@@ -16,10 +16,11 @@ describe("DemoLoop", () => {
     expect(html).toMatch(/playsinline/i); // React 19 SSR renders playsInline
   });
 
-  it("blends into Kalk and exposes an accessible pause control", () => {
+  it("blends into Kalk and exposes a control that starts on the play label", () => {
     expect(html).toContain("mix-blend-multiply");
     expect(html).toContain('aria-label="Back squat"');
-    expect(html).toMatch(/<button[^>]*aria-pressed="false"[^>]*>Pause<\/button>/);
+    // Nothing plays before hydration, so the control must not claim otherwise.
+    expect(html).toMatch(/<button[^>]*aria-pressed="false"[^>]*>Afspil<\/button>/);
   });
 
   it("er uændret uden tint", () => {
