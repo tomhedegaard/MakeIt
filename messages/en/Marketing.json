@@ -664,6 +664,35 @@
         "schoolLabel": "Coach School",
         "school": "Opens at Beast. You learn to answer other members' form checks."
       }
+    },
+    "ask": {
+      "open": "Ask HQ",
+      "title": "Ask HQ",
+      "sub": "Answers about MakeIt and the app. No health advice.",
+      "intro": "Ask anything about the app, HQ, Munk, the tiers or how to get in.",
+      "suggestions": {
+        "s1": "What does HQ do?",
+        "s2": "What does it cost?",
+        "s3": "Which wearables work?",
+        "s4": "How do I get in?"
+      },
+      "suggestionsLabel": "Suggestions",
+      "placeholder": "Type your question",
+      "inputLabel": "Your question for HQ",
+      "send": "Send",
+      "close": "Close the chat",
+      "thinking": "HQ is thinking…",
+      "error": "That didn't work. Try again in a moment.",
+      "limited": "You've asked a lot in a short time. Try again in a moment.",
+      "unavailable": "The chat isn't available right now. Join the waitlist and Munk will get back to you.",
+      "privacy": "Answers are written by AI and can be wrong. Questions are not stored by MakeIt.",
+      "cta": "Join the waitlist",
+      "you": "You",
+      "hq": "HQ",
+      "log": "Conversation with HQ",
+      "full": "The conversation is long now. Start over to ask more.",
+      "restart": "Start over",
+      "privacyLink": "Privacy"
     }
   }
 }

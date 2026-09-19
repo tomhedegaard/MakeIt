@@ -9,6 +9,7 @@ import Voices from "./Voices";
 import AccessPanel from "./AccessPanel";
 import KalkFaq from "./KalkFaq";
 import KalkFooter from "./KalkFooter";
+import AskHq from "./AskHq";
 
 /** Kalk landing (spec 2026-09-17 §5). Eight sections, one job each. */
 export default function KalkLanding() {
@@ -26,6 +27,7 @@ export default function KalkLanding() {
         <KalkFaq />
       </main>
       <KalkFooter />
+      <AskHq />
     </ThemeScope>
   );
 }

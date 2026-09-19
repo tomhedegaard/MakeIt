@@ -110,7 +110,7 @@
         },
         "anthropic": {
           "k": "Anthropic (Claude)",
-          "v": "AI program generation, form-check assessment, crisis-text moderation of journal excerpts (Haiku), and the daily mental coach from your mind-check including optional note (Sonnet). Anthropic is a processor. On their business tier, prompts/output are not stored beyond the request lifecycle."
+          "v": "AI program generation, form-check assessment, crisis-text moderation of journal excerpts (Haiku), and the daily mental coach from your mind-check including optional note (Sonnet). Answers in the \"Ask HQ\" chat on the homepage (questions are not stored by us). Anthropic is a processor. On their business tier, prompts/output are not stored beyond the request lifecycle."
         }
       },
       "outro": "We never sell your data. We don't share it for marketing without explicit consent."

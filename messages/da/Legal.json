@@ -110,7 +110,7 @@
         },
         "anthropic": {
           "k": "Anthropic (Claude)",
-          "v": "AI-program-generation, form-check-vurdering, krise-tekstmoderering af journaluddrag (Haiku), og den daglige mental-coach ud fra mind-check inkl. valgfri note (Sonnet). Anthropic er databehandler. I deres business-tier gemmes prompts/output ikke udover request-livscyklussen."
+          "v": "AI-program-generation, form-check-vurdering, krise-tekstmoderering af journaluddrag (Haiku), og den daglige mental-coach ud fra mind-check inkl. valgfri note (Sonnet). Svar i \"Spørg HQ\"-chatten på forsiden (spørgsmålene gemmes ikke hos os). Anthropic er databehandler. I deres business-tier gemmes prompts/output ikke udover request-livscyklussen."
         }
       },
       "outro": "Vi sælger aldrig dine data. Vi deler dem ikke til markedsføring uden eksplicit samtykke."

@@ -664,6 +664,35 @@
         "schoolLabel": "Coach School",
         "school": "Åbner ved Beast. Du lærer at svare andres form-checks."
       }
+    },
+    "ask": {
+      "open": "Spørg HQ",
+      "title": "Spørg HQ",
+      "sub": "Svar om MakeIt og appen. Ingen helbredsråd.",
+      "intro": "Spørg løs om appen, HQ, Munk, niveauerne eller hvordan du kommer ind.",
+      "suggestions": {
+        "s1": "Hvad gør HQ?",
+        "s2": "Hvad koster det?",
+        "s3": "Hvilke wearables virker?",
+        "s4": "Hvordan kommer jeg ind?"
+      },
+      "suggestionsLabel": "Forslag",
+      "placeholder": "Skriv dit spørgsmål",
+      "inputLabel": "Dit spørgsmål til HQ",
+      "send": "Send",
+      "close": "Luk chatten",
+      "thinking": "HQ tænker…",
+      "error": "Det virkede ikke. Prøv igen om lidt.",
+      "limited": "Du har stillet mange spørgsmål på kort tid. Prøv igen om lidt.",
+      "unavailable": "Chatten er ikke tilgængelig lige nu. Skriv dig på listen, så vender Munk tilbage.",
+      "privacy": "Svarene skrives af AI og kan tage fejl. Spørgsmålene gemmes ikke hos MakeIt.",
+      "cta": "Skriv dig på listen",
+      "you": "Du",
+      "hq": "HQ",
+      "log": "Samtale med HQ",
+      "full": "Samtalen er lang nu. Start forfra for at spørge om mere.",
+      "restart": "Start forfra",
+      "privacyLink": "Privatliv"
     }
   }
 }
