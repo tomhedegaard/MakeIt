@@ -276,6 +276,15 @@
         "formChecks": "Form checks",
         "prs": "PRs",
         "help": "Helping others"
+      },
+      "ladder": {
+        "listLabel": "Crew tiers",
+        "hint": "Tap a plate to see what it unlocks",
+        "perksHeading": "What you unlock",
+        "floor": "{from}+ reps",
+        "ctaStart": "Start as {tier}",
+        "ctaToward": "Start towards {tier}",
+        "ctaNote": "Everyone starts as Lifter. Reps count from your first session and never expire."
       }
     },
     "voices": {

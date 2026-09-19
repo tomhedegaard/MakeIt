@@ -276,6 +276,15 @@
         "formChecks": "Form-checks",
         "prs": "PR'er",
         "help": "Hjælp til andre"
+      },
+      "ladder": {
+        "listLabel": "Niveauer i crewet",
+        "hint": "Tryk på en skive og se, hvad den låser op",
+        "perksHeading": "Det låser du op",
+        "floor": "{from}+ reps",
+        "ctaStart": "Start som {tier}",
+        "ctaToward": "Start mod {tier}",
+        "ctaNote": "Alle starter som Lifter. Reps tæller fra dit første pas og udløber aldrig."
       }
     },
     "voices": {
