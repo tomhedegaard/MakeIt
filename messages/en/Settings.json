@@ -56,6 +56,11 @@
     "delete": "Delete my account",
     "deleting": "Deleting…",
     "confirmPhrase": "DELETE MY ACCOUNT",
-    "confirmPrompt": "This cannot be undone. All your sessions, posts, Reps and form checks will be permanently deleted.\n\nType \"{phrase}\" to confirm:"
+    "confirmTitle": "Delete your account?",
+    "confirmBody": "This cannot be undone. All your sessions, posts, Reps and form checks are deleted permanently.",
+    "confirmLabel": "Type {phrase} to confirm",
+    "confirmPlaceholder": "{phrase}",
+    "cancel": "Cancel",
+    "confirm": "Delete the account permanently"
   }
 }
