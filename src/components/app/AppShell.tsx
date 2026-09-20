@@ -166,7 +166,7 @@ export default function AppShell({
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         {/* Mobile top header — outside the scrollport. */}
-        <header className="lg:hidden relative flex h-14 shrink-0 items-center justify-between px-5 border-b hairline z-30 bg-bg/85 backdrop-blur">
+        <header className="safe-top lg:hidden relative flex h-14 shrink-0 items-center justify-between px-5 border-b hairline z-30 bg-bg/85 backdrop-blur">
           <Logo />
           <div className="flex items-center gap-3">
             {/* Messages — kept one-tap on mobile after the tab bar

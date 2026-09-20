@@ -21,7 +21,7 @@ export default function KalkNav() {
   const menu = useTranslations("Marketing.nav");
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur-[10px]">
+    <header className="safe-top sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur-[10px]">
       <div className="mx-auto flex h-[68px] max-w-[1360px] items-center justify-between gap-4 px-4 md:px-8">
         <Link
           href="/"

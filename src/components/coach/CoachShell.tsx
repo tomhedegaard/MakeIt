@@ -89,7 +89,7 @@ export default function CoachShell({
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile top bar */}
-        <header className="md:hidden sticky top-0 z-30 bg-bg/85 backdrop-blur border-b hairline">
+        <header className="safe-top md:hidden sticky top-0 z-30 bg-bg/85 backdrop-blur border-b hairline">
           <div className="flex h-14 items-center justify-between px-5">
             <div className="flex items-center gap-2">
               <Logo />
