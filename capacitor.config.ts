@@ -32,9 +32,11 @@ const config: CapacitorConfig = {
     appendUserAgent: "MakeItApp/1 (android)",
   },
   plugins: {
-    // Splash and icon change with the next store release (spec D3, needs Tom's ok).
+    // D3 delivered 2026-09-20: icon and splash carry the wordmark's double
+    // slash (scripts/make-app-assets.py). The window behind the splash is
+    // Kalk, like the app, so a cold start no longer flashes dark.
     SplashScreen: {
-      backgroundColor: "#0A0A0B",
+      backgroundColor: "#E7E9EB",
     },
   },
 };

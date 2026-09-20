@@ -103,9 +103,9 @@ describe("chrome-metadata stripping is narrow (self-test)", () => {
 
 describe("native and PWA chrome (spec §6, D3)", () => {
   const cap = readFileSync(new URL("../../../capacitor.config.ts", import.meta.url), "utf8");
-  it("shell window background is Kalk; splash waits for the next store release", () => {
+  it("shell window and splash are both Kalk (D3 delivered)", () => {
     expect(cap).toMatch(/^\s{2}backgroundColor: "#E7E9EB"/m);
-    expect(cap).toMatch(/SplashScreen: \{\s*backgroundColor: "#0A0A0B"/);
+    expect(cap).toMatch(/SplashScreen: \{[\s\S]*?backgroundColor: "#E7E9EB"/);
   });
   it("PWA manifest is Kalk", () => {
     const m = read("app/manifest.ts");
