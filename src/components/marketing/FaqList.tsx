@@ -63,7 +63,7 @@ export default function FaqList({
         <button
           type="button"
           onClick={() => setExpanded(true)}
-          className="mt-6 btn btn-sm"
+          className="mt-6 btn btn-sm h-9!"
         >
           {showAllLabel}
         </button>

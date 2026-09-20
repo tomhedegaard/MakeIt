@@ -188,7 +188,7 @@ export default function SessionClient({
             type="button"
             onClick={() => setExitOpen(true)}
             aria-label={t("topBar.exit")}
-            className="size-10 rounded-full surface-2 flex items-center justify-center"
+            className="size-11 rounded-full surface-2 flex items-center justify-center"
           >
             <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
               <path d="M6 6l12 12M6 18L18 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
@@ -208,7 +208,7 @@ export default function SessionClient({
             </div>
           </div>
 
-          <div className="size-10" aria-hidden />
+          <div className="size-11" aria-hidden />
         </div>
 
         <div className="h-1 bg-bg-3 overflow-hidden">

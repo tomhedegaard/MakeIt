@@ -92,7 +92,7 @@ function FilterPill({
   return (
     <Link
       href={href}
-      className={`px-3 py-1.5 rounded-full text-xs font-mono uppercase tracking-[0.14em] border hairline transition-colors ${
+      className={`inline-flex min-h-11 items-center px-4 rounded-full text-xs font-mono uppercase tracking-[0.14em] border hairline transition-colors ${
         active
           ? "bg-fg text-bg border-transparent"
           : "text-fg-dim hover:text-fg hover:border-fg/30"

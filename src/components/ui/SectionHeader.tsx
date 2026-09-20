@@ -23,7 +23,10 @@ export default function SectionHeader({
         <h2 id={id} className="font-display text-2xl">{title}</h2>
       </div>
       {href && linkLabel ? (
-        <Link href={href} className="shrink-0 font-mono text-[11px] uppercase tracking-[0.14em] text-fg-dim hover:text-fg">
+        <Link
+          href={href}
+          className="relative shrink-0 font-mono text-[11px] uppercase tracking-[0.14em] text-fg-dim hover:text-fg after:absolute after:inset-x-0 after:-inset-y-3.5 after:content-['']"
+        >
           {linkLabel}
         </Link>
       ) : null}
