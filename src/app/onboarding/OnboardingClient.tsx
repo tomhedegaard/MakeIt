@@ -96,7 +96,7 @@ export default function OnboardingClient({
   return (
     <div className="minh-dvh flex flex-col">
       {/* Top bar */}
-      <header className="sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
+      <header className="safe-top sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
         <Container className="h-14 flex items-center justify-between gap-3">
           <Logo />
           <div className="flex items-center gap-3">

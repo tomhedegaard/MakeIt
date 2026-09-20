@@ -482,6 +482,11 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   --tabbar-stack: calc(var(--tabbar-h) + var(--safe-bottom));
 }
 
+/* Top chrome in the native shells sits under the status bar and the
+ * Dynamic Island unless it reserves the inset; on the web the inset is
+ * 0, so this is free there. */
+.safe-top { padding-top: var(--safe-top); }
+
 .h-dvh   { height: 100dvh; }
 .minh-dvh { min-height: 100dvh; }
 /* Last-line air on the AppShell scrollport. The tab bar is in-flow

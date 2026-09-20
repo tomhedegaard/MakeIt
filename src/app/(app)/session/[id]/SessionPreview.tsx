@@ -28,7 +28,7 @@ export default async function SessionPreview({ session }: { session: Session }) 
 
   return (
     <div className="minh-dvh flex flex-col bg-bg">
-      <header className="sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
+      <header className="safe-top sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
         <div className="px-4 lg:px-6 h-14 flex items-center justify-between gap-3">
           <Link
             href="/dashboard"
