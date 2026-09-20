@@ -3,7 +3,12 @@ import DemoLoop from "../../DemoLoop";
 import PhoneFrame from "../PhoneFrame";
 import { Avatar, Chip, Headline, Kicker, Label, Pill, Row } from "./parts";
 
-export const FORM_CHECK_DEMO_SRC = "/exercise-demos/back-squat.webm";
+/**
+ * The rack's form-check shows the bench press, so the landing never plays
+ * the same loop twice: Munk's card has the back squat, the body cell the
+ * deadlift.
+ */
+export const FORM_CHECK_DEMO_SRC = "/exercise-demos/bench.webm";
 
 /**
  * Træn, form-check (reference B "Form-check", spec §3.4). The member's
@@ -21,7 +26,7 @@ export default function FormCheckScreen({ width, scroll = false }: { width?: num
     <PhoneFrame label={s("formCheck.aria")} tab="train" width={width} scroll={scroll} interactive>
       <div aria-hidden="true">
         <Kicker>{card("kicker")}</Kicker>
-        <Headline>{card("lift")}</Headline>
+        <Headline>{s("formCheck.lift")}</Headline>
       </div>
 
       <DemoLoop
@@ -48,7 +53,7 @@ export default function FormCheckScreen({ width, scroll = false }: { width?: num
         </div>
 
         <div className="rounded-[14px_14px_14px_4px] border border-line bg-bg-2 px-[11px] py-2.5 text-[11.5px] font-medium leading-[1.4]">
-          {card("final")}
+          {s("formCheck.final")}
         </div>
 
         <div className="flex items-center justify-between">

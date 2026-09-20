@@ -18,7 +18,7 @@ describe("marketing phone screens", () => {
 
   it("form-check shows the member's own recording and a MoveKit reference, no drawn figure", () => {
     const html = render(<FormCheckScreen />);
-    expect(html).toContain("/exercise-demos/back-squat");
+    expect(html).toContain("/exercise-demos/bench");
     expect(html).toContain("Din optagelse");
     expect(html).toContain("<video"); // exercise visual is a real MoveKit loop
   });

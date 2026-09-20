@@ -6,7 +6,7 @@ import { resolveDemoAssets } from "@/lib/data/demo-assets";
 import { useVideoPhaseSync } from "./useVideoPhaseSync";
 
 /**
- * Compact session-chrome demo. Portrait loop when a URL exists;
+ * Compact session-chrome demo. Portrait (9:16) loop when a URL exists;
  * poster + play if autoplay is blocked. Phase index bubbles up so
  * the inline cue list can highlight in sync. Intentionally thinner
  * than ExerciseDemo — no figure toggles, no 220px detail column.
@@ -28,7 +28,10 @@ export default function SessionExerciseDemo({
 }) {
   const ref = useRef<HTMLVideoElement | null>(null);
   const idx = useVideoPhaseSync(ref, phases);
-  const { webm, mp4, poster } = resolveDemoAssets(demoAssetUrl);
+  // The frame is 9:16, so the portrait cut plays here; the landscape
+  // pair stays as later <source>s in case a portrait file is missing.
+  const portrait = resolveDemoAssets(demoAssetUrl, "portrait");
+  const landscape = resolveDemoAssets(demoAssetUrl);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
@@ -66,12 +69,14 @@ export default function SessionExerciseDemo({
           loop
           muted
           playsInline
-          poster={poster}
+          poster={portrait.poster}
           aria-label={label}
           className="block w-[104px] aspect-[9/16] object-cover bg-bg-3"
         >
-          <source src={webm} type="video/webm" />
-          <source src={mp4} type="video/mp4" />
+          <source src={portrait.webm} type="video/webm" />
+          <source src={portrait.mp4} type="video/mp4" />
+          <source src={landscape.webm} type="video/webm" />
+          <source src={landscape.mp4} type="video/mp4" />
         </video>
         {paused ? (
           <button
