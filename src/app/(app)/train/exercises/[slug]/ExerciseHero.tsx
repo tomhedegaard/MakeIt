@@ -57,7 +57,7 @@ export default function ExerciseHero({
   const details = (
     <>
       <div>
-        <div className="eyebrow mb-4">{t("howTo")}</div>
+        <h2 className="eyebrow mb-4">{t("howTo")}</h2>
         <CuesList cues={cues} phases={phases} activePhaseIdx={activePhaseIdx} />
       </div>
       <MuscleChips primary={primary} secondary={secondary} tertiary={tertiary} title={t("musclesInvolved")} />
@@ -180,7 +180,7 @@ function MuscleChips({
 
   return (
     <div className="space-y-3">
-      <div className="eyebrow">{title}</div>
+      <h2 className="eyebrow">{title}</h2>
       <div className="flex flex-wrap gap-1.5">
         {primary.map((m) => (
           <Chip key={m} label={MUSCLE_LABELS[m]} color={TIER_COLOR.primary} dark />

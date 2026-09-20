@@ -153,7 +153,7 @@ export default async function ExerciseDetailPage({
         {/* Mistakes */}
         {ex.mistakes.length > 0 ? (
           <section className="space-y-5">
-            <div className="eyebrow">{t("detail.mistakes")}</div>
+            <h2 className="eyebrow">{t("detail.mistakes")}</h2>
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
               {ex.mistakes.map((m, i) => (
                 <article
@@ -190,7 +190,7 @@ export default async function ExerciseDetailPage({
 function InfoBlock({ eyebrow, body }: { eyebrow: string; body: string }) {
   return (
     <div className="space-y-2">
-      <div className="eyebrow">{eyebrow}</div>
+      <h2 className="eyebrow">{eyebrow}</h2>
       <p className="text-base text-fg-dim leading-relaxed">{body}</p>
     </div>
   );

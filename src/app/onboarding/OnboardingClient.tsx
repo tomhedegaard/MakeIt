@@ -186,18 +186,38 @@ export default function OnboardingClient({
               </Section>
 
               <Section title={t("step1.freqTitle")}>
+                {/* Real radios, like the Mål/Niveau/Udstyr questions above:
+                    plain buttons carried the selection in a CSS class only,
+                    so a screen reader could not tell which one was chosen.
+                    The input is sr-only — the .pill[data-active] look is
+                    unchanged. The hidden `frequency` field at the top of the
+                    form comes first in the form and stays the submitted
+                    value, exactly as for goal/experience/equipment. */}
                 <div className="grid grid-cols-3 gap-2">
                   {FREQ_OPTS.map((f) => (
-                    <button
+                    <label
                       key={f}
-                      type="button"
                       data-active={freq === f}
-                      onClick={() => setFreq(f)}
-                      disabled={pending}
-                      className="pill touch-app h-12"
+                      className={cn(
+                        "pill touch-app h-12 cursor-pointer",
+                        // The input is sr-only, so the global *:focus-visible
+                        // ring would land on a clipped 1px box — put it on the
+                        // pill instead. Same outline tokens, focus only.
+                        "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-fg",
+                        pending && "pointer-events-none opacity-60",
+                      )}
                     >
+                      <input
+                        type="radio"
+                        name="frequency"
+                        value={f}
+                        checked={freq === f}
+                        onChange={() => setFreq(f)}
+                        disabled={pending}
+                        className="sr-only"
+                      />
                       {t("freqOption", { days: f })}
-                    </button>
+                    </label>
                   ))}
                 </div>
               </Section>

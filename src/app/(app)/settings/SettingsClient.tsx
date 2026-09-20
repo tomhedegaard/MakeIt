@@ -14,6 +14,7 @@ import NativePushToggle from "@/components/push/NativePushToggle";
 import LanguageSelector from "@/components/LanguageSelector";
 import HrvSettingsSection from "@/components/hrv/HrvSettingsSection";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { Modal } from "@/components/ui/Modal";
 
 type Status = { ok: boolean; text: string } | null;
 
@@ -57,6 +58,8 @@ export default function SettingsClient({
   /* Delete */
   const [deletePending, startDelete] = useTransition();
   const [deleteMsg, setDeleteMsg] = useState<string | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [typed, setTyped] = useState("");
 
   function saveProfile() {
     setProfileMsg(null);
@@ -85,11 +88,15 @@ export default function SettingsClient({
     });
   }
 
+  const deletePhrase = t("danger.confirmPhrase");
+
+  // In-app dialog rather than window.prompt: same "type the phrase"
+  // friction, but focus-trapped, themed and closable with Escape like
+  // the session's end dialog (UX review 2026-09-19).
   function confirmDelete() {
-    const phrase = t("danger.confirmPhrase");
-    const typed = window.prompt(t("danger.confirmPrompt", { phrase }));
-    if (typed !== phrase) return;
+    if (typed.trim() !== deletePhrase) return;
     setDeleteMsg(null);
+    setDeleteOpen(false);
     startDelete(async () => {
       const res = await deleteAccountAction();
       if (!res.ok) {
@@ -259,7 +266,10 @@ export default function SettingsClient({
           <button
             type="button"
             className="btn btn-sm"
-            onClick={confirmDelete}
+            onClick={() => {
+              setTyped("");
+              setDeleteOpen(true);
+            }}
             disabled={deletePending}
           >
             {deletePending ? t("danger.deleting") : t("danger.delete")}
@@ -271,6 +281,42 @@ export default function SettingsClient({
           ) : null}
         </div>
       </section>
+
+      <Modal
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        title={t("danger.confirmTitle")}
+        className="space-y-4"
+      >
+        <SectionHeader eyebrow={t("danger.eyebrow")} title={t("danger.confirmTitle")} />
+        <p className="text-fg-dim text-sm">{t("danger.confirmBody")}</p>
+        <label className="block space-y-1.5">
+          <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-dim">
+            {t("danger.confirmLabel", { phrase: deletePhrase })}
+          </span>
+          <input
+            type="text"
+            value={typed}
+            autoComplete="off"
+            placeholder={t("danger.confirmPlaceholder", { phrase: deletePhrase })}
+            onChange={(e) => setTyped(e.target.value)}
+            className="w-full rounded-xl border hairline bg-bg px-3 py-2.5 text-base"
+          />
+        </label>
+        <div className="flex flex-wrap items-center justify-end gap-3 pt-1">
+          <button type="button" className="btn btn-sm" onClick={() => setDeleteOpen(false)}>
+            {t("danger.cancel")}
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-primary disabled:opacity-40"
+            disabled={typed.trim() !== deletePhrase || deletePending}
+            onClick={confirmDelete}
+          >
+            {t("danger.confirm")}
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }

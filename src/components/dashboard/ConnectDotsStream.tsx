@@ -166,31 +166,31 @@ export default function ConnectDotsStream({
                 </p>
 
                 <div className="flex flex-wrap items-center gap-2">
-                  <Link href={card.ctaHref} className="btn btn-sm btn-primary">
+                  <Link href={card.ctaHref} className="btn btn-primary">
                     {cardCopy.cta}
                   </Link>
                   <Link
                     href={card.moreHref}
                     data-more-about={card.moreAbout}
-                    className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg border hairline rounded-full px-3 py-1.5"
+                    className="inline-flex min-h-11 items-center text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg border hairline rounded-full px-4"
                   >
                     {copy.moreAbout} {copy.domains[card.moreAbout]}
                   </Link>
                 </div>
               </div>
 
-              <div className="px-5 py-2 border-t hairline flex items-center gap-3">
+              <div className="px-5 border-t hairline flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => hide(card.id)}
-                  className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg"
+                  className="inline-flex min-h-11 items-center text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg"
                 >
                   {copy.dismiss}
                 </button>
                 <button
                   type="button"
                   onClick={() => snooze(card.id)}
-                  className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg"
+                  className="inline-flex min-h-11 items-center text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg"
                 >
                   {copy.snooze}
                 </button>

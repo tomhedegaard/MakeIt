@@ -236,3 +236,81 @@ describe("OnboardingClient DONE pending", () => {
     expect(host.textContent).toContain("step3.introTitle");
   });
 });
+
+/**
+ * Frequency was the one step-1 question built from plain buttons: the
+ * selection lived in a CSS class, with no aria-pressed/checked, so a screen
+ * reader could not perceive it. It now uses the same sr-only radio pattern
+ * as the Mål/Niveau/Udstyr questions beside it.
+ */
+describe("OnboardingClient frequency question", () => {
+  function mountStep1() {
+    host = document.createElement("div");
+    document.body.appendChild(host);
+    root = createRoot(host);
+    act(() => {
+      root.render(createElement(OnboardingClient, { memberHandle: "testy" }));
+    });
+  }
+
+  function freqRadios(): HTMLInputElement[] {
+    return Array.from(
+      host.querySelectorAll<HTMLInputElement>(
+        'input[type="radio"][name="frequency"]',
+      ),
+    );
+  }
+
+  function freqLabels(): HTMLLabelElement[] {
+    return freqRadios().map((input) => {
+      const label = input.closest("label");
+      if (!label) throw new Error("frequency radio is not inside a label");
+      return label as HTMLLabelElement;
+    });
+  }
+
+  it("exposes one checked radio per option instead of state-less buttons", () => {
+    mountStep1();
+
+    expect(freqRadios().map((el) => el.value)).toEqual(["3", "4", "5"]);
+    expect(freqRadios().map((el) => el.checked)).toEqual([false, true, false]);
+
+    // The old plain buttons are gone — nothing renders freqOption as a button.
+    expect(
+      buttons().filter((el) => el.textContent === "freqOption"),
+    ).toHaveLength(0);
+  });
+
+  it("moves the checked state and the .pill look together on selection", () => {
+    mountStep1();
+
+    act(() => {
+      freqLabels()[2].click();
+    });
+
+    expect(freqRadios().map((el) => el.checked)).toEqual([false, false, true]);
+    expect(freqLabels().map((el) => el.getAttribute("data-active"))).toEqual([
+      "false",
+      "false",
+      "true",
+    ]);
+  });
+
+  it("keeps the hidden frequency field as the submitted value", () => {
+    mountStep1();
+
+    act(() => {
+      freqLabels()[0].click();
+    });
+
+    const form = host.querySelector("form");
+    if (!form) throw new Error("no form");
+    // Hidden field first in the form, so FormData.get wins with one value —
+    // the same shape goal/experience/equipment already rely on.
+    expect(new FormData(form).get("frequency")).toBe("3");
+    expect(
+      host.querySelector<HTMLInputElement>('input[type="hidden"][name="frequency"]')
+        ?.value,
+    ).toBe("3");
+  });
+});

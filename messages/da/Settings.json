@@ -56,6 +56,11 @@
     "delete": "Slet min konto",
     "deleting": "Sletter…",
     "confirmPhrase": "SLET MIN KONTO",
-    "confirmPrompt": "Dette kan ikke fortrydes. Alle dine sessioner, posts, Reps og form-checks slettes permanent.\n\nSkriv \"{phrase}\" for at bekræfte:"
+    "confirmTitle": "Slet din konto?",
+    "confirmBody": "Dette kan ikke fortrydes. Alle dine sessioner, posts, Reps og form-checks slettes permanent.",
+    "confirmLabel": "Skriv {phrase} for at bekræfte",
+    "confirmPlaceholder": "{phrase}",
+    "cancel": "Annullér",
+    "confirm": "Slet kontoen permanent"
   }
 }

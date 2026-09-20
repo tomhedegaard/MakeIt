@@ -142,7 +142,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
           onClick={handleToggleReaction}
           aria-pressed={optimistic.reacted}
           className={cn(
-            "px-3 py-1.5 rounded-md flex items-center gap-2 transition-colors",
+            "min-h-11 px-3 rounded-md flex items-center gap-2 transition-colors",
             optimistic.reacted
               ? "bg-bg-3 text-fg"
               : "hover:text-fg hover:bg-bg-3"
@@ -157,7 +157,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
           onClick={expand}
           aria-expanded={expanded}
           className={cn(
-            "px-3 py-1.5 rounded-md flex items-center gap-2 transition-colors",
+            "min-h-11 px-3 rounded-md flex items-center gap-2 transition-colors",
             expanded ? "bg-bg-3 text-fg" : "hover:text-fg hover:bg-bg-3"
           )}
         >
@@ -168,7 +168,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
         </button>
         <button
           type="button"
-          className="ml-auto px-3 py-1.5 rounded-md hover:text-fg hover:bg-bg-3"
+          className="ml-auto inline-flex min-h-11 items-center px-3 rounded-md hover:text-fg hover:bg-bg-3"
         >
           {t("share")}
         </button>

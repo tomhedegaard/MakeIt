@@ -44,7 +44,7 @@ export default function KalkNav() {
           <Link href={PUBLIC_LOGIN_HREF} className={`${LINK} hidden whitespace-nowrap sm:inline`}>
             {t("login")}
           </Link>
-          <Link href={PUBLIC_WAITLIST_HREF} className="btn btn-primary btn-sm">
+          <Link href={PUBLIC_WAITLIST_HREF} className="btn btn-primary btn-sm h-9!">
             {t("cta")}
           </Link>
 

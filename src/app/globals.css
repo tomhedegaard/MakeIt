@@ -390,7 +390,7 @@ html:has(.theme-root[data-theme="nat"]) .grain::before {
 .btn-primary:hover { background: transparent; color: var(--fg); }
 .btn-ghost { border-color: transparent; color: var(--fg-dim); }
 .btn-ghost:hover { background: var(--bg-3); color: var(--fg); border-color: var(--line); }
-.btn-sm { height: 2.25rem; padding: 0 0.875rem; font-size: 0.6875rem; }
+.btn-sm { height: 2.5rem; padding: 0 0.875rem; font-size: 0.6875rem; }
 
 /* Form inputs — minimal, hairline-bordered, share the surface palette */
 .input {

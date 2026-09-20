@@ -24,3 +24,22 @@ describe("Settings danger zone keeps its warning eyebrow (spec §6)", () => {
     expect(en.account.eyebrow).toBeUndefined();
   });
 });
+
+describe("account deletion is confirmed in the app, not by the browser", () => {
+  it("uses the shared Modal and no native prompt", () => {
+    expect(src).not.toMatch(/window\.prompt\(/);
+    expect(src).toMatch(/from "@\/components\/ui\/Modal"/);
+    expect(src).toMatch(/<Modal[\s\S]*open=\{deleteOpen\}/);
+  });
+
+  it("still asks the member to type the phrase, and only then enables the button", () => {
+    expect(src).toMatch(/typed\.trim\(\) !== deletePhrase/);
+    expect(da.danger.confirmPhrase).toBe("SLET MIN KONTO");
+    expect(da.danger.confirmPrompt).toBeUndefined();
+    expect(en.danger.confirmPrompt).toBeUndefined();
+    for (const key of ["confirmTitle", "confirmBody", "confirmLabel", "cancel", "confirm"]) {
+      expect(da.danger[key], `da ${key}`).toBeTruthy();
+      expect(en.danger[key], `en ${key}`).toBeTruthy();
+    }
+  });
+});

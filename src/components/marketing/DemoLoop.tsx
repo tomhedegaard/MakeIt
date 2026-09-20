@@ -180,7 +180,7 @@ export default function DemoLoop({
         className={
           compact
             ? "btn btn-sm absolute right-2 top-2 h-7! px-2.5! text-[9px]!"
-            : "btn btn-sm absolute right-3 top-3"
+            : "btn btn-sm h-9! absolute right-3 top-3"
         }
       >
         {playing ? pauseLabel : playLabel}
