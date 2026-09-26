@@ -21,6 +21,15 @@
     "intermediate": "Mellem",
     "advanced": "Avanceret"
   },
+  "equipment": {
+    "barbell": "Vægtstang",
+    "dumbbell": "Håndvægt",
+    "kettlebell": "Kettlebell",
+    "cable": "Kabel",
+    "machine": "Maskine",
+    "band": "Elastik",
+    "bodyweight": "Kropsvægt"
+  },
   "detail": {
     "metaFallback": "Øvelse",
     "breadcrumb": "Øvelser",
