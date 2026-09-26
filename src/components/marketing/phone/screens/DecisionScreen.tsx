@@ -7,8 +7,8 @@ import { Card, Chip, Headline, Kicker, Label, Pill, Row } from "./parts";
  * why-chips (A2) and "Behold original" as the secondary action (C1).
  */
 export default function DecisionScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
-  const t = useTranslations("Marketing.kalk");
-  const s = useTranslations("Marketing.kalk.screens");
+  const t = useTranslations("Marketing.landing");
+  const s = useTranslations("Marketing.landing.screens");
   const d = useTranslations("Dashboard.todaySession");
   const step = (k: string) => t(`engine.steps.${k}`);
 

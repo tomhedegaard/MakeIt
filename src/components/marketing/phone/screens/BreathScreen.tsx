@@ -7,8 +7,8 @@ const WEEK_MINUTES = [12, 24, 0, 24, 36, 12, 24];
 
 /** Sind: a guided 4-7-8 breathing round, paused on the hold. */
 export default function BreathScreen({ width, scroll }: { width?: number; scroll?: boolean }) {
-  const t = useTranslations("Marketing.kalk");
-  const s = useTranslations("Marketing.kalk.screens");
+  const t = useTranslations("Marketing.landing");
+  const s = useTranslations("Marketing.landing.screens");
   const br = (key: string) => s(`breath.${key}`);
 
   return (

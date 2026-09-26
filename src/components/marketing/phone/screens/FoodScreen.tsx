@@ -12,8 +12,8 @@ const PROTEIN = [
 
 /** Mad: today's plan and the shopping list (reference B "Mad"). */
 export default function FoodScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
-  const t = useTranslations("Marketing.kalk");
-  const s = useTranslations("Marketing.kalk.screens");
+  const t = useTranslations("Marketing.landing");
+  const s = useTranslations("Marketing.landing.screens");
   const nav = useTranslations("Nav.links");
   const slot = useTranslations("Nutrition.slotLabels");
 

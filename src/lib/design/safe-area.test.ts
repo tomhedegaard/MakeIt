@@ -9,7 +9,7 @@ const css = read("app/globals.css");
 // unless it reserves the inset (seen in the simulator, 2026-09-20).
 const TOP_CHROME = [
   "components/app/AppShell.tsx",
-  "components/marketing/kalk/KalkNav.tsx",
+  "components/marketing/landing/LandingNav.tsx",
   "components/coach/CoachShell.tsx",
   "app/(app)/session/[id]/SessionClient.tsx",
   "app/(app)/session/[id]/SessionPreview.tsx",

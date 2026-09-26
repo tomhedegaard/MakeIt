@@ -28,7 +28,7 @@ describe("marketing keeps its own button heights", () => {
   it.each([
     "../marketing/FaqList.tsx",
     "../marketing/DemoLoop.tsx",
-    "../marketing/kalk/KalkNav.tsx",
+    "../marketing/landing/LandingNav.tsx",
   ])("%s pins btn-sm so the landing is unaffected", (rel) => {
     const src = read(rel);
     for (const line of src.split("\n")) {

@@ -109,7 +109,7 @@ export default function PhoneFrame({
  * should be drawn in exactly one place.
  */
 export function PhoneStatusBar({ className }: { className?: string }) {
-  const t = useTranslations("Marketing.kalk");
+  const t = useTranslations("Marketing.landing");
   return (
     <div
       aria-hidden="true"
@@ -134,7 +134,7 @@ export function PhoneTabBar({
   dark?: boolean;
   className?: string;
 }) {
-  const t = useTranslations("Marketing.kalk");
+  const t = useTranslations("Marketing.landing");
   const nav = useTranslations("Nav.links");
   const tabLabel: Record<PhoneTab, string> = {
     today: nav("today"),

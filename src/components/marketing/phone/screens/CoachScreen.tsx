@@ -18,7 +18,7 @@ const THREAD = [
 
 /** Munk: the coach thread after a form-check. */
 export default function CoachScreen({ width, scroll }: { width?: number; scroll?: boolean }) {
-  const s = useTranslations("Marketing.kalk.screens");
+  const s = useTranslations("Marketing.landing.screens");
 
   return (
     <PhoneFrame label={s("coach.aria")} tab="today" width={width} scroll={scroll}>

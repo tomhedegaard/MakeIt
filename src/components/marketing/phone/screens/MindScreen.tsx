@@ -13,8 +13,8 @@ const WEEK = [22, 28, 18, 28, 34, 24, 22];
 
 /** Sind: the 60 second mind-check (reference B "Sind"). */
 export default function MindScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
-  const t = useTranslations("Marketing.kalk");
-  const s = useTranslations("Marketing.kalk.screens");
+  const t = useTranslations("Marketing.landing");
+  const s = useTranslations("Marketing.landing.screens");
 
   return (
     <PhoneFrame label={s("mind.aria")} tab="mind" width={width} scroll={scroll}>

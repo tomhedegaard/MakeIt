@@ -17,8 +17,8 @@ const NIGHTS = [18, 12, 22, 16, 20, 26, 30];
 
 /** Søvn i nat (reference A state 1). */
 export default function SleepScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
-  const t = useTranslations("Marketing.kalk");
-  const s = useTranslations("Marketing.kalk.screens");
+  const t = useTranslations("Marketing.landing");
+  const s = useTranslations("Marketing.landing.screens");
 
   return (
     <PhoneFrame label={s("sleep.aria")} tab="today" width={width} scroll={scroll}>

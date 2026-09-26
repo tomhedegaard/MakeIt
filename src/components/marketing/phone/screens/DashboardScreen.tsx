@@ -21,8 +21,8 @@ const PLANNED = [4, 5, 6];
 
 /** I dag: the engine has rewritten today's session (reference B hero phone). */
 export default function DashboardScreen({ width = 300, scroll = false }: { width?: number; scroll?: boolean }) {
-  const t = useTranslations("Marketing.kalk");
-  const s = useTranslations("Marketing.kalk.screens");
+  const t = useTranslations("Marketing.landing");
+  const s = useTranslations("Marketing.landing.screens");
   const d = useTranslations("Dashboard.todaySession");
   const h = useTranslations("Hrv.band");
 

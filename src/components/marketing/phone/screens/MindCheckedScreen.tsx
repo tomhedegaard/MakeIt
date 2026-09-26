@@ -13,8 +13,8 @@ const STRESS_LINE = "M8 60L52 60L96 44L140 60L184 60L228 44L272 12";
 
 /** Sind: last night's mind-check (reference A state 3). */
 export default function MindCheckedScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
-  const t = useTranslations("Marketing.kalk");
-  const s = useTranslations("Marketing.kalk.screens");
+  const t = useTranslations("Marketing.landing");
+  const s = useTranslations("Marketing.landing.screens");
 
   return (
     <PhoneFrame label={s("mindChecked.aria")} tab="mind" width={width} scroll={scroll}>

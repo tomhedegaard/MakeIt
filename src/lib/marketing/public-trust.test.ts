@@ -54,18 +54,18 @@ function collectStrings(value: unknown): string[] {
 }
 
 const kalkSrc = (file: string) =>
-  readFileSync(new URL(`../../components/marketing/kalk/${file}`, import.meta.url), "utf8");
-const heroSrc = kalkSrc("KalkHero.tsx");
-const navSrc = kalkSrc("KalkNav.tsx");
-const faqSrc = kalkSrc("KalkFaq.tsx");
+  readFileSync(new URL(`../../components/marketing/landing/${file}`, import.meta.url), "utf8");
+const heroSrc = kalkSrc("LandingHero.tsx");
+const navSrc = kalkSrc("LandingNav.tsx");
+const faqSrc = kalkSrc("LandingFaq.tsx");
 const faqListSrc = readFileSync(
   new URL("../../components/marketing/FaqList.tsx", import.meta.url),
   "utf8",
 );
 const loginSrc = readFileSync(new URL("../../app/login/page.tsx", import.meta.url), "utf8");
 
-const daKalk = da.kalk as Record<string, Record<string, unknown>>;
-const enKalk = en.kalk as Record<string, Record<string, unknown>>;
+const daKalk = da.landing as Record<string, Record<string, unknown>>;
+const enKalk = en.landing as Record<string, Record<string, unknown>>;
 
 describe("public trust — FAQ count", () => {
   it("derives the show-all count from the live item list", () => {

@@ -7,8 +7,8 @@ import { Label, Pill, Row } from "./parts";
  * session state is always dark, so the frame always gets `dark`.
  */
 export default function SessionScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
-  const t = useTranslations("Marketing.kalk");
-  const s = useTranslations("Marketing.kalk.screens");
+  const t = useTranslations("Marketing.landing");
+  const s = useTranslations("Marketing.landing.screens");
   const se = useTranslations("Session");
   const weight = t("hero.plateNew");
   const setValue = s("session.setValue");

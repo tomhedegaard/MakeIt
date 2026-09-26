@@ -12,7 +12,7 @@ describe("Spørg HQ knowledge", () => {
   it("answers from the landing's own FAQ, including the honest price answer", () => {
     expect(facts).toContain(da.Marketing.faq.items.cheaper.q);
     expect(facts).toContain(da.Marketing.faq.items.cheaper.a);
-    expect(facts).toContain(da.Marketing.kalk.faq.demo.a);
+    expect(facts).toContain(da.Marketing.landing.faq.demo.a);
   });
 
   it("knows each tier's perks from the app's Reps page", () => {

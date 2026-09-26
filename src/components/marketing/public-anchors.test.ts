@@ -2,10 +2,10 @@ import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { PUBLIC_LEARN_HREF, PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
 
-const kalkDir = new URL("./kalk/", import.meta.url);
-const sources = readdirSync(kalkDir)
+const landingDir = new URL("./landing/", import.meta.url);
+const sources = readdirSync(landingDir)
   .filter((f) => f.endsWith(".tsx") && !f.includes(".test."))
-  .map((f) => [f, readFileSync(new URL(f, kalkDir), "utf8")] as const);
+  .map((f) => [f, readFileSync(new URL(f, landingDir), "utf8")] as const);
 const all = sources.map(([, s]) => s).join("\n");
 
 const ids = new Set([...all.matchAll(/\bid="([\w-]+)"/g)].map((m) => m[1]));
@@ -32,7 +32,7 @@ describe("Kalk landing anchors", () => {
 
 describe("Kalk hero fail-open", () => {
   it("renders the hero copy without a hidden Framer initial state", () => {
-    const hero = readFileSync(new URL("./kalk/KalkHero.tsx", import.meta.url), "utf8");
+    const hero = readFileSync(new URL("./landing/LandingHero.tsx", import.meta.url), "utf8");
     expect(hero).toContain("<h1");
     expect(hero).not.toMatch(/framer-motion|initial=\{\{\s*opacity:\s*0/);
   });

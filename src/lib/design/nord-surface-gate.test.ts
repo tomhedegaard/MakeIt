@@ -16,7 +16,7 @@ function walk(dir: string): string[] {
 
 // Member surfaces. Coach console, mail, non-landing marketing and the 3D coach spike are out of scope (spec header).
 const OUT_OF_SCOPE = [
-  /^app\/coach\//, /^components\/coach\//, /^lib\/email\//, /^components\/marketing\/(?!kalk\/)/,
+  /^app\/coach\//, /^components\/coach\//, /^lib\/email\//, /^components\/marketing\/(?!landing\/)/,
   /^components\/anatomy\/AnatomyFigure3D/,
 ];
 // Browser-chrome metadata must be a literal (Next viewport API): Nat values are legitimate there.
@@ -189,7 +189,7 @@ describe("section headers use SectionHeader (spec §6)", () => {
   // inside one element, so an eyebrow that sits in a flex row next to a step
   // counter is not read as a hand-built section header.
   const HAND_BUILT = /<(div|p|span)\s+className="eyebrow[^"]*"[^>]*>[^<]{0,160}<\/\1>\s*<h2\b/;
-  // The F2 landing (components/marketing/kalk) has its own type scale and gates.
+  // The F2 landing (components/marketing/landing) has its own type scale and gates.
   const files = surfaceFiles.filter(
     (p) => p.endsWith(".tsx") && !p.startsWith("components/ui/") && !p.startsWith("components/marketing/"),
   );

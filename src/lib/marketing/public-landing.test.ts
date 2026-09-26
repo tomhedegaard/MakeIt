@@ -11,7 +11,7 @@ const en = JSON.parse(
   readFileSync(new URL("../../../messages/en/Marketing.json", import.meta.url), "utf8"),
 ) as Record<string, unknown>;
 
-const kalkDir = new URL("../../components/marketing/kalk/", import.meta.url);
+const kalkDir = new URL("../../components/marketing/landing/", import.meta.url);
 const kalkSources = readdirSync(kalkDir)
   .filter((f) => f.endsWith(".tsx") && !f.includes(".test."))
   .map((f) => [f, readFileSync(new URL(f, kalkDir), "utf8")] as const);
@@ -23,7 +23,7 @@ function walkStrings(value: unknown): string[] {
 }
 
 /** Every Marketing group the live landing renders (Kalk + reused FAQ). */
-const liveCopy = [da.kalk, da.faq, en.kalk, en.faq].flatMap(walkStrings).join("\n");
+const liveCopy = [da.landing, da.faq, en.landing, en.faq].flatMap(walkStrings).join("\n");
 
 describe("public landing honesty", () => {
   it("sends new visitors to the existing waitlist, not a blind login", () => {
@@ -38,8 +38,8 @@ describe("public landing honesty", () => {
   });
 
   it("keeps invite scarcity on the access CTA, no free trial", () => {
-    const daKalk = da.kalk as { access: Record<string, string> };
-    const enKalk = en.kalk as { access: Record<string, string> };
+    const daKalk = da.landing as { access: Record<string, string> };
+    const enKalk = en.landing as { access: Record<string, string> };
     expect(daKalk.access.sub).toMatch(/invite/i);
     expect(enKalk.access.sub).toMatch(/invite/i);
     expect(liveCopy).not.toMatch(/gratis|prøveperiode|free trial/i);
@@ -72,8 +72,8 @@ describe("public landing honesty", () => {
   });
 
   it("states form-check as AI draft signed by a human, not a named vendor", () => {
-    const daMunk = (da.kalk as { munk: { card: { draftLabel: string }; flow: { label: string }[] } }).munk;
-    const enMunk = (en.kalk as { munk: { card: { draftLabel: string }; flow: { label: string }[] } }).munk;
+    const daMunk = (da.landing as { munk: { card: { draftLabel: string }; flow: { label: string }[] } }).munk;
+    const enMunk = (en.landing as { munk: { card: { draftLabel: string }; flow: { label: string }[] } }).munk;
     expect(daMunk.card.draftLabel).toMatch(/AI-udkast/i);
     expect(enMunk.card.draftLabel).toMatch(/AI draft/i);
     expect(daMunk.flow.map((s) => s.label).join(" ")).toMatch(/Munk retter og skriver under/);
