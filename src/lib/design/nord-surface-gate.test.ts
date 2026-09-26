@@ -16,7 +16,7 @@ function walk(dir: string): string[] {
 
 // Member surfaces. Coach console, mail, non-landing marketing and the 3D coach spike are out of scope (spec header).
 const OUT_OF_SCOPE = [
-  /^app\/coach\//, /^components\/coach\//, /^lib\/email\//, /^components\/marketing\/(?!kalk\/)/,
+  /^app\/coach\//, /^components\/coach\//, /^lib\/email\//, /^components\/marketing\/(?!landing\/)/,
   /^components\/anatomy\/AnatomyFigure3D/,
 ];
 // Browser-chrome metadata must be a literal (Next viewport API): Nat values are legitimate there.
@@ -93,6 +93,20 @@ describe("sentence case in one font (spec §4, §7.1)", () => {
     expect('className="text-xs font-mono uppercase tracking-[0.14em]"').toMatch(KALK_VOICE);
     expect('className="text-xs tracking-tight"').not.toMatch(KALK_VOICE);
     expect("const s = name.toUpperCase();").not.toMatch(KALK_VOICE);
+  });
+});
+
+// E-mails er inline CSS og kan ikke bruge tokens, så de gates på værdierne:
+// Nord lys, sentence case, radius 0, ingen mono. De nat-farver der ikke
+// findes i Nord lys er afvist via DARK; #111111 er tilladt, da det er blæk.
+describe("e-mails are Nord lys (spec §3.1, §7)", () => {
+  const EMAIL = join(SRC, "lib/email");
+  const mails = walk(EMAIL).filter((p) => p.endsWith(".ts") && !/\.test\./.test(p));
+  it.each(mails.map((p) => relative(SRC, p)))("%s", (p) => {
+    const src = readFileSync(join(SRC, p), "utf8");
+    expect(src).not.toMatch(DARK);
+    expect(src).not.toMatch(/text-transform:\s*uppercase|SF Mono|monospace|border-radius:\s*(999px|[1-9])|MAKEIT/);
+    expect(src).not.toMatch(/color-scheme" content="dark/);
   });
 });
 
@@ -175,7 +189,7 @@ describe("section headers use SectionHeader (spec §6)", () => {
   // inside one element, so an eyebrow that sits in a flex row next to a step
   // counter is not read as a hand-built section header.
   const HAND_BUILT = /<(div|p|span)\s+className="eyebrow[^"]*"[^>]*>[^<]{0,160}<\/\1>\s*<h2\b/;
-  // The F2 landing (components/marketing/kalk) has its own type scale and gates.
+  // The F2 landing (components/marketing/landing) has its own type scale and gates.
   const files = surfaceFiles.filter(
     (p) => p.endsWith(".tsx") && !p.startsWith("components/ui/") && !p.startsWith("components/marketing/"),
   );

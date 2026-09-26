@@ -7,8 +7,8 @@ import { Label, Pill, Row } from "./parts";
  * session state is always dark, so the frame always gets `dark`.
  */
 export default function SessionScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
-  const t = useTranslations("Marketing.kalk");
-  const s = useTranslations("Marketing.kalk.screens");
+  const t = useTranslations("Marketing.landing");
+  const s = useTranslations("Marketing.landing.screens");
   const se = useTranslations("Session");
   const weight = t("hero.plateNew");
   const setValue = s("session.setValue");
@@ -100,7 +100,7 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
 
       <div className="flex items-center justify-between gap-2">
         <div className="flex flex-1 items-center gap-2 border border-dashed border-line-strong px-2.5 py-2 text-[10px]">
-          <span className="size-2.5 flex-none rounded-full bg-danger shadow-[0_0_0_3px_color-mix(in_oklab,var(--danger)_25%,transparent)]" />
+          <span className="size-2.5 flex-none rounded-full bg-danger" />
           <span>
             {se("exercise.formCheck", { set: 3 })} · {s("session.sendTo")}
           </span>

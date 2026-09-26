@@ -106,7 +106,7 @@ export default async function BuddyPage() {
       <section className="space-y-3">
         <div className="eyebrow">{t("recentHeader")}</div>
         {buddy.recentInteractions.length === 0 ? (
-          <div className="surface-2 rounded-lg p-6 text-center">
+          <div className="surface-2 rounded-lg p-6">
             <p className="text-fg-dim text-sm">{t("noInteractions")}</p>
           </div>
         ) : (

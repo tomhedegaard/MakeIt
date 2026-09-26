@@ -14,8 +14,8 @@ const IN_BASKET = new Set<string>(["i1", "i2", "i3", "i4"]);
 
 /** Mad: indkøbslisten til ugens plan. */
 export default function ShoppingScreen({ width, scroll }: { width?: number; scroll?: boolean }) {
-  const t = useTranslations("Marketing.kalk");
-  const s = useTranslations("Marketing.kalk.screens");
+  const t = useTranslations("Marketing.landing");
+  const s = useTranslations("Marketing.landing.screens");
   const sh = (key: string) => s(`shopping.${key}`);
 
   return (

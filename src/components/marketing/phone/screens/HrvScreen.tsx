@@ -7,8 +7,8 @@ const HRV_LINE =
 
 /** Hjerte: HRV against the member's own band (reference B "HRV"). */
 export default function HrvScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
-  const t = useTranslations("Marketing.kalk");
-  const s = useTranslations("Marketing.kalk.screens");
+  const t = useTranslations("Marketing.landing");
+  const s = useTranslations("Marketing.landing.screens");
   const h = useTranslations("Hrv.band");
 
   return (

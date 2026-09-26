@@ -164,7 +164,7 @@ export default function ShoppingChecklist({
       })}
 
       {groups.length === 0 ? (
-        <section className="surface-2 rounded-2xl p-8 text-center text-sm text-fg-dim">
+        <section className="surface-2 rounded-2xl p-8 text-sm text-fg-dim">
           {t("empty")}
         </section>
       ) : null}

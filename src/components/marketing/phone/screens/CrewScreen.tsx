@@ -6,7 +6,7 @@ const POSTS = ["p1", "p2", "p3", "p4", "p5"] as const;
 
 /** Crew: today's feed, your tier and the week's reps. */
 export default function CrewScreen({ width, scroll }: { width?: number; scroll?: boolean }) {
-  const s = useTranslations("Marketing.kalk.screens");
+  const s = useTranslations("Marketing.landing.screens");
   const c = (key: string) => s(`crew.${key}`);
 
   return (

@@ -25,7 +25,7 @@ import {
 import type { MorningReportPayload, MorningUrgency } from "@/lib/coach/types";
 import type { Locale } from "@/i18n/config";
 
-const ACCENT_URGENT = "#C97B3E";
+const ACCENT_URGENT = "#A8380B";
 
 function esc(s: string): string {
   return s
@@ -53,15 +53,15 @@ function sustainedRow(
   t: EmailT,
 ): string {
   return `
-    <tr><td style="padding:12px 0;border-bottom:1px solid rgba(245,242,236,0.08);">
+    <tr><td style="padding:12px 0;border-bottom:1px solid #E1E1DE;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
         <tr>
           <td style="vertical-align:top;">
-            <a href="${baseUrl}/coach/members/${m.member_id}" style="color:#F5F2EC;text-decoration:none;font-size:14px;">
+            <a href="${baseUrl}/coach/members/${m.member_id}" style="color:#111111;text-decoration:none;font-size:14px;">
               <strong>@${esc(m.handle)}</strong>
             </a>
           </td>
-          <td style="vertical-align:top;text-align:right;white-space:nowrap;font-family:'SF Mono',Menlo,Consolas,monospace;">
+          <td style="vertical-align:top;text-align:right;white-space:nowrap;">
             <div style="color:${ACCENT_URGENT};font-size:13px;">${esc(t("sustainedLowItem", { days: m.days_low }))}</div>
           </td>
         </tr>
@@ -71,9 +71,9 @@ function sustainedRow(
 
 function statCell(label: string, value: string): string {
   return `
-    <td valign="top" style="padding:14px 8px;text-align:center;border-right:1px solid rgba(245,242,236,0.08);">
-      <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;font-size:22px;color:#F5F2EC;">${esc(value)}</div>
-      <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#A8A6A0;margin-top:4px;">${esc(label)}</div>
+    <td valign="top" style="padding:14px 8px;text-align:center;border-right:1px solid #E1E1DE;">
+      <div style="font-variant-numeric:tabular-nums;font-size:22px;color:#111111;">${esc(value)}</div>
+      <div style="font-size:12px;color:#5E5E59;margin-top:4px;">${esc(label)}</div>
     </td>`;
 }
 
@@ -102,7 +102,7 @@ function renderHtml(args: {
   }
   if (u.pending_form_checks.count > 0) {
     urgentLines.push(
-      `<div style="font-size:13px;color:#A8A6A0;padding:8px 0;">${esc(
+      `<div style="font-size:13px;color:#5E5E59;padding:8px 0;">${esc(
         t("pending", {
           count: u.pending_form_checks.count,
           hours: u.pending_form_checks.avg_wait_hours,
@@ -115,7 +115,7 @@ function renderHtml(args: {
 
   const urgentBlock = hasUrgent
     ? `<tr><td style="padding-bottom:24px;">
-         <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:${ACCENT_URGENT};margin-bottom:8px;">${esc(t("urgentHeader"))}</div>
+         <div style="font-size:12px;color:${ACCENT_URGENT};margin-bottom:8px;">${esc(t("urgentHeader"))}</div>
          ${sustainedRows ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0">${sustainedRows}</table>` : ""}
          ${urgentLines.join("")}
        </td></tr>`
@@ -124,11 +124,11 @@ function renderHtml(args: {
   const patternsBlock =
     payload.patterns.length > 0
       ? `<tr><td style="padding-bottom:24px;">
-           <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#A8A6A0;margin-bottom:8px;">${esc(t("patternsHeader"))}</div>
+           <div style="font-size:13px;font-weight:500;color:#2E4A3B;margin-bottom:8px;">${esc(t("patternsHeader"))}</div>
            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
              ${payload.patterns
                .map(
-                 (p) => `<tr><td style="padding:8px 0;border-bottom:1px solid rgba(245,242,236,0.08);font-size:13px;color:#F5F2EC;line-height:1.5;">${esc(p.summary_da)}</td></tr>`,
+                 (p) => `<tr><td style="padding:8px 0;border-bottom:1px solid #E1E1DE;font-size:13px;color:#111111;line-height:1.5;">${esc(p.summary_da)}</td></tr>`,
                )
                .join("")}
            </table>
@@ -160,25 +160,25 @@ function renderHtml(args: {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="color-scheme" content="dark light">
+  <meta name="color-scheme" content="light">
   <title>${esc(t("title"))}</title>
 </head>
-<body style="margin:0;padding:0;background:#0A0A0B;color:#F5F2EC;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0A0A0B;">
+<body style="margin:0;padding:0;background:#FFFFFF;color:#111111;font-family:'Schibsted Grotesk',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;">
     <tr><td align="center" style="padding:40px 16px;">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
         <tr><td style="padding-bottom:32px;">
-          <span style="font-weight:900;letter-spacing:-0.02em;text-transform:uppercase;font-size:14px;color:#F5F2EC;">
-            MAKEIT <span style="color:#56554F;margin:0 6px;">//</span> HQ
+          <span style="font-weight:500;letter-spacing:-0.02em;font-size:14px;color:#111111;">
+            MakeIt <span style="color:#696964;margin:0 6px;">//</span> HQ
           </span>
         </td></tr>
         <tr><td style="padding-bottom:8px;">
-          <span style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#A8A6A0;">
+          <span style="font-size:13px;font-weight:500;color:#2E4A3B;">
             ${esc(t("eyebrow", { date: dateLabel }))}
           </span>
         </td></tr>
         <tr><td style="padding-bottom:24px;">
-          <h1 style="margin:0;font-weight:900;font-size:28px;line-height:1.1;letter-spacing:-0.02em;color:#F5F2EC;">
+          <h1 style="margin:0;font-weight:500;font-size:28px;line-height:1.1;letter-spacing:-0.02em;color:#111111;">
             ${esc(headline)}
           </h1>
         </td></tr>
@@ -187,22 +187,22 @@ function renderHtml(args: {
         ${patternsBlock}
 
         <tr><td style="padding-bottom:8px;">
-          <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#56554F;margin-bottom:8px;">${esc(t("yesterdayHeader"))}</div>
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#18181B;border:1px solid rgba(245,242,236,0.08);border-radius:10px;overflow:hidden;">
+          <div style="font-size:12px;color:#696964;margin-bottom:8px;">${esc(t("yesterdayHeader"))}</div>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2F2F0;border:1px solid #E1E1DE;border-radius:0;overflow:hidden;">
             <tr>${statsCells}</tr>
           </table>
         </td></tr>
 
         <tr><td style="padding-top:24px;padding-bottom:32px;">
-          <a href="${baseUrl}/coach" style="display:inline-block;background:#F5F2EC;color:#0A0A0B;padding:14px 28px;border-radius:999px;font-weight:500;text-decoration:none;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;font-family:'SF Mono',Menlo,Consolas,monospace;">
+          <a href="${baseUrl}/coach" style="display:inline-block;background:#111111;color:#FFFFFF;padding:15px 24px;border-radius:0;font-weight:500;text-decoration:none;font-size:15px;">
             ${esc(t("cta"))}
           </a>
         </td></tr>
-        <tr><td style="border-top:1px solid rgba(245,242,236,0.08);padding-top:20px;">
-          <p style="margin:0 0 6px;color:#56554F;font-size:11px;line-height:1.7;">
+        <tr><td style="border-top:1px solid #E1E1DE;padding-top:20px;">
+          <p style="margin:0 0 6px;color:#696964;font-size:12px;line-height:1.7;">
             ${esc(emailTranslator(locale, "Email.footer")("morningReportNote"))}
           </p>
-          <p style="margin:12px 0 0;color:#56554F;font-size:11px;line-height:1.7;">
+          <p style="margin:12px 0 0;color:#696964;font-size:12px;line-height:1.7;">
             ${emailFooterHtml()}
           </p>
         </td></tr>

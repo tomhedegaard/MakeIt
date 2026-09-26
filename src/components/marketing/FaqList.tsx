@@ -38,7 +38,7 @@ export default function FaqList({
               <summary
                 className="flex items-start gap-4 py-5 cursor-pointer list-none touch-app"
               >
-                <span className="numeric text-[11px] text-fg-faint w-7 shrink-0 mt-1.5">
+                <span className="numeric text-micro text-fg-faint w-7 shrink-0 mt-1.5">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="flex-1 font-display text-lg md:text-xl leading-snug">
@@ -46,7 +46,7 @@ export default function FaqList({
                 </span>
                 <span
                   aria-hidden
-                  className="size-7 rounded-full surface-2 flex items-center justify-center text-fg-dim group-open:rotate-45 transition-transform shrink-0"
+                  className="size-7 border border-line flex items-center justify-center text-fg-dim group-open:rotate-45 transition-transform shrink-0"
                 >
                   +
                 </span>

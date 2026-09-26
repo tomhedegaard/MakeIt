@@ -730,11 +730,11 @@ nav.tabbar {
 .touch-app { touch-action: manipulation; }
 
 /* ---------------------------------------------------------------- *
- * Kalk landing helpers (F2). Tokens only, Kalk scope only.
+ * Landing helpers (Nord). Tokens only, scoped to the landing's theme root.
  * ---------------------------------------------------------------- */
 
 /* Changed number: a slanted signal stroke drawn once across it. */
-@keyframes kalk-strike {
+@keyframes landing-strike {
   from { transform: rotate(-8deg) scaleX(0); }
   to   { transform: rotate(-8deg) scaleX(1); }
 }
@@ -751,7 +751,7 @@ nav.tabbar {
   background: var(--signal);
   transform: rotate(-8deg);
   transform-origin: left center;
-  animation: kalk-strike 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.5s both;
+  animation: landing-strike 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.5s both;
 }
 
 /* Motor-demoens ene bevaegelse (hero). EngineDemo taeller topsaettet ned
@@ -765,68 +765,24 @@ nav.tabbar {
 [data-theme="nord"] [data-demo-card][data-motion="armed"] .strike-signal::after {
   animation-play-state: paused;
 }
-[data-theme="nord"] [data-demo-card][data-motion="run"] .kalk-topset {
+[data-theme="nord"] [data-demo-card][data-motion="run"] .landing-topset {
   display: inline-block;
-  animation: kalk-topset-land 0.7s cubic-bezier(0.2, 0, 0.1, 1) both;
+  animation: landing-topset-land 0.7s cubic-bezier(0.2, 0, 0.1, 1) both;
 }
-@keyframes kalk-topset-land {
+@keyframes landing-topset-land {
   from { opacity: 0.55; transform: translateY(-0.04em); }
   to   { opacity: 1; transform: none; }
 }
 
 /* Kg ruler above a section, like the holes in a rack. */
-[data-theme="nord"] .kalk-rule {
+[data-theme="nord"] .landing-rule {
   display: flex;
   justify-content: space-between;
   padding-top: 14px;
   border-top: 1px solid var(--line-bright);
   background: repeating-linear-gradient(90deg, var(--line-bright) 0 1px, transparent 1px 22px) top left / 100% 7px no-repeat;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 10px;
-  letter-spacing: 0.08em;
+  font-size: 12px;
   color: var(--fg-dim);
-}
-
-/* Motor-demoens skydere. Tommelfingeren fylder 44 px, så målfladen er
- * en finger bred, mens prikken der tegnes i den er lille nok til at
- * sporet stadig kan læses. Tokens only. */
-[data-theme="nord"] .kalk-range {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 44px;
-  background: transparent;
-  cursor: pointer;
-  touch-action: manipulation;
-}
-[data-theme="nord"] .kalk-range:focus-visible {
-  outline: 2px solid var(--fg);
-  outline-offset: 2px;
-  border-radius: 0;
-}
-[data-theme="nord"] .kalk-range::-webkit-slider-runnable-track {
-  height: 2px;
-  background: var(--line-strong);
-}
-[data-theme="nord"] .kalk-range::-moz-range-track {
-  height: 2px;
-  background: var(--line-strong);
-}
-[data-theme="nord"] .kalk-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 44px;
-  height: 44px;
-  margin-top: -21px;
-  border: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at center, var(--fg) 0 8px, var(--bg) 9px 13px, transparent 14px);
-}
-[data-theme="nord"] .kalk-range::-moz-range-thumb {
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at center, var(--fg) 0 8px, var(--bg) 9px 13px, transparent 14px);
 }
 
 /* Sticky motor rig: scale the phone down on short viewports. */
@@ -859,7 +815,7 @@ nav.tabbar {
     stroke-dashoffset: 0;
     transition: none;
   }
-  [data-theme="nord"] [data-demo-card][data-motion="run"] .kalk-topset {
+  [data-theme="nord"] [data-demo-card][data-motion="run"] .landing-topset {
     animation: none;
   }
 }

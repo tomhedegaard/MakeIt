@@ -17,7 +17,7 @@ const MESSAGES: Record<AskLocale, Messages> = { da, en: en as unknown as Message
  */
 export function buildKnowledge(locale: AskLocale): string {
   const m = MESSAGES[locale];
-  const k = m.Marketing.kalk;
+  const k = m.Marketing.landing;
   const faq = Object.values(m.Marketing.faq.items as Record<string, { q: string; a: string }>);
   const kalkFaq = Object.entries(k.faq)
     .filter(([key]) => key !== "heading" && key !== "sub")

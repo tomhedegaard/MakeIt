@@ -28,9 +28,9 @@ export default async function ShoppingPage() {
     return (
       <Container className="py-6 lg:py-12 max-w-2xl space-y-6">
         <Header t={t} />
-        <section className="surface-2 rounded-2xl p-6 lg:p-10 text-center">
-          <SectionHeader eyebrow={t("noPlanEyebrow")} title={t("noPlanTitle")} className="justify-center" />
-          <p className="text-fg-dim text-sm md:text-base max-w-md mx-auto mb-5">
+        <section className="surface-2 rounded-2xl p-6 lg:p-10">
+          <SectionHeader eyebrow={t("noPlanEyebrow")} title={t("noPlanTitle")} />
+          <p className="text-fg-dim text-sm md:text-base max-w-md mb-5">
             {t("noPlanBody")}
           </p>
           <Link href="/nutrition" className="btn btn-primary">

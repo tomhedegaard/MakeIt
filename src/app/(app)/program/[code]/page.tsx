@@ -112,7 +112,7 @@ export default async function ProgramDetailPage({
         </section>
 
         {program.days.length === 0 ? (
-          <div className="surface-2 rounded-2xl p-8 text-center text-sm text-fg-dim">
+          <div className="surface-2 rounded-2xl p-8 text-sm text-fg-dim">
             {t("emptyDays")}
           </div>
         ) : (

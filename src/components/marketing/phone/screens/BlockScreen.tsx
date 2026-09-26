@@ -9,7 +9,7 @@ const EXERCISES = ["ex1", "ex2", "ex3", "ex4"] as const;
 
 /** Træn: the block, this week and what comes next. */
 export default function BlockScreen({ width, scroll }: { width?: number; scroll?: boolean }) {
-  const s = useTranslations("Marketing.kalk.screens");
+  const s = useTranslations("Marketing.landing.screens");
   const b = (key: string) => s(`block.${key}`);
 
   return (

@@ -1,5 +1,5 @@
 import type { Viewport } from "next";
-import KalkLanding from "@/components/marketing/kalk/KalkLanding";
+import LandingPage from "@/components/marketing/landing/LandingPage";
 
 // Kalk is a light page scope on a dark-default root layout.
 export const viewport: Viewport = {
@@ -8,5 +8,5 @@ export const viewport: Viewport = {
 };
 
 export default function Home() {
-  return <KalkLanding />;
+  return <LandingPage />;
 }

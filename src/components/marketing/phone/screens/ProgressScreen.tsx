@@ -10,8 +10,8 @@ const VOLUME = [30, 36, 42, 22, 34, 40, 46, 24, 38, 44, 50, 26];
 
 /** Træn: fremgang (back squat e1RM, PRs, volume). */
 export default function ProgressScreen({ width, scroll }: { width?: number; scroll?: boolean }) {
-  const s = useTranslations("Marketing.kalk.screens");
-  const unit = useTranslations("Marketing.kalk.hero")("plateUnit");
+  const s = useTranslations("Marketing.landing.screens");
+  const unit = useTranslations("Marketing.landing.hero")("plateUnit");
 
   return (
     <PhoneFrame label={s("progress.aria")} tab="train" width={width} scroll={scroll}>

@@ -200,9 +200,9 @@ export default async function CrewPage() {
         </div>
 
         {isEmpty ? (
-          <div className="surface-2 rounded-2xl p-8 text-center">
+          <div className="surface-2 rounded-2xl p-8">
             <div className="font-display text-2xl mb-2">{t("emptyTitle")}</div>
-            <p className="text-fg-dim text-sm mb-4 max-w-sm mx-auto">
+            <p className="text-fg-dim text-sm mb-4 max-w-sm">
               {t("emptyBody")}
             </p>
             <PostComposer

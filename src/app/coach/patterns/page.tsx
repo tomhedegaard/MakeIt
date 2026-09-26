@@ -62,7 +62,7 @@ export default async function CoachPatternsPage({
       </div>
 
       {patterns.length === 0 ? (
-        <div className="surface-2 rounded-lg p-6 text-center">
+        <div className="surface-2 rounded-lg p-6">
           <p className="text-fg-dim text-sm">{t("empty")}</p>
         </div>
       ) : (

@@ -19,8 +19,8 @@ export const FORM_CHECK_DEMO_SRC = "/exercise-demos/bench.webm";
  * this screen hides its own static parts from assistive tech.
  */
 export default function FormCheckScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
-  const s = useTranslations("Marketing.kalk.screens");
-  const card = useTranslations("Marketing.kalk.munk.card");
+  const s = useTranslations("Marketing.landing.screens");
+  const card = useTranslations("Marketing.landing.munk.card");
 
   return (
     <PhoneFrame label={s("formCheck.aria")} tab="train" width={width} scroll={scroll} interactive>

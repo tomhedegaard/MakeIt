@@ -83,7 +83,6 @@ export default function PhoneFrame({
       style={{ "--pw": `${width}px` } as CSSProperties}
       className={cn(
         "relative aspect-[9/19.5] w-[var(--pw)] flex-none bg-fg p-[calc(var(--pw)*0.032)]",
-        "shadow-[0_40px_60px_-30px_color-mix(in_oklab,var(--fg)_45%,transparent),0_12px_24px_-12px_color-mix(in_oklab,var(--fg)_30%,transparent)]",
         className,
       )}
     >
@@ -110,7 +109,7 @@ export default function PhoneFrame({
  * should be drawn in exactly one place.
  */
 export function PhoneStatusBar({ className }: { className?: string }) {
-  const t = useTranslations("Marketing.kalk");
+  const t = useTranslations("Marketing.landing");
   return (
     <div
       aria-hidden="true"
@@ -135,7 +134,7 @@ export function PhoneTabBar({
   dark?: boolean;
   className?: string;
 }) {
-  const t = useTranslations("Marketing.kalk");
+  const t = useTranslations("Marketing.landing");
   const nav = useTranslations("Nav.links");
   const tabLabel: Record<PhoneTab, string> = {
     today: nav("today"),
