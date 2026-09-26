@@ -8,6 +8,7 @@ import CuesList from "@/components/exercise/CuesList";
 import { MUSCLE_LABELS, type MuscleGroup, type AnatomyView } from "@/lib/data/muscle-groups";
 import type { AnatomyGender } from "@/lib/data/anatomy/paths";
 import type { ExercisePhase } from "@/lib/data/exercises";
+import { cn } from "@/lib/utils";
 
 type Props = {
   name: string;
@@ -183,28 +184,42 @@ function MuscleChips({
       <h2 className="eyebrow">{title}</h2>
       <div className="flex flex-wrap gap-1.5">
         {primary.map((m) => (
-          <Chip key={m} label={MUSCLE_LABELS[m]} color={TIER_COLOR.primary} dark />
+          <Chip key={m} label={MUSCLE_LABELS[m]} tier="primary" />
         ))}
         {secondary.map((m) => (
-          <Chip key={m} label={MUSCLE_LABELS[m]} color={TIER_COLOR.secondary} dark />
+          <Chip key={m} label={MUSCLE_LABELS[m]} tier="secondary" />
         ))}
         {tertiary.map((m) => (
-          <Chip key={m} label={MUSCLE_LABELS[m]} color={TIER_COLOR.tertiary} />
+          <Chip key={m} label={MUSCLE_LABELS[m]} tier="tertiary" />
         ))}
       </div>
     </div>
   );
 }
 
-function Chip({ label, color, dark = false }: { label: string; color: string; dark?: boolean }) {
+/**
+ * Nord chip (spec §5): 1 px linje, 12 px tekst, 6 × 10 px padding. Den
+ * primære muskel er den "valgte" chip med blæk-fyld; sekundær og tertiær
+ * bærer deres farve som en prik, ikke som flade, så farven forbliver
+ * data-blæk (spec §7.4).
+ */
+function Chip({ label, tier }: { label: string; tier: keyof typeof TIER_COLOR }) {
+  if (tier === "primary") {
+    return (
+      <span data-tier={tier} className="inline-flex items-center border border-fg bg-fg px-2.5 py-1.5 text-micro text-bg">
+        {label}
+      </span>
+    );
+  }
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs"
-      style={{
-        background: color,
-        color: dark ? "var(--bg)" : "var(--fg)",
-      }}
+      data-tier={tier}
+      className={cn(
+        "inline-flex items-center gap-1.5 border px-2.5 py-1.5 text-micro",
+        tier === "secondary" ? "border-line-strong text-fg" : "border-line text-fg-dim",
+      )}
     >
+      <span className="size-1.5 rounded-full" style={{ background: TIER_COLOR[tier] }} aria-hidden />
       {label}
     </span>
   );

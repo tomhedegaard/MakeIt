@@ -137,23 +137,25 @@ export default async function RepsPage() {
         title={t("header.title")}
         subtitle={t("header.subtitle")}
         right={
-          <div className="surface-2 rounded-lg px-6 py-4 text-right min-w-[220px]">
-            <div className="eyebrow mb-1">{t("balance.label")}</div>
-            <div className="numeric text-4xl">
+          // Nord §6.7: saldoen er hero-tallet, venstrestillet, med
+          // niveau og afstand til næste niveau under og progress i mos.
+          <div className="min-w-[220px]">
+            <div className="eyebrow mb-2">{t("balance.label")}</div>
+            <div className="numeric text-hero md:text-hero-lg">
               {balance.toLocaleString(tag)}
             </div>
-            <div className="text-xs text-fg-faint mt-1">
+            <div className="text-meta text-fg-dim mt-2">
               {t("balance.tier", { tier: progress.current })}
             </div>
             {progress.next ? (
               <>
                 <div className="mt-3 h-1 bg-bg-3 overflow-hidden">
                   <div
-                    className="h-full bg-fg"
+                    className="h-full bg-signal"
                     style={{ width: `${progress.pct}%` }}
                   />
                 </div>
-                <div className="text-micro text-fg-faint mt-2">
+                <div className="text-meta text-fg-dim mt-2">
                   {t("balance.toNext", {
                     amount: progress.toNext?.toLocaleString(tag) ?? "",
                     tier: progress.next,
