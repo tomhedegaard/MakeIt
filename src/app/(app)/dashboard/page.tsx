@@ -435,7 +435,7 @@ export default async function TodayPage() {
             ))}
           </ul>
         ) : (
-          <div className="surface-2 rounded-lg p-6 text-center text-sm text-fg-dim">
+          <div className="surface-2 rounded-lg p-6 text-sm text-fg-dim">
             {t("upcoming.empty")}
           </div>
         )}
@@ -496,7 +496,7 @@ export default async function TodayPage() {
             ))}
           </ul>
         ) : (
-          <div className="surface-2 rounded-lg p-6 text-center text-sm text-fg-dim">
+          <div className="surface-2 rounded-lg p-6 text-sm text-fg-dim">
             {t("crew.empty")}
             <div className="mt-3">
               <Link href="/community" className="btn btn-sm btn-primary">{t("crew.share")}</Link>

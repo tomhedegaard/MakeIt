@@ -70,7 +70,7 @@ export default async function Backlog() {
           )
         )}
         {items.length === 0 ? (
-          <div className="surface-2 rounded-2xl px-5 py-8 text-center text-sm text-fg-dim">
+          <div className="surface-2 rounded-2xl px-5 py-8 text-sm text-fg-dim">
             {t("empty")}
           </div>
         ) : null}

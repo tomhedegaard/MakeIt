@@ -97,7 +97,7 @@ export default async function CoachOverviewPage() {
           </div>
 
           {recentlyActive.length === 0 ? (
-            <div className="p-6 text-sm text-fg-dim text-center">
+            <div className="p-6 text-sm text-fg-dim">
               {t("recentEmpty")}
             </div>
           ) : (

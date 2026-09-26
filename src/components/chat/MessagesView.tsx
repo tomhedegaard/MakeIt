@@ -171,11 +171,11 @@ export default function MessagesView({
         aria-label={t("ariaLabel")}
       >
         {bootPending && messages.length === 0 ? (
-          <li className="text-center text-xs text-fg-faint py-8">
+          <li className="text-xs text-fg-faint py-8">
             {t("loading")}
           </li>
         ) : messages.length === 0 ? (
-          <li className="text-center text-sm text-fg-dim py-8">
+          <li className="text-sm text-fg-dim py-8">
             {t("empty")}
           </li>
         ) : (

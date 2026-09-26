@@ -17,9 +17,9 @@ export default async function CoachMembersPage() {
 
       <section className="surface-2 rounded-2xl overflow-hidden">
         {members.length === 0 ? (
-          <div className="px-6 py-12 text-center">
+          <div className="px-6 py-12">
             <div className="font-display text-2xl mb-2">{t("emptyTitle")}</div>
-            <p className="text-fg-dim text-sm max-w-sm mx-auto">
+            <p className="text-fg-dim text-sm max-w-sm">
               {t("emptyBody")}
             </p>
           </div>

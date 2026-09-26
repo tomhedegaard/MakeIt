@@ -190,3 +190,16 @@ Fra `md` vokser en fane-titel (`PageTitle size="page"`) til 44 px, mens en under
 desktop uden at opfinde en ny størrelse på telefonen.
 
 Sidetitler slutter med punktum i begge sprog (34 strenge rettet).
+
+### 10.6 Tab-baren beholder Mind (beslutning 26.09.2026)
+
+Briefen foreslår "I dag · Træn · Mad · Crew · Mere" med Mind under "Mere". Tom har
+besluttet, at Mind BEHOLDER sin egen fane: tab-baren er "I dag · Træn · Mad · Mind ·
+Crew". Mind er den 5. søjle og skal være ét tryk væk. "Mere"-fanen bygges ikke; Mig,
+Reps, HRV og Forskning ligger fortsat i topbjælkens profilmenu.
+
+### 10.7 Tomme tilstande er venstrestillede
+
+`EmptyState` og de håndbyggede tomme blokke i app og coach er venstrestillede
+(spec §5: "Alt er venstrestillet"). Tabel-agtige celler (ugedage, nøgletal,
+segmenterede valg) er fortsat centrerede, fordi de er tal i kolonner, ikke tekst.

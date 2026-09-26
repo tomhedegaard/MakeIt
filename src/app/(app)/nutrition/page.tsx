@@ -284,16 +284,15 @@ function EmptyState({
   );
   const resetLabel = describeNextAvailable(planLimit.nextAvailableAt);
   return (
-    <section className="surface-2 rounded-2xl p-6 lg:p-10 text-center max-w-2xl mx-auto">
+    <section className="surface-2 rounded-2xl p-6 lg:p-10 max-w-2xl">
       <SectionHeader
         eyebrow={t("page.emptyEyebrow", { week: weekStartLabel(weekStart) })}
         title={t("page.emptyTitle")}
-        className="justify-center"
       />
-      <p className="text-fg-dim text-sm md:text-base max-w-md mx-auto mb-5">
+      <p className="text-fg-dim text-sm md:text-base max-w-md mb-5">
         {t("page.emptyBody")}
       </p>
-      <div className="flex flex-wrap items-center justify-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {hasProfile ? (
           <GeneratePlanButton
             label={t("page.emptyGenerate")}

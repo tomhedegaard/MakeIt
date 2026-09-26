@@ -99,7 +99,7 @@ export default async function CoachAnalyticsPage() {
             </span>
           </div>
           {atRisk.length === 0 ? (
-            <div className="p-6 text-sm text-fg-dim text-center">
+            <div className="p-6 text-sm text-fg-dim">
               {t("atRiskEmpty")}
             </div>
           ) : (

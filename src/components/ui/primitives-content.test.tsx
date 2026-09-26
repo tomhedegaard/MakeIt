@@ -18,7 +18,15 @@ describe("EmptyState", () => {
     const html = renderToStaticMarkup(
       <EmptyState title="Intet pas endnu" body="Vælg et program." actionHref="/coaching" actionLabel="Vælg program" />,
     );
-    expect(html).toMatch(/<h2 class="font-display text-xl">Intet pas endnu<\/h2>/);
+    expect(html).toMatch(/<h2 class="font-display text-section">Intet pas endnu<\/h2>/);
+  });
+
+  it("is left-aligned like everything else in Nord (spec §5)", () => {
+    const html = renderToStaticMarkup(
+      <EmptyState title="Intet pas endnu" body="Vælg et program." actionHref="/coaching" actionLabel="Vælg program" />,
+    );
+    expect(html).not.toMatch(/text-center|items-center/);
+    expect(html).toContain("items-start");
   });
 
   it("passes data-attributes through so the connected dashboard can target it", () => {

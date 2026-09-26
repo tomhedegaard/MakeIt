@@ -44,9 +44,9 @@ export default async function PriorityInboxList({
       ) : null}
 
       {items.length === 0 ? (
-        <div className="p-6 text-center space-y-2">
+        <div className="p-6 space-y-2">
           <div className="font-display text-2xl">{t("emptyTitle")}</div>
-          <p className="text-sm text-fg-dim max-w-md mx-auto">{t("emptyBody")}</p>
+          <p className="text-sm text-fg-dim max-w-md">{t("emptyBody")}</p>
           {mode === "demo" ? (
             <p className="text-micro text-fg-faint">{t("emptyDemoHint")}</p>
           ) : null}

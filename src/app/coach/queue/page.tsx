@@ -98,7 +98,7 @@ export default async function CoachQueuePage() {
       </div>
 
       {pending.length === 0 ? (
-        <div className="surface-2 rounded-2xl p-8 text-center">
+        <div className="surface-2 rounded-2xl p-8">
           <div className="font-display text-2xl mb-2">{t("emptyTitle")}</div>
           <p className="text-fg-dim text-sm">
             {t("emptyBody")}
