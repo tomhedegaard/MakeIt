@@ -4,26 +4,24 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import DomainMark from "@/components/brand/DomainMark";
+import { Brain, CalendarDays, Dumbbell, Users, Utensils } from "lucide-react";
 
 type Tab = { href: string; labelKey: string; icon: React.ReactNode; domain?: string };
 
+/**
+ * Nord tab icons (spec §5): one line family at 24 px, 1.5 px stroke,
+ * square caps, monochrome. The anatomical DomainMark glyphs (stomach,
+ * skull, figure) stay where they carry meaning — BodyMap, the HQ strip —
+ * but as nav they read as illustrations, not icons.
+ */
+const LINE = { strokeWidth: 1.5, strokeLinecap: "square", strokeLinejoin: "miter", className: "tab-icon", "aria-hidden": true } as const;
+
 const Icon = {
-  today: (
-    <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
-      <path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
-  train: <DomainMark domain="body" className="tab-icon" />,
-  crew: (
-    <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
-      <circle cx="9" cy="9" r="3" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="17" cy="10" r="2.2" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M3 19c0-3 2.7-5 6-5s6 2 6 5M14 19c0-2 1.5-3.5 4-3.5s3 1 3 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
-  food: <DomainMark domain="food" className="tab-icon" />,
-  mind: <DomainMark domain="mind" className="tab-icon" />,
+  today: <CalendarDays {...LINE} />,
+  train: <Dumbbell {...LINE} />,
+  food: <Utensils {...LINE} />,
+  mind: <Brain {...LINE} />,
+  crew: <Users {...LINE} />,
 };
 
 // Five tabs (spec §6). Me, Reps, HRV and Science live in the header menu.
