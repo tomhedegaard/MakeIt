@@ -144,7 +144,7 @@ function BacklogRow({ item, t }: { item: BacklogItem; t: Translator }) {
             <KindBadge kind={item.kind === "fix" ? "fix" : item.kind} />
             <PriorityBadge priority={item.priority} />
             {item.createdByHandle ? (
-              <span className="text-[10px] text-fg-faint">
+              <span className="text-micro text-fg-faint">
                 @{item.createdByHandle}
               </span>
             ) : null}
@@ -161,7 +161,7 @@ function BacklogRow({ item, t }: { item: BacklogItem; t: Translator }) {
               {item.description}
             </p>
           ) : null}
-          <div className="mt-2 text-[10px] text-fg-faint">
+          <div className="mt-2 text-micro text-fg-faint">
             {new Date(item.createdAt).toLocaleDateString("da-DK", {
               year: "numeric",
               month: "short",
@@ -209,7 +209,7 @@ function StatusActions({ item, t }: { item: BacklogItem; t: Translator }) {
           <input type="hidden" name="status" value={tr.status} />
           <button
             type="submit"
-            className="text-[10px] px-2 py-1 rounded border hairline-strong hover:bg-bg-3 transition-colors"
+            className="text-micro px-2 py-1 rounded border hairline-strong hover:bg-bg-3 transition-colors"
           >
             {tr.label}
           </button>
@@ -219,7 +219,7 @@ function StatusActions({ item, t }: { item: BacklogItem; t: Translator }) {
         <input type="hidden" name="id" value={item.id} />
         <button
           type="submit"
-          className="text-[10px] px-2 py-1 rounded text-fg-faint hover:text-red-400 transition-colors"
+          className="text-micro px-2 py-1 rounded text-fg-faint hover:text-red-400 transition-colors"
           aria-label={t("delete")}
         >
           ×
@@ -247,7 +247,7 @@ function KindBadge({ kind }: { kind: "feature" | "change" | "fix" }) {
   }[kind];
   return (
     <span
-      className={`px-2 py-0.5 rounded text-[10px] ${cls}`}
+      className={`px-2 py-0.5 rounded text-micro ${cls}`}
     >
       {KIND_LABEL[kind]}
     </span>
@@ -258,7 +258,7 @@ function PriorityBadge({ priority }: { priority: BacklogPriority }) {
   if (priority === "medium" || priority === "low") {
     // Avoid badge spam on the common case — only highlight elevated priorities.
     return (
-      <span className="text-[10px] text-fg-faint">
+      <span className="text-micro text-fg-faint">
         {PRIORITY_LABEL[priority]}
       </span>
     );
@@ -269,7 +269,7 @@ function PriorityBadge({ priority }: { priority: BacklogPriority }) {
   }[priority];
   return (
     <span
-      className={`px-2 py-0.5 rounded text-[10px] ${cls}`}
+      className={`px-2 py-0.5 rounded text-micro ${cls}`}
     >
       {PRIORITY_LABEL[priority]}
     </span>

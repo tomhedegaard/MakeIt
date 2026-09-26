@@ -44,7 +44,7 @@ export default function CoachShell({
         <div className="px-5 py-5 border-b hairline">
           <Logo />
           <div className="mt-4 flex items-center gap-2">
-            <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
+            <span className="numeric text-micro border hairline-strong px-2 py-0.5">
               {t("badge")}
             </span>
             <span className="eyebrow">@{member.handle}</span>
@@ -69,7 +69,7 @@ export default function CoachShell({
                         : "text-fg-dim hover:text-fg hover:bg-bg-3/60"
                     )}
                   >
-                    <span className="numeric text-[11px] text-fg-faint group-hover:text-fg-dim w-6">
+                    <span className="numeric text-micro text-fg-faint group-hover:text-fg-dim w-6">
                       {item.num}
                     </span>
                     <span className="tracking-tight">{t(item.labelKey)}</span>
@@ -93,7 +93,7 @@ export default function CoachShell({
           <div className="flex h-14 items-center justify-between px-5">
             <div className="flex items-center gap-2">
               <Logo />
-              <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
+              <span className="numeric text-micro border hairline-strong px-2 py-0.5">
                 {t("badge")}
               </span>
             </div>

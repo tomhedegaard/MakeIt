@@ -8,7 +8,7 @@ const css = readFileSync(new URL("../../app/globals.css", import.meta.url), "utf
 const da = JSON.parse(readFileSync(new URL("../../../messages/da/Nav.json", import.meta.url), "utf8"));
 const en = JSON.parse(readFileSync(new URL("../../../messages/en/Nav.json", import.meta.url), "utf8"));
 
-describe("Kalk navigation (spec §6)", () => {
+describe("Nord navigation (spec §5)", () => {
   it("has exactly five mobile tabs in order: today, train, food, mind, crew", () => {
     const keys = [...bar.matchAll(/labelKey:\s*"(\w+)"/g)].map((m) => m[1]);
     expect(keys).toEqual(["today", "train", "food", "mind", "crew"]);
@@ -44,11 +44,15 @@ describe("Kalk navigation (spec §6)", () => {
     expect(shell).toMatch(/summaryRef\.current\?\.focus\(\)/);
   });
 
-  it("labels the menu toggle as a menu and keeps the visible avatar", () => {
+  it("labels the menu toggle as a menu and draws it as a 24 px line icon (Nord §5)", () => {
     const summary = shell.slice(shell.indexOf("<summary"), shell.indexOf("</summary>"));
     expect(summary).toContain('t("shell.menu")');
     expect(summary).not.toContain("shell.myProfile");
-    expect(summary).toContain("member.handle.slice(0, 2)");
+    // Nord: profil er et linjeikon, ikke en initial-cirkel på en flade.
+    expect(summary).toMatch(/<svg[^>]*className="size-6"/);
+    expect(summary).toContain('strokeWidth="1.5"');
+    expect(summary).not.toMatch(/rounded-full|surface-2/);
+    expect(summary).toContain("size-11");
   });
 
   it("keeps the tour welcome free of dashes", () => {

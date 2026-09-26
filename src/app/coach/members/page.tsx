@@ -36,7 +36,7 @@ export default async function CoachMembersPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm">@{m.handle}</div>
-                    <div className="text-[11px] text-fg-faint">
+                    <div className="text-micro text-fg-faint">
                       {m.tier} ·{" "}
                       {m.programCode
                         ? t("withProgram", { programCode: m.programCode, programWeek: m.programWeek ?? "" })
@@ -44,7 +44,7 @@ export default async function CoachMembersPage() {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-[10px] text-fg-faint">
+                    <div className="text-micro text-fg-faint">
                       {t("last")}
                     </div>
                     <div className="numeric text-sm">

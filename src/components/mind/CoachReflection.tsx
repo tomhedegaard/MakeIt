@@ -17,7 +17,7 @@ export default async function CoachReflection({ bodyMd }: { bodyMd: string }) {
     <article className="space-y-8 rounded-2xl border hairline bg-bg-2/30 p-6 md:p-8">
       <header>
         <div data-identity="motor" className="eyebrow">{t("eyebrow")}</div>
-        <div className="text-[10px] text-fg-faint mt-1">
+        <div className="text-micro text-fg-faint mt-1">
           {t("title")}
         </div>
         <p data-engine-gloss="" className="mt-2 text-sm text-fg-dim leading-relaxed">

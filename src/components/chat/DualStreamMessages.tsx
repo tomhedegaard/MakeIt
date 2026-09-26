@@ -52,7 +52,7 @@ export default function DualStreamMessages({
           <div data-identity="coach" className="eyebrow mb-2">{copy.munkRole}</div>
           <div className="flex items-center gap-3">
             <MunkMark name={copy.munkTitle} />
-            <div className="text-[10px] text-fg-faint min-w-0">
+            <div className="text-micro text-fg-faint min-w-0">
               {copy.munkSub}
             </div>
           </div>
@@ -75,7 +75,7 @@ export default function DualStreamMessages({
             <MotorGlyph className="text-fg-dim" />
             <div className="min-w-0">
               <div className="text-sm leading-tight">{copy.motorTitle}</div>
-              <div className="text-[10px] text-fg-faint">
+              <div className="text-micro text-fg-faint">
                 {copy.motorSub}
               </div>
             </div>

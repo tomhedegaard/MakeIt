@@ -171,7 +171,7 @@ export default function AudioRecorder({
           <span className="text-sm tabular-nums">
             {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}
           </span>
-          <span className="text-[10px] text-fg-faint ml-auto">{t("max")}</span>
+          <span className="text-micro text-fg-faint ml-auto">{t("max")}</span>
           <button type="button" onClick={stop} className="btn btn-sm">
             {t("stop")}
           </button>
@@ -201,7 +201,7 @@ export default function AudioRecorder({
       ) : null}
 
       {error ? (
-        <span className="text-[10px] text-danger ml-2">{error}</span>
+        <span className="text-micro text-danger ml-2">{error}</span>
       ) : null}
     </div>
   );

@@ -47,10 +47,10 @@ export default function PatternRow({ pattern }: { pattern: PatternForDisplay }) 
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <span className="inline-flex items-center surface-2 px-2 py-0.5 text-[10px] text-fg-faint">
+              <span className="inline-flex items-center surface-2 px-2 py-0.5 text-micro text-fg-faint">
                 {codeLabel}
               </span>
-              <span className="text-[10px] text-fg-faint">
+              <span className="text-micro text-fg-faint">
                 {t("affectedCount", { count: pattern.affected.length })}
               </span>
             </div>

@@ -37,13 +37,13 @@ export default function RedemptionRow({
       </span>
       <div className="flex-1 min-w-0">
         <div className="text-sm truncate">@{redemption.memberHandle}</div>
-        <div className="text-[11px] text-fg-faint truncate">
+        <div className="text-micro text-fg-faint truncate">
           {redemption.rewardName} ·{" "}
           {t("reps", { cost: redemption.costReps.toLocaleString("da-DK") })}
         </div>
       </div>
       <span
-        className="text-[10px] border hairline-strong px-2 py-0.5 shrink-0"
+        className="text-micro border hairline-strong px-2 py-0.5 shrink-0"
         style={{
           color:
             redemption.status === "approved" ? "var(--fg)" : "var(--fg-dim)",

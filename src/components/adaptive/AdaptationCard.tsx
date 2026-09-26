@@ -106,7 +106,10 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
   return (
     <section
       aria-labelledby="adaptation-heading"
-      className="surface-2 rounded-2xl p-5 lg:p-6 space-y-3"
+      // Nord §5 "HQ's begrundelse": en strimmel med 1 px linje øverst, ikke
+      // et kort på en flade. Forklaringen er brødtekst, knapperne er
+      // blæk-primær og sekundær outline.
+      className="border-t hairline pt-4 space-y-3"
       aria-busy={isPending}
     >
       <div className="flex items-baseline justify-between gap-3">
@@ -114,7 +117,7 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
           {display.eyebrow}
         </h2>
         <span
-          className={`text-[10px] ${
+          className={`text-micro ${
  display.pendingCoach ? "text-warn" : "text-fg-dim"
  }`}
         >
@@ -122,7 +125,7 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
         </span>
       </div>
 
-      <p className="text-sm leading-relaxed text-fg-dim">
+      <p className="text-copy text-fg-body">
         {optimisticAdaptation.explanationDa}
       </p>
 
@@ -131,7 +134,7 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
           className="group"
           onToggle={handleDisclosureToggle}
         >
-          <summary className="cursor-pointer list-none text-[11px] text-fg-dim hover:text-fg select-none inline-flex items-center gap-1 lift touch-app">
+          <summary className="cursor-pointer list-none text-meta text-signal hover:underline select-none inline-flex items-center gap-1 touch-app">
             <span>Vis tankegang</span>
             <span aria-hidden className="group-open:rotate-180 transition-transform">↓</span>
           </summary>
@@ -140,12 +143,12 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
       ) : null}
 
       {display.showAcceptCTA ? (
-        <div className="flex gap-2 pt-1">
+        <div className="flex flex-wrap gap-2 pt-1">
           <button
             type="button"
             disabled={isPending}
             onClick={() => respond(true)}
-            className="flex-1 rounded-lg border hairline bg-bg-2 px-3 py-2 text-[12px] lift touch-app disabled:opacity-60"
+            className="btn btn-primary flex-1 touch-app disabled:opacity-60"
           >
             OK, kør tilpasset
           </button>
@@ -153,13 +156,13 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
             type="button"
             disabled={isPending}
             onClick={() => respond(false)}
-            className="flex-1 rounded-lg border hairline px-3 py-2 text-[12px] text-fg-dim lift touch-app disabled:opacity-60"
+            className="btn flex-1 touch-app disabled:opacity-60"
           >
             Behold original
           </button>
         </div>
       ) : optimisticAdaptation.acceptedByMember === false ? (
-        <div className="text-[11px] text-fg-faint pt-1">
+        <div className="text-meta text-fg-dim pt-1">
           Du valgte at beholde den originale session
         </div>
       ) : null}

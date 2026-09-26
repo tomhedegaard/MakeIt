@@ -95,7 +95,7 @@ export default function ShoppingChecklist({
           <button
             type="button"
             onClick={reset}
-            className="text-[11px] text-fg-faint hover:text-fg-dim mt-3"
+            className="text-micro text-fg-faint hover:text-fg-dim mt-3"
           >
             {t("reset")}
           </button>
@@ -110,7 +110,7 @@ export default function ShoppingChecklist({
           <section key={g.category} className="surface-2 rounded-2xl overflow-hidden">
             <header className="px-5 py-3 border-b hairline flex items-baseline justify-between">
               <h2 className="font-display text-xl">{g.label}</h2>
-              <span className="numeric text-[11px] text-fg-faint">
+              <span className="numeric text-micro text-fg-faint">
                 {groupDone}/{groupTotal}
               </span>
             </header>
@@ -146,7 +146,7 @@ export default function ShoppingChecklist({
                           {item.name}
                         </div>
                         {item.mealCount > 1 ? (
-                          <div className="text-[10px] text-fg-faint mt-0.5">
+                          <div className="text-micro text-fg-faint mt-0.5">
                             {t("itemMealCount", { count: item.mealCount })}
                           </div>
                         ) : null}

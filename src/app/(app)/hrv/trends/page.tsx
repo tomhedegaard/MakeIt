@@ -117,7 +117,7 @@ function StateProvisional({
         <p className="text-fg-dim text-sm md:text-base leading-relaxed mt-6 max-w-md">
           {copy.buildingBody}
         </p>
-        <p className="text-[11px] text-fg-faint mt-4">
+        <p className="text-micro text-fg-faint mt-4">
           {copy.disclaimer}
         </p>
       </div>
@@ -172,7 +172,7 @@ function StateActive({
         </div>
         <div className="px-6 py-7 md:px-8 md:py-9">
           <TrendChart readings={series} />
-          <div className="flex items-center gap-4 mt-4 text-[11px] text-fg-faint">
+          <div className="flex items-center gap-4 mt-4 text-micro text-fg-faint">
             <span>{copy.legendBand}</span>
             <span>{copy.legendAvg}</span>
           </div>
@@ -184,7 +184,7 @@ function StateActive({
               {band.engineCue === "below" ? copy.engineBelow : copy.engineAbove}
             </p>
           ) : null}
-          <p className="text-[11px] text-fg-faint mt-4">
+          <p className="text-micro text-fg-faint mt-4">
             {copy.disclaimer}
           </p>
         </div>

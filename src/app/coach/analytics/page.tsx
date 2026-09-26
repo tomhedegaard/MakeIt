@@ -94,7 +94,7 @@ export default async function CoachAnalyticsPage() {
               <div className="eyebrow mb-1">{t("atRiskEyebrow")}</div>
               <h2 className="font-display text-2xl">{t("atRiskTitle")}</h2>
             </div>
-            <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
+            <span className="numeric text-micro border hairline-strong px-2 py-0.5">
               {atRisk.length}
             </span>
           </div>
@@ -111,12 +111,12 @@ export default async function CoachAnalyticsPage() {
                     className="block px-5 py-3 flex items-center gap-4 hover:bg-bg-3"
                   >
                     <BucketDot bucket={m.bucket} />
-                    <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] shrink-0">
+                    <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
                       {m.handle.slice(0, 2).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm">@{m.handle}</div>
-                      <div className="text-[11px] text-fg-faint">
+                      <div className="text-micro text-fg-faint">
                         {m.tier} · {m.programCode ?? t("noProgram")}
                       </div>
                     </div>
@@ -124,7 +124,7 @@ export default async function CoachAnalyticsPage() {
                       <div className="numeric text-sm">
                         {m.daysSinceLastSession === null ? "—" : `${m.daysSinceLastSession}d`}
                       </div>
-                      <div className="text-[10px] text-fg-faint">
+                      <div className="text-micro text-fg-faint">
                         {m.daysSinceLastSession === null ? t("neverTrained") : t("since")}
                       </div>
                     </div>
@@ -162,10 +162,10 @@ export default async function CoachAnalyticsPage() {
             ))}
           </ul>
           <div className="pt-3 border-t hairline">
-            <div className="text-[11px] text-fg-faint">
+            <div className="text-micro text-fg-faint">
               {t("tierThresholdsLabel")}
             </div>
-            <div className="text-[11px] text-fg-dim mt-1.5 leading-relaxed">
+            <div className="text-micro text-fg-dim mt-1.5 leading-relaxed">
               {t("tierThresholds")}
             </div>
           </div>
@@ -202,8 +202,8 @@ export default async function CoachAnalyticsPage() {
                     aria-hidden
                   />
                 </div>
-                <div className="numeric text-[11px] mt-1.5">{w.count}</div>
-                <div className="text-[9px] text-fg-faint">
+                <div className="numeric text-micro mt-1.5">{w.count}</div>
+                <div className="text-micro text-fg-faint">
                   {w.weekLabel}
                 </div>
               </li>
@@ -238,7 +238,7 @@ function BucketKPI({
         {label}
       </div>
       <div className="numeric text-3xl lg:text-4xl">{value}</div>
-      <div className="text-[11px] text-fg-faint mt-1">{pct}%</div>
+      <div className="text-micro text-fg-faint mt-1">{pct}%</div>
     </div>
   );
 }

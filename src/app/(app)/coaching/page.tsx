@@ -102,7 +102,7 @@ export default async function TrainPage() {
         <PageTitle kicker={t("header.eyebrow")} title={t("header.title")} />
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
           <span data-identity="coach" className="eyebrow">{t("header.coachChip")}</span>
-          <span data-identity="motor" className="text-[10px] text-fg-faint">
+          <span data-identity="motor" className="text-micro text-fg-faint">
             {t("header.motorChip")}
           </span>
         </div>
@@ -132,7 +132,7 @@ export default async function TrainPage() {
                   {String(day.date).padStart(2, "0")}
                 </div>
                 <div
-                  className={`text-[10px] ${
+                  className={`text-micro ${
  day.rest ? "text-fg-faint" : "text-fg-dim"
  }`}
                 >
@@ -444,7 +444,7 @@ function MiniWithTrend({
       </div>
       {trend ? (
         <div
-          className={`mt-0.5 text-[10px] ${
+          className={`mt-0.5 text-micro ${
  trend.direction === "up"
  ? "text-fg"
  : trend.direction === "down"

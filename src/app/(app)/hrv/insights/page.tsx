@@ -104,7 +104,7 @@ function StatePopulated({
         ))}
       </div>
 
-      <p className="text-[11px] text-fg-faint">
+      <p className="text-micro text-fg-faint">
         {provenance} {t("weekFrom", { date: weekLabel })}
       </p>
     </div>

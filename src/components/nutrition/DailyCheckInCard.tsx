@@ -101,7 +101,7 @@ export default function DailyCheckInCard({
             <div className="numeric text-2xl">{checkin.streakDays}</div>
             <div className="eyebrow">{t("streak")}</div>
             {checkin.nextMilestone ? (
-              <div className="mt-1 text-[10px] text-fg-dim whitespace-nowrap">
+              <div className="mt-1 text-micro text-fg-dim whitespace-nowrap">
                 {checkin.nextMilestone.daysAway === 1
                   ? t("milestoneDaysAwayOne", { days: checkin.nextMilestone.daysAway })
                   : t("milestoneDaysAwayOther", { days: checkin.nextMilestone.daysAway })}
@@ -110,7 +110,7 @@ export default function DailyCheckInCard({
           </div>
         ) : checkin.nextMilestone ? (
           <div className="text-right shrink-0">
-            <div className="text-[11px] text-fg-dim leading-tight">
+            <div className="text-micro text-fg-dim leading-tight">
               {t("milestonePrompt", { days: checkin.nextMilestone.days })}
               <br />
               <span className="text-fg">{t("milestoneReward")}</span>
@@ -121,7 +121,7 @@ export default function DailyCheckInCard({
 
       {/* Macro pill — only when there's a meal to show */}
       {variant === "full" && checkin.meal ? (
-        <div className="px-5 pb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]">
+        <div className="px-5 pb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-micro">
           <span className="text-fg-dim">
             {t("kcal", { value: checkin.meal.estKcal ?? "-" })}
           </span>

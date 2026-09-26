@@ -68,7 +68,7 @@ export default function PromoteToLiveButton({
   if (!liveReady) {
     return (
       <span
-        className="text-[10px] text-fg-faint"
+        className="text-micro text-fg-faint"
         title={t("notReadyHint")}
       >
         {t("notReadyLabel")}
@@ -89,7 +89,7 @@ export default function PromoteToLiveButton({
       </button>
       {result?.kind === "error" ? (
         <span
-          className="text-[10px] text-red-400"
+          className="text-micro text-red-400"
           role="alert"
         >
           {t("promoteError", { reason: result.reason })}

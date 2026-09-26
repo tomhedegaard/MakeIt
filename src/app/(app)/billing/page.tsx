@@ -200,7 +200,7 @@ function StatusPill({
 }) {
   if (!sub) {
     return (
-      <span className="numeric text-[10px] border hairline-strong px-2 py-0.5 shrink-0 text-fg-dim">
+      <span className="numeric text-micro border hairline-strong px-2 py-0.5 shrink-0 text-fg-dim">
         {t("status.notActivated")}
       </span>
     );
@@ -210,7 +210,7 @@ function StatusPill({
   const isOk = sub.status === "active" || sub.status === "trialing";
   return (
     <span
-      className="numeric text-[10px] border hairline-strong px-2 py-0.5 shrink-0 inline-flex items-center gap-1.5"
+      className="numeric text-micro border hairline-strong px-2 py-0.5 shrink-0 inline-flex items-center gap-1.5"
       style={{ color: isOk ? "var(--fg)" : "var(--fg-dim)" }}
     >
       {isOk ? <span className="size-1.5 rounded-full bg-fg" /> : null}

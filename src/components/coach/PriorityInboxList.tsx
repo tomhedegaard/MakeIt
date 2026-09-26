@@ -48,7 +48,7 @@ export default async function PriorityInboxList({
           <div className="font-display text-2xl">{t("emptyTitle")}</div>
           <p className="text-sm text-fg-dim max-w-md mx-auto">{t("emptyBody")}</p>
           {mode === "demo" ? (
-            <p className="text-[11px] text-fg-faint">{t("emptyDemoHint")}</p>
+            <p className="text-micro text-fg-faint">{t("emptyDemoHint")}</p>
           ) : null}
         </div>
       ) : (
@@ -60,7 +60,7 @@ export default async function PriorityInboxList({
                 className="px-5 py-3 flex items-center gap-4 hover:bg-bg-3/40 transition-colors"
                 aria-label={t("openItem", { handle: item.memberHandle })}
               >
-                <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] shrink-0">
+                <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
                   {item.memberHandle.slice(0, 2).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -68,7 +68,7 @@ export default async function PriorityInboxList({
                   <div className="mt-1">
                     <span
                       className={cn(
-                        "inline-flex text-[10px] px-2 py-0.5 border",
+                        "inline-flex text-micro px-2 py-0.5 border",
                         CHIP_TONE[item.kind],
                       )}
                     >

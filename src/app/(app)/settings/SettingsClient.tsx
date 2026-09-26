@@ -275,7 +275,7 @@ export default function SettingsClient({
             {deletePending ? t("danger.deleting") : t("danger.delete")}
           </button>
           {deleteMsg ? (
-            <span className="text-[10px] text-fg-dim">
+            <span className="text-micro text-fg-dim">
               {deleteMsg}
             </span>
           ) : null}
@@ -291,7 +291,7 @@ export default function SettingsClient({
         <SectionHeader eyebrow={t("danger.eyebrow")} title={t("danger.confirmTitle")} />
         <p className="text-fg-dim text-sm">{t("danger.confirmBody")}</p>
         <label className="block space-y-1.5">
-          <span className="text-[10px] text-fg-dim">
+          <span className="text-micro text-fg-dim">
             {t("danger.confirmLabel", { phrase: deletePhrase })}
           </span>
           <input
@@ -325,7 +325,7 @@ function StatusLabel({ status }: { status: Status }) {
   if (!status) return null;
   return (
     <span
-      className="text-[10px]"
+      className="text-micro"
       style={{ color: status.ok ? "var(--fg)" : "var(--fg-dim)" }}
     >
       {status.text}

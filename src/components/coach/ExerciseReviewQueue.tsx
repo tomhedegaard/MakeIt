@@ -149,7 +149,7 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
 
         <div className="space-y-5">
           <div>
-            <p className="text-[11px] text-fg-faint">{current.slug}</p>
+            <p className="text-micro text-fg-faint">{current.slug}</p>
             <h2 id="review-name" className="font-display text-title md:text-[2.75rem]">
               {current.name}
             </h2>
@@ -228,7 +228,7 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
             {error}
           </p>
         ) : null}
-        <p className="w-full text-[11px] text-fg-faint">{t("keys")}</p>
+        <p className="w-full text-micro text-fg-faint">{t("keys")}</p>
       </div>
     </div>
   );
@@ -258,7 +258,7 @@ function MuscleRow({ label, muscles, strong = false }: { label: string; muscles:
 function Block({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-1.5 text-[11px] text-fg-faint">{label}</p>
+      <p className="mb-1.5 text-micro text-fg-faint">{label}</p>
       {children}
     </div>
   );

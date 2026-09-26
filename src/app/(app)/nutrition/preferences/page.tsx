@@ -55,7 +55,7 @@ export default async function PreferencesPage() {
                 <div className="text-sm">
                   {g === "cut" ? t("goalCut") : g === "recomp" ? t("goalRecomp") : g === "mass" ? t("goalMass") : t("goalMaintain")}
                 </div>
-                <div className="text-[10px] opacity-70 mt-0.5">
+                <div className="text-micro opacity-70 mt-0.5">
                   {g === "cut" ? t("goalCutDelta") : g === "recomp" ? t("goalRecompDelta") : g === "mass" ? t("goalMassDelta") : t("goalMaintainDelta")}
                 </div>
               </label>

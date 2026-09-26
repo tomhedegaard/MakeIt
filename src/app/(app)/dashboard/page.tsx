@@ -255,7 +255,7 @@ export default async function TodayPage() {
           <div className="text-right">
             <div className="eyebrow mb-1">{t("greeting.streakLabel")}</div>
             <div className="numeric text-3xl">{stats?.streakDays ?? (connected ? 0 : 12)}</div>
-            <div className="text-[10px] text-fg-faint">{t("greeting.streakUnit")}</div>
+            <div className="text-micro text-fg-faint">{t("greeting.streakUnit")}</div>
           </div>
         }
       />
@@ -276,7 +276,7 @@ export default async function TodayPage() {
               <span className="pulse-dot" />
               <span className="eyebrow eyebrow-domain">{t("todaySession.eyebrow", { programCode: today.programCode, week: today.week })}</span>
               {today.isDeload ? (
-                <span className="ml-auto numeric text-[10px] border hairline-strong px-2 py-0.5">
+                <span className="ml-auto numeric text-micro border hairline-strong px-2 py-0.5">
                   {t("todaySession.deload")}
                 </span>
               ) : null}
@@ -386,7 +386,7 @@ export default async function TodayPage() {
                     {t("formChecks.answeredCount", { count: reviewedCount })}
                   </span>
                 </div>
-                <div className="text-[10px] text-fg-faint mt-0.5">
+                <div className="text-micro text-fg-faint mt-0.5">
                   {t("formChecks.readNotes")}
                 </div>
               </div>
@@ -448,7 +448,7 @@ export default async function TodayPage() {
             label={t("stats.volume")}
             value={stats ? formatVolume(stats.volumeKg) : connected ? "0" : "84.2K"}
           />
-          <div className="text-[10px] text-fg-faint mt-1 flex items-center gap-1">
+          <div className="text-micro text-fg-faint mt-1 flex items-center gap-1">
             <span>{t("stats.volumeMeta")}</span>
             {stats ? (
               <TrendArrow current={stats.volumeKg} previous={stats.volumeKgPrev} t={t} />
@@ -460,7 +460,7 @@ export default async function TodayPage() {
             label={t("stats.prs")}
             value={stats ? String(stats.prs4w).padStart(2, "0") : connected ? "00" : "03"}
           />
-          <div className="text-[10px] text-fg-faint mt-1 flex items-center gap-1">
+          <div className="text-micro text-fg-faint mt-1 flex items-center gap-1">
             <span>{t("stats.prsMeta")}</span>
             {stats ? (
               <TrendArrow current={stats.prs4w} previous={stats.prsPrev} t={t} />
@@ -472,7 +472,7 @@ export default async function TodayPage() {
             label={t("stats.reps")}
             value={stats ? formatReps(stats.repsBalance, locale) : connected ? "0" : "1.420"}
           />
-          <div className="text-[10px] text-fg-faint mt-1">{member.tier}</div>
+          <div className="text-micro text-fg-faint mt-1">{member.tier}</div>
         </div>
       </Card>
 
@@ -525,7 +525,7 @@ function CrewRow({
 }: Pick<CrewItem, "id" | "who" | "what" | "when" | "pr"> & { tier?: string; prLabel: string }) {
   return (
     <li className="surface-2 rounded-lg p-4 flex items-center gap-3">
-      <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] shrink-0">
+      <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
         {who.slice(1, 3).toUpperCase()}
       </div>
       <div className="flex-1 min-w-0">
@@ -533,10 +533,10 @@ function CrewRow({
           <span className="text-fg">{who}</span>{" "}
           <span className="text-fg-dim">{what}</span>
         </div>
-        <div className="text-[10px] text-fg-faint mt-0.5">{when}</div>
+        <div className="text-micro text-fg-faint mt-0.5">{when}</div>
       </div>
       {pr ? (
-        <span className="numeric text-[10px] border hairline-strong px-2 py-0.5 shrink-0">
+        <span className="numeric text-micro border hairline-strong px-2 py-0.5 shrink-0">
           {prLabel}
         </span>
       ) : null}

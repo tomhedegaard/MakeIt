@@ -33,7 +33,7 @@ export default function HrvTrendsEmpty({
       </div>
       <div className="p-5 md:p-8 space-y-4">
         {cta}
-        <p className="text-[11px] text-fg-faint leading-relaxed">
+        <p className="text-micro text-fg-faint leading-relaxed">
           {disclaimer}
         </p>
       </div>

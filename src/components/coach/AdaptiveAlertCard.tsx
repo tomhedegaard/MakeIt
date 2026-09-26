@@ -58,7 +58,7 @@ export default function AdaptiveAlertCard({
               @{alert.memberHandle}
             </Link>
           </div>
-          <div className="text-[11px] text-fg-faint">
+          <div className="text-micro text-fg-faint">
             {new Date(alert.triggeredAt).toLocaleString("da-DK", {
               hour: "2-digit",
               minute: "2-digit",
@@ -78,13 +78,13 @@ export default function AdaptiveAlertCard({
         {alert.reasons.slice(0, 5).map((r) => (
           <span
             key={r}
-            className="text-[10px] px-2 py-0.5 rounded-sm bg-bg-3 text-fg-dim"
+            className="text-micro px-2 py-0.5 rounded-sm bg-bg-3 text-fg-dim"
           >
             {r}
           </span>
         ))}
         {alert.confidence !== null ? (
-          <span className="text-[10px] text-fg-faint ml-auto">
+          <span className="text-micro text-fg-faint ml-auto">
             conf {alert.confidence.toFixed(2)}
           </span>
         ) : null}
@@ -98,7 +98,7 @@ export default function AdaptiveAlertCard({
       ) : null}
 
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[10px] text-fg-faint">
+        <span className="text-micro text-fg-faint">
           Afventer review
         </span>
         <div className="flex gap-2">

@@ -305,7 +305,7 @@ function EmptyState({
           {t("page.emptyPreferences")}
         </Link>
       </div>
-      <p className="mt-4 text-[10px] text-fg-faint">
+      <p className="mt-4 text-micro text-fg-faint">
         {t("page.emptyQuota", {
           dailyUsed: planLimit.daily.used,
           dailyMax: planLimit.daily.max,
@@ -404,10 +404,10 @@ function PlanView({
                 >
                   <div className="eyebrow mb-1.5">{t(`dayLabels.${dayKey}`)}</div>
                   <div className="numeric text-xl mb-1">{meals.length}</div>
-                  <div className="text-[10px] text-fg-faint">
+                  <div className="text-micro text-fg-faint">
                     {t("page.meals")}
                   </div>
-                  <div className="numeric text-[11px] text-fg-dim mt-1.5">
+                  <div className="numeric text-micro text-fg-dim mt-1.5">
                     {dayKcal > 0 ? `${dayKcal} kcal` : "-"}
                   </div>
                 </a>
@@ -499,7 +499,7 @@ function PlanView({
               <li key={s.id} className="border hairline rounded-lg p-4">
                 <div className="flex items-baseline justify-between gap-3 mb-1">
                   <div className="text-sm">{s.title}</div>
-                  <span className="text-[10px] text-fg-faint">
+                  <span className="text-micro text-fg-faint">
                     {s.necessity === "high-value"
                       ? t("page.supplementStrong")
                       : s.necessity === "useful"
@@ -523,7 +523,7 @@ function PlanView({
           quotaResetLabel={resetLabel}
         />
         <LogMealButton dateIso={isoToday()} />
-        <span className="text-[11px] text-fg-faint ml-auto">
+        <span className="text-micro text-fg-faint ml-auto">
           {plan.generator === "claude"
             ? t("page.generatedByClaude")
             : t("page.generatedLocally")}

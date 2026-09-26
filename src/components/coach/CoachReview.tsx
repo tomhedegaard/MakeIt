@@ -87,7 +87,7 @@ export default function CoachReviewButton({
               preload="metadata"
               className="w-full max-h-[420px] object-contain bg-black"
             />
-            <div className="px-4 py-2 text-[10px] text-fg-faint border-t hairline">
+            <div className="px-4 py-2 text-micro text-fg-faint border-t hairline">
               {t("signedLink")}
             </div>
           </div>
@@ -115,7 +115,7 @@ export default function CoachReviewButton({
                 ? t("draftLabel", { handle: formCheck.memberHandle })
                 : t("coachNotesLabel", { handle: formCheck.memberHandle })}
               {hasDraft ? (
-                <span className="inline-flex items-center surface-2 px-2 py-0.5 text-[10px] text-fg-faint">
+                <span className="inline-flex items-center surface-2 px-2 py-0.5 text-micro text-fg-faint">
                   {t("draftBadge")}
                 </span>
               ) : null}

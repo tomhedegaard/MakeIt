@@ -63,7 +63,7 @@ export default async function AdaptiveLearnPage() {
           <article className="surface-2 rounded-2xl p-5 lg:p-6 space-y-3">
             <div className="flex items-baseline justify-between gap-3">
               <h2 className="eyebrow">{t("example.title")}</h2>
-              <span className="text-[10px] text-fg-dim">
+              <span className="text-micro text-fg-dim">
                 {t("example.meta")}
               </span>
             </div>
@@ -87,7 +87,7 @@ export default async function AdaptiveLearnPage() {
               </button>
             </div>
           </article>
-          <p className="text-[11px] text-fg-faint">
+          <p className="text-micro text-fg-faint">
             {t("example.note")}
           </p>
         </section>
@@ -163,7 +163,7 @@ export default async function AdaptiveLearnPage() {
           </Link>
         </section>
 
-        <p className="text-[10px] text-fg-faint">
+        <p className="text-micro text-fg-faint">
           {t("exampleDecision", {
             action: labelForAction(baselineDecision.action),
             confidence: baselineDecision.confidence.toFixed(2),

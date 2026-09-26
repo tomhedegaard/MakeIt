@@ -62,7 +62,7 @@ export default async function CoachSchoolLessonPage({
             {t("lesson.videoPlaceholder")}
           </div>
         )}
-        <div className="px-4 py-2 text-[10px] text-fg-faint border-t hairline">
+        <div className="px-4 py-2 text-micro text-fg-faint border-t hairline">
           {t("lesson.recordedBy")}
         </div>
       </section>

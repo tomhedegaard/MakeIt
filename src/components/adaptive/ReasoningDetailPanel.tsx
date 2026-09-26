@@ -151,7 +151,7 @@ export default function ReasoningDetailPanel({
             reasons: ruleDecision.reasons,
           })}
         </p>
-        <p className="text-[10px] text-fg-faint mt-2">
+        <p className="text-micro text-fg-faint mt-2">
           Regel-confidence {ruleDecision.confidence.toFixed(2)}
         </p>
       </section>
@@ -186,7 +186,7 @@ function SignalRow({
 }) {
   return (
     <li className="flex items-baseline justify-between gap-3 text-sm">
-      <span className="text-fg-faint text-[11px] shrink-0">
+      <span className="text-fg-faint text-micro shrink-0">
         {label}
       </span>
       <span className="text-fg numeric text-right">{value}</span>

@@ -294,7 +294,7 @@ export default function ProgramBuilder({
           <span>{t("publishedToggle")}</span>
         </label>
         {days.length === 0 ? (
-          <p className="text-[11px] text-fg-dim">
+          <p className="text-micro text-fg-dim">
             {t("publishNeedsDays")}
           </p>
         ) : null}
@@ -412,7 +412,7 @@ export default function ProgramBuilder({
 
                     {/* Sets */}
                     <div className="space-y-1.5">
-                      <div className="grid grid-cols-[1.2rem_1fr_1fr_1fr_1fr_auto] gap-2 text-[10px] text-fg-faint px-1">
+                      <div className="grid grid-cols-[1.2rem_1fr_1fr_1fr_1fr_auto] gap-2 text-micro text-fg-faint px-1">
                         <span>{t("setsColIndex")}</span>
                         <span>{t("setsColReps")}</span>
                         <span>{t("setsColKg")}</span>
@@ -485,7 +485,7 @@ export default function ProgramBuilder({
                       <button
                         type="button"
                         onClick={() => addSet(di, ei)}
-                        className="text-[11px] text-fg-dim hover:text-fg pt-1"
+                        className="text-micro text-fg-dim hover:text-fg pt-1"
                       >
                         {t("addSet")}
                       </button>
@@ -518,7 +518,7 @@ export default function ProgramBuilder({
           {saving ? t("saving") : t("save")}
         </button>
         {savedAt ? (
-          <span className="text-[11px] text-fg-faint">
+          <span className="text-micro text-fg-faint">
             {t("savedAt", { time: savedAt })}
           </span>
         ) : null}
@@ -634,7 +634,7 @@ function AssignPanel({
               {pending ? t("generating") : t("assignButton")}
             </button>
           </div>
-          <p className="text-[11px] text-fg-faint">
+          <p className="text-micro text-fg-faint">
             {t("assignNote", { start: startWeek, end: weeks })}
           </p>
           {result ? (

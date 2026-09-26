@@ -71,7 +71,7 @@ export default function RestTimer({
 
       <button
         type="button"
-        className="shrink-0 min-h-9 px-3 text-[10px] border hairline touch-app"
+        className="shrink-0 min-h-9 px-3 text-micro border hairline touch-app"
         onClick={onSkip}
       >
         {t("skip")}

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { submitMindCheckAction } from "@/app/(app)/mind/check/actions";
+import { rangeFill } from "@/lib/ui/range";
 
 type SliderKey = "energy" | "stress" | "focus";
 
@@ -75,7 +76,8 @@ export default function MindCheckForm({
             step={1}
             value={value(s.key)}
             onChange={(e) => setter(s.key)(Number(e.target.value))}
-            className="w-full accent-fg"
+            className="range w-full"
+            style={rangeFill(value(s.key), 1, 5)}
             aria-label={s.label}
           />
           <div className="flex justify-between text-fg-dim text-xs">

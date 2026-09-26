@@ -52,7 +52,7 @@ export default function LogWeightCard({
               <div className="font-display text-3xl numeric leading-none">
                 {latestKg.toFixed(1)} <span className="text-base text-fg-faint">kg</span>
               </div>
-              <div className="mt-2 text-[10px] text-fg-faint">
+              <div className="mt-2 text-micro text-fg-faint">
                 {ageDays === 0
                   ? t("loggedToday")
                   : ageDays === 1

@@ -413,7 +413,7 @@ function FormCheckBody({
               </div>
             </div>
 
-            <p className="text-[10px] text-fg-faint mb-5">
+            <p className="text-micro text-fg-faint mb-5">
               {isMockResult
                 ? t("result.mockNote")
                 : t("result.realNote")}
@@ -505,7 +505,7 @@ function UpgradeCta({
           {t("upgrade.body")}
         </div>
       </Link>
-      <div className="text-[10px] text-fg-faint text-center">
+      <div className="text-micro text-fg-faint text-center">
         {t("upgrade.orWait")}
       </div>
     </div>
@@ -536,7 +536,7 @@ function Step({
     <li className="flex items-center gap-3">
       <span
         className={cn(
-          "size-5 rounded-full border flex items-center justify-center text-[10px]",
+          "size-5 rounded-full border flex items-center justify-center text-micro",
           done
             ? "bg-fg text-bg border-fg"
             : active
@@ -567,7 +567,7 @@ function Card({
         <div className="eyebrow">{title}</div>
         <span
           className={cn(
-            "text-[10px] px-2 py-0.5 border",
+            "text-micro px-2 py-0.5 border",
             kind === "pos" ? "border-line-strong text-fg" : "border-line-strong text-fg-dim"
           )}
         >

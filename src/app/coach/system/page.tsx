@@ -128,12 +128,12 @@ export default async function CoachSystemPage() {
                           ? t("expired")
                           : `${r.daysUntilExpiry}`}
                       </div>
-                      <div className="text-[10px] text-fg-faint mt-1">
+                      <div className="text-micro text-fg-faint mt-1">
                         {r.daysUntilExpiry !== null && r.daysUntilExpiry >= 0
                           ? t("daysLeft")
                           : t("sinceExpiry")}
                       </div>
-                      <div className="text-[10px] text-fg-faint mt-1">
+                      <div className="text-micro text-fg-faint mt-1">
                         {new Date(r.expiresAt).toLocaleDateString("da-DK", {
                           year: "numeric",
                           month: "short",
@@ -195,7 +195,7 @@ export default async function CoachSystemPage() {
                     {s.name}
                   </span>
                   <span
-                    className={`text-[10px] ${
+                    className={`text-micro ${
  s.configured ? "text-green-400" : "text-fg-faint"
  }`}
                   >
@@ -371,7 +371,7 @@ function CronHealthCard({
         </span>
         <SeverityBadge severity={CRON_STATUS_SEVERITY[row.status]} />
       </div>
-      <div className="text-[10px] text-fg-faint">
+      <div className="text-micro text-fg-faint">
         {t(CRON_STATUS_KEY[row.status])}
         {row.emptyStreak > 0 ? ` · ${row.emptyStreak}` : ""}
       </div>
@@ -423,7 +423,7 @@ function SeverityBadge({ severity }: { severity: Severity }) {
   };
   return (
     <span
-      className={`inline-block px-2 py-0.5 rounded text-[10px] ${styles[severity]}`}
+      className={`inline-block px-2 py-0.5 rounded text-micro ${styles[severity]}`}
     >
       {label[severity]}
     </span>

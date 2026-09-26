@@ -115,12 +115,12 @@ export default async function CrewPage() {
                       : undefined,
                   }}
                 />
-                <div className="absolute inset-[2px] rounded-full bg-bg-2 flex items-center justify-center text-[11px]">
+                <div className="absolute inset-[2px] rounded-full bg-bg-2 flex items-center justify-center text-micro">
                   {s.who.slice(1, 3).toUpperCase()}
                 </div>
               </div>
-              <div className="text-[10px] text-fg-dim">{s.who.replace("@", "")}</div>
-              <div className="text-[9px] text-fg-faint">
+              <div className="text-micro text-fg-dim">{s.who.replace("@", "")}</div>
+              <div className="text-micro text-fg-faint">
                 {s.trained ? t("trained") : t("resting")}
               </div>
             </li>
@@ -239,14 +239,14 @@ export default async function CrewPage() {
           {LEADERBOARD.map((row, i) => (
             <li key={row.rank} className="px-5 py-3 flex items-center gap-4 text-sm">
               <span className="numeric text-fg-faint w-7">{row.rank}</span>
-              <div className="size-8 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] shrink-0">
+              <div className="size-8 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
                 {row.who.slice(1, 3).toUpperCase()}
               </div>
               <span className="flex-1 truncate">{row.who}</span>
               <span className="numeric text-fg/90">{row.score}</span>
-              <span className="text-[10px] text-fg-faint hidden sm:inline">{row.lift}</span>
+              <span className="text-micro text-fg-faint hidden sm:inline">{row.lift}</span>
               {i < 3 ? (
-                <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
+                <span className="numeric text-micro border hairline-strong px-2 py-0.5">
                   ★
                 </span>
               ) : null}

@@ -34,7 +34,7 @@ export default function MessageBubble({
   return (
     <li className={`flex flex-col ${align}`}>
       {!mine && message.senderHandle ? (
-        <div className="text-[10px] text-fg-faint mb-1 px-1">
+        <div className="text-micro text-fg-faint mb-1 px-1">
           @{message.senderHandle}
           {message.senderIsCoach ? " · coach" : ""}
         </div>
@@ -73,7 +73,7 @@ export default function MessageBubble({
               className="w-full"
             />
             {message.mediaDurationSec ? (
-              <span className="text-[10px] text-fg-faint shrink-0">
+              <span className="text-micro text-fg-faint shrink-0">
                 {formatDuration(message.mediaDurationSec)}
               </span>
             ) : null}
@@ -95,7 +95,7 @@ export default function MessageBubble({
         ) : null}
       </div>
 
-      <div className="text-[10px] text-fg-faint mt-1 px-1 flex items-center gap-1.5">
+      <div className="text-micro text-fg-faint mt-1 px-1 flex items-center gap-1.5">
         <time dateTime={message.createdAt}>{formatTime(message.createdAt)}</time>
         {mine ? (
           <span

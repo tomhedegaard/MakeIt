@@ -107,7 +107,7 @@ function PlanGenerationOverlayActive({
           </p>
         ) : null}
 
-        <div className="mt-12 text-[10px] text-fg-faint">
+        <div className="mt-12 text-micro text-fg-faint">
           {t("stayOnPage")}
         </div>
       </div>

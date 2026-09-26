@@ -559,6 +559,45 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 }
 
 /* ---------------------------------------------------------------- *
+ * Skyder (spec §5): 4 px spor i --bg-3, fyld i mos op til værdien, 20 px
+ * cirkulær knop i blæk med hvid kant. Målfladen er 44 px høj, så den er
+ * en finger bred. Fyldet er et hårdt stop, ikke en gradient; --fill
+ * sættes af komponenten via rangeFill() (src/lib/ui/range.ts).
+ * ---------------------------------------------------------------- */
+.range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.range:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.range::-webkit-slider-runnable-track {
+  height: 4px;
+  background: linear-gradient(to right, var(--signal) var(--fill, 0%), var(--bg-3) var(--fill, 0%));
+}
+.range::-moz-range-track { height: 4px; background: var(--bg-3); }
+.range::-moz-range-progress { height: 4px; background: var(--signal); }
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -8px;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--fg);
+}
+.range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--fg);
+}
+
+/* ---------------------------------------------------------------- *
  * Pill group (RPE selector)
  * ---------------------------------------------------------------- */
 .pillgroup { display: flex; gap: 6px; flex-wrap: wrap; }

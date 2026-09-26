@@ -76,7 +76,7 @@ export default async function ShoppingPage() {
             {list.servings === 1 ? t("personOne") : t("personOther")}
           </span>
         </div>
-        <span className="text-[11px] text-fg-faint ml-auto">
+        <span className="text-micro text-fg-faint ml-auto">
           {t("scaledNote")}
         </span>
       </section>
@@ -86,7 +86,7 @@ export default async function ShoppingPage() {
         groups={list.groups}
       />
 
-      <section className="text-[11px] text-fg-faint leading-relaxed">
+      <section className="text-micro text-fg-faint leading-relaxed">
         {t("footerNote")}
       </section>
     </Container>

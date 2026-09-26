@@ -100,7 +100,7 @@ export default function OnboardingClient({
         <Container className="h-14 flex items-center justify-between gap-3">
           <Logo />
           <div className="flex items-center gap-3">
-            <span className="text-[10px] text-fg-faint">
+            <span className="text-micro text-fg-faint">
               {step} / {totalSteps}
             </span>
           </div>

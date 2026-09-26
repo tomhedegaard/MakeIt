@@ -98,7 +98,7 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
       </div>
       <Link
         href="/hrv/learn/adaptive"
-        className="inline-block text-[11px] text-fg-faint hover:text-fg lift touch-app"
+        className="inline-block text-micro text-fg-faint hover:text-fg lift touch-app"
       >
         Hvordan HQ tænker →
       </Link>

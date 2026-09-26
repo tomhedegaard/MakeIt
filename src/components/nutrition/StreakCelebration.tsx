@@ -74,7 +74,7 @@ export default function StreakCelebration({
 
             <div className="mt-5 inline-flex items-center gap-2 border hairline-strong px-3 py-1.5">
               <span className="size-1.5 rounded-full bg-fg" aria-hidden />
-              <span className="numeric text-[11px]">
+              <span className="numeric text-micro">
                 {t("reward")}
               </span>
             </div>

@@ -188,7 +188,7 @@ export default function AnatomyPreview() {
                   }`}
                 >
                   <div className="font-display">{ex.name}</div>
-                  <div className="text-[10px] text-fg-faint mt-0.5">
+                  <div className="text-micro text-fg-faint mt-0.5">
                     {ex.primary.length}P · {ex.secondary.length}S · {ex.tertiary.length}T
                   </div>
                 </button>
@@ -246,7 +246,7 @@ export default function AnatomyPreview() {
             style={{ width: 260, height: 520 }}
           />
         </div>
-        <div className="mt-3 flex items-center gap-4 text-[10px] text-fg-faint">
+        <div className="mt-3 flex items-center gap-4 text-micro text-fg-faint">
           <span className="flex items-center gap-1.5">
             <span
               className="size-2 rounded-full"
@@ -304,7 +304,7 @@ export default function AnatomyPreview() {
                           key={tier}
                           type="button"
                           onClick={() => toggleMuscle(m, tier)}
-                          className={`px-2 py-0.5 text-[10px] rounded border hairline ${
+                          className={`px-2 py-0.5 text-micro rounded border hairline ${
  isOn
  ? "border-transparent"
  : "text-fg-dim hover:text-fg"
@@ -329,7 +329,7 @@ export default function AnatomyPreview() {
           </ul>
         </div>
 
-        <div className="border-t hairline pt-3 text-[10px] text-fg-faint">
+        <div className="border-t hairline pt-3 text-micro text-fg-faint">
           <div>{t("activeSelection")}</div>
           <div className="mt-2 text-fg-dim text-xs">
             <code className="text-fg">primary</code>: [{tiered.primary.join(", ") || "—"}]

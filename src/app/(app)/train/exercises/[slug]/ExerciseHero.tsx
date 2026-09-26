@@ -116,7 +116,7 @@ export default function ExerciseHero({
           />
         </div>
 
-        <div className="flex items-center gap-4 text-[10px] text-fg-faint">
+        <div className="flex items-center gap-4 text-micro text-fg-faint">
           <Dot color={TIER_COLOR.primary} label={t("tierPrimary")} />
           <Dot color={TIER_COLOR.secondary} label={t("tierSecondary")} />
           <Dot color={TIER_COLOR.tertiary} label={t("tierTertiary")} />

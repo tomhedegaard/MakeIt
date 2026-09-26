@@ -434,7 +434,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           {saving ? t("saving") : t("save")}
         </button>
         {savedAt ? (
-          <span className="text-[11px] text-fg-faint">
+          <span className="text-micro text-fg-faint">
             {t("savedAt", { time: savedAt })}
           </span>
         ) : null}
