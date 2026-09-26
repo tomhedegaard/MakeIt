@@ -8,7 +8,7 @@
     "label": "Your balance",
     "tier": "Tier: {tier}",
     "toNext": "{amount} to {tier}",
-    "topCap": "Top cap reached · ★"
+    "topCap": "Top cap reached."
   },
   "tiers": {
     "eyebrow": "Tiers",

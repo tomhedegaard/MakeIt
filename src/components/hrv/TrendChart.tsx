@@ -87,8 +87,7 @@ export default function TrendChart({
           width={plot.right - plot.left}
           height={plot.bottom - plot.top}
           fill="none"
-          stroke="currentColor"
-          strokeOpacity={CHART_CRAFT.frameOpacity}
+          stroke={CHART_CRAFT.frame}
           strokeWidth={CHART_CRAFT.gridWidth}
           vectorEffect="non-scaling-stroke"
         />
@@ -99,8 +98,7 @@ export default function TrendChart({
             x2={plot.right}
             y1={tick.y}
             y2={tick.y}
-            stroke="currentColor"
-            strokeOpacity={CHART_CRAFT.gridOpacity}
+            stroke={CHART_CRAFT.grid}
             strokeWidth={CHART_CRAFT.gridWidth}
             vectorEffect="non-scaling-stroke"
           />
@@ -173,8 +171,7 @@ export default function TrendChart({
             key={i}
             x={4}
             y={tick.y}
-            fill="currentColor"
-            fillOpacity={CHART_CRAFT.axisLabelOpacity}
+            fill={CHART_CRAFT.label}
             fontSize={9}
             dominantBaseline="middle"
           >
@@ -188,8 +185,7 @@ export default function TrendChart({
             key={i}
             x={tick.x}
             y={VIEWPORT.height - 6}
-            fill="currentColor"
-            fillOpacity={CHART_CRAFT.axisLabelOpacity}
+            fill={CHART_CRAFT.label}
             fontSize={9}
             textAnchor="middle"
           >

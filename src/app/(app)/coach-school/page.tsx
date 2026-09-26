@@ -7,6 +7,8 @@ import {
   type LessonForList,
   type RequiredTier,
 } from "@/lib/data/lessons";
+import { Check, ChevronRight, Lock } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * CC-6 — Coach School lesson-tree surface.
@@ -111,9 +113,13 @@ function LessonRowInner({
 }) {
   return (
     <>
-      <span aria-hidden="true" className="text-xl leading-none shrink-0">
-        {locked ? "🔒" : lesson.completedAt ? "✓" : "▸"}
-      </span>
+      {locked ? (
+        <Lock {...ICON} className="size-5 shrink-0 text-fg-dim" />
+      ) : lesson.completedAt ? (
+        <Check {...ICON} className="size-5 shrink-0 text-signal" />
+      ) : (
+        <ChevronRight {...ICON} className="size-5 shrink-0 text-fg-dim" />
+      )}
       <div className="min-w-0 flex-1">
         <p className="text-sm text-fg/90 leading-snug">{lesson.titleDa}</p>
         <div className="text-micro text-fg-faint mt-1">

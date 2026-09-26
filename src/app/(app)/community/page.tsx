@@ -8,6 +8,8 @@ import RealtimeIndicator from "@/components/community/RealtimeIndicator";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getFeedPosts, type FeedPost } from "@/lib/data/community";
 import { communityChallengeProgress } from "@/lib/community/challenge-progress";
+import { Star } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 const STORIES = [
   { who: "@Munk",      tier: "Legend",  trained: true },
@@ -246,8 +248,8 @@ export default async function CrewPage() {
               <span className="numeric text-fg/90">{row.score}</span>
               <span className="text-micro text-fg-faint hidden sm:inline">{row.lift}</span>
               {i < 3 ? (
-                <span className="numeric text-micro border hairline-strong px-2 py-0.5">
-                  ★
+                <span className="inline-flex items-center border hairline-strong px-2 py-1">
+                  <Star {...ICON} className="size-3" />
                 </span>
               ) : null}
             </li>

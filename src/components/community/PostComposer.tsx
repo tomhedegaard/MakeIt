@@ -7,6 +7,8 @@ import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { createPostAction } from "@/app/(app)/community/actions";
+import { Video } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 export default function PostComposer({
   trigger,
@@ -87,10 +89,7 @@ export default function PostComposer({
           >
             <div className="flex items-center gap-3">
               <div className="size-9 rounded-lg bg-bg-3 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" className="size-5 text-fg-dim" fill="none" aria-hidden>
-                  <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
-                  <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-                </svg>
+                <Video {...ICON} className="size-5 text-fg-dim" />
               </div>
               <div>
                 <div className="text-sm">{t("addVideo")}</div>

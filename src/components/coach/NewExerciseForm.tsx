@@ -71,7 +71,7 @@ export default function NewExerciseForm() {
       </div>
 
       {error ? (
-        <p className="text-sm" style={{ color: "#C97B3E" }}>
+        <p className="text-sm" style={{ color: "var(--danger)" }}>
           {error}
         </p>
       ) : null}

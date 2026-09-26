@@ -33,13 +33,16 @@ import {
  * tier happens via material props — no geometry rebuild.
  */
 
+// three.js materials need literal colours, so these are Nord nat's values
+// (the coach console is dark): silhouette --bg-2/--anatomy-edge/--bg-3 and
+// the muscle tiers as Krop #FF9C41 mixed 100/50/24 % into #111111 (spec §11).
 const COLORS = {
-  body: "#1a1a1c",
-  body_edge: "#3a3a3e",
-  inactive: "#222226",
-  primary: "#F5F2EC",
-  secondary: "#C97B3E",
-  tertiary: "#C97B3E",
+  body: "#1A1A19",
+  body_edge: "#3A3A38",
+  inactive: "#232322",
+  primary: "#FF9C41",
+  secondary: "#885629",
+  tertiary: "#4A321C",
 } as const;
 
 const EXTRUDE_OUTLINE = { depth: 18, bevelEnabled: true, bevelSize: 2, bevelThickness: 2, bevelSegments: 2, steps: 1 };

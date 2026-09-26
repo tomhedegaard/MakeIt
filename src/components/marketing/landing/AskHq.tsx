@@ -7,6 +7,8 @@ import { PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
 import { MAX_QUESTION_CHARS, MAX_TURNS } from "@/lib/marketing/ask-hq/schema";
 import { tidyAnswer } from "@/lib/marketing/ask-hq/tidy";
 import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 type Turn = { role: "user" | "assistant"; content: string };
 type Status = "idle" | "pending" | "error" | "limited" | "unavailable";
@@ -164,9 +166,7 @@ export default function AskHq() {
             onClick={close}
             className="grid size-9 flex-none cursor-pointer place-items-center border border-line-bright hover:bg-fg hover:text-bg"
           >
-            <svg viewBox="0 0 12 12" aria-hidden="true" className="size-3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-              <path d="M2.5 2.5l7 7M9.5 2.5l-7 7" />
-            </svg>
+            <X {...ICON} className="size-3" />
           </button>
         </div>
 

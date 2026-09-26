@@ -28,6 +28,8 @@ import HrvReadinessNudge from "@/components/hrv/HrvReadinessNudge";
 import AdaptationCard from "@/components/adaptive/AdaptationCard";
 import type { ActiveAdaptation } from "@/lib/adaptive/explanation";
 import { logSetAction, completeSessionAction } from "./actions";
+import { Video, X } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 type Logged = Record<
   string,
@@ -190,9 +192,7 @@ export default function SessionClient({
             aria-label={t("topBar.exit")}
             className="size-11 rounded-full surface-2 flex items-center justify-center"
           >
-            <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
-              <path d="M6 6l12 12M6 18L18 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
+            <X {...ICON} className="size-5" />
           </button>
 
           <div className="flex-1 min-w-0 text-center">
@@ -678,11 +678,7 @@ function ExerciseSection({
         onClick={onOpenFormCheck}
         className="mt-4 w-full min-h-11 text-left flex items-start gap-3 rounded-xl px-4 py-3 lift touch-app bg-fg text-bg overflow-x-clip"
       >
-        <svg viewBox="0 0 24 24" className="size-4 mt-1 shrink-0" fill="none" aria-hidden>
-          <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
-          <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-          <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
-        </svg>
+        <Video {...ICON} className="size-4 mt-1 shrink-0" />
         <span className="flex-1 min-w-0">
           <span className="flex items-baseline justify-between gap-2">
             <span className="text-sm leading-snug">{t("formCheck", { set: setIdx + 1 })}</span>

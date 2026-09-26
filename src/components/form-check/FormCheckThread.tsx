@@ -1,5 +1,7 @@
 import MunkMark from "@/components/brand/MunkMark";
 import { liftLabel, type FormQueueItem } from "@/lib/form-queue/queue";
+import { Mic } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 export type FormCheckThreadCopy = {
   eyebrow: string;
@@ -63,7 +65,7 @@ export default function FormCheckThread({
                       data-munk-voice=""
                       className="flex items-center gap-2 text-xs text-fg-dim"
                     >
-                      <span aria-hidden>🎙️</span>
+                      <Mic {...ICON} className="size-4" />
                       <span>{copy.voice}</span>
                       {item.voiceNoteDurationSec ? (
                         <span className="numeric text-fg-faint">

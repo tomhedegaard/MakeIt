@@ -2,6 +2,8 @@ import MotorGlyph from "@/components/adaptive/MotorGlyph";
 import MunkMark from "@/components/brand/MunkMark";
 import type { StreamMessage } from "@/lib/data/message-streams";
 import type { DualStreamCopy } from "./DualStreamMessages";
+import { Mic } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 export default function DualStreamBubble({
   message,
@@ -33,7 +35,7 @@ export default function DualStreamBubble({
       <div className="max-w-full rounded-2xl border hairline px-4 py-3 bg-bg-2">
         {message.kind === "audio" ? (
           <div data-munk-voice="" className="flex items-center gap-2 text-sm">
-            <span aria-hidden>🎙️</span>
+            <Mic {...ICON} className="size-4" />
             <span>{copy.voice}</span>
             {message.mediaDurationSec ? (
               <span className="numeric text-fg-faint text-xs">

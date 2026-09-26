@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { MessageSquare, User } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 import Logo from "@/components/Logo";
 import { cn } from "@/lib/utils";
 import type { Member } from "@/lib/auth";
@@ -179,14 +181,7 @@ export default function AppShell({
               className="relative size-11 flex items-center justify-center text-fg"
               aria-label={t("links.messages")}
             >
-              <svg viewBox="0 0 24 24" fill="none" className="size-6" aria-hidden>
-                <path
-                  d="M4 5h16v11H10l-4 3.5V16H4z"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="square"
-                />
-              </svg>
+              <MessageSquare {...ICON} className="size-6" />
               {unreadMessages > 0 ? (
                 <span
                   className="absolute top-1.5 right-1 numeric text-micro tabular-nums px-1 py-0.5 bg-fg text-bg leading-none min-w-[14px] text-center"
@@ -209,10 +204,7 @@ export default function AppShell({
                 className="size-11 flex items-center justify-center text-fg cursor-pointer list-none [&::-webkit-details-marker]:hidden"
                 aria-label={t("shell.menu")}
               >
-                <svg viewBox="0 0 24 24" fill="none" className="size-6" aria-hidden>
-                  <circle cx="12" cy="8.5" r="3.5" stroke="currentColor" strokeWidth="1.5" />
-                  <path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-                </svg>
+                <User {...ICON} className="size-6" />
               </summary>
               <nav
                 aria-label={t("shell.menu")}

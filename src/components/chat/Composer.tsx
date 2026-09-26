@@ -6,6 +6,8 @@ import { createClient as createBrowserSupabase } from "@/lib/supabase/client";
 import { sendMessageAction } from "@/app/(app)/messages/actions";
 import AudioRecorder from "./AudioRecorder";
 import VideoRecorder from "./VideoRecorder";
+import { Camera, Mic, Video } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 const CHAT_MEDIA_BUCKET = "chat-media";
 
@@ -278,7 +280,7 @@ export default function Composer({
           aria-label={t("imageAria")}
           title={t("imageTitle")}
         >
-          📷
+          <Camera {...ICON} className="size-5" />
         </button>
         <button
           type="button"
@@ -288,7 +290,7 @@ export default function Composer({
           aria-label={t("audioAria")}
           title={t("audioTitle")}
         >
-          🎙️
+          <Mic {...ICON} className="size-5" />
         </button>
         {canSendVideo ? (
           <button
@@ -299,7 +301,7 @@ export default function Composer({
             aria-label={t("videoAria")}
             title={t("videoTitle")}
           >
-            🎥
+            <Video {...ICON} className="size-5" />
           </button>
         ) : null}
       </div>

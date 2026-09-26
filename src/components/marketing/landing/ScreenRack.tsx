@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /** Arrow keys move the rack one screen; other keys are left alone. */
 export function rackDirection(key: string): 1 | -1 | null {
@@ -108,8 +110,8 @@ export default function ScreenRack({
               {tag}
             </span>
           ) : null}
-          <RackButton controls={id} label={prevLabel} disabled={atStart} onClick={() => go(-1)} path="M12.5 4L6.5 10l6 6" />
-          <RackButton controls={id} label={nextLabel} disabled={atEnd} onClick={() => go(1)} path="M7.5 4l6 6-6 6" />
+          <RackButton controls={id} label={prevLabel} disabled={atStart} onClick={() => go(-1)} direction="prev" />
+          <RackButton controls={id} label={nextLabel} disabled={atEnd} onClick={() => go(1)} direction="next" />
         </div>
       </div>
 
@@ -140,14 +142,15 @@ function RackButton({
   label,
   disabled,
   onClick,
-  path,
+  direction,
 }: {
   controls: string;
   label: string;
   disabled: boolean;
   onClick: () => void;
-  path: string;
+  direction: "prev" | "next";
 }) {
+  const Arrow = direction === "prev" ? ChevronLeft : ChevronRight;
   return (
     <button
       type="button"
@@ -162,9 +165,7 @@ function RackButton({
         "cursor-pointer aria-[disabled=false]:hover:bg-fg aria-[disabled=false]:hover:text-bg",
       )}
     >
-      <svg viewBox="0 0 20 20" aria-hidden="true" className="size-[18px]">
-        <path d={path} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+      <Arrow {...ICON} className="size-5" />
     </button>
   );
 }

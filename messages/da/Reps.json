@@ -8,7 +8,7 @@
     "label": "Din balance",
     "tier": "Niveau: {tier}",
     "toNext": "{amount} til {tier}",
-    "topCap": "Topcap nået · ★"
+    "topCap": "Topcap nået."
   },
   "tiers": {
     "eyebrow": "Niveauer",

@@ -8,7 +8,7 @@
   "whyLink": "Why this buddy? →",
   "reactionsHeader": "Send a quick reaction",
   "recentHeader": "Recent interactions",
-  "noInteractions": "No interactions yet. Start with a 🔥.",
+  "noInteractions": "No interactions yet. Start with a reaction.",
   "interactionFromYou": "You",
   "interactionFromBuddy": "@{handle}",
   "buckets": {
@@ -21,9 +21,9 @@
   },
   "reactions": {
     "groupLabel": "Send a reaction to your buddy",
-    "fire": "Crushing it 🔥",
-    "strong": "Strong 💪",
-    "eyes": "Impressed 👀"
+    "fire": "Crushing it",
+    "strong": "Strong",
+    "eyes": "Impressed"
   },
   "whyTitle": "How we paired you with @{handle}.",
   "whyTitleEmpty": "No buddy to explain yet.",

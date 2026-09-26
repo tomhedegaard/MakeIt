@@ -1,6 +1,8 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { PUBLIC_LOGIN_HREF, PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
+import { Menu, X } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 const SECTIONS = [
   { href: "#engine", key: "engine" },
@@ -53,10 +55,8 @@ export default function LandingNav() {
               aria-label={menu("menuOpen")}
               className="flex size-10 cursor-pointer list-none items-center justify-center border border-line-strong text-fg [&::-webkit-details-marker]:hidden"
             >
-              <svg aria-hidden="true" viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
-                <path d="M3 6h14M3 10h14M3 14h14" className="group-open:hidden" />
-                <path d="M5 5l10 10M15 5L5 15" className="hidden group-open:inline" />
-              </svg>
+              <Menu {...ICON} className="size-5 group-open:hidden" />
+              <X {...ICON} className="hidden size-5 group-open:inline" />
             </summary>
             <ul className="absolute right-0 top-[calc(100%+12px)] flex min-w-[220px] flex-col border border-line bg-bg-2 p-2">
               {SECTIONS.map((s) => (

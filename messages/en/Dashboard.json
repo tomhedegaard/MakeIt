@@ -7,14 +7,6 @@
     "streakLabel": "Streak",
     "streakUnit": "days"
   },
-  "figure": {
-    "ariaLabel": "Body map: mind, heart, body and food",
-    "eyebrow": "Body map",
-    "mind": "Mind",
-    "heart": "Heart",
-    "body": "Body",
-    "food": "Food"
-  },
   "formChecks": {
     "answeredBefore": "Mikael Munk has answered",
     "answeredCount": "{count, plural, one {# form check} other {# form checks}}",
@@ -74,7 +66,7 @@
     "seeFeed": "See feed →",
     "empty": "The crew is quiet right now. Be the first to share.",
     "share": "+ Share",
-    "prBadge": "★ PR",
+    "prBadge": "PR",
     "mock": {
       "ninaWhat": "+2.5kg PR · Deadlift 175 kg",
       "ninaWhen": "just now",

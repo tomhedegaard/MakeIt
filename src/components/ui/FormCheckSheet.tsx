@@ -15,6 +15,9 @@ import {
 } from "@/lib/form-queue/queue";
 import { createClient as createBrowserSupabase } from "@/lib/supabase/client";
 import { describeReset, type FormCheckQuota } from "@/lib/data/form-check-quota";
+import { Upload, Video } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
+import MotorGlyph from "@/components/adaptive/MotorGlyph";
 
 const FORM_CHECK_BUCKET = "form-check-videos";
 
@@ -587,28 +590,14 @@ function Card({
 }
 
 function CameraIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
-      <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-      <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  );
+  return <Video {...ICON} className="size-5" />;
 }
 function UploadIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
-      <path d="M12 16V5m0 0l-4 4m4-4l4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      <path d="M5 16v3h14v-3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
+  return <Upload {...ICON} className="size-5" />;
 }
+/** HQ's analysis is attributed with the HQ mark, as everywhere else (spec §11). */
 function SparkIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
-      <path d="M12 3v6M12 15v6M3 12h6M15 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M5.6 18.4l4.2-4.2M14.2 9.8l4.2-4.2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
-  );
+  return <MotorGlyph className="size-5" />;
 }
 
 /* ---------------------------------------------------------------- *

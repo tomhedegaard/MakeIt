@@ -6,6 +6,8 @@ import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
 import { MUSCLE_LABELS, type MuscleGroup } from "@/lib/data/muscle-groups";
 import type { Exercise, ExerciseLibrary, Session } from "@/lib/workout";
 import { startSessionAction } from "./actions";
+import { ChevronLeft } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * Read-only session view shown when status === "scheduled". Members
@@ -35,9 +37,7 @@ export default async function SessionPreview({ session }: { session: Session }) 
             aria-label={t("preview.back")}
             className="size-10 rounded-full surface-2 flex items-center justify-center"
           >
-            <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
-              <path d="M14 6l-6 6 6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <ChevronLeft {...ICON} className="size-5" />
           </Link>
 
           <div className="flex-1 min-w-0 text-center">

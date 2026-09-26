@@ -203,3 +203,41 @@ Reps, HRV og Forskning ligger fortsat i topbjælkens profilmenu.
 `EmptyState` og de håndbyggede tomme blokke i app og coach er venstrestillede
 (spec §5: "Alt er venstrestillet"). Tabel-agtige celler (ugedage, nøgletal,
 segmenterede valg) er fortsat centrerede, fordi de er tal i kolonner, ikke tekst.
+
+## 11. Grafisk sprog (tilføjet 26.09.2026)
+
+Én sammenhæng på tværs af app, landing og mails. Reglerne håndhæves af
+`src/lib/design/nord-graphics-gate.test.ts`.
+
+**Ikoner.** Ét sæt: `lucide-react` med `{...ICON}` fra `src/components/ui/icon.ts`
+(1,5 px streg, firkantede ender, currentColor, 24 px i navigation). Ingen
+håndtegnede ikoner og ingen emoji som UI. Typografiske tegn i copy (→ · ✓)
+er tekst og må blive.
+
+**Domæner.** Hvert domæne har ét mærke, og det samme mærke overalt: fanebjælke,
+kickers, HQ-strimlen, dashboard-strømmen og landingens telefon-attrapper.
+
+| Domæne | Mærke |
+|---|---|
+| Krop (02 Træn) | håndvægt |
+| Mad (03) | kniv og gaffel |
+| Hjerte (05 HRV) | hjerte med puls |
+| Sind (06 Mind) | hjerne |
+
+**HQ.** HQ-mærket er ordmærkets dobbelte skråstreg, som på app-ikonet. Det
+markerer alt, HQ har lavet (strimlen, beskeder, form-check-analyse). Munk har
+sine initialer i en cirkel, som alle avatarer.
+
+**Kroppen.** Muskelfiguren er den eneste kropsgrafik. Den trænede muskel er altid
+Krop-farven i tre styrker (`--muscle-primary/-secondary/-tertiary`: 100/50/24 %),
+på en flad silhuet med 1 px kant. Øvelsessidens chips og forklaring bruger samme
+tre styrker, og 3D-loopsenes røde markering læses i samme familie. Organfiguren
+og BodyMap er fjernet.
+
+**Data.** Grid og ramme er `--line`/`--line-strong`, aksetekst `--fg-dim` (AA),
+data i domænefarve, bånd og arealer som flade tints. Ingen gradienter, ingen
+skygger, ingen afrundede søjler. Skalaer er segmenter, ikke trafiklys.
+
+**Hvor SVG må tegnes.** Kun grafer, muskelfiguren, ordmærket og HQ-mærket,
+tredjeparts-logoer, Munks signatur og telefon-attrappernes enhedskrom. Listen
+står i gaten med en begrundelse pr. fil.

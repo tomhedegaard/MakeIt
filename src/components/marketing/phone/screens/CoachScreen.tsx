@@ -2,6 +2,8 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import PhoneFrame from "../PhoneFrame";
 import { Avatar, Headline, Kicker, Label } from "./parts";
+import { Play } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 const THREAD = [
   { key: "yesterday", divider: true },
@@ -42,9 +44,7 @@ export default function CoachScreen({ width, scroll }: { width?: number; scroll?
               className="flex items-center gap-2 self-end border border-line-strong px-2.5 py-[7px] text-[9px]"
             >
               <i className="grid h-5 w-7 place-items-center rounded-md bg-fg text-bg">
-                <svg viewBox="0 0 10 10" className="size-2" fill="currentColor">
-                  <path d="M3 2l5 3-5 3z" />
-                </svg>
+                <Play {...ICON} className="size-2" />
               </i>
               {s(`coach.${msg.key}`)}
             </p>

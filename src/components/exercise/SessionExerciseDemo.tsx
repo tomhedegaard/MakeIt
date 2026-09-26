@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import type { ExercisePhase } from "@/lib/data/exercises";
 import { resolveDemoAssets } from "@/lib/data/demo-assets";
 import { useVideoPhaseSync } from "./useVideoPhaseSync";
+import { Play } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * Compact session-chrome demo. Portrait (9:16) loop when a URL exists;
@@ -87,9 +89,7 @@ export default function SessionExerciseDemo({
             aria-label={playLabel}
             className="absolute inset-0 flex items-center justify-center bg-bg/40 text-fg"
           >
-            <svg viewBox="0 0 24 24" className="size-7" fill="currentColor" aria-hidden>
-              <path d="M8 6.5v11l9-5.5-9-5.5z" />
-            </svg>
+            <Play {...ICON} className="size-7" />
           </button>
         ) : null}
       </div>

@@ -8,7 +8,7 @@
   "whyLink": "Hvorfor denne buddy? →",
   "reactionsHeader": "Send en hilsen",
   "recentHeader": "Seneste interaktioner",
-  "noInteractions": "Ingen interaktioner endnu. Start med en 🔥.",
+  "noInteractions": "Ingen interaktioner endnu. Start med en reaktion.",
   "interactionFromYou": "Du",
   "interactionFromBuddy": "@{handle}",
   "buckets": {
@@ -21,9 +21,9 @@
   },
   "reactions": {
     "groupLabel": "Send en hilsen til din buddy",
-    "fire": "Sådan! 🔥",
-    "strong": "Stærkt 💪",
-    "eyes": "Imponeret 👀"
+    "fire": "Sådan",
+    "strong": "Stærkt",
+    "eyes": "Imponeret"
   },
   "whyTitle": "Sådan parrede vi dig med @{handle}.",
   "whyTitleEmpty": "Ingen buddy at forklare endnu.",

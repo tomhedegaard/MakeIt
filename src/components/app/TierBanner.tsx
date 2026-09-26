@@ -4,6 +4,8 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { dismissTierEventAction } from "@/app/(app)/actions";
+import { X } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 export default function TierBanner({
   eventId,
@@ -53,9 +55,7 @@ export default function TierBanner({
         aria-label={t("close")}
         className="size-8 rounded-full surface flex items-center justify-center text-fg-dim hover:text-fg shrink-0"
       >
-        <svg viewBox="0 0 24 24" className="size-4" fill="none" aria-hidden>
-          <path d="M6 6l12 12M6 18L18 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-        </svg>
+        <X {...ICON} className="size-4" />
       </button>
     </div>
   );

@@ -68,7 +68,6 @@ export default function SleepScreen({ width, scroll = false }: { width?: number;
               y={top}
               width="22"
               height={58 - top}
-              rx="3"
               className={i === NIGHTS.length - 1 ? "fill-domain" : "fill-domain-line"}
             />
           ))}

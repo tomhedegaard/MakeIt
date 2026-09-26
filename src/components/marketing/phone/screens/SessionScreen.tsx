@@ -1,6 +1,8 @@
 import { useTranslations } from "next-intl";
 import PhoneFrame from "../PhoneFrame";
 import { Label, Pill, Row } from "./parts";
+import { Check, Minus, Plus } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * Træn, live session (reference B "Session (dark)"). Design rule: the
@@ -63,9 +65,7 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
                 <span className="font-medium">{n}</span>
               ) : (
                 <span className="grid size-3.5 place-items-center rounded-full bg-fg text-bg">
-                  <svg viewBox="0 0 10 10" className="size-2" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M2 5.2l2 2 4-4.4" />
-                  </svg>
+                  <Check {...ICON} className="size-2" />
                 </span>
               )}
               <span className={current ? "" : "text-fg-dim"}>
@@ -116,7 +116,7 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
             strokeWidth="3"
             strokeDasharray="88"
             strokeDashoffset="30"
-            strokeLinecap="round"
+            strokeLinecap="square"
             transform="rotate(-90 17 17)"
           />
           <text x="17" y="19.5" textAnchor="middle" fontSize="7.5" className="fill-fg">
@@ -148,9 +148,7 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
 function StepButton({ sign }: { sign: "minus" | "plus" }) {
   return (
     <i className="grid size-[22px] place-items-center rounded-full border border-line-strong">
-      <svg viewBox="0 0 10 10" className="size-[9px]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
-        <path d={sign === "plus" ? "M1.5 5h7M5 1.5v7" : "M1.5 5h7"} />
-      </svg>
+      {sign === "plus" ? <Plus {...ICON} className="size-[9px]" /> : <Minus {...ICON} className="size-[9px]" />}
     </i>
   );
 }

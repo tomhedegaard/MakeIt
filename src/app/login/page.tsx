@@ -12,6 +12,8 @@ import {
   passwordAction,
   oauthAction,
 } from "./actions";
+import { CircleAlert } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 export async function generateMetadata() {
   const t = await getTranslations("Login");
@@ -397,11 +399,7 @@ function LoginErrorAlert({
 
 function DangerGlyph() {
   return (
-    <svg viewBox="0 0 24 24" className="size-3.5 shrink-0" fill="none" aria-hidden>
-      <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M12 8v5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      <circle cx="12" cy="16.2" r="0.9" fill="currentColor" />
-    </svg>
+    <CircleAlert {...ICON} className="size-3.5 shrink-0" />
   );
 }
 
