@@ -115,12 +115,12 @@ export default async function CrewPage() {
                       : undefined,
                   }}
                 />
-                <div className="absolute inset-[2px] rounded-full bg-bg-2 flex items-center justify-center text-[11px] font-mono">
+                <div className="absolute inset-[2px] rounded-full bg-bg-2 flex items-center justify-center text-[11px]">
                   {s.who.slice(1, 3).toUpperCase()}
                 </div>
               </div>
-              <div className="text-[10px] font-mono text-fg-dim">{s.who.replace("@", "")}</div>
-              <div className="text-[9px] font-mono text-fg-faint">
+              <div className="text-[10px] text-fg-dim">{s.who.replace("@", "")}</div>
+              <div className="text-[9px] text-fg-faint">
                 {s.trained ? t("trained") : t("resting")}
               </div>
             </li>
@@ -128,7 +128,7 @@ export default async function CrewPage() {
         </ol>
       </section>
       ) : (
-      <p className="text-xs font-mono text-fg-faint">
+      <p className="text-xs text-fg-faint">
         {t("storiesEmpty")}
       </p>
       )}
@@ -154,7 +154,7 @@ export default async function CrewPage() {
         <div className="px-5 pb-3">
           <div className="flex items-baseline justify-between mb-2">
             <span className="numeric text-2xl">{challenge.currentLabel}</span>
-            <span className="text-xs font-mono text-fg-dim">
+            <span className="text-xs text-fg-dim">
               {t("challengeProgress", { pct: challenge.youPercent })}
             </span>
           </div>
@@ -192,7 +192,7 @@ export default async function CrewPage() {
       <section>
         <div className="flex items-end justify-between mb-3">
           <div className="eyebrow">{t("feedEyebrow")}</div>
-          <span className="text-xs font-mono text-fg-faint">
+          <span className="text-xs text-fg-faint">
             {useReal
               ? t("feedCount", { count: feed.length })
               : t("feedUpdated")}
@@ -239,12 +239,12 @@ export default async function CrewPage() {
           {LEADERBOARD.map((row, i) => (
             <li key={row.rank} className="px-5 py-3 flex items-center gap-4 text-sm">
               <span className="numeric text-fg-faint w-7">{row.rank}</span>
-              <div className="size-8 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
+              <div className="size-8 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] shrink-0">
                 {row.who.slice(1, 3).toUpperCase()}
               </div>
               <span className="flex-1 truncate">{row.who}</span>
               <span className="numeric text-fg/90">{row.score}</span>
-              <span className="text-[10px] font-mono text-fg-faint hidden sm:inline">{row.lift}</span>
+              <span className="text-[10px] text-fg-faint hidden sm:inline">{row.lift}</span>
               {i < 3 ? (
                 <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
                   ★

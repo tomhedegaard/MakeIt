@@ -53,7 +53,7 @@ export default async function CoachMemberDetailPage({
     <Container className="py-6 lg:py-12 space-y-8">
       <Link
         href="/coach/members"
-        className="text-xs font-mono text-fg-dim hover:text-fg"
+        className="text-xs text-fg-dim hover:text-fg"
       >
         {t("backToMembers")}
       </Link>
@@ -138,7 +138,7 @@ export default async function CoachMemberDetailPage({
                 </span>
                 <span className="flex-1 truncate">{s.dayLabel}</span>
                 <span
-                  className="text-[10px] font-mono border hairline-strong rounded-full px-2 py-0.5 shrink-0"
+                  className="text-[10px] border hairline-strong rounded-full px-2 py-0.5 shrink-0"
                   style={{
                     color: s.status === "completed" ? "var(--fg)" : "var(--fg-dim)",
                   }}
@@ -184,7 +184,7 @@ export default async function CoachMemberDetailPage({
             <div className="font-display text-3xl numeric leading-none">
               {adherence.adherencePct}%
             </div>
-            <div className="mt-2 text-[10px] font-mono text-fg-faint">
+            <div className="mt-2 text-[10px] text-fg-faint">
               {t("mealsLogged", { logged: adherence.mealsLogged, planned: adherence.mealsPlanned })}
             </div>
           </div>
@@ -195,7 +195,7 @@ export default async function CoachMemberDetailPage({
                 ? "—"
                 : `${adherence.weightDeltaKg > 0 ? "+" : ""}${adherence.weightDeltaKg.toFixed(1)}`}
             </div>
-            <div className="mt-2 text-[10px] font-mono text-fg-faint">
+            <div className="mt-2 text-[10px] text-fg-faint">
               {t("weightUnit")}
             </div>
           </div>
@@ -204,7 +204,7 @@ export default async function CoachMemberDetailPage({
             <div className="font-display text-3xl numeric leading-none">
               {adherence.skipDaysCount}
             </div>
-            <div className="mt-2 text-[10px] font-mono text-fg-faint">
+            <div className="mt-2 text-[10px] text-fg-faint">
               {t("skipDaysSub")}
             </div>
           </div>
@@ -246,7 +246,7 @@ export default async function CoachMemberDetailPage({
                 {f.aiHeadline ? (
                   <p className="text-fg/90 text-sm leading-relaxed">{f.aiHeadline}</p>
                 ) : null}
-                <div className="mt-2 text-[10px] font-mono text-fg-faint">
+                <div className="mt-2 text-[10px] text-fg-faint">
                   {f.reviewedAt ? t("reviewed") : t("awaitingReview")}
                 </div>
               </li>

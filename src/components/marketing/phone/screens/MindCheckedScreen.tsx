@@ -46,7 +46,7 @@ export default function MindCheckedScreen({ width, scroll = false }: { width?: n
             </span>
             <span
               className={
-                "text-right font-mono text-[10px] " + (scale.strong ? "font-semibold text-fg" : "text-fg-dim")
+                "text-right text-[10px]" + (scale.strong ? "font-semibold text-fg" : "text-fg-dim")
               }
             >
               {s(`mindChecked.${scale.value}`)}

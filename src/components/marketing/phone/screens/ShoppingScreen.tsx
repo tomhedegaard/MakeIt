@@ -54,7 +54,7 @@ export default function ShoppingScreen({ width, scroll }: { width?: number; scro
                   )}
                 />
                 <span className={cn("text-[10.5px]", done && "text-fg-dim line-through")}>{sh(item)}</span>
-                <span className="font-mono text-[9.5px] text-fg-dim">{sh(`${item}v`)}</span>
+                <span className="text-[9.5px] text-fg-dim">{sh(`${item}v`)}</span>
               </div>
             );
           })}

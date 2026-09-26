@@ -34,7 +34,7 @@ export default function TierBanner({
     >
       <span className="pulse-dot" aria-hidden />
       <div className="flex-1 min-w-0">
-        <div className="text-[10px] font-mono text-fg-faint mb-0.5">
+        <div className="text-[10px] text-fg-faint mb-0.5">
           {t("eyebrow")}
         </div>
         <div className="font-display text-xl leading-snug">

@@ -116,7 +116,7 @@ export default function ExerciseHero({
           />
         </div>
 
-        <div className="flex items-center gap-4 text-[10px] font-mono text-fg-faint">
+        <div className="flex items-center gap-4 text-[10px] text-fg-faint">
           <Dot color={TIER_COLOR.primary} label={t("tierPrimary")} />
           <Dot color={TIER_COLOR.secondary} label={t("tierSecondary")} />
           <Dot color={TIER_COLOR.tertiary} label={t("tierTertiary")} />
@@ -145,7 +145,7 @@ function ToggleRow({
           key={o.v}
           type="button"
           onClick={() => onChange(o.v)}
-          className={`flex-1 px-3 py-2 rounded-md text-xs font-mono ${
+          className={`flex-1 px-3 py-2 rounded-md text-xs ${
  value === o.v ? "bg-bg-3 text-fg" : "text-fg-dim hover:text-fg"
  }`}
         >

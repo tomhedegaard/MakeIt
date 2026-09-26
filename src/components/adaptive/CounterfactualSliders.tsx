@@ -276,7 +276,7 @@ export default function CounterfactualSliders({
           <button
             type="button"
             onClick={reset}
-            className="text-[10px] font-mono text-fg-faint hover:text-fg lift touch-app"
+            className="text-[10px] text-fg-faint hover:text-fg lift touch-app"
           >
             ← Nulstil til faktiske værdier
           </button>
@@ -315,7 +315,7 @@ export default function CounterfactualSliders({
 
   return (
     <details className="group/cf mt-2 pt-2 border-t hairline">
-      <summary className="cursor-pointer list-none text-[11px] font-mono text-fg-dim hover:text-fg select-none inline-flex items-center gap-1 lift touch-app">
+      <summary className="cursor-pointer list-none text-[11px] text-fg-dim hover:text-fg select-none inline-flex items-center gap-1 lift touch-app">
         <span>Hvad hvis du havde…</span>
         <span aria-hidden className="group-open/cf:rotate-180 transition-transform">↓</span>
       </summary>
@@ -342,11 +342,11 @@ function ControlRow({
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3 mb-1.5">
-        <span className="text-[11px] font-mono text-fg-faint">
+        <span className="text-[11px] text-fg-faint">
           {label}
         </span>
         {changed ? (
-          <span className="text-[10px] font-mono text-fg-faint">
+          <span className="text-[10px] text-fg-faint">
             faktisk: {actualLabel}
           </span>
         ) : null}
@@ -376,7 +376,7 @@ function ResultBlock({
       </div>
       <p className="text-xs text-fg-dim leading-relaxed">{detail}</p>
       {previous ? (
-        <p className="text-[10px] font-mono text-fg-faint">
+        <p className="text-[10px] text-fg-faint">
           {previous}
         </p>
       ) : null}

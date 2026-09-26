@@ -40,7 +40,7 @@ export default function AppError({
           .
         </p>
         {error.digest && (
-          <p className="text-xs font-mono text-fg-faint mb-8">
+          <p className="text-xs text-fg-faint mb-8">
             {t("ref", { digest: error.digest })}
           </p>
         )}

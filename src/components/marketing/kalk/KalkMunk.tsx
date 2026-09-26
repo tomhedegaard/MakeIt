@@ -60,7 +60,7 @@ export default function KalkMunk() {
                   key={step.t}
                   className="grid grid-cols-[78px_minmax(0,1fr)] items-baseline gap-3.5 border-t border-line py-3.5 last:border-b"
                 >
-                  <span className="font-mono text-[12px] font-medium leading-none text-fg-dim">
+                  <span className="text-[12px] font-medium leading-none text-fg-dim">
                     {step.t}
                   </span>
                   <b className="font-medium">{step.label}</b>
@@ -95,19 +95,19 @@ function FormCheckCard() {
       />
 
       <div className="flex flex-col p-[clamp(22px,3vw,36px)]">
-        <p id="munk-card-title" className="font-mono text-[12px] text-fg-dim">
+        <p id="munk-card-title" className="text-[12px] text-fg-dim">
           {c("kicker")}
           <br />
           {c("lift")}
         </p>
         <p className="mt-[22px] text-[15px] text-fg-dim">
-          <em className="mb-1.5 block font-mono text-[10px] not-italic">{c("draftLabel")}</em>
+          <em className="mb-1.5 block text-[10px] not-italic">{c("draftLabel")}</em>
           <s className="decoration-signal decoration-2">{c("draft")}</s>
         </p>
         <p className="font-display mb-8 mt-[18px] text-[clamp(28px,2.6vw,38px)] leading-[0.98]!">{c("final")}</p>
 
         <div className="mt-auto flex flex-wrap-reverse items-end justify-between gap-x-3 gap-y-2 border-t border-line pt-4">
-          <p className="whitespace-nowrap font-mono text-[11px] text-fg-dim">
+          <p className="whitespace-nowrap text-[11px] text-fg-dim">
             {c("signed")} · {c("answered")}
           </p>
           <Signature label={c("signatureLabel")} />

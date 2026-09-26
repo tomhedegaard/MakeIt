@@ -75,7 +75,7 @@ export default function MindCelebration({ kind }: CelebrationProps) {
         <div className="flex items-center justify-between">
           <div className="eyebrow">{t(`kind.${kind}.eyebrow`)}</div>
           {reps > 0 ? (
-            <span className="text-xs font-mono tabular-nums px-2.5 py-1 rounded-full border hairline">
+            <span className="text-xs tabular-nums px-2.5 py-1 rounded-full border hairline">
               {t("reps", { reps })}
             </span>
           ) : null}

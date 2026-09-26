@@ -70,7 +70,7 @@ export default async function CoachCoCoachesPage() {
       )}
 
       <footer className="pt-4 border-t hairline">
-        <p className="text-xs font-mono text-fg-faint">{t("footnote")}</p>
+        <p className="text-xs text-fg-faint">{t("footnote")}</p>
       </footer>
     </Container>
   );
@@ -100,11 +100,11 @@ async function BeastRow({ beast }: { beast: BeastInTraining }) {
           >
             {agreementPct === null ? "—" : `${agreementPct}%`}
           </span>
-          <span className="text-xs font-mono text-fg-faint">
+          <span className="text-xs text-fg-faint">
             {t("reviewsLabel", { count: beast.sandboxReviewCount })}
           </span>
           {beast.lastReviewAt ? (
-            <span className="text-xs font-mono text-fg-faint">
+            <span className="text-xs text-fg-faint">
               {t("lastReviewLabel", { iso: beast.lastReviewAt })}
             </span>
           ) : null}

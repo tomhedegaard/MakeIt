@@ -134,7 +134,7 @@ export default function ConnectDotsStream({
               className="surface-2 rounded-2xl overflow-hidden"
             >
               <div className="px-5 pt-4 pb-3 space-y-3">
-                <div className="flex items-center gap-2 text-[10px] font-mono text-fg-faint">
+                <div className="flex items-center gap-2 text-[10px] text-fg-faint">
                   <MotorGlyph className="size-3" />
                   <span>{copy.motorAttribution}</span>
                 </div>
@@ -154,7 +154,7 @@ export default function ConnectDotsStream({
                         domain={domain as Domain}
                         className="size-3.5"
                       />
-                      <span className="text-[10px] font-mono">
+                      <span className="text-[10px]">
                         {copy.domains[domain]}
                       </span>
                     </span>
@@ -172,7 +172,7 @@ export default function ConnectDotsStream({
                   <Link
                     href={card.moreHref}
                     data-more-about={card.moreAbout}
-                    className="inline-flex min-h-11 items-center text-[11px] font-mono text-fg-dim hover:text-fg border hairline rounded-full px-4"
+                    className="inline-flex min-h-11 items-center text-[11px] text-fg-dim hover:text-fg border hairline rounded-full px-4"
                   >
                     {copy.moreAbout} {copy.domains[card.moreAbout]}
                   </Link>
@@ -183,14 +183,14 @@ export default function ConnectDotsStream({
                 <button
                   type="button"
                   onClick={() => hide(card.id)}
-                  className="inline-flex min-h-11 items-center text-[10px] font-mono text-fg-faint hover:text-fg"
+                  className="inline-flex min-h-11 items-center text-[10px] text-fg-faint hover:text-fg"
                 >
                   {copy.dismiss}
                 </button>
                 <button
                   type="button"
                   onClick={() => snooze(card.id)}
-                  className="inline-flex min-h-11 items-center text-[10px] font-mono text-fg-faint hover:text-fg"
+                  className="inline-flex min-h-11 items-center text-[10px] text-fg-faint hover:text-fg"
                 >
                   {copy.snooze}
                 </button>

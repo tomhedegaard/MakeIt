@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 import Rule from "./Rule";
 
-const LINK = "border-b border-line-strong pb-0.5 font-mono text-xs no-underline hover:border-fg";
+const LINK = "border-b border-line-strong pb-0.5 text-xs no-underline hover:border-fg";
 
 /**
  * Footer (reference B `.foot`): wordmark, legal links, support email
@@ -35,7 +35,7 @@ export default function KalkFooter() {
           </nav>
         </div>
 
-        <div className="mt-7 flex flex-wrap justify-between gap-4 font-mono text-[11px] text-fg-dim">
+        <div className="mt-7 flex flex-wrap justify-between gap-4 text-[11px] text-fg-dim">
           <span>{t("sample")}</span>
           <span>{t("slogan")}</span>
         </div>

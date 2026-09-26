@@ -203,7 +203,7 @@ export default function AppShell({
             >
               <summary
                 ref={summaryRef}
-                className="size-9 rounded-full surface-2 flex items-center justify-center text-xs font-mono cursor-pointer list-none [&::-webkit-details-marker]:hidden"
+                className="size-9 rounded-full surface-2 flex items-center justify-center text-xs cursor-pointer list-none [&::-webkit-details-marker]:hidden"
                 aria-label={t("shell.menu")}
               >
                 {member.handle.slice(0, 2)}
@@ -248,7 +248,7 @@ export default function AppShell({
           {demoMode ? (
             <div
               role="status"
-              className="px-5 py-2 border-b hairline text-[10px] font-mono text-fg-faint"
+              className="px-5 py-2 border-b hairline text-[10px] text-fg-faint"
             >
               {t("shell.demoBanner")}
             </div>

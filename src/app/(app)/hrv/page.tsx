@@ -337,7 +337,7 @@ function StateNotConnected({ t }: { t: PageT }) {
 
       <div className="p-5 md:p-8 space-y-4">
         <ConnectButton label={t("connectCta")} />
-        <p className="text-[11px] font-mono text-fg-faint leading-relaxed">
+        <p className="text-[11px] text-fg-faint leading-relaxed">
           {t("connectAppleNote")}
         </p>
       </div>
@@ -382,7 +382,7 @@ function StateWarmingUp({
       </div>
 
       <div className="px-6 py-3 md:px-8 border-t hairline">
-        <span className="text-[11px] font-mono text-fg-faint">
+        <span className="text-[11px] text-fg-faint">
           {t("syncedFrom", { provider })}
         </span>
       </div>
@@ -452,7 +452,7 @@ function StateActive({
       </div>
 
       <div className="px-6 py-3 md:px-8 border-t hairline">
-        <span className="text-[11px] font-mono text-fg-faint">
+        <span className="text-[11px] text-fg-faint">
           {t("syncedFrom", { provider })}
         </span>
       </div>

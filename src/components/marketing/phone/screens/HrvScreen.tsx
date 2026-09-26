@@ -22,7 +22,7 @@ export default function HrvScreen({ width, scroll = false }: { width?: number; s
         <Label>{h("latest")}</Label>
         <p className="mt-1 font-display text-[52px]">
           {t("engine.steps.hrv.value")}
-          <small className="ml-1 font-mono text-[12px] font-medium normal-case">{t("engine.steps.hrv.unit")}</small>
+          <small className="ml-1 text-[12px] font-medium normal-case">{t("engine.steps.hrv.unit")}</small>
         </p>
         <Label className="mt-1.5">
           {h("avg")} {s("hrv.avgValue")}
@@ -48,11 +48,11 @@ export default function HrvScreen({ width, scroll = false }: { width?: number; s
               vectorEffect="non-scaling-stroke"
             />
           </svg>
-          <div className="mt-1 flex justify-between font-mono text-[8px] text-fg-dim">
+          <div className="mt-1 flex justify-between text-[8px] text-fg-dim">
             <span>{s("hrv.range")}</span>
             <span>{t("engine.night.label")}</span>
           </div>
-          <div className="mt-1.5 flex gap-2.5 font-mono text-[8.5px] text-fg-dim">
+          <div className="mt-1.5 flex gap-2.5 text-[8.5px] text-fg-dim">
             <span className="flex items-center gap-1">
               <i className="inline-block h-1.5 w-2.5 rounded-sm bg-domain-line" />
               {h("legendBand")}

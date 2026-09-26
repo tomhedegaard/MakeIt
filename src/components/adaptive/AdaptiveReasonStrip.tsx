@@ -40,7 +40,7 @@ export default function AdaptiveReasonStrip({
         <div className="flex items-center gap-3">
           <MotorGlyph className="text-fg-dim" />
           <span className="eyebrow flex-1">{copy.role}</span>
-          <span className="text-[10px] font-mono text-fg-faint hidden sm:inline">
+          <span className="text-[10px] text-fg-faint hidden sm:inline">
             {copy.attribution}
           </span>
           <span
@@ -59,7 +59,7 @@ export default function AdaptiveReasonStrip({
       </summary>
 
       <div className="px-5 pb-4 space-y-3">
-        <div className="flex items-center gap-2 text-[10px] font-mono text-fg-faint sm:hidden">
+        <div className="flex items-center gap-2 text-[10px] text-fg-faint sm:hidden">
           <MotorGlyph className="size-3" />
           <span>{copy.attribution}</span>
         </div>
@@ -72,7 +72,7 @@ export default function AdaptiveReasonStrip({
             <span className="flex items-center gap-2 mb-1">
               <MunkMark />
               <span className="eyebrow">{copy.munkRole}</span>
-              <span className="text-[10px] font-mono text-fg-faint">
+              <span className="text-[10px] text-fg-faint">
                 {copy.munkNoteLabel}
               </span>
             </span>

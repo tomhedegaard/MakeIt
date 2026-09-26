@@ -41,8 +41,8 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
               key={target}
               className={
                 i === 0
-                  ? "rounded-full bg-fg px-2 py-[5px] font-mono text-[10px] text-bg"
-                  : "rounded-full border border-line-strong px-2 py-[5px] font-mono text-[10px]"
+                  ? "rounded-full bg-fg px-2 py-[5px] text-[10px] text-bg"
+                  : "rounded-full border border-line-strong px-2 py-[5px] text-[10px]"
               }
             >
               {target}
@@ -57,7 +57,7 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
           return (
             <div
               key={n}
-              className="grid grid-cols-[34px_1fr_auto] items-center border-b border-line-strong py-1.5 font-mono text-[10px]"
+              className="grid grid-cols-[34px_1fr_auto] items-center border-b border-line-strong py-1.5 text-[10px]"
             >
               {current ? (
                 <span className="font-medium">{n}</span>
@@ -119,7 +119,7 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
             strokeLinecap="round"
             transform="rotate(-90 17 17)"
           />
-          <text x="17" y="19.5" textAnchor="middle" fontSize="7.5" className="fill-fg font-mono">
+          <text x="17" y="19.5" textAnchor="middle" fontSize="7.5" className="fill-fg">
             {s("session.restValue")}
           </text>
         </svg>

@@ -34,7 +34,7 @@ export default async function CoachSchoolLessonPage({
     <Container className="py-6 lg:py-12 space-y-6">
       <Link
         href="/coach-school"
-        className="inline-flex items-center text-xs font-mono text-fg-faint hover:text-fg"
+        className="inline-flex items-center text-xs text-fg-faint hover:text-fg"
       >
         {t("lesson.backToTree")}
       </Link>
@@ -62,7 +62,7 @@ export default async function CoachSchoolLessonPage({
             {t("lesson.videoPlaceholder")}
           </div>
         )}
-        <div className="px-4 py-2 text-[10px] font-mono text-fg-faint border-t hairline">
+        <div className="px-4 py-2 text-[10px] text-fg-faint border-t hairline">
           {t("lesson.recordedBy")}
         </div>
       </section>

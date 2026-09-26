@@ -44,7 +44,7 @@ export default async function CoachProgramsPage() {
                     {p.code}
                   </span>
                   <span
-                    className={`text-[10px] font-mono px-2 py-0.5 rounded-full border hairline ${
+                    className={`text-[10px] px-2 py-0.5 rounded-full border hairline ${
  p.isPublished ? "text-fg" : "text-fg-faint"
  }`}
                   >
@@ -57,7 +57,7 @@ export default async function CoachProgramsPage() {
                 <div className="eyebrow text-fg-faint mt-1">
                   {[p.type, p.level].filter(Boolean).join(" · ")}
                 </div>
-                <div className="mt-4 flex items-center gap-4 text-[11px] font-mono text-fg-dim">
+                <div className="mt-4 flex items-center gap-4 text-[11px] text-fg-dim">
                   <span>{t("weeks", { count: p.weeks })}</span>
                   <span>
                     {p.dayCount === 1

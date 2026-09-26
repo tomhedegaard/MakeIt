@@ -104,12 +104,12 @@ export default async function CoachOverviewPage() {
             <ul className="divide-y hairline">
               {recentlyActive.map((m) => (
                 <li key={m.id} className="px-5 py-3 flex items-center gap-4">
-                  <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
+                  <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] shrink-0">
                     {m.handle.slice(0, 2).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm">@{m.handle}</div>
-                    <div className="text-[11px] font-mono text-fg-faint">
+                    <div className="text-[11px] text-fg-faint">
                       {m.programCode
                         ? t("memberWithProgram", { programCode: m.programCode, programWeek: m.programWeek ?? "" })
                         : t("memberNoProgram")}

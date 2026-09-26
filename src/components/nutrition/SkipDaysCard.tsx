@@ -82,7 +82,7 @@ export default function SkipDaysCard({
             <div className="eyebrow text-[10px] mb-0.5">{d.label}</div>
             <div className="numeric text-base">{d.day}</div>
             {d.skipped ? (
-              <div className="text-[9px] font-mono mt-1">
+              <div className="text-[9px] mt-1">
                 {t("skip")}
               </div>
             ) : null}
@@ -90,7 +90,7 @@ export default function SkipDaysCard({
         ))}
       </div>
       {skipDayIndices.length > 0 ? (
-        <p className="mt-3 text-[10px] font-mono text-fg-faint">
+        <p className="mt-3 text-[10px] text-fg-faint">
           {t("regenHint")}
         </p>
       ) : null}

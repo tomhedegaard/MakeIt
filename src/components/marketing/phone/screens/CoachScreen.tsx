@@ -39,7 +39,7 @@ export default function CoachScreen({ width, scroll }: { width?: number; scroll?
           ) : "clip" in msg ? (
             <p
               key={msg.key}
-              className="flex items-center gap-2 self-end rounded-[14px] rounded-br-[4px] border border-line-strong px-2.5 py-[7px] font-mono text-[9px]"
+              className="flex items-center gap-2 self-end rounded-[14px] rounded-br-[4px] border border-line-strong px-2.5 py-[7px] text-[9px]"
             >
               <i className="grid h-5 w-7 place-items-center rounded-md bg-fg text-bg">
                 <svg viewBox="0 0 10 10" className="size-2" fill="currentColor">

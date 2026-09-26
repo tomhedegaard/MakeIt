@@ -53,7 +53,7 @@ function VoiceCard({ voice, big = false }: { voice: Voice; big?: boolean }) {
           {voice.quote}
         </p>
       </blockquote>
-      <figcaption className="mt-5 flex flex-wrap gap-x-3.5 gap-y-1.5 font-mono text-[11.5px] text-fg-dim">
+      <figcaption className="mt-5 flex flex-wrap gap-x-3.5 gap-y-1.5 text-[11.5px] text-fg-dim">
         <b className="font-medium text-fg">{voice.name}</b>
         <span>{voice.tier}</span>
         <span>{voice.since}</span>

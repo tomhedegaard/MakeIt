@@ -25,7 +25,7 @@ export default function ProgressScreen({ width, scroll }: { width?: number; scro
       <Card>
         <p className="font-display text-[52px]">
           {s("progress.value")}
-          <small className="ml-1 font-mono text-[12px] font-medium normal-case">{unit}</small>
+          <small className="ml-1 text-[12px] font-medium normal-case">{unit}</small>
         </p>
         <Label>{s("progress.delta")}</Label>
         <svg viewBox="0 0 240 80" preserveAspectRatio="none" className="mt-2 h-[70px] w-full" data-domain="body">
@@ -34,7 +34,7 @@ export default function ProgressScreen({ width, scroll }: { width?: number; scro
           ))}
           <path d={E1RM} fill="none" strokeWidth="2" strokeLinejoin="round" className="stroke-domain" vectorEffect="non-scaling-stroke" />
         </svg>
-        <div className="mt-1 flex justify-between font-mono text-[8px] text-fg-dim">
+        <div className="mt-1 flex justify-between text-[8px] text-fg-dim">
           <span>{s("progress.weeks")}</span>
           <span>{s("time")}</span>
         </div>

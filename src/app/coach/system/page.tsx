@@ -44,7 +44,7 @@ export default async function CoachSystemPage() {
           {t("introPrefix")}
           <time
             dateTime={status.collectedAt}
-            className="font-mono text-fg"
+            className="text-fg"
             title={status.collectedAt}
           >
             {new Date(status.collectedAt).toLocaleString("da-DK", {
@@ -98,7 +98,7 @@ export default async function CoachSystemPage() {
                   <div className="font-display text-lg leading-tight">
                     {t("cronsQuietLabel")}
                   </div>
-                  <p className="mt-2 text-xs font-mono text-fg-dim">
+                  <p className="mt-2 text-xs text-fg-dim">
                     {t("cronsQuietRunbook")}
                   </p>
                 </div>
@@ -116,7 +116,7 @@ export default async function CoachSystemPage() {
                   <div className="font-display text-lg leading-tight">
                     {r.label}
                   </div>
-                  <p className="mt-2 text-xs font-mono text-fg-dim">
+                  <p className="mt-2 text-xs text-fg-dim">
                     {r.runbook}
                   </p>
                 </div>
@@ -128,12 +128,12 @@ export default async function CoachSystemPage() {
                           ? t("expired")
                           : `${r.daysUntilExpiry}`}
                       </div>
-                      <div className="text-[10px] font-mono text-fg-faint mt-1">
+                      <div className="text-[10px] text-fg-faint mt-1">
                         {r.daysUntilExpiry !== null && r.daysUntilExpiry >= 0
                           ? t("daysLeft")
                           : t("sinceExpiry")}
                       </div>
-                      <div className="text-[10px] font-mono text-fg-faint mt-1">
+                      <div className="text-[10px] text-fg-faint mt-1">
                         {new Date(r.expiresAt).toLocaleDateString("da-DK", {
                           year: "numeric",
                           month: "short",
@@ -142,7 +142,7 @@ export default async function CoachSystemPage() {
                       </div>
                     </>
                   ) : (
-                    <div className="text-xs font-mono text-fg-dim">
+                    <div className="text-xs text-fg-dim">
                       {r.suggestedRotation ?? t("noHardExpiry")}
                     </div>
                   )}
@@ -160,7 +160,7 @@ export default async function CoachSystemPage() {
         sub={t("cronsSub")}
       >
         {cronHealth.mode === "demo" ? (
-          <p className="text-sm text-fg-dim font-mono">{t("cronsDemoNote")}</p>
+          <p className="text-sm text-fg-dim">{t("cronsDemoNote")}</p>
         ) : null}
         <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {cronHealth.crons.map((row) => (
@@ -195,7 +195,7 @@ export default async function CoachSystemPage() {
                     {s.name}
                   </span>
                   <span
-                    className={`text-[10px] font-mono ${
+                    className={`text-[10px] ${
  s.configured ? "text-green-400" : "text-fg-faint"
  }`}
                   >
@@ -203,14 +203,14 @@ export default async function CoachSystemPage() {
                   </span>
                 </div>
                 {s.notes ? (
-                  <p className="text-xs font-mono text-fg-dim">{s.notes}</p>
+                  <p className="text-xs text-fg-dim">{s.notes}</p>
                 ) : null}
                 {s.dashboardUrl ? (
                   <a
                     href={s.dashboardUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 inline-block text-xs font-mono text-fg-dim hover:text-fg underline underline-offset-2"
+                    className="mt-2 inline-block text-xs text-fg-dim hover:text-fg underline underline-offset-2"
                   >
                     {t("openDashboard")}
                   </a>
@@ -224,7 +224,7 @@ export default async function CoachSystemPage() {
       {status.database.error ? (
         <section className="surface-2 rounded-2xl p-5 border border-red-400/40">
           <div className="eyebrow text-red-400 mb-2">{t("databaseError")}</div>
-          <p className="font-mono text-xs text-fg-dim break-all">
+          <p className="text-xs text-fg-dim break-all">
             {status.database.error}
           </p>
         </section>
@@ -282,7 +282,7 @@ function Row({
     <div className="px-5 py-3 flex items-center gap-4">
       <dt className="eyebrow w-36 shrink-0">{label}</dt>
       <dd
-        className={`flex-1 break-all font-mono text-xs ${dim ? "text-fg-faint" : "text-fg"}`}
+        className={`flex-1 break-all text-xs ${dim ? "text-fg-faint" : "text-fg"}`}
       >
         {value ?? "—"}
       </dd>
@@ -371,12 +371,12 @@ function CronHealthCard({
         </span>
         <SeverityBadge severity={CRON_STATUS_SEVERITY[row.status]} />
       </div>
-      <div className="text-[10px] font-mono text-fg-faint">
+      <div className="text-[10px] text-fg-faint">
         {t(CRON_STATUS_KEY[row.status])}
         {row.emptyStreak > 0 ? ` · ${row.emptyStreak}` : ""}
       </div>
       {last ? (
-        <dl className="mt-3 grid grid-cols-3 gap-2 text-xs font-mono">
+        <dl className="mt-3 grid grid-cols-3 gap-2 text-xs">
           <div className="col-span-3">
             <dt className="text-fg-faint">{t("cronsLastRun")}</dt>
             <dd>
@@ -423,7 +423,7 @@ function SeverityBadge({ severity }: { severity: Severity }) {
   };
   return (
     <span
-      className={`inline-block px-2 py-0.5 rounded text-[10px] font-mono ${styles[severity]}`}
+      className={`inline-block px-2 py-0.5 rounded text-[10px] ${styles[severity]}`}
     >
       {label[severity]}
     </span>

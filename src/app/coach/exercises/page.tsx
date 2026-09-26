@@ -48,23 +48,23 @@ export default async function CoachExercisesPage() {
                   <div className="font-display text-base leading-tight truncate">
                     {ex.name}
                   </div>
-                  <div className="text-[11px] font-mono text-fg-faint truncate">
+                  <div className="text-[11px] text-fg-faint truncate">
                     {ex.slug}
                     {ex.category ? ` · ${ex.category}` : ""}
                   </div>
                 </div>
-                <span className="text-[11px] font-mono text-fg-dim shrink-0 hidden sm:inline">
+                <span className="text-[11px] text-fg-dim shrink-0 hidden sm:inline">
                   {t("musclesSummary", {
                     primary: ex.primaryMuscles.length,
                     secondary: ex.secondaryMuscles.length,
                     tertiary: ex.tertiaryMuscles.length,
                   })}
                 </span>
-                <span className="text-[11px] font-mono text-fg-faint shrink-0 hidden md:inline">
+                <span className="text-[11px] text-fg-faint shrink-0 hidden md:inline">
                   {t("phaseCount", { count: ex.phases.length })}
                 </span>
                 <span
-                  className={`text-[10px] font-mono px-2 py-0.5 rounded-full border hairline shrink-0 ${
+                  className={`text-[10px] px-2 py-0.5 rounded-full border hairline shrink-0 ${
  ex.isPublished ? "text-fg" : "text-fg-faint"
  }`}
                 >

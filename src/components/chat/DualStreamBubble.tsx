@@ -18,14 +18,14 @@ export default function DualStreamBubble({
       className="flex flex-col items-start gap-1"
     >
       {motor ? (
-        <span className="inline-flex items-center gap-1.5 text-[10px] font-mono text-fg-faint">
+        <span className="inline-flex items-center gap-1.5 text-[10px] text-fg-faint">
           <MotorGlyph className="size-3" />
           {message.propose ? copy.propose : copy.motorTitle}
         </span>
       ) : message.senderIsCoach ? (
         <MunkMark name={message.senderHandle ?? "Munk"} />
       ) : (
-        <span className="text-[10px] font-mono text-fg-faint">
+        <span className="text-[10px] text-fg-faint">
           @{message.senderHandle}
         </span>
       )}

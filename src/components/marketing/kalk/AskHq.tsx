@@ -201,7 +201,7 @@ export default function AskHq() {
               const waiting = !me && !turn.content && pending && i === turns.length - 1;
               return (
                 <div key={i} className={cn("flex max-w-[88%] flex-col gap-1", me ? "self-end items-end" : "self-start")}>
-                  <span className="font-mono text-[10px] text-fg-dim">
+                  <span className="text-[10px] text-fg-dim">
                     {me ? t("you") : t("hq")}
                   </span>
                   <p
@@ -262,7 +262,7 @@ export default function AskHq() {
             <Link
               href={PUBLIC_WAITLIST_HREF}
               onClick={() => setOpen(false)}
-              className="flex-none font-mono text-[11px] underline underline-offset-4"
+              className="flex-none text-[11px] underline underline-offset-4"
             >
               {t("cta")}
             </Link>

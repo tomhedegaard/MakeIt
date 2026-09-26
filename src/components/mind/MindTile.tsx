@@ -55,7 +55,7 @@ export default async function MindTile({
         <span className="pulse-dot" />
         <div className="flex-1 min-w-0">
           <div className="text-sm">{title}</div>
-          <div className="text-[10px] font-mono text-fg-faint mt-0.5">
+          <div className="text-[10px] text-fg-faint mt-0.5">
             {sub}
           </div>
         </div>

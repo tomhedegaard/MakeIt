@@ -99,7 +99,7 @@ export default function TierLadder({
               <Plate key={t.key} tier={t} selected={i === selected} onSelect={() => setSelected(i)} />
             ))}
           </div>
-          <p className="mt-1 font-mono text-[11px] text-fg-dim">{hint}</p>
+          <p className="mt-1 text-[11px] text-fg-dim">{hint}</p>
 
           <div
             role="tablist"
@@ -131,7 +131,7 @@ export default function TierLadder({
                 >
                   <span
                     className={cn(
-                      "flex items-center gap-1.5 font-mono text-[10px]",
+                      "flex items-center gap-1.5 text-[10px]",
                       t.here ? "text-fg" : "text-fg-dim",
                     )}
                   >
@@ -160,7 +160,7 @@ export default function TierLadder({
         )}
       >
         <div className="flex flex-col">
-          <p className="font-mono text-[12px] opacity-70">{tier.floor}</p>
+          <p className="text-[12px] opacity-70">{tier.floor}</p>
           <p className="font-display mt-2 text-[clamp(44px,5vw,72px)] leading-[0.85]!">{tier.name}</p>
           <div className="mt-auto pt-6">
             <Link
@@ -178,7 +178,7 @@ export default function TierLadder({
           </div>
         </div>
         <div>
-          <p className="font-mono text-[12px] opacity-70">{perksHeading}</p>
+          <p className="text-[12px] opacity-70">{perksHeading}</p>
           <ul className="mt-2.5 list-none p-0">
             {tier.perks.map((perk) => (
               <li

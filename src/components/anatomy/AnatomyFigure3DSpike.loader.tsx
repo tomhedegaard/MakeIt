@@ -9,7 +9,7 @@ const AnatomyFigure3DSpike = dynamic(() => import("./AnatomyFigure3DSpike"), {
       className="surface-2 rounded-2xl flex items-center justify-center"
       style={{ width: 320, height: 360 }}
     >
-      <span className="text-[10px] font-mono text-fg-faint">
+      <span className="text-[10px] text-fg-faint">
         Loading 3D…
       </span>
     </div>

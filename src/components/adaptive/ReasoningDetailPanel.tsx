@@ -145,13 +145,13 @@ export default function ReasoningDetailPanel({
         <h3 id="reasoning-rule-heading" className="eyebrow mb-2">
           Hvilken regel fyrede
         </h3>
-        <p className="text-sm font-mono text-fg-dim leading-relaxed">
+        <p className="text-sm text-fg-dim leading-relaxed">
           {narrateRule({
             action: ruleDecision.action,
             reasons: ruleDecision.reasons,
           })}
         </p>
-        <p className="text-[10px] font-mono text-fg-faint mt-2">
+        <p className="text-[10px] text-fg-faint mt-2">
           Regel-confidence {ruleDecision.confidence.toFixed(2)}
         </p>
       </section>

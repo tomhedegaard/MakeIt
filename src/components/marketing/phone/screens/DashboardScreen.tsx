@@ -79,7 +79,7 @@ export default function DashboardScreen({ width = 300, scroll = false }: { width
           ] as const
         ).map(([label, value]) => (
           <div key={label} className="rounded-[14px] border border-line bg-bg-2 px-2 py-[7px]">
-            <span className="whitespace-nowrap font-mono text-[7.5px] text-fg-dim">
+            <span className="whitespace-nowrap text-[7.5px] text-fg-dim">
               {s(`dashboard.${label}`)}
             </span>
             <b className="block font-display text-[19px]">{s(`dashboard.${value}`)}</b>
@@ -100,7 +100,7 @@ export default function DashboardScreen({ width = 300, scroll = false }: { width
                   <span
                     key={i}
                     className={cn(
-                      "grid h-[30px] place-items-center rounded-[8px] border font-mono text-[9px]",
+                      "grid h-[30px] place-items-center rounded-[8px] border text-[9px]",
                       i === TODAY ? "border-fg bg-fg text-bg" : PLANNED.includes(i) ? "border-line-strong" : "border-line text-fg-dim",
                     )}
                   >

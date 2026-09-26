@@ -36,9 +36,10 @@ describe("EmptyState", () => {
 });
 
 describe("Stat", () => {
-  it("shows a mono value and a monochrome delta with an arrow", () => {
+  it("shows a tabular value and a monochrome delta with an arrow", () => {
     const html = renderToStaticMarkup(<Stat label="Volumen" value="18.420" unit="kg" delta={4} />);
-    expect(html).toContain("font-mono");
+    // Nord har én skrift; tal skiller sig ud på tabular-nums, ikke på familie.
+    expect(html).not.toContain("font-mono");
     expect(html).toContain("tabular-nums");
     expect(html).toMatch(/↑\s*4/);
     expect(html).not.toMatch(/text-(ok|warn|danger)/);

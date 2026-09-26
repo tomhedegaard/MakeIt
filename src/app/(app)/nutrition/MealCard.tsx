@@ -57,7 +57,7 @@ export default function MealCard({
         ) : null}
         <div className="flex-1 min-w-0">
           <div className="text-sm truncate">{meal.title}</div>
-          <div className="text-[11px] font-mono text-fg-faint">
+          <div className="text-[11px] text-fg-faint">
             {meal.estKcal ?? "-"} kcal · {meal.estProteinG ?? "-"}g P · {meal.prepMinutes ?? "-"}m
           </div>
         </div>
@@ -105,7 +105,7 @@ export default function MealCard({
             {meal.imageAttributionName ? (
               <span
                 data-theme="nat"
-                className="absolute bottom-2 right-2 text-[9px] font-mono text-fg bg-bg/70 backdrop-blur-sm rounded px-1.5 py-0.5"
+                className="absolute bottom-2 right-2 text-[9px] text-fg bg-bg/70 backdrop-blur-sm rounded px-1.5 py-0.5"
               >
                 📷 {meal.imageAttributionName}
               </span>
@@ -143,7 +143,7 @@ export default function MealCard({
           </div>
 
           {/* Macro pills */}
-          <div className="px-5 pb-3 flex flex-wrap items-center gap-2 text-[11px] font-mono">
+          <div className="px-5 pb-3 flex flex-wrap items-center gap-2 text-[11px]">
             <span className="text-fg-dim">{t("macroProtein", { value: meal.estProteinG ?? "-" })}</span>
             <span className="text-fg-faint" aria-hidden>·</span>
             <span className="text-fg-dim">{t("macroCarbs", { value: meal.estCarbsG ?? "-" })}</span>

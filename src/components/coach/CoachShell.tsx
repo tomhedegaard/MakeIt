@@ -99,7 +99,7 @@ export default function CoachShell({
             </div>
             <Link
               href="/dashboard"
-              className="text-xs font-mono text-fg-dim"
+              className="text-xs text-fg-dim"
             >
               {t("memberApp")}
             </Link>
@@ -116,7 +116,7 @@ export default function CoachShell({
                     <Link
                       href={item.href}
                       className={cn(
-                        "px-3 py-1.5 rounded-md text-xs font-mono block",
+                        "px-3 py-1.5 rounded-md text-xs block",
                         active ? "bg-bg-3 text-fg" : "text-fg-dim"
                       )}
                     >

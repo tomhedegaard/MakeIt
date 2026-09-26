@@ -31,12 +31,12 @@ export default async function CoachMembersPage() {
                   href={`/coach/members/${m.id}`}
                   className="block px-5 py-4 flex items-center gap-4 hover:bg-bg-3"
                 >
-                  <div className="size-10 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-xs font-mono shrink-0">
+                  <div className="size-10 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-xs shrink-0">
                     {m.handle.slice(0, 2).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm">@{m.handle}</div>
-                    <div className="text-[11px] font-mono text-fg-faint">
+                    <div className="text-[11px] text-fg-faint">
                       {m.tier} ·{" "}
                       {m.programCode
                         ? t("withProgram", { programCode: m.programCode, programWeek: m.programWeek ?? "" })
@@ -44,7 +44,7 @@ export default async function CoachMembersPage() {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-[10px] font-mono text-fg-faint">
+                    <div className="text-[10px] text-fg-faint">
                       {t("last")}
                     </div>
                     <div className="numeric text-sm">

@@ -97,17 +97,17 @@ function PlanGenerationOverlayActive({
           {t("stageProgress", { label: t(currentStage.labelKey) })}
         </p>
 
-        <p className="text-xs font-mono text-fg-faint mb-1">
+        <p className="text-xs text-fg-faint mb-1">
           {t("elapsed", { elapsed })}
         </p>
 
         {overtime ? (
-          <p className="mt-6 text-xs font-mono text-warn">
+          <p className="mt-6 text-xs text-warn">
             {t("overtime")}
           </p>
         ) : null}
 
-        <div className="mt-12 text-[10px] font-mono text-fg-faint">
+        <div className="mt-12 text-[10px] text-fg-faint">
           {t("stayOnPage")}
         </div>
       </div>

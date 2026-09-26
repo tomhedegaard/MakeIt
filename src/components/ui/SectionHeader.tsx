@@ -25,7 +25,7 @@ export default function SectionHeader({
       {href && linkLabel ? (
         <Link
           href={href}
-          className="relative shrink-0 font-mono text-[11px] text-fg-dim hover:text-fg after:absolute after:inset-x-0 after:-inset-y-3.5 after:content-['']"
+          className="relative shrink-0 text-[11px] text-fg-dim hover:text-fg after:absolute after:inset-x-0 after:-inset-y-3.5 after:content-['']"
         >
           {linkLabel}
         </Link>

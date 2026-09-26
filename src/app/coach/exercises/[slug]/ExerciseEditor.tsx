@@ -221,7 +221,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
                   key={v}
                   type="button"
                   onClick={() => setView(v)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-mono ${
+                  className={`px-3 py-1.5 rounded-md text-xs ${
  view === v ? "bg-bg-3 text-fg" : "text-fg-dim"
  }`}
                 >
@@ -434,7 +434,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           {saving ? t("saving") : t("save")}
         </button>
         {savedAt ? (
-          <span className="text-[11px] font-mono text-fg-faint">
+          <span className="text-[11px] text-fg-faint">
             {t("savedAt", { time: savedAt })}
           </span>
         ) : null}

@@ -26,7 +26,7 @@ export function Kicker({
     <p
       data-domain={domain}
       className={cn(
-        "flex items-center gap-1.5 font-mono text-[9px]",
+        "flex items-center gap-1.5 text-[9px]",
         domain ? "text-domain" : "text-fg-dim",
         className,
       )}
@@ -56,7 +56,7 @@ export function Label({ className, children }: { className?: string; children: R
   return (
     <p
       className={cn(
-        "flex items-center gap-1.5 font-mono text-[8.5px] text-fg-dim",
+        "flex items-center gap-1.5 text-[8.5px] text-fg-dim",
         className,
       )}
     >
@@ -86,7 +86,7 @@ export function Chip({
     <span
       data-domain={domain}
       className={cn(
-        "inline-flex items-center gap-[5px] whitespace-nowrap rounded-full border border-line bg-bg-2 px-2 py-1 font-mono text-[9px]",
+        "inline-flex items-center gap-[5px] whitespace-nowrap rounded-full border border-line bg-bg-2 px-2 py-1 text-[9px]",
         className,
       )}
     >
@@ -108,10 +108,10 @@ export function Fields({
     <div className={cn("grid grid-cols-3 gap-1.5", className)}>
       {items.map((f) => (
         <div key={f.label} className="rounded-[10px] border border-line px-[7px] py-[5px]">
-          <span className="block font-mono text-[7.5px] text-fg-dim">
+          <span className="block text-[7.5px] text-fg-dim">
             {f.label}
           </span>
-          <b className="block font-mono text-[13px] font-medium">{f.value}</b>
+          <b className="block text-[13px] font-medium">{f.value}</b>
         </div>
       ))}
     </div>
@@ -131,7 +131,7 @@ export function Pill({
   return (
     <span
       className={cn(
-        "flex h-[34px] flex-none items-center justify-center rounded-full font-mono text-[10px] font-medium",
+        "flex h-[34px] flex-none items-center justify-center rounded-full text-[10px] font-medium",
         ghost ? "border border-line-strong text-fg" : "bg-fg text-bg",
         className,
       )}
@@ -153,7 +153,7 @@ export function EngineNote({
 }) {
   return (
     <div className={cn("rounded-[14px] bg-fg px-3 py-2.5 text-bg", className)}>
-      <p className="font-mono text-[8.5px] text-bg/65">{stamp}</p>
+      <p className="text-[8.5px] text-bg/65">{stamp}</p>
       {children}
     </div>
   );
@@ -175,7 +175,7 @@ export function Swap({
     <p className={cn("flex items-baseline gap-2 font-display text-[24px]", className)}>
       <s className="text-current/55 decoration-signal decoration-[3px]">{from}</s>
       <span>→ {to}</span>
-      {unit ? <i className="font-mono text-[11px] normal-case not-italic opacity-65">{unit}</i> : null}
+      {unit ? <i className="text-[11px] normal-case not-italic opacity-65">{unit}</i> : null}
     </p>
   );
 }
@@ -201,7 +201,7 @@ export function Row({
       )}
     >
       <span className="text-[10px] text-fg-dim">{k}</span>
-      <span className="font-mono text-[10px] font-medium">{v}</span>
+      <span className="text-[10px] font-medium">{v}</span>
     </div>
   );
 }

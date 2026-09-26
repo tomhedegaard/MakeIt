@@ -107,7 +107,7 @@ export default function RedeemButton({
                 </div>
               </div>
 
-              <p className="text-xs font-mono text-fg-faint mb-5">
+              <p className="text-xs text-fg-faint mb-5">
                 {reward.kind === "physical" || reward.kind === "drop"
                   ? t("fulfilmentPhysical")
                   : reward.kind === "experience"
@@ -145,7 +145,7 @@ export default function RedeemButton({
 
               <div className="surface-2 rounded-lg p-4 text-left mb-6">
                 <div className="font-display text-lg">{reward.name}</div>
-                <div className="text-xs font-mono text-fg-faint mt-1">
+                <div className="text-xs text-fg-faint mt-1">
                   {t("successMeta", {
                     amount: reward.costReps.toLocaleString(tag),
                   })}

@@ -371,7 +371,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
             {t("back")}
           </Link>
           {saved ? (
-            <span className="text-[10px] font-mono text-fg-dim">
+            <span className="text-[10px] text-fg-dim">
               {t("saved")}
             </span>
           ) : null}

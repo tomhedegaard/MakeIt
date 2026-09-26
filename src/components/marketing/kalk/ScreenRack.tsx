@@ -100,11 +100,11 @@ export default function ScreenRack({
       <div className="mx-auto flex max-w-[1360px] flex-wrap items-end justify-between gap-6 px-4 md:px-8">
         {head}
         <div className="flex items-center gap-2.5">
-          <span aria-hidden="true" data-rack-count className="mr-1 font-mono text-[11px] tabular-nums text-fg-dim">
+          <span aria-hidden="true" data-rack-count className="mr-1 text-[11px] tabular-nums text-fg-dim">
             {pad(seenTo + 1)} / {pad(total)}
           </span>
           {tag ? (
-            <span className="rounded-full border border-line-bright px-2.5 py-1 font-mono text-[10px] text-fg-dim">
+            <span className="rounded-full border border-line-bright px-2.5 py-1 text-[10px] text-fg-dim">
               {tag}
             </span>
           ) : null}

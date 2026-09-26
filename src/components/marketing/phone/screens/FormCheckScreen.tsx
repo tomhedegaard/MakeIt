@@ -49,7 +49,7 @@ export default function FormCheckScreen({ width, scroll = false }: { width?: num
           <span>
             {card("yours")} · {s("session.set", { n: 3 }).toLowerCase()}
           </span>
-          <span className="ml-auto font-mono">{s("formCheck.duration")}</span>
+          <span className="ml-auto">{s("formCheck.duration")}</span>
         </div>
 
         <div className="rounded-[14px_14px_14px_4px] border border-line bg-bg-2 px-[11px] py-2.5 text-[11.5px] font-medium leading-[1.4]">

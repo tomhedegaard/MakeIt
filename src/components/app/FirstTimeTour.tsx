@@ -57,7 +57,7 @@ export default function FirstTimeTour() {
       <button
         type="button"
         onClick={dismiss}
-        className="absolute top-3 right-3 text-fg-dim hover:text-fg text-xs font-mono"
+        className="absolute top-3 right-3 text-fg-dim hover:text-fg text-xs"
       >
         {t("skip")}
       </button>

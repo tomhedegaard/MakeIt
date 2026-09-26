@@ -41,7 +41,7 @@ export default async function SessionPreview({ session }: { session: Session }) 
           </Link>
 
           <div className="flex-1 min-w-0 text-center">
-            <div className="text-[10px] font-mono text-fg-faint">
+            <div className="text-[10px] text-fg-faint">
               {t("topBar.programLine", {
                 programCode: session.programCode,
                 week: session.week,
@@ -184,7 +184,7 @@ async function PreviewExercise({
               <ol className="space-y-1.5">
                 {inlineCues.map((cue, i) => (
                   <li key={i} className="flex gap-2 text-sm leading-snug">
-                    <span className="font-mono text-fg-faint shrink-0 text-[11px] mt-0.5">
+                    <span className="text-fg-faint shrink-0 text-[11px] mt-0.5">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span>{cue}</span>
@@ -232,7 +232,7 @@ function PrimaryMuscleTags({ muscles }: { muscles: MuscleGroup[] }) {
       {muscles.map((m) => (
         <span
           key={m}
-          className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-bg-3 text-fg-dim"
+          className="px-2 py-0.5 rounded-full text-[10px] bg-bg-3 text-fg-dim"
         >
           {MUSCLE_LABELS[m]}
         </span>

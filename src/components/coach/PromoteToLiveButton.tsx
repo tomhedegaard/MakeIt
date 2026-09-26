@@ -57,7 +57,7 @@ export default function PromoteToLiveButton({
   if (result?.kind === "ok") {
     return (
       <span
-        className="text-xs font-mono text-fg-dim"
+        className="text-xs text-fg-dim"
         aria-live="polite"
       >
         {t("promotedConfirmation", { assigned: result.assigned })}
@@ -68,7 +68,7 @@ export default function PromoteToLiveButton({
   if (!liveReady) {
     return (
       <span
-        className="text-[10px] font-mono text-fg-faint"
+        className="text-[10px] text-fg-faint"
         title={t("notReadyHint")}
       >
         {t("notReadyLabel")}
@@ -89,7 +89,7 @@ export default function PromoteToLiveButton({
       </button>
       {result?.kind === "error" ? (
         <span
-          className="text-[10px] font-mono text-red-400"
+          className="text-[10px] text-red-400"
           role="alert"
         >
           {t("promoteError", { reason: result.reason })}

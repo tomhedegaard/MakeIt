@@ -41,7 +41,7 @@ export default function CuesList({
   return (
     <div className="space-y-4">
       {activePhase ? (
-        <div className="flex items-center gap-2 text-[10px] font-mono">
+        <div className="flex items-center gap-2 text-[10px]">
           <span className="size-1.5 rounded-full bg-fg" aria-hidden />
           <span className="text-fg-faint">{t("currentPhase")}</span>
           <span className="text-fg">{activePhase.name}</span>

@@ -70,14 +70,14 @@ export default function ConnectionStatus({
               {providerName}
             </span>
             {connection.isPrimary ? (
-              <span className="text-[10px] font-mono text-fg-faint border border-line-strong rounded-full px-2 py-0.5">
+              <span className="text-[10px] text-fg-faint border border-line-strong rounded-full px-2 py-0.5">
                 {t("primary")}
               </span>
             ) : null}
           </div>
           <div
             className={cn(
-              "mt-1 text-[11px] font-mono",
+              "mt-1 text-[11px]",
               needsAttention
                 ? "text-fg font-semibold"
                 : "text-fg-faint",
@@ -93,7 +93,7 @@ export default function ConnectionStatus({
           disabled={isPending}
           aria-busy={isPending}
           className={cn(
-            "shrink-0 text-[11px] font-mono border border-line-strong rounded-full px-3 py-1.5 touch-app",
+            "shrink-0 text-[11px] border border-line-strong rounded-full px-3 py-1.5 touch-app",
             isPending ? "opacity-50" : "lift text-fg-dim",
           )}
         >
@@ -101,7 +101,7 @@ export default function ConnectionStatus({
         </button>
       </div>
 
-      <div className="mt-3 text-[11px] font-mono text-fg-faint">
+      <div className="mt-3 text-[11px] text-fg-faint">
         {connection.lastSyncedAt
           ? t("lastSynced", {
               when: formatLastSynced(connection.lastSyncedAt, t, locale),

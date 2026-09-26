@@ -65,7 +65,7 @@ export default function AdaptationHistory({
         <h2 id="adaptation-history-heading" className="eyebrow">
           Tidligere tilpasninger
         </h2>
-        <span className="text-[10px] font-mono text-fg-faint">
+        <span className="text-[10px] text-fg-faint">
           sidste 30 dage · {items.length}
         </span>
       </div>
@@ -111,13 +111,13 @@ function AdaptationHistoryRow({ item }: { item: AdaptationHistoryItem }) {
     >
       <div className="flex items-baseline justify-between gap-3">
         <div className="flex items-baseline gap-3 min-w-0">
-          <span className="text-[11px] font-mono text-fg-faint w-14 shrink-0 numeric">
+          <span className="text-[11px] text-fg-faint w-14 shrink-0 numeric">
             {dateLabel}
           </span>
           <span className="text-sm text-fg">{actionLabel}</span>
         </div>
         <span
-          className={`text-[10px] font-mono shrink-0 ${
+          className={`text-[10px] shrink-0 ${
  outcome.tone === "pending" ? "text-warn" : "text-fg-dim"
  }`}
         >
@@ -134,12 +134,12 @@ function AdaptationHistoryRow({ item }: { item: AdaptationHistoryItem }) {
             <div className="text-[11px] text-fg-dim">Dag: {sessionLine}</div>
           ) : null}
           {rpeLine ? (
-            <div className="text-[11px] font-mono text-fg-faint numeric">
+            <div className="text-[11px] text-fg-faint numeric">
               {rpeLine}
             </div>
           ) : null}
           {readinessLine ? (
-            <div className="text-[11px] font-mono text-fg-faint">
+            <div className="text-[11px] text-fg-faint">
               {readinessLine}
             </div>
           ) : null}

@@ -82,7 +82,7 @@ export default function MuscleTierPicker({
                     type="button"
                     onClick={() => toggle(m, tier)}
                     aria-pressed={on}
-                    className="size-6 rounded text-[10px] font-mono border hairline transition-colors"
+                    className="size-6 rounded text-[10px] border hairline transition-colors"
                     style={
                       on
                         ? {

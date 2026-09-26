@@ -26,12 +26,12 @@ export default function BreathScreen({ width, scroll }: { width?: number; scroll
         <i className="absolute inset-[18px] rounded-full border-2 border-domain-line" />
         <i className="absolute inset-[40px] rounded-full bg-domain" />
         <p className="relative text-center text-bg">
-          <span className="block font-mono text-[9px]">{br("phase")}</span>
+          <span className="block text-[9px]">{br("phase")}</span>
           <span className="block font-display text-[40px] leading-none">{br("count")}</span>
         </p>
       </div>
 
-      <div className="flex justify-center gap-1.5 font-mono text-[9px]">
+      <div className="flex justify-center gap-1.5 text-[9px]">
         {(["in", "hold", "out"] as const).map((k) => (
           <span
             key={k}

@@ -91,14 +91,14 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
           type="button"
           disabled={pending}
           onClick={enable}
-          className="flex-1 rounded-lg border hairline bg-fg text-bg px-4 py-3 text-[12px] font-mono lift touch-app disabled:opacity-60"
+          className="flex-1 rounded-lg border hairline bg-fg text-bg px-4 py-3 text-[12px] lift touch-app disabled:opacity-60"
         >
           Slå adaptiv tilpasning til
         </button>
       </div>
       <Link
         href="/hrv/learn/adaptive"
-        className="inline-block text-[11px] font-mono text-fg-faint hover:text-fg lift touch-app"
+        className="inline-block text-[11px] text-fg-faint hover:text-fg lift touch-app"
       >
         Hvordan HQ tænker →
       </Link>

@@ -60,14 +60,14 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
       <div className="surface rounded-lg p-5 space-y-3" aria-live="polite">
         <div className="flex items-center justify-between gap-4">
           <div className="eyebrow">@{liveCase.memberHandle}</div>
-          <div className="text-[10px] font-mono text-amber-400">
+          <div className="text-[10px] text-amber-400">
             {t("held.badge")}
           </div>
         </div>
         <p className="text-sm text-fg/90 leading-snug">
           {t("held.title")}
         </p>
-        <p className="text-xs font-mono text-fg-faint">
+        <p className="text-xs text-fg-faint">
           {t("held.reasonLine", { reason: heldReason })}
         </p>
       </div>
@@ -79,7 +79,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
       <div className="surface rounded-lg p-5 space-y-3">
         <div className="flex items-center justify-between gap-4">
           <div className="eyebrow">@{liveCase.memberHandle}</div>
-          <div className="text-[10px] font-mono text-fg-faint">
+          <div className="text-[10px] text-fg-faint">
             {t("live.closedFootnote")}
           </div>
         </div>
@@ -105,14 +105,14 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
     <div className="surface rounded-lg p-5 space-y-4">
       <div className="flex items-baseline justify-between gap-4">
         <div className="eyebrow">@{liveCase.memberHandle}</div>
-        <div className="text-[10px] font-mono text-fg-faint">
+        <div className="text-[10px] text-fg-faint">
           {t("triggeredAt", { time: liveCase.triggeredAt })}
         </div>
       </div>
 
       <div className="surface-2 rounded-md p-3 space-y-1">
         <div className="eyebrow mb-1">{t("conditionsHeader")}</div>
-        <ul className="text-xs font-mono text-fg/90 space-y-0.5">
+        <ul className="text-xs text-fg/90 space-y-0.5">
           {Object.entries(liveCase.conditionsMet).map(([k, v]) => (
             <li key={k}>
               <span className="text-fg-faint">{k}:</span> {String(v)}
@@ -162,7 +162,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
 
       {error ? (
         <p
-          className="text-xs font-mono text-red-400"
+          className="text-xs text-red-400"
           role="alert"
           aria-live="polite"
         >

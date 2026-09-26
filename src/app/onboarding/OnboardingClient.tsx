@@ -100,7 +100,7 @@ export default function OnboardingClient({
         <Container className="h-14 flex items-center justify-between gap-3">
           <Logo />
           <div className="flex items-center gap-3">
-            <span className="text-[10px] font-mono text-fg-faint">
+            <span className="text-[10px] text-fg-faint">
               {step} / {totalSteps}
             </span>
           </div>
@@ -280,7 +280,7 @@ export default function OnboardingClient({
                 />
               </div>
 
-              <p className="text-xs font-mono text-fg-faint">
+              <p className="text-xs text-fg-faint">
                 {t("step2.footnote")}
               </p>
             </>
@@ -312,10 +312,10 @@ export default function OnboardingClient({
                 equip={equip}
               />
 
-              <p className="text-xs font-mono text-fg-faint">
+              <p className="text-xs text-fg-faint">
                 {t("step3.footnote")}
               </p>
-              <p className="text-xs font-mono text-fg-faint">
+              <p className="text-xs text-fg-faint">
                 {t("step3.submitTiming")}
               </p>
             </>
@@ -517,7 +517,7 @@ function NumField({
           className="field text-2xl numeric pr-10"
           placeholder={placeholder}
         />
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-fg-faint">
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-fg-faint">
           kg
         </span>
       </div>
@@ -527,7 +527,7 @@ function NumField({
 
 function Banner({ children }: { children: React.ReactNode }) {
   return (
-    <div className="surface-2 rounded-lg px-4 py-3 text-sm font-mono">
+    <div className="surface-2 rounded-lg px-4 py-3 text-sm">
       · {children}
     </div>
   );

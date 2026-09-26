@@ -118,7 +118,7 @@ export default async function CoachQueuePage() {
                       @{f.memberHandle}
                     </Link>
                   </div>
-                  <div className="text-[11px] font-mono text-fg-faint">
+                  <div className="text-[11px] text-fg-faint">
                     {liftLabel(f)} ·{" "}
                     {new Date(f.createdAt).toLocaleString("da-DK", {
                       hour: "2-digit",
@@ -141,7 +141,7 @@ export default async function CoachQueuePage() {
               ) : null}
 
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono text-fg-faint">
+                <span className="text-[10px] text-fg-faint">
                   {t("awaitingReview")}
                 </span>
                 <CoachReviewButton formCheck={f} />

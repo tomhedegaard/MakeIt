@@ -61,7 +61,7 @@ export default async function BillingPage({
             </section>
           ) : null}
 
-          <p className="text-xs font-mono text-fg-faint">
+          <p className="text-xs text-fg-faint">
             {t("native.note")}
           </p>
         </Container>
@@ -129,7 +129,7 @@ export default async function BillingPage({
                 </button>
               </form>
             )}
-            <p className="text-xs font-mono text-fg-faint self-center">
+            <p className="text-xs text-fg-faint self-center">
               {t("crew.secureCheckout")}
             </p>
           </div>
@@ -166,7 +166,7 @@ export default async function BillingPage({
                 </button>
               </form>
             )}
-            <p className="text-xs font-mono text-fg-faint self-center">
+            <p className="text-xs text-fg-faint self-center">
               {t("oneOnOne.requiresCrew")}
             </p>
           </div>

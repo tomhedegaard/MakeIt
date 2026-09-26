@@ -20,7 +20,7 @@ export default async function CoachSessionEditPage({
     <Container className="py-6 lg:py-12 space-y-6">
       <Link
         href={`/coach/members/${session.memberId}`}
-        className="text-xs font-mono text-fg-dim hover:text-fg"
+        className="text-xs text-fg-dim hover:text-fg"
       >
         {t("backToMember", { handle: session.memberHandle })}
       </Link>
