@@ -6,11 +6,13 @@
  * full attribution. We render plain web SVG (no react-native-svg
  * dependency) and apply MakeIt's tier-based highlight system on top.
  *
- * Tier colors:
- *   primary[]   → brand cream at 100%
- *   secondary[] → warm amber at 100%
- *   tertiary[]  → warm amber at 40% (engaged but minor contribution)
- *   inactive    → blends into body silhouette
+ * Tier colors (Nord, spec §11): the worked muscle is ALWAYS the Krop
+ * colour, at three strengths — the same language as the 3D loops' red
+ * highlight and the exercise page's chips:
+ *   primary[]   → --muscle-primary   (Krop, full)
+ *   secondary[] → --muscle-secondary (Krop mixed 50 % into the surface)
+ *   tertiary[]  → --muscle-tertiary  (Krop mixed 24 %)
+ *   inactive    → --anatomy-idle, a shade off the flat silhouette
  *
  * Same muscle can appear in both views (traps + triceps + forearms +
  * calves are visible from both front and back), so highlighting one
@@ -31,12 +33,12 @@ import {
 } from "@/lib/data/anatomy/paths";
 
 const COLORS = {
-  body: "var(--anatomy-body)", // base silhouette fill
-  body_outline: "var(--anatomy-edge)", // edge stroke + non-muscle parts (joints, hands, head)
-  inactive: "var(--anatomy-idle)", // muscles not targeted — blends with body
-  tertiary: "var(--anatomy-accent)", // low opacity
-  secondary: "var(--anatomy-accent)", // high opacity
-  primary: "var(--fg)", // brand foreground
+  body: "var(--anatomy-body)", // flat silhouette
+  body_outline: "var(--anatomy-edge)", // 1 px edge
+  inactive: "var(--anatomy-idle)", // muscles not targeted
+  tertiary: "var(--muscle-tertiary)",
+  secondary: "var(--muscle-secondary)",
+  primary: "var(--muscle-primary)",
 } as const;
 
 export default function AnatomyFigure({
@@ -95,7 +97,7 @@ export default function AnatomyFigure({
       <path
         d={outline}
         style={{ fill: COLORS.body, stroke: COLORS.body_outline }}
-        strokeWidth="1.5"
+        strokeWidth="1"
         vectorEffect="non-scaling-stroke"
       />
 
@@ -126,14 +128,9 @@ function MuscleGroupPaths({
       : tier === "tertiary"
       ? COLORS.tertiary
       : COLORS.inactive;
-  const opacity =
-    tier === "primary"
-      ? 1
-      : tier === "secondary"
-      ? 0.95
-      : tier === "tertiary"
-      ? 0.4
-      : 0.55;
+  // The tiers are opaque mixes, so every tier renders at full opacity;
+  // only a muscle nobody works fades into the silhouette.
+  const opacity = tier ? 1 : 0.7;
 
   const paths: string[] = [
     ...(part.path.common ?? []),

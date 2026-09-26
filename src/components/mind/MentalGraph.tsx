@@ -26,22 +26,16 @@ const SERIES = [
     key: "stress" as const,
     invert: true,
     token: "var(--mind-stress)",
-    gradId: "mental-graph-fill-stress",
-    stopOpacity: 0.14,
   },
   {
     key: "focus" as const,
     invert: false,
     token: "var(--mind-focus)",
-    gradId: "mental-graph-fill-focus",
-    stopOpacity: 0.16,
   },
   {
     key: "energy" as const,
     invert: false,
     token: "var(--mind-energy)",
-    gradId: "mental-graph-fill-energy",
-    stopOpacity: 0.18,
   },
 ];
 
@@ -105,7 +99,7 @@ export default function MentalGraph({
   return (
     <div className="space-y-3" data-domain="mind">
       <div className="flex items-center justify-between">
-        <h2 className="font-display text-2xl">{copy.title}</h2>
+        <h2 className="font-display text-section">{copy.title}</h2>
         <div className="flex items-center gap-3 text-xs text-fg-dim">
           <span className="inline-flex items-center gap-1.5">
             <span className="inline-block w-3 h-px bg-mind-energy" aria-hidden />
@@ -121,7 +115,7 @@ export default function MentalGraph({
           </span>
         </div>
       </div>
-      <div className="rounded-2xl border hairline bg-bg-2/40 p-4">
+      <div className="border hairline bg-bg p-4">
         {hasData ? (
           <svg
             viewBox={`0 0 ${w} ${h}`}
@@ -129,21 +123,6 @@ export default function MentalGraph({
             role="img"
             aria-label={copy.aria}
           >
-            <defs>
-              {SERIES.map((s) => (
-                <linearGradient
-                  key={s.gradId}
-                  id={s.gradId}
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop offset="0%" stopColor={s.token} stopOpacity={s.stopOpacity} />
-                  <stop offset="100%" stopColor={s.token} stopOpacity={0} />
-                </linearGradient>
-              ))}
-            </defs>
 
             <rect
               x={padL}
@@ -151,8 +130,7 @@ export default function MentalGraph({
               width={w - padL - padR}
               height={h - padT - padB}
               fill="none"
-              stroke="currentColor"
-              strokeOpacity={CHART_CRAFT.frameOpacity}
+              stroke={CHART_CRAFT.frame}
               strokeWidth={CHART_CRAFT.gridWidth}
               vectorEffect="non-scaling-stroke"
             />
@@ -164,8 +142,7 @@ export default function MentalGraph({
                   x2={w - padR}
                   y1={y(v)}
                   y2={y(v)}
-                  stroke="currentColor"
-                  strokeOpacity={CHART_CRAFT.gridOpacity}
+                  stroke={CHART_CRAFT.grid}
                   strokeWidth={CHART_CRAFT.gridWidth}
                   vectorEffect="non-scaling-stroke"
                 />
@@ -174,8 +151,7 @@ export default function MentalGraph({
                   y={y(v) + 3}
                   fontSize={9}
                   textAnchor="end"
-                  fill="currentColor"
-                  opacity={CHART_CRAFT.axisLabelOpacity}
+                  fill={CHART_CRAFT.label}
                 >
                   {v}
                 </text>
@@ -188,8 +164,10 @@ export default function MentalGraph({
                 <path
                   key={`${s.key}-fill`}
                   d={smoothAreaPath(pts, baselineY)}
-                  fill={`url(#${s.gradId})`}
-                  fillOpacity={0.7}
+                  // Flat tint, not a fade (Nord, spec §7.2): the three
+                  // series stack as 6 % washes of their own colour.
+                  fill={s.token}
+                  fillOpacity={0.06}
                   stroke="none"
                 />
               );

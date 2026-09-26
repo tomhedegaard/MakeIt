@@ -1,3 +1,5 @@
+> **Afløst 26.09.2026 (Nord, spec §11).** Organfiguren og BodyMap er fjernet fra koden; domænerne har ét linjeikon hver (`DomainMark`), og kroppen vises som muskelfiguren (`AnatomyFigure`) i Krop-farven. Dokumentet bevares som historik.
+
 # MakeIt-figuren — brandets kropskort
 
 > Status: Vedtaget 2026-09-01 (Tom/CDO). Mappingen er låst. Ikke et UDKAST.

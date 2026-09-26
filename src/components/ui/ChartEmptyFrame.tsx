@@ -57,8 +57,7 @@ export default function ChartEmptyFrame({
             x2={x1}
             y1={y}
             y2={y}
-            stroke="currentColor"
-            strokeOpacity={CHART_CRAFT.gridOpacity}
+            stroke={CHART_CRAFT.grid}
             strokeWidth={CHART_CRAFT.gridWidth}
             vectorEffect="non-scaling-stroke"
           />

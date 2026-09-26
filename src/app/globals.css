@@ -75,11 +75,17 @@
   --scrim: rgba(17, 17, 17, 0.45);
   --media: #111111;
 
-  /* Anatomy figure — muscle map illustration */
-  --anatomy-body:   #E9E9E6; /* silhuet */
-  --anatomy-edge:   #B9B9B4; /* kant, led, hoved */
+  /* Anatomy figure — muscle map illustration. Den trænede muskel er
+   * Krop-farven i tre styrker, samme som 3D-loopsenes røde markering og
+   * øvelsessidens chips (spec §11). Tierne er blandet mod --bg, så de er
+   * uigennemsigtige og ikke summerer, hvor to stier overlapper. */
+  --anatomy-body:   #E9E9E6; /* silhuet — læser på både hvid og --bg-2 */
+  --anatomy-edge:   #CFCFCA; /* kant, led, hoved */
   --anatomy-idle:   #DDDDD9; /* ikke-trænede muskler */
-  --anatomy-accent: #A8380B; /* sekundære/tertiære muskler (= --body) */
+  --anatomy-accent: #A8380B; /* = --body */
+  --muscle-primary:   var(--body);
+  --muscle-secondary: color-mix(in oklab, var(--body) 50%, var(--bg));
+  --muscle-tertiary:  color-mix(in oklab, var(--body) 24%, var(--bg));
 }
 
 /* Schibsted Grotesk er den ene stemme. Display er 500 i sentence case
@@ -149,6 +155,9 @@ html:has(.theme-root[data-theme="nat"]) {
   --anatomy-edge:   #3A3A38;
   --anatomy-idle:   #232322;
   --anatomy-accent: #FF9C41;
+  --muscle-primary:   var(--body);
+  --muscle-secondary: color-mix(in oklab, var(--body) 50%, var(--bg));
+  --muscle-tertiary:  color-mix(in oklab, var(--body) 24%, var(--bg));
 }
 
 .theme-root { background: var(--bg); color: var(--fg); }

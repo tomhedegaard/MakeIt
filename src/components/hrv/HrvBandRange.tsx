@@ -28,8 +28,7 @@ export default function HrvBandRange({
         x2={model.trackX2}
         y1={model.trackY}
         y2={model.trackY}
-        stroke="currentColor"
-        strokeOpacity={0.18}
+        stroke={CHART_CRAFT.grid}
         strokeWidth={CHART_CRAFT.gridWidth}
         strokeLinecap="round"
         vectorEffect="non-scaling-stroke"

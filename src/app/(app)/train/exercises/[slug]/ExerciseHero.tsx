@@ -21,10 +21,11 @@ type Props = {
   cues: string[];
 };
 
+// Same three strengths of Krop as the muscle figure (spec §11).
 const TIER_COLOR = {
-  primary: "var(--fg)",
-  secondary: "var(--anatomy-accent)",
-  tertiary: "color-mix(in oklab, var(--anatomy-accent) 40%, transparent)",
+  primary: "var(--muscle-primary)",
+  secondary: "var(--muscle-secondary)",
+  tertiary: "var(--muscle-tertiary)",
 } as const;
 
 /**
@@ -198,15 +199,20 @@ function MuscleChips({
 }
 
 /**
- * Nord chip (spec §5): 1 px linje, 12 px tekst, 6 × 10 px padding. Den
- * primære muskel er den "valgte" chip med blæk-fyld; sekundær og tertiær
- * bærer deres farve som en prik, ikke som flade, så farven forbliver
- * data-blæk (spec §7.4).
+ * Nord chip (spec §5, §11): 1 px linje, 12 px tekst, 6 × 10 px padding.
+ * Den primære muskel er et Krop-badge (12 % tint, 32 % kant, farvet
+ * tekst — spec §3.3); sekundær og tertiær bærer Krop-styrken som en
+ * prik. Samme tre styrker som muskelfiguren.
  */
 function Chip({ label, tier }: { label: string; tier: keyof typeof TIER_COLOR }) {
   if (tier === "primary") {
     return (
-      <span data-tier={tier} className="inline-flex items-center border border-fg bg-fg px-2.5 py-1.5 text-micro text-bg">
+      <span
+        data-tier={tier}
+        data-domain="body"
+        className="inline-flex items-center gap-1.5 border border-domain-line bg-domain-tint px-2.5 py-1.5 text-micro text-domain"
+      >
+        <span className="size-1.5 rounded-full" style={{ background: TIER_COLOR.primary }} aria-hidden />
         {label}
       </span>
     );

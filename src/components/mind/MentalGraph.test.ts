@@ -55,11 +55,10 @@ describe("MentalGraph", () => {
       8,
     );
 
-    expect(html).toContain('id="mental-graph-fill-energy"');
-    expect(html).toContain('id="mental-graph-fill-stress"');
-    expect(html).toContain('id="mental-graph-fill-focus"');
-    expect(html).toContain("stop-opacity");
-    expect(html).toContain("url(#mental-graph-fill-energy)");
+    // Stacked series fills are flat 6 % tints of each series (Nord §7.2).
+    for (const series of ["energy", "stress", "focus"]) {
+      expect(html).toMatch(new RegExp(`fill="var\\(--mind-${series}\\)" fill-opacity="0.06"`));
+    }
     expect(html).not.toContain("mix-blend-mode");
     expect(html).not.toContain("mixBlendMode");
 
@@ -68,7 +67,9 @@ describe("MentalGraph", () => {
     expect(energy).not.toMatch(/ L /);
     expect(energy).not.toMatch(/NaN/);
 
-    expect(html).toContain('stroke="currentColor"');
+    // Grid and frame are the theme's own lines (Nord, spec §11).
+    expect(html).toContain('stroke="var(--line)"');
+    expect(html).not.toMatch(/linearGradient|url\(#/);
     expect(html).toContain("var(--mind-stress)");
     expect(html).toContain("var(--mind-focus)");
     expect(html).toContain("vector-effect");
