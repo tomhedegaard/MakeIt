@@ -44,7 +44,7 @@ export default async function CoachMembersPage() {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                    <div className="text-[10px] font-mono text-fg-faint">
                       {t("last")}
                     </div>
                     <div className="numeric text-sm">

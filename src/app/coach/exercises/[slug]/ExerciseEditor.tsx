@@ -221,9 +221,9 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
                   key={v}
                   type="button"
                   onClick={() => setView(v)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-mono uppercase tracking-[0.14em] ${
-                    view === v ? "bg-bg-3 text-fg" : "text-fg-dim"
-                  }`}
+                  className={`px-3 py-1.5 rounded-md text-xs font-mono ${
+ view === v ? "bg-bg-3 text-fg" : "text-fg-dim"
+ }`}
                 >
                   {v === "front" ? t("viewFront") : t("viewBack")}
                 </button>

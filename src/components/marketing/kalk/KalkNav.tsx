@@ -9,7 +9,7 @@ const SECTIONS = [
   { href: "#crew", key: "crew" },
 ] as const;
 
-const LINK = "font-mono text-xs uppercase tracking-[0.08em] text-fg-dim no-underline transition-colors hover:text-fg";
+const LINK = "font-mono text-xs text-fg-dim no-underline transition-colors hover:text-fg";
 
 /**
  * Kalk header (reference B `.hdr`). Four section links, login and one

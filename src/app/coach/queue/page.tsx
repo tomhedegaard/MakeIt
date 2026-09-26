@@ -141,7 +141,7 @@ export default async function CoachQueuePage() {
               ) : null}
 
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                <span className="text-[10px] font-mono text-fg-faint">
                   {t("awaitingReview")}
                 </span>
                 <CoachReviewButton formCheck={f} />

@@ -35,7 +35,7 @@ export default function AdaptationHistoryExpander({
 
   return (
     <details className="group/hist" onToggle={onToggle}>
-      <summary className="cursor-pointer list-none text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg select-none inline-flex items-center gap-1 lift touch-app">
+      <summary className="cursor-pointer list-none text-[11px] font-mono text-fg-dim hover:text-fg select-none inline-flex items-center gap-1 lift touch-app">
         <span>Vis flere ({hiddenCount})</span>
         <span
           aria-hidden

@@ -93,13 +93,13 @@ function WearableConnectBody() {
                 <span className="block font-display text-lg leading-tight">
                   {provider.name}
                 </span>
-                <span className="block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-0.5">
+                <span className="block text-[11px] font-mono text-fg-faint mt-0.5">
                   {pending === provider.id
                     ? t("opening", { name: provider.name })
                     : t("meta")}
                 </span>
               </span>
-              <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint shrink-0">
+              <span className="text-[10px] font-mono text-fg-faint shrink-0">
                 {pending === provider.id ? "···" : t("action")}
               </span>
             </button>
@@ -112,7 +112,7 @@ function WearableConnectBody() {
               <span className="font-display text-lg leading-tight">
                 {provider.name}
               </span>
-              <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint border border-line-strong rounded-full px-2 py-0.5 shrink-0">
+              <span className="text-[10px] font-mono text-fg-faint border border-line-strong rounded-full px-2 py-0.5 shrink-0">
                 {t("comingSoon")}
               </span>
             </div>
@@ -129,7 +129,7 @@ function WearableConnectBody() {
         </p>
       ) : null}
 
-      <p className="mt-6 text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint leading-relaxed">
+      <p className="mt-6 text-[11px] font-mono text-fg-faint leading-relaxed">
         {tPage("connectAppleNote")}
       </p>
     </SheetContent>

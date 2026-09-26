@@ -65,21 +65,21 @@ export default async function CoachAnalyticsPage() {
       <section className="surface-2 rounded-xl px-5 py-4 flex flex-wrap items-center gap-x-6 gap-y-2">
         <div className="flex items-baseline gap-2">
           <span className="numeric text-3xl">{activePct}%</span>
-          <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
+          <span className="text-xs font-mono text-fg-dim">
             {t("trainedLastWeek")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
           <span className="numeric text-2xl">{noProgramCount}</span>
-          <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
+          <span className="text-xs font-mono text-fg-dim">
             {t("noActiveProgram")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
           <span className="numeric text-2xl">{onboarding.pct}%</span>
-          <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
+          <span className="text-xs font-mono text-fg-dim">
             {t("completedOnboarding")}
           </span>
         </div>
@@ -94,7 +94,7 @@ export default async function CoachAnalyticsPage() {
               <div className="eyebrow mb-1">{t("atRiskEyebrow")}</div>
               <h2 className="font-display text-2xl">{t("atRiskTitle")}</h2>
             </div>
-            <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
               {atRisk.length}
             </span>
           </div>
@@ -124,7 +124,7 @@ export default async function CoachAnalyticsPage() {
                       <div className="numeric text-sm">
                         {m.daysSinceLastSession === null ? "—" : `${m.daysSinceLastSession}d`}
                       </div>
-                      <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                      <div className="text-[10px] font-mono text-fg-faint">
                         {m.daysSinceLastSession === null ? t("neverTrained") : t("since")}
                       </div>
                     </div>
@@ -162,7 +162,7 @@ export default async function CoachAnalyticsPage() {
             ))}
           </ul>
           <div className="pt-3 border-t hairline">
-            <div className="text-[11px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+            <div className="text-[11px] font-mono text-fg-faint">
               {t("tierThresholdsLabel")}
             </div>
             <div className="text-[11px] font-mono text-fg-dim mt-1.5 leading-relaxed">
@@ -203,7 +203,7 @@ export default async function CoachAnalyticsPage() {
                   />
                 </div>
                 <div className="numeric text-[11px] mt-1.5">{w.count}</div>
-                <div className="text-[9px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+                <div className="text-[9px] font-mono text-fg-faint">
                   {w.weekLabel}
                 </div>
               </li>

@@ -114,9 +114,9 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
           {display.eyebrow}
         </h2>
         <span
-          className={`text-[10px] font-mono uppercase tracking-[0.14em] ${
-            display.pendingCoach ? "text-warn" : "text-fg-dim"
-          }`}
+          className={`text-[10px] font-mono ${
+ display.pendingCoach ? "text-warn" : "text-fg-dim"
+ }`}
         >
           {display.attribution}
         </span>
@@ -131,7 +131,7 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
           className="group"
           onToggle={handleDisclosureToggle}
         >
-          <summary className="cursor-pointer list-none text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg select-none inline-flex items-center gap-1 lift touch-app">
+          <summary className="cursor-pointer list-none text-[11px] font-mono text-fg-dim hover:text-fg select-none inline-flex items-center gap-1 lift touch-app">
             <span>Vis tankegang</span>
             <span aria-hidden className="group-open:rotate-180 transition-transform">↓</span>
           </summary>
@@ -145,7 +145,7 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
             type="button"
             disabled={isPending}
             onClick={() => respond(true)}
-            className="flex-1 rounded-lg border hairline bg-bg-2 px-3 py-2 text-[12px] font-mono uppercase tracking-[0.12em] lift touch-app disabled:opacity-60"
+            className="flex-1 rounded-lg border hairline bg-bg-2 px-3 py-2 text-[12px] font-mono lift touch-app disabled:opacity-60"
           >
             OK, kør tilpasset
           </button>
@@ -153,13 +153,13 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
             type="button"
             disabled={isPending}
             onClick={() => respond(false)}
-            className="flex-1 rounded-lg border hairline px-3 py-2 text-[12px] font-mono uppercase tracking-[0.12em] text-fg-dim lift touch-app disabled:opacity-60"
+            className="flex-1 rounded-lg border hairline px-3 py-2 text-[12px] font-mono text-fg-dim lift touch-app disabled:opacity-60"
           >
             Behold original
           </button>
         </div>
       ) : optimisticAdaptation.acceptedByMember === false ? (
-        <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint pt-1">
+        <div className="text-[11px] font-mono text-fg-faint pt-1">
           Du valgte at beholde den originale session
         </div>
       ) : null}

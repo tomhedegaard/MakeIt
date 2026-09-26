@@ -255,7 +255,7 @@ export default async function TodayPage() {
           <div className="text-right">
             <div className="eyebrow mb-1">{t("greeting.streakLabel")}</div>
             <div className="numeric text-3xl">{stats?.streakDays ?? (connected ? 0 : 12)}</div>
-            <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">{t("greeting.streakUnit")}</div>
+            <div className="text-[10px] font-mono text-fg-faint">{t("greeting.streakUnit")}</div>
           </div>
         }
       />
@@ -276,7 +276,7 @@ export default async function TodayPage() {
               <span className="pulse-dot" />
               <span className="eyebrow eyebrow-domain">{t("todaySession.eyebrow", { programCode: today.programCode, week: today.week })}</span>
               {today.isDeload ? (
-                <span className="ml-auto numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+                <span className="ml-auto numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
                   {t("todaySession.deload")}
                 </span>
               ) : null}
@@ -386,7 +386,7 @@ export default async function TodayPage() {
                     {t("formChecks.answeredCount", { count: reviewedCount })}
                   </span>
                 </div>
-                <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-0.5">
+                <div className="text-[10px] font-mono text-fg-faint mt-0.5">
                   {t("formChecks.readNotes")}
                 </div>
               </div>
@@ -536,7 +536,7 @@ function CrewRow({
         <div className="text-[10px] font-mono text-fg-faint mt-0.5">{when}</div>
       </div>
       {pr ? (
-        <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 shrink-0">
+        <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5 shrink-0">
           {prLabel}
         </span>
       ) : null}

@@ -41,7 +41,7 @@ export default function SendDigestButton() {
         {pending ? t("sending") : t("send")}
       </button>
       {result ? (
-        <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+        <span className="text-[10px] font-mono text-fg-faint">
           {result}
         </span>
       ) : null}

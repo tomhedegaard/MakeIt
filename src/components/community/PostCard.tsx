@@ -119,12 +119,12 @@ export default function PostCard({ post }: { post: FeedPost }) {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {post.isPr ? (
-            <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
               {t("prBadge")}
             </span>
           ) : null}
           {post.formcheck ? (
-            <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
               AI
             </span>
           ) : null}
@@ -177,7 +177,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
       {expanded ? (
         <div className="mt-4 border-t hairline pt-4 space-y-4">
           {loadingComments ? (
-            <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+            <p className="text-xs font-mono text-fg-faint">
               {t("loadingComments")}
             </p>
           ) : comments && comments.length > 0 ? (
@@ -202,7 +202,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
               ))}
             </ul>
           ) : (
-            <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+            <p className="text-xs font-mono text-fg-faint">
               {t("noComments")}
             </p>
           )}
@@ -225,7 +225,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
             </button>
           </form>
 
-          <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+          <p className="text-[10px] font-mono text-fg-faint">
             {t("mentionHint")}
           </p>
         </div>

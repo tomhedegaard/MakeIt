@@ -136,7 +136,7 @@ export default function AppShell({
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+                  <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
                     {t("shell.coachBadge")}
                   </span>
                   <span className="text-sm">{t("shell.coachConsole")}</span>
@@ -203,7 +203,7 @@ export default function AppShell({
             >
               <summary
                 ref={summaryRef}
-                className="size-9 rounded-full surface-2 flex items-center justify-center text-xs font-mono uppercase cursor-pointer list-none [&::-webkit-details-marker]:hidden"
+                className="size-9 rounded-full surface-2 flex items-center justify-center text-xs font-mono cursor-pointer list-none [&::-webkit-details-marker]:hidden"
                 aria-label={t("shell.menu")}
               >
                 {member.handle.slice(0, 2)}
@@ -248,7 +248,7 @@ export default function AppShell({
           {demoMode ? (
             <div
               role="status"
-              className="px-5 py-2 border-b hairline text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint"
+              className="px-5 py-2 border-b hairline text-[10px] font-mono text-fg-faint"
             >
               {t("shell.demoBanner")}
             </div>

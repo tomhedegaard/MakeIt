@@ -48,7 +48,7 @@ export default function RealtimeIndicator() {
       style={{ borderColor: "var(--line-bright)" }}
     >
       <span className="pulse-dot" aria-hidden />
-      <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg">
+      <span className="text-xs font-mono text-fg">
         {count === 1
           ? t("newPostsOne", { count })
           : t("newPostsOther", { count })}

@@ -41,7 +41,7 @@ export default async function SessionPreview({ session }: { session: Session }) 
           </Link>
 
           <div className="flex-1 min-w-0 text-center">
-            <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+            <div className="text-[10px] font-mono text-fg-faint">
               {t("topBar.programLine", {
                 programCode: session.programCode,
                 week: session.week,
@@ -232,7 +232,7 @@ function PrimaryMuscleTags({ muscles }: { muscles: MuscleGroup[] }) {
       {muscles.map((m) => (
         <span
           key={m}
-          className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-[0.14em] bg-bg-3 text-fg-dim"
+          className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-bg-3 text-fg-dim"
         >
           {MUSCLE_LABELS[m]}
         </span>

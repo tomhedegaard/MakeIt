@@ -54,7 +54,7 @@ export default function FormCheckTrigger({
             <span className="block font-display text-base leading-tight">
               {exhausted ? t("limitReached") : t("test")}
             </span>
-            <span className="block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-0.5">
+            <span className="block text-[11px] font-mono text-fg-faint mt-0.5">
               {t("stats", { cues: cues.length, mistakes: mistakes.length })}
               {showCounter
                 ? t("used", { used: quota.used, limit: quota.limit })
@@ -62,7 +62,7 @@ export default function FormCheckTrigger({
             </span>
           </span>
         </span>
-        <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint shrink-0">
+        <span className="text-[10px] font-mono text-fg-faint shrink-0">
           {exhausted ? t("upgrade") : t("duration")}
         </span>
       </button>

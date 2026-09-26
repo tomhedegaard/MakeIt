@@ -128,7 +128,7 @@ export default async function CoachSystemPage() {
                           ? t("expired")
                           : `${r.daysUntilExpiry}`}
                       </div>
-                      <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-1">
+                      <div className="text-[10px] font-mono text-fg-faint mt-1">
                         {r.daysUntilExpiry !== null && r.daysUntilExpiry >= 0
                           ? t("daysLeft")
                           : t("sinceExpiry")}
@@ -142,7 +142,7 @@ export default async function CoachSystemPage() {
                       </div>
                     </>
                   ) : (
-                    <div className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
+                    <div className="text-xs font-mono text-fg-dim">
                       {r.suggestedRotation ?? t("noHardExpiry")}
                     </div>
                   )}
@@ -195,9 +195,9 @@ export default async function CoachSystemPage() {
                     {s.name}
                   </span>
                   <span
-                    className={`text-[10px] font-mono uppercase tracking-[0.14em] ${
-                      s.configured ? "text-green-400" : "text-fg-faint"
-                    }`}
+                    className={`text-[10px] font-mono ${
+ s.configured ? "text-green-400" : "text-fg-faint"
+ }`}
                   >
                     {s.configured ? t("serviceLive") : t("serviceMissing")}
                   </span>
@@ -210,7 +210,7 @@ export default async function CoachSystemPage() {
                     href={s.dashboardUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 inline-block text-xs font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg underline underline-offset-2"
+                    className="mt-2 inline-block text-xs font-mono text-fg-dim hover:text-fg underline underline-offset-2"
                   >
                     {t("openDashboard")}
                   </a>
@@ -371,7 +371,7 @@ function CronHealthCard({
         </span>
         <SeverityBadge severity={CRON_STATUS_SEVERITY[row.status]} />
       </div>
-      <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <div className="text-[10px] font-mono text-fg-faint">
         {t(CRON_STATUS_KEY[row.status])}
         {row.emptyStreak > 0 ? ` · ${row.emptyStreak}` : ""}
       </div>
@@ -423,7 +423,7 @@ function SeverityBadge({ severity }: { severity: Severity }) {
   };
   return (
     <span
-      className={`inline-block px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-[0.14em] ${styles[severity]}`}
+      className={`inline-block px-2 py-0.5 rounded text-[10px] font-mono ${styles[severity]}`}
     >
       {label[severity]}
     </span>

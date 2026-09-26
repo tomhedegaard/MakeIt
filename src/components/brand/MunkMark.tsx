@@ -23,7 +23,7 @@ export default function MunkMark({
       >
         {initial}
       </span>
-      <span className="text-[10px] font-mono uppercase tracking-[0.14em] truncate">
+      <span className="text-[10px] font-mono truncate">
         {name}
       </span>
     </span>

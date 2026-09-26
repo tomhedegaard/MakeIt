@@ -26,7 +26,7 @@ export function Kicker({
     <p
       data-domain={domain}
       className={cn(
-        "flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.12em]",
+        "flex items-center gap-1.5 font-mono text-[9px]",
         domain ? "text-domain" : "text-fg-dim",
         className,
       )}
@@ -56,7 +56,7 @@ export function Label({ className, children }: { className?: string; children: R
   return (
     <p
       className={cn(
-        "flex items-center gap-1.5 font-mono text-[8.5px] uppercase tracking-[0.1em] text-fg-dim",
+        "flex items-center gap-1.5 font-mono text-[8.5px] text-fg-dim",
         className,
       )}
     >
@@ -86,7 +86,7 @@ export function Chip({
     <span
       data-domain={domain}
       className={cn(
-        "inline-flex items-center gap-[5px] whitespace-nowrap rounded-full border border-line bg-bg-2 px-2 py-1 font-mono text-[9px] tracking-[0.04em]",
+        "inline-flex items-center gap-[5px] whitespace-nowrap rounded-full border border-line bg-bg-2 px-2 py-1 font-mono text-[9px]",
         className,
       )}
     >
@@ -108,7 +108,7 @@ export function Fields({
     <div className={cn("grid grid-cols-3 gap-1.5", className)}>
       {items.map((f) => (
         <div key={f.label} className="rounded-[10px] border border-line px-[7px] py-[5px]">
-          <span className="block font-mono text-[7.5px] uppercase tracking-[0.08em] text-fg-dim">
+          <span className="block font-mono text-[7.5px] text-fg-dim">
             {f.label}
           </span>
           <b className="block font-mono text-[13px] font-medium">{f.value}</b>
@@ -131,7 +131,7 @@ export function Pill({
   return (
     <span
       className={cn(
-        "flex h-[34px] flex-none items-center justify-center rounded-full font-mono text-[10px] font-medium uppercase tracking-[0.1em]",
+        "flex h-[34px] flex-none items-center justify-center rounded-full font-mono text-[10px] font-medium",
         ghost ? "border border-line-strong text-fg" : "bg-fg text-bg",
         className,
       )}
@@ -153,7 +153,7 @@ export function EngineNote({
 }) {
   return (
     <div className={cn("rounded-[14px] bg-fg px-3 py-2.5 text-bg", className)}>
-      <p className="font-mono text-[8.5px] uppercase tracking-[0.1em] text-bg/65">{stamp}</p>
+      <p className="font-mono text-[8.5px] text-bg/65">{stamp}</p>
       {children}
     </div>
   );

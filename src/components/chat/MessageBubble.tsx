@@ -34,7 +34,7 @@ export default function MessageBubble({
   return (
     <li className={`flex flex-col ${align}`}>
       {!mine && message.senderHandle ? (
-        <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mb-1 px-1">
+        <div className="text-[10px] font-mono text-fg-faint mb-1 px-1">
           @{message.senderHandle}
           {message.senderIsCoach ? " · coach" : ""}
         </div>

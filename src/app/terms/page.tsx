@@ -97,7 +97,7 @@ export default async function TermsPage() {
           </p>
         </Section>
 
-        <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint mt-16">
+        <p className="text-xs font-mono text-fg-faint mt-16">
           {COMPANY.legal.entity ?? COMPANY.name}
           {COMPANY.legal.address ? ` · ${COMPANY.legal.address}` : ""}
         </p>

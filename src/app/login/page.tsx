@@ -87,7 +87,7 @@ export default async function LoginPage({
             </p>
           ) : null}
 
-          <p className="mt-10 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
+          <p className="mt-10 text-xs text-fg-faint font-mono">
             {SUPABASE_ENABLED ? t("statusConnected") : t("statusDemo")}
           </p>
         </div>
@@ -133,7 +133,7 @@ async function MockForm({ err }: { err?: string }) {
         </button>
       </form>
 
-      <p className="mt-6 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
+      <p className="mt-6 text-xs text-fg-faint font-mono">
         {t("testCodesLabel")}<span className="text-fg-dim">MUNK-01 · MAKEIT-CREW · STRAPIT-50K</span>
       </p>
     </>
@@ -187,7 +187,7 @@ async function TabBar({ active }: { active: Tab }) {
     { key: "oauth", label: t("oauth") },
   ];
   return (
-    <div className="flex gap-1 mb-6 surface-2 rounded-lg p-1 text-xs font-mono uppercase tracking-[0.14em]">
+    <div className="flex gap-1 mb-6 surface-2 rounded-lg p-1 text-xs font-mono">
       {tabs.map((t) => (
         <Link
           key={t.key}
@@ -304,7 +304,7 @@ async function PasswordForm({ mode }: { mode: "signin" | "signup" }) {
         </button>
       </form>
 
-      <p className="mt-4 text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <p className="mt-4 text-xs font-mono text-fg-faint">
         {isSignup ? (
           <>
             {t("hasAccount")}{" "}
@@ -387,7 +387,7 @@ function LoginErrorAlert({
   return (
     <p
       role="alert"
-      className={`flex items-center gap-2 rounded-lg border border-danger/40 bg-danger/15 px-3 py-2 text-sm font-mono uppercase tracking-[0.14em] text-danger ${className}`}
+      className={`flex items-center gap-2 rounded-lg border border-danger/40 bg-danger/15 px-3 py-2 text-sm font-mono text-danger ${className}`}
     >
       <DangerGlyph />
       <span>{children}</span>
@@ -451,7 +451,7 @@ async function SentState({ email }: { email?: string }) {
         <span className="text-fg">{email ?? t("fallbackEmail")}</span>
         {t("bodyTail")}
       </p>
-      <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <p className="text-xs font-mono text-fg-faint">
         {t("expiry")}
       </p>
     </div>

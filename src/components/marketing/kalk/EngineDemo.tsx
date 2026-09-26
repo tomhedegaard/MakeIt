@@ -129,7 +129,7 @@ export default function EngineDemo() {
     <div className="flex w-full flex-col gap-5 lg:flex-row lg:items-start lg:gap-6 xl:gap-10">
       <div className="order-2 flex w-full flex-col gap-5 lg:order-1 lg:max-w-[320px]">
         {/* Ikke klassen "eyebrow": KalkHero.test.tsx kræver, at heroen ikke har en. */}
-        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-dim lg:hidden">
+        <p className="font-mono text-[11px] text-fg-dim lg:hidden">
           {t("tryIt")}
         </p>
         <Slider
@@ -177,13 +177,13 @@ export default function EngineDemo() {
           <PhoneStatusBar className="hidden lg:flex" />
           <div className="flex min-h-0 flex-1 flex-col">
             <div className="border-b border-line px-4 pb-3 pt-4 lg:px-5 lg:pb-3.5 lg:pt-1">
-              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-fg-dim">{t("todayLabel")}</p>
+              <p className="font-mono text-[9px] text-fg-dim">{t("todayLabel")}</p>
               <p className="font-display mt-1.5 text-3xl">{t("sessionTitle")}</p>
               <span className="sr-only">{announcement}</span>
             </div>
             <div className="flex flex-1 flex-col gap-3.5 px-4 pb-4 pt-4 lg:gap-4 lg:px-5 lg:pb-5 lg:pt-5">
               <div className="rounded-[14px] border border-line-strong bg-bg-elev p-4 lg:bg-bg-2 lg:p-[18px]">
-                <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-fg-dim">{t("topSetLabel")}</p>
+                <p className="font-mono text-[9px] text-fg-dim">{t("topSetLabel")}</p>
                 <p className="mt-2 flex items-baseline gap-2.5">
                   {result.changed ? (
                     <span className="strike-signal font-display text-3xl text-fg-faint">{DEMO_TOP_SET_KG}</span>
@@ -204,10 +204,10 @@ export default function EngineDemo() {
               ) : null}
 
               <div className="flex gap-2">
-                <span className="rounded-full border border-line-strong px-2.5 py-1.5 font-mono text-[9px] tracking-[0.08em] text-fg-dim">
+                <span className="rounded-full border border-line-strong px-2.5 py-1.5 font-mono text-[9px] text-fg-dim">
                   {t("whySleep", { hours })}
                 </span>
-                <span className="rounded-full border border-line-strong px-2.5 py-1.5 font-mono text-[9px] tracking-[0.08em] text-fg-dim">
+                <span className="rounded-full border border-line-strong px-2.5 py-1.5 font-mono text-[9px] text-fg-dim">
                   {t("whyHrv", { ms: sliders.hrv })}
                 </span>
               </div>
@@ -254,7 +254,7 @@ function Slider({
     <div>
       {/* Wraps the value under the label rather than breaking it, where the column is narrow. */}
       <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-        <label htmlFor={id} className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-dim">
+        <label htmlFor={id} className="font-mono text-[11px] text-fg-dim">
           {label}
         </label>
         <span className="font-display whitespace-nowrap text-[clamp(20px,1.9vw,30px)]">

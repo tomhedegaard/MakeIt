@@ -58,7 +58,7 @@ function readBool(value: unknown, key: string): boolean {
 /* ---- shared sub-components ---------------------------------------------- */
 
 const SELECTOR_BTN =
-  "flex-1 min-w-0 text-[11px] font-mono uppercase tracking-[0.12em] " +
+  "flex-1 min-w-0 text-[11px] font-mono " +
   "rounded-full border px-3 py-2 touch-app transition-colors";
 
 function Selector<T extends string | number>({
@@ -283,7 +283,7 @@ export default function LifestyleLogCard({
             aria-label={t("sleepAria")}
             className="input w-24 disabled:opacity-50"
           />
-          <span className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+          <span className="text-[11px] font-mono text-fg-faint">
             {t("hours")}
           </span>
         </div>
@@ -331,7 +331,7 @@ export default function LifestyleLogCard({
             disabled={pending || menstruationLogged}
             aria-pressed={menstruationLogged}
             className={cn(
-              "w-full text-[11px] font-mono uppercase tracking-[0.12em] rounded-full border px-4 py-2.5 touch-app transition-colors",
+              "w-full text-[11px] font-mono rounded-full border px-4 py-2.5 touch-app transition-colors",
               menstruationLogged
                 ? "bg-fg text-bg border-fg"
                 : "border-line-strong text-fg-dim lift",

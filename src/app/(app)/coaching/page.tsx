@@ -102,7 +102,7 @@ export default async function TrainPage() {
         <PageTitle kicker={t("header.eyebrow")} title={t("header.title")} />
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
           <span data-identity="coach" className="eyebrow">{t("header.coachChip")}</span>
-          <span data-identity="motor" className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+          <span data-identity="motor" className="text-[10px] font-mono text-fg-faint">
             {t("header.motorChip")}
           </span>
         </div>
@@ -132,9 +132,9 @@ export default async function TrainPage() {
                   {String(day.date).padStart(2, "0")}
                 </div>
                 <div
-                  className={`text-[10px] font-mono uppercase tracking-[0.14em] ${
-                    day.rest ? "text-fg-faint" : "text-fg-dim"
-                  }`}
+                  className={`text-[10px] font-mono ${
+ day.rest ? "text-fg-faint" : "text-fg-dim"
+ }`}
                 >
                   {day.sessionLabel || t("week.rest")}
                 </div>

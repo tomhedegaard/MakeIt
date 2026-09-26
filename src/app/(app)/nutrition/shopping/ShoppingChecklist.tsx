@@ -95,7 +95,7 @@ export default function ShoppingChecklist({
           <button
             type="button"
             onClick={reset}
-            className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg-dim mt-3"
+            className="text-[11px] font-mono text-fg-faint hover:text-fg-dim mt-3"
           >
             {t("reset")}
           </button>
@@ -146,7 +146,7 @@ export default function ShoppingChecklist({
                           {item.name}
                         </div>
                         {item.mealCount > 1 ? (
-                          <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em] mt-0.5">
+                          <div className="text-[10px] font-mono text-fg-faint mt-0.5">
                             {t("itemMealCount", { count: item.mealCount })}
                           </div>
                         ) : null}

@@ -105,7 +105,7 @@ export default function MealCard({
             {meal.imageAttributionName ? (
               <span
                 data-theme="nat"
-                className="absolute bottom-2 right-2 text-[9px] font-mono uppercase tracking-[0.14em] text-fg bg-bg/70 backdrop-blur-sm rounded px-1.5 py-0.5"
+                className="absolute bottom-2 right-2 text-[9px] font-mono text-fg bg-bg/70 backdrop-blur-sm rounded px-1.5 py-0.5"
               >
                 📷 {meal.imageAttributionName}
               </span>

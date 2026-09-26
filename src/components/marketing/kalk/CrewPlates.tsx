@@ -78,7 +78,7 @@ export default function CrewPlates() {
 
         <div className="mt-3.5 grid gap-3.5 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
           <div className="rounded-[14px] border border-line bg-bg-2 p-[clamp(20px,2.6vw,32px)]">
-            <p className="flex justify-between gap-3 font-mono text-[12px] uppercase tracking-[0.06em] text-fg-dim">
+            <p className="flex justify-between gap-3 font-mono text-[12px] text-fg-dim">
               <span>{current.name}</span>
               <span>{t("meterNote")}</span>
             </p>
@@ -103,7 +103,7 @@ export default function CrewPlates() {
           </div>
 
           <div className="rounded-[14px] border border-line bg-bg-2 p-[clamp(20px,2.6vw,32px)]">
-            <p className="font-mono text-[12px] uppercase tracking-[0.06em] text-fg-dim">{t("earnHeading")}</p>
+            <p className="font-mono text-[12px] text-fg-dim">{t("earnHeading")}</p>
             <ul className="mt-2.5 list-none p-0">
               {(["sessions", "formChecks", "prs", "help"] as const).map((key) => (
                 <li key={key} className="border-b border-line py-[11px] text-base last:border-b-0">

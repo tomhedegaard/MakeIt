@@ -35,7 +35,7 @@ export default function MindScreen({ width, scroll = false }: { width?: number; 
                 (row > 0 ? " border-t border-line" : "")
               }
             >
-              <span className="font-mono text-[9px] tracking-[0.04em]">
+              <span className="font-mono text-[9px]">
                 {t(`systems.mind.${scale.key}`)}
               </span>
               {[1, 2, 3, 4, 5].map((n) => (

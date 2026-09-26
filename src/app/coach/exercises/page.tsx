@@ -64,9 +64,9 @@ export default async function CoachExercisesPage() {
                   {t("phaseCount", { count: ex.phases.length })}
                 </span>
                 <span
-                  className={`text-[10px] font-mono uppercase tracking-[0.14em] px-2 py-0.5 rounded-full border hairline shrink-0 ${
-                    ex.isPublished ? "text-fg" : "text-fg-faint"
-                  }`}
+                  className={`text-[10px] font-mono px-2 py-0.5 rounded-full border hairline shrink-0 ${
+ ex.isPublished ? "text-fg" : "text-fg-faint"
+ }`}
                 >
                   {ex.isPublished ? t("published") : t("draft")}
                 </span>

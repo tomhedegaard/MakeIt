@@ -40,13 +40,13 @@ export default async function CoachProgramsPage() {
                 className="surface-2 rounded-xl p-5 lift block h-full"
               >
                 <div className="flex items-start justify-between gap-3 mb-2">
-                  <span className="numeric text-[10px] tracking-[0.16em] uppercase text-fg-faint">
+                  <span className="numeric text-[10px] text-fg-faint">
                     {p.code}
                   </span>
                   <span
-                    className={`text-[10px] font-mono uppercase tracking-[0.14em] px-2 py-0.5 rounded-full border hairline ${
-                      p.isPublished ? "text-fg" : "text-fg-faint"
-                    }`}
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded-full border hairline ${
+ p.isPublished ? "text-fg" : "text-fg-faint"
+ }`}
                   >
                     {p.isPublished ? t("published") : t("draft")}
                   </span>

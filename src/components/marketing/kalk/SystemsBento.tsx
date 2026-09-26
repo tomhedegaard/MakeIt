@@ -134,7 +134,7 @@ export default function SystemsBento() {
               {t("body.stat")}
               <small
                 aria-hidden="true"
-                className="absolute right-[0.1em] top-[-2.2em] whitespace-nowrap font-mono text-[12px] font-medium tracking-[0.1em]"
+                className="absolute right-[0.1em] top-[-2.2em] whitespace-nowrap font-mono text-[12px] font-medium"
               >
                 {t("body.statLabel")}
               </small>
@@ -148,7 +148,7 @@ export default function SystemsBento() {
               {t("food.quote")}
             </blockquote>
             <div data-domain="food" className="mt-auto pt-7">
-              <p className="font-mono text-[12px] uppercase tracking-[0.06em]">{t("food.macro")}</p>
+              <p className="font-mono text-[12px]">{t("food.macro")}</p>
               <div aria-hidden="true" className="mt-2.5 flex h-3.5 gap-[3px] overflow-hidden rounded">
                 {MACROS.map((m) => (
                   <i key={m.key} style={{ flex: m.flex }} className={cn("block", m.tone)} />
@@ -165,7 +165,7 @@ export default function SystemsBento() {
           <Cell cell="heart" nat className="md:col-span-6 lg:col-span-5">
             <CellKicker domain="heart">{t("heart.kicker")}</CellKicker>
             <CellHeading>{t("heart.heading")}</CellHeading>
-            <div className="mt-3 flex gap-7 font-mono text-[12px] uppercase tracking-[0.06em] text-fg-dim">
+            <div className="mt-3 flex gap-7 font-mono text-[12px] text-fg-dim">
               <p>
                 {t("heart.now")}
                 <b data-domain="heart" className="font-display mt-1 block text-[36px] tracking-normal! text-domain">
@@ -219,7 +219,7 @@ export default function SystemsBento() {
         />
         <div aria-hidden="true" className="mx-auto max-w-[1360px] px-4 md:px-8">
           <div className="relative h-2.5 rounded-[5px] bg-[linear-gradient(var(--fg),var(--fg))] bg-[length:100%_2px] bg-center bg-no-repeat before:absolute before:left-0 before:top-0 before:size-2.5 before:rounded-[2px] before:bg-fg after:absolute after:right-0 after:top-0 after:size-2.5 after:rounded-[2px] after:bg-fg" />
-          <p className="mt-2.5 font-mono text-[10px] uppercase tracking-[0.06em] text-fg-dim">20 {unit}</p>
+          <p className="mt-2.5 font-mono text-[10px] text-fg-dim">20 {unit}</p>
         </div>
       </div>
     </section>
@@ -256,7 +256,7 @@ function CellKicker({ domain, children }: { domain: Domain; children: ReactNode 
   return (
     <p
       data-domain={domain}
-      className="flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.12em] text-domain"
+      className="flex items-center gap-2 font-mono text-[12px] text-domain"
     >
       <i aria-hidden="true" className="inline-block size-2 flex-none rounded-full bg-domain" />
       {children}

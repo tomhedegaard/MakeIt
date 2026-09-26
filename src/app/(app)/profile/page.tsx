@@ -65,7 +65,7 @@ export default async function ProfilePage() {
                   <div className="eyebrow">{l.label}</div>
                   {l.delta4w != null ? (
                     <span
-                      className="text-[10px] font-mono uppercase tracking-[0.14em]"
+                      className="text-[10px] font-mono"
                       style={{
                         color: l.delta4w > 0 ? "var(--fg)" : "var(--fg-faint)",
                       }}
@@ -86,7 +86,7 @@ export default async function ProfilePage() {
                 <div className="text-fg/70">
                   <Sparkline data={l.history.map((h) => h.e1rm)} />
                 </div>
-                <div className="mt-3 text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+                <div className="mt-3 text-[10px] font-mono text-fg-faint">
                   {l.history.length > 0
                     ? l.history.length === 1
                       ? t("lifts.weeksOne", { count: l.history.length })
@@ -96,7 +96,7 @@ export default async function ProfilePage() {
               </article>
             ))}
           </div>
-          <p className="mt-3 text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+          <p className="mt-3 text-[10px] font-mono text-fg-faint">
             {t("lifts.formula")}
           </p>
         </section>
@@ -106,7 +106,7 @@ export default async function ProfilePage() {
           <section aria-label={t("prs.ariaLabel")}>
             <div className="flex items-end justify-between mb-3">
               <div className="eyebrow">{t("prs.title")}</div>
-              <span className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+              <span className="text-[10px] font-mono text-fg-faint">
                 {t("prs.autoDetected")}
               </span>
             </div>
@@ -131,7 +131,7 @@ export default async function ProfilePage() {
                     <span className="text-fg-dim text-xs ml-1">{t("prs.e1rm")}</span>
                   </span>
                   <span
-                    className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 shrink-0"
+                    className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5 shrink-0"
                     aria-hidden
                   >
                     ★
@@ -201,7 +201,7 @@ export default async function ProfilePage() {
               </p>
             </div>
             {reviewed.length > 0 ? (
-              <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-1 inline-flex items-center gap-2 shrink-0">
+              <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-1 inline-flex items-center gap-2 shrink-0">
                 <span className="size-1.5 rounded-full bg-fg" />
                 {reviewed.length === 1
                   ? t("formChecks.coachRepliesOne", { count: reviewed.length })
@@ -299,7 +299,7 @@ export default async function ProfilePage() {
                       style={{ background: "var(--bg-3)" }}
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 inline-flex items-center gap-1.5">
+                        <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5 inline-flex items-center gap-1.5">
                           <span className="size-1.5 rounded-full bg-fg" />
                           Mikael Munk · @Munk
                         </span>
@@ -318,7 +318,7 @@ export default async function ProfilePage() {
                     </div>
                   ) : (
                     <div className="px-5 py-3 border-t hairline">
-                      <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                      <span className="text-[10px] font-mono text-fg-faint">
                         {t("formChecks.awaitingReview")}
                       </span>
                     </div>
@@ -329,7 +329,7 @@ export default async function ProfilePage() {
             </>
           )}
 
-          <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-5">
+          <p className="text-[10px] font-mono text-fg-faint mt-5">
             {pending.length > 0
               ? t("formChecks.footerPending", {
                   pending: pending.length,

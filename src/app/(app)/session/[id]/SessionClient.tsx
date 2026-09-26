@@ -196,7 +196,7 @@ export default function SessionClient({
           </button>
 
           <div className="flex-1 min-w-0 text-center">
-            <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+            <div className="text-[10px] font-mono text-fg-faint">
               {t("topBar.programLine", {
                 programCode: session.programCode,
                 week: session.week,
@@ -286,7 +286,7 @@ export default function SessionClient({
               <span>{t("targets.goal")}</span>
               {set.adapted?.kind === "weight_reduced" ? (
                 <span
-                  className="text-[9px] font-mono uppercase tracking-[0.12em] px-1.5 py-0.5 rounded-sm bg-bg-3 text-fg-dim"
+                  className="text-[9px] font-mono px-1.5 py-0.5 rounded-sm bg-bg-3 text-fg-dim"
                   title={`Reduceret fra ${set.adapted.originalWeight} kg`}
                 >
                   −{set.adapted.percent}%
@@ -368,7 +368,7 @@ export default function SessionClient({
                       : `${s.targetWeight}kg × ${s.targetReps}${s.targetRpe ? ` @ ${s.targetRpe}` : ""}`}
                   </span>
                   {isOptional ? (
-                    <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                    <span className="text-[10px] font-mono text-fg-faint">
                       valgfri
                     </span>
                   ) : null}
@@ -657,7 +657,7 @@ function ExerciseSection({
               <PrimaryMuscleTags muscles={lib.primaryMuscles} />
               <Link
                 href={`/train/exercises/${lib.slug}`}
-                className="ml-auto text-[10px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg transition-colors"
+                className="ml-auto text-[10px] font-mono text-fg-dim hover:text-fg transition-colors"
               >
                 {t("seeFull")}
               </Link>
@@ -686,11 +686,11 @@ function ExerciseSection({
         <span className="flex-1 min-w-0">
           <span className="flex items-baseline justify-between gap-2">
             <span className="text-sm leading-snug">{t("formCheck", { set: setIdx + 1 })}</span>
-            <span className="text-[10px] font-mono uppercase tracking-[0.12em] shrink-0">
+            <span className="text-[10px] font-mono shrink-0">
               {t("duration")}
             </span>
           </span>
-          <span className="block text-[10px] font-mono uppercase tracking-[0.1em] opacity-70 mt-0.5 leading-snug break-words">
+          <span className="block text-[10px] font-mono opacity-70 mt-0.5 leading-snug break-words">
             {t("formCheckSub", { lift: ex.name })}
           </span>
           {overflowCues > 0 ? (
@@ -711,7 +711,7 @@ function PrimaryMuscleTags({ muscles }: { muscles: import("@/lib/data/muscle-gro
       {muscles.map((m) => (
         <span
           key={m}
-          className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-[0.14em] bg-bg-3 text-fg-dim"
+          className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-bg-3 text-fg-dim"
         >
           {MUSCLE_LABELS[m]}
         </span>

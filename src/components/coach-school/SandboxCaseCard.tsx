@@ -84,7 +84,7 @@ export default function SandboxCaseCard({
       <div className="surface rounded-lg p-5 space-y-3" aria-live="polite">
         <div className="flex items-center justify-between gap-4">
           <div className="eyebrow">@{sandboxCase.memberHandle}</div>
-          <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-amber-400">
+          <div className="text-[10px] font-mono text-amber-400">
             {t("held.badge")}
           </div>
         </div>
@@ -147,7 +147,7 @@ export default function SandboxCaseCard({
     <div className="surface rounded-lg p-5 space-y-4">
       <div className="flex items-baseline justify-between gap-4">
         <div className="eyebrow">@{sandboxCase.memberHandle}</div>
-        <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+        <div className="text-[10px] font-mono text-fg-faint">
           {t("triggeredAt", { time: sandboxCase.triggeredAt })}
         </div>
       </div>

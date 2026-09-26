@@ -115,12 +115,12 @@ export default async function CrewPage() {
                       : undefined,
                   }}
                 />
-                <div className="absolute inset-[2px] rounded-full bg-bg-2 flex items-center justify-center text-[11px] font-mono uppercase">
+                <div className="absolute inset-[2px] rounded-full bg-bg-2 flex items-center justify-center text-[11px] font-mono">
                   {s.who.slice(1, 3).toUpperCase()}
                 </div>
               </div>
               <div className="text-[10px] font-mono text-fg-dim">{s.who.replace("@", "")}</div>
-              <div className="text-[9px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+              <div className="text-[9px] font-mono text-fg-faint">
                 {s.trained ? t("trained") : t("resting")}
               </div>
             </li>
@@ -128,7 +128,7 @@ export default async function CrewPage() {
         </ol>
       </section>
       ) : (
-      <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <p className="text-xs font-mono text-fg-faint">
         {t("storiesEmpty")}
       </p>
       )}
@@ -246,7 +246,7 @@ export default async function CrewPage() {
               <span className="numeric text-fg/90">{row.score}</span>
               <span className="text-[10px] font-mono text-fg-faint hidden sm:inline">{row.lift}</span>
               {i < 3 ? (
-                <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+                <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
                   ★
                 </span>
               ) : null}

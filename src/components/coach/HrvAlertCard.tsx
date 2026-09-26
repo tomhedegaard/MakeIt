@@ -216,7 +216,7 @@ function Chip({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border hairline px-2.5 py-1 text-[11px] font-mono uppercase tracking-[0.12em]",
+        "inline-flex items-center rounded-full border hairline px-2.5 py-1 text-[11px] font-mono",
         active ? "text-fg font-bold" : "text-fg-faint",
       )}
     >

@@ -26,7 +26,7 @@ export default function BreathScreen({ width, scroll }: { width?: number; scroll
         <i className="absolute inset-[18px] rounded-full border-2 border-domain-line" />
         <i className="absolute inset-[40px] rounded-full bg-domain" />
         <p className="relative text-center text-bg">
-          <span className="block font-mono text-[9px] uppercase tracking-[0.12em]">{br("phase")}</span>
+          <span className="block font-mono text-[9px]">{br("phase")}</span>
           <span className="block font-display text-[40px] leading-none">{br("count")}</span>
         </p>
       </div>

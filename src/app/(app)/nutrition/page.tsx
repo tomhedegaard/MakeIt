@@ -305,7 +305,7 @@ function EmptyState({
           {t("page.emptyPreferences")}
         </Link>
       </div>
-      <p className="mt-4 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <p className="mt-4 text-[10px] font-mono text-fg-faint">
         {t("page.emptyQuota", {
           dailyUsed: planLimit.daily.used,
           dailyMax: planLimit.daily.max,
@@ -404,7 +404,7 @@ function PlanView({
                 >
                   <div className="eyebrow mb-1.5">{t(`dayLabels.${dayKey}`)}</div>
                   <div className="numeric text-xl mb-1">{meals.length}</div>
-                  <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                  <div className="text-[10px] font-mono text-fg-faint">
                     {t("page.meals")}
                   </div>
                   <div className="numeric text-[11px] text-fg-dim mt-1.5">
@@ -499,7 +499,7 @@ function PlanView({
               <li key={s.id} className="border hairline rounded-lg p-4">
                 <div className="flex items-baseline justify-between gap-3 mb-1">
                   <div className="text-sm">{s.title}</div>
-                  <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                  <span className="text-[10px] font-mono text-fg-faint">
                     {s.necessity === "high-value"
                       ? t("page.supplementStrong")
                       : s.necessity === "useful"

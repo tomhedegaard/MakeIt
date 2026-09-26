@@ -413,7 +413,7 @@ function FormCheckBody({
               </div>
             </div>
 
-            <p className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint mb-5">
+            <p className="text-[10px] font-mono text-fg-faint mb-5">
               {isMockResult
                 ? t("result.mockNote")
                 : t("result.realNote")}
@@ -472,7 +472,7 @@ function QuotaLine({
   return (
     <div
       className={cn(
-        "mb-6 px-3 py-2 rounded-lg surface text-xs font-mono uppercase tracking-[0.14em] flex items-center justify-between gap-3",
+        "mb-6 px-3 py-2 rounded-lg surface text-xs font-mono flex items-center justify-between gap-3",
         blocked ? "text-fg" : "text-fg-dim",
       )}
     >
@@ -505,7 +505,7 @@ function UpgradeCta({
           {t("upgrade.body")}
         </div>
       </Link>
-      <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint text-center">
+      <div className="text-[10px] font-mono text-fg-faint text-center">
         {t("upgrade.orWait")}
       </div>
     </div>
@@ -567,7 +567,7 @@ function Card({
         <div className="eyebrow">{title}</div>
         <span
           className={cn(
-            "text-[10px] font-mono uppercase tracking-[0.14em] rounded-full px-2 py-0.5 border",
+            "text-[10px] font-mono rounded-full px-2 py-0.5 border",
             kind === "pos" ? "border-line-strong text-fg" : "border-line-strong text-fg-dim"
           )}
         >

@@ -78,7 +78,7 @@ export default function MindCheckForm({
             className="w-full accent-fg"
             aria-label={s.label}
           />
-          <div className="flex justify-between text-fg-dim text-xs uppercase tracking-wide">
+          <div className="flex justify-between text-fg-dim text-xs">
             <span>{s.low}</span>
             <span>{s.high}</span>
           </div>

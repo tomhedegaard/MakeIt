@@ -58,21 +58,21 @@ export default async function ShoppingPage() {
       <section className="surface-2 rounded-xl px-5 py-4 flex flex-wrap items-baseline gap-x-6 gap-y-2">
         <div className="flex items-baseline gap-2">
           <span className="numeric text-3xl">{headlineCount}</span>
-          <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
+          <span className="text-xs font-mono text-fg-dim">
             {t("itemsTotal")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
           <span className="numeric text-2xl">{plan.meals.length}</span>
-          <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
+          <span className="text-xs font-mono text-fg-dim">
             {t("mealsLabel")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
           <span className="numeric text-2xl">{list.servings}</span>
-          <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
+          <span className="text-xs font-mono text-fg-dim">
             {list.servings === 1 ? t("personOne") : t("personOther")}
           </span>
         </div>

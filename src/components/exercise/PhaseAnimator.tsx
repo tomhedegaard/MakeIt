@@ -81,13 +81,13 @@ export default function PhaseAnimator({
       {/* Phase label + duration */}
       <div className="flex items-baseline gap-3 text-fg-faint">
         <span className="font-display text-base text-fg">{phase.name}</span>
-        <span className="text-[10px] font-mono uppercase tracking-[0.14em]">
+        <span className="text-[10px] font-mono">
           {(phase.duration_ms / 1000).toFixed(1)}s
         </span>
         <button
           type="button"
           onClick={() => setPlaying((p) => !p)}
-          className="ml-auto text-[10px] font-mono uppercase tracking-[0.14em] hover:text-fg transition-colors"
+          className="ml-auto text-[10px] font-mono hover:text-fg transition-colors"
           aria-label={playing ? "Pause" : "Afspil"}
         >
           {playing ? "Pause" : "Play"}

@@ -160,7 +160,7 @@ export function PhoneTabBar({
           <span
             key={key}
             className={cn(
-              "relative flex flex-col items-center gap-[3px] pt-[5px] font-mono text-[8px] tracking-[0.04em]",
+              "relative flex flex-col items-center gap-[3px] pt-[5px] font-mono text-[8px]",
               on ? "font-medium text-fg" : "text-fg-dim",
             )}
           >

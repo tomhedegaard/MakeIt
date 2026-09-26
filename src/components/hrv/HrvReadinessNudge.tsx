@@ -33,7 +33,7 @@ export default function HrvReadinessNudge({ nudge }: Props) {
       <p className="text-sm leading-relaxed text-fg-dim">{body}</p>
       <Link
         href={NUDGE_HREF}
-        className="inline-block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim lift touch-app"
+        className="inline-block text-[11px] font-mono text-fg-dim lift touch-app"
       >
         {t("cta")}
       </Link>

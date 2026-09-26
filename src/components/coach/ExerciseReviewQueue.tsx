@@ -115,7 +115,7 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-fg-dim">
+        <p className="font-mono text-[12px] text-fg-dim">
           {t("position", { current: state.index + 1, total: count })}
         </p>
         <p className="font-mono text-[12px] text-fg-dim" aria-live="polite">
@@ -258,7 +258,7 @@ function MuscleRow({ label, muscles, strong = false }: { label: string; muscles:
 function Block({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-fg-faint">{label}</p>
+      <p className="mb-1.5 font-mono text-[11px] text-fg-faint">{label}</p>
       {children}
     </div>
   );

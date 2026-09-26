@@ -65,7 +65,7 @@ export default function AdaptationHistory({
         <h2 id="adaptation-history-heading" className="eyebrow">
           Tidligere tilpasninger
         </h2>
-        <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+        <span className="text-[10px] font-mono text-fg-faint">
           sidste 30 dage · {items.length}
         </span>
       </div>
@@ -111,15 +111,15 @@ function AdaptationHistoryRow({ item }: { item: AdaptationHistoryItem }) {
     >
       <div className="flex items-baseline justify-between gap-3">
         <div className="flex items-baseline gap-3 min-w-0">
-          <span className="text-[11px] font-mono uppercase tracking-[0.12em] text-fg-faint w-14 shrink-0 numeric">
+          <span className="text-[11px] font-mono text-fg-faint w-14 shrink-0 numeric">
             {dateLabel}
           </span>
           <span className="text-sm text-fg">{actionLabel}</span>
         </div>
         <span
-          className={`text-[10px] font-mono uppercase tracking-[0.14em] shrink-0 ${
-            outcome.tone === "pending" ? "text-warn" : "text-fg-dim"
-          }`}
+          className={`text-[10px] font-mono shrink-0 ${
+ outcome.tone === "pending" ? "text-warn" : "text-fg-dim"
+ }`}
         >
           <span aria-hidden className="mr-1">
             {outcome.icon}

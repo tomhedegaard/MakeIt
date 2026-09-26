@@ -52,7 +52,7 @@ export default async function CoachCirklerPage() {
           ) : (
             <div className="rounded-2xl border hairline bg-bg-2/30 overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-bg-2/60 text-fg-dim text-xs uppercase tracking-wide">
+                <thead className="bg-bg-2/60 text-fg-dim text-xs">
                   <tr>
                     <th className="text-left px-4 py-3">Navn</th>
                     <th className="text-left px-4 py-3">Leder</th>

@@ -63,7 +63,7 @@ export default function MindFirstTimeTour() {
     >
       <div className="flex items-center justify-between">
         <div className="eyebrow">{t(`steps.${currentKey}.eyebrow`)}</div>
-        <div className="text-fg-faint text-[10px] font-mono uppercase tracking-[0.16em]">
+        <div className="text-fg-faint text-[10px] font-mono">
           {step + 1} / {STEP_KEYS.length}
         </div>
       </div>

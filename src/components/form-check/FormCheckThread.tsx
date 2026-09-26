@@ -42,7 +42,7 @@ export default function FormCheckThread({
             >
               <div className="flex items-center justify-between gap-3">
                 <span className="text-sm">{liftLabel(item)}</span>
-                <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                <span className="text-[10px] font-mono text-fg-faint">
                   {reviewed ? copy.reviewed : copy.pending}
                 </span>
               </div>
@@ -50,7 +50,7 @@ export default function FormCheckThread({
               {reviewed ? (
                 <div data-munk-reply="" className="space-y-2 pt-1">
                   <MunkMark />
-                  <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                  <p className="text-[10px] font-mono text-fg-faint">
                     {copy.munkReply}
                   </p>
                   {item.coachNotes ? (

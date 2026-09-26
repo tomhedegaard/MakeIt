@@ -153,7 +153,7 @@ export default async function RepsPage() {
                     style={{ width: `${progress.pct}%` }}
                   />
                 </div>
-                <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-2">
+                <div className="text-[10px] font-mono text-fg-faint mt-2">
                   {t("balance.toNext", {
                     amount: progress.toNext?.toLocaleString(tag) ?? "",
                     tier: progress.next,
@@ -161,7 +161,7 @@ export default async function RepsPage() {
                 </div>
               </>
             ) : (
-              <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-3">
+              <div className="text-[10px] font-mono text-fg-faint mt-3">
                 {t("balance.topCap")}
               </div>
             )}
@@ -187,7 +187,7 @@ export default async function RepsPage() {
                   <div className="flex items-center justify-between mb-1">
                     <div className="font-display text-2xl">{tier.name}</div>
                     {active ? (
-                      <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 inline-flex items-center gap-1.5">
+                      <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5 inline-flex items-center gap-1.5">
                         <span className="size-1.5 rounded-full bg-fg" />
                         {t("tiers.you")}
                       </span>
@@ -213,7 +213,7 @@ export default async function RepsPage() {
         <section>
           <div className="flex items-end justify-between mb-6">
             <div className="eyebrow">{t("transactions.eyebrow")}</div>
-            <span className="text-xs text-fg-dim font-mono uppercase tracking-[0.14em]">
+            <span className="text-xs text-fg-dim font-mono">
               {t("transactions.count", { count: transactions.length })}
             </span>
           </div>
@@ -241,7 +241,7 @@ export default async function RepsPage() {
                     className="flex items-center gap-3 px-4 py-3 bg-bg-2/30"
                   >
                     <span className={`inline-block w-2 h-2 rounded-full shrink-0 ${dot}`} />
-                    <span className="text-xs uppercase tracking-wide text-fg-faint font-mono w-16 shrink-0">
+                    <span className="text-xs text-fg-faint font-mono w-16 shrink-0">
                       {t(`categories.${cat}`)}
                     </span>
                     <span className="flex-1 text-sm">
@@ -303,7 +303,7 @@ export default async function RepsPage() {
                       {r.description}
                     </p>
                   ) : <div className="flex-1" />}
-                  <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                  <div className="flex items-center justify-between text-[10px] font-mono text-fg-faint">
                     <span>{kindLabels[r.kind] ?? r.kind}</span>
                     {r.stock !== null ? (
                       <span>{t("shop.stockLeft", { stock: r.stock })}</span>
@@ -322,7 +322,7 @@ export default async function RepsPage() {
           <section>
             <div className="flex items-end justify-between mb-3">
               <div className="eyebrow">{t("redemptions.eyebrow")}</div>
-              <span className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+              <span className="text-[10px] font-mono text-fg-faint">
                 {t("redemptions.total", { count: redemptions.length })}
               </span>
             </div>
@@ -340,7 +340,7 @@ export default async function RepsPage() {
                     − {r.costReps.toLocaleString(tag)}
                   </span>
                   <span
-                    className="text-[10px] font-mono uppercase tracking-[0.14em] border hairline-strong rounded-full px-2 py-0.5 shrink-0"
+                    className="text-[10px] font-mono border hairline-strong rounded-full px-2 py-0.5 shrink-0"
                     style={{
                       color:
                         r.status === "fulfilled" || r.status === "shipped"

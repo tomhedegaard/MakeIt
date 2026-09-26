@@ -412,7 +412,7 @@ export default function ProgramBuilder({
 
                     {/* Sets */}
                     <div className="space-y-1.5">
-                      <div className="grid grid-cols-[1.2rem_1fr_1fr_1fr_1fr_auto] gap-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint px-1">
+                      <div className="grid grid-cols-[1.2rem_1fr_1fr_1fr_1fr_auto] gap-2 text-[10px] font-mono text-fg-faint px-1">
                         <span>{t("setsColIndex")}</span>
                         <span>{t("setsColReps")}</span>
                         <span>{t("setsColKg")}</span>
@@ -485,7 +485,7 @@ export default function ProgramBuilder({
                       <button
                         type="button"
                         onClick={() => addSet(di, ei)}
-                        className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg pt-1"
+                        className="text-[11px] font-mono text-fg-dim hover:text-fg pt-1"
                       >
                         {t("addSet")}
                       </button>

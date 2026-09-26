@@ -68,7 +68,7 @@ export default async function PriorityInboxList({
                   <div className="mt-1">
                     <span
                       className={cn(
-                        "inline-flex text-[10px] font-mono uppercase tracking-[0.14em] rounded-full px-2 py-0.5 border",
+                        "inline-flex text-[10px] font-mono rounded-full px-2 py-0.5 border",
                         CHIP_TONE[item.kind],
                       )}
                     >

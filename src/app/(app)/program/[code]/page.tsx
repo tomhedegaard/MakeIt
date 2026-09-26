@@ -170,7 +170,7 @@ async function DayCard({ day }: { day: ProgramDetailDay }) {
             </div>
           </div>
           <p className="text-fg-dim text-sm md:text-base">{day.title}</p>
-          <div className="mt-3 flex items-center gap-3 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+          <div className="mt-3 flex items-center gap-3 text-[10px] font-mono text-fg-faint">
             <span>{t("day.exercises", { count: day.exercises.length })}</span>
             <span aria-hidden>·</span>
             <span>{t("day.sets", { count: setCount })}</span>
@@ -215,7 +215,7 @@ function ExerciseRow({
       </div>
       {ex.slug ? (
         <span
-          className="text-fg-dim shrink-0 text-[11px] font-mono uppercase tracking-[0.14em]"
+          className="text-fg-dim shrink-0 text-[11px] font-mono"
           aria-hidden
         >
           →

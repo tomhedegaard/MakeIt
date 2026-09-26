@@ -28,7 +28,7 @@ export default function WaitlistForm() {
 
   return (
     <form action={onSubmit} className="mt-8">
-      <label htmlFor="access-email" className="mb-2.5 block font-mono text-xs uppercase tracking-[0.1em] text-fg-dim">
+      <label htmlFor="access-email" className="mb-2.5 block font-mono text-xs text-fg-dim">
         {t("emailLabel")}
       </label>
       <div className="flex flex-wrap gap-2.5">

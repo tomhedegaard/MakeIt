@@ -94,7 +94,7 @@ export default function HrvBandHero({
             <div className="mt-6 space-y-2">
               <div className="eyebrow">{copy.steadyEyebrow}</div>
               <HrvBandRange model={range} label={copy.rangeLabel} />
-              <div className="flex items-center gap-4 text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+              <div className="flex items-center gap-4 text-[11px] font-mono text-fg-faint">
                 <span>{copy.legendBand}</span>
                 <span>
                   {copy.legendAvg}
@@ -116,7 +116,7 @@ export default function HrvBandHero({
       )}
 
       <div className="px-6 py-3 md:px-8 border-t hairline">
-        <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint leading-relaxed">
+        <p className="text-[11px] font-mono text-fg-faint leading-relaxed">
           {copy.disclaimer}
         </p>
       </div>

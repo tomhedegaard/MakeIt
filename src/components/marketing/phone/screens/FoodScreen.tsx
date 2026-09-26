@@ -58,7 +58,7 @@ export default function FoodScreen({ width, scroll = false }: { width?: number; 
               (i < meals.length - 1 ? " border-b border-line" : "")
             }
           >
-            <span className="font-mono text-[8.5px] uppercase tracking-[0.08em] text-fg-dim">
+            <span className="font-mono text-[8.5px] text-fg-dim">
               {m.slot}
             </span>
             <b className="text-[11px] font-medium">{m.dish}</b>

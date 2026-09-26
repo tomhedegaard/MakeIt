@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 import Rule from "./Rule";
 
-const LINK = "border-b border-line-strong pb-0.5 font-mono text-xs uppercase tracking-[0.06em] no-underline hover:border-fg";
+const LINK = "border-b border-line-strong pb-0.5 font-mono text-xs no-underline hover:border-fg";
 
 /**
  * Footer (reference B `.foot`): wordmark, legal links, support email

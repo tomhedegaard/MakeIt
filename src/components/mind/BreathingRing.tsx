@@ -73,7 +73,7 @@ export default function BreathingRing({ pattern }: { pattern: Pattern }) {
           {phase.label}
         </div>
       </div>
-      <div className="text-fg-dim text-xs uppercase tracking-wide">
+      <div className="text-fg-dim text-xs">
         {pattern.replace(/_/g, " ")}
       </div>
     </div>
