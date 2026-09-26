@@ -1,7 +1,12 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-/** One title scale for every app page (replaces 8 ad-hoc clamp sizes). */
+/**
+ * One title scale for every app page (Nord, spec §4): 34 px sidetitel på
+ * telefon. "page" vokser til 44 px fra md, "compact" (undersider) bliver
+ * på 34 px, så hierarkiet mellem en fane og dens underside holder på
+ * store skærme uden at opfinde en ny størrelse på telefonen.
+ */
 export default function PageTitle({
   title,
   kicker,
@@ -21,8 +26,8 @@ export default function PageTitle({
         {kicker ? <p className="eyebrow eyebrow-domain mb-2">{kicker}</p> : null}
         <h1
           className={cn(
-            "font-display",
-            size === "page" ? "text-[clamp(2.25rem,8vw,3.5rem)]" : "text-[clamp(1.75rem,6vw,2.5rem)]",
+            "font-display text-title",
+            size === "page" && "md:text-[2.75rem]",
           )}
         >
           {title}

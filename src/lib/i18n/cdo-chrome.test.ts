@@ -106,9 +106,10 @@ describe("CDO DA/EN chrome — HRV subnav", () => {
     expect(keysOf(daHrv.learn)).toEqual(keysOf(enHrv.learn));
     const da = daHrv.learn as Record<string, string>;
     const en = enHrv.learn as Record<string, string>;
-    expect(da.title).toBe("Lær");
+    // Sidetitler slutter med punktum (Nord, spec §4).
+    expect(da.title).toBe("Lær.");
     expect(da.eyebrow).toBe("Restitution");
-    expect(en.title).toBe("Learn");
+    expect(en.title).toBe("Learn.");
     expect(en.eyebrow).toBe("Recovery");
     const page = read("src/app/(app)/hrv/learn/page.tsx");
     expect(page).toContain('getTranslations("Hrv.learn")');

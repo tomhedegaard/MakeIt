@@ -74,6 +74,16 @@ describe("no dark-only literals on member surfaces (spec §8)", () => {
 // tilbage. Tal skiller sig ud på tabular-nums, ikke på familie.
 const KALK_VOICE = /(?:^|\s|")(uppercase|font-mono|tracking-(?:\[0\.\d+em\]|wide|wider|widest))(?=\s|"|$)/m;
 
+// Én type-skala (spec §4): overskrifter bruger text-title/-section/-card og
+// hero-tal text-hero. En håndrullet clamp() er præcis den drift, skalaen
+// skulle standse. Landingen har sin egen skala og er undtaget.
+describe("headings use the Nord type scale (spec §4)", () => {
+  const files = surfaceFiles.filter((p) => p.endsWith(".tsx") && !p.startsWith("components/marketing/"));
+  it.each(files)("%s", (p) => {
+    expect(readFileSync(join(SRC, p), "utf8")).not.toMatch(/<h[1-3]\b[^>]*text-\[clamp\(/);
+  });
+});
+
 describe("sentence case in one font (spec §4, §7.1)", () => {
   it.each(surfaceFiles)("%s", (p) => {
     expect(readFileSync(join(SRC, p), "utf8")).not.toMatch(KALK_VOICE);

@@ -20,7 +20,7 @@ export default async function CoachAnalyticsPage() {
       <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">
+          <h1 className="font-display text-title md:text-[2.75rem]">
             {t("title")}
           </h1>
           <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">

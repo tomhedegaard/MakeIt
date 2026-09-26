@@ -176,3 +176,17 @@ Briefen kræver én skrift. I stedet for at rette 119 filer, der bruger `font-di
 2. **Sweep**: `uppercase`, spærret tracking, `rounded-full`-piller, `rounded-[14px]`.
 3. **Skærme**: de ti skærme i afsnit 6 mod grid, topbjælke, tab-bar, kort, skydere, grafer.
 4. **Landing og native**: landingssiden, app-ikon og splash i Nord.
+
+### 10.5 Type-skalaen i koden
+
+Skalaen fra §4 er Tailwind-størrelser, der hver bærer linjehøjde, spærring og vægt:
+`text-hero` (64), `text-hero-lg` (88), `text-title` (34), `text-section` (22),
+`text-card` (17), `text-copy` (15), `text-meta` (13), `text-micro` (12). Brød hedder
+`text-copy`, fordi `text-body` allerede er domænefarven Krop.
+
+Briefen giver kun sidetitlen én størrelse (34). På telefon holder koden sig til det.
+Fra `md` vokser en fane-titel (`PageTitle size="page"`) til 44 px, mens en underside
+(`size="compact"`) bliver på 34, så hierarkiet mellem fane og underside holder på
+desktop uden at opfinde en ny størrelse på telefonen.
+
+Sidetitler slutter med punktum i begge sprog (34 strenge rettet).

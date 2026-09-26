@@ -11,7 +11,7 @@ export default async function CoachMembersPage() {
     <Container className="py-6 lg:py-12 space-y-6">
       <header className="pt-2">
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">{t("title")}</h1>
+        <h1 className="font-display text-title md:text-[2.75rem]">{t("title")}</h1>
         <p className="mt-2 text-fg-dim text-sm">{t("count", { count: members.length })}</p>
       </header>
 

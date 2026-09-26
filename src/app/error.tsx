@@ -28,7 +28,7 @@ export default function GlobalError({
     <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-24">
       <div className="max-w-md text-center">
         <div className="eyebrow mb-3">{t("eyebrow")}</div>
-        <h1 className="font-display text-4xl md:text-5xl mb-4 leading-[0.95]">
+        <h1 className="font-display text-title md:text-[2.75rem] mb-4">
           {t("title")}
         </h1>
         <p className="text-fg-dim text-base leading-relaxed mb-8">

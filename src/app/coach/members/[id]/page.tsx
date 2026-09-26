@@ -61,7 +61,7 @@ export default async function CoachMemberDetailPage({
       <header className="flex items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{m.tier}</div>
-          <h1 className="font-display text-[clamp(2.4rem,7vw,4rem)] leading-[0.95]">
+          <h1 className="font-display text-title md:text-[2.75rem]">
             @{m.handle}
           </h1>
           <p className="mt-2 text-fg-dim text-sm">

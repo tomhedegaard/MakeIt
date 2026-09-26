@@ -66,7 +66,7 @@ export default function HrvBandHero({
         <div className="px-6 py-8 md:px-8 md:py-10">
           <div className="eyebrow mb-2">{copy.latest}</div>
           <div className="flex items-end justify-between gap-4 flex-wrap">
-            <div className="numeric text-7xl md:text-8xl leading-[0.85]">
+            <div className="numeric text-hero md:text-hero-lg">
               {view.latestMs ?? "—"}
               <span className="text-fg-dim text-2xl md:text-3xl ml-2">
                 {copy.unit}

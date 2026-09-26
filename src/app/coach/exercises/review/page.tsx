@@ -18,7 +18,7 @@ export default async function CoachExerciseReviewPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2">
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">{t("title")}</h1>
+        <h1 className="font-display text-title md:text-[2.75rem]">{t("title")}</h1>
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">{t("intro")}</p>
         <Link href="/coach/exercises" className="mt-4 inline-block text-sm text-fg-dim underline underline-offset-4">
           {t("back")}

@@ -60,7 +60,7 @@ export default function StreakCelebration({
               <span className="absolute -top-px -right-px size-2 border-r-2 border-t-2 border-fg" aria-hidden />
               <span className="absolute -bottom-px -left-px size-2 border-l-2 border-b-2 border-fg" aria-hidden />
               <span className="absolute -bottom-px -right-px size-2 border-r-2 border-b-2 border-fg" aria-hidden />
-              <div className="font-display leading-[0.85] text-[clamp(5rem,28vw,9rem)]">
+              <div className="font-display text-hero-lg tabular-nums">
                 {String(milestone).padStart(2, "0")}
               </div>
               <div className="eyebrow text-fg mt-1">{t("stamp")}</div>

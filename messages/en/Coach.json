@@ -120,7 +120,7 @@
   },
   "members": {
     "eyebrow": "Coach console",
-    "title": "Members",
+    "title": "Members.",
     "count": "{count} in the crew",
     "emptyTitle": "No members yet.",
     "emptyBody": "When invite codes get used, members show up here with their tier, active program and last session.",
@@ -176,7 +176,7 @@
   },
   "queue": {
     "eyebrow": "Coach console",
-    "title": "Coach queue",
+    "title": "Coach queue.",
     "waiting": "{formChecks} form-checks · {hrvAlerts} HRV anomalies waiting.",
     "hrvSectionEyebrow": "HRV anomalies",
     "hrvSectionHeading": "{count} waiting on action.",
@@ -190,7 +190,7 @@
   },
   "redemptions": {
     "eyebrow": "Coach console",
-    "title": "Reps redemptions",
+    "title": "Reps redemptions.",
     "waiting": "{count} waiting for fulfilment.",
     "emptyTitle": "The queue is empty.",
     "emptyBody": "Every redemption has been shipped or received. Strong work.",
@@ -349,7 +349,7 @@
   },
   "patterns": {
     "eyebrow": "Coach console",
-    "title": "Cross-cohort patterns",
+    "title": "Cross-cohort patterns.",
     "subtitle": "{cohortSize} active members · last {windowDays} days",
     "timeframeLabel": "Window:",
     "daysOption": "{days} days",

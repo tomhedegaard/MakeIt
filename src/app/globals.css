@@ -225,6 +225,36 @@ html:has(.theme-root[data-theme="nat"]) {
   --radius-2xl: 0;
   --radius-3xl: 0;
   --radius-4xl: 0;
+
+  /* Type-skalaen (spec §4). Hver størrelse bærer sin egen linjehøjde,
+   * spærring og vægt, så text-title alene giver hele rollen. Brød hedder
+   * text-copy, fordi text-body allerede er domænefarven Krop. */
+  --text-hero: 4rem;             /* 64 — HRV 43 ms, Reps 1.420, topsæt 135 kg */
+  --text-hero--line-height: 0.95;
+  --text-hero--letter-spacing: -0.04em;
+  --text-hero--font-weight: 500;
+  --text-hero-lg: 5.5rem;        /* 88 — samme rolle på tablet og op */
+  --text-hero-lg--line-height: 0.95;
+  --text-hero-lg--letter-spacing: -0.04em;
+  --text-hero-lg--font-weight: 500;
+  --text-title: 2.125rem;        /* 34 — "Din uge." */
+  --text-title--line-height: 1;
+  --text-title--letter-spacing: -0.03em;
+  --text-title--font-weight: 500;
+  --text-section: 1.375rem;      /* 22 */
+  --text-section--line-height: 1.1;
+  --text-section--letter-spacing: -0.02em;
+  --text-section--font-weight: 500;
+  --text-card: 1.0625rem;        /* 17 — korttitel, øvelsesnavn */
+  --text-card--line-height: 1.25;
+  --text-card--letter-spacing: -0.01em;
+  --text-card--font-weight: 500;
+  --text-copy: 0.9375rem;        /* 15 — brødtekst */
+  --text-copy--line-height: 1.5;
+  --text-meta: 0.8125rem;        /* 13 — metadata og kicker */
+  --text-meta--line-height: 1.35;
+  --text-micro: 0.75rem;         /* 12 — tabelhoveder, tidsstempler */
+  --text-micro--line-height: 1.3;
 }
 
 /* ---------------------------------------------------------------- *
@@ -245,6 +275,8 @@ body {
   /* Brødtekst er 15/1,5 uden spærring (spec §4). Vi sender kun 400 og
    * 500, så synthesis holdes slukket: en font-bold falder til 500 i
    * stedet for at blive kunstigt fed. */
+  font-size: 0.9375rem;
+  line-height: 1.5;
   font-weight: 400;
   font-synthesis: none;
   letter-spacing: 0;
@@ -631,7 +663,8 @@ nav.tabbar {
 }
 /* Nord (spec §5): hver aktiv tab er en blæk-label og en 2 px mos-streg;
  * ingen domænefarve i selve bjælken. */
-.tab-icon { width: 22px; height: 22px; }
+/* 24 px linjeikoner, 1,5 px streg (spec §5) */
+.tab-icon { width: 24px; height: 24px; }
 
 /* ---------------------------------------------------------------- *
  * Big touch primary (mobile-first session CTA)

@@ -19,7 +19,7 @@ export default function RouteOpening({
   return (
     <Container className="py-12 lg:py-16">
       <div className="eyebrow mb-3">{t("redirectEyebrow")}</div>
-      <h1 className="font-display text-[clamp(2rem,6vw,3.2rem)] leading-[0.95] mb-4">
+      <h1 className="font-display text-title md:text-[2.75rem] mb-4">
         {title}
       </h1>
       <p className="text-fg-dim text-base max-w-md leading-relaxed mb-8">

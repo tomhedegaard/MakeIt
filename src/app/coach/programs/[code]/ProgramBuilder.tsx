@@ -211,7 +211,7 @@ export default function ProgramBuilder({
           <span aria-hidden>·</span>
           <span className="numeric">{program.code}</span>
         </div>
-        <h1 className="font-display text-[clamp(2rem,5vw,3rem)] leading-[0.95]">
+        <h1 className="font-display text-title md:text-[2.75rem]">
           {name || t("untitled")}.
         </h1>
         <p className="mt-2 text-fg-dim text-sm">

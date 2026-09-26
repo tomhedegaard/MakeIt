@@ -20,12 +20,12 @@ export default function SectionHeader({
     <div className={cn("mb-4 flex items-end justify-between gap-4", className)}>
       <div className="min-w-0">
         {eyebrow ? <p className="eyebrow eyebrow-domain mb-2">{eyebrow}</p> : null}
-        <h2 id={id} className="font-display text-2xl">{title}</h2>
+        <h2 id={id} className="font-display text-section">{title}</h2>
       </div>
       {href && linkLabel ? (
         <Link
           href={href}
-          className="relative shrink-0 text-[11px] text-fg-dim hover:text-fg after:absolute after:inset-x-0 after:-inset-y-3.5 after:content-['']"
+          className="relative shrink-0 text-meta text-signal hover:underline after:absolute after:inset-x-0 after:-inset-y-3.5 after:content-['']"
         >
           {linkLabel}
         </Link>

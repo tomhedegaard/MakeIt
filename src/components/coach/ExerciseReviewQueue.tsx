@@ -150,7 +150,7 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
         <div className="space-y-5">
           <div>
             <p className="text-[11px] text-fg-faint">{current.slug}</p>
-            <h2 id="review-name" className="font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-[0.95]">
+            <h2 id="review-name" className="font-display text-title md:text-[2.75rem]">
               {current.name}
             </h2>
             {meta ? <p className="mt-1.5 text-sm text-fg-dim">{meta}</p> : null}

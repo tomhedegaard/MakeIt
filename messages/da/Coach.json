@@ -120,7 +120,7 @@
   },
   "members": {
     "eyebrow": "Coach console",
-    "title": "Medlemmer",
+    "title": "Medlemmer.",
     "count": "{count} i crewet",
     "emptyTitle": "Ingen medlemmer endnu.",
     "emptyBody": "Når invite-koder bliver brugt, dukker medlemmerne op her med tier, aktivt program og sidste session.",
@@ -176,7 +176,7 @@
   },
   "queue": {
     "eyebrow": "Coach console",
-    "title": "Coach-kø",
+    "title": "Coach-kø.",
     "waiting": "{formChecks} form-checks · {hrvAlerts} HRV-anomalier venter.",
     "hrvSectionEyebrow": "HRV-anomalier",
     "hrvSectionHeading": "{count} venter på handling.",
@@ -190,7 +190,7 @@
   },
   "redemptions": {
     "eyebrow": "Coach console",
-    "title": "Reps-indløsninger",
+    "title": "Reps-indløsninger.",
     "waiting": "{count} venter på fulfilment.",
     "emptyTitle": "Køen er tom.",
     "emptyBody": "Alle indløsninger er sendt eller modtaget. Stærkt arbejde.",
@@ -349,7 +349,7 @@
   },
   "patterns": {
     "eyebrow": "Coach console",
-    "title": "Mønstre på tværs",
+    "title": "Mønstre på tværs.",
     "subtitle": "{cohortSize} aktive medlemmer · seneste {windowDays} dage",
     "timeframeLabel": "Vindue:",
     "daysOption": "{days} dage",

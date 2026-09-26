@@ -25,7 +25,7 @@ export default async function CoachSafetyPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2">
         <div className="eyebrow mb-2">Coach · Søjle 5</div>
-        <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">
+        <h1 className="font-display text-title md:text-[2.75rem]">
           Safety.
         </h1>
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
@@ -47,7 +47,7 @@ export default async function CoachSafetyPage() {
           </div>
         ) : week.openAlerts.length === 0 ? (
           <div className="rounded-2xl border hairline bg-bg-2/30 p-6 space-y-2">
-            <div className="font-display text-5xl tabular-nums">0</div>
+            <div className="font-display text-hero tabular-nums">0</div>
             <p className="text-fg-dim text-sm">
               Ingen åbne medlems-skrevne summaries. Munk får ikke push — åbn
               denne side for at se nye.

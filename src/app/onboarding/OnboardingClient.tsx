@@ -423,7 +423,7 @@ function Intro({ eyebrow, title, sub }: { eyebrow: string; title: string; sub: s
   return (
     <div>
       <div className="eyebrow mb-3">{eyebrow}</div>
-      <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92] mb-4">
+      <h1 className="font-display text-title md:text-[2.75rem] mb-4">
         {title}
       </h1>
       <p className="text-fg-dim text-base md:text-lg max-w-md leading-relaxed">{sub}</p>

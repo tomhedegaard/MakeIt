@@ -61,7 +61,7 @@ export default async function LoginPage({
             <span className="pulse-dot" /> {t("beta")}
           </div>
 
-          <h1 className="font-display text-5xl md:text-6xl mb-4">
+          <h1 className="font-display text-title md:text-[2.75rem] mb-4">
             {t("headline.line1")}
             <br /> {t("headline.line2")}
           </h1>

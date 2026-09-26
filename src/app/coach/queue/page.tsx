@@ -29,7 +29,7 @@ export default async function CoachQueuePage() {
       <header className="pt-2 flex items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
+          <h1 className="font-display text-title md:text-[2.75rem]">
             {t("title")}
           </h1>
           <p className="mt-2 text-fg-dim text-sm">

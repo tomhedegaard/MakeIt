@@ -140,7 +140,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           <span aria-hidden>·</span>
           <span className="numeric">{exercise.slug}</span>
         </div>
-        <h1 className="font-display text-[clamp(2rem,5vw,3rem)] leading-[0.95]">
+        <h1 className="font-display text-title md:text-[2.75rem]">
           {name || t("untitled")}.
         </h1>
       </header>

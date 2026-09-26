@@ -2,7 +2,7 @@
   "eyebrow": "Crew Coaching Pyramid",
   "titleEmpty": "You're not paired yet.",
   "emptyBody": "We pair you next Sunday evening. The buddy system matches you with someone at your tier on complementarity, not similarity. That way you pull each other forward from different angles.",
-  "titleWithHandle": "You and @{handle}",
+  "titleWithHandle": "You and @{handle}.",
   "subtitle": "Tier: {tier} · You'll be learning to coach each other under Munk's supervision.",
   "readinessLabel": "@{handle}'s readiness today",
   "whyLink": "Why this buddy? →",
@@ -25,7 +25,7 @@
     "strong": "Strong 💪",
     "eyes": "Impressed 👀"
   },
-  "whyTitle": "How we paired you with @{handle}",
+  "whyTitle": "How we paired you with @{handle}.",
   "whyTitleEmpty": "No buddy to explain yet.",
   "whyEmptyBody": "We pair you next Sunday. Then there'll be something to show here.",
   "whyIntro": "The algorithm weights complementarity over similarity. These three factors scored highest in your match:",
