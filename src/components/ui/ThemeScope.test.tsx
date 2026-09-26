@@ -4,8 +4,8 @@ import ThemeScope from "./ThemeScope";
 
 describe("ThemeScope", () => {
   it("marks its subtree with the theme and the theme-root hook", () => {
-    const html = renderToStaticMarkup(<ThemeScope theme="kalk">x</ThemeScope>);
-    expect(html).toBe('<div data-theme="kalk" class="theme-root">x</div>');
+    const html = renderToStaticMarkup(<ThemeScope theme="nord">x</ThemeScope>);
+    expect(html).toBe('<div data-theme="nord" class="theme-root">x</div>');
   });
 
   it("merges layout classes", () => {

@@ -11,15 +11,15 @@ type Tab = { href: string; labelKey: string; icon: React.ReactNode; domain?: str
 const Icon = {
   today: (
     <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
-      <path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   ),
   train: <DomainMark domain="body" className="tab-icon" />,
   crew: (
     <svg viewBox="0 0 24 24" fill="none" className="tab-icon" aria-hidden>
-      <circle cx="9" cy="9" r="3" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="17" cy="10" r="2.2" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M3 19c0-3 2.7-5 6-5s6 2 6 5M14 19c0-2 1.5-3.5 4-3.5s3 1 3 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <circle cx="9" cy="9" r="3" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="17" cy="10" r="2.2" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M3 19c0-3 2.7-5 6-5s6 2 6 5M14 19c0-2 1.5-3.5 4-3.5s3 1 3 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   ),
   food: <DomainMark domain="food" className="tab-icon" />,

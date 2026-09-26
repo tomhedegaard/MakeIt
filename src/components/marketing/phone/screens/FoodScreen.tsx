@@ -39,9 +39,9 @@ export default function FoodScreen({ width, scroll = false }: { width?: number; 
         </div>
         <p className="mt-1.5 font-display text-[30px]">
           {s("food.kcal")}{" "}
-          <span className="font-mono text-[10px] font-medium normal-case">{s("food.kcalUnit")}</span>
+          <span className="text-[10px] font-medium">{s("food.kcalUnit")}</span>
         </p>
-        <p className="mt-0.5 font-mono text-[10px]">{s("food.protein")}</p>
+        <p className="mt-0.5 text-[10px]">{s("food.protein")}</p>
         <div data-domain="food" className="mt-[7px] flex h-2 gap-0.5 overflow-hidden rounded-lg">
           <i className="block h-full flex-[27] bg-domain" />
           <i className="block h-full flex-[43] bg-domain/45" />
@@ -58,7 +58,7 @@ export default function FoodScreen({ width, scroll = false }: { width?: number; 
               (i < meals.length - 1 ? " border-b border-line" : "")
             }
           >
-            <span className="font-mono text-[8.5px] uppercase tracking-[0.08em] text-fg-dim">
+            <span className="text-[8.5px] text-fg-dim">
               {m.slot}
             </span>
             <b className="text-[11px] font-medium">{m.dish}</b>
@@ -83,8 +83,8 @@ export default function FoodScreen({ width, scroll = false }: { width?: number; 
             <div data-domain="food" className="mt-2 grid grid-cols-4 items-end gap-2">
               {PROTEIN.map((p) => (
                 <div key={p.key} className="flex flex-col items-center gap-1">
-                  <i style={{ height: p.h }} className="block w-full rounded-[3px] bg-domain" />
-                  <span className="font-mono text-[8.5px] text-fg-dim">{s(`food.${p.key}`)}</span>
+                  <i style={{ height: p.h }} className="block w-full bg-domain" />
+                  <span className="text-[8.5px] text-fg-dim">{s(`food.${p.key}`)}</span>
                 </div>
               ))}
             </div>

@@ -79,10 +79,10 @@ export default function SkipDaysCard({
                 : t("markAria", { day: d.label })
             }
           >
-            <div className="eyebrow text-[10px] mb-0.5">{d.label}</div>
+            <div className="eyebrow text-micro mb-0.5">{d.label}</div>
             <div className="numeric text-base">{d.day}</div>
             {d.skipped ? (
-              <div className="text-[9px] font-mono uppercase tracking-[0.14em] mt-1">
+              <div className="text-micro mt-1">
                 {t("skip")}
               </div>
             ) : null}
@@ -90,7 +90,7 @@ export default function SkipDaysCard({
         ))}
       </div>
       {skipDayIndices.length > 0 ? (
-        <p className="mt-3 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+        <p className="mt-3 text-micro text-fg-faint">
           {t("regenHint")}
         </p>
       ) : null}

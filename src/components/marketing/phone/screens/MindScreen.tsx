@@ -35,14 +35,14 @@ export default function MindScreen({ width, scroll = false }: { width?: number; 
                 (row > 0 ? " border-t border-line" : "")
               }
             >
-              <span className="font-mono text-[9px] tracking-[0.04em]">
+              <span className="text-[9px]">
                 {t(`systems.mind.${scale.key}`)}
               </span>
               {[1, 2, 3, 4, 5].map((n) => (
                 <i
                   key={n}
                   className={
-                    "grid h-5 place-items-center rounded-lg border font-mono text-[9px] not-italic " +
+                    "grid h-5 place-items-center rounded-lg border text-[9px] not-italic" +
                     (n <= scale.filled
                       ? "border-domain bg-domain text-bg-2"
                       : "border-line bg-bg-2 text-fg-dim")
@@ -58,7 +58,7 @@ export default function MindScreen({ width, scroll = false }: { width?: number; 
 
       <div>
         <Label className="mb-[5px]">{s("mind.journal")}</Label>
-        <div className="min-h-[44px] rounded-[10px] border border-line bg-bg-2 px-2.5 py-2 text-[10.5px]">
+        <div className="min-h-[44px] border border-line bg-bg-2 px-2.5 py-2 text-[10.5px]">
           {s("mind.journalEntry")}
         </div>
       </div>

@@ -40,9 +40,9 @@ export default function DecisionScreen({ width, scroll = false }: { width?: numb
             }
           >
             <span className="text-[10.5px]">{row.label}</span>
-            <s className="font-mono text-[10px] text-fg-dim decoration-signal decoration-2">{row.from}</s>
-            <span className="font-mono text-[10px] text-fg-dim">→</span>
-            <b className="font-mono text-[11px] font-semibold">{row.to}</b>
+            <s className="text-[10px] text-fg-dim decoration-signal decoration-2">{row.from}</s>
+            <span className="text-[10px] text-fg-dim">→</span>
+            <b className="text-[11px] font-semibold">{row.to}</b>
           </div>
         ))}
       </div>

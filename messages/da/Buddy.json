@@ -2,7 +2,7 @@
   "eyebrow": "Crew Coaching Pyramid",
   "titleEmpty": "Du er ikke parret endnu.",
   "emptyBody": "Vi parrer dig næste søndag aften. Buddy-systemet matcher dig med en på samme tier ud fra komplementaritet, ikke lighed. Så trækker I hinanden fremad i hver sin retning.",
-  "titleWithHandle": "Du og @{handle}",
+  "titleWithHandle": "Du og @{handle}.",
   "subtitle": "Tier: {tier} · I lærer at coache hinanden under Munks supervision.",
   "readinessLabel": "@{handle}'s readiness i dag",
   "whyLink": "Hvorfor denne buddy? →",
@@ -25,7 +25,7 @@
     "strong": "Stærkt 💪",
     "eyes": "Imponeret 👀"
   },
-  "whyTitle": "Sådan parrede vi dig med @{handle}",
+  "whyTitle": "Sådan parrede vi dig med @{handle}.",
   "whyTitleEmpty": "Ingen buddy at forklare endnu.",
   "whyEmptyBody": "Vi parrer dig næste søndag. Så er der noget at vise her.",
   "whyIntro": "Algoritmen vægter komplementaritet over lighed. Disse tre faktorer scorede højest i jeres match:",

@@ -6,7 +6,7 @@ const page = readFileSync(new URL("../../../app/page.tsx", import.meta.url), "ut
 
 describe("KalkLanding shell", () => {
   it("is a Kalk page scope", () => {
-    expect(src).toContain('<ThemeScope theme="kalk"');
+    expect(src).toContain('<ThemeScope theme="nord"');
   });
 
   it("renders the eight sections in spec order", () => {
@@ -22,7 +22,7 @@ describe("KalkLanding shell", () => {
   it("is rendered unconditionally on / with a light viewport", () => {
     expect(page).toContain("return <KalkLanding />");
     expect(page).not.toMatch(/getLandingVariant|LANDING_VARIANT|ClassicLanding/);
-    expect(page).toMatch(/export const viewport[^=]*=\s*\{[^}]*themeColor:\s*"#E7E9EB"/);
+    expect(page).toMatch(/export const viewport[^=]*=\s*\{[^}]*themeColor:\s*"#FFFFFF"/);
     expect(page).toMatch(/colorScheme:\s*"light"/);
   });
 });

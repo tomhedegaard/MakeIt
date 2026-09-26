@@ -413,7 +413,7 @@ function FormCheckBody({
               </div>
             </div>
 
-            <p className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint mb-5">
+            <p className="text-micro text-fg-faint mb-5">
               {isMockResult
                 ? t("result.mockNote")
                 : t("result.realNote")}
@@ -447,7 +447,7 @@ function FormCheckBody({
               </button>
             </div>
 
-            <p className="mt-4 text-xs font-mono text-fg-faint text-center">
+            <p className="mt-4 text-xs text-fg-faint text-center">
               {t("result.coachReviewNote")}
             </p>
           </div>
@@ -472,14 +472,14 @@ function QuotaLine({
   return (
     <div
       className={cn(
-        "mb-6 px-3 py-2 rounded-lg surface text-xs font-mono uppercase tracking-[0.14em] flex items-center justify-between gap-3",
+        "mb-6 px-3 py-2 rounded-lg surface text-xs flex items-center justify-between gap-3",
         blocked ? "text-fg" : "text-fg-dim",
       )}
     >
       <span>
         {t("quota.used", { used: quota.used, limit: quota.limit })}
       </span>
-      <span className="text-fg-faint normal-case tracking-normal">
+      <span className="text-fg-faint">
         {describeReset(quota.resetsAt)}
       </span>
     </div>
@@ -505,7 +505,7 @@ function UpgradeCta({
           {t("upgrade.body")}
         </div>
       </Link>
-      <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint text-center">
+      <div className="text-micro text-fg-faint text-center">
         {t("upgrade.orWait")}
       </div>
     </div>
@@ -514,7 +514,7 @@ function UpgradeCta({
 
 function ProgressLine({ value }: { value: number }) {
   return (
-    <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+    <div className="h-1.5 bg-bg-3 overflow-hidden">
       <div
         className="h-full bg-fg transition-all"
         style={{ width: `${value}%`, transitionDuration: "180ms" }}
@@ -536,7 +536,7 @@ function Step({
     <li className="flex items-center gap-3">
       <span
         className={cn(
-          "size-5 rounded-full border flex items-center justify-center text-[10px]",
+          "size-5 rounded-full border flex items-center justify-center text-micro",
           done
             ? "bg-fg text-bg border-fg"
             : active
@@ -567,7 +567,7 @@ function Card({
         <div className="eyebrow">{title}</div>
         <span
           className={cn(
-            "text-[10px] font-mono uppercase tracking-[0.14em] rounded-full px-2 py-0.5 border",
+            "text-micro px-2 py-0.5 border",
             kind === "pos" ? "border-line-strong text-fg" : "border-line-strong text-fg-dim"
           )}
         >

@@ -49,7 +49,7 @@ export default function PhoneFrame({
     <div
       role={interactive || scroll ? "group" : "img"}
       aria-label={label}
-      className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--pw)*0.13)] bg-bg text-[11px] leading-[1.4] text-fg"
+      className="relative flex h-full flex-col overflow-hidden bg-bg text-[11px] leading-[1.4] text-fg"
     >
       <PhoneStatusBar />
       {scroll ? (
@@ -82,7 +82,7 @@ export default function PhoneFrame({
     <div
       style={{ "--pw": `${width}px` } as CSSProperties}
       className={cn(
-        "relative aspect-[9/19.5] w-[var(--pw)] flex-none rounded-[calc(var(--pw)*0.16)] bg-fg p-[calc(var(--pw)*0.032)]",
+        "relative aspect-[9/19.5] w-[var(--pw)] flex-none bg-fg p-[calc(var(--pw)*0.032)]",
         "shadow-[0_40px_60px_-30px_color-mix(in_oklab,var(--fg)_45%,transparent),0_12px_24px_-12px_color-mix(in_oklab,var(--fg)_30%,transparent)]",
         className,
       )}
@@ -97,7 +97,7 @@ export default function PhoneFrame({
       {/* Island sits on the bezel, outside any Nat block, so it stays ink. */}
       <i
         aria-hidden="true"
-        className="absolute left-1/2 top-[calc(var(--pw)*0.032_+_9px)] z-10 h-6 w-[31%] -translate-x-1/2 rounded-[14px] bg-fg"
+        className="absolute left-1/2 top-[calc(var(--pw)*0.032_+_9px)] z-10 h-6 w-[31%] -translate-x-1/2 bg-fg"
       />
     </div>
   );
@@ -160,17 +160,17 @@ export function PhoneTabBar({
           <span
             key={key}
             className={cn(
-              "relative flex flex-col items-center gap-[3px] pt-[5px] font-mono text-[8px] tracking-[0.04em]",
+              "relative flex flex-col items-center gap-[3px] pt-[5px] text-[8px]",
               on ? "font-medium text-fg" : "text-fg-dim",
             )}
           >
-            {on ? <i className="absolute -top-[9px] h-[3px] w-[22px] rounded-b-[3px] bg-signal" /> : null}
+            {on ? <i className="absolute -top-[9px] h-[3px] w-[22px] bg-signal" /> : null}
             <TabGlyph tab={key} />
             {tabLabel[key]}
           </span>
         );
       })}
-      <i className="absolute bottom-1.5 left-1/2 h-1 w-[34%] -translate-x-1/2 rounded-[3px] bg-fg opacity-85" />
+      <i className="absolute bottom-1.5 left-1/2 h-1 w-[34%] -translate-x-1/2 bg-fg opacity-85" />
     </div>
   );
 }

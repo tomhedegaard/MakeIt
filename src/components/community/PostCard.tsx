@@ -109,22 +109,22 @@ export default function PostCard({ post }: { post: FeedPost }) {
     <article className="surface-2 rounded-2xl p-5 lift">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
+          <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
             {post.who.slice(1, 3).toUpperCase()}
           </div>
           <div className="min-w-0">
             <div className="text-sm truncate">{post.who}</div>
-            <div className="eyebrow text-[10px]">{post.tier}</div>
+            <div className="eyebrow text-micro">{post.tier}</div>
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {post.isPr ? (
-            <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-micro border hairline-strong px-2 py-0.5">
               {t("prBadge")}
             </span>
           ) : null}
           {post.formcheck ? (
-            <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-micro border hairline-strong px-2 py-0.5">
               AI
             </span>
           ) : null}
@@ -136,7 +136,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
         <MentionText text={post.content} />
       </p>
 
-      <div className="border-t hairline pt-3 flex items-center gap-1 text-xs font-mono text-fg-dim">
+      <div className="border-t hairline pt-3 flex items-center gap-1 text-xs text-fg-dim">
         <button
           type="button"
           onClick={handleToggleReaction}
@@ -177,20 +177,20 @@ export default function PostCard({ post }: { post: FeedPost }) {
       {expanded ? (
         <div className="mt-4 border-t hairline pt-4 space-y-4">
           {loadingComments ? (
-            <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+            <p className="text-xs text-fg-faint">
               {t("loadingComments")}
             </p>
           ) : comments && comments.length > 0 ? (
             <ul className="space-y-3">
               {comments.map((c) => (
                 <li key={c.id} className="flex gap-3">
-                  <div className="size-7 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
+                  <div className="size-7 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
                     {c.who.slice(1, 3).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-sm">{c.who}</span>
-                      <span className="numeric text-[10px] text-fg-faint">
+                      <span className="numeric text-micro text-fg-faint">
                         {c.whenLabel}
                       </span>
                     </div>
@@ -202,7 +202,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
               ))}
             </ul>
           ) : (
-            <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+            <p className="text-xs text-fg-faint">
               {t("noComments")}
             </p>
           )}
@@ -225,7 +225,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
             </button>
           </form>
 
-          <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+          <p className="text-micro text-fg-faint">
             {t("mentionHint")}
           </p>
         </div>

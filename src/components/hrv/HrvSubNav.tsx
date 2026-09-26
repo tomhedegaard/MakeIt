@@ -27,7 +27,7 @@ export default function HrvSubNav() {
   return (
     <nav
       aria-label={t("aria")}
-      className="flex items-center gap-5 text-[11px] font-mono uppercase tracking-[0.14em]"
+      className="flex items-center gap-5 text-micro"
     >
       {LINKS.map((link) => {
         const active =

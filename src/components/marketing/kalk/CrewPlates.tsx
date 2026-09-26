@@ -77,8 +77,8 @@ export default function CrewPlates() {
         />
 
         <div className="mt-3.5 grid gap-3.5 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-          <div className="rounded-[14px] border border-line bg-bg-2 p-[clamp(20px,2.6vw,32px)]">
-            <p className="flex justify-between gap-3 font-mono text-[12px] uppercase tracking-[0.06em] text-fg-dim">
+          <div className="border border-line bg-bg-2 p-[clamp(20px,2.6vw,32px)]">
+            <p className="flex justify-between gap-3 text-[12px] text-fg-dim">
               <span>{current.name}</span>
               <span>{t("meterNote")}</span>
             </p>
@@ -94,7 +94,7 @@ export default function CrewPlates() {
                 >
                   <i style={{ width: `${progress.ratio * 100}%` }} className="block h-full rounded-md bg-fg" />
                 </div>
-                <p className="mt-2.5 flex justify-between font-mono text-[12px] text-fg-dim">
+                <p className="mt-2.5 flex justify-between text-[12px] text-fg-dim">
                   <span>{current.name}</span>
                   <span>{next.name}</span>
                 </p>
@@ -102,8 +102,8 @@ export default function CrewPlates() {
             ) : null}
           </div>
 
-          <div className="rounded-[14px] border border-line bg-bg-2 p-[clamp(20px,2.6vw,32px)]">
-            <p className="font-mono text-[12px] uppercase tracking-[0.06em] text-fg-dim">{t("earnHeading")}</p>
+          <div className="border border-line bg-bg-2 p-[clamp(20px,2.6vw,32px)]">
+            <p className="text-[12px] text-fg-dim">{t("earnHeading")}</p>
             <ul className="mt-2.5 list-none p-0">
               {(["sessions", "formChecks", "prs", "help"] as const).map((key) => (
                 <li key={key} className="border-b border-line py-[11px] text-base last:border-b-0">

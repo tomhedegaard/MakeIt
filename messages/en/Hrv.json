@@ -32,7 +32,7 @@
   },
   "trends": {
     "eyebrow": "Recovery",
-    "title": "Trend",
+    "title": "Trend.",
     "subtitle": "Your HRV over time: the daily reading, your 7-day mean and your normal range.",
     "empty": {
       "title": "No readings yet",
@@ -60,7 +60,7 @@
   },
   "learn": {
     "eyebrow": "Recovery",
-    "title": "Learn",
+    "title": "Learn.",
     "subtitle": "What HRV is, why we show it the way we do, and what the number means for you.",
     "sections": {
       "what": {
@@ -87,7 +87,7 @@
   },
   "insights": {
     "eyebrow": "HRV",
-    "title": "Insight",
+    "title": "Insight.",
     "subtitle": "Your weekly observation and what your lifestyle seems to be telling you.",
     "empty": "Your first weekly insight is written on Sunday evening, as soon as you have 14 days of data from your wearable.",
     "provenanceAuto": "Written automatically.",
@@ -96,7 +96,7 @@
   },
   "page": {
     "eyebrow": "Heart",
-    "title": "HRV",
+    "title": "HRV.",
     "subtitle": "Your heart-rate variability: a daily read on how ready your body is to train.",
     "connectEyebrow": "Get started",
     "connectTitle": "Let HRV run in the background.",
@@ -157,7 +157,7 @@
   },
   "learnAdaptive": {
     "eyebrow": "Recovery",
-    "title": "How HQ thinks",
+    "title": "How HQ thinks.",
     "subtitle": "See the full decision chain behind a daily session adjustment, and try changing the signals yourself.",
     "hero": {
       "p1": "HQ adjusts today's session from four things: your HRV reading, your sleep, last session's RPE, and your latest form checks. It fires every morning at 05:30, and you see the result when you open the session.",

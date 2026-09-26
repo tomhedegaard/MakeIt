@@ -17,7 +17,7 @@ export default function AccessPanel() {
       <div className="mx-auto max-w-[1360px] px-4 md:px-8">
         <div
           data-theme="nat"
-          className="grid items-end gap-[clamp(32px,5vw,80px)] rounded-[14px] bg-bg p-[clamp(28px,5vw,72px)] text-fg lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]"
+          className="grid items-end gap-[clamp(32px,5vw,80px)] bg-bg p-[clamp(28px,5vw,72px)] text-fg lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]"
         >
           <div>
             <p className="eyebrow mb-5 inline-flex items-center gap-2.5 before:h-0.5 before:w-7 before:bg-fg">

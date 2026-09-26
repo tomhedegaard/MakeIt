@@ -21,7 +21,7 @@ export default async function TermsPage() {
         </Link>
 
         <div className="eyebrow mb-3">{t("eyebrow")}</div>
-        <h1 className="font-display text-4xl md:text-6xl mb-6 leading-[0.95]">
+        <h1 className="font-display text-title md:text-[2.75rem] mb-6">
           {t("title")}
         </h1>
         <p className="text-fg-dim text-base leading-relaxed mb-10">
@@ -97,7 +97,7 @@ export default async function TermsPage() {
           </p>
         </Section>
 
-        <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint mt-16">
+        <p className="text-xs text-fg-faint mt-16">
           {COMPANY.legal.entity ?? COMPANY.name}
           {COMPANY.legal.address ? ` · ${COMPANY.legal.address}` : ""}
         </p>

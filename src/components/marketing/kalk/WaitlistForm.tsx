@@ -28,7 +28,7 @@ export default function WaitlistForm() {
 
   return (
     <form action={onSubmit} className="mt-8">
-      <label htmlFor="access-email" className="mb-2.5 block font-mono text-xs uppercase tracking-[0.1em] text-fg-dim">
+      <label htmlFor="access-email" className="mb-2.5 block text-xs text-fg-dim">
         {t("emailLabel")}
       </label>
       <div className="flex flex-wrap gap-2.5">
@@ -51,7 +51,7 @@ export default function WaitlistForm() {
           {pending ? t("pending") : t("cta")}
         </button>
       </div>
-      <p id="access-status" aria-live="polite" className="mt-3 min-h-[1.5em] font-mono text-xs text-fg-dim">
+      <p id="access-status" aria-live="polite" className="mt-3 min-h-[1.5em] text-xs text-fg-dim">
         {state === "done" ? t("done") : state === "error" ? t("error") : ""}
       </p>
       <p id="access-fine" className="mt-1 text-sm text-fg-dim">

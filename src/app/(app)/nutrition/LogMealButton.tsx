@@ -88,7 +88,7 @@ export default function LogMealButton({
                   {mealTitle ?? t("freeMeal")}
                 </h3>
                 {slot ? (
-                  <div className="text-xs text-fg-faint mt-1 font-mono">
+                  <div className="text-xs text-fg-faint mt-1">
                     {t("slotDate", { slot: ts(slot), date: dateIso })}
                   </div>
                 ) : null}

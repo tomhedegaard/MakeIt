@@ -61,7 +61,7 @@ export default async function BillingPage({
             </section>
           ) : null}
 
-          <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+          <p className="text-xs text-fg-faint">
             {t("native.note")}
           </p>
         </Container>
@@ -129,7 +129,7 @@ export default async function BillingPage({
                 </button>
               </form>
             )}
-            <p className="text-xs font-mono text-fg-faint self-center">
+            <p className="text-xs text-fg-faint self-center">
               {t("crew.secureCheckout")}
             </p>
           </div>
@@ -166,7 +166,7 @@ export default async function BillingPage({
                 </button>
               </form>
             )}
-            <p className="text-xs font-mono text-fg-faint self-center">
+            <p className="text-xs text-fg-faint self-center">
               {t("oneOnOne.requiresCrew")}
             </p>
           </div>
@@ -200,7 +200,7 @@ function StatusPill({
 }) {
   if (!sub) {
     return (
-      <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 shrink-0 text-fg-dim">
+      <span className="numeric text-micro border hairline-strong px-2 py-0.5 shrink-0 text-fg-dim">
         {t("status.notActivated")}
       </span>
     );
@@ -210,7 +210,7 @@ function StatusPill({
   const isOk = sub.status === "active" || sub.status === "trialing";
   return (
     <span
-      className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 shrink-0 inline-flex items-center gap-1.5"
+      className="numeric text-micro border hairline-strong px-2 py-0.5 shrink-0 inline-flex items-center gap-1.5"
       style={{ color: isOk ? "var(--fg)" : "var(--fg-dim)" }}
     >
       {isOk ? <span className="size-1.5 rounded-full bg-fg" /> : null}

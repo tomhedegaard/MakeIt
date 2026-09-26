@@ -100,11 +100,11 @@ export default function ScreenRack({
       <div className="mx-auto flex max-w-[1360px] flex-wrap items-end justify-between gap-6 px-4 md:px-8">
         {head}
         <div className="flex items-center gap-2.5">
-          <span aria-hidden="true" data-rack-count className="mr-1 font-mono text-[11px] tabular-nums tracking-[0.08em] text-fg-dim">
+          <span aria-hidden="true" data-rack-count className="mr-1 text-[11px] tabular-nums text-fg-dim">
             {pad(seenTo + 1)} / {pad(total)}
           </span>
           {tag ? (
-            <span className="rounded-full border border-line-bright px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-fg-dim">
+            <span className="border border-line-bright px-2.5 py-1 text-[10px] text-fg-dim">
               {tag}
             </span>
           ) : null}
@@ -121,7 +121,7 @@ export default function ScreenRack({
         onKeyDown={onKeyDown}
         className={cn(
           "mt-9 flex snap-x snap-mandatory list-none gap-[clamp(24px,3vw,48px)] overflow-x-auto overscroll-x-contain pb-[30px] pt-2.5",
-          "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus-visible:rounded-[14px] focus-visible:outline-offset-[-3px]",
+          "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus-visible:outline-offset-[-3px]",
           GUTTER,
         )}
       >

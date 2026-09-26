@@ -117,7 +117,7 @@ function StateProvisional({
         <p className="text-fg-dim text-sm md:text-base leading-relaxed mt-6 max-w-md">
           {copy.buildingBody}
         </p>
-        <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-4">
+        <p className="text-micro text-fg-faint mt-4">
           {copy.disclaimer}
         </p>
       </div>
@@ -172,7 +172,7 @@ function StateActive({
         </div>
         <div className="px-6 py-7 md:px-8 md:py-9">
           <TrendChart readings={series} />
-          <div className="flex items-center gap-4 mt-4 text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+          <div className="flex items-center gap-4 mt-4 text-micro text-fg-faint">
             <span>{copy.legendBand}</span>
             <span>{copy.legendAvg}</span>
           </div>
@@ -184,7 +184,7 @@ function StateActive({
               {band.engineCue === "below" ? copy.engineBelow : copy.engineAbove}
             </p>
           ) : null}
-          <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-4">
+          <p className="text-micro text-fg-faint mt-4">
             {copy.disclaimer}
           </p>
         </div>
@@ -203,7 +203,7 @@ function StateActive({
                 <span className="text-xs text-fg-dim w-24 shrink-0">
                   {t(`distribution.bucket.${bucket}`)}
                 </span>
-                <div className="flex-1 h-2 rounded-full bg-line overflow-hidden">
+                <div className="flex-1 h-2 bg-line overflow-hidden">
                   <div
                     className="h-full bg-fg"
                     style={{ width: `${Math.max(share * 100, share > 0 ? 2 : 0)}%` }}

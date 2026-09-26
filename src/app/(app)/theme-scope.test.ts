@@ -8,28 +8,28 @@ const sessionLoading = readFileSync(new URL("./session/[id]/loading.tsx", import
 const appLoading = readFileSync(new URL("./loading.tsx", import.meta.url), "utf8");
 
 describe("app theme scopes (spec §2, §6)", () => {
-  it("gives the Kalk wrapper a definite mobile height so the tab bar stays pinned", () => {
+  it("gives the Nord wrapper a definite mobile height so the tab bar stays pinned", () => {
     // flex-1 (basis 0) in the auto-height body let the wrapper grow to
     // content height, pushing the tab bar below the fold.
-    const cls = layout.match(/<ThemeScope theme="kalk" className="([^"]+)"/)?.[1] ?? "";
+    const cls = layout.match(/<ThemeScope theme="nord" className="([^"]+)"/)?.[1] ?? "";
     expect(cls.split(" ")).toEqual(expect.arrayContaining(["h-dvh", "lg:h-auto", "lg:minh-dvh", "lg:flex-1"]));
     // Desktop keeps growing with content (sticky sidebar, page scroll).
     expect(cls.split(" ")).not.toContain("flex-1");
   });
 
-  it("runs the member app in Kalk with a light browser chrome", () => {
-    expect(layout).toContain('<ThemeScope theme="kalk"');
-    expect(layout).toMatch(/export const viewport[\s\S]*?themeColor: "#E7E9EB"/);
+  it("runs the member app in Nord lys with a light browser chrome", () => {
+    expect(layout).toContain('<ThemeScope theme="nord"');
+    expect(layout).toMatch(/export const viewport[\s\S]*?themeColor: "#FFFFFF"/);
   });
 
   it("keeps the live session in Nat with a dark browser chrome", () => {
     expect(session).toContain('<ThemeScope theme="nat"');
-    expect(session).toMatch(/export const viewport[\s\S]*?themeColor: "#0A0A0B"/);
+    expect(session).toMatch(/export const viewport[\s\S]*?themeColor: "#111111"/);
   });
 
   // Next merges metadata shallowly: a segment's appleWebApp replaces the
   // root object wholesale, so capable + title must be restated.
-  it("gives the iOS PWA dark status text on Kalk and light text in the session", () => {
+  it("gives the iOS PWA dark status text on Nord lys and light text in the session", () => {
     expect(layout).toMatch(
       /export const metadata[\s\S]*?appleWebApp: \{[^}]*capable: true[^}]*statusBarStyle: "default"[^}]*title: COMPANY\.name/,
     );

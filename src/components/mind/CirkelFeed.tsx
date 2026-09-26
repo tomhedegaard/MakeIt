@@ -32,17 +32,17 @@ export default function CirkelFeed({ posts }: { posts: Post[] }) {
           {p.mind_share ? (
             <div className="flex flex-wrap gap-2 text-xs text-fg-dim">
               {p.mind_share.energy !== undefined ? (
-                <span className="rounded-full border hairline px-2.5 py-1">
+                <span className="border hairline px-2.5 py-1">
                   {t("energy", { value: p.mind_share.energy })}
                 </span>
               ) : null}
               {p.mind_share.stress !== undefined ? (
-                <span className="rounded-full border hairline px-2.5 py-1">
+                <span className="border hairline px-2.5 py-1">
                   {t("stress", { value: p.mind_share.stress })}
                 </span>
               ) : null}
               {p.mind_share.focus !== undefined ? (
-                <span className="rounded-full border hairline px-2.5 py-1">
+                <span className="border hairline px-2.5 py-1">
                   {t("focus", { value: p.mind_share.focus })}
                 </span>
               ) : null}

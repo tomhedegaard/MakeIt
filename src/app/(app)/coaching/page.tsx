@@ -102,7 +102,7 @@ export default async function TrainPage() {
         <PageTitle kicker={t("header.eyebrow")} title={t("header.title")} />
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
           <span data-identity="coach" className="eyebrow">{t("header.coachChip")}</span>
-          <span data-identity="motor" className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+          <span data-identity="motor" className="text-micro text-fg-faint">
             {t("header.motorChip")}
           </span>
         </div>
@@ -132,9 +132,9 @@ export default async function TrainPage() {
                   {String(day.date).padStart(2, "0")}
                 </div>
                 <div
-                  className={`text-[10px] font-mono uppercase tracking-[0.14em] ${
-                    day.rest ? "text-fg-faint" : "text-fg-dim"
-                  }`}
+                  className={`text-micro ${
+ day.rest ? "text-fg-faint" : "text-fg-dim"
+ }`}
                 >
                   {day.sessionLabel || t("week.rest")}
                 </div>
@@ -244,7 +244,7 @@ export default async function TrainPage() {
               <div className="eyebrow">{t("active.weeks")}</div>
             </div>
           </div>
-          <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-bg-3 overflow-hidden">
             <div
               className="h-full bg-fg"
               style={{
@@ -277,7 +277,7 @@ export default async function TrainPage() {
       <section id="programs">
         <div className="flex items-end justify-between mb-3">
           <div className="eyebrow">{t("library.eyebrow")}</div>
-          <span className="text-xs font-mono text-fg-faint">{library.length}</span>
+          <span className="text-xs text-fg-faint">{library.length}</span>
         </div>
 
         <ul className="space-y-3">
@@ -289,7 +289,7 @@ export default async function TrainPage() {
                     <div className="eyebrow mb-2">
                       {p.code} · {p.type}
                       {p.active && p.currentWeek ? (
-                        <span className="ml-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border hairline-strong">
+                        <span className="ml-2 inline-flex items-center gap-1.5 px-2 py-0.5 border hairline-strong">
                           <span className="size-1.5 rounded-full bg-fg" />{" "}
                           {t("library.activeBadge", { week: p.currentWeek })}
                         </span>
@@ -444,13 +444,13 @@ function MiniWithTrend({
       </div>
       {trend ? (
         <div
-          className={`mt-0.5 text-[10px] font-mono ${
-            trend.direction === "up"
-              ? "text-fg"
-              : trend.direction === "down"
-              ? "text-fg-dim"
-              : "text-fg-faint"
-          }`}
+          className={`mt-0.5 text-micro ${
+ trend.direction === "up"
+ ? "text-fg"
+ : trend.direction === "down"
+ ? "text-fg-dim"
+ : "text-fg-faint"
+ }`}
         >
           {trend.label}
         </div>

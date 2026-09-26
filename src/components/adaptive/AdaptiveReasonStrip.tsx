@@ -36,11 +36,11 @@ export default function AdaptiveReasonStrip({
       data-engine-strip=""
       className="group border-t hairline"
     >
-      <summary className="cursor-pointer list-none px-5 py-3 select-none touch-app hover:bg-bg-3/60">
+      <summary className="cursor-pointer list-none px-5 py-3 select-none touch-app hover:bg-bg-2">
         <div className="flex items-center gap-3">
           <MotorGlyph className="text-fg-dim" />
           <span className="eyebrow flex-1">{copy.role}</span>
-          <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint hidden sm:inline">
+          <span className="text-micro text-fg-faint hidden sm:inline">
             {copy.attribution}
           </span>
           <span
@@ -52,14 +52,14 @@ export default function AdaptiveReasonStrip({
         </div>
         <p
           data-engine-gloss=""
-          className="mt-1.5 pl-8 text-sm text-fg-dim leading-relaxed"
+          className="mt-1.5 pl-8 text-copy text-fg-body"
         >
           {copy.gloss}
         </p>
       </summary>
 
       <div className="px-5 pb-4 space-y-3">
-        <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint sm:hidden">
+        <div className="flex items-center gap-2 text-micro text-fg-faint sm:hidden">
           <MotorGlyph className="size-3" />
           <span>{copy.attribution}</span>
         </div>
@@ -67,12 +67,12 @@ export default function AdaptiveReasonStrip({
         {model.munkNote ? (
           <p
             data-munk-note=""
-            className="text-sm text-fg-dim leading-relaxed"
+            className="text-copy text-fg-body"
           >
             <span className="flex items-center gap-2 mb-1">
               <MunkMark />
               <span className="eyebrow">{copy.munkRole}</span>
-              <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+              <span className="text-micro text-fg-faint">
                 {copy.munkNoteLabel}
               </span>
             </span>
@@ -99,7 +99,7 @@ export default function AdaptiveReasonStrip({
                   className="size-4 text-domain"
                 />
               </span>
-              <span className="text-sm text-fg-dim leading-relaxed">
+              <span className="text-copy text-fg-body">
                 {copy.steps[step.key]}
               </span>
             </li>

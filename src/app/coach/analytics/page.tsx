@@ -20,7 +20,7 @@ export default async function CoachAnalyticsPage() {
       <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">
+          <h1 className="font-display text-title md:text-[2.75rem]">
             {t("title")}
           </h1>
           <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
@@ -65,21 +65,21 @@ export default async function CoachAnalyticsPage() {
       <section className="surface-2 rounded-xl px-5 py-4 flex flex-wrap items-center gap-x-6 gap-y-2">
         <div className="flex items-baseline gap-2">
           <span className="numeric text-3xl">{activePct}%</span>
-          <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
+          <span className="text-xs text-fg-dim">
             {t("trainedLastWeek")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
           <span className="numeric text-2xl">{noProgramCount}</span>
-          <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
+          <span className="text-xs text-fg-dim">
             {t("noActiveProgram")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
           <span className="numeric text-2xl">{onboarding.pct}%</span>
-          <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
+          <span className="text-xs text-fg-dim">
             {t("completedOnboarding")}
           </span>
         </div>
@@ -94,7 +94,7 @@ export default async function CoachAnalyticsPage() {
               <div className="eyebrow mb-1">{t("atRiskEyebrow")}</div>
               <h2 className="font-display text-2xl">{t("atRiskTitle")}</h2>
             </div>
-            <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-micro border hairline-strong px-2 py-0.5">
               {atRisk.length}
             </span>
           </div>
@@ -111,12 +111,12 @@ export default async function CoachAnalyticsPage() {
                     className="block px-5 py-3 flex items-center gap-4 hover:bg-bg-3"
                   >
                     <BucketDot bucket={m.bucket} />
-                    <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
+                    <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
                       {m.handle.slice(0, 2).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm">@{m.handle}</div>
-                      <div className="text-[11px] font-mono text-fg-faint">
+                      <div className="text-micro text-fg-faint">
                         {m.tier} · {m.programCode ?? t("noProgram")}
                       </div>
                     </div>
@@ -124,7 +124,7 @@ export default async function CoachAnalyticsPage() {
                       <div className="numeric text-sm">
                         {m.daysSinceLastSession === null ? "—" : `${m.daysSinceLastSession}d`}
                       </div>
-                      <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                      <div className="text-micro text-fg-faint">
                         {m.daysSinceLastSession === null ? t("neverTrained") : t("since")}
                       </div>
                     </div>
@@ -151,7 +151,7 @@ export default async function CoachAnalyticsPage() {
                     {t.count} · {t.pct}%
                   </span>
                 </div>
-                <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-bg-3 overflow-hidden">
                   <div
                     className="h-full bg-fg"
                     style={{ width: `${Math.max(2, t.pct)}%` }}
@@ -162,10 +162,10 @@ export default async function CoachAnalyticsPage() {
             ))}
           </ul>
           <div className="pt-3 border-t hairline">
-            <div className="text-[11px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+            <div className="text-micro text-fg-faint">
               {t("tierThresholdsLabel")}
             </div>
-            <div className="text-[11px] font-mono text-fg-dim mt-1.5 leading-relaxed">
+            <div className="text-micro text-fg-dim mt-1.5 leading-relaxed">
               {t("tierThresholds")}
             </div>
           </div>
@@ -202,8 +202,8 @@ export default async function CoachAnalyticsPage() {
                     aria-hidden
                   />
                 </div>
-                <div className="numeric text-[11px] mt-1.5">{w.count}</div>
-                <div className="text-[9px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+                <div className="numeric text-micro mt-1.5">{w.count}</div>
+                <div className="text-micro text-fg-faint">
                   {w.weekLabel}
                 </div>
               </li>
@@ -238,7 +238,7 @@ function BucketKPI({
         {label}
       </div>
       <div className="numeric text-3xl lg:text-4xl">{value}</div>
-      <div className="text-[11px] font-mono text-fg-faint mt-1">{pct}%</div>
+      <div className="text-micro text-fg-faint mt-1">{pct}%</div>
     </div>
   );
 }

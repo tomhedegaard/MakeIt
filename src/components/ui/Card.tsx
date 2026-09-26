@@ -32,7 +32,7 @@ export default function Card({
       "data-card": variant,
       "data-domain": domain,
       className: cn(
-        "bg-bg-2 rounded-[14px] p-5 border",
+        "bg-bg-2 p-5 border",
         variant === "primary" ? "border-line-strong" : "border-line",
         className,
       ),

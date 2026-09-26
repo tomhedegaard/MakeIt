@@ -39,7 +39,7 @@ export default async function CoachOverviewPage() {
       <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">
+          <h1 className="font-display text-title md:text-[2.75rem]">
             {t("title")}
           </h1>
           <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
@@ -59,7 +59,7 @@ export default async function CoachOverviewPage() {
             <h2 className="font-display text-2xl">{tInbox("sectionTitle")}</h2>
           </div>
           {inbox.items.length > 0 ? (
-            <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-micro border hairline-strong px-2 py-0.5">
               {tInbox("count", { count: inbox.items.length })}
             </span>
           ) : null}
@@ -104,12 +104,12 @@ export default async function CoachOverviewPage() {
             <ul className="divide-y hairline">
               {recentlyActive.map((m) => (
                 <li key={m.id} className="px-5 py-3 flex items-center gap-4">
-                  <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
+                  <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
                     {m.handle.slice(0, 2).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm">@{m.handle}</div>
-                    <div className="text-[11px] font-mono text-fg-faint">
+                    <div className="text-micro text-fg-faint">
                       {m.programCode
                         ? t("memberWithProgram", { programCode: m.programCode, programWeek: m.programWeek ?? "" })
                         : t("memberNoProgram")}
@@ -136,7 +136,7 @@ export default async function CoachOverviewPage() {
               <h2 className="font-display text-2xl">{t("queueTitle")}</h2>
             </div>
             {pending.length > 0 ? (
-              <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+              <span className="numeric text-micro border hairline-strong px-2 py-0.5">
                 {pending.length}
               </span>
             ) : null}

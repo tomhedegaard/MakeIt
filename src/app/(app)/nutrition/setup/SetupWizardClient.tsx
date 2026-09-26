@@ -128,19 +128,19 @@ export default function SetupWizardClient() {
               className="field text-2xl numeric pr-12"
               autoComplete="off"
             />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono uppercase text-fg-faint">
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-fg-faint">
               kg
             </span>
           </div>
         </label>
-        <p className="mt-3 text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+        <p className="mt-3 text-xs text-fg-faint">
           {t("weightTiming")}
         </p>
       </Section>
 
       <div className="border-t hairline pt-6 flex flex-wrap items-center gap-4">
         <SubmitButton />
-        <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+        <p className="text-xs text-fg-faint">
           {t("submitTiming")}
         </p>
       </div>
@@ -195,7 +195,7 @@ function Section({
   return (
     <section>
       <div className="flex items-baseline gap-3 mb-2">
-        <span className="numeric text-xs font-mono uppercase tracking-[0.16em] text-fg-faint">
+        <span className="numeric text-xs text-fg-faint">
           {num}
         </span>
         <h2 className="font-display text-2xl md:text-3xl">{title}</h2>

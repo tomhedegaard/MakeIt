@@ -7,13 +7,13 @@ const css = `
   --bg: #0A0A0B;
   --fg: #F5F2EC; /* comment */
 }
-html:has(.theme-root[data-theme="kalk"]),
-[data-theme="kalk"] {
+html:has(.theme-root[data-theme="nord"]),
+[data-theme="nord"] {
   --bg: #E7E9EB;
   --heart-tint: color-mix(in oklab, var(--heart) 12%, transparent);
 }
 @media (prefers-reduced-motion: reduce) {
-  [data-theme="kalk"] { --grain-anim: none; }
+  [data-theme="nord"] { --grain-anim: none; }
 }
 .btn { color: var(--fg); }
 `;
@@ -27,7 +27,7 @@ describe("readThemeTokens", () => {
   });
 
   it("merges every block that lists the selector, later wins", () => {
-    const kalk = readThemeTokens(css, '[data-theme="kalk"]');
+    const kalk = readThemeTokens(css, '[data-theme="nord"]');
     expect(kalk["--bg"]).toBe("#E7E9EB");
     expect(kalk["--heart-tint"]).toBe("color-mix(in oklab, var(--heart) 12%, transparent)");
     expect(kalk["--grain-anim"]).toBe("none");

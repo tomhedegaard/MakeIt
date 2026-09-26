@@ -215,7 +215,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
                   })}
                 </span>
                 {ex.id ? null : (
-                  <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+                  <span className="numeric text-micro border hairline-strong px-2 py-0.5">
                     {t("newBadge")}
                   </span>
                 )}
@@ -371,7 +371,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
             {t("back")}
           </Link>
           {saved ? (
-            <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-dim">
+            <span className="text-micro text-fg-dim">
               {t("saved")}
             </span>
           ) : null}

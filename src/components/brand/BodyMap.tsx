@@ -46,7 +46,7 @@ export default async function BodyMap() {
                   className="size-6 text-domain shrink-0"
                 />
                 <span className="min-w-0">
-                  <span className="numeric text-[10px] text-domain mr-1.5">
+                  <span className="numeric text-micro text-domain mr-1.5">
                     {item.num}
                   </span>
                   <span className="eyebrow eyebrow-domain">

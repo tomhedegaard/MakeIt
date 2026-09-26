@@ -68,7 +68,7 @@ describe("/train/exercises category chips", () => {
 
   it("keeps the ?category= link pattern and raises the chips to 44px", () => {
     expect(src).toContain("?category=");
-    expect(src).toContain("inline-flex min-h-11 items-center px-4 rounded-full");
+    expect(src).toContain("inline-flex min-h-11 items-center px-4");
     expect(src).not.toContain("px-3 py-1.5 rounded-full");
   });
 });

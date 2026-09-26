@@ -70,14 +70,14 @@ export default function MentalToggleRow({
         role="switch"
         aria-checked={value}
         aria-label={title}
-        className={`relative w-12 h-7 rounded-full transition-colors shrink-0 ${
-          value ? "bg-fg" : "bg-bg-2 border hairline"
-        } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
+        className={`relative w-12 h-7 transition-colors shrink-0 ${
+ value ? "bg-fg" : "bg-bg-2 border hairline"
+ } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
       >
         <span
           className={`absolute top-0.5 w-6 h-6 rounded-full bg-bg transition-transform shadow ${
-            value ? "translate-x-5" : "translate-x-0.5"
-          }`}
+ value ? "translate-x-5" : "translate-x-0.5"
+ }`}
         />
       </button>
     </div>

@@ -92,11 +92,11 @@ function FilterPill({
   return (
     <Link
       href={href}
-      className={`inline-flex min-h-11 items-center px-4 rounded-full text-xs font-mono uppercase tracking-[0.14em] border hairline transition-colors ${
-        active
-          ? "bg-fg text-bg border-transparent"
-          : "text-fg-dim hover:text-fg hover:border-fg/30"
-      }`}
+      className={`inline-flex min-h-11 items-center px-4 text-xs border hairline transition-colors ${
+ active
+ ? "bg-fg text-bg border-transparent"
+ : "text-fg-dim hover:text-fg hover:border-fg/30"
+ }`}
     >
       {label}
     </Link>

@@ -115,14 +115,14 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-fg-dim">
+        <p className="text-[12px] text-fg-dim">
           {t("position", { current: state.index + 1, total: count })}
         </p>
-        <p className="font-mono text-[12px] text-fg-dim" aria-live="polite">
+        <p className="text-[12px] text-fg-dim" aria-live="polite">
           {t("tally", { approved, skipped })}
         </p>
       </div>
-      <div className="h-1 overflow-hidden rounded-full bg-bg-3" aria-hidden="true">
+      <div className="h-1 overflow-hidden bg-bg-3" aria-hidden="true">
         <i className="block h-full bg-signal transition-[width]" style={{ width: `${(state.index / count) * 100}%` }} />
       </div>
 
@@ -149,8 +149,8 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
 
         <div className="space-y-5">
           <div>
-            <p className="font-mono text-[11px] text-fg-faint">{current.slug}</p>
-            <h2 id="review-name" className="font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-[0.95]">
+            <p className="text-micro text-fg-faint">{current.slug}</p>
+            <h2 id="review-name" className="font-display text-title md:text-[2.75rem]">
               {current.name}
             </h2>
             {meta ? <p className="mt-1.5 text-sm text-fg-dim">{meta}</p> : null}
@@ -228,7 +228,7 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
             {error}
           </p>
         ) : null}
-        <p className="w-full font-mono text-[11px] text-fg-faint">{t("keys")}</p>
+        <p className="w-full text-micro text-fg-faint">{t("keys")}</p>
       </div>
     </div>
   );
@@ -243,7 +243,7 @@ function MuscleRow({ label, muscles, strong = false }: { label: string; muscles:
           <span
             key={m}
             className={cn(
-              "rounded-full border px-2.5 py-1 text-xs",
+              "border px-2.5 py-1 text-xs",
               strong ? "border-fg text-fg" : "hairline text-fg-dim",
             )}
           >
@@ -258,7 +258,7 @@ function MuscleRow({ label, muscles, strong = false }: { label: string; muscles:
 function Block({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-fg-faint">{label}</p>
+      <p className="mb-1.5 text-micro text-fg-faint">{label}</p>
       {children}
     </div>
   );

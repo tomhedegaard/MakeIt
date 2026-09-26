@@ -41,8 +41,8 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
               key={target}
               className={
                 i === 0
-                  ? "rounded-full bg-fg px-2 py-[5px] font-mono text-[10px] text-bg"
-                  : "rounded-full border border-line-strong px-2 py-[5px] font-mono text-[10px]"
+                  ? "bg-fg px-2 py-[5px] text-[10px] text-bg"
+                  : "border border-line-strong px-2 py-[5px] text-[10px]"
               }
             >
               {target}
@@ -57,7 +57,7 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
           return (
             <div
               key={n}
-              className="grid grid-cols-[34px_1fr_auto] items-center border-b border-line-strong py-1.5 font-mono text-[10px]"
+              className="grid grid-cols-[34px_1fr_auto] items-center border-b border-line-strong py-1.5 text-[10px]"
             >
               {current ? (
                 <span className="font-medium">{n}</span>
@@ -85,7 +85,7 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
           { label: se("steppers.weight"), value: weight },
           { label: se("steppers.reps"), value: "3" },
         ].map((st) => (
-          <div key={st.label} className="rounded-[10px] border border-line-strong bg-bg-3 px-2 py-1.5">
+          <div key={st.label} className="border border-line-strong bg-bg-3 px-2 py-1.5">
             <Label>{st.label}</Label>
             <div className="mt-0.5 flex items-center justify-between">
               <StepButton sign="minus" />
@@ -99,7 +99,7 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
       <Pill>{se("cta.logSet")}</Pill>
 
       <div className="flex items-center justify-between gap-2">
-        <div className="flex flex-1 items-center gap-2 rounded-[14px] border border-dashed border-line-strong px-2.5 py-2 text-[10px]">
+        <div className="flex flex-1 items-center gap-2 border border-dashed border-line-strong px-2.5 py-2 text-[10px]">
           <span className="size-2.5 flex-none rounded-full bg-danger shadow-[0_0_0_3px_color-mix(in_oklab,var(--danger)_25%,transparent)]" />
           <span>
             {se("exercise.formCheck", { set: 3 })} · {s("session.sendTo")}
@@ -119,7 +119,7 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
             strokeLinecap="round"
             transform="rotate(-90 17 17)"
           />
-          <text x="17" y="19.5" textAnchor="middle" fontSize="7.5" className="fill-fg font-mono">
+          <text x="17" y="19.5" textAnchor="middle" fontSize="7.5" className="fill-fg">
             {s("session.restValue")}
           </text>
         </svg>
@@ -135,7 +135,7 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
               <Row key={n} k={s(`session.next${n}`)} v={s(`session.next${n}v`)} last={n === 4} className="border-line-strong" />
             ))}
           </div>
-          <div className="rounded-[14px] border border-dashed border-line-strong px-2.5 py-2">
+          <div className="border border-dashed border-line-strong px-2.5 py-2">
             <Label>{s("session.noteLabel")}</Label>
             <p className="mt-1 text-[10.5px]">{s("session.note")}</p>
           </div>

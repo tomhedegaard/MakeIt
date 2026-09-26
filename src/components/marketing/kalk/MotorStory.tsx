@@ -115,7 +115,7 @@ export default function MotorStory() {
           </MotorStoryRig>
         </div>
 
-        <p className="mt-10 max-w-[52ch] font-mono text-[11px] tracking-[0.04em] text-fg-dim lg:mt-24">
+        <p className="mt-10 max-w-[52ch] text-[11px] text-fg-dim lg:mt-24">
           {t("keepOriginalNote")} {t("disclaimer")}
         </p>
       </div>
@@ -131,7 +131,7 @@ function EngineBounds() {
 
   return (
     <div className="mt-12 lg:mt-16">
-      <h3 className="font-mono text-[11px] uppercase tracking-[0.1em] text-fg-dim">{t("bounds.heading")}</h3>
+      <h3 className="text-[11px] text-fg-dim">{t("bounds.heading")}</h3>
       <ul className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
         {BOUNDS.map((bound) => (
           <li
@@ -175,11 +175,11 @@ function ReportLine({ step, domain }: { step: MotorStepKey; domain: string }) {
           style.tickOn,
         )}
       />
-      <p className="flex justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.1em] text-fg-dim">
+      <p className="flex justify-between gap-3 text-[11px] text-fg-dim">
         <span className="text-fg">{t(`${step}.time`)}</span>
         <span>{t(`${step}.source`)}</span>
       </p>
-      <h3 className="mt-7 flex items-center gap-2.5 font-mono text-[13px] font-medium uppercase tracking-[0.16em] text-domain">
+      <h3 className="mt-7 flex items-center gap-2.5 text-[13px] font-medium text-domain">
         <i aria-hidden="true" className="size-2 rounded-full bg-domain" />
         {t(`${step}.label`)}
       </h3>
@@ -192,11 +192,11 @@ function ReportLine({ step, domain }: { step: MotorStepKey; domain: string }) {
       >
         {t(`${step}.value`)}
         {unit ? (
-          <small className={cn("text-[0.42em] tracking-normal text-fg-dim", step === "hrv" && "ml-2")}>{unit}</small>
+          <small className={cn("text-[0.42em] text-fg-dim", step === "hrv" && "ml-2")}>{unit}</small>
         ) : null}
       </p>
       {step === "decision" ? (
-        <p className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-1.5 font-mono text-[clamp(20px,2vw,28px)]">
+        <p className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-1.5 text-[clamp(20px,2vw,28px)]">
           <span>{t("decision.lift")}</span>
           <s className="text-fg-dim decoration-signal decoration-2">{t("decision.from")}</s>
           <span aria-hidden="true" className="text-fg-dim">

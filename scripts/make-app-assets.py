@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""App icon and splash art for the native shells (spec D3).
+"""App icon and splash art for the native shells (spec D3, retning Nord).
 
-Both were flat #0A0A0B placeholders with no mark on them. The brand's
-most recognisable element is the double slash in the MAKEIT // HQ
-wordmark, and two slanted bars stay legible at 48 px, so that is the
-icon: ink ground, one bar in Kalk chalk and one in the signal orange
-that the design system reserves for graphics.
+The brand's most recognisable element is the double slash in the
+MakeIt // HQ wordmark, and two slanted bars stay legible at 48 px, so
+that is the icon. Nord is a white brand: paper ground, one bar in ink
+and one in the moss green the design system reserves as its only
+accent (spec 2026-09-26 §3.1). The dark splash is the one exception —
+moss on ink is 1,6:1, so there the second bar is the nat grey.
 
 Every existing PNG is rewritten at its own size, so no format, density
 or filename is invented here; run `npx cap sync` afterwards.
@@ -21,11 +22,12 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-# Kalk tokens (src/app/globals.css)
-INK = (13, 15, 18)
-CHALK = (231, 233, 235)
-NAT = (10, 10, 11)
-SIGNAL = (228, 87, 15)
+# Nord tokens (src/app/globals.css)
+INK = (17, 17, 17)      # --fg
+PAPER = (255, 255, 255) # --bg
+NAT = (17, 17, 17)      # Nord nat --bg
+NAT_DIM = (185, 185, 180)
+SIGNAL = (46, 74, 59)   # mos
 
 ROOT = Path(__file__).resolve().parent.parent
 IOS = ROOT / "ios/App/App/Assets.xcassets"
@@ -93,18 +95,18 @@ def targets() -> list[tuple[Path, str]]:
 
 def render(recipe: str, size: tuple[int, int]) -> Image.Image:
     if recipe == "splash":
-        return mark(size, CHALK, (INK, SIGNAL), 0.22)
+        return mark(size, PAPER, (INK, SIGNAL), 0.22)
     if recipe == "splash-dark":
-        return mark(size, NAT, (CHALK, SIGNAL), 0.22)
+        return mark(size, NAT, (PAPER, NAT_DIM), 0.22)
     if recipe == "icon":
-        return mark(size, INK, (CHALK, SIGNAL), 0.46)
+        return mark(size, PAPER, (INK, SIGNAL), 0.46)
     if recipe == "icon-round":
-        return rounded(mark(size, INK, (CHALK, SIGNAL), 0.46))
+        return rounded(mark(size, PAPER, (INK, SIGNAL), 0.46))
     if recipe == "adaptive-bg":
-        return Image.new("RGBA", size, (*INK, 255))
+        return Image.new("RGBA", size, (*PAPER, 255))
     if recipe == "adaptive-fg":
         # Adaptive icons crop to the middle ~66 %, so the mark sits small.
-        return mark(size, None, (CHALK, SIGNAL), 0.30)
+        return mark(size, None, (INK, SIGNAL), 0.30)
     raise ValueError(recipe)
 
 

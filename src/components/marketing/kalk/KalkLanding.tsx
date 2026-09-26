@@ -14,7 +14,7 @@ import AskHq from "./AskHq";
 /** Kalk landing (spec 2026-09-17 §5). Eight sections, one job each. */
 export default function KalkLanding() {
   return (
-    <ThemeScope theme="kalk" className="flex-1 flex flex-col">
+    <ThemeScope theme="nord" className="flex-1 flex flex-col">
       <KalkNav />
       <main className="relative z-10 flex-1">
         <KalkHero />

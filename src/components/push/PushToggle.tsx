@@ -171,7 +171,7 @@ export default function PushToggle({
           >
             {t("test")}
           </button>
-          <span className="text-[10px] font-mono text-fg-faint">
+          <span className="text-micro text-fg-faint">
             {testSentAt
               ? t("testSent", { seconds: secondsAgo(testSentAt) })
               : t("dailyReminder")}
@@ -193,7 +193,7 @@ export default function PushToggle({
               : t("turnOn")}
           </button>
           {noKey ? (
-            <span className="text-[10px] font-mono text-fg-faint">
+            <span className="text-micro text-fg-faint">
               {t("vapidNotConfigured")}
             </span>
           ) : null}

@@ -96,7 +96,7 @@ export default function SessionRunner({
             <button
               type="button"
               onClick={() => setRunning(true)}
-              className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
             >
               {t("start")}
             </button>
@@ -151,7 +151,7 @@ export default function SessionRunner({
           type="button"
           onClick={complete}
           disabled={pending}
-          className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
         >
           {pending ? t("saving") : t("finish")}
         </button>

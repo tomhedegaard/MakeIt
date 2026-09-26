@@ -53,7 +53,7 @@ export default async function CoachMemberDetailPage({
     <Container className="py-6 lg:py-12 space-y-8">
       <Link
         href="/coach/members"
-        className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg"
+        className="text-xs text-fg-dim hover:text-fg"
       >
         {t("backToMembers")}
       </Link>
@@ -61,7 +61,7 @@ export default async function CoachMemberDetailPage({
       <header className="flex items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{m.tier}</div>
-          <h1 className="font-display text-[clamp(2.4rem,7vw,4rem)] leading-[0.95]">
+          <h1 className="font-display text-title md:text-[2.75rem]">
             @{m.handle}
           </h1>
           <p className="mt-2 text-fg-dim text-sm">
@@ -118,7 +118,7 @@ export default async function CoachMemberDetailPage({
           ) : null}
         </div>
         {m.programCode ? (
-          <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-bg-3 overflow-hidden">
             <div className="h-full bg-fg" style={{ width: `${programPct}%` }} />
           </div>
         ) : null}
@@ -138,7 +138,7 @@ export default async function CoachMemberDetailPage({
                 </span>
                 <span className="flex-1 truncate">{s.dayLabel}</span>
                 <span
-                  className="text-[10px] font-mono uppercase tracking-[0.14em] border hairline-strong rounded-full px-2 py-0.5 shrink-0"
+                  className="text-micro border hairline-strong px-2 py-0.5 shrink-0"
                   style={{
                     color: s.status === "completed" ? "var(--fg)" : "var(--fg-dim)",
                   }}
@@ -184,7 +184,7 @@ export default async function CoachMemberDetailPage({
             <div className="font-display text-3xl numeric leading-none">
               {adherence.adherencePct}%
             </div>
-            <div className="mt-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+            <div className="mt-2 text-micro text-fg-faint">
               {t("mealsLogged", { logged: adherence.mealsLogged, planned: adherence.mealsPlanned })}
             </div>
           </div>
@@ -195,7 +195,7 @@ export default async function CoachMemberDetailPage({
                 ? "—"
                 : `${adherence.weightDeltaKg > 0 ? "+" : ""}${adherence.weightDeltaKg.toFixed(1)}`}
             </div>
-            <div className="mt-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+            <div className="mt-2 text-micro text-fg-faint">
               {t("weightUnit")}
             </div>
           </div>
@@ -204,7 +204,7 @@ export default async function CoachMemberDetailPage({
             <div className="font-display text-3xl numeric leading-none">
               {adherence.skipDaysCount}
             </div>
-            <div className="mt-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+            <div className="mt-2 text-micro text-fg-faint">
               {t("skipDaysSub")}
             </div>
           </div>
@@ -246,7 +246,7 @@ export default async function CoachMemberDetailPage({
                 {f.aiHeadline ? (
                   <p className="text-fg/90 text-sm leading-relaxed">{f.aiHeadline}</p>
                 ) : null}
-                <div className="mt-2 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                <div className="mt-2 text-micro text-fg-faint">
                   {f.reviewedAt ? t("reviewed") : t("awaitingReview")}
                 </div>
               </li>

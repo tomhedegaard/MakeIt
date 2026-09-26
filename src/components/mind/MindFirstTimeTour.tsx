@@ -63,7 +63,7 @@ export default function MindFirstTimeTour() {
     >
       <div className="flex items-center justify-between">
         <div className="eyebrow">{t(`steps.${currentKey}.eyebrow`)}</div>
-        <div className="text-fg-faint text-[10px] font-mono uppercase tracking-[0.16em]">
+        <div className="text-fg-faint text-micro">
           {step + 1} / {STEP_KEYS.length}
         </div>
       </div>
@@ -74,7 +74,7 @@ export default function MindFirstTimeTour() {
 
       <p className="text-fg-dim leading-relaxed text-base md:text-lg">{t(`steps.${currentKey}.body`)}</p>
 
-      <div className="h-1 bg-bg-3 overflow-hidden rounded-full">
+      <div className="h-1 bg-bg-3 overflow-hidden">
         <div
           className="h-full bg-fg transition-all duration-500"
           style={{ width: `${((step + 1) / STEP_KEYS.length) * 100}%` }}
@@ -88,7 +88,7 @@ export default function MindFirstTimeTour() {
         <button
           type="button"
           onClick={next}
-          className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
+          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
         >
           {isLast ? t("begin") : t("next")}
         </button>

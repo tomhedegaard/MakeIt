@@ -1,6 +1,6 @@
 {
   "eyebrow": "Coach School · Sandbox",
-  "title": "Beslut parallelt med Munk",
+  "title": "Beslut parallelt med Munk.",
   "subtitle": "{count} sandbox-cases venter på dit kald. Du ser, hvad Munk så, men ikke hvad han valgte, før du har trykket Send.",
   "empty": "Ingen åbne sandbox-cases lige nu. Tilbage når Munk har afgjort flere alerts.",
   "footnote": "Sandbox-cases er hrv_alerts Munk allerede har afgjort. Dit kald sammenlignes med hans. Gennemsnittet over de seneste 50 sandbox-runder driver promotion-gaten (mål: ≥80%).",
@@ -33,7 +33,7 @@
   },
   "live": {
     "eyebrow": "Coach School · Live",
-    "title": "Dine tildelte medlemmer",
+    "title": "Dine tildelte medlemmer.",
     "subtitle": "{count} åbne alerts på medlemmer du co-coacher. Dit kald lukker køen.",
     "empty": "Ingen åbne alerts på dine medlemmer lige nu. Godt arbejde, eller stille morgen.",
     "footnote": "Live-kald gemmes som coach_reviews (mode=live). Munk spot-checker via /coach/co-coaches.",
@@ -45,7 +45,7 @@
   },
   "tree": {
     "eyebrow": "Coach School",
-    "title": "Lær at coache som Munk",
+    "title": "Lær at coache som Munk.",
     "subtitle": "Lektioner låses op af din tier. Hver lektion: kort video, 3 quiz-spørgsmål, og en praksis-scenarie hvor AI evaluerer dit svar mod Munks rubrikker.",
     "empty": "Ingen lektioner er udgivet endnu. Munk optager den første kohorte i M5.",
     "tierHeader": {

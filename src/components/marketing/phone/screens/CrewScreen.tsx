@@ -14,7 +14,7 @@ export default function CrewScreen({ width, scroll }: { width?: number; scroll?:
       <div>
         <Kicker>{c("tier")}</Kicker>
         <Headline className="mt-1">{c("title")}</Headline>
-        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line">
+        <div className="mt-2 h-1.5 overflow-hidden bg-line">
           <i className="block h-full w-[25%] bg-signal" />
         </div>
       </div>
@@ -26,9 +26,9 @@ export default function CrewScreen({ width, scroll }: { width?: number; scroll?:
           <div className="min-w-0 flex-1">
             <p className="text-[10.5px] font-semibold">{c(p)}</p>
             <p className="text-[10.5px] leading-[1.35]">{c(`${p}t`)}</p>
-            <p className="mt-1 font-mono text-[8.5px] text-fg-dim">{c(`${p}m`)}</p>
+            <p className="mt-1 text-[8.5px] text-fg-dim">{c(`${p}m`)}</p>
           </div>
-          <span className="rounded-full border border-line-strong px-2 py-[3px] font-mono text-[8.5px] uppercase tracking-[0.08em]">
+          <span className="border border-line-strong px-2 py-[3px] text-[8.5px]">
             {c("cheer")}
           </span>
         </Card>

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { submitMindCheckAction } from "@/app/(app)/mind/check/actions";
+import { rangeFill } from "@/lib/ui/range";
 
 type SliderKey = "energy" | "stress" | "focus";
 
@@ -75,10 +76,11 @@ export default function MindCheckForm({
             step={1}
             value={value(s.key)}
             onChange={(e) => setter(s.key)(Number(e.target.value))}
-            className="w-full accent-fg"
+            className="range w-full"
+            style={rangeFill(value(s.key), 1, 5)}
             aria-label={s.label}
           />
-          <div className="flex justify-between text-fg-dim text-xs uppercase tracking-wide">
+          <div className="flex justify-between text-fg-dim text-xs">
             <span>{s.low}</span>
             <span>{s.high}</span>
           </div>
@@ -113,7 +115,7 @@ export default function MindCheckForm({
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3.5 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3.5 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
         >
           {pending ? t("saving") : saved ? t("update") : t("save")}
         </button>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { rangeFill } from "@/lib/ui/range";
 
 /**
  * Minimal HTML5 audio player for mental sessions (B-layer voice-agnostic).
@@ -85,7 +86,7 @@ export default function AudioPlayer({ src, durationSeconds }: { src: string; dur
   if (errored) return null;
 
   return (
-    <div className="flex items-center gap-4 rounded-full border hairline bg-bg-2/40 px-4 py-2.5">
+    <div className="flex items-center gap-4 border hairline bg-bg-2/40 px-4 py-2.5">
       <button
         type="button"
         onClick={toggle}
@@ -112,7 +113,8 @@ export default function AudioPlayer({ src, durationSeconds }: { src: string; dur
         value={currentTime}
         onChange={scrub}
         aria-label={t("seek")}
-        className="flex-1 accent-fg"
+        className="range flex-1"
+        style={rangeFill(currentTime, 0, actualDuration)}
       />
 
       <span className="text-fg-dim text-xs tabular-nums shrink-0 w-16 text-right">

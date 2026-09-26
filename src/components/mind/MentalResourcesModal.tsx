@@ -95,14 +95,14 @@ function MentalResourcesDialog({ onClose }: { onClose: () => void }) {
               <button
                 type="button"
                 onClick={() => setMode("escalate")}
-                className="inline-flex items-center justify-center rounded-full border hairline px-5 py-2.5 text-sm font-medium hover:bg-bg/30 transition-colors"
+                className="inline-flex items-center justify-center border hairline px-5 py-2.5 text-sm font-medium hover:bg-bg/30 transition-colors"
               >
                 {t("tellMunk")}
               </button>
               <button
                 type="button"
                 onClick={close}
-                className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
+                className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
               >
                 {t("close")}
               </button>
@@ -145,7 +145,7 @@ function MentalResourcesDialog({ onClose }: { onClose: () => void }) {
               <button
                 type="submit"
                 disabled={pending || summary.trim().length < 4}
-                className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
+                className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
               >
                 {pending ? t("sending") : t("send")}
               </button>
@@ -167,7 +167,7 @@ function MentalResourcesDialog({ onClose }: { onClose: () => void }) {
             <button
               type="button"
               onClick={close}
-              className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
             >
               {t("sentClose")}
             </button>

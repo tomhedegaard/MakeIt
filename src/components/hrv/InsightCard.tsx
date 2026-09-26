@@ -28,7 +28,7 @@ export default function InsightCard({ card }: { card: CorrelationCard }) {
 
   return (
     <div className="surface-2 rounded-2xl p-5">
-      <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-domain">
+      <div className="text-micro text-domain">
         {t(`factor.${card.factor}.framing`)}
       </div>
       <div className="mt-1 font-display text-lg leading-tight text-fg">
@@ -64,7 +64,7 @@ export default function InsightCard({ card }: { card: CorrelationCard }) {
       ) : (
         <div className="mt-4 flex flex-col gap-2">
           <div className="text-sm text-fg-dim">{t("notEnough")}</div>
-          <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint leading-relaxed">
+          <div className="text-micro text-fg-faint leading-relaxed">
             {t("needMore", {
               exposed: card.exposedN,
               baseline: card.baselineN,

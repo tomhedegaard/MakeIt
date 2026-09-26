@@ -337,7 +337,7 @@ function StateNotConnected({ t }: { t: PageT }) {
 
       <div className="p-5 md:p-8 space-y-4">
         <ConnectButton label={t("connectCta")} />
-        <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint leading-relaxed">
+        <p className="text-micro text-fg-faint leading-relaxed">
           {t("connectAppleNote")}
         </p>
       </div>
@@ -369,7 +369,7 @@ function StateWarmingUp({
 
       <div className="px-6 py-8 md:px-8 md:py-10">
         <div className="eyebrow mb-2">{t("warmingUp.latest")}</div>
-        <div className="numeric text-6xl md:text-7xl leading-[0.9]">
+        <div className="numeric text-hero md:text-hero-lg">
           {Math.round(rmssdMs)}
           <span className="text-fg-dim text-2xl md:text-3xl ml-2">{t("unit")}</span>
         </div>
@@ -382,7 +382,7 @@ function StateWarmingUp({
       </div>
 
       <div className="px-6 py-3 md:px-8 border-t hairline">
-        <span className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+        <span className="text-micro text-fg-faint">
           {t("syncedFrom", { provider })}
         </span>
       </div>
@@ -420,7 +420,7 @@ function StateActive({
 
       <div className="px-6 py-8 md:px-8 md:py-10">
         <div className="eyebrow mb-2">{t("active.latest")}</div>
-        <div className="numeric text-7xl md:text-8xl leading-[0.85]">
+        <div className="numeric text-hero md:text-hero-lg">
           {Math.round(latest.rmssdMs)}
           <span className="text-fg-dim text-2xl md:text-3xl ml-2">{t("unit")}</span>
         </div>
@@ -452,7 +452,7 @@ function StateActive({
       </div>
 
       <div className="px-6 py-3 md:px-8 border-t hairline">
-        <span className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+        <span className="text-micro text-fg-faint">
           {t("syncedFrom", { provider })}
         </span>
       </div>

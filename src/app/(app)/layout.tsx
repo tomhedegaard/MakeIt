@@ -9,7 +9,7 @@ import { getUnreadCount } from "@/lib/data/messages";
 
 // Kalk: light browser chrome (spec §2, §6). Viewport merges per key, so
 // width/viewportFit from the root layout survive.
-export const viewport: Viewport = { themeColor: "#E7E9EB", colorScheme: "light" };
+export const viewport: Viewport = { themeColor: "#FFFFFF", colorScheme: "light" };
 
 // Metadata merges shallowly: appleWebApp replaces the root object, so
 // capable + title are restated. "default" gives dark status text on Kalk.
@@ -39,7 +39,7 @@ export default async function AppLayout({
   const unreadMessages = SUPABASE_ENABLED ? await getUnreadCount(member.id) : 0;
 
   return (
-    <ThemeScope theme="kalk" className="flex flex-col h-dvh lg:h-auto lg:minh-dvh lg:flex-1">
+    <ThemeScope theme="nord" className="flex flex-col h-dvh lg:h-auto lg:minh-dvh lg:flex-1">
       <AppShell
         member={member}
         unreadMessages={unreadMessages}

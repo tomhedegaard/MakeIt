@@ -104,7 +104,7 @@ export default function AppShell({
                   >
                     <span
                       className={cn(
-                        "numeric text-[11px] w-6",
+                        "numeric text-micro w-6",
                         domain
                           ? "text-domain"
                           : "text-fg-faint group-hover:text-fg-dim"
@@ -115,7 +115,7 @@ export default function AppShell({
                     <span className="tracking-tight">{t(`links.${item.labelKey}`)}</span>
                     {item.href === "/messages" && unreadMessages > 0 ? (
                       <span
-                        className="ml-auto numeric text-[10px] tabular-nums px-1.5 py-0.5 rounded-full bg-fg text-bg"
+                        className="ml-auto numeric text-micro tabular-nums px-1.5 py-0.5 bg-fg text-bg"
                         aria-label={t("shell.unread", { count: unreadMessages })}
                       >
                         {unreadMessages > 99 ? "99+" : unreadMessages}
@@ -136,7 +136,7 @@ export default function AppShell({
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+                  <span className="numeric text-micro border hairline-strong px-2 py-0.5">
                     {t("shell.coachBadge")}
                   </span>
                   <span className="text-sm">{t("shell.coachConsole")}</span>
@@ -166,27 +166,30 @@ export default function AppShell({
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         {/* Mobile top header — outside the scrollport. */}
-        <header className="safe-top lg:hidden relative flex h-14 shrink-0 items-center justify-between px-5 border-b hairline z-30 bg-bg/85 backdrop-blur">
+        {/* Nord topbjælke (spec §5): ordmærke til venstre, beskeder og profil
+            som 24 px linjeikoner til højre, 1 px linje under. Hvid flade,
+            ingen blur. */}
+        <header className="safe-top lg:hidden relative flex h-14 shrink-0 items-center justify-between pl-5 pr-2 border-b hairline z-30 bg-bg">
           <Logo />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center">
             {/* Messages — kept one-tap on mobile after the tab bar
                 lost its Messages slot to /mind (Søjle 5). */}
             <Link
               href="/messages"
-              className="relative size-9 rounded-full surface-2 flex items-center justify-center"
+              className="relative size-11 flex items-center justify-center text-fg"
               aria-label={t("links.messages")}
             >
-              <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5" aria-hidden>
+              <svg viewBox="0 0 24 24" fill="none" className="size-6" aria-hidden>
                 <path
-                  d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4 3.5v-3.5H6.5A2.5 2.5 0 0 1 4 14.5v-8z"
+                  d="M4 5h16v11H10l-4 3.5V16H4z"
                   stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  strokeLinecap="square"
                 />
               </svg>
               {unreadMessages > 0 ? (
                 <span
-                  className="absolute -top-0.5 -right-0.5 numeric text-[9px] tabular-nums px-1 py-0.5 rounded-full bg-fg text-bg leading-none min-w-[14px] text-center"
+                  className="absolute top-1.5 right-1 numeric text-micro tabular-nums px-1 py-0.5 bg-fg text-bg leading-none min-w-[14px] text-center"
                   aria-label={t("shell.unread", { count: unreadMessages })}
                 >
                   {unreadMessages > 9 ? "9+" : unreadMessages}
@@ -203,10 +206,13 @@ export default function AppShell({
             >
               <summary
                 ref={summaryRef}
-                className="size-9 rounded-full surface-2 flex items-center justify-center text-xs font-mono uppercase cursor-pointer list-none [&::-webkit-details-marker]:hidden"
+                className="size-11 flex items-center justify-center text-fg cursor-pointer list-none [&::-webkit-details-marker]:hidden"
                 aria-label={t("shell.menu")}
               >
-                {member.handle.slice(0, 2)}
+                <svg viewBox="0 0 24 24" fill="none" className="size-6" aria-hidden>
+                  <circle cx="12" cy="8.5" r="3.5" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+                </svg>
               </summary>
               <nav
                 aria-label={t("shell.menu")}
@@ -248,7 +254,7 @@ export default function AppShell({
           {demoMode ? (
             <div
               role="status"
-              className="px-5 py-2 border-b hairline text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint"
+              className="px-5 py-2 border-b hairline text-micro text-fg-dim"
             >
               {t("shell.demoBanner")}
             </div>

@@ -84,7 +84,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
               @{alert.memberHandle}
             </Link>
           </div>
-          <div className="text-[11px] font-mono text-fg-faint">
+          <div className="text-micro text-fg-faint">
             {new Date(alert.triggeredAt).toLocaleString("da-DK", {
               hour: "2-digit",
               minute: "2-digit",
@@ -116,7 +116,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
 
       {/* Per-sub-flag truth for lifestyle — render all four, even when
           false, so Munk sees the negative space too. */}
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-mono mb-4">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-micro mb-4">
         <SubFlag on={lifestyleFlags.sick}>syg</SubFlag>
         <span className="text-fg-faint">·</span>
         <SubFlag on={lifestyleFlags.stressed}>stress</SubFlag>
@@ -172,7 +172,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
                   maxLength={1000}
                 />
               </label>
-              <div className="mt-2 text-[11px] font-mono text-fg-faint text-right">
+              <div className="mt-2 text-micro text-fg-faint text-right">
                 {notes.length} / 1000
               </div>
             </div>
@@ -196,7 +196,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
               </button>
             </div>
 
-            <p className="mt-4 text-xs font-mono text-fg-faint text-center">
+            <p className="mt-4 text-xs text-fg-faint text-center">
               Markerer alerten som reviewet og sender beskeden til medlemmet.
             </p>
           </SheetContent>
@@ -216,7 +216,7 @@ function Chip({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border hairline px-2.5 py-1 text-[11px] font-mono uppercase tracking-[0.12em]",
+        "inline-flex items-center border hairline px-2.5 py-1 text-micro",
         active ? "text-fg font-bold" : "text-fg-faint",
       )}
     >

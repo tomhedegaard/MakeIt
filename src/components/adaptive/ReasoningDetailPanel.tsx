@@ -145,13 +145,13 @@ export default function ReasoningDetailPanel({
         <h3 id="reasoning-rule-heading" className="eyebrow mb-2">
           Hvilken regel fyrede
         </h3>
-        <p className="text-sm font-mono text-fg-dim leading-relaxed">
+        <p className="text-sm text-fg-dim leading-relaxed">
           {narrateRule({
             action: ruleDecision.action,
             reasons: ruleDecision.reasons,
           })}
         </p>
-        <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-2">
+        <p className="text-micro text-fg-faint mt-2">
           Regel-confidence {ruleDecision.confidence.toFixed(2)}
         </p>
       </section>
@@ -186,7 +186,7 @@ function SignalRow({
 }) {
   return (
     <li className="flex items-baseline justify-between gap-3 text-sm">
-      <span className="text-fg-faint text-[11px] uppercase tracking-[0.12em] shrink-0">
+      <span className="text-fg-faint text-micro shrink-0">
         {label}
       </span>
       <span className="text-fg numeric text-right">{value}</span>

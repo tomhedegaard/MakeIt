@@ -68,7 +68,7 @@ export default function NeedsAttentionStrip({
                         className="block lift touch-app -mx-1 px-1 py-1"
                       >
                         <div className="text-sm">@{row.memberHandle}</div>
-                        <div className="text-[11px] font-mono text-fg-faint truncate">
+                        <div className="text-micro text-fg-faint truncate">
                           {row.lift ? `${row.lift} · ${row.detail}` : row.detail}
                         </div>
                       </Link>

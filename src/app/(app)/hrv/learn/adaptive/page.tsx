@@ -63,7 +63,7 @@ export default async function AdaptiveLearnPage() {
           <article className="surface-2 rounded-2xl p-5 lg:p-6 space-y-3">
             <div className="flex items-baseline justify-between gap-3">
               <h2 className="eyebrow">{t("example.title")}</h2>
-              <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-dim">
+              <span className="text-micro text-fg-dim">
                 {t("example.meta")}
               </span>
             </div>
@@ -74,20 +74,20 @@ export default async function AdaptiveLearnPage() {
               <button
                 type="button"
                 disabled
-                className="flex-1 rounded-lg border hairline bg-bg-2 px-3 py-2 text-[12px] font-mono uppercase tracking-[0.12em] opacity-60 cursor-not-allowed"
+                className="flex-1 rounded-lg border hairline bg-bg-2 px-3 py-2 text-[12px] opacity-60 cursor-not-allowed"
               >
                 {t("example.accept")}
               </button>
               <button
                 type="button"
                 disabled
-                className="flex-1 rounded-lg border hairline px-3 py-2 text-[12px] font-mono uppercase tracking-[0.12em] text-fg-dim opacity-60 cursor-not-allowed"
+                className="flex-1 rounded-lg border hairline px-3 py-2 text-[12px] text-fg-dim opacity-60 cursor-not-allowed"
               >
                 {t("example.keep")}
               </button>
             </div>
           </article>
-          <p className="text-[11px] text-fg-faint">
+          <p className="text-micro text-fg-faint">
             {t("example.note")}
           </p>
         </section>
@@ -155,7 +155,7 @@ export default async function AdaptiveLearnPage() {
         <section className="pt-4">
           <Link
             href="/hrv"
-            className="inline-block text-[12px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg lift touch-app"
+            className="inline-block text-[12px] text-fg-dim hover:text-fg lift touch-app"
           >
             {t.rich("backLink", {
               faint: (chunks) => <span className="text-fg-faint">{chunks}</span>,
@@ -163,7 +163,7 @@ export default async function AdaptiveLearnPage() {
           </Link>
         </section>
 
-        <p className="text-[10px] text-fg-faint">
+        <p className="text-micro text-fg-faint">
           {t("exampleDecision", {
             action: labelForAction(baselineDecision.action),
             confidence: baselineDecision.confidence.toFixed(2),

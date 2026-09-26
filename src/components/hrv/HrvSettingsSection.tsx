@@ -124,7 +124,7 @@ export default function HrvSettingsSection({
                 {connections.length > 1 && !connection.isPrimary ? (
                   <button
                     type="button"
-                    className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim border border-line-strong rounded-full px-3 py-1.5 touch-app lift disabled:opacity-50"
+                    className="text-micro text-fg-dim border border-line-strong px-3 py-1.5 touch-app lift disabled:opacity-50"
                     onClick={() => makePrimary(connection.id)}
                     disabled={primaryPending}
                   >
@@ -138,7 +138,7 @@ export default function HrvSettingsSection({
         {primaryError ? (
           <p
             role="alert"
-            className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-dim"
+            className="text-micro text-fg-dim"
           >
             {primaryError}
           </p>
@@ -162,7 +162,7 @@ export default function HrvSettingsSection({
             />
             <span
               aria-hidden
-              className="block relative w-12 h-7 rounded-full border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
+              className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
               style={{ background: cycleEnabled ? "var(--fg)" : "var(--bg-3)" }}
             >
               <span
@@ -192,7 +192,7 @@ export default function HrvSettingsSection({
             />
             <span
               aria-hidden
-              className="block relative w-12 h-7 rounded-full border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
+              className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
               style={{ background: nudgeEnabled ? "var(--fg)" : "var(--bg-3)" }}
             >
               <span
@@ -210,7 +210,7 @@ export default function HrvSettingsSection({
       </ul>
       {cycleMsg ? (
         <span
-          className="text-[10px] font-mono uppercase tracking-[0.16em]"
+          className="text-micro"
           style={{ color: cycleMsg.startsWith("✓") ? "var(--fg)" : "var(--fg-dim)" }}
         >
           {cycleMsg}
@@ -218,7 +218,7 @@ export default function HrvSettingsSection({
       ) : null}
       {nudgeMsg ? (
         <span
-          className="text-[10px] font-mono uppercase tracking-[0.16em]"
+          className="text-micro"
           style={{ color: nudgeMsg.startsWith("✓") ? "var(--fg)" : "var(--fg-dim)" }}
         >
           {nudgeMsg}
@@ -228,7 +228,7 @@ export default function HrvSettingsSection({
       {/* Link to the full module */}
       <Link
         href="/hrv"
-        className="block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim lift"
+        className="block text-micro text-fg-dim lift"
       >
         {t("seeAll")}
       </Link>

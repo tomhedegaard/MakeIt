@@ -20,7 +20,7 @@ const config: CapacitorConfig = {
   appName: "MakeIt",
   // Local fallback shell — only shown if the remote app can't load.
   webDir: "native-shell",
-  backgroundColor: "#E7E9EB",
+  backgroundColor: "#FFFFFF",
   server: {
     url: "https://makeit.tomhedegaard.dk",
     allowNavigation: ["makeit.tomhedegaard.dk"],
@@ -34,9 +34,9 @@ const config: CapacitorConfig = {
   plugins: {
     // D3 delivered 2026-09-20: icon and splash carry the wordmark's double
     // slash (scripts/make-app-assets.py). The window behind the splash is
-    // Kalk, like the app, so a cold start no longer flashes dark.
+    // Nord lys, like the app, so a cold start no longer flashes dark.
     SplashScreen: {
-      backgroundColor: "#E7E9EB",
+      backgroundColor: "#FFFFFF",
     },
   },
 };

@@ -150,7 +150,7 @@ export default function DemoLoop({
       ref={wrapRef}
       // cn, not a template string: a caller that places the loop with
       // `absolute` must win over the default `relative`.
-      className={cn("relative overflow-hidden rounded-[14px] bg-bg-2", className)}
+      className={cn("relative overflow-hidden bg-bg-2", className)}
     >
       <video
         ref={videoRef}
@@ -169,7 +169,7 @@ export default function DemoLoop({
         <div aria-hidden="true" data-tint={tint} data-domain={tint} className="absolute inset-0 bg-domain-tint" />
       ) : null}
       {tag ? (
-        <span className="absolute bottom-2 left-2 rounded-md bg-fg px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.08em] text-bg">
+        <span className="absolute bottom-2 left-2 rounded-md bg-fg px-1.5 py-0.5 text-[9px] text-bg">
           {tag}
         </span>
       ) : null}

@@ -33,7 +33,7 @@ export default function CreateCirkelForm() {
       <div className="eyebrow">Opret cirkel</div>
 
       <label className="block space-y-1.5">
-        <span className="text-fg-dim text-xs uppercase tracking-wide">Navn</span>
+        <span className="text-fg-dim text-xs">Navn</span>
         <input
           type="text"
           name="name"
@@ -48,7 +48,7 @@ export default function CreateCirkelForm() {
       </label>
 
       <label className="block space-y-1.5">
-        <span className="text-fg-dim text-xs uppercase tracking-wide">
+        <span className="text-fg-dim text-xs">
           Max medlemmer (3-10)
         </span>
         <input
@@ -71,7 +71,7 @@ export default function CreateCirkelForm() {
       <button
         type="submit"
         disabled={pending || name.trim().length < 2}
-        className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-6 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
+        className="inline-flex items-center justify-center bg-fg text-bg px-6 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
       >
         {pending ? "Opretter..." : "Opret cirkel"}
       </button>

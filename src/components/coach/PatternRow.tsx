@@ -47,10 +47,10 @@ export default function PatternRow({ pattern }: { pattern: PatternForDisplay }) 
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <span className="inline-flex items-center rounded-full surface-2 px-2 py-0.5 text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+              <span className="inline-flex items-center surface-2 px-2 py-0.5 text-micro text-fg-faint">
                 {codeLabel}
               </span>
-              <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+              <span className="text-micro text-fg-faint">
                 {t("affectedCount", { count: pattern.affected.length })}
               </span>
             </div>
@@ -58,7 +58,7 @@ export default function PatternRow({ pattern }: { pattern: PatternForDisplay }) 
           </div>
           <span
             aria-hidden="true"
-            className="shrink-0 text-fg-faint font-mono text-xs"
+            className="shrink-0 text-fg-faint text-xs"
           >
             {open ? "−" : "+"}
           </span>
@@ -73,7 +73,7 @@ export default function PatternRow({ pattern }: { pattern: PatternForDisplay }) 
               <li key={m.memberId}>
                 <Link
                   href={`/coach/members/${m.memberId}`}
-                  className="inline-flex items-center rounded-full surface-2 px-3 py-1 text-xs text-fg hover:bg-bg-3 transition-colors"
+                  className="inline-flex items-center surface-2 px-3 py-1 text-xs text-fg hover:bg-bg-3 transition-colors"
                 >
                   @{m.handle}
                 </Link>

@@ -29,7 +29,7 @@ export default async function CoachQueuePage() {
       <header className="pt-2 flex items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
+          <h1 className="font-display text-title md:text-[2.75rem]">
             {t("title")}
           </h1>
           <p className="mt-2 text-fg-dim text-sm">
@@ -118,7 +118,7 @@ export default async function CoachQueuePage() {
                       @{f.memberHandle}
                     </Link>
                   </div>
-                  <div className="text-[11px] font-mono text-fg-faint">
+                  <div className="text-micro text-fg-faint">
                     {liftLabel(f)} ·{" "}
                     {new Date(f.createdAt).toLocaleString("da-DK", {
                       hour: "2-digit",
@@ -141,7 +141,7 @@ export default async function CoachQueuePage() {
               ) : null}
 
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                <span className="text-micro text-fg-faint">
                   {t("awaitingReview")}
                 </span>
                 <CoachReviewButton formCheck={f} />

@@ -10,7 +10,7 @@ export const metadata = {
 };
 
 // Coach console stays dark in v1 (spec §2). Explicit, so it never depends on :root.
-export const viewport: Viewport = { themeColor: "#0A0A0B", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#111111", colorScheme: "dark" };
 
 export default async function CoachLayout({
   children,

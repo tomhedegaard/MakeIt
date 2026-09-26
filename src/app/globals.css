@@ -1,41 +1,53 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------- *
- * MakeIt — design tokens (monochrome / strength editorial)
+ * MakeIt — design tokens, retning Nord
+ * (docs/superpowers/specs/2026-09-26-nord-redesign-design.md §3)
+ *
+ * Lys er standard og dækker alle medlemsflader, login og onboarding.
+ * Mørkt findes to steder — /session under et pas og coach-konsollen —
+ * via <ThemeScope theme="nat">. Webshoppen sætter tonen; token-navnene
+ * er shoppens.
  * ---------------------------------------------------------------- */
 :root,
-[data-theme="nat"] {
-  color-scheme: dark;
+[data-theme="nord"] {
+  color-scheme: light;
 
   /* Surfaces */
-  --bg:           #0A0A0B;
-  --bg-2:         #111113;
-  --bg-3:         #18181B;
-  --bg-elev:      #1F1F23;
+  --bg:           #FFFFFF;
+  --bg-2:         #F2F2F0;
+  --bg-3:         #E9E9E6;
+  --bg-elev:      #FFFFFF; /* sheets og popovers: 1 px linje, ingen skygge */
 
-  /* Text */
-  --fg:           #F5F2EC;
-  --fg-dim:       #A8A6A0;
-  --fg-faint:     #56554F;
+  /* Text. Briefens --fg-dim og --fg-faint er skubbet ned, så al
+   * neutral tekst holder AA på alle tre flader (spec §10.1). */
+  --fg:           #111111;
+  --fg-body:      #333333;
+  --fg-dim:       #5E5E59;
+  --fg-faint:     #696964;
 
-  /* Lines */
-  --line:         rgba(245, 242, 236, 0.08);
-  --line-strong:  rgba(245, 242, 236, 0.18);
-  --line-bright:  rgba(245, 242, 236, 0.34);
+  /* Lines — 1 px i stedet for skygger */
+  --line:         #E1E1DE;
+  --line-strong:  #CFCFCA;
+  --line-bright:  #B9B9B4;
 
-  /* Accents (still monochrome — depth via cool undertone) */
-  --steel:        #1A1D24;
-  --signal:       #F5F2EC; /* emphasis = white, not color */
+  --steel:        #F2F2F0;
+
+  /* Mos er den eneste brand-accent: kicker uden domæne, links,
+   * progress, aktiv tab-markør, valgt tilstand. Aldrig knapfyld,
+   * aldrig store flader (spec §7.3). 9,7:1 som tekst på hvid. */
+  --signal:       #2E4A3B;
+  --signal-ink:   #2E4A3B;
 
   /* Domain accents — "farve er retning, ikke dekoration".
    * Only allowed in: kickers, chart data-ink, active nav, dots,
    * badge tints and the dashboard tile accent stroke.
    * Never in: buttons/CTAs, alerts, body text, large fills.
    * See docs/DOMAIN_COLOR_SYSTEM.md */
-  --heart: #F2545B; /* HRV, puls, kardiovaskulært */
-  --food:  #45C487; /* kost, måltider, vægt */
-  --body:  #FF9C41; /* træning, øvelser, programmer */
-  --mind:  #5B9DF5; /* mentalt, check-in, journal, søvn */
+  --heart: #BE123C; /* HRV, puls, kardiovaskulært */
+  --food:  #116A35; /* kost, måltider, vægt */
+  --body:  #A8380B; /* træning, øvelser, programmer */
+  --mind:  #1D4ED8; /* mentalt, check-in, journal, søvn */
 
   --heart-tint: color-mix(in oklab, var(--heart) 12%, transparent);
   --food-tint:  color-mix(in oklab, var(--food) 12%, transparent);
@@ -46,139 +58,97 @@
   --food-line:  color-mix(in oklab, var(--food) 32%, transparent);
   --body-line:  color-mix(in oklab, var(--body) 32%, transparent);
   --mind-line:  color-mix(in oklab, var(--mind) 32%, transparent);
-
   /* Mind chart series — cool family so the graph reads as one domain
    * while the three series stay distinguishable */
-  --mind-energy: #9F8CFB;
-  --mind-stress: #5B9DF5;
-  --mind-focus:  #6FE0E8;
-
-  /* Status — separate from domains. Status colors only appear in
-   * filled alerts/badges WITH icon and text; domain colors never do. */
-  --ok:     #4ADE80;
-  --warn:   #FACC15;
-  --danger: #F87171;
-
-  /* Theme-dependent treatments (Kalk overrides below) */
-  --glow: rgba(245, 242, 236, 0.08);
-  --vignette-edge: rgba(0, 0, 0, 0.45);
-  --grain-blend: overlay;
-  --grain-opacity: 0.55;
-  --signal-ink: #F5F2EC;
-
-  /* Scrim (modal backdrop) and media letterbox */
-  --scrim: rgba(0, 0, 0, 0.7);
-  --media: #000000;
-
-  /* Anatomy figure — muscle map illustration */
-  --anatomy-body:   #1A1A1C; /* silhuet */
-  --anatomy-edge:   #3A3A3E; /* kant, led, hoved */
-  --anatomy-idle:   #222226; /* ikke-trænede muskler */
-  --anatomy-accent: #C97B3E; /* sekundære/tertiære muskler */
-}
-
-/* Big Shoulders is the one display voice everywhere; the treatment lives
- * on :root, not per theme. */
-:root {
-  --display-weight: 800;
-  --display-tracking: -0.005em;
-  --display-leading: 0.88;
-}
-
-/* ---------------------------------------------------------------- *
- * Kalk — daylight theme (spec 2026-09-17 §3). Same token names,
- * light values. Enabled per surface via <ThemeScope theme="kalk">.
- * html:has(...) lifts it to <html>/<body> so page background,
- * overscroll and root-level UI (cookie bar) follow.
- * ---------------------------------------------------------------- */
-html:has(.theme-root[data-theme="kalk"]),
-[data-theme="kalk"] {
-  color-scheme: light;
-
-  --bg:          #E7E9EB;
-  --bg-2:        #F4F5F6;
-  --bg-3:        #DCDFE2;
-  --bg-elev:     #FFFFFF;
-
-  --fg:          #0D0F12;
-  --fg-dim:      #4A4F57;
-  --fg-faint:    #5A6069; /* 4.74:1 on --bg-3, 5.21:1 on --bg */
-
-  --line:        rgba(13, 15, 18, 0.10);
-  --line-strong: rgba(13, 15, 18, 0.18);
-  --line-bright: rgba(13, 15, 18, 0.32);
-
-  --steel:       #DCDFE2;
-  --signal:      #E4570F; /* graphic only, never text, never on --bg-3 */
-  --signal-ink:  #A8380B; /* orange as text */
-
-  --heart: #BE123C;
-  --food:  #116A35;
-  --body:  #A8380B;
-  --mind:  #1D4ED8;
-
-  /* Custom properties resolve where declared, so tints must be
-   * re-declared here or they keep the Nat hues from :root. */
-  --heart-tint: color-mix(in oklab, var(--heart) 12%, transparent);
-  --food-tint:  color-mix(in oklab, var(--food) 12%, transparent);
-  --body-tint:  color-mix(in oklab, var(--body) 12%, transparent);
-  --mind-tint:  color-mix(in oklab, var(--mind) 12%, transparent);
-  --heart-line: color-mix(in oklab, var(--heart) 32%, transparent);
-  --food-line:  color-mix(in oklab, var(--food) 32%, transparent);
-  --body-line:  color-mix(in oklab, var(--body) 32%, transparent);
-  --mind-line:  color-mix(in oklab, var(--mind) 32%, transparent);
-
   --mind-energy: #6D28D9;
   --mind-stress: #1D4ED8;
   --mind-focus:  #0E7490;
 
-  --ok:     #166534;
-  --warn:   #854D0E;
-  --danger: #B91C1C;
-
-  --glow: rgba(255, 255, 255, 0.7);
-  --vignette-edge: rgba(13, 15, 18, 0.06);
-  --grain-blend: multiply;
-  --grain-opacity: 0.35;
+  /* Status — separate from domains. Status colors only appear in
+   * filled alerts/badges WITH icon and text; domain colors never do.
+   * Ingen "info"-farve; info er monokrom (spec §3.3). */
+  --ok:     #116A35;
+  --warn:   #8A6A00;
+  --danger: #B42318;
 
   /* Scrim (modal backdrop) and media letterbox */
-  --scrim: rgba(13, 15, 18, 0.45);
-  --media: #0D0F12;
+  --scrim: rgba(17, 17, 17, 0.45);
+  --media: #111111;
 
   /* Anatomy figure — muscle map illustration */
-  --anatomy-body:   #DCDFE2; /* silhuet */
-  --anatomy-edge:   #B4B9C0; /* kant, led, hoved */
-  --anatomy-idle:   #CDD1D6; /* ikke-trænede muskler */
+  --anatomy-body:   #E9E9E6; /* silhuet */
+  --anatomy-edge:   #B9B9B4; /* kant, led, hoved */
+  --anatomy-idle:   #DDDDD9; /* ikke-trænede muskler */
   --anatomy-accent: #A8380B; /* sekundære/tertiære muskler (= --body) */
 }
 
-/* A Nat surface inside a Kalk layout (e.g. /session) wins at <html>.
- * Mirrors every colour token Kalk overrides, so root-level UI
- * (cookie bar, sheets portalled to body) never mixes the two. */
+/* Schibsted Grotesk er den ene stemme. Display er 500 i sentence case
+ * (spec §4): ingen uppercase, ingen kondenseret display-skrift. */
+:root {
+  --display-weight: 500;
+  --display-tracking: -0.03em;
+  --display-leading: 1;
+}
+
+/* ---------------------------------------------------------------- *
+ * Nord nat (spec §3.2) — kun /session under et pas og coach-konsollen.
+ * Samme blok bærer <html>-løftet, så root-niveau-UI (cookie-bar, sheets
+ * portalleret til body) aldrig blander de to flader. Ét sted at rette:
+ * de to selektorer kan ikke drifte fra hinanden.
+ * ---------------------------------------------------------------- */
+[data-theme="nat"],
 html:has(.theme-root[data-theme="nat"]) {
   color-scheme: dark;
-  --bg: #0A0A0B; --bg-2: #111113; --bg-3: #18181B; --bg-elev: #1F1F23;
-  --fg: #F5F2EC; --fg-dim: #A8A6A0; --fg-faint: #56554F;
-  --line: rgba(245, 242, 236, 0.08);
-  --line-strong: rgba(245, 242, 236, 0.18);
-  --line-bright: rgba(245, 242, 236, 0.34);
-  --steel: #1A1D24; --signal: #F5F2EC; --signal-ink: #F5F2EC;
-  --heart: #F2545B; --food: #45C487; --body: #FF9C41; --mind: #5B9DF5;
+
+  --bg:           #111111;
+  --bg-2:         #1A1A19;
+  --bg-3:         #232322;
+  --bg-elev:      #1A1A19;
+
+  --fg:           #FFFFFF;
+  --fg-body:      #E6E6E2;
+  --fg-dim:       #B9B9B4;
+  --fg-faint:     #8F8F8A;
+
+  --line:         rgba(255, 255, 255, 0.12);
+  --line-strong:  rgba(255, 255, 255, 0.24);
+  --line-bright:  rgba(255, 255, 255, 0.40);
+
+  --steel:        #232322;
+
+  /* På mørkt er hvid emfasen; ingen mos på mørkt (spec §3.2). */
+  --signal:       #FFFFFF;
+  --signal-ink:   #FFFFFF;
+
+  --heart: #F2545B;
+  --food:  #45C487;
+  --body:  #FF9C41;
+  --mind:  #5B9DF5;
+
   --heart-tint: color-mix(in oklab, var(--heart) 12%, transparent);
   --food-tint:  color-mix(in oklab, var(--food) 12%, transparent);
   --body-tint:  color-mix(in oklab, var(--body) 12%, transparent);
   --mind-tint:  color-mix(in oklab, var(--mind) 12%, transparent);
+
   --heart-line: color-mix(in oklab, var(--heart) 32%, transparent);
   --food-line:  color-mix(in oklab, var(--food) 32%, transparent);
   --body-line:  color-mix(in oklab, var(--body) 32%, transparent);
   --mind-line:  color-mix(in oklab, var(--mind) 32%, transparent);
-  --mind-energy: #9F8CFB; --mind-stress: #5B9DF5; --mind-focus: #6FE0E8;
-  --ok: #4ADE80; --warn: #FACC15; --danger: #F87171;
-  --glow: rgba(245, 242, 236, 0.08);
-  --grain-blend: overlay; --grain-opacity: 0.55;
-  --vignette-edge: rgba(0, 0, 0, 0.45);
-  --scrim: rgba(0, 0, 0, 0.7); --media: #000000;
-  --anatomy-body: #1A1A1C; --anatomy-edge: #3A3A3E; --anatomy-idle: #222226; --anatomy-accent: #C97B3E;
+  --mind-energy: #9F8CFB;
+  --mind-stress: #5B9DF5;
+  --mind-focus:  #6FE0E8;
+
+  --ok:     #45C487;
+  --warn:   #FACC15;
+  --danger: #F87171;
+
+  --scrim: rgba(0, 0, 0, 0.7);
+  --media: #000000;
+
+  --anatomy-body:   #1A1A19;
+  --anatomy-edge:   #3A3A38;
+  --anatomy-idle:   #232322;
+  --anatomy-accent: #FF9C41;
 }
 
 .theme-root { background: var(--bg); color: var(--fg); }
@@ -197,6 +167,7 @@ html:has(.theme-root[data-theme="nat"]) {
   --color-bg-3:        var(--bg-3);
   --color-bg-elev:     var(--bg-elev);
   --color-fg:          var(--fg);
+  --color-fg-body:     var(--fg-body);
   --color-fg-dim:      var(--fg-dim);
   --color-fg-faint:    var(--fg-faint);
   --color-line:        var(--line);
@@ -235,9 +206,55 @@ html:has(.theme-root[data-theme="nat"]) {
   --color-warn:   var(--warn);
   --color-danger: var(--danger);
 
+  /* Én skrift (spec §4). De tre navne bliver stående, så de 119 filer
+   * der bruger font-display og de 167 der bruger font-mono ikke skal
+   * røres — de peger alle på Schibsted Grotesk nu. */
   --font-sans:    var(--font-sans-stack);
-  --font-display: var(--font-display-stack);
-  --font-mono:    var(--font-mono-stack);
+  --font-display: var(--font-sans-stack);
+  --font-mono:    var(--font-sans-stack);
+
+  /* Radius 0 overalt (spec §7.2). Sat som tema, så hver eksisterende
+   * rounded-sm/md/lg/xl/2xl bliver 0 uden en filændring. rounded-full
+   * er en egen værdi: cirkler (avatarer, dots, skyder-knop) forbliver
+   * cirkler, præcis som briefen beskriver dem. */
+  --radius-xs:  0;
+  --radius-sm:  0;
+  --radius-md:  0;
+  --radius-lg:  0;
+  --radius-xl:  0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
+
+  /* Type-skalaen (spec §4). Hver størrelse bærer sin egen linjehøjde,
+   * spærring og vægt, så text-title alene giver hele rollen. Brød hedder
+   * text-copy, fordi text-body allerede er domænefarven Krop. */
+  --text-hero: 4rem;             /* 64 — HRV 43 ms, Reps 1.420, topsæt 135 kg */
+  --text-hero--line-height: 0.95;
+  --text-hero--letter-spacing: -0.04em;
+  --text-hero--font-weight: 500;
+  --text-hero-lg: 5.5rem;        /* 88 — samme rolle på tablet og op */
+  --text-hero-lg--line-height: 0.95;
+  --text-hero-lg--letter-spacing: -0.04em;
+  --text-hero-lg--font-weight: 500;
+  --text-title: 2.125rem;        /* 34 — "Din uge." */
+  --text-title--line-height: 1;
+  --text-title--letter-spacing: -0.03em;
+  --text-title--font-weight: 500;
+  --text-section: 1.375rem;      /* 22 */
+  --text-section--line-height: 1.1;
+  --text-section--letter-spacing: -0.02em;
+  --text-section--font-weight: 500;
+  --text-card: 1.0625rem;        /* 17 — korttitel, øvelsesnavn */
+  --text-card--line-height: 1.25;
+  --text-card--letter-spacing: -0.01em;
+  --text-card--font-weight: 500;
+  --text-copy: 0.9375rem;        /* 15 — brødtekst */
+  --text-copy--line-height: 1.5;
+  --text-meta: 0.8125rem;        /* 13 — metadata og kicker */
+  --text-meta--line-height: 1.35;
+  --text-micro: 0.75rem;         /* 12 — tabelhoveder, tidsstempler */
+  --text-micro--line-height: 1.3;
 }
 
 /* ---------------------------------------------------------------- *
@@ -245,7 +262,7 @@ html:has(.theme-root[data-theme="nat"]) {
  * ---------------------------------------------------------------- */
 * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
-html { color-scheme: dark; }
+html { color-scheme: light; }
 /* html/body keep their natural (auto) height. Lenis used to force
  * this on every page; the shells depend on it: the member app pins
  * itself with h-dvh on mobile and grows with content on desktop
@@ -255,37 +272,44 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-feature-settings: "ss01", "cv11";
-  letter-spacing: -0.01em;
+  /* Brødtekst er 15/1,5 uden spærring (spec §4). Vi sender kun 400 og
+   * 500, så synthesis holdes slukket: en font-bold falder til 500 i
+   * stedet for at blive kunstigt fed. */
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: 0;
 }
 
 ::selection { background: var(--fg); color: var(--bg); }
 
 ::-webkit-scrollbar       { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--bg-elev); border-radius: 8px; }
-::-webkit-scrollbar-thumb:hover { background: var(--line-bright); }
+::-webkit-scrollbar-thumb { background: var(--line-strong); }
+::-webkit-scrollbar-thumb:hover { background: var(--fg-faint); }
 
 /* ---------------------------------------------------------------- *
  * Type system — strength editorial
  * ---------------------------------------------------------------- */
 .font-display {
-  font-family: var(--font-display), Impact, "Helvetica Neue", sans-serif;
-  /* Big Shoulders is variable; :root picks the weight, synthesis stays off. */
+  font-family: var(--font-display), system-ui, sans-serif;
+  /* Sentence case er den største enkeltforskel fra Kalk (spec §7.1):
+   * ingen text-transform her, og ingen andre steder. */
   font-weight: var(--display-weight);
   font-synthesis: none;
   letter-spacing: var(--display-tracking);
   line-height: var(--display-leading);
-  text-transform: uppercase;
 }
 
+/* Kicker: 13 px sentence case i mos, ikke 11 px spærret mono i grå
+ * (spec §4). Inde i en [data-domain]-scope overtager domænefarven. */
 .eyebrow {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--fg-dim);
+  line-height: 1.35;
+  letter-spacing: 0;
+  color: var(--signal-ink);
 }
 
 /* Opt-in domain kicker — colored only inside a [data-domain] scope,
@@ -296,12 +320,13 @@ body {
  * Short 24×2px bar in the tile's domain hue (docs/DOMAIN_COLOR_SYSTEM.md §3) */
 .domain-stroke {
   display: block;
-  width: 24px; height: 2px; border-radius: 1px;
+  width: 24px; height: 2px;
   background: var(--domain, var(--line-bright));
 }
 
+/* Tal står i samme skrift som resten, men altid med tabular-nums, så
+ * en kolonne af kilo og millisekunder ikke danser (spec §4). */
 .numeric {
-  font-family: var(--font-mono), ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
@@ -314,83 +339,38 @@ body {
 .hairline        { border-color: var(--line); }
 .hairline-strong { border-color: var(--line-strong); }
 
-.grain::before {
-  content: "";
-  position: fixed; inset: -10%; pointer-events: none; z-index: 1;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1   0 0 0 0 0.95   0 0 0 0 0.92   0 0 0 0.045 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  opacity: var(--grain-opacity);
-  mix-blend-mode: var(--grain-blend);
-  /* Subtle film-projector drift — the tile shifts in 8 steps so
-   * it never reads as smooth motion (which would feel like a
-   * texture sliding) but instead as the grain pattern itself
-   * resampling, the way real film grain does frame-to-frame. */
-  animation: grain-drift 7s steps(8) infinite;
-}
-
-@keyframes grain-drift {
-  0%   { transform: translate(0%, 0%); }
-  10%  { transform: translate(-4%, -3%); }
-  20%  { transform: translate(3%, -5%); }
-  30%  { transform: translate(-2%, 4%); }
-  40%  { transform: translate(5%, 2%); }
-  50%  { transform: translate(-4%, -1%); }
-  60%  { transform: translate(2%, 3%); }
-  70%  { transform: translate(-5%, -4%); }
-  80%  { transform: translate(4%, -2%); }
-  90%  { transform: translate(-1%, 5%); }
-  100% { transform: translate(0%, 0%); }
-}
-
-/* Kalk: dark noise so multiply leaves a visible concrete texture. */
-html:has(.theme-root[data-theme="kalk"]) .grain::before {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05   0 0 0 0 0.06   0 0 0 0 0.07   0 0 0 0.22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-}
-html:has(.theme-root[data-theme="nat"]) .grain::before {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1   0 0 0 0 0.95   0 0 0 0 0.92   0 0 0 0.045 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .grain::before { animation: none; }
-}
-
-.vignette::after {
-  content: "";
-  position: fixed; inset: 0; pointer-events: none; z-index: 1;
-  background: radial-gradient(120% 80% at 50% 0%, transparent 40%, var(--vignette-edge) 100%);
-}
-
 /* Focus ring */
 *:focus-visible {
   outline: 2px solid var(--fg);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
-/* Buttons */
+/* Buttons (spec §5). Primær er blæk-fyldt, sekundær er 1 px blæk-
+ * outline, tertiær er et mos-tekstlink. Ingen mos-fyldte knapper,
+ * ingen piller: 48 px høj, radius 0, 15 px 500 i sentence case. */
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
   gap: 0.5rem;
-  height: 2.75rem;
+  height: 3rem;
   padding: 0 1.25rem;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.75rem;
+  font-size: 0.9375rem;
   font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  letter-spacing: 0;
+  border: 1px solid var(--fg);
+  border-radius: 0;
   background: transparent;
   color: var(--fg);
-  transition: background 220ms ease, color 220ms ease, border-color 220ms ease, transform 220ms ease;
+  transition: background 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out;
   cursor: pointer;
   white-space: nowrap;
 }
 .btn:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .btn-primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .btn-primary:hover { background: transparent; color: var(--fg); }
-.btn-ghost { border-color: transparent; color: var(--fg-dim); }
-.btn-ghost:hover { background: var(--bg-3); color: var(--fg); border-color: var(--line); }
-.btn-sm { height: 2.5rem; padding: 0 0.875rem; font-size: 0.6875rem; }
+.btn-ghost { border-color: transparent; color: var(--signal-ink); }
+.btn-ghost:hover { background: transparent; border-color: transparent; text-decoration: underline; }
+.btn-sm { height: 2.5rem; padding: 0 0.875rem; font-size: 0.8125rem; }
 
 /* Form inputs — minimal, hairline-bordered, share the surface palette */
 .input {
@@ -398,8 +378,8 @@ html:has(.theme-root[data-theme="nat"]) .grain::before {
   appearance: none;
   background: var(--bg-3);
   color: var(--fg);
-  border: 1px solid var(--line);
-  border-radius: 0.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
   padding: 0.625rem 0.875rem;
   font: inherit;
   font-size: 0.875rem;
@@ -439,17 +419,16 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   width: 100%;
   height: 3rem;
   padding: 0 1rem;
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  background: var(--bg-3);
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
   color: var(--fg);
-  font-family: var(--font-mono), monospace;
-  font-size: 0.875rem;
-  letter-spacing: 0.04em;
+  font-size: 0.9375rem;
+  letter-spacing: 0;
   transition: border-color 200ms ease, background 200ms ease;
 }
 .field:hover  { border-color: var(--line-strong); }
-.field:focus  { border-color: var(--fg); background: var(--bg); outline: none; }
+.field:focus  { border-color: var(--fg); background: var(--bg-2); outline: none; }
 .field:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
 .field::placeholder { color: var(--fg-faint); }
 
@@ -521,7 +500,6 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   grid-template-columns: 56px 1fr 56px;
   align-items: stretch;
   border: 1px solid var(--line-strong);
-  border-radius: 14px;
   overflow: hidden;
   background: var(--bg-2);
   user-select: none;
@@ -546,8 +524,8 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   display: flex;
   align-items: baseline;
   justify-content: center;
-  font-family: var(--font-mono), monospace;
   font-variant-numeric: tabular-nums;
+  font-weight: 500;
   font-size: 2rem;
   letter-spacing: -0.03em;
   line-height: 1;
@@ -560,7 +538,6 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   margin: 0;
   padding: 0.125rem 0.15rem;
   border: 0;
-  border-radius: 4px;
   background: transparent;
   color: inherit;
   font: inherit;
@@ -575,12 +552,49 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   outline-offset: 2px;
 }
 .stepper-label {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.625rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0;
   color: var(--fg-dim);
   margin-top: 0.25rem;
+}
+
+/* ---------------------------------------------------------------- *
+ * Skyder (spec §5): 4 px spor i --bg-3, fyld i mos op til værdien, 20 px
+ * cirkulær knop i blæk med hvid kant. Målfladen er 44 px høj, så den er
+ * en finger bred. Fyldet er et hårdt stop, ikke en gradient; --fill
+ * sættes af komponenten via rangeFill() (src/lib/ui/range.ts).
+ * ---------------------------------------------------------------- */
+.range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.range:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.range::-webkit-slider-runnable-track {
+  height: 4px;
+  background: linear-gradient(to right, var(--signal) var(--fill, 0%), var(--bg-3) var(--fill, 0%));
+}
+.range::-moz-range-track { height: 4px; background: var(--bg-3); }
+.range::-moz-range-progress { height: 4px; background: var(--signal); }
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -8px;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--fg);
+}
+.range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--fg);
 }
 
 /* ---------------------------------------------------------------- *
@@ -593,11 +607,9 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   height: 44px;
   display: inline-flex; align-items: center; justify-content: center;
   border: 1px solid var(--line-strong);
-  border-radius: 999px;
   background: transparent;
   color: var(--fg);
-  font-family: var(--font-mono), monospace;
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   font-variant-numeric: tabular-nums;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -614,9 +626,7 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
  * ---------------------------------------------------------------- */
 .sheet-overlay {
   position: fixed; inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: var(--scrim);
   z-index: 60;
   animation: sheet-fade 220ms cubic-bezier(.2,.7,.2,1);
 }
@@ -625,7 +635,6 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   left: 0; right: 0; bottom: 0;
   background: var(--bg-2);
   border-top: 1px solid var(--line-strong);
-  border-radius: 18px 18px 0 0;
   padding: 18px 18px calc(18px + var(--safe-bottom));
   z-index: 61;
   max-height: 92dvh;
@@ -633,7 +642,7 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   animation: sheet-up 320ms cubic-bezier(.2,.7,.2,1);
 }
 .sheet-grabber {
-  width: 38px; height: 4px; border-radius: 2px;
+  width: 38px; height: 4px;
   background: var(--line-bright);
   margin: 0 auto 12px;
 }
@@ -671,12 +680,11 @@ nav.tabbar {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 2px;
   color: var(--fg-dim);
-  font-family: var(--font-mono), monospace;
   font-size: 0.6875rem;
-  letter-spacing: 0.06em;
+  font-weight: 500;
+  letter-spacing: 0;
   line-height: 1.1;
   text-align: center;
-  text-transform: uppercase;
   -webkit-tap-highlight-color: transparent;
   position: relative;
   min-width: 0;
@@ -691,11 +699,11 @@ nav.tabbar {
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
   width: 24px; height: 2px;
   background: var(--signal);
-  border-radius: 0 0 2px 2px;
 }
-/* Kalk (spec §6): every active tab is an ink label + signal stroke;
- * no domain hue on the tab bar. */
-.tab-icon { width: 22px; height: 22px; }
+/* Nord (spec §5): hver aktiv tab er en blæk-label og en 2 px mos-streg;
+ * ingen domænefarve i selve bjælken. */
+/* 24 px linjeikoner, 1,5 px streg (spec §5) */
+.tab-icon { width: 24px; height: 24px; }
 
 /* ---------------------------------------------------------------- *
  * Big touch primary (mobile-first session CTA)
@@ -703,9 +711,8 @@ nav.tabbar {
 .btn-xl {
   height: 64px;
   padding: 0 24px;
-  font-size: 0.8125rem;
-  letter-spacing: 0.18em;
-  border-radius: 16px;
+  font-size: 0.9375rem;
+  letter-spacing: 0;
   width: 100%;
 }
 
@@ -721,10 +728,10 @@ nav.tabbar {
   from { transform: rotate(-8deg) scaleX(0); }
   to   { transform: rotate(-8deg) scaleX(1); }
 }
-[data-theme="kalk"] .strike-signal {
+[data-theme="nord"] .strike-signal {
   position: relative;
 }
-[data-theme="kalk"] .strike-signal::after {
+[data-theme="nord"] .strike-signal::after {
   content: "";
   position: absolute;
   left: -4%;
@@ -741,14 +748,14 @@ nav.tabbar {
  * fra 150 med rAF og saetter `data-motion`: "armed" naar JS lever men
  * kortet endnu ikke er i syne, "run" naar det er. Uden JS staar
  * attributten ikke, og stregen tegnes som for ved mount. */
-[data-theme="kalk"] [data-demo-card] .strike-signal::after {
+[data-theme="nord"] [data-demo-card] .strike-signal::after {
   animation-delay: 0.12s;
   animation-duration: 0.62s;
 }
-[data-theme="kalk"] [data-demo-card][data-motion="armed"] .strike-signal::after {
+[data-theme="nord"] [data-demo-card][data-motion="armed"] .strike-signal::after {
   animation-play-state: paused;
 }
-[data-theme="kalk"] [data-demo-card][data-motion="run"] .kalk-topset {
+[data-theme="nord"] [data-demo-card][data-motion="run"] .kalk-topset {
   display: inline-block;
   animation: kalk-topset-land 0.7s cubic-bezier(0.2, 0, 0.1, 1) both;
 }
@@ -758,7 +765,7 @@ nav.tabbar {
 }
 
 /* Kg ruler above a section, like the holes in a rack. */
-[data-theme="kalk"] .kalk-rule {
+[data-theme="nord"] .kalk-rule {
   display: flex;
   justify-content: space-between;
   padding-top: 14px;
@@ -773,7 +780,7 @@ nav.tabbar {
 /* Motor-demoens skydere. Tommelfingeren fylder 44 px, så målfladen er
  * en finger bred, mens prikken der tegnes i den er lille nok til at
  * sporet stadig kan læses. Tokens only. */
-[data-theme="kalk"] .kalk-range {
+[data-theme="nord"] .kalk-range {
   -webkit-appearance: none;
   appearance: none;
   height: 44px;
@@ -781,20 +788,20 @@ nav.tabbar {
   cursor: pointer;
   touch-action: manipulation;
 }
-[data-theme="kalk"] .kalk-range:focus-visible {
+[data-theme="nord"] .kalk-range:focus-visible {
   outline: 2px solid var(--fg);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 0;
 }
-[data-theme="kalk"] .kalk-range::-webkit-slider-runnable-track {
+[data-theme="nord"] .kalk-range::-webkit-slider-runnable-track {
   height: 2px;
   background: var(--line-strong);
 }
-[data-theme="kalk"] .kalk-range::-moz-range-track {
+[data-theme="nord"] .kalk-range::-moz-range-track {
   height: 2px;
   background: var(--line-strong);
 }
-[data-theme="kalk"] .kalk-range::-webkit-slider-thumb {
+[data-theme="nord"] .kalk-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 44px;
@@ -804,7 +811,7 @@ nav.tabbar {
   border-radius: 50%;
   background: radial-gradient(circle at center, var(--fg) 0 8px, var(--bg) 9px 13px, transparent 14px);
 }
-[data-theme="kalk"] .kalk-range::-moz-range-thumb {
+[data-theme="nord"] .kalk-range::-moz-range-thumb {
   width: 44px;
   height: 44px;
   border: 0;
@@ -813,36 +820,36 @@ nav.tabbar {
 }
 
 /* Sticky motor rig: scale the phone down on short viewports. */
-[data-theme="kalk"] [data-motor-story] { --rig-s: 1; }
+[data-theme="nord"] [data-motor-story] { --rig-s: 1; }
 @media (max-height: 760px) {
-  [data-theme="kalk"] [data-motor-story] { --rig-s: 0.88; }
+  [data-theme="nord"] [data-motor-story] { --rig-s: 0.88; }
 }
 @media (max-height: 660px) {
-  [data-theme="kalk"] [data-motor-story] { --rig-s: 0.76; }
+  [data-theme="nord"] [data-motor-story] { --rig-s: 0.76; }
 }
 
 /* Night curve: hidden until NightCurveReveal (a small IntersectionObserver
  * island, same shape as the motor rig's) marks the figure in view, then
  * draws itself once via stroke-dashoffset. */
-[data-theme="kalk"] .night-curve__path {
+[data-theme="nord"] .night-curve__path {
   stroke-dasharray: 1400;
   stroke-dashoffset: 1400;
   transition: stroke-dashoffset 1.6s ease-out;
 }
-[data-theme="kalk"] [data-night-curve][data-in-view="true"] .night-curve__path {
+[data-theme="nord"] [data-night-curve][data-in-view="true"] .night-curve__path {
   stroke-dashoffset: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-theme="kalk"] .strike-signal::after {
+  [data-theme="nord"] .strike-signal::after {
     animation: none;
     transform: rotate(-8deg);
   }
-  [data-theme="kalk"] .night-curve__path {
+  [data-theme="nord"] .night-curve__path {
     stroke-dashoffset: 0;
     transition: none;
   }
-  [data-theme="kalk"] [data-demo-card][data-motion="run"] .kalk-topset {
+  [data-theme="nord"] [data-demo-card][data-motion="run"] .kalk-topset {
     animation: none;
   }
 }

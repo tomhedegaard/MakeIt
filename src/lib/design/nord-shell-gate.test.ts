@@ -9,13 +9,13 @@ const files: (readonly [string, string])[] = [
 const layout = readFileSync(new URL("../../app/layout.tsx", import.meta.url), "utf8");
 files.push(["dashboard/page.tsx", readFileSync(new URL("../../app/(app)/dashboard/page.tsx", import.meta.url), "utf8")]);
 
-describe("Kalk shell gate", () => {
+describe("Nord shell gate", () => {
   it("lets people zoom (WCAG 1.4.4)", () => {
     expect(layout).not.toMatch(/maximumScale/);
   });
 
   it.each(files)("%s has no dark-only literals", (_f, src) => {
-    expect(src).not.toMatch(/#0A0A0B|#F5F2EC|rgba\(245,\s?242,\s?236|rgba\(10,\s?10,\s?11/i);
+    expect(src).not.toMatch(/#0A0A0B|#F5F2EC|#1A1A19|#232322|#E6E6E2|rgba\(245,\s?242,\s?236|rgba\(10,\s?10,\s?11|rgba\(255,\s?255,\s?255/i);
     expect(src).not.toMatch(/\b(bg-black|text-white|bg-white|text-black)\b/);
   });
 });

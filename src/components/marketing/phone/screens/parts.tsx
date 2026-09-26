@@ -26,7 +26,7 @@ export function Kicker({
     <p
       data-domain={domain}
       className={cn(
-        "flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.12em]",
+        "flex items-center gap-1.5 text-[9px]",
         domain ? "text-domain" : "text-fg-dim",
         className,
       )}
@@ -56,7 +56,7 @@ export function Label({ className, children }: { className?: string; children: R
   return (
     <p
       className={cn(
-        "flex items-center gap-1.5 font-mono text-[8.5px] uppercase tracking-[0.1em] text-fg-dim",
+        "flex items-center gap-1.5 text-[8.5px] text-fg-dim",
         className,
       )}
     >
@@ -67,7 +67,7 @@ export function Label({ className, children }: { className?: string; children: R
 
 export function Card({ className, children }: { className?: string; children: ReactNode }) {
   return (
-    <div className={cn("rounded-[14px] border border-line bg-bg-2 px-3 py-[11px]", className)}>
+    <div className={cn("border border-line bg-bg-2 px-3 py-[11px]", className)}>
       {children}
     </div>
   );
@@ -86,7 +86,7 @@ export function Chip({
     <span
       data-domain={domain}
       className={cn(
-        "inline-flex items-center gap-[5px] whitespace-nowrap rounded-full border border-line bg-bg-2 px-2 py-1 font-mono text-[9px] tracking-[0.04em]",
+        "inline-flex items-center gap-[5px] whitespace-nowrap border border-line bg-bg-2 px-2 py-1 text-[9px]",
         className,
       )}
     >
@@ -107,11 +107,11 @@ export function Fields({
   return (
     <div className={cn("grid grid-cols-3 gap-1.5", className)}>
       {items.map((f) => (
-        <div key={f.label} className="rounded-[10px] border border-line px-[7px] py-[5px]">
-          <span className="block font-mono text-[7.5px] uppercase tracking-[0.08em] text-fg-dim">
+        <div key={f.label} className="border border-line px-[7px] py-[5px]">
+          <span className="block text-[7.5px] text-fg-dim">
             {f.label}
           </span>
-          <b className="block font-mono text-[13px] font-medium">{f.value}</b>
+          <b className="block text-[13px] font-medium">{f.value}</b>
         </div>
       ))}
     </div>
@@ -131,7 +131,7 @@ export function Pill({
   return (
     <span
       className={cn(
-        "flex h-[34px] flex-none items-center justify-center rounded-full font-mono text-[10px] font-medium uppercase tracking-[0.1em]",
+        "flex h-[34px] flex-none items-center justify-center text-[10px] font-medium",
         ghost ? "border border-line-strong text-fg" : "bg-fg text-bg",
         className,
       )}
@@ -152,8 +152,8 @@ export function EngineNote({
   children: ReactNode;
 }) {
   return (
-    <div className={cn("rounded-[14px] bg-fg px-3 py-2.5 text-bg", className)}>
-      <p className="font-mono text-[8.5px] uppercase tracking-[0.1em] text-bg/65">{stamp}</p>
+    <div className={cn("bg-fg px-3 py-2.5 text-bg", className)}>
+      <p className="text-[8.5px] text-bg/65">{stamp}</p>
       {children}
     </div>
   );
@@ -175,7 +175,7 @@ export function Swap({
     <p className={cn("flex items-baseline gap-2 font-display text-[24px]", className)}>
       <s className="text-current/55 decoration-signal decoration-[3px]">{from}</s>
       <span>→ {to}</span>
-      {unit ? <i className="font-mono text-[11px] normal-case not-italic opacity-65">{unit}</i> : null}
+      {unit ? <i className="text-[11px] not-italic opacity-65">{unit}</i> : null}
     </p>
   );
 }
@@ -201,7 +201,7 @@ export function Row({
       )}
     >
       <span className="text-[10px] text-fg-dim">{k}</span>
-      <span className="font-mono text-[10px] font-medium">{v}</span>
+      <span className="text-[10px] font-medium">{v}</span>
     </div>
   );
 }

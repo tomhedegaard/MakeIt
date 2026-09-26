@@ -35,16 +35,16 @@ export default function SleepScreen({ width, scroll = false }: { width?: number;
           {STAGE_Y.map(([key, y]) => (
             <g key={key}>
               <line x1="34" y1={y} x2="240" y2={y} className="stroke-line" />
-              <text x="0" y={y + 2.5} fontSize="7" className="fill-fg-dim font-mono">
+              <text x="0" y={y + 2.5} fontSize="7" className="fill-fg-dim">
                 {s(`sleep.${key}`)}
               </text>
             </g>
           ))}
           <path d={HYPNOGRAM} fill="none" strokeWidth="2" strokeLinejoin="round" className="stroke-domain" />
-          <text x="34" y="91" fontSize="6.5" className="fill-fg-dim font-mono">
+          <text x="34" y="91" fontSize="6.5" className="fill-fg-dim">
             {s("sleep.start")}
           </text>
-          <text x="240" y="91" fontSize="6.5" textAnchor="end" className="fill-fg-dim font-mono">
+          <text x="240" y="91" fontSize="6.5" textAnchor="end" className="fill-fg-dim">
             {s("sleep.end")}
           </text>
         </svg>

@@ -35,7 +35,7 @@ export default function KalkHero() {
             </Link>
             <a
               href="#engine"
-              className="border-b border-line-bright pb-0.5 font-mono text-[13px] uppercase tracking-[0.06em] no-underline hover:border-fg"
+              className="border-b border-line-bright pb-0.5 text-[13px] no-underline hover:border-fg"
             >
               {t("link")} <span aria-hidden="true">→</span>
             </a>

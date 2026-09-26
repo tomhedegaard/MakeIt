@@ -51,9 +51,9 @@ export default function NightCurve() {
   return (
     <figure
       data-night-curve
-      className="m-0 rounded-[22px] border border-line bg-bg-2 px-[18px] pb-[22px] pt-5 sm:px-7 sm:pb-7 sm:pt-[26px]"
+      className="m-0 border border-line bg-bg-2 px-[18px] pb-[22px] pt-5 sm:px-7 sm:pb-7 sm:pt-[26px]"
     >
-      <div className="mb-[18px] flex justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.08em] text-fg-dim">
+      <div className="mb-[18px] flex justify-between gap-3 text-[11px] text-fg-dim">
         <span>
           {n("label")} · {n("t0")} → {n("t3")}
         </span>
@@ -64,7 +64,7 @@ export default function NightCurve() {
         {BAND.map((line) => (
           <g key={line.ms}>
             <line x1="40" x2="960" y1={line.y} y2={line.y} strokeDasharray="3 5" className="stroke-line-bright" />
-            <text x="964" y={line.y} dy="3.5" fontSize="10" className="fill-fg-dim font-mono">
+            <text x="964" y={line.y} dy="3.5" fontSize="10" className="fill-fg-dim">
               {line.ms}
             </text>
           </g>
@@ -87,12 +87,12 @@ export default function NightCurve() {
           </g>
         ))}
 
-        <text x="797.6" y="85.4" dx="-12" dy="22" fontSize="13" textAnchor="end" className="fill-fg font-mono">
+        <text x="797.6" y="85.4" dx="-12" dy="22" fontSize="13" textAnchor="end" className="fill-fg">
           {t("steps.hrv.value")} {t("steps.hrv.unit")}
         </text>
       </svg>
 
-      <div aria-hidden="true" className="relative mt-2.5 h-5 font-mono text-[11px] text-fg-dim">
+      <div aria-hidden="true" className="relative mt-2.5 h-5 text-[11px] text-fg-dim">
         {AXIS.map((tick) => (
           <span key={tick.key} style={{ left: tick.left }} className={`absolute top-0 whitespace-nowrap ${tick.shift}`}>
             {n(tick.key)}
@@ -100,7 +100,7 @@ export default function NightCurve() {
         ))}
       </div>
 
-      <div aria-hidden="true" className="mt-[18px] flex flex-wrap gap-x-[18px] gap-y-2 font-mono text-[11px] tracking-[0.06em] text-fg-dim">
+      <div aria-hidden="true" className="mt-[18px] flex flex-wrap gap-x-[18px] gap-y-2 text-[11px] text-fg-dim">
         <span data-domain="mind" className="inline-flex items-center gap-2">
           <i className="size-1.5 rounded-full bg-domain" />
           {n("legendSleep")}

@@ -120,7 +120,7 @@ export default function SettingsClient({
         <div className="grid gap-3 md:grid-cols-2">
           <Field label={t("profile.handleLabel")}>
             <div className="flex items-center gap-2">
-              <span className="text-fg-dim font-mono">@</span>
+              <span className="text-fg-dim">@</span>
               <input
                 className="field flex-1"
                 value={handle}
@@ -275,7 +275,7 @@ export default function SettingsClient({
             {deletePending ? t("danger.deleting") : t("danger.delete")}
           </button>
           {deleteMsg ? (
-            <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-dim">
+            <span className="text-micro text-fg-dim">
               {deleteMsg}
             </span>
           ) : null}
@@ -291,7 +291,7 @@ export default function SettingsClient({
         <SectionHeader eyebrow={t("danger.eyebrow")} title={t("danger.confirmTitle")} />
         <p className="text-fg-dim text-sm">{t("danger.confirmBody")}</p>
         <label className="block space-y-1.5">
-          <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-dim">
+          <span className="text-micro text-fg-dim">
             {t("danger.confirmLabel", { phrase: deletePhrase })}
           </span>
           <input
@@ -325,7 +325,7 @@ function StatusLabel({ status }: { status: Status }) {
   if (!status) return null;
   return (
     <span
-      className="text-[10px] font-mono uppercase tracking-[0.16em]"
+      className="text-micro"
       style={{ color: status.ok ? "var(--fg)" : "var(--fg-dim)" }}
     >
       {status.text}
@@ -377,7 +377,7 @@ function Toggle({
         />
         <span
           aria-hidden
-          className="block relative w-12 h-7 rounded-full border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
+          className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
           style={{ background: checked ? "var(--fg)" : "var(--bg-3)" }}
         >
           <span

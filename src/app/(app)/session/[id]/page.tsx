@@ -19,7 +19,7 @@ import { applyAdaptationToSession } from "@/lib/adaptive/apply";
 import { getTodaysReadinessNudge } from "@/lib/data/hrv";
 
 // Nat: the live session stays dark inside the Kalk app (spec §2, §6).
-export const viewport: Viewport = { themeColor: "#0A0A0B", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#111111", colorScheme: "dark" };
 
 // Overrides the (app) layout's appleWebApp wholesale (shallow merge).
 export const metadata: Metadata = {

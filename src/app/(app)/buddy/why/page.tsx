@@ -82,7 +82,7 @@ export default async function BuddyWhyPage() {
       </ol>
 
       <footer className="pt-4 border-t hairline">
-        <p className="text-xs font-mono text-fg-faint">
+        <p className="text-xs text-fg-faint">
           {t("whyAlgoLine", {
             version: buddy.pairingReason.algo_version,
             score: buddy.pairingReason.score,

@@ -92,7 +92,7 @@ export default function ReadinessLadder({
       </div>
 
       {bucket === null ? (
-        <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint leading-relaxed">
+        <p className="text-micro text-fg-faint leading-relaxed">
           {t("waiting")}
         </p>
       ) : (

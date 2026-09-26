@@ -20,7 +20,7 @@ export async function generateMetadata() {
 
 // Kalk pilot (spec 2026-09-17). Merges with the root viewport.
 export const viewport: Viewport = {
-  themeColor: "#E7E9EB",
+  themeColor: "#FFFFFF",
   colorScheme: "light",
 };
 
@@ -47,12 +47,8 @@ export default async function LoginPage({
   const t = await getTranslations("Login");
 
   return (
-    <ThemeScope theme="kalk" className="flex-1 flex flex-col">
+    <ThemeScope theme="nord" className="flex-1 flex flex-col">
       <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-24">
-        <div className="absolute inset-0 -z-0 pointer-events-none">
-          <div className="absolute left-1/2 top-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,var(--glow),transparent_70%)] blur-2xl" />
-        </div>
-
         <div className="relative z-10 w-full max-w-md">
           <div className="mb-12 flex items-center justify-between">
             <Link href="/" className="inline-block text-fg">
@@ -65,7 +61,7 @@ export default async function LoginPage({
             <span className="pulse-dot" /> {t("beta")}
           </div>
 
-          <h1 className="font-display text-5xl md:text-6xl mb-4">
+          <h1 className="font-display text-title md:text-[2.75rem] mb-4">
             {t("headline.line1")}
             <br /> {t("headline.line2")}
           </h1>
@@ -91,7 +87,7 @@ export default async function LoginPage({
             </p>
           ) : null}
 
-          <p className="mt-10 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
+          <p className="mt-10 text-xs text-fg-faint">
             {SUPABASE_ENABLED ? t("statusConnected") : t("statusDemo")}
           </p>
         </div>
@@ -137,7 +133,7 @@ async function MockForm({ err }: { err?: string }) {
         </button>
       </form>
 
-      <p className="mt-6 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
+      <p className="mt-6 text-xs text-fg-faint">
         {t("testCodesLabel")}<span className="text-fg-dim">MUNK-01 · MAKEIT-CREW · STRAPIT-50K</span>
       </p>
     </>
@@ -191,7 +187,7 @@ async function TabBar({ active }: { active: Tab }) {
     { key: "oauth", label: t("oauth") },
   ];
   return (
-    <div className="flex gap-1 mb-6 surface-2 rounded-lg p-1 text-xs font-mono uppercase tracking-[0.14em]">
+    <div className="flex gap-1 mb-6 surface-2 rounded-lg p-1 text-xs">
       {tabs.map((t) => (
         <Link
           key={t.key}
@@ -308,7 +304,7 @@ async function PasswordForm({ mode }: { mode: "signin" | "signup" }) {
         </button>
       </form>
 
-      <p className="mt-4 text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <p className="mt-4 text-xs text-fg-faint">
         {isSignup ? (
           <>
             {t("hasAccount")}{" "}
@@ -391,7 +387,7 @@ function LoginErrorAlert({
   return (
     <p
       role="alert"
-      className={`flex items-center gap-2 rounded-lg border border-danger/40 bg-danger/15 px-3 py-2 text-sm font-mono uppercase tracking-[0.14em] text-danger ${className}`}
+      className={`flex items-center gap-2 rounded-lg border border-danger/40 bg-danger/15 px-3 py-2 text-sm text-danger ${className}`}
     >
       <DangerGlyph />
       <span>{children}</span>
@@ -455,7 +451,7 @@ async function SentState({ email }: { email?: string }) {
         <span className="text-fg">{email ?? t("fallbackEmail")}</span>
         {t("bodyTail")}
       </p>
-      <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <p className="text-xs text-fg-faint">
         {t("expiry")}
       </p>
     </div>

@@ -18,9 +18,10 @@ export default function PageHeader({
 }) {
   return (
     <div className={cn("border-b hairline", className)}>
-      <Container className="py-10 md:py-14">
+      {/* 32 px mellem sektioner (spec §5) */}
+      <Container className="py-8 md:py-12">
         <PageTitle kicker={eyebrow} title={title} action={right} />
-        {subtitle ? <p className="mt-4 max-w-xl text-fg-dim text-base md:text-lg">{subtitle}</p> : null}
+        {subtitle ? <p className="mt-3 max-w-xl text-copy text-fg-body">{subtitle}</p> : null}
       </Container>
     </div>
   );

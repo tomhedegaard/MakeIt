@@ -75,7 +75,7 @@ export default function MindCelebration({ kind }: CelebrationProps) {
         <div className="flex items-center justify-between">
           <div className="eyebrow">{t(`kind.${kind}.eyebrow`)}</div>
           {reps > 0 ? (
-            <span className="text-xs font-mono tabular-nums px-2.5 py-1 rounded-full border hairline">
+            <span className="text-xs tabular-nums px-2.5 py-1 border hairline">
               {t("reps", { reps })}
             </span>
           ) : null}
@@ -87,7 +87,7 @@ export default function MindCelebration({ kind }: CelebrationProps) {
         <button
           type="button"
           onClick={dismiss}
-          className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity mt-2"
+          className="inline-flex items-center justify-center bg-fg text-bg px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity mt-2"
         >
           {t("dismiss")}
         </button>

@@ -116,7 +116,7 @@ function LessonRowInner({
       </span>
       <div className="min-w-0 flex-1">
         <p className="text-sm text-fg/90 leading-snug">{lesson.titleDa}</p>
-        <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint mt-1">
+        <div className="text-micro text-fg-faint mt-1">
           {fmtDuration(lesson.durationSec)}
           {" · "}
           {t("tree.repsLine", { reps: lesson.repsAward })}
