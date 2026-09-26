@@ -32,7 +32,7 @@ export default function KalkMunk() {
           className="font-display flex items-center justify-between gap-4 whitespace-nowrap text-[clamp(112px,29vw,430px)] leading-[0.78]! tracking-[-0.03em]!"
         >
           {MUNK_HANDLE}
-          <span className="grid aspect-square w-[clamp(76px,18vw,260px)] flex-none place-items-center rounded-full border border-line-bright bg-[repeating-radial-gradient(circle,var(--bg-2)_0_7px,var(--bg-3)_7px_8px)] shadow-[0_30px_50px_-30px_color-mix(in_oklab,var(--fg)_50%,transparent)]">
+          <span className="grid aspect-square w-[clamp(76px,18vw,260px)] flex-none place-items-center rounded-full border border-line-strong bg-bg-2">
             <b className="grid aspect-square w-[42%] place-items-center rounded-full bg-fg text-[clamp(18px,3vw,44px)] leading-none text-bg">
               {s("munkInitials")}
             </b>
@@ -101,13 +101,13 @@ function FormCheckCard() {
           {c("lift")}
         </p>
         <p className="mt-[22px] text-[15px] text-fg-dim">
-          <em className="mb-1.5 block text-[10px] not-italic">{c("draftLabel")}</em>
+          <em className="mb-1.5 block text-micro not-italic">{c("draftLabel")}</em>
           <s className="decoration-signal decoration-2">{c("draft")}</s>
         </p>
         <p className="font-display mb-8 mt-[18px] text-[clamp(28px,2.6vw,38px)] leading-[0.98]!">{c("final")}</p>
 
         <div className="mt-auto flex flex-wrap-reverse items-end justify-between gap-x-3 gap-y-2 border-t border-line pt-4">
-          <p className="whitespace-nowrap text-[11px] text-fg-dim">
+          <p className="whitespace-nowrap text-micro text-fg-dim">
             {c("signed")} · {c("answered")}
           </p>
           <Signature label={c("signatureLabel")} />

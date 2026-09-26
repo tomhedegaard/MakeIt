@@ -35,7 +35,7 @@ export default function KalkFooter() {
           </nav>
         </div>
 
-        <div className="mt-7 flex flex-wrap justify-between gap-4 text-[11px] text-fg-dim">
+        <div className="mt-7 flex flex-wrap justify-between gap-4 text-micro text-fg-dim">
           <span>{t("sample")}</span>
           <span>{t("slogan")}</span>
         </div>

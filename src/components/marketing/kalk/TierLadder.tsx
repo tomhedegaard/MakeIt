@@ -93,13 +93,13 @@ export default function TierLadder({
           <span id="tiers" className="block scroll-mt-[88px]" />
           <div
             aria-hidden="true"
-            className="relative flex items-center justify-between py-5 [container-type:inline-size] before:absolute before:inset-x-[-12px] before:top-1/2 before:z-0 before:h-3.5 before:-translate-y-1/2 before:rounded-[3px] before:bg-[linear-gradient(var(--bg-3),color-mix(in_oklab,var(--fg)_22%,var(--bg-3)))]"
+            className="relative flex items-center justify-between py-5 [container-type:inline-size] before:absolute before:inset-x-[-12px] before:top-1/2 before:z-0 before:h-3.5 before:-translate-y-1/2 before:bg-bg-3"
           >
             {tiers.map((t, i) => (
               <Plate key={t.key} tier={t} selected={i === selected} onSelect={() => setSelected(i)} />
             ))}
           </div>
-          <p className="mt-1 text-[11px] text-fg-dim">{hint}</p>
+          <p className="mt-1 text-micro text-fg-dim">{hint}</p>
 
           <div
             role="tablist"
@@ -131,7 +131,7 @@ export default function TierLadder({
                 >
                   <span
                     className={cn(
-                      "flex items-center gap-1.5 text-[10px]",
+                      "flex items-center gap-1.5 text-micro",
                       t.here ? "text-fg" : "text-fg-dim",
                     )}
                   >
@@ -222,11 +222,10 @@ function Plate({ tier, selected, onSelect }: { tier: LadderTier; selected: boole
         onClick={onSelect}
         className={cn(
           "grid aspect-square w-full cursor-pointer place-items-center rounded-full border",
-          "shadow-[0_18px_30px_-18px_color-mix(in_oklab,var(--fg)_50%,transparent)]",
           "transition-[translate,outline-color] duration-200 hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0",
           plate.dark
-            ? "border-fg bg-[repeating-radial-gradient(circle,color-mix(in_oklab,var(--fg)_88%,var(--bg))_0_6px,var(--fg)_6px_7px)]"
-            : "border-line-bright bg-[repeating-radial-gradient(circle,var(--bg-2)_0_5px,var(--bg-3)_5px_6px)]",
+            ? "border-fg bg-fg"
+            : "border-line-strong bg-bg-2",
           selected
             ? "outline-4 outline-offset-[5px] outline-signal"
             : "outline-4 outline-offset-[5px] outline-transparent",

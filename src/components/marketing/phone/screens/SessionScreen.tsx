@@ -100,7 +100,7 @@ export default function SessionScreen({ width, scroll = false }: { width?: numbe
 
       <div className="flex items-center justify-between gap-2">
         <div className="flex flex-1 items-center gap-2 border border-dashed border-line-strong px-2.5 py-2 text-[10px]">
-          <span className="size-2.5 flex-none rounded-full bg-danger shadow-[0_0_0_3px_color-mix(in_oklab,var(--danger)_25%,transparent)]" />
+          <span className="size-2.5 flex-none rounded-full bg-danger" />
           <span>
             {se("exercise.formCheck", { set: 3 })} · {s("session.sendTo")}
           </span>

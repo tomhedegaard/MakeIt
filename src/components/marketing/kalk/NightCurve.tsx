@@ -53,7 +53,7 @@ export default function NightCurve() {
       data-night-curve
       className="m-0 border border-line bg-bg-2 px-[18px] pb-[22px] pt-5 sm:px-7 sm:pb-7 sm:pt-[26px]"
     >
-      <div className="mb-[18px] flex justify-between gap-3 text-[11px] text-fg-dim">
+      <div className="mb-[18px] flex justify-between gap-3 text-micro text-fg-dim">
         <span>
           {n("label")} · {n("t0")} → {n("t3")}
         </span>
@@ -92,7 +92,7 @@ export default function NightCurve() {
         </text>
       </svg>
 
-      <div aria-hidden="true" className="relative mt-2.5 h-5 text-[11px] text-fg-dim">
+      <div aria-hidden="true" className="relative mt-2.5 h-5 text-micro text-fg-dim">
         {AXIS.map((tick) => (
           <span key={tick.key} style={{ left: tick.left }} className={`absolute top-0 whitespace-nowrap ${tick.shift}`}>
             {n(tick.key)}
@@ -100,7 +100,7 @@ export default function NightCurve() {
         ))}
       </div>
 
-      <div aria-hidden="true" className="mt-[18px] flex flex-wrap gap-x-[18px] gap-y-2 text-[11px] text-fg-dim">
+      <div aria-hidden="true" className="mt-[18px] flex flex-wrap gap-x-[18px] gap-y-2 text-micro text-fg-dim">
         <span data-domain="mind" className="inline-flex items-center gap-2">
           <i className="size-1.5 rounded-full bg-domain" />
           {n("legendSleep")}

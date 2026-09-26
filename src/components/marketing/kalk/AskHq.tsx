@@ -131,7 +131,7 @@ export default function AskHq() {
         aria-expanded={open}
         aria-controls={`${id}-panel`}
         onClick={() => (open ? close() : setOpen(true))}
-        className="btn btn-primary fixed bottom-4 right-4 z-40 h-12! gap-2.5 px-5! shadow-[0_18px_30px_-18px_color-mix(in_oklab,var(--fg)_60%,transparent)] md:bottom-6 md:right-6"
+        className="btn btn-primary fixed bottom-4 right-4 z-40 h-12! gap-2.5 px-5! md:bottom-6 md:right-6"
       >
         <i aria-hidden="true" className="inline-block size-2 flex-none rounded-full bg-signal" />
         {t("open")}
@@ -148,7 +148,6 @@ export default function AskHq() {
         }}
         className={cn(
           "fixed inset-x-2 bottom-20 top-[10dvh] z-40 flex flex-col overflow-hidden border border-line bg-bg-2 text-fg",
-          "shadow-[0_40px_60px_-30px_color-mix(in_oklab,var(--fg)_45%,transparent)]",
           "md:inset-x-auto md:bottom-24 md:right-6 md:top-auto md:h-[min(600px,calc(100dvh-8rem))] md:w-[400px]",
         )}
       >
@@ -163,7 +162,7 @@ export default function AskHq() {
             type="button"
             aria-label={t("close")}
             onClick={close}
-            className="grid size-9 flex-none cursor-pointer place-items-center rounded-full border border-line-bright hover:bg-fg hover:text-bg"
+            className="grid size-9 flex-none cursor-pointer place-items-center border border-line-bright hover:bg-fg hover:text-bg"
           >
             <svg viewBox="0 0 12 12" aria-hidden="true" className="size-3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
               <path d="M2.5 2.5l7 7M9.5 2.5l-7 7" />
@@ -201,7 +200,7 @@ export default function AskHq() {
               const waiting = !me && !turn.content && pending && i === turns.length - 1;
               return (
                 <div key={i} className={cn("flex max-w-[88%] flex-col gap-1", me ? "self-end items-end" : "self-start")}>
-                  <span className="text-[10px] text-fg-dim">
+                  <span className="text-micro text-fg-dim">
                     {me ? t("you") : t("hq")}
                   </span>
                   <p
@@ -253,7 +252,7 @@ export default function AskHq() {
             </button>
           </div>
           <div className="mt-3 flex items-center justify-between gap-3">
-            <p className="text-[11px] leading-[1.35] text-fg-dim">
+            <p className="text-micro leading-[1.35] text-fg-dim">
               {t("privacy")}{" "}
               <Link href="/privacy" className="underline underline-offset-2">
                 {t("privacyLink")}
@@ -262,7 +261,7 @@ export default function AskHq() {
             <Link
               href={PUBLIC_WAITLIST_HREF}
               onClick={() => setOpen(false)}
-              className="flex-none text-[11px] underline underline-offset-4"
+              className="flex-none text-micro underline underline-offset-4"
             >
               {t("cta")}
             </Link>

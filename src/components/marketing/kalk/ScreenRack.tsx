@@ -100,11 +100,11 @@ export default function ScreenRack({
       <div className="mx-auto flex max-w-[1360px] flex-wrap items-end justify-between gap-6 px-4 md:px-8">
         {head}
         <div className="flex items-center gap-2.5">
-          <span aria-hidden="true" data-rack-count className="mr-1 text-[11px] tabular-nums text-fg-dim">
+          <span aria-hidden="true" data-rack-count className="mr-1 text-micro tabular-nums text-fg-dim">
             {pad(seenTo + 1)} / {pad(total)}
           </span>
           {tag ? (
-            <span className="border border-line-bright px-2.5 py-1 text-[10px] text-fg-dim">
+            <span className="border border-line-bright px-2.5 py-1 text-micro text-fg-dim">
               {tag}
             </span>
           ) : null}
@@ -156,7 +156,7 @@ function RackButton({
       aria-disabled={disabled}
       onClick={disabled ? undefined : onClick}
       className={cn(
-        "grid size-[52px] place-items-center rounded-full border border-line-bright bg-bg-2 text-fg",
+        "grid size-[52px] place-items-center border border-line-bright bg-bg-2 text-fg",
         "transition-[background-color,color,opacity] duration-200 motion-reduce:transition-none",
         "aria-disabled:cursor-default aria-disabled:opacity-35",
         "cursor-pointer aria-[disabled=false]:hover:bg-fg aria-[disabled=false]:hover:text-bg",

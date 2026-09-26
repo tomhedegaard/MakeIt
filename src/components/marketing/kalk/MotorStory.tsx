@@ -115,7 +115,7 @@ export default function MotorStory() {
           </MotorStoryRig>
         </div>
 
-        <p className="mt-10 max-w-[52ch] text-[11px] text-fg-dim lg:mt-24">
+        <p className="mt-10 max-w-[52ch] text-micro text-fg-dim lg:mt-24">
           {t("keepOriginalNote")} {t("disclaimer")}
         </p>
       </div>
@@ -131,7 +131,7 @@ function EngineBounds() {
 
   return (
     <div className="mt-12 lg:mt-16">
-      <h3 className="text-[11px] text-fg-dim">{t("bounds.heading")}</h3>
+      <h3 className="text-micro text-fg-dim">{t("bounds.heading")}</h3>
       <ul className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
         {BOUNDS.map((bound) => (
           <li
@@ -175,7 +175,7 @@ function ReportLine({ step, domain }: { step: MotorStepKey; domain: string }) {
           style.tickOn,
         )}
       />
-      <p className="flex justify-between gap-3 text-[11px] text-fg-dim">
+      <p className="flex justify-between gap-3 text-micro text-fg-dim">
         <span className="text-fg">{t(`${step}.time`)}</span>
         <span>{t(`${step}.source`)}</span>
       </p>

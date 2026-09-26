@@ -21,7 +21,7 @@ export default function KalkNav() {
   const menu = useTranslations("Marketing.nav");
 
   return (
-    <header className="safe-top sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur-[10px]">
+    <header className="safe-top sticky top-0 z-50 border-b border-line bg-bg">
       <div className="mx-auto flex h-[68px] max-w-[1360px] items-center justify-between gap-4 px-4 md:px-8">
         <Link
           href="/"
@@ -51,14 +51,14 @@ export default function KalkNav() {
           <details className="group relative lg:hidden">
             <summary
               aria-label={menu("menuOpen")}
-              className="flex size-10 cursor-pointer list-none items-center justify-center rounded-full border border-line-strong text-fg [&::-webkit-details-marker]:hidden"
+              className="flex size-10 cursor-pointer list-none items-center justify-center border border-line-strong text-fg [&::-webkit-details-marker]:hidden"
             >
               <svg aria-hidden="true" viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
                 <path d="M3 6h14M3 10h14M3 14h14" className="group-open:hidden" />
                 <path d="M5 5l10 10M15 5L5 15" className="hidden group-open:inline" />
               </svg>
             </summary>
-            <ul className="absolute right-0 top-[calc(100%+12px)] flex min-w-[220px] flex-col border border-line bg-bg-2 p-2 shadow-[0_24px_40px_-24px_color-mix(in_oklab,var(--fg)_40%,transparent)]">
+            <ul className="absolute right-0 top-[calc(100%+12px)] flex min-w-[220px] flex-col border border-line bg-bg-2 p-2">
               {SECTIONS.map((s) => (
                 <li key={s.href}>
                   <a href={s.href} className={`${LINK} block px-3 py-3 hover:bg-bg-3`}>

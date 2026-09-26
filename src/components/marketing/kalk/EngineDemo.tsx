@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { rangeFill } from "@/lib/ui/range";
 import { PhoneStatusBar, PhoneTabBar } from "@/components/marketing/phone/PhoneFrame";
 import {
   DEMO_DEFAULTS,
@@ -32,8 +33,8 @@ const INTRO_MS = 700;
  *
  * Skyderne henter min, max og step fra `engine-demo`, så landingen
  * aldrig kan stille motoren et spørgsmål den ikke er bygget til.
- * Tommelfingeren er 44 px; den styles i `globals.css` (`.kalk-range`)
- * sammen med resten af Kalk.
+ * Skyderen er appens egen Nord-skyder (`.range` + `rangeFill`), så
+ * landingen viser præcis den kontrol, medlemmet møder i appen.
  */
 export default function EngineDemo() {
   const t = useTranslations("Marketing.kalk.demo");
@@ -57,7 +58,7 @@ export default function EngineDemo() {
   /**
    * Sidens ene bevægelse: når kortet første gang er i syne, tælles
    * topsættet ned fra 150 til motorens svar, mens stregen tegnes over
-   * det gamle tal (`kalk-strike` i globals.css, sat i gang af
+   * det gamle tal (`landing-strike` i globals.css, sat i gang af
    * `data-motion`). Samme IntersectionObserver-form som
    * NightCurveReveal. `prefers-reduced-motion` springer den over og
    * viser sluttilstanden med det samme.
@@ -129,7 +130,7 @@ export default function EngineDemo() {
     <div className="flex w-full flex-col gap-5 lg:flex-row lg:items-start lg:gap-6 xl:gap-10">
       <div className="order-2 flex w-full flex-col gap-5 lg:order-1 lg:max-w-[320px]">
         {/* Ikke klassen "eyebrow": KalkHero.test.tsx kræver, at heroen ikke har en. */}
-        <p className="text-[11px] text-fg-dim lg:hidden">
+        <p className="text-micro text-fg-dim lg:hidden">
           {t("tryIt")}
         </p>
         <Slider
@@ -158,7 +159,7 @@ export default function EngineDemo() {
           value={sliders.stress}
           onChange={(stress) => set({ stress })}
         />
-        <p className="text-[11px] leading-relaxed text-fg-faint">{t("bandNote")}</p>
+        <p className="text-micro leading-relaxed text-fg-faint">{t("bandNote")}</p>
       </div>
 
       {/* Ét element, to former: Kalk-kort under lg, telefon fra lg. */}
@@ -170,25 +171,24 @@ export default function EngineDemo() {
           "relative order-1 w-full border border-line bg-bg-2 lg:order-2",
           "lg:[--pw:288px] lg:aspect-[9/19.5] lg:w-[var(--pw)] lg:flex-none",
           "lg:rounded-[calc(var(--pw)*0.16)] lg:border-0 lg:bg-fg lg:p-[calc(var(--pw)*0.032)]",
-          "lg:shadow-[0_40px_60px_-30px_color-mix(in_oklab,var(--fg)_45%,transparent),0_12px_24px_-12px_color-mix(in_oklab,var(--fg)_30%,transparent)]",
         ].join(" ")}
       >
         <div className="flex h-full flex-col overflow-hidden lg:rounded-[calc(var(--pw)*0.13)] lg:bg-bg">
           <PhoneStatusBar className="hidden lg:flex" />
           <div className="flex min-h-0 flex-1 flex-col">
             <div className="border-b border-line px-4 pb-3 pt-4 lg:px-5 lg:pb-3.5 lg:pt-1">
-              <p className="text-[9px] text-fg-dim">{t("todayLabel")}</p>
+              <p className="text-micro text-fg-dim">{t("todayLabel")}</p>
               <p className="font-display mt-1.5 text-3xl">{t("sessionTitle")}</p>
               <span className="sr-only">{announcement}</span>
             </div>
             <div className="flex flex-1 flex-col gap-3.5 px-4 pb-4 pt-4 lg:gap-4 lg:px-5 lg:pb-5 lg:pt-5">
               <div className="border border-line-strong bg-bg-elev p-4 lg:bg-bg-2 lg:p-[18px]">
-                <p className="text-[9px] text-fg-dim">{t("topSetLabel")}</p>
+                <p className="text-micro text-fg-dim">{t("topSetLabel")}</p>
                 <p className="mt-2 flex items-baseline gap-2.5">
                   {result.changed ? (
                     <span className="strike-signal font-display text-3xl text-fg-faint">{DEMO_TOP_SET_KG}</span>
                   ) : null}
-                  <span className="kalk-topset font-display text-5xl">{shownKg}</span>
+                  <span className="landing-topset font-display text-5xl">{shownKg}</span>
                   <span className="text-xs text-fg-dim">kg</span>
                 </p>
                 <p className="mt-2.5 text-xs leading-relaxed text-fg-dim">{result.decision.explanationDa}</p>
@@ -204,10 +204,10 @@ export default function EngineDemo() {
               ) : null}
 
               <div className="flex gap-2">
-                <span className="border border-line-strong px-2.5 py-1.5 text-[9px] text-fg-dim">
+                <span className="border border-line-strong px-2.5 py-1.5 text-micro text-fg-dim">
                   {t("whySleep", { hours })}
                 </span>
-                <span className="border border-line-strong px-2.5 py-1.5 text-[9px] text-fg-dim">
+                <span className="border border-line-strong px-2.5 py-1.5 text-micro text-fg-dim">
                   {t("whyHrv", { ms: sliders.hrv })}
                 </span>
               </div>
@@ -254,7 +254,7 @@ function Slider({
     <div>
       {/* Wraps the value under the label rather than breaking it, where the column is narrow. */}
       <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-        <label htmlFor={id} className="text-[11px] text-fg-dim">
+        <label htmlFor={id} className="text-micro text-fg-dim">
           {label}
         </label>
         <span className="font-display whitespace-nowrap text-[clamp(20px,1.9vw,30px)]">
@@ -270,7 +270,8 @@ function Slider({
         step={range.step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="kalk-range mt-1 w-full"
+        className="range mt-1 w-full"
+        style={rangeFill(value, range.min, range.max)}
       />
     </div>
   );
