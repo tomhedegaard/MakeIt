@@ -59,7 +59,7 @@ export default async function CoachOverviewPage() {
             <h2 className="font-display text-2xl">{tInbox("sectionTitle")}</h2>
           </div>
           {inbox.items.length > 0 ? (
-            <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
               {tInbox("count", { count: inbox.items.length })}
             </span>
           ) : null}
@@ -136,7 +136,7 @@ export default async function CoachOverviewPage() {
               <h2 className="font-display text-2xl">{t("queueTitle")}</h2>
             </div>
             {pending.length > 0 ? (
-              <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
+              <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
                 {pending.length}
               </span>
             ) : null}

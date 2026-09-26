@@ -147,7 +147,7 @@ export default async function RepsPage() {
             </div>
             {progress.next ? (
               <>
-                <div className="mt-3 h-1 bg-bg-3 rounded-full overflow-hidden">
+                <div className="mt-3 h-1 bg-bg-3 overflow-hidden">
                   <div
                     className="h-full bg-fg"
                     style={{ width: `${progress.pct}%` }}
@@ -187,7 +187,7 @@ export default async function RepsPage() {
                   <div className="flex items-center justify-between mb-1">
                     <div className="font-display text-2xl">{tier.name}</div>
                     {active ? (
-                      <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5 inline-flex items-center gap-1.5">
+                      <span className="numeric text-[10px] border hairline-strong px-2 py-0.5 inline-flex items-center gap-1.5">
                         <span className="size-1.5 rounded-full bg-fg" />
                         {t("tiers.you")}
                       </span>
@@ -340,7 +340,7 @@ export default async function RepsPage() {
                     − {r.costReps.toLocaleString(tag)}
                   </span>
                   <span
-                    className="text-[10px] border hairline-strong rounded-full px-2 py-0.5 shrink-0"
+                    className="text-[10px] border hairline-strong px-2 py-0.5 shrink-0"
                     style={{
                       color:
                         r.status === "fulfilled" || r.status === "shipped"

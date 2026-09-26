@@ -192,7 +192,7 @@ function ReportLine({ step, domain }: { step: MotorStepKey; domain: string }) {
       >
         {t(`${step}.value`)}
         {unit ? (
-          <small className={cn("text-[0.42em] tracking-normal text-fg-dim", step === "hrv" && "ml-2")}>{unit}</small>
+          <small className={cn("text-[0.42em] text-fg-dim", step === "hrv" && "ml-2")}>{unit}</small>
         ) : null}
       </p>
       {step === "decision" ? (

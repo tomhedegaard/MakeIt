@@ -106,9 +106,9 @@ export default function PhaseAnimator({
         {phases.map((p, i) => (
           <div
             key={i}
-            className={`h-0.5 rounded-full transition-colors ${
-              i === idx ? "bg-fg" : i < idx ? "bg-fg-faint" : "bg-bg-3"
-            }`}
+            className={`h-0.5 transition-colors ${
+ i === idx ? "bg-fg" : i < idx ? "bg-fg-faint" : "bg-bg-3"
+ }`}
             style={{ flex: p.duration_ms / totalMs }}
           />
         ))}

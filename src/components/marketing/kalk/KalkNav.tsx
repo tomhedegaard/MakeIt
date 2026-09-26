@@ -58,16 +58,16 @@ export default function KalkNav() {
                 <path d="M5 5l10 10M15 5L5 15" className="hidden group-open:inline" />
               </svg>
             </summary>
-            <ul className="absolute right-0 top-[calc(100%+12px)] flex min-w-[220px] flex-col rounded-[14px] border border-line bg-bg-2 p-2 shadow-[0_24px_40px_-24px_color-mix(in_oklab,var(--fg)_40%,transparent)]">
+            <ul className="absolute right-0 top-[calc(100%+12px)] flex min-w-[220px] flex-col border border-line bg-bg-2 p-2 shadow-[0_24px_40px_-24px_color-mix(in_oklab,var(--fg)_40%,transparent)]">
               {SECTIONS.map((s) => (
                 <li key={s.href}>
-                  <a href={s.href} className={`${LINK} block rounded-[10px] px-3 py-3 hover:bg-bg-3`}>
+                  <a href={s.href} className={`${LINK} block px-3 py-3 hover:bg-bg-3`}>
                     {t(s.key)}
                   </a>
                 </li>
               ))}
               <li className="sm:hidden">
-                <Link href={PUBLIC_LOGIN_HREF} className={`${LINK} block rounded-[10px] px-3 py-3 hover:bg-bg-3`}>
+                <Link href={PUBLIC_LOGIN_HREF} className={`${LINK} block px-3 py-3 hover:bg-bg-3`}>
                   {t("login")}
                 </Link>
               </li>

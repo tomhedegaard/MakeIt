@@ -93,7 +93,7 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
             <div className="flex items-center gap-2">
               <span className="eyebrow">{t("lesson.evalHeader")}</span>
               <span
-                className={`inline-flex items-center rounded-full px-3 py-1 text-xs ${SCORE_PILL[result.practiceEvalScore]}`}
+                className={`inline-flex items-center px-3 py-1 text-xs ${SCORE_PILL[result.practiceEvalScore]}`}
               >
                 {t(`lesson.evalScore.${result.practiceEvalScore}`)}
               </span>

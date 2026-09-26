@@ -150,7 +150,7 @@ export default function DemoLoop({
       ref={wrapRef}
       // cn, not a template string: a caller that places the loop with
       // `absolute` must win over the default `relative`.
-      className={cn("relative overflow-hidden rounded-[14px] bg-bg-2", className)}
+      className={cn("relative overflow-hidden bg-bg-2", className)}
     >
       <video
         ref={videoRef}

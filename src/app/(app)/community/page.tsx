@@ -158,7 +158,7 @@ export default async function CrewPage() {
               {t("challengeProgress", { pct: challenge.youPercent })}
             </span>
           </div>
-          <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-bg-3 overflow-hidden">
             <div
               className="h-full bg-fg"
               style={{ width: `${challenge.barPercent}%` }}
@@ -246,7 +246,7 @@ export default async function CrewPage() {
               <span className="numeric text-fg/90">{row.score}</span>
               <span className="text-[10px] text-fg-faint hidden sm:inline">{row.lift}</span>
               {i < 3 ? (
-                <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
+                <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
                   ★
                 </span>
               ) : null}

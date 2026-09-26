@@ -44,7 +44,7 @@ export default function CoachShell({
         <div className="px-5 py-5 border-b hairline">
           <Logo />
           <div className="mt-4 flex items-center gap-2">
-            <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
               {t("badge")}
             </span>
             <span className="eyebrow">@{member.handle}</span>
@@ -93,7 +93,7 @@ export default function CoachShell({
           <div className="flex h-14 items-center justify-between px-5">
             <div className="flex items-center gap-2">
               <Logo />
-              <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
+              <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
                 {t("badge")}
               </span>
             </div>

@@ -85,7 +85,7 @@ export default function AudioPlayer({ src, durationSeconds }: { src: string; dur
   if (errored) return null;
 
   return (
-    <div className="flex items-center gap-4 rounded-full border hairline bg-bg-2/40 px-4 py-2.5">
+    <div className="flex items-center gap-4 border hairline bg-bg-2/40 px-4 py-2.5">
       <button
         type="button"
         onClick={toggle}

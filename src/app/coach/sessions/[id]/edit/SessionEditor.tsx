@@ -215,7 +215,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
                   })}
                 </span>
                 {ex.id ? null : (
-                  <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
+                  <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
                     {t("newBadge")}
                   </span>
                 )}

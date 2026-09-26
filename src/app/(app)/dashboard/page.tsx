@@ -276,7 +276,7 @@ export default async function TodayPage() {
               <span className="pulse-dot" />
               <span className="eyebrow eyebrow-domain">{t("todaySession.eyebrow", { programCode: today.programCode, week: today.week })}</span>
               {today.isDeload ? (
-                <span className="ml-auto numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
+                <span className="ml-auto numeric text-[10px] border hairline-strong px-2 py-0.5">
                   {t("todaySession.deload")}
                 </span>
               ) : null}
@@ -536,7 +536,7 @@ function CrewRow({
         <div className="text-[10px] text-fg-faint mt-0.5">{when}</div>
       </div>
       {pr ? (
-        <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5 shrink-0">
+        <span className="numeric text-[10px] border hairline-strong px-2 py-0.5 shrink-0">
           {prLabel}
         </span>
       ) : null}

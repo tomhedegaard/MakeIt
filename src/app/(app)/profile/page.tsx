@@ -131,7 +131,7 @@ export default async function ProfilePage() {
                     <span className="text-fg-dim text-xs ml-1">{t("prs.e1rm")}</span>
                   </span>
                   <span
-                    className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5 shrink-0"
+                    className="numeric text-[10px] border hairline-strong px-2 py-0.5 shrink-0"
                     aria-hidden
                   >
                     ★
@@ -201,7 +201,7 @@ export default async function ProfilePage() {
               </p>
             </div>
             {reviewed.length > 0 ? (
-              <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-1 inline-flex items-center gap-2 shrink-0">
+              <span className="numeric text-[10px] border hairline-strong px-2 py-1 inline-flex items-center gap-2 shrink-0">
                 <span className="size-1.5 rounded-full bg-fg" />
                 {reviewed.length === 1
                   ? t("formChecks.coachRepliesOne", { count: reviewed.length })
@@ -299,7 +299,7 @@ export default async function ProfilePage() {
                       style={{ background: "var(--bg-3)" }}
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5 inline-flex items-center gap-1.5">
+                        <span className="numeric text-[10px] border hairline-strong px-2 py-0.5 inline-flex items-center gap-1.5">
                           <span className="size-1.5 rounded-full bg-fg" />
                           Mikael Munk · @Munk
                         </span>

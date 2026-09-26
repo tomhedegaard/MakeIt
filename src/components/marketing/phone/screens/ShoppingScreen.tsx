@@ -28,7 +28,7 @@ export default function ShoppingScreen({ width, scroll }: { width?: number; scro
         <p className="mt-0.5 text-[10.5px] text-fg-dim">{sh("sub")}</p>
       </div>
 
-      <div data-domain="food" className="flex h-1.5 overflow-hidden rounded-full bg-line">
+      <div data-domain="food" className="flex h-1.5 overflow-hidden bg-line">
         <i className="block h-full w-[29%] bg-domain" />
       </div>
       <Label>{sh("done")}</Label>
@@ -49,7 +49,7 @@ export default function ShoppingScreen({ width, scroll }: { width?: number; scro
                 <i
                   data-domain="food"
                   className={cn(
-                    "grid size-3 place-items-center rounded-[4px] border",
+                    "grid size-3 place-items-center border",
                     done ? "border-domain bg-domain" : "border-line-strong",
                   )}
                 />

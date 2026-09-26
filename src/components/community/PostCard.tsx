@@ -119,12 +119,12 @@ export default function PostCard({ post }: { post: FeedPost }) {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {post.isPr ? (
-            <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
               {t("prBadge")}
             </span>
           ) : null}
           {post.formcheck ? (
-            <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
               AI
             </span>
           ) : null}

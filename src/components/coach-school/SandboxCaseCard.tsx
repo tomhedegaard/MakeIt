@@ -116,7 +116,7 @@ export default function SandboxCaseCard({
           <div className="surface-2 rounded-md p-3">
             <div className="eyebrow mb-1">{t("revealed.youHeader")}</div>
             <div
-              className={`inline-flex items-center rounded-full px-3 py-1 text-xs ${PILL_FOR_DECISION[revealed.beast]}`}
+              className={`inline-flex items-center px-3 py-1 text-xs ${PILL_FOR_DECISION[revealed.beast]}`}
             >
               {t(`decisions.${revealed.beast}`)}
             </div>
@@ -124,7 +124,7 @@ export default function SandboxCaseCard({
           <div className="surface-2 rounded-md p-3">
             <div className="eyebrow mb-1">{t("revealed.munkHeader")}</div>
             <div
-              className={`inline-flex items-center rounded-full px-3 py-1 text-xs ${PILL_FOR_DECISION[revealed.munk]}`}
+              className={`inline-flex items-center px-3 py-1 text-xs ${PILL_FOR_DECISION[revealed.munk]}`}
             >
               {t(`decisions.${revealed.munk}`)}
             </div>

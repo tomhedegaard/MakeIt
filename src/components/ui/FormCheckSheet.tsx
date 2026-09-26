@@ -479,7 +479,7 @@ function QuotaLine({
       <span>
         {t("quota.used", { used: quota.used, limit: quota.limit })}
       </span>
-      <span className="text-fg-faint normal-case tracking-normal">
+      <span className="text-fg-faint">
         {describeReset(quota.resetsAt)}
       </span>
     </div>
@@ -514,7 +514,7 @@ function UpgradeCta({
 
 function ProgressLine({ value }: { value: number }) {
   return (
-    <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+    <div className="h-1.5 bg-bg-3 overflow-hidden">
       <div
         className="h-full bg-fg transition-all"
         style={{ width: `${value}%`, transitionDuration: "180ms" }}
@@ -567,7 +567,7 @@ function Card({
         <div className="eyebrow">{title}</div>
         <span
           className={cn(
-            "text-[10px] rounded-full px-2 py-0.5 border",
+            "text-[10px] px-2 py-0.5 border",
             kind === "pos" ? "border-line-strong text-fg" : "border-line-strong text-fg-dim"
           )}
         >

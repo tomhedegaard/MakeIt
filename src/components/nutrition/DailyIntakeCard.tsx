@@ -65,10 +65,10 @@ function Metric({
         ) : null}
         <span className="text-fg-faint text-sm"> {unit}</span>
       </div>
-      <div className="mt-2 h-1.5 rounded-full bg-fg/10 overflow-hidden">
+      <div className="mt-2 h-1.5 bg-fg/10 overflow-hidden">
         {pct != null ? (
           <div
-            className="h-full rounded-full"
+            className="h-full"
             style={{ width: `${pct}%`, background: over ? "var(--fg-faint)" : "var(--fg)" }}
           />
         ) : null}

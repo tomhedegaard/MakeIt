@@ -24,7 +24,7 @@ export default function LanguageSelector() {
     <div
       role="group"
       aria-label={t("title")}
-      className="inline-flex rounded-full border hairline-strong p-1"
+      className="inline-flex border hairline-strong p-1"
     >
       {locales.map((locale) => {
         const isActive = locale === active;
@@ -35,7 +35,7 @@ export default function LanguageSelector() {
             onClick={() => select(locale)}
             disabled={pending}
             aria-pressed={isActive}
-            className="px-4 py-1.5 rounded-full text-sm font-medium transition-colors disabled:opacity-60 touch-app"
+            className="px-4 py-1.5 text-sm font-medium transition-colors disabled:opacity-60 touch-app"
             style={{
               background: isActive ? "var(--fg)" : "transparent",
               color: isActive ? "var(--bg)" : "var(--fg-dim)",

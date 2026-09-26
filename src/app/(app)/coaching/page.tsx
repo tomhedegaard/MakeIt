@@ -244,7 +244,7 @@ export default async function TrainPage() {
               <div className="eyebrow">{t("active.weeks")}</div>
             </div>
           </div>
-          <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-bg-3 overflow-hidden">
             <div
               className="h-full bg-fg"
               style={{
@@ -289,7 +289,7 @@ export default async function TrainPage() {
                     <div className="eyebrow mb-2">
                       {p.code} · {p.type}
                       {p.active && p.currentWeek ? (
-                        <span className="ml-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border hairline-strong">
+                        <span className="ml-2 inline-flex items-center gap-1.5 px-2 py-0.5 border hairline-strong">
                           <span className="size-1.5 rounded-full bg-fg" />{" "}
                           {t("library.activeBadge", { week: p.currentWeek })}
                         </span>

@@ -124,7 +124,7 @@ export default function HrvSettingsSection({
                 {connections.length > 1 && !connection.isPrimary ? (
                   <button
                     type="button"
-                    className="text-[11px] text-fg-dim border border-line-strong rounded-full px-3 py-1.5 touch-app lift disabled:opacity-50"
+                    className="text-[11px] text-fg-dim border border-line-strong px-3 py-1.5 touch-app lift disabled:opacity-50"
                     onClick={() => makePrimary(connection.id)}
                     disabled={primaryPending}
                   >
@@ -162,7 +162,7 @@ export default function HrvSettingsSection({
             />
             <span
               aria-hidden
-              className="block relative w-12 h-7 rounded-full border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
+              className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
               style={{ background: cycleEnabled ? "var(--fg)" : "var(--bg-3)" }}
             >
               <span
@@ -192,7 +192,7 @@ export default function HrvSettingsSection({
             />
             <span
               aria-hidden
-              className="block relative w-12 h-7 rounded-full border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
+              className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
               style={{ background: nudgeEnabled ? "var(--fg)" : "var(--bg-3)" }}
             >
               <span

@@ -69,6 +69,23 @@ describe("no dark-only literals on member surfaces (spec §8)", () => {
   });
 });
 
+// Nord er sentence case i én skrift (spec §4, §7.1). Klasserne herunder
+// hører til Kalks stemme — spærret mono i versaler — og må ikke vende
+// tilbage. Tal skiller sig ud på tabular-nums, ikke på familie.
+const KALK_VOICE = /(?:^|\s|")(uppercase|font-mono|tracking-(?:\[0\.\d+em\]|wide|wider|widest))(?=\s|"|$)/m;
+
+describe("sentence case in one font (spec §4, §7.1)", () => {
+  it.each(surfaceFiles)("%s", (p) => {
+    expect(readFileSync(join(SRC, p), "utf8")).not.toMatch(KALK_VOICE);
+  });
+
+  it("catches the voice it is meant to catch (self-test)", () => {
+    expect('className="text-xs font-mono uppercase tracking-[0.14em]"').toMatch(KALK_VOICE);
+    expect('className="text-xs tracking-tight"').not.toMatch(KALK_VOICE);
+    expect("const s = name.toUpperCase();").not.toMatch(KALK_VOICE);
+  });
+});
+
 describe("chrome-metadata stripping is narrow (self-test)", () => {
   it("strips a single-line viewport export clean of its dark literal", () => {
     const strip = CHROME_METADATA["app/coach/layout.tsx"];

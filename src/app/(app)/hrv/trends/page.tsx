@@ -203,7 +203,7 @@ function StateActive({
                 <span className="text-xs text-fg-dim w-24 shrink-0">
                   {t(`distribution.bucket.${bucket}`)}
                 </span>
-                <div className="flex-1 h-2 rounded-full bg-line overflow-hidden">
+                <div className="flex-1 h-2 bg-line overflow-hidden">
                   <div
                     className="h-full bg-fg"
                     style={{ width: `${Math.max(share * 100, share > 0 ? 2 : 0)}%` }}

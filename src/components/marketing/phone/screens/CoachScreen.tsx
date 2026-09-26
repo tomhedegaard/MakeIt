@@ -39,7 +39,7 @@ export default function CoachScreen({ width, scroll }: { width?: number; scroll?
           ) : "clip" in msg ? (
             <p
               key={msg.key}
-              className="flex items-center gap-2 self-end rounded-[14px] rounded-br-[4px] border border-line-strong px-2.5 py-[7px] text-[9px]"
+              className="flex items-center gap-2 self-end border border-line-strong px-2.5 py-[7px] text-[9px]"
             >
               <i className="grid h-5 w-7 place-items-center rounded-md bg-fg text-bg">
                 <svg viewBox="0 0 10 10" className="size-2" fill="currentColor">
@@ -52,8 +52,8 @@ export default function CoachScreen({ width, scroll }: { width?: number; scroll?
             <p
               key={msg.key}
               className={cn(
-                "max-w-[82%] rounded-[14px] px-2.5 py-[7px] text-[10.5px] leading-[1.38]",
-                msg.me ? "self-end rounded-br-[4px] bg-fg text-bg" : "self-start rounded-bl-[4px] border border-line bg-bg-2",
+                "max-w-[82%] px-2.5 py-[7px] text-[10.5px] leading-[1.38]",
+                msg.me ? "self-end bg-fg text-bg" : "self-start border border-line bg-bg-2",
               )}
             >
               {s(`coach.${msg.key}`)}
@@ -64,7 +64,7 @@ export default function CoachScreen({ width, scroll }: { width?: number; scroll?
 
       <Label className="justify-center">{s("coach.signed")}</Label>
 
-      <div className="flex h-[34px] items-center rounded-full border border-line-strong px-3 text-[10.5px] text-fg-dim">
+      <div className="flex h-[34px] items-center border border-line-strong px-3 text-[10.5px] text-fg-dim">
         {s("coach.input")}
       </div>
     </PhoneFrame>

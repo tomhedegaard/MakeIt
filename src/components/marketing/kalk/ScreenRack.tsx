@@ -104,7 +104,7 @@ export default function ScreenRack({
             {pad(seenTo + 1)} / {pad(total)}
           </span>
           {tag ? (
-            <span className="rounded-full border border-line-bright px-2.5 py-1 text-[10px] text-fg-dim">
+            <span className="border border-line-bright px-2.5 py-1 text-[10px] text-fg-dim">
               {tag}
             </span>
           ) : null}
@@ -121,7 +121,7 @@ export default function ScreenRack({
         onKeyDown={onKeyDown}
         className={cn(
           "mt-9 flex snap-x snap-mandatory list-none gap-[clamp(24px,3vw,48px)] overflow-x-auto overscroll-x-contain pb-[30px] pt-2.5",
-          "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus-visible:rounded-[14px] focus-visible:outline-offset-[-3px]",
+          "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden focus-visible:outline-offset-[-3px]",
           GUTTER,
         )}
       >

@@ -183,10 +183,10 @@ export default async function CoachSystemPage() {
             >
               <span
                 className={`size-3 rounded-full shrink-0 mt-1.5 ${
-                  s.configured
-                    ? "bg-green-400"
-                    : "bg-fg-faint/30 border border-fg-faint"
-                }`}
+ s.configured
+ ? "bg-green-400"
+ : "bg-fg-faint/30 border border-fg-faint"
+ }`}
                 aria-hidden
               />
               <div className="min-w-0 flex-1">

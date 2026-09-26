@@ -123,7 +123,7 @@ export default function MealCard({
                 {meal.kind === "recipe" ? (
                   <>
                     <span className="text-fg-faint" aria-hidden>·</span>
-                    <span className="numeric border hairline-strong rounded-full px-2 py-0.5 text-[10px]">
+                    <span className="numeric border hairline-strong px-2 py-0.5 text-[10px]">
                       {t("anchor")}
                     </span>
                   </>

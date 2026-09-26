@@ -122,7 +122,7 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
           {t("tally", { approved, skipped })}
         </p>
       </div>
-      <div className="h-1 overflow-hidden rounded-full bg-bg-3" aria-hidden="true">
+      <div className="h-1 overflow-hidden bg-bg-3" aria-hidden="true">
         <i className="block h-full bg-signal transition-[width]" style={{ width: `${(state.index / count) * 100}%` }} />
       </div>
 
@@ -243,7 +243,7 @@ function MuscleRow({ label, muscles, strong = false }: { label: string; muscles:
           <span
             key={m}
             className={cn(
-              "rounded-full border px-2.5 py-1 text-xs",
+              "border px-2.5 py-1 text-xs",
               strong ? "border-fg text-fg" : "hairline text-fg-dim",
             )}
           >

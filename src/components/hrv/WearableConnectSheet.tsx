@@ -112,7 +112,7 @@ function WearableConnectBody() {
               <span className="font-display text-lg leading-tight">
                 {provider.name}
               </span>
-              <span className="text-[10px] text-fg-faint border border-line-strong rounded-full px-2 py-0.5 shrink-0">
+              <span className="text-[10px] text-fg-faint border border-line-strong px-2 py-0.5 shrink-0">
                 {t("comingSoon")}
               </span>
             </div>

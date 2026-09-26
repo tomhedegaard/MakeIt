@@ -246,7 +246,7 @@ function MuscleChips({ muscles }: { muscles: MuscleGroup[] }) {
       {muscles.slice(0, 3).map((m) => (
         <span
           key={m}
-          className="px-1.5 py-0.5 rounded-full bg-bg-3 text-fg-dim normal-case tracking-normal"
+          className="px-1.5 py-0.5 bg-bg-3 text-fg-dim"
         >
           {MUSCLE_LABELS[m]}
         </span>

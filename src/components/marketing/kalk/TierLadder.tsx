@@ -155,7 +155,7 @@ export default function TierLadder({
         aria-labelledby={`${id}-tab-${tier.key}`}
         data-tier-panel={tier.key}
         className={cn(
-          "mt-[clamp(48px,6vw,80px)] grid gap-6 rounded-[14px] border p-[clamp(20px,2.6vw,32px)] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
+          "mt-[clamp(48px,6vw,80px)] grid gap-6 border p-[clamp(20px,2.6vw,32px)] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
           PLATE[tier.key].dark ? "border-fg bg-fg text-bg" : "border-line bg-bg-2",
         )}
       >

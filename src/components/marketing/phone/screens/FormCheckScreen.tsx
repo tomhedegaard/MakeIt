@@ -52,7 +52,7 @@ export default function FormCheckScreen({ width, scroll = false }: { width?: num
           <span className="ml-auto">{s("formCheck.duration")}</span>
         </div>
 
-        <div className="rounded-[14px_14px_14px_4px] border border-line bg-bg-2 px-[11px] py-2.5 text-[11.5px] font-medium leading-[1.4]">
+        <div className="border border-line bg-bg-2 px-[11px] py-2.5 text-[11.5px] font-medium leading-[1.4]">
           {s("formCheck.final")}
         </div>
 

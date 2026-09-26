@@ -115,7 +115,7 @@ export default function CoachReviewButton({
                 ? t("draftLabel", { handle: formCheck.memberHandle })
                 : t("coachNotesLabel", { handle: formCheck.memberHandle })}
               {hasDraft ? (
-                <span className="inline-flex items-center rounded-full surface-2 px-2 py-0.5 text-[10px] text-fg-faint">
+                <span className="inline-flex items-center surface-2 px-2 py-0.5 text-[10px] text-fg-faint">
                   {t("draftBadge")}
                 </span>
               ) : null}

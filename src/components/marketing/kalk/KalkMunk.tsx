@@ -47,7 +47,7 @@ export default function KalkMunk() {
                 alt={t("portraitAlt")}
                 width={480}
                 height={600}
-                className="mb-10 h-auto w-full max-w-[320px] rounded-[14px] object-cover"
+                className="mb-10 h-auto w-full max-w-[320px] object-cover"
               />
             ) : null}
             <h2 id="munk-heading" className="font-display text-[clamp(40px,4.6vw,68px)]">
@@ -83,7 +83,7 @@ function FormCheckCard() {
   return (
     <article
       aria-labelledby="munk-card-title"
-      className="grid overflow-hidden rounded-[14px] border border-line bg-bg-2 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
+      className="grid overflow-hidden border border-line bg-bg-2 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
     >
       <DemoLoop
         src={MUNK_DEMO_SRC}

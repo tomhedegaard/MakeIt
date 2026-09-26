@@ -43,7 +43,7 @@ export default function RedemptionRow({
         </div>
       </div>
       <span
-        className="text-[10px] border hairline-strong rounded-full px-2 py-0.5 shrink-0"
+        className="text-[10px] border hairline-strong px-2 py-0.5 shrink-0"
         style={{
           color:
             redemption.status === "approved" ? "var(--fg)" : "var(--fg-dim)",

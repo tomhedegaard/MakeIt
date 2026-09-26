@@ -24,7 +24,7 @@ export default function EmptyState({
       {...rest}
       data-empty-state
       className={cn(
-        "bg-bg-2 rounded-[14px] border border-line p-5 flex flex-col items-center gap-3 text-center",
+        "bg-bg-2 border border-line p-5 flex flex-col items-center gap-3 text-center",
         className,
       )}
     >

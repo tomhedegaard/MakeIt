@@ -118,7 +118,7 @@ export default async function CoachMemberDetailPage({
           ) : null}
         </div>
         {m.programCode ? (
-          <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-bg-3 overflow-hidden">
             <div className="h-full bg-fg" style={{ width: `${programPct}%` }} />
           </div>
         ) : null}
@@ -138,7 +138,7 @@ export default async function CoachMemberDetailPage({
                 </span>
                 <span className="flex-1 truncate">{s.dayLabel}</span>
                 <span
-                  className="text-[10px] border hairline-strong rounded-full px-2 py-0.5 shrink-0"
+                  className="text-[10px] border hairline-strong px-2 py-0.5 shrink-0"
                   style={{
                     color: s.status === "completed" ? "var(--fg)" : "var(--fg-dim)",
                   }}

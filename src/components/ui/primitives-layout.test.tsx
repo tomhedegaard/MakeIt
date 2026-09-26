@@ -9,7 +9,9 @@ describe("Card", () => {
   it("is a quiet token surface by default", () => {
     const html = renderToStaticMarkup(<Card>x</Card>);
     expect(html).toContain('data-card="quiet"');
-    expect(html).toMatch(/class="[^"]*bg-bg-2[^"]*rounded-\[14px\][^"]*p-5/);
+    // Nord: radius 0, så kortet har ingen rounded-klasse overhovedet.
+    expect(html).toMatch(/class="[^"]*bg-bg-2[^"]*p-5/);
+    expect(html).not.toMatch(/class="[^"]*\brounded-/);
   });
 
   it("marks the primary card and scopes a domain", () => {

@@ -59,7 +59,7 @@ function readBool(value: unknown, key: string): boolean {
 
 const SELECTOR_BTN =
   "flex-1 min-w-0 text-[11px]" +
-  "rounded-full border px-3 py-2 touch-app transition-colors";
+  "border px-3 py-2 touch-app transition-colors";
 
 function Selector<T extends string | number>({
   label,
@@ -125,7 +125,7 @@ function Toggle({
         />
         <span
           aria-hidden
-          className="block relative w-12 h-7 rounded-full border hairline-strong"
+          className="block relative w-12 h-7 border hairline-strong"
           style={{ background: checked ? "var(--fg)" : "var(--bg-3)" }}
         >
           <span
@@ -331,7 +331,7 @@ export default function LifestyleLogCard({
             disabled={pending || menstruationLogged}
             aria-pressed={menstruationLogged}
             className={cn(
-              "w-full text-[11px] rounded-full border px-4 py-2.5 touch-app transition-colors",
+              "w-full text-[11px] border px-4 py-2.5 touch-app transition-colors",
               menstruationLogged
                 ? "bg-fg text-bg border-fg"
                 : "border-line-strong text-fg-dim lift",

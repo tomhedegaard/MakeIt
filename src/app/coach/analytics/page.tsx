@@ -94,7 +94,7 @@ export default async function CoachAnalyticsPage() {
               <div className="eyebrow mb-1">{t("atRiskEyebrow")}</div>
               <h2 className="font-display text-2xl">{t("atRiskTitle")}</h2>
             </div>
-            <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
               {atRisk.length}
             </span>
           </div>
@@ -151,7 +151,7 @@ export default async function CoachAnalyticsPage() {
                     {t.count} · {t.pct}%
                   </span>
                 </div>
-                <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-bg-3 overflow-hidden">
                   <div
                     className="h-full bg-fg"
                     style={{ width: `${Math.max(2, t.pct)}%` }}

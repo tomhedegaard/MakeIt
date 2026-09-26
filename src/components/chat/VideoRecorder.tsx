@@ -265,7 +265,7 @@ export default function VideoRecorder({
             />
             <div
               data-theme="nat"
-              className="absolute top-2 left-2 flex items-center gap-1.5 bg-bg/70 rounded-full px-2 py-1"
+              className="absolute top-2 left-2 flex items-center gap-1.5 bg-bg/70 px-2 py-1"
             >
               <span className="size-2 rounded-full bg-danger animate-pulse" aria-hidden />
               <span className="text-[11px] tabular-nums text-fg">

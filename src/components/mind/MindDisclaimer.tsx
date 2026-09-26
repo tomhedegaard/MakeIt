@@ -57,7 +57,7 @@ export default async function MindDisclaimer() {
           <form action={acknowledgeMentalDisclaimerAction}>
             <button
               type="submit"
-              className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-8 py-4 text-base font-medium hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center bg-fg text-bg px-8 py-4 text-base font-medium hover:opacity-90 transition-opacity"
             >
               {t("accept")}
             </button>

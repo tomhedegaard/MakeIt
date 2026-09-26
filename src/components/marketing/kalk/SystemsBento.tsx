@@ -123,7 +123,7 @@ export default function SystemsBento() {
                 <i
                   key={i}
                   style={{ height: tick.h }}
-                  className={cn("block w-1.5 rounded-[2px]", tick.done ? "bg-domain" : "bg-line-bright")}
+                  className={cn("block w-1.5", tick.done ? "bg-domain" : "bg-line-bright")}
                 />
               ))}
             </div>
@@ -218,7 +218,7 @@ export default function SystemsBento() {
           }
         />
         <div aria-hidden="true" className="mx-auto max-w-[1360px] px-4 md:px-8">
-          <div className="relative h-2.5 rounded-[5px] bg-[linear-gradient(var(--fg),var(--fg))] bg-[length:100%_2px] bg-center bg-no-repeat before:absolute before:left-0 before:top-0 before:size-2.5 before:rounded-[2px] before:bg-fg after:absolute after:right-0 after:top-0 after:size-2.5 after:rounded-[2px] after:bg-fg" />
+          <div className="relative h-2.5 bg-[linear-gradient(var(--fg),var(--fg))] bg-[length:100%_2px] bg-center bg-no-repeat before:absolute before:left-0 before:top-0 before:size-2.5 before:rounded-[2px] before:bg-fg after:absolute after:right-0 after:top-0 after:size-2.5 after:rounded-[2px] after:bg-fg" />
           <p className="mt-2.5 text-[10px] text-fg-dim">20 {unit}</p>
         </div>
       </div>
@@ -242,7 +242,7 @@ function Cell({
       data-cell={cell}
       data-theme={nat ? "nat" : undefined}
       className={cn(
-        "relative col-span-12 flex flex-col overflow-hidden rounded-[14px] border p-[clamp(22px,2.4vw,34px)] lg:min-h-[300px]",
+        "relative col-span-12 flex flex-col overflow-hidden border p-[clamp(22px,2.4vw,34px)] lg:min-h-[300px]",
         nat ? "border-bg bg-bg text-fg" : "border-line bg-bg-2",
         className,
       )}
@@ -296,7 +296,7 @@ function MindScales() {
               <i
                 key={n}
                 className={cn(
-                  "h-[26px] rounded-[10px] border",
+                  "h-[26px] border",
                   n <= filled ? "border-domain bg-domain" : "border-line-bright",
                 )}
               />

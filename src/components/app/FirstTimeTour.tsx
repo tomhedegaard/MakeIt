@@ -71,7 +71,7 @@ export default function FirstTimeTour() {
           <span
             key={i}
             aria-hidden
-            className="flex-1 h-1 rounded-full"
+            className="flex-1 h-1"
             style={{ background: i <= step ? "var(--fg)" : "var(--bg-elev)" }}
           />
         ))}

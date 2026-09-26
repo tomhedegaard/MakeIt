@@ -36,7 +36,7 @@ export default function BreathScreen({ width, scroll }: { width?: number; scroll
           <span
             key={k}
             className={
-              "rounded-full border px-2 py-1 " + (k === "hold" ? "border-fg bg-fg text-bg" : "border-line text-fg-dim")
+              "border px-2 py-1" + (k === "hold" ? "border-fg bg-fg text-bg" : "border-line text-fg-dim")
             }
           >
             {br(k)}
@@ -60,7 +60,7 @@ export default function BreathScreen({ width, scroll }: { width?: number; scroll
         </Label>
         <div data-domain="mind" className="mt-2 flex h-10 items-end gap-1.5">
           {WEEK_MINUTES.map((h, i) => (
-            <i key={i} style={{ height: h }} className="block flex-1 rounded-[3px] bg-domain" />
+            <i key={i} style={{ height: h }} className="block flex-1 bg-domain" />
           ))}
         </div>
         <p className="mt-2 text-[10px] leading-[1.38] text-fg-dim">{br("note")}</p>

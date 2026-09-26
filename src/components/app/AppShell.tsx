@@ -115,7 +115,7 @@ export default function AppShell({
                     <span className="tracking-tight">{t(`links.${item.labelKey}`)}</span>
                     {item.href === "/messages" && unreadMessages > 0 ? (
                       <span
-                        className="ml-auto numeric text-[10px] tabular-nums px-1.5 py-0.5 rounded-full bg-fg text-bg"
+                        className="ml-auto numeric text-[10px] tabular-nums px-1.5 py-0.5 bg-fg text-bg"
                         aria-label={t("shell.unread", { count: unreadMessages })}
                       >
                         {unreadMessages > 99 ? "99+" : unreadMessages}
@@ -136,7 +136,7 @@ export default function AppShell({
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="numeric text-[10px] border hairline-strong rounded-full px-2 py-0.5">
+                  <span className="numeric text-[10px] border hairline-strong px-2 py-0.5">
                     {t("shell.coachBadge")}
                   </span>
                   <span className="text-sm">{t("shell.coachConsole")}</span>
@@ -186,7 +186,7 @@ export default function AppShell({
               </svg>
               {unreadMessages > 0 ? (
                 <span
-                  className="absolute -top-0.5 -right-0.5 numeric text-[9px] tabular-nums px-1 py-0.5 rounded-full bg-fg text-bg leading-none min-w-[14px] text-center"
+                  className="absolute -top-0.5 -right-0.5 numeric text-[9px] tabular-nums px-1 py-0.5 bg-fg text-bg leading-none min-w-[14px] text-center"
                   aria-label={t("shell.unread", { count: unreadMessages })}
                 >
                   {unreadMessages > 9 ? "9+" : unreadMessages}

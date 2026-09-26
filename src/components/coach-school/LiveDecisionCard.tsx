@@ -86,7 +86,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
         <div className="flex items-center gap-3">
           <span className="eyebrow">{t("live.yourCall")}</span>
           <div
-            className={`inline-flex items-center rounded-full px-3 py-1 text-xs ${PILL_FOR_DECISION[sent.decision]}`}
+            className={`inline-flex items-center px-3 py-1 text-xs ${PILL_FOR_DECISION[sent.decision]}`}
           >
             {t(`decisions.${sent.decision}`)}
           </div>

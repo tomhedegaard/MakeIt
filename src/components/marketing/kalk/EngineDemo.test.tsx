@@ -50,9 +50,12 @@ describe("EngineDemo", () => {
     expect((html.match(/Behold original/g) ?? []).length).toBe(1);
   });
 
-  it("er et almindeligt Kalk-kort under lg: ingen kant, ingen telefon-krom", () => {
+  it("er et almindeligt kort under lg: ingen kant, ingen telefon-krom", () => {
     const open = panel.slice(0, panel.indexOf(">"));
-    expect(open).toMatch(/rounded-\[14px\]/);
+    // Kortet selv har radius 0; kun telefon-attrappen over lg beholder sin
+    // afrunding, fordi den forestiller en telefon og ikke er UI-krom.
+    expect(open).not.toMatch(/(?<!lg:)rounded-\[/);
+    expect(open).toMatch(/lg:rounded-\[calc/);
     expect(open).toMatch(/border border-line/);
     expect(open).toMatch(/bg-bg-2/);
     expect(open).toMatch(/\bw-full\b/);

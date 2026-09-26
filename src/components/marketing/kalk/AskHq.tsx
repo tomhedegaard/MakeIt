@@ -147,7 +147,7 @@ export default function AskHq() {
           if (e.key === "Escape") close();
         }}
         className={cn(
-          "fixed inset-x-2 bottom-20 top-[10dvh] z-40 flex flex-col overflow-hidden rounded-[14px] border border-line bg-bg-2 text-fg",
+          "fixed inset-x-2 bottom-20 top-[10dvh] z-40 flex flex-col overflow-hidden border border-line bg-bg-2 text-fg",
           "shadow-[0_40px_60px_-30px_color-mix(in_oklab,var(--fg)_45%,transparent)]",
           "md:inset-x-auto md:bottom-24 md:right-6 md:top-auto md:h-[min(600px,calc(100dvh-8rem))] md:w-[400px]",
         )}
@@ -188,7 +188,7 @@ export default function AskHq() {
                     key={key}
                     type="button"
                     onClick={() => void ask(t(`suggestions.${key}`))}
-                    className="cursor-pointer rounded-full border border-line-bright px-3 py-1.5 text-left text-[13px] hover:bg-fg hover:text-bg"
+                    className="cursor-pointer border border-line-bright px-3 py-1.5 text-left text-[13px] hover:bg-fg hover:text-bg"
                   >
                     {t(`suggestions.${key}`)}
                   </button>
@@ -206,8 +206,8 @@ export default function AskHq() {
                   </span>
                   <p
                     className={cn(
-                      "whitespace-pre-wrap rounded-[14px] px-3.5 py-2.5 text-[14px] leading-[1.45]",
-                      me ? "rounded-br-[4px] bg-fg text-bg" : "rounded-bl-[4px] border border-line bg-bg",
+                      "whitespace-pre-wrap px-3.5 py-2.5 text-[14px] leading-[1.45]",
+                      me ? "bg-fg text-bg" : "border border-line bg-bg",
                     )}
                   >
                     {waiting ? <span className="text-fg-dim">{t("thinking")}</span> : me ? turn.content : tidyAnswer(turn.content)}
@@ -242,7 +242,7 @@ export default function AskHq() {
               placeholder={t("placeholder")}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={onInputKey}
-              className="max-h-28 min-h-11 flex-1 resize-none rounded-[12px] border border-line-bright bg-bg px-3.5 py-2.5 text-[15px] leading-[1.35] placeholder:text-fg-dim focus-visible:outline-2 focus-visible:outline-fg"
+              className="max-h-28 min-h-11 flex-1 resize-none border border-line-bright bg-bg px-3.5 py-2.5 text-[15px] leading-[1.35] placeholder:text-fg-dim focus-visible:outline-2 focus-visible:outline-fg"
             />
             <button
               type="submit"

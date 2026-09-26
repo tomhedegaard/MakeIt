@@ -40,7 +40,7 @@ export default function MindCheckedScreen({ width, scroll = false }: { width?: n
               {[1, 2, 3, 4, 5].map((n) => (
                 <i
                   key={n}
-                  className={"h-1.5 rounded-full " + (n <= scale.filled ? scale.fill : "bg-line-strong")}
+                  className={"h-1.5" + (n <= scale.filled ? scale.fill : "bg-line-strong")}
                 />
               ))}
             </span>

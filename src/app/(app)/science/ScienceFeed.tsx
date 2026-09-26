@@ -85,7 +85,7 @@ function FilterChip({
       type="button"
       onClick={onClick}
       data-active={active}
-      className="rounded-full border px-3.5 py-1.5 text-[13px] transition-colors hairline text-fg-dim hover:text-fg data-[active=true]:text-fg data-[active=true]:border-line-bright"
+      className="border px-3.5 py-1.5 text-[13px] transition-colors hairline text-fg-dim hover:text-fg data-[active=true]:text-fg data-[active=true]:border-line-bright"
       style={color && active ? { color, borderColor: color } : undefined}
     >
       {children}
@@ -102,12 +102,12 @@ function Card({ item }: { item: ScienceFeedItem }) {
       <div className="px-5 py-4 min-w-0">
         <div className="mb-2 flex flex-wrap items-center gap-2.5 text-xs">
           <span
-            className="rounded-full border px-2.5 py-0.5 font-semibold"
+            className="border px-2.5 py-0.5 font-semibold"
             style={{ color, borderColor: color }}
           >
             {t(`domains.${item.domain}`)}
           </span>
-          <span className="rounded-full border surface-2 px-2.5 py-0.5">{item.evidenceBadge}</span>
+          <span className="border surface-2 px-2.5 py-0.5">{item.evidenceBadge}</span>
           {item.verified && (
             <span className="text-food" title={t("verifiedTitle")}>
               ✓ {t("verified")}

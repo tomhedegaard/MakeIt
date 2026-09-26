@@ -44,7 +44,7 @@ export default async function CoachProgramsPage() {
                     {p.code}
                   </span>
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded-full border hairline ${
+                    className={`text-[10px] px-2 py-0.5 border hairline ${
  p.isPublished ? "text-fg" : "text-fg-faint"
  }`}
                   >

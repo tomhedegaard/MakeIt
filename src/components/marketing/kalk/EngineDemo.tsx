@@ -167,13 +167,13 @@ export default function EngineDemo() {
         aria-live="polite"
         data-demo-card
         className={[
-          "relative order-1 w-full rounded-[14px] border border-line bg-bg-2 lg:order-2",
+          "relative order-1 w-full border border-line bg-bg-2 lg:order-2",
           "lg:[--pw:288px] lg:aspect-[9/19.5] lg:w-[var(--pw)] lg:flex-none",
           "lg:rounded-[calc(var(--pw)*0.16)] lg:border-0 lg:bg-fg lg:p-[calc(var(--pw)*0.032)]",
           "lg:shadow-[0_40px_60px_-30px_color-mix(in_oklab,var(--fg)_45%,transparent),0_12px_24px_-12px_color-mix(in_oklab,var(--fg)_30%,transparent)]",
         ].join(" ")}
       >
-        <div className="flex h-full flex-col overflow-hidden rounded-[13px] lg:rounded-[calc(var(--pw)*0.13)] lg:bg-bg">
+        <div className="flex h-full flex-col overflow-hidden lg:rounded-[calc(var(--pw)*0.13)] lg:bg-bg">
           <PhoneStatusBar className="hidden lg:flex" />
           <div className="flex min-h-0 flex-1 flex-col">
             <div className="border-b border-line px-4 pb-3 pt-4 lg:px-5 lg:pb-3.5 lg:pt-1">
@@ -182,7 +182,7 @@ export default function EngineDemo() {
               <span className="sr-only">{announcement}</span>
             </div>
             <div className="flex flex-1 flex-col gap-3.5 px-4 pb-4 pt-4 lg:gap-4 lg:px-5 lg:pb-5 lg:pt-5">
-              <div className="rounded-[14px] border border-line-strong bg-bg-elev p-4 lg:bg-bg-2 lg:p-[18px]">
+              <div className="border border-line-strong bg-bg-elev p-4 lg:bg-bg-2 lg:p-[18px]">
                 <p className="text-[9px] text-fg-dim">{t("topSetLabel")}</p>
                 <p className="mt-2 flex items-baseline gap-2.5">
                   {result.changed ? (
@@ -204,10 +204,10 @@ export default function EngineDemo() {
               ) : null}
 
               <div className="flex gap-2">
-                <span className="rounded-full border border-line-strong px-2.5 py-1.5 text-[9px] text-fg-dim">
+                <span className="border border-line-strong px-2.5 py-1.5 text-[9px] text-fg-dim">
                   {t("whySleep", { hours })}
                 </span>
-                <span className="rounded-full border border-line-strong px-2.5 py-1.5 text-[9px] text-fg-dim">
+                <span className="border border-line-strong px-2.5 py-1.5 text-[9px] text-fg-dim">
                   {t("whyHrv", { ms: sliders.hrv })}
                 </span>
               </div>
@@ -226,7 +226,7 @@ export default function EngineDemo() {
         {/* Øen ligger på kanten, som på PhoneFrame. Kun telefon-formen. */}
         <i
           aria-hidden="true"
-          className="absolute left-1/2 top-[calc(var(--pw)*0.032_+_9px)] z-10 hidden h-6 w-[31%] -translate-x-1/2 rounded-[14px] bg-fg lg:block"
+          className="absolute left-1/2 top-[calc(var(--pw)*0.032_+_9px)] z-10 hidden h-6 w-[31%] -translate-x-1/2 bg-fg lg:block"
         />
       </div>
     </div>

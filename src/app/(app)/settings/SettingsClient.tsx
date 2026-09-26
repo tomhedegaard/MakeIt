@@ -377,7 +377,7 @@ function Toggle({
         />
         <span
           aria-hidden
-          className="block relative w-12 h-7 rounded-full border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
+          className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
           style={{ background: checked ? "var(--fg)" : "var(--bg-3)" }}
         >
           <span

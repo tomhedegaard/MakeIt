@@ -58,7 +58,7 @@ export default function MindScreen({ width, scroll = false }: { width?: number; 
 
       <div>
         <Label className="mb-[5px]">{s("mind.journal")}</Label>
-        <div className="min-h-[44px] rounded-[10px] border border-line bg-bg-2 px-2.5 py-2 text-[10.5px]">
+        <div className="min-h-[44px] border border-line bg-bg-2 px-2.5 py-2 text-[10.5px]">
           {s("mind.journalEntry")}
         </div>
       </div>

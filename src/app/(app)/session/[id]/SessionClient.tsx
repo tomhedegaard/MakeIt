@@ -711,7 +711,7 @@ function PrimaryMuscleTags({ muscles }: { muscles: import("@/lib/data/muscle-gro
       {muscles.map((m) => (
         <span
           key={m}
-          className="px-2 py-0.5 rounded-full text-[10px] bg-bg-3 text-fg-dim"
+          className="px-2 py-0.5 text-[10px] bg-bg-3 text-fg-dim"
         >
           {MUSCLE_LABELS[m]}
         </span>

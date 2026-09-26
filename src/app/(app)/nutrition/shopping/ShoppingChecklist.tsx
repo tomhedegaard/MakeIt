@@ -82,7 +82,7 @@ export default function ShoppingChecklist({
             {totals.done} <span className="text-fg-dim">/ {totals.total}</span>
           </span>
         </div>
-        <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+        <div className="h-1.5 bg-bg-3 overflow-hidden">
           <div
             className="h-full bg-fg transition-all"
             style={{

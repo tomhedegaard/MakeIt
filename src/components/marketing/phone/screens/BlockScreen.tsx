@@ -29,12 +29,12 @@ export default function BlockScreen({ width, scroll }: { width?: number; scroll?
             <div
               key={w}
               className={cn(
-                "rounded-[10px] border px-2 py-1.5",
+                "border px-2 py-1.5",
                 now ? "border-fg bg-fg text-bg" : "border-line bg-bg-2",
               )}
             >
               <span className="block text-[8px] opacity-70">{b(w)}</span>
-              <i className={cn("mt-1.5 block h-1 rounded-full", now ? "bg-signal" : "bg-domain")} />
+              <i className={cn("mt-1.5 block h-1", now ? "bg-signal" : "bg-domain")} />
             </div>
           );
         })}

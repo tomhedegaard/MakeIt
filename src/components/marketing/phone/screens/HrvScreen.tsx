@@ -22,7 +22,7 @@ export default function HrvScreen({ width, scroll = false }: { width?: number; s
         <Label>{h("latest")}</Label>
         <p className="mt-1 font-display text-[52px]">
           {t("engine.steps.hrv.value")}
-          <small className="ml-1 text-[12px] font-medium normal-case">{t("engine.steps.hrv.unit")}</small>
+          <small className="ml-1 text-[12px] font-medium">{t("engine.steps.hrv.unit")}</small>
         </p>
         <Label className="mt-1.5">
           {h("avg")} {s("hrv.avgValue")}

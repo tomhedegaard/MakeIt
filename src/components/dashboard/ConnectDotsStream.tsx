@@ -143,7 +143,7 @@ export default function ConnectDotsStream({
                     <span
                       key={domain}
                       data-domain={domain}
-                      className="inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5"
+                      className="inline-flex items-center gap-1.5 border px-2 py-0.5"
                       style={{
                         background: "var(--domain-tint)",
                         borderColor: "var(--domain-line)",
@@ -172,7 +172,7 @@ export default function ConnectDotsStream({
                   <Link
                     href={card.moreHref}
                     data-more-about={card.moreAbout}
-                    className="inline-flex min-h-11 items-center text-[11px] text-fg-dim hover:text-fg border hairline rounded-full px-4"
+                    className="inline-flex min-h-11 items-center text-[11px] text-fg-dim hover:text-fg border hairline px-4"
                   >
                     {copy.moreAbout} {copy.domains[card.moreAbout]}
                   </Link>
