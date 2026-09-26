@@ -2,6 +2,8 @@ import { useTranslations } from "next-intl";
 import DemoLoop from "../../DemoLoop";
 import PhoneFrame from "../PhoneFrame";
 import { Avatar, Chip, Headline, Kicker, Label, Pill, Row } from "./parts";
+import { Play } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * The rack's form-check shows the bench press, so the landing never plays
@@ -42,9 +44,7 @@ export default function FormCheckScreen({ width, scroll = false }: { width?: num
       <div aria-hidden="true" className="flex flex-col gap-[9px]">
         <div className="flex items-center gap-2 py-0.5 text-[10px] text-fg-dim">
           <span className="grid h-6 w-[34px] flex-none place-items-center rounded-md bg-fg text-bg">
-            <svg viewBox="0 0 10 10" className="size-[9px]" fill="currentColor">
-              <path d="M3 2l5 3-5 3z" />
-            </svg>
+            <Play {...ICON} className="size-[9px]" />
           </span>
           <span>
             {card("yours")} · {s("session.set", { n: 3 }).toLowerCase()}

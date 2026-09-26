@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { ChevronRight } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * Shared building blocks for the marketing phone screens, translated
@@ -222,8 +224,6 @@ export function Avatar({ className, children }: { className?: string; children: 
 
 export function Chevron() {
   return (
-    <svg viewBox="0 0 10 10" className="size-2.5 flex-none" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3.5 1.5L7 5 3.5 8.5" />
-    </svg>
+    <ChevronRight {...ICON} className="size-2.5 flex-none" />
   );
 }

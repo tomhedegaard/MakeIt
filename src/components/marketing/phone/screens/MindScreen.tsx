@@ -75,7 +75,6 @@ export default function MindScreen({ width, scroll = false }: { width?: number; 
               y={36 - height}
               width="18"
               height={height}
-              rx="3"
               className={i === WEEK.length - 1 ? "fill-signal" : "fill-domain"}
             />
           ))}

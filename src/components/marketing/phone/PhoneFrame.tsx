@@ -1,6 +1,9 @@
 import type { CSSProperties, ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import { CalendarDays, Users } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
+import DomainMark from "@/components/brand/DomainMark";
 
 export type PhoneTab = "today" | "train" | "food" | "mind" | "crew";
 
@@ -163,7 +166,7 @@ export function PhoneTabBar({
               on ? "font-medium text-fg" : "text-fg-dim",
             )}
           >
-            {on ? <i className="absolute -top-[9px] h-[3px] w-[22px] bg-signal" /> : null}
+            {on ? <i className="absolute -top-[9px] h-[2px] w-[22px] bg-signal" /> : null}
             <TabGlyph tab={key} />
             {tabLabel[key]}
           </span>
@@ -188,54 +191,23 @@ function StatusGlyph() {
   );
 }
 
-/** Tab-bar glyphs from reference B's symbol set. The only icons allowed. */
+/**
+ * The mockup's tab bar shows the app's own icons (Nord, spec §11): the
+ * domain tabs are their DomainMark, I dag and Crew the same line family,
+ * so the phone on the landing is the app, not a lookalike.
+ */
 function TabGlyph({ tab }: { tab: PhoneTab }) {
-  const common = {
-    viewBox: "0 0 20 20",
-    className: "size-[17px]",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.6,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
+  const cls = "size-[17px]";
   switch (tab) {
     case "today":
-      return (
-        <svg {...common}>
-          <rect x="3" y="4" width="14" height="13" rx="3" />
-          <path d="M3 8.5h14M7 2.5v3M13 2.5v3" />
-        </svg>
-      );
+      return <CalendarDays {...ICON} className={cls} />;
     case "train":
-      return (
-        <svg {...common}>
-          <path d="M2 10h16" />
-          <rect x="4" y="5" width="3" height="10" rx="1.2" fill="currentColor" stroke="none" />
-          <rect x="13" y="5" width="3" height="10" rx="1.2" fill="currentColor" stroke="none" />
-        </svg>
-      );
+      return <DomainMark domain="body" className={cls} />;
     case "food":
-      return (
-        <svg {...common}>
-          <path d="M3 9h14a7 7 0 0 1-14 0Z" />
-          <path d="M8 6c0-1.5 1-2 1-3.5M12 6c0-1.5 1-2 1-3.5" strokeWidth="1.4" />
-        </svg>
-      );
+      return <DomainMark domain="food" className={cls} />;
     case "mind":
-      return (
-        <svg {...common}>
-          <circle cx="10" cy="10" r="7" />
-          <path d="M5.5 10.5c1.5-2 3-2 4.5 0s3 2 4.5 0" />
-        </svg>
-      );
+      return <DomainMark domain="mind" className={cls} />;
     case "crew":
-      return (
-        <svg {...common}>
-          <circle cx="7" cy="7.5" r="3" />
-          <circle cx="14" cy="8.5" r="2.4" />
-          <path d="M1.8 17c.6-3 2.6-4.6 5.2-4.6s4.6 1.6 5.2 4.6M13 12.8c2.4 0 4.2 1.3 4.8 4.2" />
-        </svg>
-      );
+      return <Users {...ICON} className={cls} />;
   }
 }
