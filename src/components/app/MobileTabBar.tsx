@@ -4,24 +4,23 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Brain, CalendarDays, Dumbbell, Users, Utensils } from "lucide-react";
+import { CalendarDays, Users } from "lucide-react";
+import DomainMark from "@/components/brand/DomainMark";
+import { ICON } from "@/components/ui/icon";
 
 type Tab = { href: string; labelKey: string; icon: React.ReactNode; domain?: string };
 
 /**
- * Nord tab icons (spec §5): one line family at 24 px, 1.5 px stroke,
- * square caps, monochrome. The anatomical DomainMark glyphs (stomach,
- * skull, figure) stay where they carry meaning — BodyMap, the HQ strip —
- * but as nav they read as illustrations, not icons.
+ * Nord tab icons (spec §5, §11): the domain tabs show their DomainMark,
+ * so a domain has one mark everywhere; I dag and Crew use the same line
+ * family. 24 px, 1.5 px stroke, square caps, monochrome.
  */
-const LINE = { strokeWidth: 1.5, strokeLinecap: "square", strokeLinejoin: "miter", className: "tab-icon", "aria-hidden": true } as const;
-
 const Icon = {
-  today: <CalendarDays {...LINE} />,
-  train: <Dumbbell {...LINE} />,
-  food: <Utensils {...LINE} />,
-  mind: <Brain {...LINE} />,
-  crew: <Users {...LINE} />,
+  today: <CalendarDays {...ICON} className="tab-icon" />,
+  train: <DomainMark domain="body" className="tab-icon" />,
+  food: <DomainMark domain="food" className="tab-icon" />,
+  mind: <DomainMark domain="mind" className="tab-icon" />,
+  crew: <Users {...ICON} className="tab-icon" />,
 };
 
 // Five tabs (spec §6). Me, Reps, HRV and Science live in the header menu.

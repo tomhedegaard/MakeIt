@@ -49,7 +49,7 @@ describe("Nord navigation (spec §5)", () => {
     expect(summary).toContain('t("shell.menu")');
     expect(summary).not.toContain("shell.myProfile");
     // Nord: profil er et linjeikon, ikke en initial-cirkel på en flade.
-    expect(summary).toMatch(/<User className="size-6" strokeWidth=\{1\.5\} strokeLinecap="square"/);
+    expect(summary).toContain("<User {...ICON} className=\"size-6\" />");
     expect(summary).not.toMatch(/rounded-full|surface-2/);
     expect(summary).toContain("size-11");
   });

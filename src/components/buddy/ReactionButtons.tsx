@@ -4,6 +4,8 @@ import { useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { sendBuddyReactionAction } from "@/app/(app)/buddy/actions";
 import type { BuddyInteractionKind } from "@/lib/data/buddy";
+import { BicepsFlexed, Eye, Flame, type LucideIcon } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * Three reaction buttons on /buddy. Calls the server action, which
@@ -12,14 +14,14 @@ import type { BuddyInteractionKind } from "@/lib/data/buddy";
  */
 type Reaction = {
   kind: BuddyInteractionKind;
-  emoji: string;
+  Icon: LucideIcon;
   labelKey: string;
 };
 
 const REACTIONS: Reaction[] = [
-  { kind: "reaction_fire",   emoji: "🔥", labelKey: "reactions.fire" },
-  { kind: "reaction_strong", emoji: "💪", labelKey: "reactions.strong" },
-  { kind: "reaction_eyes",   emoji: "👀", labelKey: "reactions.eyes" },
+  { kind: "reaction_fire",   Icon: Flame,        labelKey: "reactions.fire" },
+  { kind: "reaction_strong", Icon: BicepsFlexed, labelKey: "reactions.strong" },
+  { kind: "reaction_eyes",   Icon: Eye,          labelKey: "reactions.eyes" },
 ];
 
 export default function ReactionButtons({ pairId }: { pairId: string }) {
@@ -47,9 +49,7 @@ export default function ReactionButtons({ pairId }: { pairId: string }) {
           aria-label={t(r.labelKey)}
           className="btn btn-sm flex items-center gap-2 disabled:opacity-50"
         >
-          <span aria-hidden="true" className="text-base leading-none">
-            {r.emoji}
-          </span>
+          <r.Icon {...ICON} className="size-4" />
           <span>{t(r.labelKey)}</span>
         </button>
       ))}

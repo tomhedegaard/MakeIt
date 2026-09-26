@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { rangeFill } from "@/lib/ui/range";
+import { Pause, Play } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * Minimal HTML5 audio player for mental sessions (B-layer voice-agnostic).
@@ -94,14 +96,9 @@ export default function AudioPlayer({ src, durationSeconds }: { src: string; dur
         className="size-9 rounded-full bg-fg text-bg flex items-center justify-center shrink-0 hover:opacity-90 transition-opacity"
       >
         {playing ? (
-          <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden>
-            <rect x="6" y="5" width="4" height="14" rx="0.5" />
-            <rect x="14" y="5" width="4" height="14" rx="0.5" />
-          </svg>
+          <Pause {...ICON} className="size-4" />
         ) : (
-          <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden>
-            <path d="M7 5l12 7-12 7z" />
-          </svg>
+          <Play {...ICON} className="size-4" />
         )}
       </button>
 

@@ -1,10 +1,12 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Motor mark — Adaptive Engine attribution.
+ * HQ mark — Adaptive Engine attribution (Nord, spec §11).
  *
- * Stroke language matches DomainMark (1.6, round caps, currentColor).
- * A gear, not a face. No personality, no sparkle.
+ * The double slash from the wordmark "MakeIt // HQ" and the app icon,
+ * drawn as two 1.5 px strokes with square ends so it sits in the one
+ * icon language. It says "this came from HQ" the same way the app icon
+ * says "this is HQ". A mark, not a face: no personality, no sparkle.
  */
 export default function MotorGlyph({ className }: { className?: string }) {
   return (
@@ -15,18 +17,11 @@ export default function MotorGlyph({ className }: { className?: string }) {
       data-motor-glyph=""
       aria-hidden
     >
-      <circle
-        cx="12"
-        cy="12"
-        r="3.1"
-        stroke="currentColor"
-        strokeWidth={1.6}
-      />
       <path
-        d="M12 4.2v2.1M12 17.7v2.1M4.2 12h2.1M17.7 12h2.1M6.4 6.4l1.5 1.5M16.1 16.1l1.5 1.5M6.4 17.6l1.5-1.5M16.1 7.9l1.5-1.5"
+        d="M10.5 5 6 19M18 5l-4.5 14"
         stroke="currentColor"
-        strokeWidth={1.6}
-        strokeLinecap="round"
+        strokeWidth={1.5}
+        strokeLinecap="square"
       />
     </svg>
   );

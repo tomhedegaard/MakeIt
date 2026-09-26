@@ -9,6 +9,8 @@ import { getSession } from "@/lib/auth";
 import { getMyFormChecks, type MyFormCheck } from "@/lib/data/me";
 import { getMyLifts, type LiftPr, type LiftStats } from "@/lib/data/lifts";
 import { COMPANY } from "@/lib/company";
+import { Star } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 export default async function ProfilePage() {
   const m = (await getSession())!;
@@ -131,10 +133,10 @@ export default async function ProfilePage() {
                     <span className="text-fg-dim text-xs ml-1">{t("prs.e1rm")}</span>
                   </span>
                   <span
-                    className="numeric text-micro border hairline-strong px-2 py-0.5 shrink-0"
+                    className="inline-flex items-center border hairline-strong px-2 py-1 shrink-0"
                     aria-hidden
                   >
-                    ★
+                    <Star {...ICON} className="size-3" />
                   </span>
                 </li>
               ))}

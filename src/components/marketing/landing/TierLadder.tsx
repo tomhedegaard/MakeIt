@@ -4,6 +4,8 @@ import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "rea
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { TierKey } from "@/lib/marketing/tiers";
+import { Check } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 export type LadderTier = {
   key: TierKey;
@@ -188,18 +190,7 @@ export default function TierLadder({
                   PLATE[tier.key].dark ? "border-bg/15" : "border-line",
                 )}
               >
-                <svg
-                  viewBox="0 0 12 12"
-                  aria-hidden="true"
-                  className="size-3 flex-none text-signal"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M2 6.4l2.6 2.4L10 3.2" />
-                </svg>
+                <Check {...ICON} className="size-3 flex-none text-signal" />
                 {perk}
               </li>
             ))}

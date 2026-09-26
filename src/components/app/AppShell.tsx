@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { MessageSquare, User } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 import Logo from "@/components/Logo";
 import { cn } from "@/lib/utils";
 import type { Member } from "@/lib/auth";
@@ -180,7 +181,7 @@ export default function AppShell({
               className="relative size-11 flex items-center justify-center text-fg"
               aria-label={t("links.messages")}
             >
-              <MessageSquare className="size-6" strokeWidth={1.5} strokeLinecap="square" strokeLinejoin="miter" aria-hidden />
+              <MessageSquare {...ICON} className="size-6" />
               {unreadMessages > 0 ? (
                 <span
                   className="absolute top-1.5 right-1 numeric text-micro tabular-nums px-1 py-0.5 bg-fg text-bg leading-none min-w-[14px] text-center"
@@ -203,7 +204,7 @@ export default function AppShell({
                 className="size-11 flex items-center justify-center text-fg cursor-pointer list-none [&::-webkit-details-marker]:hidden"
                 aria-label={t("shell.menu")}
               >
-                <User className="size-6" strokeWidth={1.5} strokeLinecap="square" strokeLinejoin="miter" aria-hidden />
+                <User {...ICON} className="size-6" />
               </summary>
               <nav
                 aria-label={t("shell.menu")}

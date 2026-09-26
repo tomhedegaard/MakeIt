@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import type { Meal } from "@/lib/data/nutrition";
 import { swapMealAction } from "./actions";
 import LogMealButton from "./LogMealButton";
+import { Camera } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 const CARB_DENSITY_KEYS: Record<Meal["carbDensity"], string> = {
   low: "carbLow",
@@ -105,9 +107,10 @@ export default function MealCard({
             {meal.imageAttributionName ? (
               <span
                 data-theme="nat"
-                className="absolute bottom-2 right-2 text-micro text-fg bg-bg/70 backdrop-blur-sm rounded px-1.5 py-0.5"
+                className="absolute bottom-2 right-2 inline-flex items-center gap-1 text-micro text-fg bg-bg px-1.5 py-0.5"
               >
-                📷 {meal.imageAttributionName}
+                <Camera {...ICON} className="size-3.5" />
+                {meal.imageAttributionName}
               </span>
             ) : null}
           </a>

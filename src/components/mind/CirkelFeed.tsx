@@ -1,4 +1,6 @@
 import { useTranslations } from "next-intl";
+import { BicepsFlexed, Flame, Heart } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 interface Post {
   id: string;
@@ -50,9 +52,9 @@ export default function CirkelFeed({ posts }: { posts: Post[] }) {
           ) : null}
           <p className="text-fg-dim leading-relaxed whitespace-pre-wrap">{p.body}</p>
           <div className="flex items-center gap-3 text-xs text-fg-dim pt-1">
-            <span>🔥 {p.reactions.fire}</span>
-            <span>💪 {p.reactions.flex}</span>
-            <span>❤ {p.reactions.heart}</span>
+            <span className="inline-flex items-center gap-1"><Flame {...ICON} className="size-4" />{p.reactions.fire}</span>
+            <span className="inline-flex items-center gap-1"><BicepsFlexed {...ICON} className="size-4" />{p.reactions.flex}</span>
+            <span className="inline-flex items-center gap-1"><Heart {...ICON} className="size-4" />{p.reactions.heart}</span>
           </div>
         </article>
       ))}

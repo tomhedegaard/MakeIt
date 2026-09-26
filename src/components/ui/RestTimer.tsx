@@ -52,9 +52,9 @@ export default function RestTimer({
           <circle cx="18" cy="18" r="16" fill="none" stroke="var(--line)" strokeWidth="2" />
           <circle
             cx="18" cy="18" r="16" fill="none"
-            stroke="var(--fg)" strokeWidth="2"
+            stroke="var(--signal)" strokeWidth="2"
             strokeDasharray={`${(pct / 100) * 100.53} 100.53`}
-            strokeLinecap="round"
+            strokeLinecap="butt"
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center numeric text-sm">
