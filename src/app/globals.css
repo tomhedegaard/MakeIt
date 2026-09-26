@@ -262,6 +262,16 @@ html:has(.theme-root[data-theme="nat"]) {
  * ---------------------------------------------------------------- */
 * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
+/* Tailwind v4 lader en kant uden farve arve currentColor, så divide-y og
+ * en bar border tegnede sorte streger. Nord har 1 px linjer i --line
+ * (spec §5); en farveklasse (border-fg, border-domain-line) vinder stadig,
+ * fordi utilities ligger i et senere lag. */
+@layer base {
+  *, ::before, ::after, ::backdrop, ::file-selector-button {
+    border-color: var(--line);
+  }
+}
+
 html { color-scheme: light; }
 /* html/body keep their natural (auto) height. Lenis used to force
  * this on every page; the shells depend on it: the member app pins
@@ -284,9 +294,9 @@ body {
 
 ::selection { background: var(--fg); color: var(--bg); }
 
-::-webkit-scrollbar       { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--line-strong); }
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line); }
 ::-webkit-scrollbar-thumb:hover { background: var(--fg-faint); }
 
 /* ---------------------------------------------------------------- *
