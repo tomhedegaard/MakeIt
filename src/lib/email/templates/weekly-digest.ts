@@ -61,9 +61,9 @@ function renderHtml(args: {
   const statsCells = stats
     .map(
       (s) => `
-      <td valign="top" style="padding:14px 8px;text-align:center;border-right:1px solid rgba(245,242,236,0.08);">
-        <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;font-size:24px;color:#F5F2EC;">${s.value}</div>
-        <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#A8A6A0;margin-top:4px;">${esc(s.label)}</div>
+      <td valign="top" style="padding:14px 8px;text-align:center;border-right:1px solid #E1E1DE;">
+        <div style="font-variant-numeric:tabular-nums;font-size:24px;color:#111111;">${s.value}</div>
+        <div style="font-size:12px;color:#5E5E59;margin-top:4px;">${esc(s.label)}</div>
       </td>`
     )
     .join("");
@@ -71,15 +71,15 @@ function renderHtml(args: {
   const topPosts = digest.topPosts
     .map(
       (p, i) => `
-      <tr><td style="padding:10px 0;border-bottom:1px solid rgba(245,242,236,0.08);">
+      <tr><td style="padding:10px 0;border-bottom:1px solid #E1E1DE;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
           <tr>
-            <td style="width:32px;font-family:'SF Mono',Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;color:#56554F;font-size:12px;vertical-align:top;">${String(i + 1).padStart(2, "0")}</td>
+            <td style="width:32px;font-variant-numeric:tabular-nums;color:#696964;font-size:12px;vertical-align:top;">${String(i + 1).padStart(2, "0")}</td>
             <td style="vertical-align:top;">
-              <div style="font-size:13px;color:#F5F2EC;">${esc(p.who)}</div>
-              <div style="font-size:13px;color:#A8A6A0;line-height:1.5;margin-top:2px;">${esc(p.content)}</div>
+              <div style="font-size:13px;color:#111111;">${esc(p.who)}</div>
+              <div style="font-size:13px;color:#5E5E59;line-height:1.5;margin-top:2px;">${esc(p.content)}</div>
             </td>
-            <td style="font-family:'SF Mono',Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;color:#A8A6A0;font-size:12px;vertical-align:top;text-align:right;white-space:nowrap;">+${p.reactions}</td>
+            <td style="font-variant-numeric:tabular-nums;color:#5E5E59;font-size:12px;vertical-align:top;text-align:right;white-space:nowrap;">+${p.reactions}</td>
           </tr>
         </table>
       </td></tr>`
@@ -89,7 +89,7 @@ function renderHtml(args: {
   const topPosters = digest.topPosters
     .map(
       (p) =>
-        `<span style="display:inline-block;border:1px solid rgba(245,242,236,0.18);border-radius:999px;padding:4px 10px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;color:#F5F2EC;margin-right:6px;margin-bottom:6px;">${esc(p.who)} · ${p.count}</span>`
+        `<span style="display:inline-block;border:1px solid #CFCFCA;border-radius:0;padding:4px 10px;font-size:12px;color:#111111;margin-right:6px;margin-bottom:6px;">${esc(p.who)} · ${p.count}</span>`
     )
     .join("");
 
@@ -98,30 +98,30 @@ function renderHtml(args: {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="color-scheme" content="dark light">
+  <meta name="color-scheme" content="light">
   <title>${esc(t("title", { range }))}</title>
 </head>
-<body style="margin:0;padding:0;background:#0A0A0B;color:#F5F2EC;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0A0A0B;">
+<body style="margin:0;padding:0;background:#FFFFFF;color:#111111;font-family:'Schibsted Grotesk',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;">
     <tr><td align="center" style="padding:40px 16px;">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
         <tr><td style="padding-bottom:32px;">
-          <span style="font-weight:900;letter-spacing:-0.02em;text-transform:uppercase;font-size:14px;color:#F5F2EC;">
-            MAKEIT <span style="color:#56554F;margin:0 6px;">//</span> HQ
+          <span style="font-weight:500;letter-spacing:-0.02em;font-size:14px;color:#111111;">
+            MakeIt <span style="color:#696964;margin:0 6px;">//</span> HQ
           </span>
         </td></tr>
         <tr><td style="padding-bottom:8px;">
-          <span style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#A8A6A0;">
+          <span style="font-size:13px;font-weight:500;color:#2E4A3B;">
             ${esc(t("eyebrow", { range }))}
           </span>
         </td></tr>
         <tr><td style="padding-bottom:24px;">
-          <h1 style="margin:0;font-weight:900;font-size:30px;line-height:1.05;letter-spacing:-0.02em;color:#F5F2EC;">
+          <h1 style="margin:0;font-weight:500;font-size:30px;line-height:1.05;letter-spacing:-0.02em;color:#111111;">
             ${esc(t("greeting", { handle: args.recipientHandle }))}
           </h1>
         </td></tr>
         <tr><td style="padding-bottom:24px;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#18181B;border:1px solid rgba(245,242,236,0.08);border-radius:10px;overflow:hidden;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2F2F0;border:1px solid #E1E1DE;border-radius:0;overflow:hidden;">
             <tr>${statsCells}</tr>
           </table>
         </td></tr>
@@ -129,7 +129,7 @@ function renderHtml(args: {
         ${
           digest.topPosts.length > 0
             ? `<tr><td style="padding-bottom:24px;">
-                 <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#A8A6A0;margin-bottom:8px;">${esc(t("topPosts"))}</div>
+                 <div style="font-size:13px;font-weight:500;color:#2E4A3B;margin-bottom:8px;">${esc(t("topPosts"))}</div>
                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${topPosts}</table>
                </td></tr>`
             : ""
@@ -138,22 +138,22 @@ function renderHtml(args: {
         ${
           digest.topPosters.length > 0
             ? `<tr><td style="padding-bottom:24px;">
-                 <div style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#A8A6A0;margin-bottom:10px;">${esc(t("topPosters"))}</div>
+                 <div style="font-size:13px;font-weight:500;color:#2E4A3B;margin-bottom:10px;">${esc(t("topPosters"))}</div>
                  <div>${topPosters}</div>
                </td></tr>`
             : ""
         }
 
         <tr><td style="padding-top:8px;padding-bottom:32px;">
-          <a href="${args.baseUrl}/community" style="display:inline-block;background:#F5F2EC;color:#0A0A0B;padding:14px 28px;border-radius:999px;font-weight:500;text-decoration:none;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;font-family:'SF Mono',Menlo,Consolas,monospace;">
+          <a href="${args.baseUrl}/community" style="display:inline-block;background:#111111;color:#FFFFFF;padding:15px 24px;border-radius:0;font-weight:500;text-decoration:none;font-size:15px;">
             ${esc(t("cta"))}
           </a>
         </td></tr>
-        <tr><td style="border-top:1px solid rgba(245,242,236,0.08);padding-top:20px;">
-          <p style="margin:0 0 6px;color:#56554F;font-size:11px;line-height:1.7;">
+        <tr><td style="border-top:1px solid #E1E1DE;padding-top:20px;">
+          <p style="margin:0 0 6px;color:#696964;font-size:12px;line-height:1.7;">
             ${esc(tFooter("weeklyDigestNote"))}
           </p>
-          <p style="margin:12px 0 0;color:#56554F;font-size:11px;line-height:1.7;">
+          <p style="margin:12px 0 0;color:#696964;font-size:12px;line-height:1.7;">
             ${emailFooterHtml()}
           </p>
         </td></tr>

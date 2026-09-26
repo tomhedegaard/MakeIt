@@ -96,6 +96,20 @@ describe("sentence case in one font (spec §4, §7.1)", () => {
   });
 });
 
+// E-mails er inline CSS og kan ikke bruge tokens, så de gates på værdierne:
+// Nord lys, sentence case, radius 0, ingen mono. De nat-farver der ikke
+// findes i Nord lys er afvist via DARK; #111111 er tilladt, da det er blæk.
+describe("e-mails are Nord lys (spec §3.1, §7)", () => {
+  const EMAIL = join(SRC, "lib/email");
+  const mails = walk(EMAIL).filter((p) => p.endsWith(".ts") && !/\.test\./.test(p));
+  it.each(mails.map((p) => relative(SRC, p)))("%s", (p) => {
+    const src = readFileSync(join(SRC, p), "utf8");
+    expect(src).not.toMatch(DARK);
+    expect(src).not.toMatch(/text-transform:\s*uppercase|SF Mono|monospace|border-radius:\s*(999px|[1-9])|MAKEIT/);
+    expect(src).not.toMatch(/color-scheme" content="dark/);
+  });
+});
+
 describe("chrome-metadata stripping is narrow (self-test)", () => {
   it("strips a single-line viewport export clean of its dark literal", () => {
     const strip = CHROME_METADATA["app/coach/layout.tsx"];
