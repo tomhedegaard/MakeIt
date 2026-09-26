@@ -3,7 +3,7 @@ import KalkLanding from "@/components/marketing/kalk/KalkLanding";
 
 // Kalk is a light page scope on a dark-default root layout.
 export const viewport: Viewport = {
-  themeColor: "#E7E9EB",
+  themeColor: "#FFFFFF",
   colorScheme: "light",
 };
 

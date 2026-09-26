@@ -54,9 +54,10 @@ describe("login magic-link invite field", () => {
     expect(en.errors.missing).not.toMatch(/and code/i);
   });
 
-  it("is the Kalk pilot: themed scope, light viewport, no hardcoded glow", () => {
-    expect(login).toContain('<ThemeScope theme="kalk"');
-    expect(login).toMatch(/export const viewport[\s\S]*?themeColor: "#E7E9EB"/);
+  it("is Nord: themed scope, light viewport, no glow and no gradient", () => {
+    expect(login).toContain('<ThemeScope theme="nord"');
+    expect(login).toMatch(/export const viewport[\s\S]*?themeColor: "#FFFFFF"/);
     expect(login).not.toMatch(/rgba\(245,\s*242,\s*236/);
+    expect(login).not.toMatch(/gradient|--glow/);
   });
 });

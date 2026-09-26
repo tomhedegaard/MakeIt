@@ -1,5 +1,5 @@
 /**
- * Status bar follows the surface theme (spec 2026-09-17 §6, D3).
+ * Status bar follows the surface theme (Nord, spec 2026-09-26 §3).
  * The plugin comes from the shell-injected runtime (window.Capacitor.Plugins),
  * like NativePushToggle; nothing is bundled.
  */
@@ -10,7 +10,7 @@ export type StatusBarPlugin = {
   setBackgroundColor: (o: { color: string }) => Promise<void>;
 };
 
-const BACKGROUND = { LIGHT: "#E7E9EB", DARK: "#0A0A0B" } as const;
+const BACKGROUND = { LIGHT: "#FFFFFF", DARK: "#111111" } as const;
 
 /** Capacitor naming: LIGHT = dark text for light backgrounds. */
 export function statusBarStyleFor(colorScheme: string): StatusBarStyle {
@@ -21,13 +21,13 @@ export function statusBarStyleFor(colorScheme: string): StatusBarStyle {
  * Reads the active theme straight from the DOM instead of the computed
  * `color-scheme` (which is derived via `html:has(.theme-root[data-theme=…])`
  * in globals.css — `:has()` is absent in older Android WebViews). Mirrors
- * the CSS cascade: the Nat rule is declared after the Kalk one, so Nat wins
- * when both are present; "dark" is also the fallback when neither is found.
+ * the CSS cascade: Nord nat is declared after Nord lys, so nat wins when
+ * both are present, and light is the fallback because Nord lys now sits on
+ * `:root`.
  */
 export function schemeFromDocument(doc: Pick<Document, "querySelector">): "light" | "dark" {
   if (doc.querySelector('.theme-root[data-theme="nat"]')) return "dark";
-  if (doc.querySelector('.theme-root[data-theme="kalk"]')) return "light";
-  return "dark";
+  return "light";
 }
 
 export async function syncStatusBar(plugin: StatusBarPlugin | undefined, colorScheme: string): Promise<boolean> {

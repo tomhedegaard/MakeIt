@@ -20,7 +20,7 @@ export async function generateMetadata() {
 
 // Kalk pilot (spec 2026-09-17). Merges with the root viewport.
 export const viewport: Viewport = {
-  themeColor: "#E7E9EB",
+  themeColor: "#FFFFFF",
   colorScheme: "light",
 };
 
@@ -47,12 +47,8 @@ export default async function LoginPage({
   const t = await getTranslations("Login");
 
   return (
-    <ThemeScope theme="kalk" className="flex-1 flex flex-col">
+    <ThemeScope theme="nord" className="flex-1 flex flex-col">
       <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-24">
-        <div className="absolute inset-0 -z-0 pointer-events-none">
-          <div className="absolute left-1/2 top-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,var(--glow),transparent_70%)] blur-2xl" />
-        </div>
-
         <div className="relative z-10 w-full max-w-md">
           <div className="mb-12 flex items-center justify-between">
             <Link href="/" className="inline-block text-fg">

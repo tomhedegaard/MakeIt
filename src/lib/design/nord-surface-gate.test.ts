@@ -14,7 +14,7 @@ function walk(dir: string): string[] {
   });
 }
 
-// Member surfaces. Coach console, mail, non-Kalk marketing and the 3D coach spike are out of scope (spec header).
+// Member surfaces. Coach console, mail, non-landing marketing and the 3D coach spike are out of scope (spec header).
 const OUT_OF_SCOPE = [
   /^app\/coach\//, /^components\/coach\//, /^lib\/email\//, /^components\/marketing\/(?!kalk\/)/,
   /^components\/anatomy\/AnatomyFigure3D/,
@@ -35,12 +35,24 @@ const CHROME_METADATA: Record<string, (src: string) => string> = {
   "lib/native/status-bar.ts": (src) => src.replace(/const BACKGROUND = \{[\s\S]*?\} as const;/, ""),
 };
 
-// Intentionally narrow: the exact Nat token hex values (plus the old Nat anatomy
-// hexes) — not a general hex/colour scanner. Widen only when a genuine new
-// dark-only literal shows up; do not loosen this into "any hex".
-const DARK = /#0A0A0B|#F5F2EC|#111113|#18181B|#1F1F23|#A8A6A0|#56554F|#C97B3E|#4CAF7D|#E8703A|#4F86C6|#1A1A1C|#3A3A3E|#222226|rgba\(245,\s?242,\s?236|rgba\(10,\s?10,\s?11/i;
+// Intentionally narrow: the exact dark-only token values — Nord nat's own
+// surfaces, greys, lines and domain hues, plus every pre-Nord dark literal so
+// the old palette cannot creep back. NOT a general hex scanner, and #111111 is
+// deliberately absent: it is Nord lys's --fg as well as Nord nat's --bg.
+// Widen only when a genuine new dark-only literal shows up.
+const DARK = new RegExp([
+  // Nord nat (spec §3.2)
+  "#1A1A19", "#232322", "#E6E6E2", "#8F8F8A", "#3A3A38",
+  "#F2545B", "#45C487", "#FF9C41", "#5B9DF5", "#9F8CFB", "#6FE0E8",
+  String.raw`rgba\(255,\s?255,\s?255`,
+  // Pre-Nord dark palette (Nat/Kalk era)
+  "#0A0A0B", "#F5F2EC", "#111113", "#18181B", "#1F1F23", "#A8A6A0", "#56554F",
+  "#C97B3E", "#4CAF7D", "#E8703A", "#4F86C6", "#1A1A1C", "#3A3A3E", "#222226",
+  String.raw`rgba\(245,\s?242,\s?236`, String.raw`rgba\(10,\s?10,\s?11`,
+].join("|"), "i");
 // Intentionally narrow: only the specific dark-only Tailwind utilities that were
-// actually used pre-Kalk, not every colour utility.
+// actually used pre-Nord, not every colour utility. Tokens only: a white page
+// is bg-bg, never bg-white.
 const DARK_UTIL = /\b(bg-black|text-white|bg-white|text-black)(\/\d+)?\b/;
 
 const surfaceFiles = walk(SRC)
@@ -60,7 +72,7 @@ describe("no dark-only literals on member surfaces (spec §8)", () => {
 describe("chrome-metadata stripping is narrow (self-test)", () => {
   it("strips a single-line viewport export clean of its dark literal", () => {
     const strip = CHROME_METADATA["app/coach/layout.tsx"];
-    const fixture = 'export const viewport: Viewport = { themeColor: "#0A0A0B", colorScheme: "dark" };\n';
+    const fixture = 'export const viewport: Viewport = { themeColor: "#1A1A19", colorScheme: "dark" };\n';
     expect(strip(fixture)).not.toMatch(DARK);
   });
 
@@ -68,7 +80,7 @@ describe("chrome-metadata stripping is narrow (self-test)", () => {
     const strip = CHROME_METADATA["app/layout.tsx"];
     const fixture = [
       "export const viewport: Viewport = {",
-      '  themeColor: "#0A0A0B",',
+      '  themeColor: "#1A1A19",',
       '  colorScheme: "dark",',
       "};",
       "",
@@ -79,7 +91,7 @@ describe("chrome-metadata stripping is narrow (self-test)", () => {
   it("does NOT strip a dark literal that lives outside the viewport export", () => {
     const strip = CHROME_METADATA["app/layout.tsx"];
     const fixture = [
-      'export const viewport: Viewport = { themeColor: "#0A0A0B", colorScheme: "dark" };',
+      'export const viewport: Viewport = { themeColor: "#1A1A19", colorScheme: "dark" };',
       'const rogue = "bg-black";',
       "",
     ].join("\n");
@@ -91,7 +103,7 @@ describe("chrome-metadata stripping is narrow (self-test)", () => {
   it("strips only the BACKGROUND map in status-bar.ts, not the rest of the file", () => {
     const strip = CHROME_METADATA["lib/native/status-bar.ts"];
     const fixture = [
-      'const BACKGROUND = { LIGHT: "#E7E9EB", DARK: "#0A0A0B" } as const;',
+      'const BACKGROUND = { LIGHT: "#FFFFFF", DARK: "#1A1A19" } as const;',
       'const rogue = "bg-black";',
       "",
     ].join("\n");
@@ -103,14 +115,14 @@ describe("chrome-metadata stripping is narrow (self-test)", () => {
 
 describe("native and PWA chrome (spec §6, D3)", () => {
   const cap = readFileSync(new URL("../../../capacitor.config.ts", import.meta.url), "utf8");
-  it("shell window and splash are both Kalk (D3 delivered)", () => {
-    expect(cap).toMatch(/^\s{2}backgroundColor: "#E7E9EB"/m);
-    expect(cap).toMatch(/SplashScreen: \{[\s\S]*?backgroundColor: "#E7E9EB"/);
+  it("shell window and splash are both Nord lys", () => {
+    expect(cap).toMatch(/^\s{2}backgroundColor: "#FFFFFF"/m);
+    expect(cap).toMatch(/SplashScreen: \{[\s\S]*?backgroundColor: "#FFFFFF"/);
   });
-  it("PWA manifest is Kalk", () => {
+  it("PWA manifest is Nord lys", () => {
     const m = read("app/manifest.ts");
-    expect(m).toMatch(/background_color: "#E7E9EB"/);
-    expect(m).toMatch(/theme_color: "#E7E9EB"/);
+    expect(m).toMatch(/background_color: "#FFFFFF"/);
+    expect(m).toMatch(/theme_color: "#FFFFFF"/);
   });
 });
 
@@ -161,9 +173,9 @@ describe("theme scopes (spec §2)", () => {
     expect(src).toMatch(/colorScheme: "dark"/);
   });
 
-  it("/onboarding is Kalk with light browser chrome", () => {
+  it("/onboarding is Nord lys with light browser chrome", () => {
     const src = read("app/onboarding/layout.tsx");
-    expect(src).toMatch(/<ThemeScope theme="kalk"/);
+    expect(src).toMatch(/<ThemeScope theme="nord"/);
     expect(src).toMatch(/colorScheme: "light"/);
   });
 });
