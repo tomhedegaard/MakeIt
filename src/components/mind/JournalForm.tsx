@@ -26,6 +26,7 @@ export default function JournalForm({
   const t = useTranslations("Mind.journal");
   const [body, setBody] = useState<string>(initialBody);
   const [showResources, setShowResources] = useState(false);
+  const [guardianNotified, setGuardianNotified] = useState(false);
   const [saved, setSaved] = useState<boolean>(initialBody.length > 0);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
@@ -40,6 +41,7 @@ export default function JournalForm({
         return;
       }
       setSaved(true);
+      setGuardianNotified(res.guardianNotified);
       if (res.moderation === "crisis" || res.moderation === "flagged") {
         setShowResources(true);
         return;
@@ -96,6 +98,7 @@ export default function JournalForm({
 
       <MentalResourcesModal
         open={showResources}
+        guardianNotified={guardianNotified}
         onClose={() => {
           setShowResources(false);
           router.refresh();

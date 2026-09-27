@@ -62,7 +62,9 @@
     "errorTooLong": "Beskeden er for lang.",
     "errorRls": "Beskeden kunne ikke gemmes. Ring til Livslinien hvis du har brug for hjælp nu.",
     "errorWrite": "Beskeden kunne ikke gemmes. Prøv igen, eller ring til Livslinien.",
-    "errorGeneric": "Beskeden kunne ikke gemmes. Prøv igen, eller ring til Livslinien."
+    "errorGeneric": "Beskeden kunne ikke gemmes. Prøv igen, eller ring til Livslinien.",
+    "youthNotified": "Vi har også sendt din forælder en kort besked om, at du har det svært. Din forælder ser ikke, hvad du har skrevet.",
+    "youthPrivacy": "Din journal er gemt. Kun du kan læse den."
   },
   "journal": {
     "eyebrow": "Mind · Journal",

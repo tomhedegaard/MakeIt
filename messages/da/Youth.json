@@ -15,7 +15,7 @@
     "consentRecovery": "Søvn og restitution (fra ur eller ring, hvis den unge forbinder et)",
     "consentMind": "Mind: check-in og en privat journal",
     "alertTitle": "Hvornår får du besked",
-    "alertBody": "Du får automatisk besked, hvis appen ser tegn på et anstrengt forhold til træning, fx træning næsten hver dag i to uger eller meget lidt søvn samtidig med hård træning. Ved tegn på selvskade får du besked med det samme. Den unge ser hver besked, du får. Du ser aldrig journal, beskeder eller check-in-svar.",
+    "alertBody": "Du får automatisk besked, hvis appen ser tegn på, at træningen fylder for meget: træning på 12 eller flere af 14 dage, eller flere pas samme dag igen og igen i mindst en uge. Ved tegn på selvskade får du besked med det samme. Den unge ser hver besked, du får. Du ser aldrig journal, beskeder eller check-in-svar.",
     "declaration": "Jeg er fyldt 18 og har forældremyndigheden over den unge",
     "send": "Send invitation",
     "statusInvited": "Invitation sendt",
@@ -57,7 +57,7 @@
     "outBody": "Der er ingen kalorietæller, ingen vægt og ingen mål for din krop. Det er et bevidst valg.",
     "alertTitle": "Hvornår får din forælder besked",
     "alertAcute": "Skriver du noget, der tyder på, at du vil gøre skade på dig selv, får din forælder besked med det samme, og du ser Børnetelefonen, headspace og 112.",
-    "alertConcern": "Hvis appen i mindst 7 dage ser tegn på, at træningen fylder for meget, fx træning næsten hver dag eller hård træning med meget lidt søvn, får din forælder én neutral besked om det, vi har set.",
+    "alertConcern": "Hvis appen i mindst 7 dage ser tegn på, at træningen fylder for meget, altså træning på 12 eller flere af 14 dage, eller flere pas samme dag igen og igen, får din forælder én neutral besked om det, vi har set.",
     "alertSeen": "Du ser hver besked, din forælder får. Din forælder ser aldrig din journal, dine beskeder eller dine svar.",
     "consentTitle": "Dit samtykke",
     "consentTraining": "Træning er altid med.",
@@ -132,5 +132,27 @@
       "examples": "Kartofler, pasta eller ris · kød, fisk, æg eller bønner · grøntsager eller frugt."
     },
     "footer": "Er du i tvivl om mad eller energi, så tal med dine forældre, din skolesundhedsplejerske eller din læge."
+  },
+  "notices": {
+    "crisis_language": "{name} har skrevet noget i sin journal i MakeIt, der kan handle om selvskade eller om ikke at ville være her. Vi viser ikke, hvad der står.",
+    "daily_training": "{name} har trænet {trainedDays} af de sidste {windowDays} dage.",
+    "double_sessions": "{name} har trænet to eller flere gange samme dag på {doubleDays} af de sidste {windowDays} dage.",
+    "acuteNext": "Tal med {name} i dag, roligt og uden at presse. Er der akut fare, så ring 112. Børnetelefonen (116 111), headspace.dk og jeres egen læge kan også hjælpe. {name} har fået de samme numre i appen.",
+    "concernNext": "Det er ikke en diagnose, kun det, appen har set. Tag en rolig snak om, hvordan træningen fylder. Er I bekymrede, kan I tale med jeres egen læge eller med LMS, Landsforeningen mod spiseforstyrrelser og selvskade (lms.dk).",
+    "seenByYouth": "{name} ser den samme besked i appen.",
+    "subjectAcute": "MakeIt Ung: vigtig besked om {name}",
+    "subjectConcern": "MakeIt Ung: en besked om {name}",
+    "eyebrowAcute": "Vigtig besked",
+    "eyebrowConcern": "Besked",
+    "why": "Du får den, fordi du har givet samtykke til MakeIt Ung for {name}. Du kan afslutte det når som helst på {url}.",
+    "youthEyebrow": "Besked til din forælder",
+    "youthTitle": "Vi har sendt din forælder denne besked",
+    "youthBody": "Du har ikke gjort noget forkert. Vi fortæller dig det, så intet sker bag din ryg.",
+    "youthHelp": "Vil du tale med nogen? Børnetelefonen 116 111 (døgnet rundt) · headspace.dk · akut 112",
+    "youthAck": "Forstået",
+    "listTitle": "Beskeder",
+    "listEmpty": "Ingen beskeder. Du får en mail, hvis appen ser et af tegnene.",
+    "seen": "{name} har set den",
+    "notSeen": "{name} har ikke set den endnu"
   }
 }

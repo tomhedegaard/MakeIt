@@ -42,6 +42,8 @@ export const EXPORT_COLLECTION_KEYS = [
   "buddy_pairs",
   "push_subscriptions",
   "member_action_logs",
+  "guardianships",
+  "guardian_notices",
 ] as const;
 
 export type ExportCollectionKey = (typeof EXPORT_COLLECTION_KEYS)[number];

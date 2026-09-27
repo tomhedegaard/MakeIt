@@ -96,6 +96,18 @@ og forælderen. En klinisk rådgiver anbefales stadig, før listen udvides.
 Tegnene beregnes af faste regler, ikke af AI, så det altid kan forklares præcist, hvorfor et
 varsel blev sendt.
 
+**Første version (del 3)** varsler på tre tegn, som appen har data til i dag
+(`src/lib/youth/signals.ts`):
+
+- træning på 12 eller flere af de sidste 14 dage;
+- to eller flere pas samme dag på mindst 3 dage, spredt over mindst en uge;
+- sprog om selvskade i journalen (akut, højst én gang pr. døgn).
+
+Ikke med endnu: søvn/HRV (unge kan ikke åbne restitution i appen endnu), de to mind-check-
+spørgsmål (kræver formulering uden klinisk tolkning) og det pludselige fald (et fald i brug er
+oftest bare en pause og ville give falske alarmer). Samtykketeksterne nævner kun de tre tegn,
+der er med.
+
 ---
 
 ## 5. Varsling af forælderen (beslutning 2 og 4)
@@ -131,8 +143,7 @@ problemet). Værnene er derfor bygget ind i selve varslingen:
 | `members.account_type` (`adult` · `youth`) | styrer, hvad appen viser |
 | `members.birth_year` | kun for unge; skifte ved 18 |
 | `guardianships` | forælder, ung, samtykke pr. område, tidspunkter, tilbagetrækning |
-| `youth_signals` | tegn, niveau, hvornår det blev set, hvornår forælderen fik besked |
-| `guardian_notices` | hver besked til en forælder, også synlig for den unge |
+| `guardian_notices` | hver besked til en forælder, også synlig for den unge: tegn, niveau, de observerede tal, periode, hvornår mailen gik, hvornår den unge så den (del 3 samlede `youth_signals` ind her, da tegnene beregnes af reglerne hver dag og ikke skal gemmes for sig) |
 
 Alle tabeller med RLS: den unge ser sit eget; forælderen ser kun overblikket; coachen ser
 det, protokollen kræver. Med i dataudtræk efter art. 20.
