@@ -1,6 +1,6 @@
 # Spec: HQ-estimat af måltider og I dag som kort
 
-Dato: 27.09.2026 · Status: udkast til Toms godkendelse · Retning: Nord (spec 2026-09-26)
+Dato: 27.09.2026 · Status: beslutninger truffet 27.09.2026 (afsnit D), klar til bygning · Retning: Nord (spec 2026-09-26)
 
 Inspiration: 0xCal (foto/tekst → makroer, kort med ét tal hver). Vi tager funktionen og
 kortgrammatikken, ikke udtrykket: ingen farvede kortflader, ingen håndskrift, ingen
@@ -32,15 +32,25 @@ To leverancer:
 1. **Input.** Sheetet åbner med to valg: *Tag foto* og *Skriv det*. Foto bruger kameraet
    (native i appen, filvælger på web); tekst er ét felt ("2 æg, rugbrød og en kaffe med
    mælk"). Et foto må have en kort tekst med ("delt med Sara").
-2. **Estimat.** HQ svarer på få sekunder med:
+2. **Afklaring (kun når HQ er i tvivl).** Genkender HQ ikke noget på billedet, eller kan
+   det være flere ting, spørger HQ, før der estimeres. Billedet vises med en nummereret
+   markering om det pågældende, og under det: "Hvad er nr. 1?" med op til tre bud og et
+   fritekstfelt ("Brun sauce · Soyasauce · Teriyaki · Noget andet"). Markeringen er
+   omtrentlig (modellens eget bud på placeringen); hvis den ikke kan placeres, beskriver
+   spørgsmålet stedet i ord ("den brune sauce øverst til venstre"). Ser HQ slet ingen mad,
+   siger det netop det og tilbyder *Tag nyt foto* eller *Skriv det*. Højst tre spørgsmål;
+   resten estimeres med lav sikkerhed.
+3. **Estimat.** HQ viser:
    - én linje om antagelsen: "Estimeret som en standard Cobb salad, ca. 450 g."
-   - totaler: kcal · protein · kulhydrat · fedt
+   - totaler med **usikkerhed**: "ca. 690 kcal (550–830)" og makroerne som hele gram
    - ingredienslisten, hver med gram og kcal, og en portions-stepper (½ · ¾ · 1 · 1¼ · 1½ ·
      2) der skalerer alt
-   - sikkerhed i ord, ikke tal: *Sikkert* / *Omtrentligt* / *Groft gæt*
+   - sikkerheden i ord: *Sikkert* / *Omtrentligt* / *Groft gæt*, og hvorfor ("portionen
+     er svær at se på billedet")
    - linjen "HQ-estimat · du kan rette alle tal"
-3. **Bekræft.** *Log måltidet* (primær) gemmer. *Ret selv* åbner felterne med HQ's tal
-   udfyldt. *Annullér* gemmer intet. Intet tæller mod dagen før medlemmet har bekræftet.
+4. **Godkend.** Estimatet tæller først, når medlemmet har godkendt det, **også når HQ er
+   sikker** (beslutning 1). Godkend-knappen gentager usikkerheden: *Godkend ca. 690 kcal
+   (550–830)*. *Ret selv* åbner felterne med HQ's tal udfyldt. *Annullér* gemmer intet.
 
 Fejl eller ingen API-nøgle: sheetet falder tilbage til dagens manuelle felter (kcal +
 protein), så flowet aldrig er blokeret.
@@ -49,23 +59,45 @@ protein), så flowet aldrig er blokeret.
 
 - Samme wrapper-mønster som `src/lib/data/nutrition-photo-claude.ts`: frosset,
   cachebart system-prompt, Zod-skema på svaret, `null` ved fejl.
-- Model: Claude med vision. Den eksisterende foto-bedømmelse kører
-  `claude-sonnet-4-6`; estimatet bør køre på den nyeste Sonnet (`claude-sonnet-5`).
-  Afgøres ved implementeringen, se åbent spørgsmål 3.
+- Model: `claude-sonnet-5` med vision (beslutning 3). Den er god til at genkende retter og
+  ingredienser og til at forklare sin antagelse; ingen model kan veje mad på et foto, så
+  portioner vil ofte være 20–40 % ved siden af. Derfor interval, afklaring og godkendelse.
+- **Evaluering før lancering:** et sæt på 30 egne måltidsfotos med vejet mængde (danske
+  hverdagsretter, brand-rammens måltider, restaurantmad). Krav: det vejede tal ligger inden
+  for intervallet i mindst 80 % af tilfældene, og ingen fejlgenkendelser, der ikke
+  udløser et spørgsmål. Falder den igennem, justeres prompt og interval, før funktionen
+  åbnes.
 - Svarskema:
 
+  Estimatet kører i to kald, så medlemmet kan svare ind imellem:
+
   ```ts
+  // Kald 1: hvad er på billedet?
   {
-    assumption: string,            // "Standard Cobb salad, ca. 450 g i alt."
+    foodVisible: boolean,
+    questions: Array<{            // 0–3; tom = alt er genkendt
+      id: string,
+      prompt: string,             // "Hvad er den brune sauce?"
+      options: string[],          // op til 3 bud
+      box?: { x: number; y: number; w: number; h: number },  // 0–1, omtrentlig
+      where?: string,             // "øverst til venstre", når box mangler
+    }>,
+  }
+
+  // Kald 2: estimatet, med medlemmets svar
+  {
+    assumption: string,           // "Standard Cobb salad, ca. 450 g i alt."
     confidence: "high" | "medium" | "low",
+    confidenceReason: string,     // "Portionen er svær at se på billedet."
     items: Array<{ name: string; grams: number; kcal: number;
                    proteinG: number; carbsG: number; fatG: number }>,  // 1–15
-    totals: { kcal: number; proteinG: number; carbsG: number; fatG: number },
+    kcalRange: { low: number; high: number },
   }
   ```
 
   Totaler genberegnes på serveren som summen af `items`, så modellen ikke kan give en
-  total, der ikke passer til listen.
+  total, der ikke passer til listen. Intervallet skal indeholde totalen; ellers afvises
+  svaret. En tekst uden tvivl springer kald 1 over.
 - Afrunding i visningen: kcal til nærmeste 10, gram til hele tal.
 - Promptet kender brand-rammen (olivenolie og smør, skyr og hytteost) og dansk mad, men
   estimerer det, der er på billedet, ikke det, planen ønskede.
@@ -83,13 +115,15 @@ Migration på `nutrition_logs` (tilføjende, ingen brud):
 | `estimate_confidence` | text: `high` · `medium` · `low` | HQ's sikkerhed |
 | `estimate_items` | jsonb | ingredienslisten, som den blev bekræftet |
 | `estimate_edited` | boolean | om medlemmet rettede HQ's tal |
+| `estimate_kcal_low` / `estimate_kcal_high` | integer | intervallet, som det blev godkendt |
 
 `kcal`, `protein_g`, `photo_path` og `notes` genbruges. Fotos ligger i den eksisterende
 private `meal-photos`-bucket. `getDailyIntake` udvides med kulhydrat og fedt.
 
 ### A.4 Regler
 
-- Ingen dom: estimatet siger hvad, aldrig "godt" eller "dårligt". Ingen score.
+- Ingen dom: estimatet siger hvad, aldrig "godt" eller "dårligt". Ingen score. Alle regler i
+  afsnit S gælder.
 - Mærkning overalt, hvor tallet står: "HQ-estimat" (spec §7.8: hvor AI har lavet noget,
   står det).
 - Coachen ser kilde og om tallet er rettet, så ugesignalerne kan vægte groft gæt lavere.
@@ -102,6 +136,9 @@ private `meal-photos`-bucket. `getDailyIntake` udvides med kulhydrat og fedt.
 - Fallback til manuelle felter når wrapperen returnerer `null`.
 - Intet gemmes før bekræftelse; portions-stepperen skalerer alle fire tal.
 - Grænsen på 20 pr. døgn.
+- Afklaring: `foodVisible: false` giver "ingen mad"-tilstanden; spørgsmål vises med
+  markering, og svarene sendes med i kald 2.
+- Interval: afvis svar hvor totalen ligger uden for intervallet; godkend-knappen viser det.
 - Gates: "HQ-estimat" står ved tallet; ingen 0–100 i UI.
 
 ---
@@ -126,11 +163,13 @@ kun i kicker og data-blæk. Ingen farvede flader.
 | Kort | Tal | Hvorfor-linje | Data-blæk | Kilde (findes) |
 |---|---|---|---|---|
 | Hjerte | "43 ms" + "Lav" | "Dit normalområde 54–68 · Oura 05:14" | 14 nætter med dit bånd | `getHrvChipData` |
-| Mad | "1.428 kcal tilbage" | "Træningsdag · 96 af 182 g protein" | bjælke forbrugt/mål | `getDailyIntake` |
+| Mad | "1.312 af 2.740 kcal" | "Træningsdag · 96 af 182 g protein" | bjælke spist/dagens mål | `getDailyIntake` |
 | Sind | "3/5" eller "Tjek ind" | "Energi 3 · Stress 2 · Fokus 4" | tre små streger | `hasMindCheckToday` + dagens værdier |
-| Vægt | "95,8 kg" | "−0,5 kg på 7 dage · mål: cut" | 14 dages sparkline | `getRecentWeights` / `getWeightTrend` |
+| Kropsvægt (valgfri, se S) | "95,8 kg" (7-dages snit) | "Pejlemærke 91 kg · retning: ned" | 14 dages sparkline af snittet | `getRecentWeights` / `getWeightTrend` + nyt felt |
 
 Mad-kortet har en sekundær handling *+ Spiste noget andet*, der åbner flow A direkte.
+Mad-kortet siger "spist af dagens mål", ikke "tilbage": tilbage lægger op til at spare.
+Over målet står der blot "2.940 af 2.740 kcal", uden rød farve eller advarsel.
 
 Tomme tilstande er kort, ikke tomme huller: "Forbind din wearable", "Tjek ind på 60
 sekunder", "Log din vægt". Samme grammatik, tallet erstattes af en handling.
@@ -154,33 +193,85 @@ sekunder", "Log din vægt". Samme grammatik, tallet erstattes af en handling.
 
 ---
 
+## S. Et sundt forhold til mad og krop
+
+MakeIt må ikke bidrage til spiseforstyrrelser eller et unaturligt forhold til mad og
+motion. Det er et krav til begge leverancer og vejer tungere end at få flere tal på
+skærmen. Reglerne her er ufravigelige og får deres egne tests.
+
+**Pejlemærke i stedet for målvægt (beslutning 2).** Profilen får et valgfrit felt,
+*pejlemærke*: en kropsvægt, medlemmet selv sætter som retning. Ordet er valgt, fordi det
+peger, men ikke dømmer; vi bruger aldrig "målvægt", "ideal", "tab", "slank" eller
+"fedtprocent" i copy.
+
+- **Frivilligt og skjult som standard.** Kropsvægt-kortet vises først på I dag, når
+  medlemmet selv har slået det til. Man kan til enhver tid slå tal fra.
+- **Snit, ikke dagsvægt.** Kortet viser 7-dages snit. En enkelt vejning svinger 1–2 kg og
+  skaber unødig uro; den vises kun i historikken.
+- **Ingen nedtælling.** Ingen "19 uger til mål", ingen "kg tilbage", ingen procent-bjælke
+  mod pejlemærket. Kortet viser retning ("ned", "op", "stabil"), ikke afstand.
+- **Grænser for pejlemærket.** HQ accepterer ikke et pejlemærke, der svarer til BMI under
+  18,5, eller et tempo over 0,5 % af kropsvægten pr. uge. Et sådant ønske mødes med en
+  venlig forklaring og en henvisning til at tale med Munk.
+- **Et kaloriegulv.** HQ foreslår aldrig et dagligt mål under det beregnede hvilestofskifte,
+  og aldrig under 1.500 kcal for kvinder eller 1.800 kcal for mænd, uanset pejlemærke.
+- **Ingen farver for godt og skidt.** Ingen rød ved overskridelse, ingen grøn ved
+  underskud; tallene står i blæk.
+- **Neutral sprogbrug.** Aldrig "snyd", "synd", "cheat day", "fortjent", "brænd det af",
+  "god/dårlig mad". Motion omtales som træning, ikke som betaling for mad.
+- **Tal kan slås fra.** Et valg under *Mig*: "Vis ikke kalorier og vægt". Så viser Mad
+  måltider og protein uden kcal, Kropsvægt-kortet forsvinder, og HQ planlægger stadig ud
+  fra tallene i baggrunden.
+
+**Tidlige tegn.** HQ holder øje med mønstre, der kan være tegn på et anstrengt forhold til
+mad: gentaget indtag under kaloriegulvet flere dage i træk, mange vejninger om dagen,
+pejlemærket sænket igen og igen, eller estimater, der rettes systematisk ned. Det udløser
+aldrig en advarsel i appen. I stedet får Munk (eller den ansvarlige coach) en diskret
+markering i coach-indbakken, og medlemmet får ved næste mind-check et blødt spørgsmål om,
+hvordan forholdet til mad og træning føles, med samme sikkerhedslinje som Mind:
+"Appen er ikke behandling. Livslinien 70 201 201 · akut 112" og en henvisning til
+Landsforeningen mod spiseforstyrrelser og selvskade (LMS).
+
+**Alder.** Vi gemmer ikke alder i dag, og vilkårene nævner ikke en aldersgrænse. Pejlemærke
+og kalorietal bør kræve, at medlemmet har bekræftet at være fyldt 18. Det kræver en
+beslutning om vilkårene, som vi skal tage, før B lanceres.
+
+**Test.** Pejlemærke-grænserne, kaloriegulvet, "slå tal fra", at Kropsvægt-kortet er
+skjult som standard, en copy-gate for de forbudte ord, og at tidlige tegn kun når coachen
+og aldrig vises som advarsel til medlemmet.
+
+---
+
 ## C. Uden for denne spec (senere)
 
 | Idé | Hvorfor ikke nu |
 |---|---|
 | Vand og koffein | Nyt kort og ny logning. Passer godt (sen koffein hænger sammen med HRV og søvn) og kan komme som femte kort. |
 | Widgets på hjemmeskærmen | Kræver native WidgetKit/Android-kode i skallerne; efter App Store-buildet. |
-| Målvægt og tempo ("~19 uger til mål") | `nutrition_profiles` har kun `goal` (cut/recomp/mass/maintain), ikke en målvægt. Kræver et nyt felt og en beslutning om, hvem der sætter målet. |
+| Tid til pejlemærke ("~19 uger") | Fravalgt: en nedtælling til en kropsvægt er præcis det, afsnit S skal undgå. |
 | Faste | Ikke kerne for et styrkebrand. |
 | App-blokering (Screen Time) | Fravalgt: kræver særlig Apple-tilladelse og en formynderisk tone, der ikke passer til brandet. |
 
 ---
 
-## D. Åbne spørgsmål til Tom
+## D. Beslutninger (Tom, 27.09.2026)
 
-1. **Bekræftelse:** Skal et HQ-estimat altid bekræftes, før det tæller (anbefalet), eller må
-   *Sikkert*-estimater logges med ét tryk?
-2. **Målvægt:** Skal vægtkortet have et mål nu (nyt felt i profilen), eller er trend og
-   målretning (cut/mass) nok i v1?
-3. **Model:** Er det i orden at estimatet kører på den nyeste Sonnet (samme klasse som
-   foto-bedømmelsen i dag)?
+1. **Bekræftelse:** Et HQ-estimat tæller aldrig, før medlemmet har godkendt det, og
+   usikkerheden (interval og sikkerhed i ord) står på godkend-knappen.
+2. **Pejlemærke:** Ja, men med et neutralt navn og under reglerne i afsnit S. Tilbage at
+   afgøre: aldersgrænse i vilkårene (se S · Alder).
+3. **Model:** `claude-sonnet-5`, under forudsætning af at den består evalueringen i A.2.
+   Når HQ ikke genkender noget, spørger den med billedet og en markering (A.1 trin 2).
 
 ---
 
 ## E. Leverance i to PR'er
 
-1. **A — HQ-estimat:** migration, wrapper + skema, server action, sheet med de tre trin,
-   `getDailyIntake` med kulhydrat og fedt, tests.
-2. **B — I dag som kort:** `SignalCard`, de fire kort, dashboard-placering, tests.
+1. **A — HQ-estimat:** migration, de to kald + skemaer, evalueringssættet, server
+   actions, sheetet med afklaring og godkendelse, `getDailyIntake` med kulhydrat og fedt,
+   tests.
+2. **B — I dag som kort + afsnit S:** `SignalCard`, de fire kort, pejlemærke-feltet med
+   grænser og kaloriegulv, "Vis ikke kalorier og vægt", tidlige tegn til coachen, copy-gate,
+   tests.
 
 A kommer først, fordi Mad-kortet i B bruger A's handling og kulhydrat/fedt-tallene.
