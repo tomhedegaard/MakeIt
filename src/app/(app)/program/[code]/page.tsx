@@ -16,12 +16,14 @@ import {
 } from "@/lib/data/program-detail";
 import StartProgramButton from "@/app/(app)/coaching/StartProgramButton";
 import { seedProgramCopyPath } from "@/lib/i18n/member-bodycopy";
+import { memberAudience } from "@/lib/youth/account";
 
 type Params = Promise<{ code: string }>;
 
 export async function generateMetadata({ params }: { params: Params }) {
   const { code } = await params;
-  const p = await getMemberProgramByCode(code);
+  const viewer = await getSession();
+  const p = await getMemberProgramByCode(code, viewer ? await memberAudience(viewer.id) : "adult");
   const t = await getTranslations("ProgramDetail");
   return {
     title: p
@@ -36,10 +38,10 @@ export default async function ProgramDetailPage({
   params: Params;
 }) {
   const { code } = await params;
-  const program = await getMemberProgramByCode(code);
+  const member = await getSession();
+  const program = await getMemberProgramByCode(code, member ? await memberAudience(member.id) : "adult");
   if (!program) notFound();
 
-  const member = await getSession();
   const active = member ? await getActiveProgram(member.id) : null;
   const isThisActive = active?.programId === program.id;
 

@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getSession } from "@/lib/auth";
 import { getFormCheckQuota } from "@/lib/data/form-check-quota-server";
+import { isYouthAccount } from "@/lib/youth/account";
 import type {
   AIVerdict,
   ExerciseCoachingContext,
@@ -48,6 +49,10 @@ export async function analyzeFormCheckAction(input: {
   // session, no DB) so local dev keeps working.
   if (SUPABASE_ENABLED) {
     const member = await getSession();
+    // MakeIt Ung: no form-checks, no coach contact (spec afsnit 3).
+    if (member && (await isYouthAccount(member.id))) {
+      return { ok: false, verdict: null, formCheckId: null };
+    }
     if (member) {
       const quota = await getFormCheckQuota(member.id, member.tier);
       if (!quota.hasRemaining) {

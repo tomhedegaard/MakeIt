@@ -22,10 +22,17 @@ export function excludeSyntheticPrograms<T extends { code: string }>(
   return programs.filter((p) => !isSyntheticProgramCode(p.code));
 }
 
-/** Member self-assign policy used by `startProgramAction`. */
+/**
+ * Member self-assign policy used by `startProgramAction` and onboarding.
+ * A programme is only for its own audience (0064): adult blueprints carry
+ * fixed kilos and must never reach a young account, and MakeIt Ung
+ * programmes are not part of the adult catalogue.
+ */
 export function canMemberAssignProgram(opts: {
   code: string;
   isPublished: boolean;
+  audience: string;
+  memberAudience: "adult" | "youth";
 }): boolean {
-  return opts.isPublished && !isSyntheticProgramCode(opts.code);
+  return opts.isPublished && !isSyntheticProgramCode(opts.code) && opts.audience === opts.memberAudience;
 }

@@ -54,6 +54,8 @@ import {
   upcomingForSurface,
 } from "@/lib/trust/connected-first-run";
 import { generatedSessionTitleKey } from "@/lib/i18n/member-bodycopy";
+import YouthToday from "@/components/youth/YouthToday";
+import { youthClaimsFor } from "@/lib/youth/account";
 
 type Translator = Awaited<ReturnType<typeof getTranslations<"Dashboard">>>;
 
@@ -148,6 +150,13 @@ async function getHrvChipData(memberId: string): Promise<HrvChipData | null> {
 
 export default async function TodayPage() {
   const member = (await getSession())!;
+
+  // MakeIt Ung: its own I dag, without kcal, body weight or HRV numbers.
+  const youth = SUPABASE_ENABLED ? await youthClaimsFor(member.id) : null;
+  if (youth) {
+    return <YouthToday memberId={member.id} name={member.displayName ?? member.handle} mind={youth.mind} />;
+  }
+
   const locale = await getLocale();
   const t = await getTranslations("Dashboard");
   const [stripCopy, dotsCopy] = await Promise.all([

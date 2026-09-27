@@ -159,7 +159,14 @@ export async function acceptInvitation(input: YouthAccept): Promise<AcceptResult
     email: g.youth_email,
     password: input.password,
     email_confirm: true,
-    user_metadata: { account_type: "youth", display_name: g.youth_first_name },
+    user_metadata: { display_name: g.youth_first_name },
+    // Server-written claims the middleware trusts (routes.ts). A young
+    // member cannot change app_metadata, unlike user_metadata.
+    app_metadata: {
+      account_type: "youth",
+      consent_mind: input.consentMind && g.guardian_consent_mind,
+      consent_recovery: input.consentRecovery && g.guardian_consent_recovery,
+    },
   });
   if (error || !created.user) {
     return { ok: false, reason: /registered|exists/i.test(error?.message ?? "") ? "exists" : "failed" };
@@ -209,9 +216,21 @@ export async function setGuardianConsent(
     .eq("id", id)
     .eq("guardian_member_id", guardian.id)
     .in("status", ["invited", "active"])
-    .select("id")
+    .select("id, youth_member_id, youth_consent_mind, youth_consent_recovery")
     .maybeSingle();
-  return !!data;
+  if (!data) return false;
+  // Keep the middleware's claims in step: an area is on only when both
+  // said yes, so a guardian withdrawing closes it at the next request.
+  if (data.youth_member_id) {
+    await svc.auth.admin.updateUserById(data.youth_member_id, {
+      app_metadata: {
+        account_type: "youth",
+        consent_mind: consent.mind && data.youth_consent_mind,
+        consent_recovery: consent.recovery && data.youth_consent_recovery,
+      },
+    });
+  }
+  return true;
 }
 
 /**

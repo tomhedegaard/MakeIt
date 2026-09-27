@@ -17,6 +17,7 @@ import { getSession } from "@/lib/auth";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import FormCheckTrigger from "@/components/exercise/FormCheckTrigger";
 import ExerciseHero from "./ExerciseHero";
+import { isYouthAccount } from "@/lib/youth/account";
 
 type Params = Promise<{ slug: string }>;
 
@@ -50,8 +51,11 @@ export default async function ExerciseDetailPage({
   // Form-check quota for the current member — drives the upgrade CTA
   // when they've used their tier allowance. Demo-mode = Legend (unlimited).
   let quota: FormCheckQuota;
+  let youth = false;
   if (SUPABASE_ENABLED) {
     const member = await getSession();
+    // MakeIt Ung: no form-check trigger (spec afsnit 3).
+    youth = member ? await isYouthAccount(member.id) : false;
     quota = member
       ? await getFormCheckQuota(member.id, member.tier)
       : {
@@ -140,6 +144,7 @@ export default async function ExerciseDetailPage({
         {/* AI form-check — opens FormCheckSheet pre-loaded with this
             exercise's cues + mistakes so Claude evaluates against the
             specific checklist rather than generic squat/bench principles. */}
+        {youth ? null : (
         <section>
           <FormCheckTrigger
             exerciseId={ex.id}
@@ -149,6 +154,7 @@ export default async function ExerciseDetailPage({
             quota={quota}
           />
         </section>
+        )}
 
         {/* Mistakes */}
         {ex.mistakes.length > 0 ? (

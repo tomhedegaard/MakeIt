@@ -1,4 +1,6 @@
 import { getTranslations } from "next-intl/server";
+import { getSession } from "@/lib/auth";
+import { isYouthAccount } from "@/lib/youth/account";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { acknowledgeMentalDisclaimerAction } from "@/app/(app)/mind/onboarding/actions";
@@ -6,6 +8,8 @@ import { acknowledgeMentalDisclaimerAction } from "@/app/(app)/mind/onboarding/a
 /** First-visit Mind disclaimer — rendered on `/mind` so the tab does not hop. */
 export default async function MindDisclaimer() {
   const t = await getTranslations("Mind.disclaimer");
+  const viewer = await getSession();
+  const youth = viewer ? await isYouthAccount(viewer.id) : false;
 
   return (
     <>
@@ -28,6 +32,8 @@ export default async function MindDisclaimer() {
           <section className="border-l-2 border-fg/20 pl-5">
             <h3 className="eyebrow mb-3">{t("resources_title")}</h3>
             <ul className="space-y-1.5 text-fg text-base">
+              {youth ? <li>{t("resources_bornetelefonen")}</li> : null}
+              {youth ? <li>{t("resources_headspace")}</li> : null}
               <li>{t("resources_livslinien")}</li>
               <li>{t("resources_emergency")}</li>
               <li>{t("resources_doctor")}</li>

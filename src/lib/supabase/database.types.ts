@@ -3056,6 +3056,7 @@ export type Database = {
       }
       programs: {
         Row: {
+          audience: string
           coach_id: string | null
           code: string
           created_at: string
@@ -3068,6 +3069,7 @@ export type Database = {
           weeks: number
         }
         Insert: {
+          audience?: string
           coach_id?: string | null
           code: string
           created_at?: string
@@ -3080,6 +3082,7 @@ export type Database = {
           weeks: number
         }
         Update: {
+          audience?: string
           coach_id?: string | null
           code?: string
           created_at?: string
