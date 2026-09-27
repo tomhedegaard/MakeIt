@@ -7,6 +7,7 @@ import {
 } from "@/lib/data/invites";
 import { finishMagicLinkCallback } from "@/lib/magic-link";
 import { LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE, isLocale } from "@/i18n/config";
+import { PENDING_ADULT_COOKIE, hasAdultConfirmation } from "@/lib/auth/age";
 
 const PENDING_INVITE_COOKIE = "mi_pending_invite";
 
@@ -67,6 +68,14 @@ export async function GET(req: NextRequest) {
   if (!user) {
     await supabase.auth.signOut();
     return NextResponse.redirect(new URL("/login?err=callback", url));
+  }
+
+  // OAuth signups carry the 18-year confirmation in a cookie (GoTrue
+  // takes no metadata on OAuth). Record it once on the user.
+  const adultAt = cookieStore.get(PENDING_ADULT_COOKIE)?.value ?? null;
+  cookieStore.delete(PENDING_ADULT_COOKIE);
+  if (adultAt && !hasAdultConfirmation(user.user_metadata)) {
+    await supabase.auth.updateUser({ data: { adult_confirmed_at: adultAt } });
   }
 
   const alreadyAdmitted = await fetchInviteAdmitted();

@@ -231,8 +231,13 @@
       "cvrFallback": " (CVR is not yet published — the company is being registered)",
       "bodyAfter": ". We give access to AI-generated strength training programs, video-based form feedback, a community of crew members, and a Reps loyalty program. Access requires an invite code and active membership."
     },
-    "s02": {
+    "age": {
       "eyebrow": "02",
+      "title": "Age",
+      "body": "You must be 18 or older to create an account and use {product}. When you sign up you confirm that you are 18 or older, and we store the time of your confirmation. The service processes information about training, sleep, recovery and mental health and is not designed for children and young people. If we learn that an account belongs to someone under 18, we close the account and delete the data as described in the privacy policy."
+    },
+    "s02": {
+      "eyebrow": "03",
       "title": "Membership and payment",
       "items": {
         "billed": {
@@ -254,14 +259,14 @@
       }
     },
     "s03": {
-      "eyebrow": "03",
+      "eyebrow": "04",
       "title": "Health disclaimer",
       "p1Emphasis": "You train at your own risk.",
       "p1": " Our coaching and AI feedback do not replace medical or physiotherapy advice. You should consult a doctor before starting a new training program, especially if you have existing injuries, heart conditions, or other health issues.",
       "p2": "AI form checks are a technical assessment, not a final quality assurance. Mikael Munk reviews personally within 24 hours, but the responsibility to lift safely lies with you."
     },
     "s04": {
-      "eyebrow": "04",
+      "eyebrow": "05",
       "title": "Acceptable use",
       "items": {
         "personal": {
@@ -283,18 +288,18 @@
       }
     },
     "s05": {
-      "eyebrow": "05",
+      "eyebrow": "06",
       "title": "Reps and redemptions",
       "p1": "Reps have no cash value and cannot be converted to money or transferred between members. They don't expire — but if you delete your account or cancel your membership, you lose access to both your balance and redemptions.",
       "p2": "Limited drops are shipped with GLS once Mikael confirms — typically within 5 business days. Custom-embroidered products have a 2-3 week delivery time."
     },
     "s06": {
-      "eyebrow": "06",
+      "eyebrow": "07",
       "title": "Limitation of liability",
       "body": "Our total liability toward you is limited to the amount you have paid in membership over the past 12 months. We are not liable for indirect losses, lost profits or damages resulting from the service being unavailable. This does not limit liability that cannot be waived under Danish law."
     },
     "s07": {
-      "eyebrow": "07",
+      "eyebrow": "08",
       "title": "Governing law + disputes",
       "body": "These terms are governed by Danish law. Disputes that cannot be settled amicably are decided by the Copenhagen City Court as the court of first instance."
     }

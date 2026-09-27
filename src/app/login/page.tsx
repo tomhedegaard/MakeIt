@@ -241,6 +241,10 @@ async function MagicLinkForm() {
           />
         </label>
 
+        {/* Existing members use this form too, so the box is only enforced
+            when the email is new (magicLinkAction → send-signup). */}
+        <AdultCheckbox required={false} />
+
         <button type="submit" className="btn btn-primary w-full mt-2">
           {t("submit")}
         </button>
@@ -301,6 +305,8 @@ async function PasswordForm({ mode }: { mode: "signin" | "signup" }) {
           </label>
         ) : null}
 
+        {isSignup ? <AdultCheckbox required /> : null}
+
         <button type="submit" className="btn btn-primary w-full mt-2">
           {isSignup ? t("submitSignup") : t("submitSignin")}
         </button>
@@ -355,6 +361,8 @@ async function OAuthForm() {
             className="field"
           />
         </label>
+
+        <AdultCheckbox required />
 
         <div className="grid grid-cols-1 gap-3 mt-2">
           <button
@@ -453,5 +461,20 @@ async function SentState({ email }: { email?: string }) {
         {t("expiry")}
       </p>
     </div>
+  );
+}
+
+/**
+ * "Jeg er fyldt 18 år" (terms, "Alder"). Required where the form always
+ * creates or may create an account; optional on the magic-link form,
+ * where the server enforces it only for a new email.
+ */
+async function AdultCheckbox({ required }: { required: boolean }) {
+  const t = await getTranslations("Login.adult");
+  return (
+    <label className="flex items-start gap-3 text-meta">
+      <input type="checkbox" name="adult" required={required} className="mt-0.5 size-5 shrink-0 accent-fg" />
+      <span>{required ? t("label") : t("labelNew")}</span>
+    </label>
   );
 }

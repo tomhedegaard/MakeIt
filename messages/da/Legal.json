@@ -231,8 +231,13 @@
       "cvrFallback": " (CVR er endnu ikke offentliggjort — selskabet er under registrering)",
       "bodyAfter": ". Vi giver adgang til AI-genererede styrketrænings-programmer, video-baseret form-feedback, et community af crew-medlemmer, og et Reps-loyalty program. Adgang kræver invite-kode og aktivt medlemskab."
     },
-    "s02": {
+    "age": {
       "eyebrow": "02",
+      "title": "Alder",
+      "body": "Du skal være fyldt 18 år for at oprette en konto og bruge {product}. Ved oprettelse bekræfter du, at du er fyldt 18, og vi gemmer tidspunktet for din bekræftelse. Tjenesten behandler oplysninger om træning, søvn, restitution og mental sundhed og er ikke tilpasset børn og unge. Får vi at vide, at en konto tilhører en person under 18, lukker vi kontoen og sletter oplysningerne som beskrevet i privatlivspolitikken."
+    },
+    "s02": {
+      "eyebrow": "03",
       "title": "Medlemskab og betaling",
       "items": {
         "billed": {
@@ -254,14 +259,14 @@
       }
     },
     "s03": {
-      "eyebrow": "03",
+      "eyebrow": "04",
       "title": "Sundheds-disclaimer",
       "p1Emphasis": "Du træner på eget ansvar.",
       "p1": " Vores coaching og AI-feedback erstatter ikke medicinsk eller fysioterapeutisk rådgivning. Du bør konsultere en læge før start af et nyt træningsprogram, særligt hvis du har eksisterende skader, hjertesygdomme, eller andre helbredsmæssige forhold.",
       "p2": "AI form-checks er en teknisk vurdering, ikke en endelig kvalitetssikring. Mikael Munk gennemgår personligt inden for 24 timer, men ansvaret for at løfte sikkert ligger hos dig."
     },
     "s04": {
-      "eyebrow": "04",
+      "eyebrow": "05",
       "title": "Acceptabel brug",
       "items": {
         "personal": {
@@ -283,18 +288,18 @@
       }
     },
     "s05": {
-      "eyebrow": "05",
+      "eyebrow": "06",
       "title": "Reps og indløsninger",
       "p1": "Reps har ingen kontant-værdi og kan ikke konverteres til penge eller overføres mellem medlemmer. De udløber ikke — men hvis du sletter din konto eller opsiger dit medlemskab, mister du adgangen til både balance og indløsninger.",
       "p2": "Limited drops sendes med GLS når Mikael har bekræftet — typisk inden for 5 hverdage. Custom-broderede produkter har 2-3 ugers leveringstid."
     },
     "s06": {
-      "eyebrow": "06",
+      "eyebrow": "07",
       "title": "Ansvarsbegrænsning",
       "body": "Vores samlede ansvar over for dig er begrænset til det beløb du har betalt i medlemsskab de seneste 12 måneder. Vi er ikke ansvarlige for indirekte tab, tabt fortjeneste eller skader som følge af tjenestens utilgængelighed. Dette begrænser ikke ansvar der ikke kan fraskrives efter dansk lov."
     },
     "s07": {
-      "eyebrow": "07",
+      "eyebrow": "08",
       "title": "Lovvalg + tvister",
       "body": "Disse vilkår er underlagt dansk ret. Tvister der ikke kan løses i mindelighed, afgøres ved Københavns Byret som første instans."
     }
