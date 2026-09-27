@@ -2351,7 +2351,15 @@ export type Database = {
         Row: {
           ai_headline: string | null
           ai_notes: string | null
+          carbs_g: number | null
           created_at: string
+          estimate_confidence: string | null
+          estimate_edited: boolean
+          estimate_items: Json | null
+          estimate_kcal_high: number | null
+          estimate_kcal_low: number | null
+          estimate_source: string
+          fat_g: number | null
           graded_at: string | null
           id: string
           kcal: number | null
@@ -2372,6 +2380,14 @@ export type Database = {
           ai_headline?: string | null
           ai_notes?: string | null
           created_at?: string
+          carbs_g?: number | null
+          estimate_confidence?: string | null
+          estimate_edited?: boolean
+          estimate_items?: Json | null
+          estimate_kcal_high?: number | null
+          estimate_kcal_low?: number | null
+          estimate_source?: string
+          fat_g?: number | null
           graded_at?: string | null
           id?: string
           kcal?: number | null
@@ -2392,6 +2408,14 @@ export type Database = {
           ai_headline?: string | null
           ai_notes?: string | null
           created_at?: string
+          carbs_g?: number | null
+          estimate_confidence?: string | null
+          estimate_edited?: boolean
+          estimate_items?: Json | null
+          estimate_kcal_high?: number | null
+          estimate_kcal_low?: number | null
+          estimate_source?: string
+          fat_g?: number | null
           graded_at?: string | null
           id?: string
           kcal?: number | null
