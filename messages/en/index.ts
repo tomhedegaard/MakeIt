@@ -32,6 +32,7 @@ import Mind from "./Mind.json";
 import Science from "./Science.json";
 import Hrv from "./Hrv.json";
 import Adaptive from "./Adaptive.json";
+import Youth from "./Youth.json";
 
 const messages = {
   Common,
@@ -65,6 +66,7 @@ const messages = {
   Science,
   Hrv,
   Adaptive,
+  Youth,
 };
 
 export default messages;
