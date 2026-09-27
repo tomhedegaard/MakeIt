@@ -22,6 +22,9 @@ const PUBLIC_PAGE_PATHS = new Set([
   "/join",
   "/signup",
   "/legal",
+  // MakeIt Ung: the young member opens the invitation before having an
+  // account; the hashed token is the key (spec 2026-09-27-makeit-ung).
+  "/ung/invitation/[token]",
 ]);
 
 describe("normalizePathname", () => {
@@ -145,3 +148,11 @@ function collectPagePaths(dir: string, urlParts: string[] = []): string[] {
   }
   return out;
 }
+
+describe("MakeIt Ung invitation", () => {
+  it("is public, but the guardian page /ung is not", () => {
+    expect(isPublicPath("/ung/invitation/abc")).toBe(true);
+    expect(isPublicPath("/ung")).toBe(false);
+    expect(isPublicPath("/ung/other")).toBe(false);
+  });
+});

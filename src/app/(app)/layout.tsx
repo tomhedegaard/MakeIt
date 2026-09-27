@@ -6,6 +6,8 @@ import { getSession, signOutLeftoverAuthUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getUnreadCount } from "@/lib/data/messages";
+import { isYouthAccount } from "@/lib/youth/account";
+import YouthWaiting from "@/components/youth/YouthWaiting";
 
 // Kalk: light browser chrome (spec §2, §6). Viewport merges per key, so
 // width/viewportFit from the root layout survive.
@@ -26,6 +28,17 @@ export default async function AppLayout({
   if (!member) {
     const leftover = await signOutLeftoverAuthUser();
     redirect(leftover ? "/login?err=invite" : "/login");
+  }
+
+  // MakeIt Ung (spec 2026-09-27-makeit-ung-design.md): a young account
+  // never reaches the adult app or its onboarding. Until the youth
+  // product ships, it sees a waiting screen instead of any (app) route.
+  if (SUPABASE_ENABLED && (await isYouthAccount(member.id))) {
+    return (
+      <ThemeScope theme="nord" className="flex flex-col h-dvh lg:h-auto lg:minh-dvh lg:flex-1">
+        <YouthWaiting firstName={member.displayName ?? member.handle} />
+      </ThemeScope>
+    );
   }
 
   // Connected mode: force onboarding before any app surface.

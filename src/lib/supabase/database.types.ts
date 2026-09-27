@@ -1409,6 +1409,72 @@ export type Database = {
           },
         ]
       }
+      guardianships: {
+        Row: {
+          created_at: string
+          guardian_consent_mind: boolean
+          guardian_consent_recovery: boolean
+          guardian_declared_at: string
+          guardian_member_id: string
+          id: string
+          invite_expires_at: string
+          invite_token_hash: string
+          status: string
+          updated_at: string
+          withdrawn_at: string | null
+          withdrawn_by: string | null
+          youth_birth_date: string
+          youth_consent_mind: boolean
+          youth_consent_recovery: boolean
+          youth_consented_at: string | null
+          youth_email: string
+          youth_first_name: string
+          youth_member_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          guardian_consent_mind?: boolean
+          guardian_consent_recovery?: boolean
+          guardian_declared_at: string
+          guardian_member_id: string
+          id?: string
+          invite_expires_at: string
+          invite_token_hash: string
+          status?: string
+          updated_at?: string
+          withdrawn_at?: string | null
+          withdrawn_by?: string | null
+          youth_birth_date: string
+          youth_consent_mind?: boolean
+          youth_consent_recovery?: boolean
+          youth_consented_at?: string | null
+          youth_email: string
+          youth_first_name: string
+          youth_member_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          guardian_consent_mind?: boolean
+          guardian_consent_recovery?: boolean
+          guardian_declared_at?: string
+          guardian_member_id?: string
+          id?: string
+          invite_expires_at?: string
+          invite_token_hash?: string
+          status?: string
+          updated_at?: string
+          withdrawn_at?: string | null
+          withdrawn_by?: string | null
+          youth_birth_date?: string
+          youth_consent_mind?: boolean
+          youth_consent_recovery?: boolean
+          youth_consented_at?: string | null
+          youth_email?: string
+          youth_first_name?: string
+          youth_member_id?: string | null
+        }
+        Relationships: []
+      }
       invite_codes: {
         Row: {
           code: string
@@ -1645,6 +1711,7 @@ export type Database = {
       }
       members: {
         Row: {
+          account_type: string
           acknowledged_mental_disclaimer_at: string | null
           avatar_url: string | null
           bio: string | null
@@ -1679,6 +1746,7 @@ export type Database = {
           weekly_frequency: number | null
         }
         Insert: {
+          account_type?: string
           acknowledged_mental_disclaimer_at?: string | null
           avatar_url?: string | null
           bio?: string | null
@@ -1713,6 +1781,7 @@ export type Database = {
           weekly_frequency?: number | null
         }
         Update: {
+          account_type?: string
           acknowledged_mental_disclaimer_at?: string | null
           avatar_url?: string | null
           bio?: string | null

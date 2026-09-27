@@ -40,6 +40,9 @@ const PUBLIC_PREFIXES = [
   "/privacy",
   "/terms",
   "/auth",
+  // MakeIt Ung: the young member opens the guardian's invitation before
+  // they have an account. The token itself is the key (spec afsnit 2).
+  "/ung/invitation",
   "/.well-known",
   "/_next",
 ] as const;
