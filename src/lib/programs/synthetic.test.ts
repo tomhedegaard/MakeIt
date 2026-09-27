@@ -69,19 +69,21 @@ describe("excludeSyntheticPrograms", () => {
 });
 
 describe("canMemberAssignProgram", () => {
+  const adult = { audience: "adult", memberAudience: "adult" as const };
+
   it("refuses denylisted codes even when published", () => {
-    expect(
-      canMemberAssignProgram({
-        code: "ADAPTIVE-DEMO-STR",
-        isPublished: true,
-      }),
-    ).toBe(false);
-    expect(
-      canMemberAssignProgram({ code: "STR-12", isPublished: true }),
-    ).toBe(true);
-    expect(
-      canMemberAssignProgram({ code: "STR-12", isPublished: false }),
-    ).toBe(false);
+    expect(canMemberAssignProgram({ code: "ADAPTIVE-DEMO-STR", isPublished: true, ...adult })).toBe(false);
+    expect(canMemberAssignProgram({ code: "STR-12", isPublished: true, ...adult })).toBe(true);
+    expect(canMemberAssignProgram({ code: "STR-12", isPublished: false, ...adult })).toBe(false);
+  });
+
+  it("never lets a young account start an adult programme (fixed kilos, 0064)", () => {
+    expect(canMemberAssignProgram({ code: "STR-12", isPublished: true, audience: "adult", memberAudience: "youth" })).toBe(false);
+    expect(canMemberAssignProgram({ code: "UNG-01", isPublished: true, audience: "youth", memberAudience: "youth" })).toBe(true);
+  });
+
+  it("keeps MakeIt Ung programmes out of the adult catalogue", () => {
+    expect(canMemberAssignProgram({ code: "UNG-01", isPublished: true, audience: "youth", memberAudience: "adult" })).toBe(false);
   });
 });
 

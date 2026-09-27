@@ -30,6 +30,7 @@ import type { ActiveAdaptation } from "@/lib/adaptive/explanation";
 import { logSetAction, completeSessionAction } from "./actions";
 import { Video, X } from "lucide-react";
 import { ICON } from "@/components/ui/icon";
+import { useYouth } from "@/components/youth/YouthContext";
 
 type Logged = Record<
   string,
@@ -99,6 +100,7 @@ export default function SessionClient({
   const [doneOpen, setDoneOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
   const [formCheckOpen, setFormCheckOpen] = useState(false);
+  const youth = useYouth();
   const [queued, setQueued] = useState<FormQueueItem[]>([]);
   const [repsAwarded, setRepsAwarded] = useState<number>(250);
   const [, startTransition] = useTransition();
@@ -277,6 +279,7 @@ export default function SessionClient({
             munkReply: t("exercise.thread.munkReply"),
           }}
           onOpenFormCheck={() => setFormCheckOpen(true)}
+          youth={Boolean(youth)}
         />
 
         {/* Targets row */}
@@ -485,6 +488,7 @@ export default function SessionClient({
         </SheetContent>
       </Sheet>
 
+      {youth ? null : (
       <FormCheckSheet
         open={formCheckOpen}
         onOpenChange={setFormCheckOpen}
@@ -502,6 +506,7 @@ export default function SessionClient({
         }
         quota={formCheckQuota}
       />
+      )}
     </div>
   );
 }
@@ -540,6 +545,7 @@ function ExerciseSection({
   threads,
   threadCopy,
   onOpenFormCheck,
+  youth = false,
 }: {
   ex: Exercise;
   exIdx: number;
@@ -555,6 +561,8 @@ function ExerciseSection({
     munkReply: string;
   };
   onOpenFormCheck: () => void;
+  /** MakeIt Ung: no coach contact, so no filming for Munk (spec afsnit 3). */
+  youth?: boolean;
 }) {
   const t = useTranslations("Session.exercise");
   const lib = ex.library;
@@ -671,6 +679,7 @@ function ExerciseSection({
         </p>
       ) : null}
 
+      {youth ? null : (
       <button
         type="button"
         data-form-film-cta=""
@@ -694,6 +703,7 @@ function ExerciseSection({
           ) : null}
         </span>
       </button>
+      )}
 
       <FormCheckThread items={threads} copy={threadCopy} />
     </section>

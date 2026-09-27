@@ -183,7 +183,7 @@ export async function completeOnboardingAction(formData: FormData) {
 
       const { data: prog, error: progErr } = await supabase
         .from("programs")
-        .select("id, code, name, is_published")
+        .select("id, code, name, is_published, audience")
         .eq("code", choice.programCode)
         .maybeSingle();
       console.info("[onboarding] step=program-lookup", {
@@ -198,6 +198,9 @@ export async function completeOnboardingAction(formData: FormData) {
         !canMemberAssignProgram({
           code: prog.code,
           isPublished: prog.is_published,
+          audience: prog.audience,
+          // The adult onboarding never runs for a young account.
+          memberAudience: "adult",
         })
       ) {
         console.error("[onboarding] reject=gen program lookup", {

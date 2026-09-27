@@ -12,6 +12,7 @@ import {
   type WeekStripSession,
 } from "@/lib/dashboard/week-strip";
 import { excludeSyntheticPrograms } from "@/lib/programs/synthetic";
+import { memberAudience } from "@/lib/youth/account";
 
 export { WEEK_DAY_KEYS };
 export type { WeekDay, WeekDayKey } from "@/lib/dashboard/week-strip";
@@ -195,6 +196,8 @@ export async function getProgramLibrary(
          days:program_days(id)`
       )
       .eq("is_published", true)
+      // Only the member's own catalogue (0064): adult or MakeIt Ung.
+      .eq("audience", await memberAudience(memberId))
       .order("name", { ascending: true }),
     supabase
       .from("program_assignments")

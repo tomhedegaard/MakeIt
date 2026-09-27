@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { useYouth } from "@/components/youth/YouthContext";
 import { escalateMentalSafetyAction } from "@/app/(app)/mind/journal/escalate-actions";
 
 /**
@@ -183,9 +184,24 @@ function CrisisLines({
 }: {
   t: ReturnType<typeof useTranslations<"Mind.safety">>;
 }) {
+  const youth = useYouth();
   return (
     <div className="border-l-2 border-fg/30 pl-5 space-y-1.5">
       <h3 className="eyebrow mb-2">{t("ifBurning")}</h3>
+      {youth ? (
+        <>
+          <p>
+            <a href="tel:116111" className="underline hover:opacity-80">
+              {t("youthBornetelefonen")}
+            </a>
+          </p>
+          <p>
+            <a href="https://headspace.dk" className="underline hover:opacity-80">
+              {t("youthHeadspace")}
+            </a>
+          </p>
+        </>
+      ) : null}
       <p>
         <a href="tel:70201201" className="underline hover:opacity-80">
           {t("livslinien")}

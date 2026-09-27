@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getSession } from "@/lib/auth";
 import { canMemberAssignProgram } from "@/lib/programs/synthetic";
+import { memberAudience } from "@/lib/youth/account";
 import { assignProgramForAuthenticatedMember } from "@/lib/data/assign-program";
 import { isEmptyDaysError } from "@/lib/programs/assign-from-blueprint";
 import {
@@ -72,7 +73,7 @@ export async function startProgramAction(
   // are coach/script-only — members cannot self-assign them.
   const { data: program, error: programErr } = await supabase
     .from("programs")
-    .select("id, code, is_published")
+    .select("id, code, is_published, audience")
     .eq("id", id)
     .maybeSingle();
   if (programErr) {
@@ -84,6 +85,8 @@ export async function startProgramAction(
     !canMemberAssignProgram({
       code: program.code,
       isPublished: program.is_published,
+      audience: program.audience,
+      memberAudience: await memberAudience(member.id),
     })
   ) {
     return failure(

@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
 import type { Member } from "@/lib/auth";
 import { logoutAction } from "@/app/(app)/actions";
 import MobileTabBar from "@/components/app/MobileTabBar";
+import { youthMayOpen, type YouthClaims } from "@/lib/youth/routes";
+import { YouthProvider } from "@/components/youth/YouthContext";
 
 const NAV = [
   { href: "/dashboard", labelKey: "today",    num: "01" },
@@ -25,15 +27,29 @@ const NAV = [
   { href: "/messages",  labelKey: "messages", num: "10" },
 ] as const;
 
+/**
+ * MakeIt Ung (spec afsnit 3): a young account sees only its own routes,
+ * with Mad pointing at the number-free /ung/mad instead of /nutrition.
+ */
+export function navFor(youth: YouthClaims | null) {
+  if (!youth) return [...NAV];
+  return NAV.map((item) => (item.href === "/nutrition" ? { ...item, href: "/ung/mad" } : item)).filter((item) =>
+    youthMayOpen(item.href, youth),
+  );
+}
+
 export default function AppShell({
   member,
   unreadMessages = 0,
   demoMode = false,
+  youth = null,
   children,
 }: {
   member: Member;
   unreadMessages?: number;
   demoMode?: boolean;
+  /** MakeIt Ung: the young account's claims; null for adults. */
+  youth?: YouthClaims | null;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -72,10 +88,15 @@ export default function AppShell({
   const immersive = pathname?.startsWith("/session");
 
   if (immersive) {
-    return <div className="relative z-10 flex-1 minh-dvh">{children}</div>;
+    return (
+      <YouthProvider value={youth}>
+        <div className="relative z-10 flex-1 minh-dvh">{children}</div>
+      </YouthProvider>
+    );
   }
 
   return (
+    <YouthProvider value={youth}>
     <div className="relative z-10 flex h-dvh flex-1 lg:h-auto lg:minh-dvh">
       {/* Desktop sidebar (≥ lg) */}
       <aside className="hidden lg:flex w-[260px] shrink-0 flex-col border-r hairline bg-bg-2/40 sticky top-0 h-dvh">
@@ -85,7 +106,7 @@ export default function AppShell({
 
         <nav className="flex-1 px-3 py-6">
           <ul className="space-y-1">
-            {NAV.map((item) => {
+            {navFor(youth).map((item) => {
               const active =
                 item.href === "/dashboard"
                   ? pathname === "/dashboard"
@@ -176,6 +197,7 @@ export default function AppShell({
           <div className="flex items-center">
             {/* Messages — kept one-tap on mobile after the tab bar
                 lost its Messages slot to /mind (Søjle 5). */}
+            {youth ? null : (
             <Link
               href="/messages"
               className="relative size-11 flex items-center justify-center text-fg"
@@ -191,6 +213,7 @@ export default function AppShell({
                 </span>
               ) : null}
             </Link>
+            )}
             {/* Header menu (spec §6): the five tabs leave Me, Reps, HRV
                 and Science here. */}
             <details
@@ -216,7 +239,9 @@ export default function AppShell({
                     { href: "/reps", labelKey: "reps" },
                     { href: "/hrv", labelKey: "hrv" },
                     { href: "/science", labelKey: "science" },
-                  ] as const).map((item) => {
+                  ] as const)
+                    .filter((item) => !youth || youthMayOpen(item.href, youth))
+                    .map((item) => {
                     const active = pathname?.startsWith(item.href);
                     return (
                       <li key={item.href}>
@@ -255,8 +280,9 @@ export default function AppShell({
         </main>
         {/* In-flow on mobile so main's viewport ends above the tab bar.
             Fixed overlay was why #69's token bump never cleared Learn/Reps. */}
-        <MobileTabBar />
+        <MobileTabBar youth={youth} />
       </div>
     </div>
+    </YouthProvider>
   );
 }

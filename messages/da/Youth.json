@@ -1,12 +1,4 @@
 {
-  "waiting": {
-    "eyebrow": "MakeIt Ung",
-    "title": "Din konto er klar, {name}.",
-    "body": "Vi åbner snart for din træning her. Indtil da er der ikke mere at gøre, og ingen tal om mad eller vægt i appen.",
-    "helpTitle": "Brug for at tale med nogen?",
-    "help": "Børnetelefonen 116 111 (døgnet rundt) · headspace.dk · akut 112",
-    "logout": "Log ud"
-  },
   "guardian": {
     "metaTitle": "MakeIt Ung",
     "eyebrow": "MakeIt Ung · pilot",
@@ -86,5 +78,59 @@
       "exists": "Der findes allerede en konto med den e-mail.",
       "failed": "Det lykkedes ikke. Prøv igen."
     }
+  },
+  "today": {
+    "eyebrow": "MakeIt Ung",
+    "title": "Hej {name}.",
+    "sessionEyebrow": "Dagens pas · {day}",
+    "sessionMeta": "{exercises} øvelser · ca. {minutes} min",
+    "sessionHint": "Vælg en vægt, hvor du kunne tage to eller tre gentagelser mere. Teknikken først.",
+    "start": "Start pas",
+    "trainEyebrow": "Træn",
+    "chooseTitle": "Vælg dit program",
+    "chooseBody": "Start med Grundstyrke: tre dage om ugen, teknik først, ingen maksforsøg.",
+    "choose": "Se programmet",
+    "restTitle": "Hviledag",
+    "restBody": "Ingen pas i dag. Hvile er en del af træningen.",
+    "foodEyebrow": "Mad",
+    "foodTitle": "Mad omkring træning",
+    "foodBody": "Hvad og hvornår du spiser, når du træner. Ingen tal.",
+    "mindEyebrow": "Mind",
+    "mindTitle": "Tjek ind",
+    "mindBody": "Hvordan har du det i dag? Tager et minut.",
+    "helpTitle": "Brug for at tale med nogen?",
+    "help": "Børnetelefonen 116 111 (døgnet rundt) · headspace.dk · akut 112"
+  },
+  "food": {
+    "metaTitle": "Mad omkring træning",
+    "eyebrow": "Mad",
+    "title": "Mad omkring træning.",
+    "subtitle": "Din krop vokser og træner på samme tid. Den har brug for mad nok, jævnt fordelt over dagen.",
+    "regular": {
+      "title": "Spis jævnt over dagen",
+      "body": "Tre måltider og et par mellemmåltider giver energi til både skole og træning. Spring ikke måltider over for at træne.",
+      "examples": "Morgenmad, frokost, aftensmad og noget midt på eftermiddagen."
+    },
+    "before": {
+      "title": "Før træning",
+      "body": "Et måltid 2 til 3 timer før, eller noget let en time før, så du har kræfter.",
+      "examples": "Rugbrød med ost, en banan, yoghurt med müsli."
+    },
+    "after": {
+      "title": "Efter træning",
+      "body": "Spis inden for et par timer. Kroppen bygger op efter træning og har brug for mad til det.",
+      "examples": "Aftensmad, en bolle med pålæg, havregryn med mælk."
+    },
+    "drink": {
+      "title": "Drik vand",
+      "body": "Drik vand i løbet af dagen og under træningen, især når det er varmt.",
+      "examples": "En vandflaske i tasken er nok."
+    },
+    "plate": {
+      "title": "En god tallerken",
+      "body": "Noget mættende, noget med protein og noget grønt. Al slags mad kan være en del af det.",
+      "examples": "Kartofler, pasta eller ris · kød, fisk, æg eller bønner · grøntsager eller frugt."
+    },
+    "footer": "Er du i tvivl om mad eller energi, så tal med dine forældre, din skolesundhedsplejerske eller din læge."
   }
 }

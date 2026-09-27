@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { CalendarDays, Users } from "lucide-react";
 import DomainMark from "@/components/brand/DomainMark";
 import { ICON } from "@/components/ui/icon";
+import { youthMayOpen, type YouthClaims } from "@/lib/youth/routes";
 
 type Tab = { href: string; labelKey: string; icon: React.ReactNode; domain?: string };
 
@@ -32,7 +33,15 @@ const TABS: Tab[] = [
   { href: "/community", labelKey: "crew",  icon: Icon.crew },
 ];
 
-export default function MobileTabBar() {
+/** MakeIt Ung: only the young account's own tabs, Mad → /ung/mad. */
+export function tabsFor(youth: YouthClaims | null): Tab[] {
+  if (!youth) return TABS;
+  return TABS.map((tab) => (tab.href === "/nutrition" ? { ...tab, href: "/ung/mad" } : tab)).filter((tab) =>
+    youthMayOpen(tab.href, youth),
+  );
+}
+
+export default function MobileTabBar({ youth = null }: { youth?: YouthClaims | null }) {
   const pathname = usePathname();
   const t = useTranslations("Nav");
   const barRef = useRef<HTMLElement>(null);
@@ -70,7 +79,7 @@ export default function MobileTabBar() {
       aria-label={t("shell.mainNav")}
     >
       <div className="tabbar-row">
-        {TABS.map((tab) => {
+        {tabsFor(youth).map((tab) => {
           const active =
             tab.href === "/dashboard"
               ? pathname === "/dashboard"

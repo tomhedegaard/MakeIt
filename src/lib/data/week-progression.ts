@@ -1,7 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
+import { isYouthAccount } from "@/lib/youth/account";
 import {
   isDeloadWeek,
   progressWeek,
+  ADULT_PROGRESSION,
+  YOUTH_PROGRESSION,
   type PrevSession,
 } from "@/lib/data/program-generator";
 
@@ -79,7 +82,11 @@ export async function maybeAdvanceWeek(
 
   const nextWeek = week + 1;
   const isDeload = isDeloadWeek(nextWeek);
-  const nextSessions = progressWeek(prev as unknown as PrevSession[], isDeload);
+  const nextSessions = progressWeek(
+    prev as unknown as PrevSession[],
+    isDeload,
+    (await isYouthAccount(memberId)) ? YOUTH_PROGRESSION : ADULT_PROGRESSION,
+  );
 
   // Promote the assignment first so the dashboard reflects the new week
   // even if subsequent inserts fail mid-way.

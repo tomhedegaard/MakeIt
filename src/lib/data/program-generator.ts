@@ -458,7 +458,17 @@ export type PrevSession = {
 };
 
 /** Progressive overload rules — week N+1 from week N. */
-function progressSet(prev: PrevSet, isDeload: boolean): GeneratedSet {
+/**
+ * Progression policy. Adults hold the weight when the logged set was
+ * above RPE 8.5. MakeIt Ung holds earlier, above RPE 7.5, so a young
+ * member keeps two or three reps in reserve and only ever builds on
+ * their own logged sets (spec 2026-09-27-makeit-ung afsnit 3).
+ */
+export type ProgressionPolicy = { holdAboveRpe: number };
+export const ADULT_PROGRESSION: ProgressionPolicy = { holdAboveRpe: 8.5 };
+export const YOUTH_PROGRESSION: ProgressionPolicy = { holdAboveRpe: 7.5 };
+
+function progressSet(prev: PrevSet, isDeload: boolean, policy: ProgressionPolicy = ADULT_PROGRESSION): GeneratedSet {
   const targetW = Number(prev.target_weight ?? 0);
   const targetReps = prev.target_reps ?? 0;
   const targetRpe = prev.target_rpe != null ? Number(prev.target_rpe) : null;
@@ -483,8 +493,8 @@ function progressSet(prev: PrevSet, isDeload: boolean): GeneratedSet {
     return { reps: targetReps, weight: 0, rpe: targetRpe, restSec };
   }
 
-  // If logged at RPE > 8.5, hold weight — too heavy to add yet.
-  if (completed && loggedRpe != null && loggedRpe > 8.5) {
+  // If logged above the policy's RPE, hold weight — too heavy to add yet.
+  if (completed && loggedRpe != null && loggedRpe > policy.holdAboveRpe) {
     return { reps: targetReps, weight: r25(baseW), rpe: targetRpe, restSec };
   }
 
@@ -493,7 +503,8 @@ function progressSet(prev: PrevSet, isDeload: boolean): GeneratedSet {
 
 export function progressWeek(
   prev: PrevSession[],
-  isDeload: boolean
+  isDeload: boolean,
+  policy: ProgressionPolicy = ADULT_PROGRESSION,
 ): GeneratedSession[] {
   const offsets = [0, 1, 3, 4];
   return prev.map((s, idx) => ({
@@ -510,7 +521,7 @@ export function progressWeek(
         sets: ex.sets
           .slice()
           .sort((a, b) => a.position - b.position)
-          .map((st) => progressSet(st, isDeload)),
+          .map((st) => progressSet(st, isDeload, policy)),
       })),
   }));
 }

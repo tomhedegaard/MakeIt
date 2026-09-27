@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE } from "@/lib/auth";
-import { needsAuth, publicRedirectFor } from "@/lib/auth/public-paths";
+import { needsAuth, normalizePathname, publicRedirectFor } from "@/lib/auth/public-paths";
+import { youthClaims, youthMayOpen } from "@/lib/youth/routes";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { updateSupabaseSession } from "@/lib/supabase/middleware";
 
@@ -27,6 +28,14 @@ export async function middleware(req: NextRequest) {
     const { response, user } = await updateSupabaseSession(req);
     if (needsAuth(pathname) && !user) {
       return redirectToLogin(req, pathname);
+    }
+    // MakeIt Ung: a young account only opens the routes of the youth
+    // product. The claim is server-written app_metadata (spec afsnit 3).
+    if (user && needsAuth(pathname)) {
+      const claims = youthClaims(user.app_metadata);
+      if (claims.youth && !youthMayOpen(normalizePathname(pathname), claims)) {
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+      }
     }
     return response;
   }

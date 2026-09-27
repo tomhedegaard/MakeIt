@@ -9,6 +9,7 @@ import { computeBaseline } from "@/lib/hrv/baseline";
 import { priorLnRmssdForSource, sameSourceSeries } from "@/lib/hrv/prior";
 import { mockInsertReading, mockListReadings } from "@/lib/hrv/mock";
 import type { HrvReading, HrvSource } from "@/lib/hrv/types";
+import { youthClaims } from "@/lib/youth/routes";
 
 const SubmitSchema = z.object({
   rrIntervals: z.array(z.number().positive()).min(2),
@@ -156,6 +157,8 @@ export async function enableAdaptiveEngineAction(): Promise<{ ok: boolean }> {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { ok: false };
+  // MakeIt Ung: no adaptive engine for a young account (spec afsnit 3).
+  if (youthClaims(user.app_metadata).youth) return { ok: false };
 
   const { error } = await supabase
     .from("hrv_settings")

@@ -30,10 +30,17 @@ describe("database (0063)", () => {
 });
 
 describe("app gate", () => {
-  it("shows a young account the waiting screen before any onboarding redirect", () => {
-    expect(LAYOUT.indexOf("isYouthAccount(member.id)")).toBeGreaterThan(-1);
-    expect(LAYOUT.indexOf("isYouthAccount(member.id)")).toBeLessThan(LAYOUT.indexOf('redirect("/onboarding")'));
-    expect(LAYOUT).toContain("<YouthWaiting");
+  it("gives a young account the youth shell before any onboarding redirect", () => {
+    expect(LAYOUT.indexOf("youthClaimsFor(member.id)")).toBeGreaterThan(-1);
+    expect(LAYOUT.indexOf("youthClaimsFor(member.id)")).toBeLessThan(LAYOUT.indexOf('redirect("/onboarding")'));
+    expect(LAYOUT).toContain("<AppShell member={member} youth={youth}>");
+  });
+
+  it("enforces the youth routes in middleware from server-written app_metadata", () => {
+    const mw = read("../../middleware.ts");
+    expect(mw).toContain("youthClaims(user.app_metadata)");
+    expect(mw).toMatch(/claims\.youth && !youthMayOpen\(/);
+    expect(SERVER).toMatch(/app_metadata: \{\s*account_type: "youth"/);
   });
 
   it("keeps a young account out of the adult onboarding", () => {

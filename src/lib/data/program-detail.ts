@@ -94,6 +94,7 @@ type RawProgram = {
 
 export async function getMemberProgramByCode(
   code: string,
+  audience: "adult" | "youth" = "adult",
 ): Promise<ProgramDetail | null> {
   if (isSyntheticProgramCode(code)) return null;
 
@@ -117,6 +118,7 @@ export async function getMemberProgramByCode(
     )
     .eq("code", code)
     .eq("is_published", true)
+    .eq("audience", audience)
     .maybeSingle<RawProgram>();
 
   if (!data) return null;
