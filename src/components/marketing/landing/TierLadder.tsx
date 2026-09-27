@@ -27,11 +27,17 @@ export type LadderTier = {
  * `.plates`). Sizes use container units, so the row scales with its
  * column.
  */
-const PLATE: Record<TierKey, { basis: string; label: string; dark?: boolean }> = {
-  lifter: { basis: "basis-[16%]", label: "text-[4cqi]" },
-  athlete: { basis: "basis-[21%]", label: "text-[5.2cqi]" },
-  beast: { basis: "basis-[26%]", label: "text-[6.4cqi]" },
-  legend: { basis: "basis-[31%]", label: "text-[7.6cqi]", dark: true },
+/**
+ * The plates in side profile, as they sit on a loaded barbell sleeve
+ * (Nord, spec §11): flat rectangles, radius 0, 1 px line. Height follows
+ * the real plate (5 kg is small, 20 and 25 kg share the 450 mm disc and
+ * 25 is the thicker one); width is the plate's thickness.
+ */
+const PLATE: Record<TierKey, { height: string; width: string }> = {
+  lifter: { height: "h-[46%]", width: "w-[clamp(16px,1.9vw,24px)]" },
+  athlete: { height: "h-[66%]", width: "w-[clamp(20px,2.5vw,32px)]" },
+  beast: { height: "h-[100%]", width: "w-[clamp(26px,3.2vw,42px)]" },
+  legend: { height: "h-[100%]", width: "w-[clamp(34px,4.2vw,54px)]" },
 };
 
 /** Arrow keys and Home/End move between tabs; other keys are left alone. */
@@ -78,6 +84,8 @@ export default function TierLadder({
     ),
   );
   const tier = tiers[selected];
+  // Legend's panel is the ink narrative band (spec §5 fortællebånd).
+  const legendPanel = tier.key === "legend";
 
   function onKeyDown(e: KeyboardEvent<HTMLButtonElement>, i: number) {
     const next = nextTabIndex(e.key, i, tiers.length);
@@ -93,10 +101,11 @@ export default function TierLadder({
         {head}
         <div>
           <span id="tiers" className="block scroll-mt-[88px]" />
-          <div
-            aria-hidden="true"
-            className="relative flex items-center justify-between py-5 [container-type:inline-size] before:absolute before:inset-x-[-12px] before:top-1/2 before:z-0 before:h-3.5 before:-translate-y-1/2 before:bg-bg-3"
-          >
+          {/* A barbell sleeve seen from the side: a 4 px bar, the four
+              plates loaded along it, the weight under each. Decorative for
+              assistive tech — the tabs below carry the same choice. */}
+          <div aria-hidden="true" className="relative grid grid-cols-4 pt-4">
+            <span className="absolute inset-x-0 top-[calc(1rem+clamp(64px,9vw,112px))] h-1 -translate-y-1/2 bg-line-strong" />
             {tiers.map((t, i) => (
               <Plate key={t.key} tier={t} selected={i === selected} onSelect={() => setSelected(i)} />
             ))}
@@ -158,7 +167,7 @@ export default function TierLadder({
         data-tier-panel={tier.key}
         className={cn(
           "mt-[clamp(48px,6vw,80px)] grid gap-6 border p-[clamp(20px,2.6vw,32px)] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
-          PLATE[tier.key].dark ? "border-fg bg-fg text-bg" : "border-line bg-bg-2",
+          legendPanel ? "border-fg bg-fg text-bg" : "border-line bg-bg-2",
         )}
       >
         <div className="flex flex-col">
@@ -169,7 +178,7 @@ export default function TierLadder({
               href={ctaHref}
               className={cn(
                 "btn h-12! px-6!",
-                PLATE[tier.key].dark
+                legendPanel
                   ? "border-bg! bg-bg! text-fg! hover:bg-transparent! hover:text-bg!"
                   : "btn-primary",
               )}
@@ -187,10 +196,10 @@ export default function TierLadder({
                 key={perk}
                 className={cn(
                   "flex items-center gap-3 border-b py-[11px] text-base last:border-b-0",
-                  PLATE[tier.key].dark ? "border-bg/15" : "border-line",
+                  legendPanel ? "border-bg/15" : "border-line",
                 )}
               >
-                <Check {...ICON} className="size-3 flex-none text-signal" />
+                <Check {...ICON} className={cn("size-3 flex-none", legendPanel ? "text-bg" : "text-signal")} />
                 {perk}
               </li>
             ))}
@@ -204,34 +213,42 @@ export default function TierLadder({
 function Plate({ tier, selected, onSelect }: { tier: LadderTier; selected: boolean; onSelect: () => void }) {
   const plate = PLATE[tier.key];
   return (
-    <div className={cn("relative z-[1] flex min-w-0 flex-none flex-col items-center", plate.basis)}>
+    <div
+      data-plate={tier.key}
+      data-current={tier.here ? "true" : undefined}
+      data-selected={selected ? "true" : undefined}
+      onClick={onSelect}
+      className="group relative z-[1] flex cursor-pointer flex-col items-center"
+    >
       {/* Mouse and touch only: the tabs below carry the same choice for the keyboard. */}
-      <div
-        data-plate={tier.key}
-        data-current={tier.here ? "true" : undefined}
-        data-selected={selected ? "true" : undefined}
-        onClick={onSelect}
+      <div className="flex h-[clamp(128px,18vw,224px)] items-center">
+        <span className={cn("relative flex items-center justify-center", plate.height, plate.width)}>
+          {/* The hub: the raised collar round the sleeve hole, which is
+              what makes a rectangle read as a plate in side view. */}
+          <span
+            className={cn(
+              "absolute h-[clamp(22px,2.6vw,32px)] w-[calc(100%+8px)] border transition-colors duration-200 motion-reduce:transition-none",
+              selected ? "border-fg bg-fg" : "border-line-strong bg-bg-3",
+            )}
+          />
+          <span
+            className={cn(
+              "relative block h-full w-full border transition-colors duration-200 motion-reduce:transition-none",
+              selected ? "border-fg bg-fg" : "border-line-strong bg-bg-2 group-hover:bg-bg-3",
+            )}
+          />
+        </span>
+      </div>
+      <b
         className={cn(
-          "grid aspect-square w-full cursor-pointer place-items-center rounded-full border",
-          "transition-[translate,outline-color] duration-200 hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0",
-          plate.dark
-            ? "border-fg bg-fg"
-            : "border-line-strong bg-bg-2",
-          selected
-            ? "outline-4 outline-offset-[5px] outline-signal"
-            : "outline-4 outline-offset-[5px] outline-transparent",
+          "mt-3 font-display text-section tabular-nums leading-none!",
+          selected ? "text-fg" : "text-fg-dim group-hover:text-fg",
         )}
       >
-        <b
-          className={cn(
-            "font-display grid aspect-square w-[46%] place-items-center rounded-full border leading-none!",
-            plate.label,
-            plate.dark ? "border-[color-mix(in_oklab,var(--bg)_20%,var(--fg))] bg-fg text-bg" : "border-line bg-bg-2",
-          )}
-        >
-          {tier.kg}
-        </b>
-      </div>
+        {tier.kg}
+        <span className="ml-0.5 text-micro font-normal text-fg-dim">kg</span>
+      </b>
+      {tier.here ? <span className="mt-2 block h-0.5 w-5 bg-signal" /> : <span className="mt-2 block h-0.5 w-5" />}
     </div>
   );
 }
