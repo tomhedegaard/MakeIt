@@ -22,6 +22,7 @@ import {
 } from "@/lib/data/invites";
 import { confirmAuthUserEmail } from "@/lib/data/auth-admin";
 import { finishInvitePasswordSignup } from "@/lib/password-signup";
+import { PENDING_ADULT_COOKIE, adultMetadata, confirmsAdult } from "@/lib/auth/age";
 
 /* ---------------------------------------------------------------- *
  * Helpers
@@ -92,6 +93,8 @@ export async function magicLinkAction(formData: FormData) {
   let createUser = false;
   let inviteForRedirect: string | null = null;
   if (send.action === "send-signup") {
+    // A new account must confirm the 18-year limit (terms, "Alder").
+    if (!confirmsAdult(formData)) redirect("/login?err=age");
     await requireValidConnectedInvite(send.invite);
     createUser = true;
     inviteForRedirect = send.invite;
@@ -111,6 +114,8 @@ export async function magicLinkAction(formData: FormData) {
     options: {
       shouldCreateUser: createUser,
       emailRedirectTo: redirectTo,
+      // Only written when GoTrue creates the user (send-signup).
+      ...(createUser ? { data: adultMetadata() } : {}),
     },
   });
 
@@ -160,6 +165,7 @@ export async function passwordAction(formData: FormData) {
   if (password.length < 8) redirect("/login?err=pw_short");
 
   if (mode === "signup") {
+    if (!confirmsAdult(formData)) redirect("/login?err=age");
     await requireValidConnectedInvite(code);
 
     const base = await baseUrl();
@@ -170,7 +176,7 @@ export async function passwordAction(formData: FormData) {
         // raw_user_meta_data.invite lets handle_new_user (0059)
         // consume atomically. emailRedirectTo keeps a later
         // confirm-mail click harmless if GoTrue still sends one.
-        data: { invite: code },
+        data: { invite: code, ...adultMetadata() },
         emailRedirectTo: `${base}/auth/callback?invite=${encodeURIComponent(code)}`,
       },
     });
@@ -276,10 +282,19 @@ export async function oauthAction(formData: FormData) {
   if (provider !== "google" && provider !== "apple") {
     redirect("/login?err=provider");
   }
+  // OAuth may create the account, so the 18-year box is required here too.
+  if (!confirmsAdult(formData)) redirect("/login?err=age");
   await requireValidConnectedInvite(code);
 
-  // Stash the invite for /auth/callback to read after the round-trip.
+  // Stash the invite and the confirmation for /auth/callback to read
+  // after the round-trip (GoTrue takes no metadata on OAuth).
   await setPendingInvite(code);
+  (await cookies()).set(PENDING_ADULT_COOKIE, adultMetadata().adult_confirmed_at, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 10,
+  });
 
   const base = await baseUrl();
   const { data, error } = await supabase.auth.signInWithOAuth({

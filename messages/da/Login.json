@@ -1,6 +1,7 @@
 {
   "metaTitle": "Log ind · {product}",
   "errors": {
+    "age": "Du skal være fyldt 18 år for at oprette en konto. Sæt kryds i feltet og prøv igen.",
     "1": "Noget gik galt. Prøv igen",
     "missing": "Email kræves",
     "invite": "Ugyldig invite-kode",
@@ -74,5 +75,9 @@
     "fallbackEmail": "din mail",
     "bodyTail": ". Åbn linket på samme enhed, så er du inde.",
     "expiry": "Linket virker i 1 time."
+  },
+  "adult": {
+    "label": "Jeg er fyldt 18 år",
+    "labelNew": "Jeg er fyldt 18 år (kræves for nye konti)"
   }
 }

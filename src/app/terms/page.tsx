@@ -45,6 +45,10 @@ export default async function TermsPage() {
           </p>
         </Section>
 
+        <Section eyebrow={t("age.eyebrow")} title={t("age.title")}>
+          <p>{t("age.body", { product: COMPANY.product })}</p>
+        </Section>
+
         <Section eyebrow={t("s02.eyebrow")} title={t("s02.title")}>
           <List
             items={[

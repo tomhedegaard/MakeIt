@@ -1,6 +1,7 @@
 {
   "metaTitle": "Sign in · {product}",
   "errors": {
+    "age": "You must be 18 or older to create an account. Tick the box and try again.",
     "1": "Something went wrong. Try again",
     "missing": "Email is required",
     "invite": "Invalid invite code",
@@ -74,5 +75,9 @@
     "fallbackEmail": "your email",
     "bodyTail": ". Open the link on the same device and you're in.",
     "expiry": "The link works for 1 hour."
+  },
+  "adult": {
+    "label": "I am 18 or older",
+    "labelNew": "I am 18 or older (required for new accounts)"
   }
 }

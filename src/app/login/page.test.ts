@@ -32,13 +32,25 @@ describe("login public status", () => {
 });
 
 describe("login magic-link invite field", () => {
+  it("asks every signup form for the 18-year confirmation (terms, Alder)", () => {
+    const magic = login.slice(login.indexOf("async function MagicLinkForm"), login.indexOf("async function PasswordForm"));
+    const password = login.slice(login.indexOf("async function PasswordForm"), login.indexOf("async function OAuthForm"));
+    const oauth = login.slice(login.indexOf("async function OAuthForm"), login.indexOf("async function AdultCheckbox"));
+    // Optional on magic link (existing members), enforced server-side for a new email.
+    expect(magic).toContain("<AdultCheckbox required={false} />");
+    expect(password).toContain("{isSignup ? <AdultCheckbox required /> : null}");
+    expect(oauth).toContain("<AdultCheckbox required />");
+    expect(login).toMatch(/type="checkbox" name="adult"/);
+  });
+
   it("does not require an invite on the magic-link form", () => {
     const magicForm = login.slice(
       login.indexOf("async function MagicLinkForm"),
       login.indexOf("async function PasswordForm"),
     );
     expect(magicForm).toContain('name="code"');
-    expect(magicForm).not.toMatch(/name="code"[\s\S]*?\brequired\b/);
+    // The code input's own attributes, up to the end of its tag.
+    expect(magicForm).not.toMatch(/name="code"[^>]*\brequired\b/);
     expect(magicForm).toContain('name="email"');
     expect(magicForm).toMatch(/name="email"[\s\S]*?\brequired\b/);
   });
