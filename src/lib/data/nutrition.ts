@@ -1,5 +1,6 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
+import type { Json } from "@/lib/supabase/database.types";
 import { generateMockPlan } from "@/lib/nutrition/mock-plan";
 import { fallbackPlanNotes } from "@/lib/nutrition/plan-macros";
 import { getMealImage, getMealImagesBatch } from "@/lib/nutrition/unsplash";
@@ -493,6 +494,17 @@ export async function createLog(input: {
   offPlan?: boolean;
   kcal?: number | null;
   proteinG?: number | null;
+  /** HQ estimate (spec 2026-09-27 A.3); omitted by the manual flows. */
+  estimate?: {
+    source: "hq_photo" | "hq_text";
+    carbsG: number;
+    fatG: number;
+    confidence: "high" | "medium" | "low";
+    items: unknown;
+    edited: boolean;
+    kcalLow: number;
+    kcalHigh: number;
+  } | null;
   photoPath: string | null;
   rating: number | null;
   notes: string | null;
@@ -510,6 +522,18 @@ export async function createLog(input: {
       off_plan: input.offPlan ?? false,
       kcal: input.kcal ?? null,
       protein_g: input.proteinG ?? null,
+      ...(input.estimate
+        ? {
+            carbs_g: input.estimate.carbsG,
+            fat_g: input.estimate.fatG,
+            estimate_source: input.estimate.source,
+            estimate_confidence: input.estimate.confidence,
+            estimate_items: input.estimate.items as Json,
+            estimate_edited: input.estimate.edited,
+            estimate_kcal_low: input.estimate.kcalLow,
+            estimate_kcal_high: input.estimate.kcalHigh,
+          }
+        : {}),
       photo_path: input.photoPath,
       rating: input.rating,
       notes: input.notes,

@@ -30,6 +30,7 @@ import SkipDaysCard from "@/components/nutrition/SkipDaysCard";
 import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
 import DailyIntakeCard from "@/components/nutrition/DailyIntakeCard";
 import OffPlanLogButton from "./OffPlanLogButton";
+import { isMealEstimateEnabled } from "./actions";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
 import { getDailyIntake } from "@/lib/data/nutrition-intake";
 import { isNutritionProfileFresh } from "@/lib/nutrition/profile-fresh";
@@ -117,7 +118,7 @@ export default async function NutritionPage({
           title={t("page.title")}
           action={
             <div className="flex flex-wrap items-center gap-2">
-              <OffPlanLogButton />
+              <OffPlanLogButton estimateEnabled={await isMealEstimateEnabled(member)} />
               <Link
                 href="/nutrition/shopping"
                 className="btn btn-sm"

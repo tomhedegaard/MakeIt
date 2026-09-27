@@ -19,6 +19,8 @@ import {
   type NutritionGoal,
 } from "@/lib/data/nutrition";
 import { gradeMealPhoto } from "@/lib/data/nutrition-photo-claude";
+import { estimateMeal, identifyMeal, type MealAnswer, type MealInput } from "@/lib/data/nutrition-estimate-claude";
+import { ApprovedSchema, mealEstimateEnabled, type IdentifyResult, type MealEstimate } from "@/lib/data/nutrition-estimate";
 import { generatePlanWithClaude } from "@/lib/data/nutrition-planner-claude";
 import {
   resolveDailyTargets,
@@ -533,6 +535,155 @@ export async function logOffPlanAction(formData: FormData): Promise<LogResult> {
   revalidatePath("/nutrition");
   revalidatePath("/dashboard");
   return { streakMilestone };
+}
+
+/* ---------------------------------------------------------------- *
+ * HQ meal estimate (spec 2026-09-27 del A)
+ *
+ * Three actions behind the "Spiste noget andet" sheet:
+ *   identifyMealAction  — is there food; what must HQ ask first?
+ *   estimateMealAction  — the estimate, using the member's answers
+ *   logEstimatedMealAction — saves ONLY what the member approved
+ *
+ * The photo is downscaled in the browser and sent with each call, so
+ * nothing is stored until the member approves. Every Claude call counts
+ * toward the "meal_estimate" daily cap. Any failure returns
+ * "unavailable" and the sheet falls back to manual entry.
+ * ---------------------------------------------------------------- */
+
+export type EstimateFailure = { status: "limited" } | { status: "unavailable" };
+export type IdentifyResponse =
+  | { status: "ok"; result: IdentifyResult }
+  | { status: "no_food" }
+  | EstimateFailure;
+export type EstimateResponse = { status: "ok"; estimate: MealEstimate } | EstimateFailure;
+
+/**
+ * Open to coaches now, to everyone once the 30-meal evaluation has
+ * passed and NUTRITION_ESTIMATE_ENABLED=1 is set (spec A.2).
+ */
+export async function isMealEstimateEnabled(member: { isCoach?: boolean }): Promise<boolean> {
+  return mealEstimateEnabled(process.env.NUTRITION_ESTIMATE_ENABLED, member.isCoach);
+}
+
+const MAX_PHOTO_BYTES = 1_500_000;
+
+async function readMealInput(formData: FormData): Promise<MealInput | null> {
+  const text = String(formData.get("text") ?? "").trim().slice(0, 500) || null;
+  const photo = formData.get("photo");
+  let image: MealInput["photo"] = null;
+  if (photo instanceof File && photo.size > 0) {
+    if (photo.size > MAX_PHOTO_BYTES) return null;
+    const type = photo.type.toLowerCase();
+    const mediaType = type.includes("png") ? "image/png" : type.includes("webp") ? "image/webp" : type.includes("jpeg") || type.includes("jpg") ? "image/jpeg" : null;
+    if (!mediaType) return null;
+    image = { base64: Buffer.from(await photo.arrayBuffer()).toString("base64"), mediaType };
+  }
+  if (!image && !text) return null;
+  return { photo: image, text };
+}
+
+async function claimEstimateCall(memberId: string): Promise<boolean> {
+  const limit = await checkLimit(memberId, "meal_estimate");
+  if (!limit.allowed) return false;
+  await recordAction(memberId, "meal_estimate", {});
+  return true;
+}
+
+export async function identifyMealAction(formData: FormData): Promise<IdentifyResponse> {
+  const member = await requireMember();
+  if (!(await isMealEstimateEnabled(member))) return { status: "unavailable" };
+  const input = await readMealInput(formData);
+  if (!input) return { status: "unavailable" };
+  if (!(await claimEstimateCall(member.id))) return { status: "limited" };
+  const result = await identifyMeal(input);
+  if (!result) return { status: "unavailable" };
+  if (!result.foodVisible) return { status: "no_food" };
+  return { status: "ok", result };
+}
+
+export async function estimateMealAction(formData: FormData): Promise<EstimateResponse> {
+  const member = await requireMember();
+  if (!(await isMealEstimateEnabled(member))) return { status: "unavailable" };
+  const input = await readMealInput(formData);
+  if (!input) return { status: "unavailable" };
+  let answers: MealAnswer[] = [];
+  try {
+    const raw = JSON.parse(String(formData.get("answers") ?? "[]"));
+    if (Array.isArray(raw)) {
+      answers = raw
+        .filter((a) => a && typeof a.prompt === "string" && typeof a.answer === "string")
+        .slice(0, 3)
+        .map((a) => ({ prompt: a.prompt.slice(0, 140), answer: a.answer.slice(0, 120) }));
+    }
+  } catch {
+    answers = [];
+  }
+  if (!(await claimEstimateCall(member.id))) return { status: "limited" };
+  const estimate = await estimateMeal(input, answers);
+  return estimate ? { status: "ok", estimate } : { status: "unavailable" };
+}
+
+export async function logEstimatedMealAction(formData: FormData): Promise<LogResult & { ok: boolean }> {
+  const member = await requireMember();
+  const parsed = ApprovedSchema.safeParse(
+    (() => {
+      try {
+        return JSON.parse(String(formData.get("approved") ?? ""));
+      } catch {
+        return null;
+      }
+    })(),
+  );
+  if (!parsed.success) return { ok: false, streakMilestone: null };
+  const a = parsed.data;
+
+  // The approved photo is stored with the log, like a planned-meal photo.
+  let photoPath: string | null = null;
+  const photo = formData.get("photo");
+  if (a.source === "hq_photo" && photo instanceof File && photo.size > 0 && photo.size <= MAX_PHOTO_BYTES) {
+    const supabase = await createClient();
+    if (supabase) {
+      const path = `${member.id}/${randomUUID()}.jpg`;
+      const { error } = await supabase.storage
+        .from("meal-photos")
+        .upload(path, Buffer.from(await photo.arrayBuffer()), { contentType: "image/jpeg", upsert: false });
+      if (!error) photoPath = path;
+    }
+  }
+
+  const loggedForDate = copenhagenIsoDate();
+  const tracker = await streakMilestoneTracker(member.id, loggedForDate, "eaten", await createClient());
+
+  const log = await createLog({
+    memberId: member.id,
+    mealId: null,
+    loggedForDate,
+    loggedForSlot: null,
+    status: "eaten",
+    offPlan: true,
+    kcal: a.kcal,
+    proteinG: a.proteinG,
+    estimate: {
+      source: a.source,
+      carbsG: a.carbsG,
+      fatG: a.fatG,
+      confidence: a.confidence,
+      items: a.items,
+      edited: a.edited,
+      kcalLow: a.kcalLow,
+      kcalHigh: a.kcalHigh,
+    },
+    photoPath,
+    rating: null,
+    notes: a.label,
+  });
+  if (!log) return { ok: false, streakMilestone: null };
+
+  const streakMilestone = await tracker.after();
+  revalidatePath("/nutrition");
+  revalidatePath("/dashboard");
+  return { ok: true, streakMilestone };
 }
 
 /* ---------------------------------------------------------------- *
