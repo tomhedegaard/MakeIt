@@ -99,7 +99,7 @@ export default async function ExerciseDetailPage({
                 {ex.equipment ? (
                   <>
                     <span aria-hidden>·</span>
-                    <span>{ex.equipment}</span>
+                    <span>{t.has(`equipment.${ex.equipment}`) ? t(`equipment.${ex.equipment}`) : ex.equipment}</span>
                   </>
                 ) : null}
                 {ex.difficulty ? (

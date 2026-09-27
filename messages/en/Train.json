@@ -21,6 +21,15 @@
     "intermediate": "Intermediate",
     "advanced": "Advanced"
   },
+  "equipment": {
+    "barbell": "Barbell",
+    "dumbbell": "Dumbbell",
+    "kettlebell": "Kettlebell",
+    "cable": "Cable",
+    "machine": "Machine",
+    "band": "Band",
+    "bodyweight": "Bodyweight"
+  },
   "detail": {
     "metaFallback": "Exercise",
     "breadcrumb": "Exercises",

@@ -67,9 +67,9 @@ export default async function ExercisesIndexPage({
         {exercises.length === 0 ? (
           <p className="text-fg-dim">{t("index.empty")}</p>
         ) : (
-          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {exercises.map((ex) => (
-              <li key={ex.slug}>
+              <li key={ex.slug} className="min-w-0">
                 <ExerciseCard exercise={ex} />
               </li>
             ))}

@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
 import { MUSCLE_LABELS } from "@/lib/data/muscle-groups";
 import { dominantView, type Exercise } from "@/lib/data/exercises";
+import { exerciseMetaLabels } from "@/lib/data/exercise-meta";
 
 /**
  * Index-card view of an exercise. Figure thumbnail on the left,
@@ -19,6 +20,7 @@ export default async function ExerciseCard({
   compact?: boolean;
 }) {
   const t = await getTranslations("Train.card");
+  const tTrain = await getTranslations("Train");
   const view = dominantView(exercise);
   const href = `/train/exercises/${exercise.slug}`;
   const primaryNames = exercise.primaryMuscles
@@ -53,7 +55,7 @@ export default async function ExerciseCard({
   return (
     <Link
       href={href}
-      className="surface-2 rounded-xl lift block overflow-hidden"
+      className="surface-2 lift block min-w-0 overflow-hidden"
     >
       <div className="flex gap-4 p-4 sm:p-5">
         <div className="shrink-0 surface-2 rounded-lg p-2">
@@ -70,10 +72,8 @@ export default async function ExerciseCard({
             <div className="font-display text-lg sm:text-xl leading-tight truncate">
               {exercise.name}
             </div>
-            <div className="eyebrow text-fg-faint mt-1 truncate">
-              {[exercise.category, exercise.equipment, exercise.difficulty]
-                .filter(Boolean)
-                .join(" · ")}
+            <div className="eyebrow eyebrow-domain mt-1 truncate" data-domain="body">
+              {exerciseMetaLabels(tTrain, exercise).join(" · ")}
             </div>
           </div>
 

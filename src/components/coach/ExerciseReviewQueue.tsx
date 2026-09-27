@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { exerciseMetaLabels } from "@/lib/data/exercise-meta";
 import { setExercisePublishedAction } from "@/app/coach/exercises/actions";
 import { resolveDemoAssets } from "@/lib/data/demo-assets";
 import type { Exercise } from "@/lib/data/exercises";
@@ -19,6 +20,7 @@ import { cn } from "@/lib/utils";
  */
 export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts: Exercise[] }) {
   const t = useTranslations("CoachStudio.exercises.review");
+  const tTrain = useTranslations("Train");
   // Frozen at mount: publishing revalidates the library, and a fresh
   // list without the approved draft would shift every position by one.
   const [drafts] = useState(initialDrafts);
@@ -110,7 +112,7 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
   }
 
   const demo = current.demoAssetUrl ? resolveDemoAssets(current.demoAssetUrl) : null;
-  const meta = [current.category, current.equipment, current.difficulty].filter(Boolean).join(" · ");
+  const meta = exerciseMetaLabels(tTrain, current).join(" · ");
 
   return (
     <div className="space-y-5">
