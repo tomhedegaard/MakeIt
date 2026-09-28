@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import { getSession } from "@/lib/auth";
 import {
   getHeadCoachId,
@@ -9,6 +10,11 @@ import {
 } from "@/lib/data/messages";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import MessagesView from "@/components/chat/MessagesView";
+import DualStreamMessages from "@/components/chat/DualStreamMessages";
+import { demoDualStream } from "@/lib/data/message-streams";
+import { demoEngineStrip } from "@/lib/adaptive/engine-strip";
+import { loadDualStreamCopy } from "@/lib/ui/sprint-b-copy";
+import { loadStripCopy } from "@/lib/ui/sprint-a-copy";
 
 /**
  * Member-side chat. One thread with the head coach. Coaches reach
@@ -50,32 +56,44 @@ export default async function MessagesPage() {
   }
 
   const t = await getTranslations("Messages.page");
+  const [streamCopy, stripCopy] = await Promise.all([
+    loadDualStreamCopy(),
+    loadStripCopy(),
+  ]);
+  const demo = demoDualStream();
 
   return (
     <Container className="py-6 lg:py-12">
-      <header className="pt-2 pb-4 mb-4 border-b hairline">
-        <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {coachHandle
-            ? t("titleWithCoach", { handle: coachHandle })
-            : t("titleFallback")}
-        </h1>
+      <div className="pt-2 pb-4 mb-4 border-b hairline">
+        <PageTitle
+          kicker={t("eyebrow")}
+          title={
+            coachHandle
+              ? t("titleWithCoach", { handle: coachHandle })
+              : t("titleFallback")
+          }
+        />
         <p className="mt-2 text-fg-dim text-sm max-w-md">
           {t("subtitle")}
         </p>
-      </header>
-
-      <div
-        className="surface-2 rounded-2xl overflow-hidden flex flex-col"
-        style={{ minHeight: "60vh", maxHeight: "calc(100vh - 220px)" }}
-      >
-        <MessagesView
-          conversationId={conversationId}
-          initialMessages={initialMessages}
-          myMemberId={member.id}
-          canSendVideo={false}
-        />
       </div>
+
+      <DualStreamMessages
+        munk={SUPABASE_ENABLED ? [] : demo.munk}
+        motor={demo.motor}
+        copy={streamCopy}
+        strip={demoEngineStrip()}
+        stripCopy={stripCopy}
+      >
+        {SUPABASE_ENABLED ? (
+          <MessagesView
+            conversationId={conversationId}
+            initialMessages={initialMessages}
+            myMemberId={member.id}
+            canSendVideo={false}
+          />
+        ) : null}
+      </DualStreamMessages>
     </Container>
   );
 }

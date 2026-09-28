@@ -1,12 +1,19 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
+import HrvTrendsEmpty from "@/components/hrv/HrvTrendsEmpty";
 import TrendChart from "@/components/hrv/TrendChart";
 import { getSession } from "@/lib/auth";
 import { getHrvReadingSeries } from "@/lib/data/hrv";
 import type { ChartReading } from "@/lib/hrv/trend-chart";
 import type { ReadinessBucket } from "@/lib/hrv/types";
+import { SUPABASE_ENABLED } from "@/lib/supabase/env";
+import { buildHrvBandView } from "@/lib/hrv/band";
+import { demoSteadySeries } from "@/lib/hrv/demo-series";
+import { loadHrvBandCopy } from "@/lib/ui/sprint-a-copy";
+import ConnectButton from "../ConnectButton";
 
 /**
  * `/hrv/trends` — a member's HRV trend chart + readiness-bucket distribution.
@@ -14,11 +21,13 @@ import type { ReadinessBucket } from "@/lib/hrv/types";
  * Reads the member's primary-connection reading history via
  * `getHrvReadingSeries`, then renders ONE of three states by series length
  * (spec §6):
- *  - Empty (0 readings) → a faint axis scaffold + reassurance copy.
+ *  - Empty (0 readings) → honest empty copy + wearable connect CTA.
  *  - Provisional (1–13 readings) → the trend chart while the baseline builds.
  *  - Active (≥14 readings) → the full chart + a 30-day bucket distribution.
  *
- * Demo mode (`getHrvReadingSeries` returns `[]`) falls into the empty state.
+ * Demo mode (`!SUPABASE_ENABLED` + empty fetch) uses `demoSteadySeries`
+ * so the populated chart can be reviewed locally. Connected members with
+ * zero readings see the honest empty state.
  *
  * The shared `HrvSubNav` at the top links between the three `/hrv` pages.
  */
@@ -32,15 +41,6 @@ const BUCKET_ORDER: ReadinessBucket[] = [
   "very_high",
 ];
 
-/** Danish labels for each readiness bucket. */
-const BUCKET_LABEL: Record<ReadinessBucket, string> = {
-  very_low: "Langt under",
-  low: "Under",
-  normal: "Normal",
-  high: "Over",
-  very_high: "Langt over",
-};
-
 /** Window, in days, for the readiness-bucket distribution. */
 const DISTRIBUTION_DAYS = 30;
 
@@ -48,7 +48,17 @@ export default async function HrvTrendsPage() {
   const member = await getSession();
   if (!member) redirect("/login");
 
-  const series = await getHrvReadingSeries(member.id);
+  const t = await getTranslations("Hrv.trends");
+  const tPage = await getTranslations("Hrv.page");
+  const fetched = await getHrvReadingSeries(member.id);
+  const series = fetched.length === 0 && !SUPABASE_ENABLED
+    ? demoSteadySeries()
+    : fetched;
+  const band = buildHrvBandView(series);
+  const bandCopy = await loadHrvBandCopy({
+    count: band.nightsCollected,
+    needed: band.nightsNeeded,
+  });
 
   const state =
     series.length === 0
@@ -60,19 +70,25 @@ export default async function HrvTrendsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Recovery"
-        title="Forløb"
-        subtitle="Dit HRV-forløb over tid — den daglige måling, dit 7-dages snit og dit normalområde."
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        subtitle={t("subtitle")}
       />
       <Container className="py-8 lg:py-12 space-y-8">
         <HrvSubNav />
 
         {state === "empty" ? (
-          <StateEmpty />
+          <HrvTrendsEmpty
+            eyebrow={t("eyebrow")}
+            title={t("empty.title")}
+            body={t("empty.body")}
+            disclaimer={bandCopy.disclaimer}
+            cta={<ConnectButton label={tPage("connectCta")} />}
+          />
         ) : state === "provisional" ? (
-          <StateProvisional series={series} />
+          <StateProvisional series={series} copy={bandCopy} />
         ) : (
-          <StateActive series={series} />
+          <StateActive series={series} copy={bandCopy} t={t} />
         )}
       </Container>
     </>
@@ -80,49 +96,29 @@ export default async function HrvTrendsPage() {
 }
 
 /* ---------------------------------------------------------------- */
-/* Empty — 0 readings                                               */
-/* ---------------------------------------------------------------- */
-
-function StateEmpty() {
-  return (
-    <section className="surface-2 rounded-2xl overflow-hidden">
-      <div className="px-6 py-7 md:px-8 md:py-10">
-        <div className="eyebrow mb-3">Dit forløb</div>
-        {/* Faint chart-axis scaffold — placeholder for the trend chart. */}
-        <div
-          aria-hidden
-          className="rounded-xl border hairline aspect-[8/3] w-full flex items-end"
-        >
-          <div className="grid grid-cols-6 w-full h-full opacity-30">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="border-r hairline last:border-r-0" />
-            ))}
-          </div>
-        </div>
-        <p className="text-fg-dim text-sm md:text-base leading-relaxed mt-6 max-w-md">
-          Vi viser dit forløb her, så snart vi har data. Dine målinger ligger
-          trygt gemt.
-        </p>
-      </div>
-    </section>
-  );
-}
-
-/* ---------------------------------------------------------------- */
 /* Provisional — 1–13 readings                                      */
 /* ---------------------------------------------------------------- */
 
-function StateProvisional({ series }: { series: ChartReading[] }) {
+function StateProvisional({
+  series,
+  copy,
+}: {
+  series: ChartReading[];
+  copy: Awaited<ReturnType<typeof loadHrvBandCopy>>;
+}) {
   return (
     <section className="surface-2 rounded-2xl overflow-hidden">
       <div className="px-6 py-5 md:px-8 border-b hairline flex items-center gap-2">
         <span className="pulse-dot" />
-        <span className="eyebrow">Bygger din baseline</span>
+        <span className="eyebrow eyebrow-domain">{copy.buildingTitle}</span>
       </div>
       <div className="px-6 py-7 md:px-8 md:py-9">
         <TrendChart readings={series} />
         <p className="text-fg-dim text-sm md:text-base leading-relaxed mt-6 max-w-md">
-          Vi bygger din baseline. Når den er klar, kommer båndet.
+          {copy.buildingBody}
+        </p>
+        <p className="text-micro text-fg-faint mt-4">
+          {copy.disclaimer}
         </p>
       </div>
     </section>
@@ -133,23 +129,70 @@ function StateProvisional({ series }: { series: ChartReading[] }) {
 /* Active — >= 14 readings                                          */
 /* ---------------------------------------------------------------- */
 
-function StateActive({ series }: { series: ChartReading[] }) {
+function StateActive({
+  series,
+  copy,
+  t,
+}: {
+  series: ChartReading[];
+  copy: Awaited<ReturnType<typeof loadHrvBandCopy>>;
+  t: Awaited<ReturnType<typeof getTranslations<"Hrv.trends">>>;
+}) {
   const dist = bucketDistribution(series);
+  const band = buildHrvBandView(series);
+  const latestMs = band.latestMs;
+  const qualitative = band.qualitative
+    ? copy.qualitative[band.qualitative]
+    : null;
 
   return (
     <div className="space-y-8">
-      <section className="surface-2 rounded-2xl overflow-hidden">
-        <div className="px-6 py-5 md:px-8 border-b hairline flex items-center gap-2">
-          <span className="eyebrow">Dit HRV-forløb</span>
+      <section
+        id="band"
+        className="surface-2 rounded-2xl overflow-hidden"
+      >
+        <div className="px-6 py-5 md:px-8 border-b hairline flex items-center justify-between gap-3 flex-wrap">
+          <span className="eyebrow eyebrow-domain">{copy.steadyEyebrow}</span>
+          {latestMs != null ? (
+            <div className="flex items-baseline gap-2">
+              <span className="numeric text-3xl md:text-4xl leading-none">
+                {latestMs}
+                <span className="text-fg-dim text-sm ml-1">{copy.unit}</span>
+              </span>
+              {qualitative ? (
+                <span
+                  data-qualitative={band.qualitative}
+                  className="font-display text-xl"
+                >
+                  {qualitative}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
         </div>
         <div className="px-6 py-7 md:px-8 md:py-9">
           <TrendChart readings={series} />
+          <div className="flex items-center gap-4 mt-4 text-micro text-fg-faint">
+            <span>{copy.legendBand}</span>
+            <span>{copy.legendAvg}</span>
+          </div>
+          {band.engineCue ? (
+            <p
+              data-engine-cue={band.engineCue}
+              className="text-sm md:text-base text-fg-dim leading-relaxed mt-5 max-w-lg"
+            >
+              {band.engineCue === "below" ? copy.engineBelow : copy.engineAbove}
+            </p>
+          ) : null}
+          <p className="text-micro text-fg-faint mt-4">
+            {copy.disclaimer}
+          </p>
         </div>
       </section>
 
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-6 py-5 md:px-8 border-b hairline">
-          <span className="eyebrow">Readiness-fordeling</span>
+          <span className="eyebrow">{t("distribution.eyebrow")}</span>
         </div>
         <div className="px-6 py-7 md:px-8 md:py-9 space-y-3">
           {BUCKET_ORDER.map((bucket) => {
@@ -158,9 +201,9 @@ function StateActive({ series }: { series: ChartReading[] }) {
             return (
               <div key={bucket} className="flex items-center gap-4">
                 <span className="text-xs text-fg-dim w-24 shrink-0">
-                  {BUCKET_LABEL[bucket]}
+                  {t(`distribution.bucket.${bucket}`)}
                 </span>
-                <div className="flex-1 h-2 rounded-full bg-line overflow-hidden">
+                <div className="flex-1 h-2 bg-line overflow-hidden">
                   <div
                     className="h-full bg-fg"
                     style={{ width: `${Math.max(share * 100, share > 0 ? 2 : 0)}%` }}
@@ -173,14 +216,14 @@ function StateActive({ series }: { series: ChartReading[] }) {
             );
           })}
           <p className="text-fg-dim text-sm leading-relaxed pt-3">
-            {dist.total > 0 ? (
-              <>
-                Dine sidste {DISTRIBUTION_DAYS} dage: {dist.normalPct}% normal,{" "}
-                {dist.underPct}% under, {dist.overPct}% over.
-              </>
-            ) : (
-              <>Ingen readiness-data i de sidste {DISTRIBUTION_DAYS} dage.</>
-            )}
+            {dist.total > 0
+              ? t("distribution.summary", {
+                  days: DISTRIBUTION_DAYS,
+                  normal: dist.normalPct,
+                  under: dist.underPct,
+                  over: dist.overPct,
+                })
+              : t("distribution.none", { days: DISTRIBUTION_DAYS })}
           </p>
         </div>
       </section>

@@ -72,7 +72,7 @@ export function explainerScenarioInput(): EngineInput {
     nextSession: {
       sessionId: "explainer-next",
       scheduledFor: "2026-05-26",
-      title: "Back squat — top set @ RPE 8",
+      title: "Back squat: top set @ RPE 8",
       week: 3,
       exercises: [
         {
@@ -103,7 +103,7 @@ export function explainerScenarioInput(): EngineInput {
  * generated so the explainer page reads consistently across renders.
  */
 export const EXPLAINER_EXPLANATION_DA =
-  "Din HRV er lav i dag, og kort søvn ovenpå — vi har reduceret topsæt-vægten med 10%. Arbejdssæt og volumen er uændret.";
+  "Din HRV er lav i dag, og kort søvn ovenpå. Vi har reduceret topsæt-vægten med 10%. Arbejdssæt og volumen er uændret.";
 
 /**
  * Convenience: build the scenario's baseline decision by actually

@@ -23,10 +23,11 @@ export type MuscleTiers = {
 
 const ALL_MUSCLES = Object.keys(MUSCLE_LABELS) as MuscleGroup[];
 
+// Same three Krop strengths as the muscle figure the member sees (spec §11).
 const TIER_DOT: Record<MuscleTier, string> = {
-  primary: "#F5F2EC",
-  secondary: "#C97B3E",
-  tertiary: "#C97B3E66",
+  primary: "var(--muscle-primary)",
+  secondary: "var(--muscle-secondary)",
+  tertiary: "var(--muscle-tertiary)",
 };
 
 const TIER_LABEL: Record<MuscleTier, string> = {
@@ -69,7 +70,7 @@ export default function MuscleTierPicker({
           <div key={m} className="flex items-center gap-2 py-0.5">
             <span
               className="size-2.5 rounded-full shrink-0"
-              style={{ background: t ? TIER_DOT[t] : "#2a2a2e" }}
+              style={{ background: t ? TIER_DOT[t] : "var(--anatomy-idle)" }}
               aria-hidden
             />
             <span className="flex-1 text-sm truncate">{MUSCLE_LABELS[m]}</span>
@@ -82,12 +83,12 @@ export default function MuscleTierPicker({
                     type="button"
                     onClick={() => toggle(m, tier)}
                     aria-pressed={on}
-                    className="size-6 rounded text-[10px] font-mono border hairline transition-colors"
+                    className="size-6 text-micro border hairline transition-colors"
                     style={
                       on
                         ? {
                             background: TIER_DOT[tier],
-                            color: "#0A0A0B",
+                            color: tier === "primary" ? "var(--bg)" : "var(--fg)",
                             borderColor: "transparent",
                           }
                         : undefined

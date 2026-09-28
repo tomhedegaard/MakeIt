@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { pricing } from "@/lib/pricing";
 import { TODAY_SESSION, totalSets } from "@/lib/workout";
 import { getSession } from "@/lib/auth";
@@ -11,6 +13,7 @@ import {
   type TodayCard,
 } from "@/lib/data/dashboard";
 import {
+  emptyWeekStrip,
   getActiveProgram,
   getProgramLibrary,
   getSessionStreak,
@@ -21,14 +24,35 @@ import {
   type WeekDay,
 } from "@/lib/data/coaching";
 import StartProgramButton from "./StartProgramButton";
+import AdaptiveReasonStrip from "@/components/adaptive/AdaptiveReasonStrip";
+import {
+  demoEngineStrip,
+  emptyEngineStrip,
+} from "@/lib/adaptive/engine-strip";
+import { loadStripCopy } from "@/lib/ui/sprint-a-copy";
+import {
+  computeTrendChip,
+  generatedSessionTitleKey,
+  seedProgramCopyPath,
+} from "@/lib/i18n/member-bodycopy";
+import {
+  libraryForSurface,
+  todayCardForSurface,
+  weekStripForSurface,
+} from "@/lib/trust/connected-first-run";
+
+type CoachingT = Awaited<ReturnType<typeof getTranslations<"Coaching">>>;
 
 export default async function TrainPage() {
   const member = await getSession();
   const memberId = member?.id ?? null;
   const t = await getTranslations("Coaching");
+  const stripCopy = await loadStripCopy();
+  const connected = Boolean(SUPABASE_ENABLED && memberId);
+  const engineStrip = connected ? emptyEngineStrip() : demoEngineStrip();
 
   const [todayCardDb, weekDb, activeDb, libraryDb, statsDb, streakDb] =
-    SUPABASE_ENABLED && memberId
+    connected && memberId
       ? await Promise.all([
           getTodayCard(memberId),
           getWeekStrip(memberId),
@@ -39,11 +63,31 @@ export default async function TrainPage() {
         ])
       : ([null, null, null, null, null, 0] as const);
 
-  const today: TodayCard = todayCardDb ?? todayCardFromMock();
-  const week: WeekDay[] = weekDb ?? mockWeekStrip();
+  const todayRaw = todayCardForSurface({
+    connected,
+    fromDb: todayCardDb,
+    demo: todayCardFromMock(t),
+  });
+  const today = todayRaw
+    ? { ...todayRaw, title: localizeGeneratedTitle(todayRaw.title, t) }
+    : todayRaw;
+  const week: WeekDay[] = weekStripForSurface({
+    connected,
+    fromDb: weekDb,
+    demo: mockWeekStrip(),
+    empty: emptyWeekStrip(),
+  });
   const active: ActiveProgram | null = activeDb;
-  const library: ProgramListing[] = libraryDb ?? mockLibrary();
-  const sets = today.setCount > 0 ? today.setCount : totalSets(TODAY_SESSION);
+  const library: ProgramListing[] = libraryForSurface({
+    connected,
+    fromDb: libraryDb,
+    demo: mockLibrary(t),
+  }).map((p) => localizeSeedProgram(p, t));
+  const sets = today
+    ? today.setCount > 0
+      ? today.setCount
+      : totalSets(TODAY_SESSION)
+    : 0;
 
   const volumeKg = statsDb?.volumeKg ?? 0;
   const volumeKgPrev = statsDb?.volumeKgPrev ?? 0;
@@ -54,15 +98,18 @@ export default async function TrainPage() {
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
-      <header className="pt-2 pb-1">
-        <div className="eyebrow mb-2">{t("header.eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
-          {t("header.title")}
-        </h1>
+      <div className="pt-2 pb-1">
+        <PageTitle kicker={t("header.eyebrow")} title={t("header.title")} />
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+          <span data-identity="coach" className="eyebrow">{t("header.coachChip")}</span>
+          <span data-identity="motor" className="text-micro text-fg-faint">
+            {t("header.motorChip")}
+          </span>
+        </div>
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
           {t("header.subtitle")}
         </p>
-      </header>
+      </div>
 
       {/* Week strip — horizontal scroll on mobile */}
       <section
@@ -80,16 +127,16 @@ export default async function TrainPage() {
                   borderColor: day.today ? "var(--line-bright)" : undefined,
                 }}
               >
-                <div className="eyebrow mb-1.5">{day.label}</div>
+                <div className="eyebrow mb-1.5">{t(`week.days.${day.dayKey}`)}</div>
                 <div className="numeric text-2xl mb-1">
                   {String(day.date).padStart(2, "0")}
                 </div>
                 <div
-                  className={`text-[10px] font-mono uppercase tracking-[0.14em] ${
-                    day.rest ? "text-fg-faint" : "text-fg-dim"
-                  }`}
+                  className={`text-micro ${
+ day.rest ? "text-fg-faint" : "text-fg-dim"
+ }`}
                 >
-                  {day.sessionLabel}
+                  {day.sessionLabel || t("week.rest")}
                 </div>
                 <div className="mt-2 flex justify-center">
                   {day.done ? (
@@ -126,7 +173,8 @@ export default async function TrainPage() {
         </ol>
       </section>
 
-      {/* Today's session — flagship CTA */}
+      {/* Today's session — flagship CTA, or honest empty in connected mode */}
+      {today ? (
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 pt-5 pb-4 border-b hairline">
           <div className="flex items-center gap-2 mb-3">
@@ -144,13 +192,15 @@ export default async function TrainPage() {
           <p className="text-fg-dim text-sm md:text-base">{today.title}</p>
         </div>
 
+        <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
+
         <div className="grid grid-cols-3 gap-px bg-line border-b hairline">
           <Mini label={t("today.exercises")} value={today.exerciseCount} />
           <Mini label={t("today.sets")} value={sets} />
           <Mini
             label={t("today.estTime")}
             value={today.estimatedMinutes}
-            suffix="m"
+            suffix={t("today.minuteUnit")}
           />
         </div>
 
@@ -160,6 +210,23 @@ export default async function TrainPage() {
           </Link>
         </div>
       </section>
+      ) : (
+      <section
+        data-today-empty=""
+        className="surface-2 rounded-2xl overflow-hidden"
+      >
+        <div className="px-5 pt-5 pb-4">
+          <SectionHeader eyebrow={t("today.emptyEyebrow")} title={t("today.emptyTitle")} />
+          <p className="text-fg-dim text-sm md:text-base">{t("today.emptyBody")}</p>
+        </div>
+        <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
+        <div className="p-4 lg:p-5">
+          <a href="#programs" className="btn btn-primary btn-xl">
+            {t("today.emptyCta")}
+          </a>
+        </div>
+      </section>
+      )}
 
       {/* Active program progress */}
       {active ? (
@@ -177,7 +244,7 @@ export default async function TrainPage() {
               <div className="eyebrow">{t("active.weeks")}</div>
             </div>
           </div>
-          <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-bg-3 overflow-hidden">
             <div
               className="h-full bg-fg"
               style={{
@@ -189,26 +256,28 @@ export default async function TrainPage() {
             <MiniWithTrend
               label={t("active.volume")}
               value={formatVolume(volumeKg)}
-              suffix={volumeKg >= 1000 ? "" : "kg"}
+              suffix={volumeKg >= 1000 ? "" : t("active.kgUnit")}
               current={volumeKg}
               previous={volumeKgPrev}
+              newLabel={t("trend.new")}
             />
             <MiniWithTrend
               label={t("active.prs")}
               value={String(prs4w).padStart(2, "0")}
               current={prs4w}
               previous={prsPrev}
+              newLabel={t("trend.new")}
             />
-            <Mini label={t("active.streak")} value={streakDays} suffix="d" small />
+            <Mini label={t("active.streak")} value={streakDays} suffix={t("active.dayUnit")} small />
           </div>
         </section>
       ) : null}
 
       {/* Programs library */}
-      <section>
+      <section id="programs">
         <div className="flex items-end justify-between mb-3">
           <div className="eyebrow">{t("library.eyebrow")}</div>
-          <span className="text-xs font-mono text-fg-faint">{library.length}</span>
+          <span className="text-xs text-fg-faint">{library.length}</span>
         </div>
 
         <ul className="space-y-3">
@@ -220,7 +289,7 @@ export default async function TrainPage() {
                     <div className="eyebrow mb-2">
                       {p.code} · {p.type}
                       {p.active && p.currentWeek ? (
-                        <span className="ml-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border hairline-strong">
+                        <span className="ml-2 inline-flex items-center gap-1.5 px-2 py-0.5 border hairline-strong">
                           <span className="size-1.5 rounded-full bg-fg" />{" "}
                           {t("library.activeBadge", { week: p.currentWeek })}
                         </span>
@@ -244,9 +313,11 @@ export default async function TrainPage() {
 
                 <div className="grid grid-cols-2 gap-px bg-line border hairline rounded-lg overflow-hidden mb-4">
                   <div className="bg-bg-2 px-3 py-2.5">
-                    <div className="eyebrow mb-0.5">{t("library.coach")}</div>
+                    <div className="eyebrow mb-0.5">
+                      {p.coachName ? t("library.coach") : t("library.engine")}
+                    </div>
                     <div className="text-sm">
-                      {p.coachName ?? t("library.coachFallback")}
+                      {p.coachName ?? t("library.engineName")}
                     </div>
                   </div>
                   <div className="bg-bg-2 px-3 py-2.5">
@@ -259,17 +330,27 @@ export default async function TrainPage() {
 
                 <div className="flex items-center gap-2">
                   {p.active ? (
+                    today ? (
                     <Link
-                      href={`/session/${today.id}`}
+                      href={today ? `/session/${today.id}` : "/dashboard"}
                       className="btn btn-primary btn-sm flex-1"
                     >
                       {t("library.continue")}
                     </Link>
+                    ) : (
+                    <Link
+                      href={`/program/${p.code}`}
+                      className="btn btn-primary btn-sm flex-1"
+                    >
+                      {t("library.details")}
+                    </Link>
+                    )
                   ) : (
                     <StartProgramButton
                       programId={p.id}
                       programName={p.name}
                       hasOtherActive={Boolean(active)}
+                      hasDays={p.dayCount > 0}
                     />
                   )}
                   <Link
@@ -292,7 +373,7 @@ export default async function TrainPage() {
           {t("oneOnOne.title")}
         </h3>
         <p className="text-fg-dim text-sm md:text-base max-w-xl mb-5">
-          {t("oneOnOne.body", { spots: pricing.oneOnOne.spots })}
+          {t("oneOnOne.body", { count: pricing.oneOnOne.spots })}
         </p>
 
         <div className="flex items-baseline gap-2 mb-5">
@@ -344,14 +425,16 @@ function MiniWithTrend({
   suffix,
   current,
   previous,
+  newLabel,
 }: {
   label: string;
   value: number | string;
   suffix?: string;
   current: number;
   previous: number;
+  newLabel: string;
 }) {
-  const trend = computeTrend(current, previous);
+  const trend = computeTrendChip(current, previous, newLabel);
   return (
     <div className="bg-bg-2 px-4 py-3 text-center">
       <div className="eyebrow mb-1">{label}</div>
@@ -361,33 +444,19 @@ function MiniWithTrend({
       </div>
       {trend ? (
         <div
-          className={`mt-0.5 text-[10px] font-mono ${
-            trend.direction === "up"
-              ? "text-fg"
-              : trend.direction === "down"
-              ? "text-fg-dim"
-              : "text-fg-faint"
-          }`}
+          className={`mt-0.5 text-micro ${
+ trend.direction === "up"
+ ? "text-fg"
+ : trend.direction === "down"
+ ? "text-fg-dim"
+ : "text-fg-faint"
+ }`}
         >
           {trend.label}
         </div>
       ) : null}
     </div>
   );
-}
-
-function computeTrend(
-  current: number,
-  previous: number
-): { direction: "up" | "down" | "flat"; label: string } | null {
-  if (previous === 0 && current === 0) return null;
-  if (previous === 0) return { direction: "up", label: "↑ ny" };
-  const pct = Math.round(((current - previous) / previous) * 100);
-  if (Math.abs(pct) < 3) return { direction: "flat", label: "·" };
-  return {
-    direction: pct > 0 ? "up" : "down",
-    label: `${pct > 0 ? "↑" : "↓"} ${Math.abs(pct)}%`,
-  };
 }
 
 /* ---------------------------------------------------------------- *
@@ -409,15 +478,31 @@ function formatVolume(kg: number): string {
  * unconnected sessions still render the page).
  * ---------------------------------------------------------------- */
 
-function todayCardFromMock(): TodayCard {
+function localizeGeneratedTitle(title: string, t: CoachingT): string {
+  const key = generatedSessionTitleKey(title);
+  return key ? t(`today.${key}`) : title;
+}
+
+function localizeSeedProgram(p: ProgramListing, t: CoachingT): ProgramListing {
+  const path = seedProgramCopyPath(p.code);
+  if (!path) return p;
+  return {
+    ...p,
+    type: t(`${path}.type`),
+    level: t(`${path}.level`),
+    description: t(`${path}.description`),
+  };
+}
+
+function todayCardFromMock(t: CoachingT): TodayCard {
   return {
     id: TODAY_SESSION.id,
     programCode: TODAY_SESSION.programCode,
     programName: TODAY_SESSION.programName,
     week: TODAY_SESSION.week,
     isDeload: false,
-    dayLabel: TODAY_SESSION.dayLabel,
-    title: TODAY_SESSION.title,
+    dayLabel: t("today.mock.dayLabel"),
+    title: t("today.mock.title"),
     estimatedMinutes: TODAY_SESSION.estimatedMinutes,
     exerciseCount: TODAY_SESSION.exercises.length,
     setCount: totalSets(TODAY_SESSION),
@@ -429,59 +514,59 @@ function todayCardFromMock(): TodayCard {
   };
 }
 
-function mockLibrary(): ProgramListing[] {
+function mockLibrary(t: CoachingT): ProgramListing[] {
   return [
     {
       id: "mock-str-12",
       code: "STR-12",
       name: "PR-Block",
-      type: "Strength",
+      type: t("library.mock.STR-12.type"),
       weeks: 12,
-      level: "Inter./Adv.",
-      description:
-        "Klassisk linær periodisering med RPE. Bygget til nye PR'er på squat, bench og DL.",
+      level: t("library.mock.STR-12.level"),
+      description: t("library.mock.STR-12.description"),
       coachName: "Mikael Munk",
       active: true,
       currentWeek: 4,
+      dayCount: 4,
     },
     {
       id: "mock-hyp-08",
       code: "HYP-08",
       name: "Build Phase",
-      type: "Hypertrofi",
+      type: t("library.mock.HYP-08.type"),
       weeks: 8,
-      level: "All levels",
-      description:
-        "Volumen-fokuseret blok med bro-split logik for ben, ryg og skuldre.",
+      level: t("library.mock.HYP-08.level"),
+      description: t("library.mock.HYP-08.description"),
       coachName: "Maria",
       active: false,
       currentWeek: null,
+      dayCount: 4,
     },
     {
       id: "mock-pwr-10",
       code: "PWR-10",
       name: "Powerbuilding",
-      type: "Hybrid",
+      type: t("library.mock.PWR-10.type"),
       weeks: 10,
-      level: "Intermediate",
-      description:
-        "50/50 strength og hypertrofi. Tunge top-sets, accessory til æstetik.",
+      level: t("library.mock.PWR-10.level"),
+      description: t("library.mock.PWR-10.description"),
       coachName: "Kasper",
       active: false,
       currentWeek: null,
+      dayCount: 4,
     },
     {
       id: "mock-dl-06",
       code: "DL-06",
       name: "Deadlift Spec.",
-      type: "Specialization",
+      type: t("library.mock.DL-06.type"),
       weeks: 6,
-      level: "Advanced",
-      description:
-        "Seks uger fokuseret 100% på dødløft. Pause-pulls, deficits, peak-protokol.",
+      level: t("library.mock.DL-06.level"),
+      description: t("library.mock.DL-06.description"),
       coachName: "Mikael Munk",
       active: false,
       currentWeek: null,
+      dayCount: 3,
     },
   ];
 }

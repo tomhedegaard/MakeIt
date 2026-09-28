@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAMID.eu.nowmakeit.app",
+        "paths": ["/auth/callback", "/dashboard", "/hrv/*", "/nutrition/*", "/mind/*", "/coaching/*"]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["TEAMID.eu.nowmakeit.app"]
+  }
+}

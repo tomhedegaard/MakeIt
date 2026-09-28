@@ -1,12 +1,14 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { getSession } from "@/lib/auth";
 import { pricing } from "@/lib/pricing";
 import { STRIPE_ENABLED } from "@/lib/stripe";
 import { getActiveSubscriptions, type ActiveSubscription } from "@/lib/data/billing";
 import { startCheckoutAction, openPortalAction } from "./actions";
 import { BILLING_MAILTO, COMPANY } from "@/lib/company";
+import { isNativeRequest } from "@/lib/platform-server";
 
 export default async function BillingPage({
   searchParams,
@@ -21,6 +23,51 @@ export default async function BillingPage({
   const oneOnOne = subs?.one_on_one ?? null;
 
   const t = await getTranslations("Billing");
+
+  // Native shells must not render purchase UI (Apple 3.1.1 —
+  // APP_STORE_PLAN Fase 2/5: v1-apps sælger ingenting). Members see
+  // their subscription STATUS only; no prices, no checkout, no
+  // external purchase links.
+  if (await isNativeRequest()) {
+    return (
+      <>
+        <PageHeader
+          eyebrow={t("header.eyebrow")}
+          title={t("header.title")}
+          subtitle={t("native.subtitle")}
+        />
+        <Container className="py-8 lg:py-12 space-y-6">
+          <section className="surface-2 rounded-2xl overflow-hidden">
+            <div className="px-5 py-5 flex items-center justify-between gap-4">
+              <SectionHeader eyebrow={t("crew.eyebrow")} title={t("crew.title")} className="mb-0" />
+              <StatusPill sub={crew} t={t} />
+            </div>
+            {crew?.currentPeriodEnd ? (
+              <div className="border-t hairline">
+                <Cell
+                  label={t("crew.nextBilling")}
+                  value={new Date(crew.currentPeriodEnd).toLocaleDateString("da-DK")}
+                />
+              </div>
+            ) : null}
+          </section>
+
+          {oneOnOne ? (
+            <section className="surface-2 rounded-2xl overflow-hidden">
+              <div className="px-5 py-5 flex items-center justify-between gap-4">
+                <SectionHeader eyebrow={t("oneOnOne.eyebrow")} title={t("oneOnOne.title")} className="mb-0" />
+                <StatusPill sub={oneOnOne} t={t} />
+              </div>
+            </section>
+          ) : null}
+
+          <p className="text-xs text-fg-faint">
+            {t("native.note")}
+          </p>
+        </Container>
+      </>
+    );
+  }
 
   return (
     <>
@@ -53,12 +100,7 @@ export default async function BillingPage({
         {/* Crew membership */}
         <section className="surface-2 rounded-2xl overflow-hidden">
           <div className="px-5 py-5 border-b hairline flex items-center justify-between gap-4">
-            <div>
-              <div className="eyebrow mb-1">{t("crew.eyebrow")}</div>
-              <h2 className="font-display text-2xl md:text-3xl">
-                {t("crew.title")}
-              </h2>
-            </div>
+            <SectionHeader eyebrow={t("crew.eyebrow")} title={t("crew.title")} className="mb-0" />
             <StatusPill sub={crew} t={t} />
           </div>
 
@@ -69,7 +111,7 @@ export default async function BillingPage({
               value={
                 crew?.currentPeriodEnd
                   ? new Date(crew.currentPeriodEnd).toLocaleDateString("da-DK")
-                  : "—"
+                  : "-"
               }
             />
           </div>
@@ -87,7 +129,7 @@ export default async function BillingPage({
                 </button>
               </form>
             )}
-            <p className="text-xs font-mono text-fg-faint self-center">
+            <p className="text-xs text-fg-faint self-center">
               {t("crew.secureCheckout")}
             </p>
           </div>
@@ -96,12 +138,7 @@ export default async function BillingPage({
         {/* 1:1 add-on */}
         <section className="surface-2 rounded-2xl overflow-hidden">
           <div className="px-5 py-5 border-b hairline flex items-center justify-between gap-4">
-            <div>
-              <div className="eyebrow mb-1">{t("oneOnOne.eyebrow")}</div>
-              <h2 className="font-display text-2xl md:text-3xl">
-                {t("oneOnOne.title")}
-              </h2>
-            </div>
+            <SectionHeader eyebrow={t("oneOnOne.eyebrow")} title={t("oneOnOne.title")} className="mb-0" />
             <StatusPill sub={oneOnOne} t={t} />
           </div>
 
@@ -129,7 +166,7 @@ export default async function BillingPage({
                 </button>
               </form>
             )}
-            <p className="text-xs font-mono text-fg-faint self-center">
+            <p className="text-xs text-fg-faint self-center">
               {t("oneOnOne.requiresCrew")}
             </p>
           </div>
@@ -163,7 +200,7 @@ function StatusPill({
 }) {
   if (!sub) {
     return (
-      <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 shrink-0 text-fg-dim">
+      <span className="numeric text-micro border hairline-strong px-2 py-0.5 shrink-0 text-fg-dim">
         {t("status.notActivated")}
       </span>
     );
@@ -173,7 +210,7 @@ function StatusPill({
   const isOk = sub.status === "active" || sub.status === "trialing";
   return (
     <span
-      className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 shrink-0 inline-flex items-center gap-1.5"
+      className="numeric text-micro border hairline-strong px-2 py-0.5 shrink-0 inline-flex items-center gap-1.5"
       style={{ color: isOk ? "var(--fg)" : "var(--fg-dim)" }}
     >
       {isOk ? <span className="size-1.5 rounded-full bg-fg" /> : null}

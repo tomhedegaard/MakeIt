@@ -90,3 +90,22 @@ export async function getSession(): Promise<Member | null> {
 export async function isAuthed() {
   return (await getSession()) !== null;
 }
+
+/**
+ * Connected mode: an Auth JWT can exist without an admitted
+ * `members` row (anon signUp residual, or consume not yet applied).
+ * Sign that leftover session out so middleware does not keep
+ * sending them at protected routes. Returns true if a user was
+ * present. Demo mode is a no-op.
+ */
+export async function signOutLeftoverAuthUser(): Promise<boolean> {
+  if (!SUPABASE_ENABLED) return false;
+  const supabase = await createClient();
+  if (!supabase) return false;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return false;
+  await supabase.auth.signOut();
+  return true;
+}

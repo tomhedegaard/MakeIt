@@ -114,7 +114,7 @@ export default function DemoAssetUploader({
               }}
               className="block w-full text-xs text-fg-dim file:mr-3 file:rounded-md file:border-0 file:bg-bg-3 file:px-3 file:py-1.5 file:text-fg"
             />
-            <span className="text-[11px] font-mono text-fg-faint">
+            <span className="text-micro text-fg-faint">
               {state[slot.key] === "uploading" && "Uploader…"}
               {state[slot.key] === "done" && `Uploadet — ${slug}.${slot.ext}`}
               {state[slot.key] === "error" && (errors[slot.key] ?? "Fejl")}
@@ -140,7 +140,7 @@ export default function DemoAssetUploader({
           </video>
         </div>
       ) : (
-        <p className="text-[11px] font-mono text-fg-faint">
+        <p className="text-micro text-fg-faint">
           Intet demo-loop endnu — upload en WebM for at aktivere det.
         </p>
       )}

@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { getStripe, priceIdFor, STRIPE_ENABLED, type ProductKind } from "@/lib/stripe";
 
 async function baseUrl() {
@@ -52,7 +53,9 @@ export async function startCheckoutAction(
       },
     });
     customerId = customer.id;
-    await supabase
+    // stripe_customer_id is server-written only (migration 0062): a
+    // client that could set it could open another member's portal.
+    await createServiceClient()
       .from("members")
       .update({ stripe_customer_id: customerId })
       .eq("id", user.id);

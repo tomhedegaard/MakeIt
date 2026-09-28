@@ -1,0 +1,111 @@
+import MotorGlyph from "@/components/adaptive/MotorGlyph";
+import DomainMark, { type Domain } from "@/components/brand/DomainMark";
+import MunkMark from "@/components/brand/MunkMark";
+import type {
+  EngineStripModel,
+  StripStepKey,
+} from "@/lib/adaptive/engine-strip";
+
+export type AdaptiveStripCopy = {
+  why: string;
+  role: string;
+  attribution: string;
+  gloss: string;
+  munkRole: string;
+  munkNoteLabel: string;
+  steps: Record<StripStepKey, string>;
+};
+
+/**
+ * Collapsible Adaptive Engine reason strip. Collapsed by default.
+ * Native <details> — no JS state. Attribution is the Motor glyph,
+ * never a face or a personality label. Role + gloss keep Motor a
+ * system and Munk a coach, even before the strip is opened.
+ */
+export default function AdaptiveReasonStrip({
+  model,
+  copy,
+}: {
+  model: EngineStripModel;
+  copy: AdaptiveStripCopy;
+}) {
+  if (model.steps.length === 0) return null;
+
+  return (
+    <details
+      data-engine-strip=""
+      className="group border-t hairline"
+    >
+      <summary className="cursor-pointer list-none px-5 py-3 select-none touch-app hover:bg-bg-2">
+        <div className="flex items-center gap-3">
+          <MotorGlyph className="text-fg-dim" />
+          <span className="eyebrow flex-1">{copy.role}</span>
+          <span className="text-micro text-fg-faint hidden sm:inline">
+            {copy.attribution}
+          </span>
+          <span
+            aria-hidden
+            className="text-fg-faint text-xs group-open:rotate-180 transition-transform"
+          >
+            ↓
+          </span>
+        </div>
+        <p
+          data-engine-gloss=""
+          className="mt-1.5 pl-8 text-copy text-fg-body"
+        >
+          {copy.gloss}
+        </p>
+      </summary>
+
+      <div className="px-5 pb-4 space-y-3">
+        <div className="flex items-center gap-2 text-micro text-fg-faint sm:hidden">
+          <MotorGlyph className="size-3" />
+          <span>{copy.attribution}</span>
+        </div>
+
+        {model.munkNote ? (
+          <p
+            data-munk-note=""
+            className="text-copy text-fg-body"
+          >
+            <span className="flex items-center gap-2 mb-1">
+              <MunkMark />
+              <span className="eyebrow">{copy.munkRole}</span>
+              <span className="text-micro text-fg-faint">
+                {copy.munkNoteLabel}
+              </span>
+            </span>
+            {model.munkNote}
+          </p>
+        ) : null}
+
+        <div className="eyebrow">{copy.why}</div>
+
+        <ol data-engine-steps="" className="space-y-2">
+          {model.steps.map((step, i) => (
+            <li
+              key={`${step.domain}-${step.key}-${i}`}
+              data-strip-step={step.key}
+              data-strip-domain={step.domain}
+              className="flex items-start gap-3"
+            >
+              <span className="numeric text-fg-faint text-xs w-5 pt-0.5 shrink-0">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span data-domain={step.domain} className="mt-0.5 shrink-0">
+                <DomainMark
+                  domain={step.domain as Domain}
+                  className="size-4 text-domain"
+                />
+              </span>
+              <span className="text-copy text-fg-body">
+                {copy.steps[step.key]}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </details>
+  );
+}

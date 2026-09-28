@@ -1,19 +1,31 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import NeedsAttentionStrip from "@/components/coach/NeedsAttentionStrip";
+import PriorityInboxList from "@/components/coach/PriorityInboxList";
+import SendDigestButton from "@/components/coach/SendDigestButton";
 import {
   getCoachOverview,
   getMembersSummary,
+  getNeedsAttentionModel,
   getPendingFormChecks,
 } from "@/lib/data/coach";
-import SendDigestButton from "@/components/coach/SendDigestButton";
+import { getCoachPriorityInbox } from "@/lib/data/coach-priority-inbox";
+import { liftLabel } from "@/lib/form-queue/queue";
+import { loadNeedsAttentionCopy } from "@/lib/ui/sprint-b-copy";
+
+const INBOX_PREVIEW = 8;
 
 export default async function CoachOverviewPage() {
   const t = await getTranslations("Coach.overview");
-  const [overview, members, pending] = await Promise.all([
+  const tInbox = await getTranslations("Coach.inbox");
+  const [overview, members, pending, needs, needsCopy, inbox] = await Promise.all([
     getCoachOverview(),
     getMembersSummary(),
     getPendingFormChecks(5),
+    getNeedsAttentionModel(),
+    loadNeedsAttentionCopy(),
+    getCoachPriorityInbox(),
   ]);
 
   // Recent activity = most recent member sessions (mock-ish ordering by lastSessionDate)
@@ -27,7 +39,7 @@ export default async function CoachOverviewPage() {
       <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">
+          <h1 className="font-display text-title md:text-[2.75rem]">
             {t("title")}
           </h1>
           <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
@@ -36,6 +48,33 @@ export default async function CoachOverviewPage() {
         </div>
         <SendDigestButton />
       </header>
+
+      <NeedsAttentionStrip model={needs} copy={needsCopy} />
+
+      {/* Who needs you today */}
+      <section className="surface-2 rounded-2xl overflow-hidden">
+        <div className="px-5 py-4 border-b hairline flex items-center justify-between gap-4">
+          <div>
+            <div className="eyebrow mb-1">{tInbox("sectionEyebrow")}</div>
+            <h2 className="font-display text-2xl">{tInbox("sectionTitle")}</h2>
+          </div>
+          {inbox.items.length > 0 ? (
+            <span className="numeric text-micro border hairline-strong px-2 py-0.5">
+              {tInbox("count", { count: inbox.items.length })}
+            </span>
+          ) : null}
+        </div>
+        <PriorityInboxList
+          items={inbox.items.slice(0, INBOX_PREVIEW)}
+          safetyReadable={inbox.safetyReadable}
+          mode={inbox.mode}
+        />
+        <div className="border-t hairline p-3">
+          <Link href="/coach/inbox" className="btn btn-sm w-full">
+            {t("inboxOpen")}
+          </Link>
+        </div>
+      </section>
 
       {/* KPI row */}
       <section className="grid grid-cols-2 md:grid-cols-5 gap-px bg-line border hairline rounded-lg overflow-hidden">
@@ -58,19 +97,19 @@ export default async function CoachOverviewPage() {
           </div>
 
           {recentlyActive.length === 0 ? (
-            <div className="p-6 text-sm text-fg-dim text-center">
+            <div className="p-6 text-sm text-fg-dim">
               {t("recentEmpty")}
             </div>
           ) : (
             <ul className="divide-y hairline">
               {recentlyActive.map((m) => (
                 <li key={m.id} className="px-5 py-3 flex items-center gap-4">
-                  <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
+                  <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
                     {m.handle.slice(0, 2).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm">@{m.handle}</div>
-                    <div className="text-[11px] font-mono text-fg-faint">
+                    <div className="text-micro text-fg-faint">
                       {m.programCode
                         ? t("memberWithProgram", { programCode: m.programCode, programWeek: m.programWeek ?? "" })
                         : t("memberNoProgram")}
@@ -97,7 +136,7 @@ export default async function CoachOverviewPage() {
               <h2 className="font-display text-2xl">{t("queueTitle")}</h2>
             </div>
             {pending.length > 0 ? (
-              <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+              <span className="numeric text-micro border hairline-strong px-2 py-0.5">
                 {pending.length}
               </span>
             ) : null}
@@ -115,7 +154,7 @@ export default async function CoachOverviewPage() {
                     </span>
                   </div>
                   <div className="text-fg-dim text-xs truncate">
-                    {f.exerciseName ?? t("formCheckFallback")}
+                    {liftLabel(f)}
                   </div>
                 </li>
               ))}

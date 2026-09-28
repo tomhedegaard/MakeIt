@@ -1,6 +1,6 @@
 {
   "links": {
-    "today": "Today",
+    "today": "I dag",
     "train": "Træn",
     "food": "Mad",
     "crew": "Crew",
@@ -9,52 +9,55 @@
     "reps": "Reps",
     "me": "Mig",
     "messages": "Beskeder",
-    "chat": "Chat"
+    "chat": "Chat",
+    "science": "Forskning"
   },
   "shell": {
     "coachBadge": "Coach",
     "coachConsole": "Konsol",
-    "tier": "Tier",
+    "tier": "Niveau",
+    "demoBanner": "Demo · eksempeldata, ikke dit personlige crew",
     "logout": "Log ud",
     "myProfile": "Min profil",
     "unread": "{count} ulæste",
-    "mainNav": "Hovednavigation"
+    "mainNav": "Hovednavigation",
+    "menu": "Menu"
   },
   "tierBanner": {
     "eyebrow": "Tier-up",
     "title": "Du er rykket fra {fromTier} til {toTier}.",
-    "subtitle": "Nye perks låst op — se Reps-siden.",
+    "subtitle": "Nye perks låst op. Se Reps-siden.",
     "cta": "Se perks →",
     "close": "Luk"
   },
   "tour": {
     "skip": "Spring over",
     "back": "Tilbage",
-    "next": "Næste →",
-    "begin": "Begynd →",
+    "next": "Næste",
+    "begin": "Begynd",
     "steps": {
       "welcome": {
         "eyebrow": "Velkommen",
         "title": "Du er inde i crewet.",
-        "body": "Hurtig rundtur — så ved du hvor alt ligger. 4 skærme, 30 sekunder."
+        "body": "Fire skærme. Så ved du, hvor alt ligger."
       },
       "today": {
-        "eyebrow": "01 · Today",
+        "eyebrow": "I dag",
         "title": "Dagens session ligger her.",
-        "body": "Hver morgen åbner du Today. Tap det store \"Start session →\"-kort og du er i gang. AI'en har allerede valgt vægte ud fra dine 1RM'er."
+        "body": "Hver morgen åbner du Today. Tap det store \"Start session\"-kort og du er i gang. Vægtene er sat ud fra dine 1RM'er."
       },
       "tabs": {
-        "eyebrow": "02 · Træn / Crew / Reps / Mig",
-        "title": "Bottom tab-bar = hele appen.",
-        "body": "Træn = dine programmer. Crew = feed med PR'er + form-checks. Reps = optjen og indløs. Mig = profil, lifts-historik og coach-noter fra Mikael."
+        "eyebrow": "Fem faner",
+        "title": "Fem faner bærer hele appen.",
+        "body": "I dag, Træn, Mad, Mind og Crew ligger i bunden. Mig, Reps, HRV og Forskning finder du i menuen bag dine initialer øverst til højre."
       },
       "formCheck": {
-        "eyebrow": "03 · Form-check",
-        "title": "AI vurderer din teknik.",
-        "body": "Tap \"Form-check med AI\" inde i en session. Optag eller upload — du får svar inden for sekunder. Mikael godkender personligt inden 24 timer."
+        "eyebrow": "Form-check",
+        "title": "Teknikken bliver tjekket.",
+        "body": "Tap \"Form-check\" inde i en session. Optag eller upload. HQ giver et første bud; Munk skriver under inden 24 timer."
       },
       "reps": {
-        "eyebrow": "04 · Reps",
+        "eyebrow": "Reps",
         "title": "Du får for det du laver.",
         "body": "+250 Reps pr. fuldført session. +100 pr. uge i program. Bytt dem til limited drops, custom-broderede straps, og 1:1 tid med Mikael."
       }

@@ -1,6 +1,21 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
-import { currentIsoMonday } from "@/lib/data/nutrition";
+import {
+  copenhagenIsoMonday,
+  copenhagenTodayIso,
+  isoPlusDays,
+} from "@/lib/dates/copenhagen";
+import {
+  buildWeekStrip,
+  WEEK_DAY_KEYS,
+  type WeekDay,
+  type WeekStripSession,
+} from "@/lib/dashboard/week-strip";
+import { excludeSyntheticPrograms } from "@/lib/programs/synthetic";
+import { memberAudience } from "@/lib/youth/account";
+
+export { WEEK_DAY_KEYS };
+export type { WeekDay, WeekDayKey } from "@/lib/dashboard/week-strip";
 
 /**
  * Data fetchers for /coaching (the Træn page). Mirrors the
@@ -12,79 +27,32 @@ import { currentIsoMonday } from "@/lib/data/nutrition";
  * Week strip — Mon..Sun for the current ISO week
  * ================================================================ */
 
-export type WeekDay = {
-  /** Mon..Søn — display label */
-  label: string;
-  /** Day-of-month (1..31) */
-  date: number;
-  /** YYYY-MM-DD for click-through */
-  iso: string;
-  /** Compressed session label, e.g. "Squat" / "Push" / "Hvile" */
-  sessionLabel: string;
-  /** Session id if a session is scheduled, for the link */
-  sessionId: string | null;
-  /** Status flags driving the dot variant */
-  done: boolean;
-  today: boolean;
-  rest: boolean;
-};
-
-const DA_DAYS = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
-
 export async function getWeekStrip(memberId: string): Promise<WeekDay[] | null> {
   const supabase = await createClient();
   if (!supabase) return null;
 
-  const monday = currentIsoMonday();
-  const sunday = isoPlusDays(monday, 6);
-  const today = todayIso();
-
-  // Pull all sessions in the window in one shot.
+  const today = copenhagenTodayIso();
+  // Do not clamp to the current UTC ISO week — that drops an overdue
+  // Dag A and the pulse lands on Bench. Same universe as the Today pick:
+  // dated sessions the member actually has (open + this horizon).
   const { data: sessions } = await supabase
     .from("sessions")
     .select("id, day_label, title, scheduled_for, status")
     .eq("member_id", memberId)
-    .gte("scheduled_for", monday)
-    .lte("scheduled_for", sunday);
+    .not("scheduled_for", "is", null)
+    .order("scheduled_for", { ascending: true })
+    .limit(80);
 
-  const byDate = new Map<
-    string,
-    { id: string; dayLabel: string | null; title: string; status: string }
-  >();
-  for (const s of sessions ?? []) {
-    if (!s.scheduled_for) continue;
-    // First session per day wins — programs typically only have one
-    // scheduled session per date.
-    if (!byDate.has(s.scheduled_for)) {
-      byDate.set(s.scheduled_for, {
-        id: s.id,
-        dayLabel: s.day_label,
-        title: s.title,
-        status: s.status,
-      });
-    }
-  }
-
-  const out: WeekDay[] = [];
-  for (let i = 0; i < 7; i++) {
-    const iso = isoPlusDays(monday, i);
-    const session = byDate.get(iso);
-    const date = Number(iso.slice(8, 10));
-    const isRest = !session;
-    out.push({
-      label: DA_DAYS[i],
-      date,
-      iso,
-      sessionLabel: session
-        ? compressSessionLabel(session.dayLabel, session.title)
-        : "Hvile",
-      sessionId: session?.id ?? null,
-      done: session?.status === "completed",
-      today: iso === today,
-      rest: isRest,
-    });
-  }
-  return out;
+  return buildWeekStrip({
+    todayIso: today,
+    sessions: (sessions ?? []).map((s) => ({
+      id: s.id as string,
+      status: (s.status ?? "scheduled") as WeekStripSession["status"],
+      scheduledFor: s.scheduled_for as string,
+      dayLabel: s.day_label as string | null,
+      title: s.title as string,
+    })),
+  });
 }
 
 /**
@@ -93,14 +61,16 @@ export async function getWeekStrip(memberId: string): Promise<WeekDay[] | null> 
  * unconnected demo still looks "live".
  */
 export function mockWeekStrip(): WeekDay[] {
-  const monday = currentIsoMonday();
-  const today = todayIso();
-  const labels = ["Squat", "Push", "Pull", "Deadlift", "Hyper", "Hvile", "Aktiv"];
+  const monday = copenhagenIsoMonday();
+  const today = copenhagenTodayIso();
+  // Exercise proper names stay English; rest days leave sessionLabel
+  // empty so the page can render Coaching.week.rest in the locale.
+  const labels = ["Squat", "Push", "Pull", "Deadlift", "Hyper", "", ""];
   return labels.map((label, i) => {
     const iso = isoPlusDays(monday, i);
     const isRest = i >= 5;
     return {
-      label: DA_DAYS[i],
+      dayKey: WEEK_DAY_KEYS[i],
       date: Number(iso.slice(8, 10)),
       iso,
       sessionLabel: label,
@@ -109,6 +79,17 @@ export function mockWeekStrip(): WeekDay[] {
       today: iso === today,
       rest: isRest,
     };
+  });
+}
+
+/**
+ * Honest calendar week — real dates, no invented Squat/Push sessions.
+ * Used when connected mode has no week fetch (should be rare).
+ */
+export function emptyWeekStrip(): WeekDay[] {
+  return buildWeekStrip({
+    sessions: [],
+    todayIso: copenhagenTodayIso(),
   });
 }
 
@@ -195,6 +176,8 @@ export type ProgramListing = {
   coachName: string | null;
   active: boolean;
   currentWeek: number | null;
+  /** Blueprint day count — 0 means Start Program must stay disabled. */
+  dayCount: number;
 };
 
 export async function getProgramLibrary(
@@ -209,9 +192,12 @@ export async function getProgramLibrary(
       .from("programs")
       .select(
         `id, code, name, type, description, weeks, level,
-         coach:members(handle, tier)`
+         coach:members(handle, tier),
+         days:program_days(id)`
       )
       .eq("is_published", true)
+      // Only the member's own catalogue (0064): adult or MakeIt Ung.
+      .eq("audience", await memberAudience(memberId))
       .order("name", { ascending: true }),
     supabase
       .from("program_assignments")
@@ -225,8 +211,11 @@ export async function getProgramLibrary(
   const activeProgramId = assignment?.program_id ?? null;
   const activeWeek = assignment?.current_week ?? null;
 
-  return programs.map((p): ProgramListing => {
+  // Seeded adaptive-demo rows stay out of the member library even if
+  // an older seed left them published (default is_published=true).
+  return excludeSyntheticPrograms(programs).map((p): ProgramListing => {
     const coach = unwrapOne(p.coach);
+    const row = p as typeof p & { days?: { id: string }[] | null };
     return {
       id: p.id,
       code: p.code,
@@ -238,6 +227,7 @@ export async function getProgramLibrary(
       coachName: coach?.handle ? `@${coach.handle}` : null,
       active: p.id === activeProgramId,
       currentWeek: p.id === activeProgramId ? activeWeek : null,
+      dayCount: (row.days ?? []).length,
     };
   });
 }
@@ -253,7 +243,7 @@ export async function getSessionStreak(memberId: string): Promise<number> {
   const supabase = await createClient();
   if (!supabase) return 0;
 
-  const today = todayIso();
+  const today = copenhagenTodayIso();
   const { data } = await supabase
     .from("sessions")
     .select("status, scheduled_for")
@@ -283,42 +273,4 @@ export async function getSessionStreak(memberId: string): Promise<number> {
 function unwrapOne<T>(v: T | T[] | null | undefined): T | null {
   if (!v) return null;
   return Array.isArray(v) ? v[0] ?? null : v;
-}
-
-function isoPlusDays(iso: string, n: number): string {
-  const d = new Date(iso + "T00:00:00Z");
-  d.setUTCDate(d.getUTCDate() + n);
-  return d.toISOString().slice(0, 10);
-}
-
-function todayIso(): string {
-  // Europe/Copenhagen-aware "today" so the strip flips at local midnight.
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Europe/Copenhagen",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
-}
-
-/**
- * "Dag A — Squat" → "Squat". "Squat — Top set" → "Squat". Picks the
- * shortest meaningful chunk so the day-strip stays compact.
- */
-function compressSessionLabel(
-  dayLabel: string | null,
-  title: string
-): string {
-  const candidates = [dayLabel, title].filter(
-    (s): s is string => typeof s === "string" && s.length > 0
-  );
-  for (const c of candidates) {
-    // Pull text after an em-dash if present (handles "Dag A — Squat")
-    const m = c.match(/—\s*(.+)$/);
-    const tail = m ? m[1] : c;
-    // First word, max 12 chars
-    const word = tail.trim().split(/\s+/)[0] ?? tail;
-    if (word) return word.slice(0, 12);
-  }
-  return "—";
 }

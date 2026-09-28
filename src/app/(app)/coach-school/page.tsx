@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import {
   loadLessonsForMember,
   type LessonForList,
   type RequiredTier,
 } from "@/lib/data/lessons";
+import { Check, ChevronRight, Lock } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * CC-6 — Coach School lesson-tree surface.
@@ -36,7 +39,7 @@ function groupByTier(
 }
 
 function fmtDuration(seconds: number | null): string {
-  if (!seconds) return "—";
+  if (!seconds) return "-";
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
   return `${m}m ${s.toString().padStart(2, "0")}s`;
@@ -49,16 +52,13 @@ export default async function CoachSchoolTreePage() {
 
   return (
     <Container className="py-6 lg:py-12 space-y-6">
-      <header className="pt-2">
-        <div className="eyebrow mb-2">{t("tree.eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {t("tree.title")}
-        </h1>
+      <div className="pt-2">
+        <PageTitle size="compact" kicker={t("tree.eyebrow")} title={t("tree.title")} />
         <p className="mt-2 text-fg-dim text-sm">{t("tree.subtitle")}</p>
-      </header>
+      </div>
 
       {lessons.length === 0 ? (
-        <div className="surface-2 rounded-lg p-6 text-center">
+        <div className="surface-2 rounded-lg p-6">
           <p className="text-fg-dim text-sm">{t("tree.empty")}</p>
         </div>
       ) : (
@@ -113,12 +113,16 @@ function LessonRowInner({
 }) {
   return (
     <>
-      <span aria-hidden="true" className="text-xl leading-none shrink-0">
-        {locked ? "🔒" : lesson.completedAt ? "✓" : "▸"}
-      </span>
+      {locked ? (
+        <Lock {...ICON} className="size-5 shrink-0 text-fg-dim" />
+      ) : lesson.completedAt ? (
+        <Check {...ICON} className="size-5 shrink-0 text-signal" />
+      ) : (
+        <ChevronRight {...ICON} className="size-5 shrink-0 text-fg-dim" />
+      )}
       <div className="min-w-0 flex-1">
         <p className="text-sm text-fg/90 leading-snug">{lesson.titleDa}</p>
-        <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint mt-1">
+        <div className="text-micro text-fg-faint mt-1">
           {fmtDuration(lesson.durationSec)}
           {" · "}
           {t("tree.repsLine", { reps: lesson.repsAward })}

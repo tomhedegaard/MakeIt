@@ -21,6 +21,15 @@
     "intermediate": "Mellem",
     "advanced": "Avanceret"
   },
+  "equipment": {
+    "barbell": "Vægtstang",
+    "dumbbell": "Håndvægt",
+    "kettlebell": "Kettlebell",
+    "cable": "Kabel",
+    "machine": "Maskine",
+    "band": "Elastik",
+    "bodyweight": "Kropsvægt"
+  },
   "detail": {
     "metaFallback": "Øvelse",
     "breadcrumb": "Øvelser",
@@ -39,14 +48,17 @@
     "tierTertiary": "Tertiær",
     "howTo": "Sådan udfører du den",
     "musclesInvolved": "Muskler involveret",
-    "currentPhase": "Aktiv fase"
+    "currentPhase": "Aktiv fase",
+    "demoPlay": "Afspil",
+    "demoPause": "Pause",
+    "demoAria": "3D-demo af {lift}, de arbejdende muskler er markeret"
   },
   "card": {
     "primaryPrefix": "Primær: ",
-    "metaEmpty": "—"
+    "metaEmpty": "-"
   },
   "formCheck": {
-    "limitReached": "AI form-check — månedlig grænse nået",
+    "limitReached": "AI form-check: månedlig grænse nået",
     "test": "Test din form med AI",
     "stats": "{cues} cues · {mistakes} typiske fejl",
     "used": " · {used}/{limit} brugt",

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import type { HrvSyncProgress } from "@/lib/hrv/progress";
 
 type Props = { progress: HrvSyncProgress };
@@ -13,21 +14,20 @@ type Props = { progress: HrvSyncProgress };
  *     dage · alle milestones gennemført"
  */
 export function HrvSyncStreakLine({ progress }: Props) {
+  const t = useTranslations("Hrv.syncStreak");
   if (progress.daysSynced === 0) return null;
 
   const { daysSynced, nextMilestone, nextMilestoneReps } = progress;
 
   let detail: string;
   if (nextMilestone === null || nextMilestoneReps === null) {
-    detail = "alle milestones gennemført";
+    detail = t("allDone");
   } else {
     const remaining = nextMilestone - daysSynced;
     detail =
       remaining <= 0
-        ? `næste milestone i dag (+${nextMilestoneReps} Reps)`
-        : `næste milestone om ${remaining} ${
-            remaining === 1 ? "dag" : "dage"
-          } (+${nextMilestoneReps} Reps)`;
+        ? t("nextToday", { reps: nextMilestoneReps })
+        : t("nextIn", { count: remaining, reps: nextMilestoneReps });
   }
 
   return (
@@ -35,7 +35,7 @@ export function HrvSyncStreakLine({ progress }: Props) {
       className="text-xs text-fg-dim"
       data-testid="hrv-sync-streak-line"
     >
-      Sync-streak: {daysSynced} {daysSynced === 1 ? "dag" : "dage"} · {detail}
+      {t("line", { count: daysSynced, detail })}
     </p>
   );
 }

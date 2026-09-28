@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -10,23 +11,13 @@ import {
 import SessionCard from "@/components/mind/SessionCard";
 import type { MentalSession, MentalSessionCategory } from "@/lib/mind/types";
 
-export const metadata = {
-  title: "Sessions · Mind · MakeIt",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Mind.sessionsPage");
+  return { title: t("metaTitle") };
+}
 
+/** Category headings + subtitles live in Mind.sessionsPage.category. */
 const CATEGORY_ORDER: MentalSessionCategory[] = ["breathing", "focus", "recovery", "debrief"];
-const CATEGORY_HEADING: Record<MentalSessionCategory, string> = {
-  breathing: "Vejrtrækning",
-  focus: "Fokus",
-  recovery: "Recovery",
-  debrief: "Debrief",
-};
-const CATEGORY_SUBTITLE: Record<MentalSessionCategory, string> = {
-  breathing: "Box breath, coherence, lang udånding — for ro og HRV.",
-  focus: "Pre-session priming + genstart efter pause.",
-  recovery: "Vind ned efter beast-mode. Sov bedre.",
-  debrief: "Efter sessionen — hvad lærte du?",
-};
 
 /**
  * `/mind/sessions` — hero session library (MH-5).
@@ -38,6 +29,7 @@ const CATEGORY_SUBTITLE: Record<MentalSessionCategory, string> = {
 export default async function MindSessionsPage() {
   const member = await getSession();
   if (!member) redirect("/login");
+  const t = await getTranslations("Mind.sessionsPage");
   if (!(await hasAcknowledgedMentalDisclaimer(member.id))) {
     redirect("/mind/onboarding");
   }
@@ -58,9 +50,9 @@ export default async function MindSessionsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Mind · Sessions"
-        title="Bibliotek."
-        subtitle="Vejrtrækning, fokus, recovery, debrief. Vælg én. 1-5 minutter pr. session."
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        subtitle={t("subtitle")}
       />
       <Container className="py-10 md:py-14 space-y-14">
         {CATEGORY_ORDER.map((cat) => {
@@ -70,9 +62,11 @@ export default async function MindSessionsPage() {
             <section key={cat}>
               <div className="mb-5">
                 <h2 className="font-display text-2xl md:text-3xl">
-                  {CATEGORY_HEADING[cat]}
+                  {t(`category.${cat}.heading`)}
                 </h2>
-                <p className="text-fg-dim text-sm mt-1">{CATEGORY_SUBTITLE[cat]}</p>
+                <p className="text-fg-dim text-sm mt-1">
+                  {t(`category.${cat}.subtitle`)}
+                </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {items.map((s) => (

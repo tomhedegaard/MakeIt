@@ -10,8 +10,11 @@ import {
 } from "./actions";
 import type { MemberSettings, HrvSettings } from "@/lib/data/settings";
 import PushToggle from "@/components/push/PushToggle";
+import NativePushToggle from "@/components/push/NativePushToggle";
 import LanguageSelector from "@/components/LanguageSelector";
 import HrvSettingsSection from "@/components/hrv/HrvSettingsSection";
+import SectionHeader from "@/components/ui/SectionHeader";
+import { Modal } from "@/components/ui/Modal";
 
 type Status = { ok: boolean; text: string } | null;
 
@@ -55,6 +58,8 @@ export default function SettingsClient({
   /* Delete */
   const [deletePending, startDelete] = useTransition();
   const [deleteMsg, setDeleteMsg] = useState<string | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [typed, setTyped] = useState("");
 
   function saveProfile() {
     setProfileMsg(null);
@@ -83,11 +88,15 @@ export default function SettingsClient({
     });
   }
 
+  const deletePhrase = t("danger.confirmPhrase");
+
+  // In-app dialog rather than window.prompt: same "type the phrase"
+  // friction, but focus-trapped, themed and closable with Escape like
+  // the session's end dialog (UX review 2026-09-19).
   function confirmDelete() {
-    const phrase = t("danger.confirmPhrase");
-    const typed = window.prompt(t("danger.confirmPrompt", { phrase }));
-    if (typed !== phrase) return;
+    if (typed.trim() !== deletePhrase) return;
     setDeleteMsg(null);
+    setDeleteOpen(false);
     startDelete(async () => {
       const res = await deleteAccountAction();
       if (!res.ok) {
@@ -100,24 +109,18 @@ export default function SettingsClient({
     <div className="space-y-6">
       {/* Language */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-4">
-        <div>
-          <div className="eyebrow mb-1">{tl("eyebrow")}</div>
-          <h2 className="font-display text-2xl">{tl("title")}</h2>
-        </div>
+        <SectionHeader eyebrow={tl("eyebrow")} title={tl("title")} />
         <p className="text-fg-dim text-sm max-w-md">{tl("description")}</p>
         <LanguageSelector />
       </section>
 
       {/* Profile */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-4">
-        <div>
-          <div className="eyebrow mb-1">{t("profile.eyebrow")}</div>
-          <h2 className="font-display text-2xl">{t("profile.title")}</h2>
-        </div>
+        <SectionHeader title={t("profile.title")} />
         <div className="grid gap-3 md:grid-cols-2">
           <Field label={t("profile.handleLabel")}>
             <div className="flex items-center gap-2">
-              <span className="text-fg-dim font-mono">@</span>
+              <span className="text-fg-dim">@</span>
               <input
                 className="field flex-1"
                 value={handle}
@@ -162,10 +165,7 @@ export default function SettingsClient({
 
       {/* Notifications */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-4">
-        <div>
-          <div className="eyebrow mb-1">{t("notifications.eyebrow")}</div>
-          <h2 className="font-display text-2xl">{t("notifications.title")}</h2>
-        </div>
+        <SectionHeader title={t("notifications.title")} />
         <div className="rounded-xl border hairline px-4 py-3 flex items-start gap-4">
           <div className="flex-1">
             <div className="text-sm font-medium mb-1">
@@ -175,7 +175,10 @@ export default function SettingsClient({
               {t("notifications.pushDescription")}
             </div>
           </div>
+          {/* Web og native gater sig selv: PushToggle forsvinder uden
+              PushManager (WKWebView), NativePushToggle uden shell. */}
           <PushToggle vapidPublicKey={vapidPublicKey} />
+          <NativePushToggle />
         </div>
         <ul className="divide-y hairline">
           <Toggle
@@ -221,12 +224,9 @@ export default function SettingsClient({
 
       {/* Account info — read-only */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7">
-        <div className="mb-4">
-          <div className="eyebrow mb-1">{t("account.eyebrow")}</div>
-          <h2 className="font-display text-2xl">{t("account.title")}</h2>
-        </div>
+        <SectionHeader title={t("account.title")} />
         <ul className="space-y-3 text-sm">
-          <Row k={t("account.email")} v={settings.email ?? "—"} />
+          <Row k={t("account.email")} v={settings.email ?? "-"} />
           <Row k={t("account.tier")} v={settings.tier} />
           <Row
             k={t("account.memberSince")}
@@ -240,10 +240,7 @@ export default function SettingsClient({
 
       {/* Data export */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7">
-        <div className="mb-4">
-          <div className="eyebrow mb-1">{t("data.eyebrow")}</div>
-          <h2 className="font-display text-2xl">{t("data.title")}</h2>
-        </div>
+        <SectionHeader title={t("data.title")} />
         <p className="text-fg-dim text-sm mb-4 max-w-md">
           {t("data.description")}
         </p>
@@ -261,10 +258,7 @@ export default function SettingsClient({
         className="surface-2 rounded-2xl p-5 lg:p-7"
         style={{ borderColor: "var(--line-bright)" }}
       >
-        <div className="mb-4">
-          <div className="eyebrow mb-1">{t("danger.eyebrow")}</div>
-          <h2 className="font-display text-2xl">{t("danger.title")}</h2>
-        </div>
+        <SectionHeader eyebrow={t("danger.eyebrow")} title={t("danger.title")} />
         <p className="text-fg-dim text-sm mb-4 max-w-md">
           {t("danger.description")}
         </p>
@@ -272,18 +266,57 @@ export default function SettingsClient({
           <button
             type="button"
             className="btn btn-sm"
-            onClick={confirmDelete}
+            onClick={() => {
+              setTyped("");
+              setDeleteOpen(true);
+            }}
             disabled={deletePending}
           >
             {deletePending ? t("danger.deleting") : t("danger.delete")}
           </button>
           {deleteMsg ? (
-            <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-dim">
+            <span className="text-micro text-fg-dim">
               {deleteMsg}
             </span>
           ) : null}
         </div>
       </section>
+
+      <Modal
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        title={t("danger.confirmTitle")}
+        className="space-y-4"
+      >
+        <SectionHeader eyebrow={t("danger.eyebrow")} title={t("danger.confirmTitle")} />
+        <p className="text-fg-dim text-sm">{t("danger.confirmBody")}</p>
+        <label className="block space-y-1.5">
+          <span className="text-micro text-fg-dim">
+            {t("danger.confirmLabel", { phrase: deletePhrase })}
+          </span>
+          <input
+            type="text"
+            value={typed}
+            autoComplete="off"
+            placeholder={t("danger.confirmPlaceholder", { phrase: deletePhrase })}
+            onChange={(e) => setTyped(e.target.value)}
+            className="w-full rounded-xl border hairline bg-bg px-3 py-2.5 text-base"
+          />
+        </label>
+        <div className="flex flex-wrap items-center justify-end gap-3 pt-1">
+          <button type="button" className="btn btn-sm" onClick={() => setDeleteOpen(false)}>
+            {t("danger.cancel")}
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-primary disabled:opacity-40"
+            disabled={typed.trim() !== deletePhrase || deletePending}
+            onClick={confirmDelete}
+          >
+            {t("danger.confirm")}
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }
@@ -292,7 +325,7 @@ function StatusLabel({ status }: { status: Status }) {
   if (!status) return null;
   return (
     <span
-      className="text-[10px] font-mono uppercase tracking-[0.16em]"
+      className="text-micro"
       style={{ color: status.ok ? "var(--fg)" : "var(--fg-dim)" }}
     >
       {status.text}
@@ -344,7 +377,7 @@ function Toggle({
         />
         <span
           aria-hidden
-          className="block relative w-12 h-7 rounded-full border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
+          className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
           style={{ background: checked ? "var(--fg)" : "var(--bg-3)" }}
         >
           <span

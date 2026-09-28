@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import LanguageSelector from "@/components/LanguageSelector";
 import PageHeader from "@/components/app/PageHeader";
 import Sparkline from "@/components/ui/Sparkline";
 import FormCheckProgressionCard from "@/components/profile/FormCheckProgressionCard";
@@ -8,6 +9,8 @@ import { getSession } from "@/lib/auth";
 import { getMyFormChecks, type MyFormCheck } from "@/lib/data/me";
 import { getMyLifts, type LiftPr, type LiftStats } from "@/lib/data/lifts";
 import { COMPANY } from "@/lib/company";
+import { Star } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 export default async function ProfilePage() {
   const m = (await getSession())!;
@@ -24,6 +27,8 @@ export default async function ProfilePage() {
   const progression = computeFormCheckProgression(formChecks);
 
   const t = await getTranslations("Profile");
+  const locale = await getLocale();
+  const dateLocale = locale === "en" ? "en-GB" : "da-DK";
 
   return (
     <>
@@ -32,7 +37,7 @@ export default async function ProfilePage() {
         title={`@${m.handle}`}
         subtitle={t("header.subtitle", {
           tier: m.tier,
-          date: new Date(m.joinedAt).toLocaleDateString("da-DK"),
+          date: new Date(m.joinedAt).toLocaleDateString(dateLocale),
         })}
         right={
           <div className="flex flex-wrap items-center gap-2">
@@ -62,7 +67,7 @@ export default async function ProfilePage() {
                   <div className="eyebrow">{l.label}</div>
                   {l.delta4w != null ? (
                     <span
-                      className="text-[10px] font-mono uppercase tracking-[0.14em]"
+                      className="text-micro"
                       style={{
                         color: l.delta4w > 0 ? "var(--fg)" : "var(--fg-faint)",
                       }}
@@ -76,14 +81,14 @@ export default async function ProfilePage() {
                 </div>
                 <div className="flex items-baseline gap-1.5 mb-3">
                   <span className="numeric text-4xl">
-                    {l.currentE1rm != null ? l.currentE1rm : "—"}
+                    {l.currentE1rm != null ? l.currentE1rm : "-"}
                   </span>
                   <span className="text-fg-dim text-xs">{t("lifts.e1rmUnit")}</span>
                 </div>
                 <div className="text-fg/70">
                   <Sparkline data={l.history.map((h) => h.e1rm)} />
                 </div>
-                <div className="mt-3 text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+                <div className="mt-3 text-micro text-fg-faint">
                   {l.history.length > 0
                     ? l.history.length === 1
                       ? t("lifts.weeksOne", { count: l.history.length })
@@ -93,7 +98,7 @@ export default async function ProfilePage() {
               </article>
             ))}
           </div>
-          <p className="mt-3 text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+          <p className="mt-3 text-micro text-fg-faint">
             {t("lifts.formula")}
           </p>
         </section>
@@ -103,7 +108,7 @@ export default async function ProfilePage() {
           <section aria-label={t("prs.ariaLabel")}>
             <div className="flex items-end justify-between mb-3">
               <div className="eyebrow">{t("prs.title")}</div>
-              <span className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+              <span className="text-micro text-fg-faint">
                 {t("prs.autoDetected")}
               </span>
             </div>
@@ -114,7 +119,7 @@ export default async function ProfilePage() {
                   className="px-5 py-3 flex items-center gap-4 text-sm"
                 >
                   <span className="numeric text-xs text-fg-faint w-20 shrink-0">
-                    {new Date(pr.date).toLocaleDateString("da-DK", {
+                    {new Date(pr.date).toLocaleDateString(dateLocale, {
                       day: "numeric",
                       month: "short",
                     })}
@@ -128,10 +133,10 @@ export default async function ProfilePage() {
                     <span className="text-fg-dim text-xs ml-1">{t("prs.e1rm")}</span>
                   </span>
                   <span
-                    className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 shrink-0"
+                    className="inline-flex items-center border hairline-strong px-2 py-1 shrink-0"
                     aria-hidden
                   >
-                    ★
+                    <Star {...ICON} className="size-3" />
                   </span>
                 </li>
               ))}
@@ -152,9 +157,9 @@ export default async function ProfilePage() {
                 <span className="text-fg-dim">{t("settings.notifications")}</span>
                 <span>{t("settings.notificationsValue")}</span>
               </li>
-              <li className="flex items-center justify-between border-b hairline pb-3">
+              <li className="flex items-center justify-between gap-3 border-b hairline pb-3">
                 <span className="text-fg-dim">{t("settings.language")}</span>
-                <span>{t("settings.languageValue")}</span>
+                <LanguageSelector />
               </li>
               <li className="flex items-center justify-between">
                 <span className="text-fg-dim">{t("settings.theme")}</span>
@@ -198,7 +203,7 @@ export default async function ProfilePage() {
               </p>
             </div>
             {reviewed.length > 0 ? (
-              <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-1 inline-flex items-center gap-2 shrink-0">
+              <span className="numeric text-micro border hairline-strong px-2 py-1 inline-flex items-center gap-2 shrink-0">
                 <span className="size-1.5 rounded-full bg-fg" />
                 {reviewed.length === 1
                   ? t("formChecks.coachRepliesOne", { count: reviewed.length })
@@ -225,8 +230,8 @@ export default async function ProfilePage() {
                       <h3 className="font-display text-lg leading-snug">
                         {f.aiHeadline ?? t("formChecks.aiHeadlineFallback")}
                       </h3>
-                      <div className="mt-1 text-[11px] font-mono text-fg-faint">
-                        {new Date(f.createdAt).toLocaleString("da-DK", {
+                      <div className="mt-1 text-micro text-fg-faint">
+                        {new Date(f.createdAt).toLocaleString(dateLocale, {
                           weekday: "short",
                           day: "numeric",
                           month: "short",
@@ -236,7 +241,7 @@ export default async function ProfilePage() {
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <div className="numeric text-3xl">{f.aiScore ?? "—"}</div>
+                      <div className="numeric text-3xl">{f.aiScore ?? "-"}</div>
                       <div className="eyebrow">{t("formChecks.outOf")}</div>
                     </div>
                   </header>
@@ -248,7 +253,7 @@ export default async function ProfilePage() {
                         controls
                         playsInline
                         preload="metadata"
-                        className="w-full max-h-[340px] object-contain bg-black"
+                        className="w-full max-h-[340px] object-contain bg-media"
                       />
                     </div>
                   ) : null}
@@ -296,12 +301,12 @@ export default async function ProfilePage() {
                       style={{ background: "var(--bg-3)" }}
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 inline-flex items-center gap-1.5">
+                        <span className="numeric text-micro border hairline-strong px-2 py-0.5 inline-flex items-center gap-1.5">
                           <span className="size-1.5 rounded-full bg-fg" />
                           Mikael Munk · @Munk
                         </span>
-                        <span className="numeric text-[10px] text-fg-faint">
-                          {new Date(f.reviewedAt).toLocaleString("da-DK", {
+                        <span className="numeric text-micro text-fg-faint">
+                          {new Date(f.reviewedAt).toLocaleString(dateLocale, {
                             day: "numeric",
                             month: "short",
                             hour: "2-digit",
@@ -315,7 +320,7 @@ export default async function ProfilePage() {
                     </div>
                   ) : (
                     <div className="px-5 py-3 border-t hairline">
-                      <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                      <span className="text-micro text-fg-faint">
                         {t("formChecks.awaitingReview")}
                       </span>
                     </div>
@@ -326,7 +331,7 @@ export default async function ProfilePage() {
             </>
           )}
 
-          <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-5">
+          <p className="text-micro text-fg-faint mt-5">
             {pending.length > 0
               ? t("formChecks.footerPending", {
                   pending: pending.length,

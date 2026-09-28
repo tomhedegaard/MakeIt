@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
 import type { ExerciseMistake } from "@/lib/data/exercises";
 import type { FormCheckQuota } from "@/lib/data/form-check-quota";
+import { Video } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * Button + sheet pair for the exercise detail page. Sits in the
@@ -40,21 +42,12 @@ export default function FormCheckTrigger({
         className="w-full sm:w-auto flex items-center justify-between gap-4 surface-2 rounded-xl px-5 py-4 lift touch-app"
       >
         <span className="flex items-center gap-3 text-left">
-          <svg
-            viewBox="0 0 24 24"
-            className="size-5 text-fg-dim shrink-0"
-            fill="none"
-            aria-hidden
-          >
-            <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
-            <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-            <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
-          </svg>
+          <Video {...ICON} className="size-5 text-fg-dim shrink-0" />
           <span>
             <span className="block font-display text-base leading-tight">
               {exhausted ? t("limitReached") : t("test")}
             </span>
-            <span className="block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-0.5">
+            <span className="block text-micro text-fg-faint mt-0.5">
               {t("stats", { cues: cues.length, mistakes: mistakes.length })}
               {showCounter
                 ? t("used", { used: quota.used, limit: quota.limit })
@@ -62,7 +55,7 @@ export default function FormCheckTrigger({
             </span>
           </span>
         </span>
-        <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint shrink-0">
+        <span className="text-micro text-fg-faint shrink-0">
           {exhausted ? t("upgrade") : t("duration")}
         </span>
       </button>

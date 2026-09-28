@@ -1,0 +1,229 @@
+import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
+import { ChevronRight } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
+
+/**
+ * Shared building blocks for the marketing phone screens, translated
+ * from reference B's app classes (`.a-eye`, `.a-h`, `.card`, `.k`,
+ * `.chip`, `.fields`, `.a-btn`, `.motor`) and reference A's rows
+ * (`.a-row`, `.a-diff`). Tokens only, no state.
+ */
+
+export type Domain = "body" | "food" | "heart" | "mind";
+
+/** Screen kicker. Takes the domain colour when a domain is given. */
+export function Kicker({
+  domain,
+  dot = false,
+  className,
+  children,
+}: {
+  domain?: Domain;
+  dot?: boolean;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <p
+      data-domain={domain}
+      className={cn(
+        "flex items-center gap-1.5 text-[9px]",
+        domain ? "text-domain" : "text-fg-dim",
+        className,
+      )}
+    >
+      {dot ? <Dot /> : null}
+      {children}
+    </p>
+  );
+}
+
+export function Dot({ domain, className }: { domain?: Domain; className?: string }) {
+  return (
+    <i
+      data-domain={domain}
+      className={cn("inline-block size-1.5 flex-none rounded-full bg-domain", className)}
+    />
+  );
+}
+
+/** Display headline (`.a-h`). */
+export function Headline({ className, children }: { className?: string; children: ReactNode }) {
+  return <p className={cn("font-display text-[26px]", className)}>{children}</p>;
+}
+
+/** Mono micro label (`.k`). */
+export function Label({ className, children }: { className?: string; children: ReactNode }) {
+  return (
+    <p
+      className={cn(
+        "flex items-center gap-1.5 text-[8.5px] text-fg-dim",
+        className,
+      )}
+    >
+      {children}
+    </p>
+  );
+}
+
+export function Card({ className, children }: { className?: string; children: ReactNode }) {
+  return (
+    <div className={cn("border border-line bg-bg-2 px-3 py-[11px]", className)}>
+      {children}
+    </div>
+  );
+}
+
+export function Chip({
+  domain,
+  className,
+  children,
+}: {
+  domain?: Domain;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <span
+      data-domain={domain}
+      className={cn(
+        "inline-flex items-center gap-[5px] whitespace-nowrap border border-line bg-bg-2 px-2 py-1 text-[9px]",
+        className,
+      )}
+    >
+      {domain ? <Dot /> : null}
+      {children}
+    </span>
+  );
+}
+
+/** Three small value fields (`.fields`). */
+export function Fields({
+  items,
+  className,
+}: {
+  items: readonly { label: string; value: string }[];
+  className?: string;
+}) {
+  return (
+    <div className={cn("grid grid-cols-3 gap-1.5", className)}>
+      {items.map((f) => (
+        <div key={f.label} className="border border-line px-[7px] py-[5px]">
+          <span className="block text-[7.5px] text-fg-dim">
+            {f.label}
+          </span>
+          <b className="block text-[13px] font-medium">{f.value}</b>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Pill button in ink (`.a-btn`). Buttons are monochrome, never orange. */
+export function Pill({
+  ghost = false,
+  className,
+  children,
+}: {
+  ghost?: boolean;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <span
+      className={cn(
+        "flex h-[34px] flex-none items-center justify-center text-[10px] font-medium",
+        ghost ? "border border-line-strong text-fg" : "bg-fg text-bg",
+        className,
+      )}
+    >
+      {children}
+    </span>
+  );
+}
+
+/** The engine's ink note (`.motor`). */
+export function EngineNote({
+  stamp,
+  className,
+  children,
+}: {
+  stamp: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className={cn("bg-fg px-3 py-2.5 text-bg", className)}>
+      <p className="text-[8.5px] text-bg/65">{stamp}</p>
+      {children}
+    </div>
+  );
+}
+
+/** Before and after, with the old value struck in signal orange. */
+export function Swap({
+  from,
+  to,
+  unit,
+  className,
+}: {
+  from: string;
+  to: string;
+  unit?: string;
+  className?: string;
+}) {
+  return (
+    <p className={cn("flex items-baseline gap-2 font-display text-[24px]", className)}>
+      <s className="text-current/55 decoration-signal decoration-[3px]">{from}</s>
+      <span>→ {to}</span>
+      {unit ? <i className="text-[11px] not-italic opacity-65">{unit}</i> : null}
+    </p>
+  );
+}
+
+/** Key and value on one hairline row (reference A `.a-row`). */
+export function Row({
+  k,
+  v,
+  last = false,
+  className,
+}: {
+  k: ReactNode;
+  v: ReactNode;
+  last?: boolean;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-baseline justify-between gap-2 border-t border-line py-[5px]",
+        last && "border-b",
+        className,
+      )}
+    >
+      <span className="text-[10px] text-fg-dim">{k}</span>
+      <span className="text-[10px] font-medium">{v}</span>
+    </div>
+  );
+}
+
+/** Initials avatar (`.av`). */
+export function Avatar({ className, children }: { className?: string; children: ReactNode }) {
+  return (
+    <span
+      className={cn(
+        "grid size-[26px] flex-none place-items-center rounded-full bg-fg font-display text-[11px] text-bg",
+        className,
+      )}
+    >
+      {children}
+    </span>
+  );
+}
+
+export function Chevron() {
+  return (
+    <ChevronRight {...ICON} className="size-2.5 flex-none" />
+  );
+}

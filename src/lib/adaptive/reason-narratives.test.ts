@@ -215,8 +215,8 @@ describe("formatReadinessBucket", () => {
     expect(formatReadinessBucket("very_high")).toBe("Langt over din norm");
   });
 
-  it("returns em-dash for null", () => {
-    expect(formatReadinessBucket(null)).toBe("—");
+  it("returns plain hyphen for null", () => {
+    expect(formatReadinessBucket(null)).toBe("-");
   });
 });
 
@@ -228,8 +228,8 @@ describe("formatFeelingState", () => {
     expect(formatFeelingState("stressed")).toBe("Stresset");
   });
 
-  it("returns em-dash for null", () => {
-    expect(formatFeelingState(null)).toBe("—");
+  it("returns plain hyphen for null", () => {
+    expect(formatFeelingState(null)).toBe("-");
   });
 });
 
@@ -245,12 +245,12 @@ describe("formatSleepHours", () => {
     expect(formatSleepHours(6.25)).toBe("6t15m");
   });
 
-  it("returns em-dash for null, zero, negative, or non-finite values", () => {
-    expect(formatSleepHours(null)).toBe("—");
-    expect(formatSleepHours(0)).toBe("—");
-    expect(formatSleepHours(-3)).toBe("—");
-    expect(formatSleepHours(Infinity)).toBe("—");
-    expect(formatSleepHours(NaN)).toBe("—");
+  it("returns plain hyphen for null, zero, negative, or non-finite values", () => {
+    expect(formatSleepHours(null)).toBe("-");
+    expect(formatSleepHours(0)).toBe("-");
+    expect(formatSleepHours(-3)).toBe("-");
+    expect(formatSleepHours(Infinity)).toBe("-");
+    expect(formatSleepHours(NaN)).toBe("-");
   });
 
   it("caps absurd values at 12 hours", () => {
@@ -274,11 +274,11 @@ describe("formatRpeDelta", () => {
     expect(formatRpeDelta(8, 8)).toBe("8 vs 8 (±0)");
   });
 
-  it("returns em-dash when either input is null or non-finite", () => {
-    expect(formatRpeDelta(null, 8)).toBe("—");
-    expect(formatRpeDelta(8, null)).toBe("—");
-    expect(formatRpeDelta(null, null)).toBe("—");
-    expect(formatRpeDelta(NaN, 8)).toBe("—");
+  it("returns plain hyphen when either input is null or non-finite", () => {
+    expect(formatRpeDelta(null, 8)).toBe("-");
+    expect(formatRpeDelta(8, null)).toBe("-");
+    expect(formatRpeDelta(null, null)).toBe("-");
+    expect(formatRpeDelta(NaN, 8)).toBe("-");
   });
 });
 

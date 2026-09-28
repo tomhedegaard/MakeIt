@@ -67,9 +67,9 @@ export default async function ExercisesIndexPage({
         {exercises.length === 0 ? (
           <p className="text-fg-dim">{t("index.empty")}</p>
         ) : (
-          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {exercises.map((ex) => (
-              <li key={ex.slug}>
+              <li key={ex.slug} className="min-w-0">
                 <ExerciseCard exercise={ex} />
               </li>
             ))}
@@ -92,11 +92,11 @@ function FilterPill({
   return (
     <Link
       href={href}
-      className={`px-3 py-1.5 rounded-full text-xs font-mono uppercase tracking-[0.14em] border hairline transition-colors ${
-        active
-          ? "bg-fg text-bg border-transparent"
-          : "text-fg-dim hover:text-fg hover:border-fg/30"
-      }`}
+      className={`inline-flex min-h-11 items-center px-4 text-xs border hairline transition-colors ${
+ active
+ ? "bg-fg text-bg border-transparent"
+ : "text-fg-dim hover:text-fg hover:border-fg/30"
+ }`}
     >
       {label}
     </Link>

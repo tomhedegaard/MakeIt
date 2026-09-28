@@ -1,6 +1,7 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import type { MuscleGroup } from "@/lib/data/muscle-groups";
+import { isSyntheticProgramCode } from "@/lib/programs/synthetic";
 
 /**
  * Member-facing program template fetcher. Pulls a *published* program
@@ -93,7 +94,10 @@ type RawProgram = {
 
 export async function getMemberProgramByCode(
   code: string,
+  audience: "adult" | "youth" = "adult",
 ): Promise<ProgramDetail | null> {
+  if (isSyntheticProgramCode(code)) return null;
+
   const supabase = await createClient();
   if (!supabase) return null;
 
@@ -114,6 +118,7 @@ export async function getMemberProgramByCode(
     )
     .eq("code", code)
     .eq("is_published", true)
+    .eq("audience", audience)
     .maybeSingle<RawProgram>();
 
   if (!data) return null;

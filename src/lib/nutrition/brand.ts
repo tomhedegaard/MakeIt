@@ -150,7 +150,7 @@ export const DISALLOWLIST = {
 export const BRAND_VOICE = `MakeIt-måltider er hele madvarer, sammensat enkelt. Aldrig industriprodukter.
 Olivenolie og smør, ikke rapsolie. Skyr og hytteost, ikke proteinbarer. Sild,
 makrel og laks 2-3 gange om ugen. Grønt fylder halvdelen af tallerkenen. Protein
-er midten. Komplekse kulhydrater matcher træningen — mere på tunge dage, mindre
+er midten. Komplekse kulhydrater matcher træningen: mere på tunge dage, mindre
 på hviledage. Maden skal smage af noget. Kogetider er korte. Ingredienser få.`;
 
 /* ---------------------------------------------------------------- *
@@ -249,14 +249,14 @@ export function suggestSupplements(opts: {
     out.push({
       id: "algae-omega-3",
       title: "Algeolie (omega-3 vegansk)",
-      why: "Alger giver direkte EPA/DHA — det får du ikke fra hørfrø alene.",
+      why: "Alger giver direkte EPA/DHA. Det får du ikke fra hørfrø alene.",
       necessity: "useful",
     });
   }
   if (opts.isWinter !== false) {
     out.push({
       id: "d3",
-      title: "Vitamin D3 (oktober–april)",
+      title: "Vitamin D3 (oktober-april)",
       why: "Sundhedsstyrelsen anbefaler D3 i vinterhalvåret. Solen klarer det fra maj til september.",
       necessity: "high-value",
     });

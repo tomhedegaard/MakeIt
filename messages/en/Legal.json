@@ -3,8 +3,8 @@
     "metaTitle": "Privacy Policy — {product}",
     "eyebrow": "Privacy Policy",
     "title": "What we store.",
-    "introUpdated": "Last updated: May 2026 · Data controller: ",
-    "introCvrFallback": "CVR — contact",
+    "introUpdated": "Last updated: September 2026 · Data controller: ",
+    "introCvrFallback": "CVR is not yet published — the company is being registered. Contact",
     "s01": {
       "eyebrow": "01",
       "title": "What we collect",
@@ -24,7 +24,35 @@
         },
         "wearable": {
           "k": "Wearable data",
-          "v": "If you connect a wearable (e.g. Whoop): recovery, sleep, strain/workout, cycle and basic profile data — only with your explicit consent. See section 08."
+          "v": "If you connect a wearable (e.g. Whoop): recovery, sleep, strain/workout, cycle and basic profile data — only with your explicit consent. See section 09."
+        },
+        "journal": {
+          "k": "Journal",
+          "v": "The text you write in your journal (pillar 5). Munk, coaches and other members cannot read it. An excerpt may be sent to Anthropic (Claude Haiku) for crisis-text moderation."
+        },
+        "mindCheck": {
+          "k": "Mind-check",
+          "v": "Daily signal: energy, stress, focus, and an optional note. The note may be included in the daily mental coach (Anthropic Claude Sonnet)."
+        },
+        "mentalCoach": {
+          "k": "Mental coach",
+          "v": "AI-generated daily reflections, session completions, and your mental settings. Output is stored so you can re-read it."
+        },
+        "cirkler": {
+          "k": "Circles",
+          "v": "Posts and reactions in mental circles, if you share. Visible only to circle members."
+        },
+        "nutrition": {
+          "k": "Nutrition",
+          "v": "Nutrition profile, meal plans, logs and skip-days — health data (art. 9)."
+        },
+        "messages": {
+          "k": "Messages",
+          "v": "1:1 threads with a coach (text and media paths)."
+        },
+        "weight": {
+          "k": "Weight",
+          "v": "Weight logs you enter yourself."
         },
         "social": {
           "k": "Social",
@@ -37,6 +65,10 @@
         "technical": {
           "k": "Technical data",
           "v": "Session cookie, IP address for logging purposes, request timestamps."
+        },
+        "askHq": {
+          "k": "Ask HQ (homepage)",
+          "v": "If you use the chat on the homepage, your questions and the conversation are sent to our AI processor (see section 03) to be answered. We do not store the conversation; it exists only in your browser until you close the page. Your IP address is used briefly in the server's memory to limit abuse and is not stored. Please do not enter health or personal information in the chat. This also applies to visitors without an account."
         }
       }
     },
@@ -47,7 +79,7 @@
       "items": {
         "deliver": {
           "k": "Deliver the service",
-          "v": "Personalized program, form-check feedback, community feed, Reps loyalty."
+          "v": "Personalized program, form-check, nutrition, HRV, mind-check, journal moderation, daily mental coach, community feed, Reps loyalty."
         },
         "notify": {
           "k": "Send notifications",
@@ -60,6 +92,10 @@
         "legal": {
           "k": "Meet legal requirements",
           "v": "Accounting, GDPR rights, security."
+        },
+        "askHq": {
+          "k": "Answer questions on the homepage",
+          "v": "Answers in the \"Ask HQ\" chat for visitors considering MakeIt, and protecting the chat against abuse (legitimate interest)."
         }
       }
     },
@@ -82,7 +118,7 @@
         },
         "anthropic": {
           "k": "Anthropic (Claude)",
-          "v": "AI program generation and form-check assessment. Anthropic does not store prompts/output beyond the request lifecycle on their business tier."
+          "v": "AI program generation, form-check assessment, crisis-text moderation of journal excerpts (Haiku), the daily mental coach from your mind-check including optional note (Sonnet) and the answers in the \"Ask HQ\" chat on the homepage (Haiku). Anthropic is a processor. On their business tier, prompts/output are not stored beyond the request lifecycle."
         }
       },
       "outro": "We never sell your data. We don't share it for marketing without explicit consent."
@@ -93,7 +129,7 @@
       "items": {
         "access": {
           "k": "Access + portability",
-          "v": "Export all your data as JSON from Settings → Data."
+          "v": "Export your own member rows as JSON from Settings → Data (GDPR art. 20)."
         },
         "rectify": {
           "k": "Rectification",
@@ -131,6 +167,55 @@
       "eyebrow": "07",
       "title": "Changes",
       "body": "We update this policy when functionality changes. Material changes are announced by email to registered members at least 14 days before they take effect."
+    },
+    "s08": {
+      "eyebrow": "08",
+      "title": "Special categories (GDPR art. 9)",
+      "intro": "Journal, mind-check, mental coach, circles, HRV/biometrics and nutrition are health data. We process them only when you use those modules.",
+      "items": {
+        "category": {
+          "k": "Category",
+          "v": "Health data (art. 9) — text about mental health, biometric HRV readings, nutrition and weight data."
+        },
+        "basis": {
+          "k": "Legal basis",
+          "v": "Explicit consent (art. 9(2)(a)): the Mind onboarding acknowledgement, and for wearables the provider OAuth. There is no separate per-category consent checkbox in this version."
+        },
+        "stop": {
+          "k": "Stop",
+          "v": "Stop processing by stopping use of the module and deleting your account. A wearable connection can be disconnected under Settings (see section 09)."
+        }
+      }
+    },
+    "s09": {
+      "eyebrow": "09",
+      "title": "Wearable integrations",
+      "intro": "{product} can connect to your wearable so training can adapt to your recovery. The integration is voluntary and only starts after you explicitly consent in the provider's OAuth flow.",
+      "whoopLead": "Whoop: When you connect your Whoop account, we fetch the following on your behalf via Whoop's API:",
+      "items": {
+        "recovery": {
+          "k": "Recovery",
+          "v": "Daily recovery score, resting heart rate, HRV."
+        },
+        "sleep": {
+          "k": "Sleep",
+          "v": "Sleep duration, sleep stages, sleep performance."
+        },
+        "strain": {
+          "k": "Strain & workouts",
+          "v": "Daily strain and recorded workouts."
+        },
+        "cycle": {
+          "k": "Cycle",
+          "v": "Whoop's physiological circadian-cycle data."
+        },
+        "profile": {
+          "k": "Profile",
+          "v": "Name and basic profile data from your Whoop account."
+        }
+      },
+      "use": "These data are used to personalise your program and form feedback inside {product}. They are stored in the EU (Supabase, Frankfurt) and never sold.",
+      "disconnect": "You can disconnect at any time under Settings. When you do, the connection is set to revoked and we stop using our Whoop access token. Already fetched readings and connection metadata are not deleted automatically — they are kept until you delete your {product} account. There is no 30-day deletion job on disconnect. You can also revoke access directly in your Whoop account."
     }
   },
   "terms": {
@@ -143,11 +228,16 @@
       "title": "The service",
       "bodyBefore": "{product} is a closed coaching platform provided by {entity}",
       "cvr": " (CVR {cvr})",
-      "cvrFallback": " (CVR — contact)",
+      "cvrFallback": " (CVR is not yet published — the company is being registered)",
       "bodyAfter": ". We give access to AI-generated strength training programs, video-based form feedback, a community of crew members, and a Reps loyalty program. Access requires an invite code and active membership."
     },
-    "s02": {
+    "age": {
       "eyebrow": "02",
+      "title": "Age",
+      "body": "You must be 18 or older to create an account and use {product}. When you sign up you confirm that you are 18 or older, and we store the time of your confirmation. The service processes information about training, sleep, recovery and mental health and is not designed for children and young people. If we learn that an account belongs to someone under 18, we close the account and delete the data as described in the privacy policy."
+    },
+    "s02": {
+      "eyebrow": "03",
       "title": "Membership and payment",
       "items": {
         "billed": {
@@ -169,14 +259,14 @@
       }
     },
     "s03": {
-      "eyebrow": "03",
+      "eyebrow": "04",
       "title": "Health disclaimer",
       "p1Emphasis": "You train at your own risk.",
       "p1": " Our coaching and AI feedback do not replace medical or physiotherapy advice. You should consult a doctor before starting a new training program, especially if you have existing injuries, heart conditions, or other health issues.",
       "p2": "AI form checks are a technical assessment, not a final quality assurance. Mikael Munk reviews personally within 24 hours, but the responsibility to lift safely lies with you."
     },
     "s04": {
-      "eyebrow": "04",
+      "eyebrow": "05",
       "title": "Acceptable use",
       "items": {
         "personal": {
@@ -198,18 +288,18 @@
       }
     },
     "s05": {
-      "eyebrow": "05",
+      "eyebrow": "06",
       "title": "Reps and redemptions",
       "p1": "Reps have no cash value and cannot be converted to money or transferred between members. They don't expire — but if you delete your account or cancel your membership, you lose access to both your balance and redemptions.",
       "p2": "Limited drops are shipped with GLS once Mikael confirms — typically within 5 business days. Custom-embroidered products have a 2-3 week delivery time."
     },
     "s06": {
-      "eyebrow": "06",
+      "eyebrow": "07",
       "title": "Limitation of liability",
       "body": "Our total liability toward you is limited to the amount you have paid in membership over the past 12 months. We are not liable for indirect losses, lost profits or damages resulting from the service being unavailable. This does not limit liability that cannot be waived under Danish law."
     },
     "s07": {
-      "eyebrow": "07",
+      "eyebrow": "08",
       "title": "Governing law + disputes",
       "body": "These terms are governed by Danish law. Disputes that cannot be settled amicably are decided by the Copenhagen City Court as the court of first instance."
     }

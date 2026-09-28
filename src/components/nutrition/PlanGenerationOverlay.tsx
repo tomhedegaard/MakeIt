@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 /**
  * Full-screen overlay shown while Claude is generating a meal plan.
@@ -33,26 +34,35 @@ const STAGES: Stage[] = [
   { labelKey: "stage6", afterSec: 35 },
 ];
 
+type OverlayNamespace = "Nutrition.planOverlay" | "Onboarding.programOverlay";
+
 export default function PlanGenerationOverlay({
   pending,
+  namespace = "Nutrition.planOverlay",
 }: {
   pending: boolean;
+  namespace?: OverlayNamespace;
 }) {
-  const t = useTranslations("Nutrition.planOverlay");
+  // Unmount when idle so elapsed resets on the next run without a
+  // setState-in-effect (react-hooks/set-state-in-effect).
+  if (!pending) return null;
+  return <PlanGenerationOverlayActive namespace={namespace} />;
+}
+
+function PlanGenerationOverlayActive({
+  namespace,
+}: {
+  namespace: OverlayNamespace;
+}) {
+  const t = useTranslations(namespace);
   const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
-    if (!pending) {
-      setElapsed(0);
-      return;
-    }
     const id = setInterval(() => {
       setElapsed((e) => e + 1);
     }, 1000);
     return () => clearInterval(id);
-  }, [pending]);
-
-  if (!pending) return null;
+  }, []);
 
   // Find the latest stage whose afterSec threshold has been crossed.
   const currentStage =
@@ -70,10 +80,7 @@ export default function PlanGenerationOverlay({
       aria-live="polite"
     >
       <div className="max-w-md mx-auto text-center px-6">
-        <div className="eyebrow mb-3">{t("eyebrow")}</div>
-        <h2 className="font-display text-[clamp(2rem,5vw,3rem)] leading-[0.95] mb-8">
-          {t("title")}
-        </h2>
+        <SectionHeader eyebrow={t("eyebrow")} title={t("title")} className="justify-center" />
 
         {/* 3-dot loading indicator — staggered pulse, no fake % */}
         <div className="flex justify-center gap-2 mb-8" aria-hidden>
@@ -90,17 +97,17 @@ export default function PlanGenerationOverlay({
           {t("stageProgress", { label: t(currentStage.labelKey) })}
         </p>
 
-        <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint mb-1">
+        <p className="text-xs text-fg-faint mb-1">
           {t("elapsed", { elapsed })}
         </p>
 
         {overtime ? (
-          <p className="mt-6 text-xs font-mono uppercase tracking-[0.14em] text-yellow-400">
+          <p className="mt-6 text-xs text-warn">
             {t("overtime")}
           </p>
         ) : null}
 
-        <div className="mt-12 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+        <div className="mt-12 text-micro text-fg-faint">
           {t("stayOnPage")}
         </div>
       </div>

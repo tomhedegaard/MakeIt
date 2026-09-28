@@ -18,6 +18,7 @@ import type { Ingredient, Meal } from "@/lib/data/nutrition";
 
 export type ShoppingCategory =
   | "proteins"
+  | "plant"
   | "fish"
   | "dairy"
   | "carbs"
@@ -30,6 +31,7 @@ export type ShoppingCategory =
 
 const CATEGORY_LABELS: Record<ShoppingCategory, string> = {
   proteins: "Kød & æg",
+  plant:    "Bælgfrugter & tofu",
   fish:     "Fisk",
   dairy:    "Mejeri",
   carbs:    "Korn, kartofler & frugt",
@@ -42,7 +44,7 @@ const CATEGORY_LABELS: Record<ShoppingCategory, string> = {
 };
 
 const CATEGORY_ORDER: ShoppingCategory[] = [
-  "proteins", "fish", "dairy", "carbs", "veg", "fats",
+  "proteins", "plant", "fish", "dairy", "carbs", "veg", "fats",
   "herbs", "spices", "pantry", "other",
 ];
 
@@ -63,7 +65,7 @@ function buildLookup(): Lookup {
   // Proteins — animal + plant lump together; fish gets its own bucket
   for (const term of ALLOWLIST.proteins.animal) push(term, "proteins");
   for (const term of ALLOWLIST.proteins.fish)   push(term, "fish");
-  for (const term of ALLOWLIST.proteins.plant)  push(term, "proteins");
+  for (const term of ALLOWLIST.proteins.plant)  push(term, "plant");
   for (const term of ALLOWLIST.proteins.dairy)  push(term, "dairy");
   // Carbs
   for (const term of ALLOWLIST.carbs.grains)    push(term, "carbs");
@@ -194,8 +196,20 @@ export function aggregateShopping(opts: {
  * Helpers
  * ---------------------------------------------------------------- */
 
+/** Singular/plural and spelling variants that should share a bucket. */
+const INGREDIENT_ALIASES: Record<string, string> = {
+  gulerod: "gulerødder",
+  guleroden: "gulerødder",
+  gulerødderne: "gulerødder",
+};
+
+function canonicalizeName(name: string): string {
+  const key = name.toLowerCase();
+  return INGREDIENT_ALIASES[key] ?? name;
+}
+
 function normalizeIngredient(ing: Ingredient): { name: string; amount: number; unit: string } | null {
-  const name = (ing.name ?? "").trim();
+  const name = canonicalizeName((ing.name ?? "").trim());
   const unit = normalizeUnit(ing.unit ?? "");
   if (!name || !Number.isFinite(ing.amount)) return null;
   return { name, amount: ing.amount, unit };

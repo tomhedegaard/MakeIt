@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import type { ReadinessBucket } from "@/lib/hrv/types";
 
@@ -11,8 +12,10 @@ import type { ReadinessBucket } from "@/lib/hrv/types";
  * member is still warming up: all segments render in a uniform neutral
  * outline plus an explanatory caption.
  *
- * Monochrome only — the filled / outline / sketch hierarchy is expressed
- * purely through fill, stroke weight, and opacity.
+ * The filled / outline / sketch hierarchy is expressed through fill,
+ * stroke weight, and opacity. The active bucket fills in the domain
+ * color (heart, via the /hrv data-domain scope) — it is data-ink,
+ * the one place color is allowed (docs/DOMAIN_COLOR_SYSTEM.md).
  */
 
 /** Bottom-up order: index 0 is the bottom rung of the ladder. */
@@ -23,14 +26,6 @@ const LADDER_ORDER: ReadinessBucket[] = [
   "high",
   "very_high",
 ];
-
-const BUCKET_LABELS: Record<ReadinessBucket, string> = {
-  very_low: "Meget under din norm",
-  low: "Under din norm",
-  normal: "I dit normale område",
-  high: "Over din norm",
-  very_high: "Meget over din norm",
-};
 
 type SegmentTone = "filled" | "outline" | "sketch" | "neutral";
 
@@ -49,8 +44,8 @@ function toneFor(
 }
 
 const TONE_CLASSES: Record<SegmentTone, string> = {
-  // Solid block — the member's current readiness.
-  filled: "bg-fg border border-fg",
+  // Solid block — the member's current readiness, in domain ink.
+  filled: "bg-domain border border-domain",
   // Hairline outline — immediate neighbours.
   outline: "border border-line-strong",
   // Faint, thinner sketch line — distant segments.
@@ -64,6 +59,7 @@ export default function ReadinessLadder({
 }: {
   bucket: ReadinessBucket | null;
 }) {
+  const t = useTranslations("Hrv.readinessLadder");
   // Render top-down for the DOM/visual stack (very_high first).
   const segments = [...LADDER_ORDER].reverse();
 
@@ -74,8 +70,8 @@ export default function ReadinessLadder({
         role="img"
         aria-label={
           bucket === null
-            ? "Readiness-stige — venter på baseline"
-            : `Readiness: ${BUCKET_LABELS[bucket]}`
+            ? t("ariaWaiting")
+            : t("aria", { label: t(`bucket.${bucket}`) })
         }
       >
         {segments.map((segment) => {
@@ -89,19 +85,19 @@ export default function ReadinessLadder({
                 TONE_CLASSES[tone],
               )}
             >
-              <span className="sr-only">{BUCKET_LABELS[segment]}</span>
+              <span className="sr-only">{t(`bucket.${segment}`)}</span>
             </div>
           );
         })}
       </div>
 
       {bucket === null ? (
-        <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint leading-relaxed">
-          Readiness kommer når din baseline er klar
+        <p className="text-micro text-fg-faint leading-relaxed">
+          {t("waiting")}
         </p>
       ) : (
         <p className="font-display text-base leading-tight text-fg">
-          {BUCKET_LABELS[bucket]}
+          {t(`bucket.${bucket}`)}
         </p>
       )}
     </div>

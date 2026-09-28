@@ -23,6 +23,7 @@ import type {
 } from "@/lib/adaptive/types";
 import type { FeelingState } from "@/lib/hrv/lifestyle";
 import { TELEMETRY, track } from "@/lib/telemetry";
+import { rangeFill } from "@/lib/ui/range";
 
 type Props = {
   /**
@@ -218,7 +219,8 @@ export default function CounterfactualSliders({
                 setSleep(Number(e.currentTarget.value))
               }
               aria-label="Søvn i timer"
-              className="flex-1 accent-fg touch-app"
+              className="range flex-1"
+              style={rangeFill(sleep, SLEEP_MIN, SLEEP_MAX)}
             />
             <span className="numeric text-sm tabular-nums w-14 text-right">
               {formatSleepHours(sleep)}
@@ -261,7 +263,7 @@ export default function CounterfactualSliders({
               setFeeling(e.currentTarget.value as FeelingState)
             }
             aria-label="Følelse"
-            className="bg-bg-2 border hairline rounded-md px-2 py-1 text-sm touch-app"
+            className="bg-bg-2 border hairline rounded-md px-2 py-1 text-base md:text-sm touch-app"
           >
             {FEELING_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -276,7 +278,7 @@ export default function CounterfactualSliders({
           <button
             type="button"
             onClick={reset}
-            className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg lift touch-app"
+            className="text-micro text-fg-faint hover:text-fg lift touch-app"
           >
             ← Nulstil til faktiske værdier
           </button>
@@ -284,11 +286,11 @@ export default function CounterfactualSliders({
 
         {/* ----------------- Result ----------------- */}
         <div className="surface-3 rounded-lg p-3 border hairline space-y-1.5">
-          <div className="eyebrow text-fg-faint">Motoren ville have valgt</div>
+          <div className="eyebrow text-fg-faint">HQ ville have valgt</div>
           {decisionMatches && !sliderTouched ? (
             <ResultBlock
               headline="Samme beslutning"
-              detail="Du er ved baseline-værdierne — træk i en slider for at simulere."
+              detail="Du er ved baseline-værdierne. Træk i en slider for at simulere."
               tone="quiet"
             />
           ) : decisionMatches ? (
@@ -315,7 +317,7 @@ export default function CounterfactualSliders({
 
   return (
     <details className="group/cf mt-2 pt-2 border-t hairline">
-      <summary className="cursor-pointer list-none text-[11px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg select-none inline-flex items-center gap-1 lift touch-app">
+      <summary className="cursor-pointer list-none text-micro text-fg-dim hover:text-fg select-none inline-flex items-center gap-1 lift touch-app">
         <span>Hvad hvis du havde…</span>
         <span aria-hidden className="group-open/cf:rotate-180 transition-transform">↓</span>
       </summary>
@@ -342,11 +344,11 @@ function ControlRow({
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3 mb-1.5">
-        <span className="text-[11px] font-mono uppercase tracking-[0.12em] text-fg-faint">
+        <span className="text-micro text-fg-faint">
           {label}
         </span>
         {changed ? (
-          <span className="text-[10px] font-mono tracking-[0.12em] text-fg-faint">
+          <span className="text-micro text-fg-faint">
             faktisk: {actualLabel}
           </span>
         ) : null}
@@ -376,7 +378,7 @@ function ResultBlock({
       </div>
       <p className="text-xs text-fg-dim leading-relaxed">{detail}</p>
       {previous ? (
-        <p className="text-[10px] font-mono uppercase tracking-[0.12em] text-fg-faint">
+        <p className="text-micro text-fg-faint">
           {previous}
         </p>
       ) : null}

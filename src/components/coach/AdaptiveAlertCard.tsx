@@ -58,7 +58,7 @@ export default function AdaptiveAlertCard({
               @{alert.memberHandle}
             </Link>
           </div>
-          <div className="text-[11px] font-mono text-fg-faint">
+          <div className="text-micro text-fg-faint">
             {new Date(alert.triggeredAt).toLocaleString("da-DK", {
               hour: "2-digit",
               minute: "2-digit",
@@ -69,7 +69,7 @@ export default function AdaptiveAlertCard({
         </div>
         <div className="text-right shrink-0">
           <div className="eyebrow">Engine foreslår</div>
-          <div className="text-sm font-mono">{actionLabel}</div>
+          <div className="text-sm">{actionLabel}</div>
         </div>
       </div>
 
@@ -78,13 +78,13 @@ export default function AdaptiveAlertCard({
         {alert.reasons.slice(0, 5).map((r) => (
           <span
             key={r}
-            className="text-[10px] font-mono uppercase tracking-[0.12em] px-2 py-0.5 rounded-sm bg-bg-3 text-fg-dim"
+            className="text-micro px-2 py-0.5 rounded-sm bg-bg-3 text-fg-dim"
           >
             {r}
           </span>
         ))}
         {alert.confidence !== null ? (
-          <span className="text-[10px] font-mono tracking-[0.12em] text-fg-faint ml-auto">
+          <span className="text-micro text-fg-faint ml-auto">
             conf {alert.confidence.toFixed(2)}
           </span>
         ) : null}
@@ -98,7 +98,7 @@ export default function AdaptiveAlertCard({
       ) : null}
 
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+        <span className="text-micro text-fg-faint">
           Afventer review
         </span>
         <div className="flex gap-2">
@@ -106,7 +106,7 @@ export default function AdaptiveAlertCard({
             type="button"
             disabled={pending}
             onClick={() => review(false)}
-            className="rounded-lg border hairline px-3 py-2 text-[12px] font-mono uppercase tracking-[0.12em] text-fg-dim lift touch-app disabled:opacity-60"
+            className="rounded-lg border hairline px-3 py-2 text-[12px] text-fg-dim lift touch-app disabled:opacity-60"
           >
             Afvis
           </button>
@@ -114,7 +114,7 @@ export default function AdaptiveAlertCard({
             type="button"
             disabled={pending}
             onClick={() => review(true)}
-            className="rounded-lg border hairline bg-bg-2 px-3 py-2 text-[12px] font-mono uppercase tracking-[0.12em] lift touch-app disabled:opacity-60"
+            className="rounded-lg border hairline bg-bg-2 px-3 py-2 text-[12px] lift touch-app disabled:opacity-60"
           >
             Godkend
           </button>

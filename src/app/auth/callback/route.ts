@@ -1,30 +1,40 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import {
+  consumeInviteForUser,
+  fetchInviteAdmitted,
+} from "@/lib/data/invites";
+import { finishMagicLinkCallback } from "@/lib/magic-link";
 import { LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE, isLocale } from "@/i18n/config";
+import { PENDING_ADULT_COOKIE, hasAdultConfirmation } from "@/lib/auth/age";
 
 const PENDING_INVITE_COOKIE = "mi_pending_invite";
 
 /**
  * Auth callback — handles every flow that ends here:
  *
- *   - Magic-link OTP    : ?code=<otp>&invite=<CODE>  (invite in URL)
- *   - Password sign-up  : ?code=<otp>&invite=<CODE>  (invite in URL)
+ *   - Magic-link OTP    : ?code=<otp>                (returning)
+ *                         ?code=<otp>&invite=<CODE>  (new signup)
+ *   - Password confirm  : leftover confirm-mail click after
+ *                         invite-gated signup already auto-confirmed
+ *                         (`invite` in URL; consume is idempotent)
  *   - OAuth (Google/    : ?code=<authcode>           (invite in cookie)
  *      Apple)
  *
  * We exchange whatever code is present for a session, then consume
- * the invite. The invite source is "URL first, cookie fallback" so
- * the magic-link / password flows keep working unchanged, and OAuth
- * picks up the stashed cookie value.
+ * the invite for newly created / un-admitted users. Returning
+ * members (admitted, or official OTP with no invite) skip consume.
+ * The invite source is "URL first, cookie fallback" so the
+ * magic-link signup and password confirm flows keep working, and
+ * OAuth picks up the stashed cookie.
  *
  * Failure modes:
  *   - No code in URL          → /login?err=callback
  *   - Exchange fails          → /login?err=callback
- *   - Invite consumption is best-effort — the auth.users trigger has
- *     already created the public.members row at this point, so we
- *     don't block the redirect on a failed invite update. Worst case
- *     the user is in but the invite-code row stays "unused".
+ *   - New / un-admitted user, no invite or consume fails → sign out,
+ *     /login?err=invite (fail closed — never land a signup that did
+ *     not spend a valid code)
  */
 export async function GET(req: NextRequest) {
   const url = req.nextUrl;
@@ -46,51 +56,56 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL("/login?err=callback", url));
   }
 
-  // Resolve invite — prefer URL (magic-link / password), fall back to
-  // the cookie stashed by the OAuth action.
   const cookieStore = await cookies();
   const inviteFromCookie = cookieStore.get(PENDING_INVITE_COOKIE)?.value ?? null;
   const invite = inviteFromUrl ?? inviteFromCookie;
+  cookieStore.delete(PENDING_INVITE_COOKIE);
 
-  if (invite) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
-      await supabase
-        .from("invite_codes")
-        .update({
-          used_by: user.id,
-          used_at: new Date().toISOString(),
-          uses_count: 1,
-        })
-        .eq("code", invite.toUpperCase())
-        .is("used_by", null);
-    }
-    // Always clear the cookie — even if we read invite from the URL,
-    // a stale cookie shouldn't linger.
-    cookieStore.delete(PENDING_INVITE_COOKIE);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    await supabase.auth.signOut();
+    return NextResponse.redirect(new URL("/login?err=callback", url));
+  }
+
+  // OAuth signups carry the 18-year confirmation in a cookie (GoTrue
+  // takes no metadata on OAuth). Record it once on the user.
+  const adultAt = cookieStore.get(PENDING_ADULT_COOKIE)?.value ?? null;
+  cookieStore.delete(PENDING_ADULT_COOKIE);
+  if (adultAt && !hasAdultConfirmation(user.user_metadata)) {
+    await supabase.auth.updateUser({ data: { adult_confirmed_at: adultAt } });
+  }
+
+  const alreadyAdmitted = await fetchInviteAdmitted();
+  const finished = await finishMagicLinkCallback({
+    user,
+    invite,
+    nowMs: Date.now(),
+    alreadyAdmitted,
+    consumeInvite: consumeInviteForUser,
+    signOut: () => supabase.auth.signOut(),
+  });
+
+  if (!finished.ok) {
+    return NextResponse.redirect(new URL(`/login?err=${finished.err}`, url));
   }
 
   // Re-seed the language cookie from the member's saved preference so
   // the chosen locale follows the user onto a new device. Best-effort:
   // a missing column or row leaves the existing cookie untouched.
-  const {
-    data: { user: sessionUser },
-  } = await supabase.auth.getUser();
-  if (sessionUser) {
-    const { data: member } = await supabase
-      .from("members")
-      .select("locale")
-      .eq("id", sessionUser.id)
-      .maybeSingle();
-    if (isLocale(member?.locale)) {
-      cookieStore.set(LOCALE_COOKIE, member.locale, {
-        path: "/",
-        maxAge: LOCALE_COOKIE_MAX_AGE,
-        sameSite: "lax",
-      });
-    }
+  const { data: member } = await supabase
+    .from("members")
+    .select("locale")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (isLocale(member?.locale)) {
+    cookieStore.set(LOCALE_COOKIE, member.locale, {
+      path: "/",
+      maxAge: LOCALE_COOKIE_MAX_AGE,
+      sameSite: "lax",
+    });
   }
 
   return NextResponse.redirect(new URL(next, url));

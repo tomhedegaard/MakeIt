@@ -29,6 +29,10 @@ import Buddy from "./Buddy.json";
 import CoachSchool from "./CoachSchool.json";
 import ProgramDetail from "./ProgramDetail.json";
 import Mind from "./Mind.json";
+import Science from "./Science.json";
+import Hrv from "./Hrv.json";
+import Adaptive from "./Adaptive.json";
+import Youth from "./Youth.json";
 
 const messages = {
   Common,
@@ -59,6 +63,10 @@ const messages = {
   CoachSchool,
   ProgramDetail,
   Mind,
+  Science,
+  Hrv,
+  Adaptive,
+  Youth,
 };
 
 export default messages;

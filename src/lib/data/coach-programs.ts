@@ -5,7 +5,7 @@
  * day-blueprints (Dag A/B/C…), each with exercises pulled from the
  * library and a per-exercise set scheme. Assigning a program to a
  * member generates real `sessions` for weeks 1..N from these
- * blueprints — see assignProgramAction in the route's actions.ts.
+ * blueprints — see `assignProgramFromBlueprint`.
  *
  * Read-only here; mutations live in the server actions.
  */

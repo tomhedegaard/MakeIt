@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { getSession } from "@/lib/auth";
 import {
   currentIsoMonday,
@@ -29,8 +30,11 @@ import SkipDaysCard from "@/components/nutrition/SkipDaysCard";
 import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
 import DailyIntakeCard from "@/components/nutrition/DailyIntakeCard";
 import OffPlanLogButton from "./OffPlanLogButton";
+import { isMealEstimateEnabled } from "./actions";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
 import { getDailyIntake } from "@/lib/data/nutrition-intake";
+import { isNutritionProfileFresh } from "@/lib/nutrition/profile-fresh";
+import NutritionSetupView from "./setup/NutritionSetupView";
 
 export async function generateMetadata() {
   const t = await getTranslations("Nutrition");
@@ -48,25 +52,34 @@ export default async function NutritionPage({
 }) {
   const { err } = await searchParams;
   const member = (await getSession())!;
-  const t = await getTranslations("Nutrition");
   const weekStart = currentIsoMonday();
+  // Cheap first-visit gate before the rest of the page's fetches.
+  // Render the wizard here — do not bounce to the setup path.
+  // A server redirect() after this await commits an empty stub on
+  // client navigations (Next.js App Router), which is the blank
+  // flash Testy hit on the Kost tab.
+  const [profile, plan, latestWeight] = await Promise.all([
+    getOrCreateNutritionProfile(member.id),
+    getCurrentPlan(member.id),
+    getLatestWeight(member.id),
+  ]);
+  if (isNutritionProfileFresh({ plan, latestWeight, profile })) {
+    return <NutritionSetupView />;
+  }
+
+  const t = await getTranslations("Nutrition");
+
   const [
-    profile,
-    plan,
     checkin,
     intake,
-    latestWeight,
     weightTrend,
     planLimit,
     swapLimit,
     skipDayIndices,
     kcalAdjustGate,
   ] = await Promise.all([
-    getOrCreateNutritionProfile(member.id),
-    getCurrentPlan(member.id),
     getDailyCheckIn(member.id),
     getDailyIntake(member.id),
-    getLatestWeight(member.id),
     getWeightTrend(member.id),
     checkLimit(member.id, "plan_regen"),
     checkLimit(member.id, "meal_swap"),
@@ -95,54 +108,36 @@ export default async function NutritionPage({
     }
   }
 
-  // First-time guard: only redirect when the profile is genuinely
-  // untouched. The earlier `plan === null && latestWeight === null`
-  // check looped users back to the wizard whenever either persist
-  // step failed (Claude timeout + mock fallback DB hiccup, or
-  // missing weight_logs migration making logWeight no-op). We now
-  // gate on a single signal — has the member ever opened the
-  // wizard — by checking whether onboarded_at on the profile is
-  // null. The wizard sets the goal explicitly; if it's still at
-  // the schema default AND there's no plan AND no weight, we know
-  // they've never completed setup.
-  const profileFresh =
-    !plan &&
-    !latestWeight &&
-    (!profile?.goal || profile.goal === "maintain") &&
-    !profile?.dailyKcalTarget;
-  if (profileFresh) {
-    redirect("/nutrition/setup");
-  }
   const todayIndex = todayDayIndex();
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
-      <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="eyebrow mb-2">{t("page.eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
-            {t("page.title")}
-          </h1>
-          <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-            {t("page.intro")}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <OffPlanLogButton />
-          <Link
-            href="/nutrition/shopping"
-            className="btn btn-sm"
-          >
-            {t("page.shoppingLink")}
-          </Link>
-          <Link
-            href="/nutrition/preferences"
-            className="btn btn-ghost btn-sm"
-          >
-            {t("page.preferencesLink")}
-          </Link>
-        </div>
-      </header>
+      <div className="pt-2">
+        <PageTitle
+          kicker={t("page.eyebrow")}
+          title={t("page.title")}
+          action={
+            <div className="flex flex-wrap items-center gap-2">
+              <OffPlanLogButton estimateEnabled={await isMealEstimateEnabled(member)} />
+              <Link
+                href="/nutrition/shopping"
+                className="btn btn-sm"
+              >
+                {t("page.shoppingLink")}
+              </Link>
+              <Link
+                href="/nutrition/preferences"
+                className="btn btn-ghost btn-sm"
+              >
+                {t("page.preferencesLink")}
+              </Link>
+            </div>
+          }
+        />
+        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+          {t("page.intro")}
+        </p>
+      </div>
 
       {err === "quota_plan" || err === "quota_swap" ? (
         <QuotaBanner
@@ -153,6 +148,8 @@ export default async function NutritionPage({
       ) : null}
 
       {kcalAdjust ? <KcalAdjustBanner delta={kcalAdjust.delta} reason={kcalAdjust.reason} t={t} /> : null}
+
+      {plan?.generator === "mock" ? <FallbackPlanBanner t={t} /> : null}
 
       <DailyCheckInCard checkin={checkin} />
 
@@ -206,8 +203,8 @@ function KcalAdjustBanner({
 }) {
   const sign = delta > 0 ? "+" : "";
   return (
-    <div className="surface-2 rounded-xl border border-blue-400/40 px-5 py-3 text-sm">
-      <span className="eyebrow text-blue-400 mr-2">{t("page.kcalAdjustEyebrow")}</span>
+    <div className="surface-2 rounded-xl border hairline-strong px-5 py-3 text-sm">
+      <span className="eyebrow mr-2">{t("page.kcalAdjustEyebrow")}</span>
       {t.rich("page.kcalAdjustBody", {
         sign,
         delta,
@@ -222,6 +219,15 @@ function KcalAdjustBanner({
  * Quota error banner
  * ---------------------------------------------------------------- */
 
+function FallbackPlanBanner({ t }: { t: T }) {
+  return (
+    <div className="surface-2 rounded-xl border border-warn/40 px-5 py-3 text-sm">
+      <span className="eyebrow text-warn mr-2">{t("page.fallbackEyebrow")}</span>
+      {t("page.fallbackBody")}
+    </div>
+  );
+}
+
 function QuotaBanner({
   kind,
   limit,
@@ -234,8 +240,8 @@ function QuotaBanner({
   const reset = describeNextAvailable(limit.nextAvailableAt);
   const label = kind === "plan" ? t("page.quotaLabelPlan") : t("page.quotaLabelSwap");
   return (
-    <div className="surface-2 rounded-xl border border-yellow-400/40 px-5 py-3 text-sm">
-      <span className="eyebrow text-yellow-400 mr-2">{t("page.quotaEyebrow")}</span>
+    <div className="surface-2 rounded-xl border border-warn/40 px-5 py-3 text-sm">
+      <span className="eyebrow text-warn mr-2">{t("page.quotaEyebrow")}</span>
       {t("page.quotaBody", {
         label,
         dailyUsed: limit.daily.used,
@@ -279,15 +285,15 @@ function EmptyState({
   );
   const resetLabel = describeNextAvailable(planLimit.nextAvailableAt);
   return (
-    <section className="surface-2 rounded-2xl p-6 lg:p-10 text-center max-w-2xl mx-auto">
-      <div className="eyebrow mb-3">{t("page.emptyEyebrow", { week: weekStartLabel(weekStart) })}</div>
-      <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-3">
-        {t("page.emptyTitle")}
-      </h2>
-      <p className="text-fg-dim text-sm md:text-base max-w-md mx-auto mb-5">
+    <section className="surface-2 rounded-2xl p-6 lg:p-10 max-w-2xl">
+      <SectionHeader
+        eyebrow={t("page.emptyEyebrow", { week: weekStartLabel(weekStart) })}
+        title={t("page.emptyTitle")}
+      />
+      <p className="text-fg-dim text-sm md:text-base max-w-md mb-5">
         {t("page.emptyBody")}
       </p>
-      <div className="flex flex-wrap items-center justify-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {hasProfile ? (
           <GeneratePlanButton
             label={t("page.emptyGenerate")}
@@ -299,7 +305,7 @@ function EmptyState({
           {t("page.emptyPreferences")}
         </Link>
       </div>
-      <p className="mt-4 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <p className="mt-4 text-micro text-fg-faint">
         {t("page.emptyQuota", {
           dailyUsed: planLimit.daily.used,
           dailyMax: planLimit.daily.max,
@@ -370,10 +376,10 @@ function PlanView({
     <>
       {/* Macro / meta strip */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline rounded-lg overflow-hidden">
-        <Stat label={t("page.statKcal")} value={plan.dailyKcal ?? "—"} />
-        <Stat label={t("page.statProtein")} value={plan.dailyProteinG ?? "—"} />
-        <Stat label={t("page.statCarbs")} value={plan.dailyCarbsG ?? "—"} />
-        <Stat label={t("page.statFat")} value={plan.dailyFatG ?? "—"} />
+        <Stat label={t("page.statKcal")} value={plan.dailyKcal ?? "-"} />
+        <Stat label={t("page.statProtein")} value={plan.dailyProteinG ?? "-"} />
+        <Stat label={t("page.statCarbs")} value={plan.dailyCarbsG ?? "-"} />
+        <Stat label={t("page.statFat")} value={plan.dailyFatG ?? "-"} />
       </section>
 
       {/* Week strip */}
@@ -398,11 +404,11 @@ function PlanView({
                 >
                   <div className="eyebrow mb-1.5">{t(`dayLabels.${dayKey}`)}</div>
                   <div className="numeric text-xl mb-1">{meals.length}</div>
-                  <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                  <div className="text-micro text-fg-faint">
                     {t("page.meals")}
                   </div>
-                  <div className="numeric text-[11px] text-fg-dim mt-1.5">
-                    {dayKcal > 0 ? `${dayKcal} kcal` : "—"}
+                  <div className="numeric text-micro text-fg-dim mt-1.5">
+                    {dayKcal > 0 ? `${dayKcal} kcal` : "-"}
                   </div>
                 </a>
               </li>
@@ -413,16 +419,17 @@ function PlanView({
 
       {/* Today */}
       <section id={`day-${todayIndex}`}>
-        <div className="flex items-end justify-between mb-3">
-          <div>
-            <div className="eyebrow mb-1">{t("page.todayEyebrow", { day: t(`dayLabels.${DAY_KEYS[todayIndex]}`) })}</div>
-            <h2 className="font-display text-3xl md:text-4xl leading-[1]">
-              {today.length === 1
+        <div className="flex items-end justify-between gap-4">
+          <SectionHeader
+            eyebrow={t("page.todayEyebrow", { day: t(`dayLabels.${DAY_KEYS[todayIndex]}`) })}
+            title={
+              today.length === 1
                 ? t("page.todayMealsOne", { count: today.length })
-                : t("page.todayMealsOther", { count: today.length })}
-            </h2>
-          </div>
-          <span className="text-xs font-mono text-fg-faint">
+                : t("page.todayMealsOther", { count: today.length })
+            }
+            className="mb-0"
+          />
+          <span className="text-xs text-fg-faint shrink-0">
             {t("page.todayMacros", {
               kcal: today.reduce((s, m) => s + (m.estKcal ?? 0), 0),
               protein: today.reduce((s, m) => s + (m.estProteinG ?? 0), 0),
@@ -492,7 +499,7 @@ function PlanView({
               <li key={s.id} className="border hairline rounded-lg p-4">
                 <div className="flex items-baseline justify-between gap-3 mb-1">
                   <div className="text-sm">{s.title}</div>
-                  <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                  <span className="text-micro text-fg-faint">
                     {s.necessity === "high-value"
                       ? t("page.supplementStrong")
                       : s.necessity === "useful"
@@ -516,9 +523,9 @@ function PlanView({
           quotaResetLabel={resetLabel}
         />
         <LogMealButton dateIso={isoToday()} />
-        <span className="text-[11px] font-mono text-fg-faint ml-auto">
+        <span className="text-micro text-fg-faint ml-auto">
           {plan.generator === "claude"
-            ? t("page.generatedByClaude", { model: plan.generatorModel ?? "claude" })
+            ? t("page.generatedByClaude")
             : t("page.generatedLocally")}
         </span>
       </section>

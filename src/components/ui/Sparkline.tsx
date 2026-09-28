@@ -1,8 +1,12 @@
 /**
  * Tiny SVG sparkline. Strokes in currentColor so callers control
- * theming via the wrapping element. Renders nothing for <2 points.
+ * theming via the wrapping element. Empty / sparse series render a
+ * quiet charcoal frame — no text wall.
  */
 import { cn } from "@/lib/utils";
+import { CHART_CRAFT } from "@/lib/svg/chart-craft";
+import { smoothAreaPath, smoothLinePath } from "@/lib/svg/smooth-path";
+import ChartEmptyFrame from "@/components/ui/ChartEmptyFrame";
 
 export default function Sparkline({
   data,
@@ -19,14 +23,9 @@ export default function Sparkline({
 }) {
   if (!data || data.length < 2) {
     return (
-      <div
-        className={cn(
-          "h-14 flex items-end text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint",
-          className
-        )}
-      >
-        Ikke nok data endnu
-      </div>
+      <ChartEmptyFrame
+        className={cn("h-14", className)}
+      />
     );
   }
 
@@ -34,25 +33,16 @@ export default function Sparkline({
   const max = Math.max(...data);
   const range = max - min || 1;
 
-  // Pad the y-range slightly so the line never grazes the top/bottom edge.
   const pad = 4;
   const yScale = (height - pad * 2) / range;
   const xStep = width / (data.length - 1);
 
-  const points = data
-    .map((v, i) => {
-      const x = i * xStep;
-      const y = height - pad - (v - min) * yScale;
-      return `${x},${y}`;
-    })
-    .join(" ");
+  const pts = data.map((v, i) => ({
+    x: i * xStep,
+    y: height - pad - (v - min) * yScale,
+  }));
 
-  // Filled area below the line for a subtle volume cue.
-  const areaPath =
-    `M 0,${height} L ${points.split(" ").join(" L ")} L ${width},${height} Z`;
-
-  const lastX = (data.length - 1) * xStep;
-  const lastY = height - pad - (data[data.length - 1] - min) * yScale;
+  const last = pts[pts.length - 1];
 
   return (
     <svg
@@ -60,19 +50,29 @@ export default function Sparkline({
       preserveAspectRatio="none"
       className={cn("w-full h-14", className)}
       aria-hidden
+      data-sparkline=""
     >
-      <path d={areaPath} fill="currentColor" opacity="0.06" />
-      <polyline
-        points={points}
+      <path
+        d={smoothAreaPath(pts, height)}
+        fill="currentColor"
+        fillOpacity={CHART_CRAFT.areaFillOpacity}
+      />
+      <path
+        d={smoothLinePath(pts)}
         fill="none"
         stroke="currentColor"
-        strokeWidth="1.5"
+        strokeWidth={CHART_CRAFT.sparkStrokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
       />
       {showLastPoint ? (
-        <circle cx={lastX} cy={lastY} r="3" fill="currentColor" />
+        <circle
+          cx={last.x}
+          cy={last.y}
+          r={CHART_CRAFT.lastPointR}
+          fill="currentColor"
+        />
       ) : null}
     </svg>
   );

@@ -6,6 +6,8 @@ import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
 import { MUSCLE_LABELS, type MuscleGroup } from "@/lib/data/muscle-groups";
 import type { Exercise, ExerciseLibrary, Session } from "@/lib/workout";
 import { startSessionAction } from "./actions";
+import { ChevronLeft } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * Read-only session view shown when status === "scheduled". Members
@@ -28,20 +30,18 @@ export default async function SessionPreview({ session }: { session: Session }) 
 
   return (
     <div className="minh-dvh flex flex-col bg-bg">
-      <header className="sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
+      <header className="safe-top sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
         <div className="px-4 lg:px-6 h-14 flex items-center justify-between gap-3">
           <Link
             href="/dashboard"
             aria-label={t("preview.back")}
             className="size-10 rounded-full surface-2 flex items-center justify-center"
           >
-            <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
-              <path d="M14 6l-6 6 6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <ChevronLeft {...ICON} className="size-5" />
           </Link>
 
           <div className="flex-1 min-w-0 text-center">
-            <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+            <div className="text-micro text-fg-faint">
               {t("topBar.programLine", {
                 programCode: session.programCode,
                 week: session.week,
@@ -184,7 +184,7 @@ async function PreviewExercise({
               <ol className="space-y-1.5">
                 {inlineCues.map((cue, i) => (
                   <li key={i} className="flex gap-2 text-sm leading-snug">
-                    <span className="font-mono text-fg-faint shrink-0 text-[11px] mt-0.5">
+                    <span className="text-fg-faint shrink-0 text-micro mt-0.5">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span>{cue}</span>
@@ -232,7 +232,7 @@ function PrimaryMuscleTags({ muscles }: { muscles: MuscleGroup[] }) {
       {muscles.map((m) => (
         <span
           key={m}
-          className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-[0.14em] bg-bg-3 text-fg-dim"
+          className="px-2 py-0.5 text-micro bg-bg-3 text-fg-dim"
         >
           {MUSCLE_LABELS[m]}
         </span>
@@ -250,7 +250,7 @@ function formatSetTarget(
   if (reps > 0) parts.push(`${reps} reps`);
   if (weight > 0) parts.push(`${weight} kg`);
   if (rpe) parts.push(`RPE ${rpe}`);
-  return parts.length > 0 ? parts.join(" · ") : "—";
+  return parts.length > 0 ? parts.join(" · ") : "-";
 }
 
 function dominantView(lib: ExerciseLibrary): "front" | "back" {

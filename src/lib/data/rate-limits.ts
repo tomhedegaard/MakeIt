@@ -25,7 +25,8 @@ export type RateLimitedAction =
   | "meal_swap"
   | "weight_log"
   | "pref_update"
-  | "kcal_adjustment";
+  | "kcal_adjustment"
+  | "meal_estimate";
 
 type Limit = { daily: number; weekly: number };
 
@@ -42,6 +43,9 @@ export const LIMITS: Record<RateLimitedAction, Limit> = {
   // user-driven. Limit prevents accidental double-fire within one
   // week but isn't surfaced in UI rate counters.
   kcal_adjustment: { daily: 2, weekly: 2 },
+  // HQ meal estimate: one row per Claude call (identify + estimate).
+  // Spec 2026-09-27 A.2 caps at 20 a day; the week is not the point.
+  meal_estimate: { daily: 20, weekly: 140 },
 };
 
 export type RateLimitStatus = {

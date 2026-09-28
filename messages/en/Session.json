@@ -11,7 +11,9 @@
   },
   "steppers": {
     "weight": "Weight",
-    "reps": "Reps"
+    "reps": "Reps",
+    "decrease": "Decrease {label}",
+    "increase": "Increase {label}"
   },
   "sets": {
     "title": "Sets in this exercise",
@@ -34,7 +36,7 @@
   },
   "exit": {
     "title": "End session?",
-    "description": "Your logged sets are already saved — you can pick it up later.",
+    "description": "Your logged sets are already saved. You can pick it up later.",
     "stay": "Stay",
     "confirm": "End"
   },
@@ -43,18 +45,30 @@
     "sets": "sets",
     "openDetails": "Open exercise details",
     "seeFull": "See the full exercise →",
-    "formCheck": "Form check with AI",
+    "demo": "See the move",
+    "demoAria": "See the move: {lift}",
+    "demoPlay": "Play the move",
+    "formCheck": "Record set {set}",
+    "formCheckSub": "Goes to coach Munk, bound to {lift}",
     "moreCues": " · {count} more cues",
-    "duration": "~6 sec →"
+    "duration": "Record →",
+    "thread": {
+      "eyebrow": "Form-check under this lift",
+      "pending": "Waiting for feedback from coach Munk",
+      "reviewed": "Coach Munk replied",
+      "voice": "Voice note",
+      "youFilmed": "You filmed this set",
+      "munkReply": "Feedback from coach Munk"
+    }
   },
   "restTimer": {
     "ariaLabel": "Rest",
     "title": "Rest",
-    "description": "Next set in {time} — grab a sip of water.",
+    "description": "Next set in {time}. Grab a sip of water.",
     "skip": "Skip"
   },
   "rpe": {
-    "label": "RPE — how heavy did it feel?",
+    "label": "RPE: how heavy did it feel?",
     "ariaLabel": "RPE"
   },
   "preview": {
@@ -64,6 +78,6 @@
     "sets": "Sets",
     "estTime": "Time",
     "summary": "{exerciseCount} exercises · {setCount} sets",
-    "start": "Start session"
+    "start": "Start the session"
   }
 }

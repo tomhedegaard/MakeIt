@@ -1,11 +1,16 @@
+import type { Viewport } from "next";
 import { redirect } from "next/navigation";
 import CoachShell from "@/components/coach/CoachShell";
-import { getSession } from "@/lib/auth";
+import ThemeScope from "@/components/ui/ThemeScope";
+import { getSession, signOutLeftoverAuthUser } from "@/lib/auth";
 import { COMPANY } from "@/lib/company";
 
 export const metadata = {
   title: `Coach — ${COMPANY.product}`,
 };
+
+// Coach console stays dark in v1 (spec §2). Explicit, so it never depends on :root.
+export const viewport: Viewport = { themeColor: "#111111", colorScheme: "dark" };
 
 export default async function CoachLayout({
   children,
@@ -13,7 +18,14 @@ export default async function CoachLayout({
   children: React.ReactNode;
 }) {
   const member = await getSession();
-  if (!member) redirect("/login");
+  if (!member) {
+    const leftover = await signOutLeftoverAuthUser();
+    redirect(leftover ? "/login?err=invite" : "/login");
+  }
   if (!member.isCoach) redirect("/dashboard");
-  return <CoachShell member={member}>{children}</CoachShell>;
+  return (
+    <ThemeScope theme="nat" className="flex flex-1 flex-col">
+      <CoachShell member={member}>{children}</CoachShell>
+    </ThemeScope>
+  );
 }

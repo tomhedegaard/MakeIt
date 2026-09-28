@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import Logo from "@/components/Logo";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 
 export async function generateMetadata() {
@@ -20,7 +21,7 @@ export default async function TermsPage() {
         </Link>
 
         <div className="eyebrow mb-3">{t("eyebrow")}</div>
-        <h1 className="font-display text-4xl md:text-6xl mb-6 leading-[0.95]">
+        <h1 className="font-display text-title md:text-[2.75rem] mb-6">
           {t("title")}
         </h1>
         <p className="text-fg-dim text-base leading-relaxed mb-10">
@@ -42,6 +43,10 @@ export default async function TermsPage() {
               : t("s01.cvrFallback")}
             {t("s01.bodyAfter")}
           </p>
+        </Section>
+
+        <Section eyebrow={t("age.eyebrow")} title={t("age.title")}>
+          <p>{t("age.body", { product: COMPANY.product })}</p>
         </Section>
 
         <Section eyebrow={t("s02.eyebrow")} title={t("s02.title")}>
@@ -96,7 +101,7 @@ export default async function TermsPage() {
           </p>
         </Section>
 
-        <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint mt-16">
+        <p className="text-xs text-fg-faint mt-16">
           {COMPANY.legal.entity ?? COMPANY.name}
           {COMPANY.legal.address ? ` · ${COMPANY.legal.address}` : ""}
         </p>
@@ -118,8 +123,7 @@ function Section({
     <section className="py-8 border-t hairline">
       <div className="grid md:grid-cols-12 gap-6">
         <div className="md:col-span-3">
-          <div className="eyebrow mb-2">{eyebrow}</div>
-          <h2 className="font-display text-2xl leading-tight">{title}</h2>
+          <SectionHeader eyebrow={eyebrow} title={title} />
         </div>
         <div className="md:col-span-9 space-y-4 text-fg/90 text-base leading-relaxed">
           {children}

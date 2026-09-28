@@ -44,7 +44,7 @@ export default function CoachShell({
         <div className="px-5 py-5 border-b hairline">
           <Logo />
           <div className="mt-4 flex items-center gap-2">
-            <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+            <span className="numeric text-micro border hairline-strong px-2 py-0.5">
               {t("badge")}
             </span>
             <span className="eyebrow">@{member.handle}</span>
@@ -69,7 +69,7 @@ export default function CoachShell({
                         : "text-fg-dim hover:text-fg hover:bg-bg-3/60"
                     )}
                   >
-                    <span className="numeric text-[11px] text-fg-faint group-hover:text-fg-dim w-6">
+                    <span className="numeric text-micro text-fg-faint group-hover:text-fg-dim w-6">
                       {item.num}
                     </span>
                     <span className="tracking-tight">{t(item.labelKey)}</span>
@@ -89,17 +89,17 @@ export default function CoachShell({
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile top bar */}
-        <header className="md:hidden sticky top-0 z-30 bg-bg/85 backdrop-blur border-b hairline">
+        <header className="safe-top md:hidden sticky top-0 z-30 bg-bg/85 backdrop-blur border-b hairline">
           <div className="flex h-14 items-center justify-between px-5">
             <div className="flex items-center gap-2">
               <Logo />
-              <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
+              <span className="numeric text-micro border hairline-strong px-2 py-0.5">
                 {t("badge")}
               </span>
             </div>
             <Link
               href="/dashboard"
-              className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim"
+              className="text-xs text-fg-dim"
             >
               {t("memberApp")}
             </Link>
@@ -116,7 +116,7 @@ export default function CoachShell({
                     <Link
                       href={item.href}
                       className={cn(
-                        "px-3 py-1.5 rounded-md text-xs font-mono uppercase tracking-[0.14em] block",
+                        "px-3 py-1.5 rounded-md text-xs block",
                         active ? "bg-bg-3 text-fg" : "text-fg-dim"
                       )}
                     >

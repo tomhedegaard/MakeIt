@@ -8,7 +8,7 @@
   "testSent": "Sendt {seconds}s siden",
   "dailyReminder": "Daglig påmindelse · 08:00",
   "vapidMissing": "VAPID keys mangler",
-  "vapidMissingAdmin": "VAPID keys mangler — kontakt admin",
+  "vapidMissingAdmin": "VAPID keys mangler. Kontakt admin",
   "vapidNotConfigured": "VAPID ikke konfigureret",
   "ellipsis": "…"
 }

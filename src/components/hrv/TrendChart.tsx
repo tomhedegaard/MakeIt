@@ -1,3 +1,6 @@
+import { useLocale, useTranslations } from "next-intl";
+import ChartEmptyFrame from "@/components/ui/ChartEmptyFrame";
+import { CHART_CRAFT } from "@/lib/svg/chart-craft";
 import {
   buildTrendChartModel,
   type ChartReading,
@@ -10,12 +13,17 @@ import {
  * no client island. All geometry comes from `buildTrendChartModel`; this
  * component is a thin renderer that only emits SVG elements from the model.
  *
- * Monochrome strength-editorial: every stroke / fill is `currentColor`
- * (the SVG inherits the surrounding text colour) with opacity expressing
- * the visual hierarchy — NO colour accents.
+ * Strength-editorial with domain ink: axes, grid and labels stay monochrome
+ * (`currentColor` + opacity), while the data itself — baseline band,
+ * mean line and daily points — renders in the heart domain color
+ * resolved from the /hrv data-domain scope (falls back to currentColor
+ * outside it). See docs/DOMAIN_COLOR_SYSTEM.md.
  *
- * Z-order, back to front: baseline band → 7-day mean line → daily points
- * → axis ticks. Sick days render as hollow (outline-only) dots.
+ * Z-order, back to front: grid → baseline band → mean area → 7-day mean
+ * line → daily points → axis ticks. Sick days render as hollow
+ * (outline-only) ticks.
+ *
+ * Empty series: a quiet charcoal frame — no invented data, no copy wall.
  *
  * Accessibility: an SVG `<title>`/`<desc>` plus a visually-hidden data-table
  * fallback give non-visual users the underlying readings.
@@ -24,16 +32,16 @@ import {
 /** Fixed SVG coordinate space — the element scales to its container width. */
 const VIEWPORT = { width: 640, height: 240 };
 
-/** Format an ISO timestamp as a short Danish date for the fallback table. */
-function tableDate(iso: string): string {
+/** Format an ISO timestamp as a short localized date for the fallback table. */
+function tableDate(iso: string, locale: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString("da-DK", { day: "numeric", month: "short" });
+  return d.toLocaleDateString(locale, { day: "numeric", month: "short" });
 }
 
 /** lnRMSSD → whole-millisecond RMSSD. */
-function rmssdMs(lnRmssd: number): number {
-  return Math.round(Math.exp(lnRmssd));
+function rmssdMs(lnRmssd: number): string {
+  return String(Math.round(Math.exp(lnRmssd)));
 }
 
 export default function TrendChart({
@@ -41,71 +49,129 @@ export default function TrendChart({
 }: {
   readings: ChartReading[];
 }) {
+  const t = useTranslations("Hrv.trendChart");
+  const locale = useLocale();
   const model = buildTrendChartModel(readings, VIEWPORT);
 
-  // The /hrv/trends page owns the rich empty state — a simple guard is fine.
-  if (model.isEmpty) return null;
+  if (model.isEmpty) {
+    return (
+      <div className="text-fg" data-trend-chart="empty">
+        <ChartEmptyFrame />
+      </div>
+    );
+  }
+
+  const { plot } = model;
 
   return (
-    <div className="text-fg">
+    <div className="text-fg" data-trend-chart="ready">
       <svg
         viewBox={`0 0 ${VIEWPORT.width} ${VIEWPORT.height}`}
         width="100%"
-        height="auto"
+        // height is a CSS length attribute in SVG: "auto" is invalid and logs a
+        // console error. The viewBox plus w-full/h-auto keeps the ratio.
         preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-labelledby="trendchart-title trendchart-desc"
-        className="block w-full"
+        className="block w-full h-auto"
       >
-        <title id="trendchart-title">HRV-trend</title>
+        <title id="trendchart-title">{t("title")}</title>
         <desc id="trendchart-desc">
-          Daglig HRV (RMSSD) med 7-dages gennemsnitslinje og 60-dages
-          baseline-bånd. {readings.length} målinger.
+          {t("desc", { count: readings.length })}
         </desc>
 
-        {/* 1. Baseline band — translucent region behind everything. */}
+        {/* Hairline plot frame + y-grid — monochrome, non-scaling. */}
+        <rect
+          x={plot.left}
+          y={plot.top}
+          width={plot.right - plot.left}
+          height={plot.bottom - plot.top}
+          fill="none"
+          stroke={CHART_CRAFT.frame}
+          strokeWidth={CHART_CRAFT.gridWidth}
+          vectorEffect="non-scaling-stroke"
+        />
+        {model.yTicks.map((tick, i) => (
+          <line
+            key={`g${i}`}
+            x1={plot.left}
+            x2={plot.right}
+            y1={tick.y}
+            y2={tick.y}
+            stroke={CHART_CRAFT.grid}
+            strokeWidth={CHART_CRAFT.gridWidth}
+            vectorEffect="non-scaling-stroke"
+          />
+        ))}
+
+        {/* Baseline band — tint language, not a solid wash. */}
         {model.baselineBand ? (
           <path
             d={model.baselineBand.path}
-            fill="currentColor"
-            fillOpacity={0.15}
+            fill="var(--domain, currentColor)"
+            fillOpacity={CHART_CRAFT.bandFillOpacity}
             stroke="none"
           />
         ) : null}
 
-        {/* 2. 7-day mean line. */}
+        {/* Soft volume under the 7-day mean. */}
+        {model.meanAreaPath ? (
+          <path
+            d={model.meanAreaPath}
+            fill="var(--domain, currentColor)"
+            fillOpacity={CHART_CRAFT.areaFillOpacity}
+            stroke="none"
+          />
+        ) : null}
+
+        {/* Dashed personal average — the centre of the band. */}
+        {model.personalAvg ? (
+          <path
+            d={model.personalAvg.path}
+            fill="none"
+            stroke="var(--domain, currentColor)"
+            strokeWidth={CHART_CRAFT.avgStrokeWidth}
+            strokeDasharray="5 4"
+            strokeOpacity={0.55}
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        ) : null}
+
+        {/* 7-day mean line — primary data ink. */}
         {model.meanLinePath ? (
           <path
             d={model.meanLinePath}
             fill="none"
-            stroke="currentColor"
-            strokeWidth={1.5}
+            stroke="var(--domain, currentColor)"
+            strokeWidth={CHART_CRAFT.meanStrokeWidth}
             strokeLinejoin="round"
             strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
           />
         ) : null}
 
-        {/* 3. Daily points — filled dot, or hollow outline for sick days. */}
+        {/* Daily points — editorial ticks, hollow outline for sick days. */}
         {model.points.map((p, i) => (
           <circle
             key={i}
             cx={p.x}
             cy={p.y}
-            r={2.5}
-            fill={p.isSick ? "none" : "currentColor"}
-            stroke="currentColor"
+            r={CHART_CRAFT.pointR}
+            fill={p.isSick ? "none" : "var(--domain, currentColor)"}
+            stroke="var(--domain, currentColor)"
             strokeWidth={p.isSick ? 1 : 0}
+            vectorEffect="non-scaling-stroke"
           />
         ))}
 
-        {/* 4. Y-axis ticks — faint ms-valued labels. */}
+        {/* Y-axis ticks — faint ms-valued labels. */}
         {model.yTicks.map((tick, i) => (
           <text
             key={i}
             x={4}
             y={tick.y}
-            fill="currentColor"
-            fillOpacity={0.45}
+            fill={CHART_CRAFT.label}
             fontSize={9}
             dominantBaseline="middle"
           >
@@ -113,14 +179,13 @@ export default function TrendChart({
           </text>
         ))}
 
-        {/* 5. X-axis ticks — short date labels near the bottom. */}
+        {/* X-axis ticks — short date labels near the bottom. */}
         {model.xTicks.map((tick, i) => (
           <text
             key={i}
             x={tick.x}
             y={VIEWPORT.height - 6}
-            fill="currentColor"
-            fillOpacity={0.45}
+            fill={CHART_CRAFT.label}
             fontSize={9}
             textAnchor="middle"
           >
@@ -131,17 +196,17 @@ export default function TrendChart({
 
       {/* Visually-hidden data-table fallback for non-visual users. */}
       <table className="sr-only">
-        <caption>HRV-målinger: dato og RMSSD</caption>
+        <caption>{t("caption")}</caption>
         <thead>
           <tr>
-            <th scope="col">Dato</th>
-            <th scope="col">RMSSD (ms)</th>
+            <th scope="col">{t("colDate")}</th>
+            <th scope="col">{t("colRmssd")}</th>
           </tr>
         </thead>
         <tbody>
           {readings.map((r, i) => (
             <tr key={i}>
-              <td>{tableDate(r.measuredAt)}</td>
+              <td>{tableDate(r.measuredAt, locale)}</td>
               <td>{rmssdMs(r.lnRmssd)}</td>
             </tr>
           ))}

@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import ReactionButtons from "@/components/buddy/ReactionButtons";
 import { getMyBuddy } from "@/lib/data/buddy";
 import type { ReadinessBucket } from "@/lib/hrv/types";
+import { BicepsFlexed, Dumbbell, Eye, Flame, MessageSquare, Moon } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * CC-3 — /buddy overview surface.
@@ -21,17 +24,38 @@ import type { ReadinessBucket } from "@/lib/hrv/types";
  * Spec §6 outlines the migration (conversations.thread_type column +
  * buddy_threads view) which lands in a CC-3 follow-up.
  */
-const BUCKET_EMOJI: Record<ReadinessBucket, string> = {
-  very_low: "🔴",
-  low: "🟠",
-  normal: "🟢",
-  high: "⚡",
-  very_high: "🚀",
+const BUCKET_LEVEL: Record<ReadinessBucket, number> = {
+  very_low: 1,
+  low: 2,
+  normal: 3,
+  high: 4,
+  very_high: 5,
 };
 
-function bucketEmoji(b: ReadinessBucket | null): string {
-  return b ? BUCKET_EMOJI[b] : "❔";
+/**
+ * Readiness as five flat segments in the Hjerte colour, filled up to the
+ * bucket (Nord, spec §11: data is ink, never a traffic-light emoji).
+ * Unknown shows five empty segments.
+ */
+function ReadinessBar({ bucket }: { bucket: ReadinessBucket | null }) {
+  const level = bucket ? BUCKET_LEVEL[bucket] : 0;
+  return (
+    <span data-domain="heart" className="flex gap-1" aria-hidden="true">
+      {[1, 2, 3, 4, 5].map((n) => (
+        <span key={n} className={n <= level ? "h-3 w-4 bg-domain" : "h-3 w-4 bg-bg-3"} />
+      ))}
+    </span>
+  );
 }
+
+const INTERACTION_ICON = {
+  reaction_fire: Flame,
+  reaction_strong: BicepsFlexed,
+  reaction_eyes: Eye,
+  nudge_session: Dumbbell,
+  nudge_sleep: Moon,
+  comment: MessageSquare,
+} as const;
 
 function relativeTimeDa(iso: string, now: Date = new Date()): string {
   const then = new Date(iso).getTime();
@@ -51,28 +75,25 @@ export default async function BuddyPage() {
   if (!buddy) {
     return (
       <Container className="py-6 lg:py-12 space-y-6">
-        <header className="pt-2">
-          <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-            {t("titleEmpty")}
-          </h1>
+        <div className="pt-2">
+          <PageTitle kicker={t("eyebrow")} title={t("titleEmpty")} />
           <p className="mt-2 text-fg-dim text-sm">{t("emptyBody")}</p>
-        </header>
+        </div>
       </Container>
     );
   }
 
   return (
     <Container className="py-6 lg:py-12 space-y-6">
-      <header className="pt-2">
-        <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {t("titleWithHandle", { handle: buddy.buddyHandle })}
-        </h1>
+      <div className="pt-2">
+        <PageTitle
+          kicker={t("eyebrow")}
+          title={t("titleWithHandle", { handle: buddy.buddyHandle })}
+        />
         <p className="mt-2 text-fg-dim text-sm">
           {t("subtitle", { tier: buddy.buddyTier })}
         </p>
-      </header>
+      </div>
 
       <section className="surface rounded-xl p-5 space-y-4">
         <div className="flex items-center justify-between gap-4">
@@ -81,9 +102,7 @@ export default async function BuddyPage() {
               {t("readinessLabel", { handle: buddy.buddyHandle })}
             </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl leading-none" aria-hidden="true">
-                {bucketEmoji(buddy.buddyReadinessBucket)}
-              </span>
+              <ReadinessBar bucket={buddy.buddyReadinessBucket} />
               <span className="text-sm text-fg-dim">
                 {buddy.buddyReadinessBucket
                   ? t(`buckets.${buddy.buddyReadinessBucket}`)
@@ -108,7 +127,7 @@ export default async function BuddyPage() {
       <section className="space-y-3">
         <div className="eyebrow">{t("recentHeader")}</div>
         {buddy.recentInteractions.length === 0 ? (
-          <div className="surface-2 rounded-lg p-6 text-center">
+          <div className="surface-2 rounded-lg p-6">
             <p className="text-fg-dim text-sm">{t("noInteractions")}</p>
           </div>
         ) : (
@@ -120,14 +139,10 @@ export default async function BuddyPage() {
                   key={i.id}
                   className="surface-2 rounded-lg p-3 flex items-start gap-3"
                 >
-                  <span aria-hidden="true" className="text-xl leading-none shrink-0">
-                    {i.kind === "reaction_fire" && "🔥"}
-                    {i.kind === "reaction_strong" && "💪"}
-                    {i.kind === "reaction_eyes" && "👀"}
-                    {i.kind === "nudge_session" && "🏋️"}
-                    {i.kind === "nudge_sleep" && "🌙"}
-                    {i.kind === "comment" && "💬"}
-                  </span>
+                  {(() => {
+                    const Icon = INTERACTION_ICON[i.kind as keyof typeof INTERACTION_ICON];
+                    return Icon ? <Icon {...ICON} className="size-5 shrink-0 text-fg-dim" /> : null;
+                  })()}
                   <div className="min-w-0 flex-1">
                     <div className="text-xs text-fg-faint mb-0.5">
                       {fromYou

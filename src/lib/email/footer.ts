@@ -28,7 +28,7 @@ function legalLineParts(): string[] {
 /** Single-line legal + domain string for inline use inside a styled paragraph. */
 export function emailFooterHtml(): string {
   const legal = legalLineParts().join(" · ");
-  const link = `<a href="${COMPANY.marketingUrl}" style="color:#A8A6A0;">${COMPANY.marketingDomain}</a>`;
+  const link = `<a href="${COMPANY.marketingUrl}" style="color:#5E5E59;">${COMPANY.marketingDomain}</a>`;
   return `${legal} · ${link}`;
 }
 

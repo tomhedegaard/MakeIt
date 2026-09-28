@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { rangeFill } from "@/lib/ui/range";
+import { Pause, Play } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 /**
  * Minimal HTML5 audio player for mental sessions (B-layer voice-agnostic).
@@ -17,6 +21,7 @@ import { useEffect, useRef, useState } from "react";
  * to be the always-available default.
  */
 export default function AudioPlayer({ src, durationSeconds }: { src: string; durationSeconds: number }) {
+  const t = useTranslations("Mind.audio");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -83,22 +88,17 @@ export default function AudioPlayer({ src, durationSeconds }: { src: string; dur
   if (errored) return null;
 
   return (
-    <div className="flex items-center gap-4 rounded-full border hairline bg-bg-2/40 px-4 py-2.5">
+    <div className="flex items-center gap-4 border hairline bg-bg-2/40 px-4 py-2.5">
       <button
         type="button"
         onClick={toggle}
-        aria-label={playing ? "Pause audio" : "Afspil audio"}
+        aria-label={playing ? t("pause") : t("play")}
         className="size-9 rounded-full bg-fg text-bg flex items-center justify-center shrink-0 hover:opacity-90 transition-opacity"
       >
         {playing ? (
-          <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden>
-            <rect x="6" y="5" width="4" height="14" rx="0.5" />
-            <rect x="14" y="5" width="4" height="14" rx="0.5" />
-          </svg>
+          <Pause {...ICON} className="size-4" />
         ) : (
-          <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden>
-            <path d="M7 5l12 7-12 7z" />
-          </svg>
+          <Play {...ICON} className="size-4" />
         )}
       </button>
 
@@ -109,8 +109,9 @@ export default function AudioPlayer({ src, durationSeconds }: { src: string; dur
         step={0.1}
         value={currentTime}
         onChange={scrub}
-        aria-label="Søg i audio"
-        className="flex-1 accent-fg"
+        aria-label={t("seek")}
+        className="range flex-1"
+        style={rangeFill(currentTime, 0, actualDuration)}
       />
 
       <span className="text-fg-dim text-xs tabular-nums shrink-0 w-16 text-right">

@@ -2,8 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocaleTag } from "@/i18n/config";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { redeemRewardAction } from "./actions";
 import type { Reward } from "@/lib/data/rewards";
 
@@ -17,6 +19,8 @@ export default function RedeemButton({
   balance: number;
 }) {
   const t = useTranslations("Reps.redeem");
+  const tShop = useTranslations("Reps.shop");
+  const tag = intlLocaleTag(useLocale());
   const [open, setOpen] = useState(false);
   const [stage, setStage] = useState<Stage>("confirm");
   const [errorReason, setErrorReason] = useState<string>("");
@@ -66,7 +70,7 @@ export default function RedeemButton({
           ? t("soldOut")
           : !canAfford
             ? t("missingReps", {
-                amount: (reward.costReps - balance).toLocaleString("da-DK"),
+                amount: (reward.costReps - balance).toLocaleString(tag),
               })
             : t("redeem")}
       </button>
@@ -75,8 +79,7 @@ export default function RedeemButton({
         <SheetContent>
           {stage === "confirm" ? (
             <>
-              <div className="eyebrow mb-2">{t("confirmEyebrow")}</div>
-              <h2 className="font-display text-2xl mb-2">{reward.name}</h2>
+              <SectionHeader eyebrow={t("confirmEyebrow")} title={reward.name} />
               {reward.description ? (
                 <p className="text-fg-dim text-sm mb-5">{reward.description}</p>
               ) : null}
@@ -85,26 +88,26 @@ export default function RedeemButton({
                 <div className="flex items-baseline justify-between mb-3">
                   <span className="text-fg-dim text-sm">{t("price")}</span>
                   <span className="numeric text-lg">
-                    {reward.costReps.toLocaleString("da-DK")}{" "}
-                    <span className="text-fg-dim text-xs">Reps</span>
+                    {reward.costReps.toLocaleString(tag)}{" "}
+                    <span className="text-fg-dim text-xs">{tShop("repsLabel")}</span>
                   </span>
                 </div>
                 <div className="flex items-baseline justify-between mb-3 border-t hairline pt-3">
                   <span className="text-fg-dim text-sm">{t("yourBalance")}</span>
                   <span className="numeric text-lg">
-                    {balance.toLocaleString("da-DK")}
+                    {balance.toLocaleString(tag)}
                   </span>
                 </div>
                 <div className="flex items-baseline justify-between border-t hairline-strong pt-3">
                   <span className="text-fg text-sm">{t("afterRedemption")}</span>
                   <span className="numeric text-lg">
-                    {(balance - reward.costReps).toLocaleString("da-DK")}{" "}
-                    <span className="text-fg-dim text-xs">Reps</span>
+                    {(balance - reward.costReps).toLocaleString(tag)}{" "}
+                    <span className="text-fg-dim text-xs">{tShop("repsLabel")}</span>
                   </span>
                 </div>
               </div>
 
-              <p className="text-xs font-mono text-fg-faint mb-5">
+              <p className="text-xs text-fg-faint mb-5">
                 {reward.kind === "physical" || reward.kind === "drop"
                   ? t("fulfilmentPhysical")
                   : reward.kind === "experience"
@@ -135,17 +138,16 @@ export default function RedeemButton({
 
           {stage === "success" ? (
             <div className="text-center py-2">
-              <div className="eyebrow mb-3">{t("successEyebrow")}</div>
-              <h2 className="font-display text-3xl mb-2">{t("successTitle")}</h2>
+              <SectionHeader eyebrow={t("successEyebrow")} title={t("successTitle")} className="justify-center" />
               <p className="text-fg-dim text-sm mb-6 px-2">
                 {t("successBody")}
               </p>
 
               <div className="surface-2 rounded-lg p-4 text-left mb-6">
                 <div className="font-display text-lg">{reward.name}</div>
-                <div className="text-xs font-mono text-fg-faint mt-1">
+                <div className="text-xs text-fg-faint mt-1">
                   {t("successMeta", {
-                    amount: reward.costReps.toLocaleString("da-DK"),
+                    amount: reward.costReps.toLocaleString(tag),
                   })}
                 </div>
               </div>
@@ -162,8 +164,7 @@ export default function RedeemButton({
 
           {stage === "error" ? (
             <div className="text-center py-2">
-              <div className="eyebrow mb-3">{t("errorEyebrow")}</div>
-              <h2 className="font-display text-2xl mb-2">{errorReason}</h2>
+              <SectionHeader eyebrow={t("errorEyebrow")} title={errorReason} className="justify-center" />
               <p className="text-fg-dim text-sm mb-6">
                 {t("errorBody")}
               </p>

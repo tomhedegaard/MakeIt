@@ -8,7 +8,7 @@ const Loaded = dynamic(() => import("./AnatomyFigure3D"), {
   ssr: false,
   loading: () => (
     <div className="surface-2 rounded-2xl flex items-center justify-center w-full h-full">
-      <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <span className="text-micro text-fg-faint">
         Loading 3D…
       </span>
     </div>

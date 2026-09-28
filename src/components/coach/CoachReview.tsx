@@ -7,6 +7,7 @@ import { reviewFormCheckAction } from "@/app/coach/queue/actions";
 import type { FormCheckRow } from "@/lib/data/coach";
 import { draftOverlapRatio } from "@/lib/coach/draft-overlap";
 import { track, TELEMETRY } from "@/lib/telemetry";
+import AudioRecorder from "@/components/chat/AudioRecorder";
 
 export default function CoachReviewButton({
   formCheck,
@@ -20,6 +21,8 @@ export default function CoachReviewButton({
   // Pre-fill with Claude's draft so Munk edits inline rather than
   // writing from a blank box (spec §MM-2). Falls back to empty.
   const [notes, setNotes] = useState(draft ?? "");
+  const [voiceSec, setVoiceSec] = useState<number | null>(null);
+  const [recording, setRecording] = useState(false);
   const [pending, startTransition] = useTransition();
   const openedAtRef = useRef<number | null>(null);
 
@@ -84,7 +87,7 @@ export default function CoachReviewButton({
               preload="metadata"
               className="w-full max-h-[420px] object-contain bg-black"
             />
-            <div className="px-4 py-2 text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint border-t hairline">
+            <div className="px-4 py-2 text-micro text-fg-faint border-t hairline">
               {t("signedLink")}
             </div>
           </div>
@@ -112,7 +115,7 @@ export default function CoachReviewButton({
                 ? t("draftLabel", { handle: formCheck.memberHandle })
                 : t("coachNotesLabel", { handle: formCheck.memberHandle })}
               {hasDraft ? (
-                <span className="inline-flex items-center rounded-full surface-2 px-2 py-0.5 text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+                <span className="inline-flex items-center surface-2 px-2 py-0.5 text-micro text-fg-faint">
                   {t("draftBadge")}
                 </span>
               ) : null}
@@ -124,6 +127,33 @@ export default function CoachReviewButton({
               onChange={(e) => setNotes(e.target.value)}
             />
           </label>
+          <div className="mt-4" data-munk-voice-composer="">
+            <div className="eyebrow mb-2">
+              {t("voiceLabel", { handle: formCheck.memberHandle })}
+            </div>
+            <p className="text-xs text-fg-faint mb-2">{t("voiceHint")}</p>
+            {voiceSec != null ? (
+              <p className="text-sm text-fg-dim" data-munk-voice="">
+                {t("voiceReady", { sec: voiceSec })}
+              </p>
+            ) : recording ? (
+              <AudioRecorder
+                onCancel={() => setRecording(false)}
+                onSubmit={async (_blob, durationSec) => {
+                  setVoiceSec(Math.round(durationSec));
+                  setRecording(false);
+                }}
+              />
+            ) : (
+              <button
+                type="button"
+                className="btn btn-sm"
+                onClick={() => setRecording(true)}
+              >
+                {t("voiceLabel", { handle: formCheck.memberHandle })}
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mt-5">
@@ -149,7 +179,7 @@ export default function CoachReviewButton({
           </button>
         </div>
 
-        <p className="mt-4 text-xs font-mono text-fg-faint text-center">
+        <p className="mt-4 text-xs text-fg-faint text-center">
           {t("footnote")}
         </p>
       </SheetContent>

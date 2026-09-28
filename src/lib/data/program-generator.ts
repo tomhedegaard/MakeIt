@@ -110,8 +110,8 @@ function restFor(intent: "main_strength" | "main_hyp" | "accessory" | "isolation
 function strengthDayA(p: ProfileInput): GeneratedSession {
   const rm = pick1RM(p, "sq");
   return {
-    dayLabel: "Dag A — Squat",
-    title: "Squat fokus + posterior chain",
+    dayLabel: "Dag A · Squat",
+    title: "Squat-fokus og bagside",
     estimatedMinutes: 65,
     scheduledOffsetDays: 0,
     exercises: [
@@ -162,7 +162,7 @@ function strengthDayA(p: ProfileInput): GeneratedSession {
 function strengthDayB(p: ProfileInput): GeneratedSession {
   const rm = pick1RM(p, "b");
   return {
-    dayLabel: "Dag B — Bench",
+    dayLabel: "Dag B · Bench",
     title: "Pause-bench + horisontalt træk",
     estimatedMinutes: 55,
     scheduledOffsetDays: 1,
@@ -215,7 +215,7 @@ function strengthDayB(p: ProfileInput): GeneratedSession {
 function strengthDayC(p: ProfileInput): GeneratedSession {
   const rm = pick1RM(p, "dl");
   return {
-    dayLabel: "Dag C — Deadlift",
+    dayLabel: "Dag C · Deadlift",
     title: "Deadlift fokus + benstyrke",
     estimatedMinutes: 70,
     scheduledOffsetDays: 3,
@@ -263,7 +263,7 @@ function strengthDayC(p: ProfileInput): GeneratedSession {
 
 function strengthDayD(p: ProfileInput): GeneratedSession {
   return {
-    dayLabel: "Dag D — Hyper",
+    dayLabel: "Dag D · Hyper",
     title: "Volumen-blok: kvadriceps + skulder",
     estimatedMinutes: 50,
     scheduledOffsetDays: 4,
@@ -336,6 +336,24 @@ function asHypertrophy(session: GeneratedSession): GeneratedSession {
  * ----------------------------------------------------------------- */
 
 /**
+ * Catalog program chosen from onboarding goal. Same mapping as
+ * `generateRuleBased` / the Claude prompt — used by DONE to resolve
+ * the blueprint without synthesizing week-1 rows (or calling Claude).
+ */
+export function catalogProgramForProfile(goalFocus: GoalFocus): {
+  programCode: string;
+  programName: string;
+} {
+  if (goalFocus === "hypertrophy") {
+    return { programCode: "HYP-08", programName: "Build Phase" };
+  }
+  if (goalFocus === "deadlift_spec") {
+    return { programCode: "DL-06", programName: "Deadlift Specialization" };
+  }
+  return { programCode: "STR-12", programName: "PR-Block" };
+}
+
+/**
  * Public API — async dispatcher. When ANTHROPIC_API_KEY is set, we try
  * Claude (Sonnet 4.6) first; on any failure we silently fall back to
  * the rule-based generator. Both paths return the same shape.
@@ -384,7 +402,7 @@ export function generateRuleBased(profile: ProfileInput): {
     sessions = [
       { ...dl, scheduledOffsetDays: 0 },
       ...others.slice(0, 2).map((s, i) => ({ ...s, scheduledOffsetDays: i + 1 })),
-      { ...dl, dayLabel: "Dag D — Pull volumen", title: "DL technik + accessory pulls", scheduledOffsetDays: 4 },
+      { ...dl, dayLabel: "Dag D · Pull volumen", title: "Dødløft-teknik og støtte-træk", scheduledOffsetDays: 4 },
     ];
   }
 
@@ -404,18 +422,7 @@ export function generateRuleBased(profile: ProfileInput): {
   }
 
   return {
-    programCode:
-      profile.goalFocus === "hypertrophy"
-        ? "HYP-08"
-        : profile.goalFocus === "deadlift_spec"
-          ? "DL-06"
-          : "STR-12",
-    programName:
-      profile.goalFocus === "hypertrophy"
-        ? "Build Phase"
-        : profile.goalFocus === "deadlift_spec"
-          ? "Deadlift Specialization"
-          : "PR-Block",
+    ...catalogProgramForProfile(profile.goalFocus),
     sessions,
   };
 }
@@ -451,7 +458,17 @@ export type PrevSession = {
 };
 
 /** Progressive overload rules — week N+1 from week N. */
-function progressSet(prev: PrevSet, isDeload: boolean): GeneratedSet {
+/**
+ * Progression policy. Adults hold the weight when the logged set was
+ * above RPE 8.5. MakeIt Ung holds earlier, above RPE 7.5, so a young
+ * member keeps two or three reps in reserve and only ever builds on
+ * their own logged sets (spec 2026-09-27-makeit-ung afsnit 3).
+ */
+export type ProgressionPolicy = { holdAboveRpe: number };
+export const ADULT_PROGRESSION: ProgressionPolicy = { holdAboveRpe: 8.5 };
+export const YOUTH_PROGRESSION: ProgressionPolicy = { holdAboveRpe: 7.5 };
+
+function progressSet(prev: PrevSet, isDeload: boolean, policy: ProgressionPolicy = ADULT_PROGRESSION): GeneratedSet {
   const targetW = Number(prev.target_weight ?? 0);
   const targetReps = prev.target_reps ?? 0;
   const targetRpe = prev.target_rpe != null ? Number(prev.target_rpe) : null;
@@ -476,8 +493,8 @@ function progressSet(prev: PrevSet, isDeload: boolean): GeneratedSet {
     return { reps: targetReps, weight: 0, rpe: targetRpe, restSec };
   }
 
-  // If logged at RPE > 8.5, hold weight — too heavy to add yet.
-  if (completed && loggedRpe != null && loggedRpe > 8.5) {
+  // If logged above the policy's RPE, hold weight — too heavy to add yet.
+  if (completed && loggedRpe != null && loggedRpe > policy.holdAboveRpe) {
     return { reps: targetReps, weight: r25(baseW), rpe: targetRpe, restSec };
   }
 
@@ -486,12 +503,13 @@ function progressSet(prev: PrevSet, isDeload: boolean): GeneratedSet {
 
 export function progressWeek(
   prev: PrevSession[],
-  isDeload: boolean
+  isDeload: boolean,
+  policy: ProgressionPolicy = ADULT_PROGRESSION,
 ): GeneratedSession[] {
   const offsets = [0, 1, 3, 4];
   return prev.map((s, idx) => ({
     dayLabel: s.day_label ?? `Dag ${idx + 1}`,
-    title: isDeload ? `${s.title} — DELOAD` : s.title,
+    title: isDeload ? `${s.title} · DELOAD` : s.title,
     estimatedMinutes: s.estimated_minutes ?? 60,
     scheduledOffsetDays: offsets[idx] ?? idx,
     exercises: s.exercises
@@ -503,7 +521,7 @@ export function progressWeek(
         sets: ex.sets
           .slice()
           .sort((a, b) => a.position - b.position)
-          .map((st) => progressSet(st, isDeload)),
+          .map((st) => progressSet(st, isDeload, policy)),
       })),
   }));
 }

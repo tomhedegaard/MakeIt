@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { headers } from "next/headers";
 
+import { assertCronAuth } from "@/lib/cron/auth";
+import { recordWatchedCronRun } from "@/lib/data/cron-runs";
 import { createServiceClient } from "@/lib/supabase/service";
 import { aggregateMorningReportInputs } from "@/lib/data/coach-morning-report";
 import {
@@ -45,10 +47,8 @@ type CoachRow = {
 };
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const auth = request.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("unauthorized", { status: 401 });
-  }
+  const unauthorized = assertCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   const supabase = createServiceClient();
   const now = new Date();
@@ -141,7 +141,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     `[cron/coach-morning-report] date=${reportDate} urgency=${urgency} patterns=${payload.patterns.length} coaches=${coaches.length} written=${written} emailed=${emailed} skipped=${skipped} failed=${failed}`,
   );
 
-  return NextResponse.json({
+  const body = {
     ok: failed === 0,
     report_date: reportDate,
     urgency,
@@ -151,5 +151,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     emailed,
     skipped,
     failed,
-  });
+  };
+  await recordWatchedCronRun(supabase, "coach-morning-report", body);
+  return NextResponse.json(body);
 }

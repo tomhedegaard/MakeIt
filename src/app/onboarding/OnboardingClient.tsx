@@ -1,10 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, type FormEvent } from "react";
+import { flushSync } from "react-dom";
 import { useTranslations } from "next-intl";
 import Logo from "@/components/Logo";
 import Container from "@/components/Container";
+import PlanGenerationOverlay from "@/components/nutrition/PlanGenerationOverlay";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { cn } from "@/lib/utils";
+import {
+  isNextRedirectError,
+  nextRedirectPath,
+} from "@/lib/programs/start-program-error";
 import { completeOnboardingAction } from "./actions";
 
 type Goal = "strength" | "hypertrophy" | "hybrid" | "deadlift_spec";
@@ -17,6 +24,10 @@ const EQUIP_IDS: Equip[] = ["full", "home_rack", "minimal"];
 
 const FREQ_OPTS = [3, 4, 5] as const;
 
+/** Demo (and a fast connected write) can finish in the same tick.
+ *  Keep the overlay up long enough that DONE never looks like a no-op. */
+const MIN_PENDING_MS = 800;
+
 export default function OnboardingClient({
   memberHandle,
   err,
@@ -25,24 +36,71 @@ export default function OnboardingClient({
   err?: string;
 }) {
   const t = useTranslations("Onboarding");
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(
+    err === "save" || err === "auth" || err === "gen" || err === "freq" ? 3 : 1,
+  );
   const [goal, setGoal] = useState<Goal | null>(null);
   const [level, setLevel] = useState<Level | null>(null);
   const [freq, setFreq] = useState<number>(4);
   const [equip, setEquip] = useState<Equip | null>(null);
+  const [maxSquat, setMaxSquat] = useState("");
+  const [maxBench, setMaxBench] = useState("");
+  const [maxDeadlift, setMaxDeadlift] = useState("");
+  const [maxOhp, setMaxOhp] = useState("");
+  const [pending, setPending] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const totalSteps = 3;
   const canNext1 = goal && level && equip;
   const canNext2 = true; // 1RMs are optional
 
+  async function runComplete() {
+    if (pending) return;
+    const form = formRef.current;
+    if (!form) return;
+
+    // flushSync so the overlay paints before the server action starts.
+    // A form-status hook can look idle for the rest of a long write.
+    const startedAt = Date.now();
+    flushSync(() => {
+      setPending(true);
+    });
+
+    async function finish(path: string) {
+      const wait = MIN_PENDING_MS - (Date.now() - startedAt);
+      if (wait > 0) {
+        await new Promise((resolve) => window.setTimeout(resolve, wait));
+      }
+      window.location.assign(path);
+    }
+
+    try {
+      await completeOnboardingAction(new FormData(form));
+      await finish("/dashboard");
+    } catch (error) {
+      if (isNextRedirectError(error)) {
+        await finish(nextRedirectPath(error) ?? "/dashboard");
+        return;
+      }
+      console.error("[OnboardingClient] completeOnboardingAction failed", error);
+      await finish("/onboarding?err=gen");
+    }
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (step !== totalSteps) return;
+    void runComplete();
+  }
+
   return (
     <div className="minh-dvh flex flex-col">
       {/* Top bar */}
-      <header className="sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
+      <header className="safe-top sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
         <Container className="h-14 flex items-center justify-between gap-3">
           <Logo />
           <div className="flex items-center gap-3">
-            <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+            <span className="text-micro text-fg-faint">
               {step} / {totalSteps}
             </span>
           </div>
@@ -55,18 +113,36 @@ export default function OnboardingClient({
         </div>
       </header>
 
-      <form action={completeOnboardingAction} className="flex-1 flex flex-col">
+      <form
+        ref={formRef}
+        action={completeOnboardingAction}
+        onSubmit={handleSubmit}
+        aria-busy={pending}
+        className="flex-1 flex flex-col"
+      >
         {/* Persisted state across step navigation. Step 1's radio inputs only
             render when step === 1, so without these the form would submit
             blank goal/experience/equipment when the user clicks Generér on
             step 3. Frequency already had a hidden input below; pulled that
-            up here for consistency. */}
+            up here for consistency. Same for 1RMs from step 2. */}
         <input type="hidden" name="goal" value={goal ?? ""} />
         <input type="hidden" name="experience" value={level ?? ""} />
         <input type="hidden" name="equipment" value={equip ?? ""} />
         <input type="hidden" name="frequency" value={freq} />
+        <input type="hidden" name="maxSquat" value={maxSquat} />
+        <input type="hidden" name="maxBench" value={maxBench} />
+        <input type="hidden" name="maxDeadlift" value={maxDeadlift} />
+        <input type="hidden" name="maxOhp" value={maxOhp} />
 
-        <Container size="narrow" className="py-8 lg:py-14 flex-1 space-y-10">
+        <Container size="narrow" className="py-8 lg:py-14 flex-1 space-y-10 pb-28 lg:pb-10">
+          {err === "goal" || err === "level" || err === "equip" ? (
+            <Banner>{t("step1.errorBanner")}</Banner>
+          ) : null}
+          {err === "save" ? <Banner>{t("step3.errorSave")}</Banner> : null}
+          {err === "auth" ? <Banner>{t("step3.errorAuth")}</Banner> : null}
+          {err === "gen" ? <Banner>{t("step3.errorGen")}</Banner> : null}
+          {err === "freq" ? <Banner>{t("step3.errorFreq")}</Banner> : null}
+
           {step === 1 ? (
             <>
               <Intro
@@ -74,10 +150,6 @@ export default function OnboardingClient({
                 title={t("step1.introTitle")}
                 sub={t("step1.introSub")}
               />
-
-              {err === "goal" || err === "level" || err === "equip" ? (
-                <Banner>{t("step1.errorBanner")}</Banner>
-              ) : null}
 
               <Section eyebrow={t("step1.goalEyebrow")} title={t("step1.goalTitle")}>
                 <Grid>
@@ -90,12 +162,13 @@ export default function OnboardingClient({
                       onCheck={() => setGoal(id)}
                       title={t(`goals.${id}.title`)}
                       sub={t(`goals.${id}.sub`)}
+                      disabled={pending}
                     />
                   ))}
                 </Grid>
               </Section>
 
-              <Section eyebrow={t("step1.levelEyebrow")} title={t("step1.levelTitle")}>
+              <Section title={t("step1.levelTitle")}>
                 <Grid>
                   {LEVEL_IDS.map((id) => (
                     <Choice
@@ -106,23 +179,45 @@ export default function OnboardingClient({
                       onCheck={() => setLevel(id)}
                       title={t(`levels.${id}.title`)}
                       sub={t(`levels.${id}.sub`)}
+                      disabled={pending}
                     />
                   ))}
                 </Grid>
               </Section>
 
-              <Section eyebrow={t("step1.freqEyebrow")} title={t("step1.freqTitle")}>
+              <Section title={t("step1.freqTitle")}>
+                {/* Real radios, like the Mål/Niveau/Udstyr questions above:
+                    plain buttons carried the selection in a CSS class only,
+                    so a screen reader could not tell which one was chosen.
+                    The input is sr-only — the .pill[data-active] look is
+                    unchanged. The hidden `frequency` field at the top of the
+                    form comes first in the form and stays the submitted
+                    value, exactly as for goal/experience/equipment. */}
                 <div className="grid grid-cols-3 gap-2">
                   {FREQ_OPTS.map((f) => (
-                    <button
+                    <label
                       key={f}
-                      type="button"
                       data-active={freq === f}
-                      onClick={() => setFreq(f)}
-                      className="pill touch-app h-12"
+                      className={cn(
+                        "pill touch-app h-12 cursor-pointer",
+                        // The input is sr-only, so the global *:focus-visible
+                        // ring would land on a clipped 1px box — put it on the
+                        // pill instead. Same outline tokens, focus only.
+                        "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-fg",
+                        pending && "pointer-events-none opacity-60",
+                      )}
                     >
+                      <input
+                        type="radio"
+                        name="frequency"
+                        value={f}
+                        checked={freq === f}
+                        onChange={() => setFreq(f)}
+                        disabled={pending}
+                        className="sr-only"
+                      />
                       {t("freqOption", { days: f })}
-                    </button>
+                    </label>
                   ))}
                 </div>
               </Section>
@@ -138,6 +233,7 @@ export default function OnboardingClient({
                       onCheck={() => setEquip(id)}
                       title={t(`equipment.${id}.title`)}
                       sub={t(`equipment.${id}.sub`)}
+                      disabled={pending}
                     />
                   ))}
                 </Grid>
@@ -154,13 +250,37 @@ export default function OnboardingClient({
               />
 
               <div className="grid grid-cols-2 gap-3">
-                <NumField name="maxSquat"    label={t("step2.squat")}    placeholder="—" />
-                <NumField name="maxBench"    label={t("step2.bench")}    placeholder="—" />
-                <NumField name="maxDeadlift" label={t("step2.deadlift")} placeholder="—" />
-                <NumField name="maxOhp"      label={t("step2.ohp")}      placeholder="—" />
+                <NumField
+                  label={t("step2.squat")}
+                  placeholder="-"
+                  value={maxSquat}
+                  onChange={setMaxSquat}
+                  disabled={pending}
+                />
+                <NumField
+                  label={t("step2.bench")}
+                  placeholder="-"
+                  value={maxBench}
+                  onChange={setMaxBench}
+                  disabled={pending}
+                />
+                <NumField
+                  label={t("step2.deadlift")}
+                  placeholder="-"
+                  value={maxDeadlift}
+                  onChange={setMaxDeadlift}
+                  disabled={pending}
+                />
+                <NumField
+                  label={t("step2.ohp")}
+                  placeholder="-"
+                  value={maxOhp}
+                  onChange={setMaxOhp}
+                  disabled={pending}
+                />
               </div>
 
-              <p className="text-xs font-mono text-fg-faint">
+              <p className="text-xs text-fg-faint">
                 {t("step2.footnote")}
               </p>
             </>
@@ -179,6 +299,7 @@ export default function OnboardingClient({
                 <textarea
                   name="injuries"
                   rows={4}
+                  disabled={pending}
                   className="field py-3 min-h-[120px] resize-none w-full"
                   placeholder={t("step3.injuriesPlaceholder")}
                 />
@@ -191,46 +312,108 @@ export default function OnboardingClient({
                 equip={equip}
               />
 
-              <p className="text-xs font-mono text-fg-faint">
+              <p className="text-xs text-fg-faint">
                 {t("step3.footnote")}
+              </p>
+              <p className="text-xs text-fg-faint">
+                {t("step3.submitTiming")}
               </p>
             </>
           ) : null}
         </Container>
 
-        {/* Sticky CTA */}
+        {/* Sticky on mobile so DONE stays tappable; static on desktop so
+            NEXT does not cover GOAL cards. Content has pb-28 on small
+            screens to keep the last cards above the bar. */}
         <div
-          className="sticky bottom-0 z-30 border-t hairline bg-bg/95 backdrop-blur"
+          className="sticky bottom-0 lg:static z-30 border-t hairline bg-bg/95 backdrop-blur"
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
         >
           <Container size="narrow" className="pt-3 flex items-center gap-3">
-            {step > 1 ? (
-              <button
-                type="button"
-                className="btn"
-                onClick={() => setStep(step - 1)}
-              >
-                {t("nav.back")}
-              </button>
-            ) : null}
-            {step < totalSteps ? (
-              <button
-                type="button"
-                className="btn btn-primary btn-xl flex-1"
-                onClick={() => setStep(step + 1)}
-                disabled={(step === 1 && !canNext1) || (step === 2 && !canNext2)}
-              >
-                {t("nav.next")}
-              </button>
-            ) : (
-              <button type="submit" className="btn btn-primary btn-xl flex-1">
-                {t("nav.submit")}
-              </button>
-            )}
+            <OnboardingNav
+              step={step}
+              totalSteps={totalSteps}
+              canNext1={!!canNext1}
+              canNext2={canNext2}
+              pending={pending}
+              onBack={() => setStep(step - 1)}
+              onNext={() => setStep(step + 1)}
+              onDone={() => void runComplete()}
+            />
           </Container>
         </div>
+        <PlanGenerationOverlay
+          pending={pending}
+          namespace="Onboarding.programOverlay"
+        />
       </form>
     </div>
+  );
+}
+
+function OnboardingNav({
+  step,
+  totalSteps,
+  canNext1,
+  canNext2,
+  pending,
+  onBack,
+  onNext,
+  onDone,
+}: {
+  step: number;
+  totalSteps: number;
+  canNext1: boolean;
+  canNext2: boolean;
+  pending: boolean;
+  onBack: () => void;
+  onNext: () => void;
+  onDone: () => void;
+}) {
+  const t = useTranslations("Onboarding");
+
+  return (
+    <>
+      {step > 1 ? (
+        <button
+          type="button"
+          className="btn"
+          onClick={onBack}
+          disabled={pending}
+        >
+          {t("nav.back")}
+        </button>
+      ) : null}
+      {step < totalSteps ? (
+        <button
+          key="onboarding-next"
+          type="button"
+          className="btn btn-primary btn-xl flex-1"
+          onClick={onNext}
+          disabled={pending || (step === 1 && !canNext1) || (step === 2 && !canNext2)}
+        >
+          {t("nav.next")}
+        </button>
+      ) : (
+        <button
+          key="onboarding-done"
+          type="button"
+          onClick={onDone}
+          disabled={pending}
+          aria-busy={pending}
+          className="btn btn-primary btn-xl flex-1 disabled:opacity-60"
+        >
+          {pending ? (
+            <>
+              <span className="inline-block size-2 rounded-full bg-current animate-pulse mr-2" />
+              {t("nav.submitting")}
+            </>
+          ) : (
+            t("nav.submit")
+          )}
+        </button>
+      )}
+    </>
   );
 }
 
@@ -240,7 +423,7 @@ function Intro({ eyebrow, title, sub }: { eyebrow: string; title: string; sub: s
   return (
     <div>
       <div className="eyebrow mb-3">{eyebrow}</div>
-      <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92] mb-4">
+      <h1 className="font-display text-title md:text-[2.75rem] mb-4">
         {title}
       </h1>
       <p className="text-fg-dim text-base md:text-lg max-w-md leading-relaxed">{sub}</p>
@@ -248,11 +431,10 @@ function Intro({ eyebrow, title, sub }: { eyebrow: string; title: string; sub: s
   );
 }
 
-function Section({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) {
+function Section({ eyebrow, title, children }: { eyebrow?: string; title: string; children: React.ReactNode }) {
   return (
     <section>
-      <div className="eyebrow mb-2">{eyebrow}</div>
-      <h2 className="font-display text-2xl md:text-3xl mb-4">{title}</h2>
+      <SectionHeader eyebrow={eyebrow} title={title} />
       {children}
     </section>
   );
@@ -263,7 +445,7 @@ function Grid({ children }: { children: React.ReactNode }) {
 }
 
 function Choice({
-  name, value, checked, onCheck, title, sub,
+  name, value, checked, onCheck, title, sub, disabled,
 }: {
   name: string;
   value: string;
@@ -271,11 +453,13 @@ function Choice({
   onCheck: () => void;
   title: string;
   sub: string;
+  disabled?: boolean;
 }) {
   return (
     <label
       className={cn(
         "surface-2 rounded-2xl p-5 cursor-pointer touch-app block lift",
+        disabled && "pointer-events-none opacity-60",
       )}
       style={{
         background: checked ? "var(--bg-3)" : undefined,
@@ -288,6 +472,7 @@ function Choice({
         value={value}
         checked={checked}
         onChange={onCheck}
+        disabled={disabled}
         className="sr-only"
       />
       <div className="flex items-start gap-3">
@@ -307,22 +492,32 @@ function Choice({
   );
 }
 
-function NumField({ name, label, placeholder }: { name: string; label: string; placeholder?: string }) {
+function NumField({
+  label, placeholder, value, onChange, disabled,
+}: {
+  label: string;
+  placeholder?: string;
+  value: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+}) {
   return (
     <label className="block">
       <span className="eyebrow block mb-2">{label}</span>
       <div className="relative">
         <input
-          name={name}
           type="number"
           step="2.5"
           min="0"
           max="600"
           inputMode="decimal"
+          disabled={disabled}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           className="field text-2xl numeric pr-10"
           placeholder={placeholder}
         />
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-fg-faint uppercase">
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-fg-faint">
           kg
         </span>
       </div>
@@ -332,7 +527,7 @@ function NumField({ name, label, placeholder }: { name: string; label: string; p
 
 function Banner({ children }: { children: React.ReactNode }) {
   return (
-    <div className="surface-2 rounded-lg px-4 py-3 text-sm font-mono uppercase tracking-[0.14em]">
+    <div className="surface-2 rounded-lg px-4 py-3 text-sm">
       · {children}
     </div>
   );
@@ -348,10 +543,10 @@ function Summary({
 }) {
   const t = useTranslations("Onboarding");
   const rows = [
-    { k: t("summary.goal"),  v: goal ? t(`goals.${goal}.title`) : "—" },
-    { k: t("summary.level"), v: level ? t(`levels.${level}.title`) : "—" },
+    { k: t("summary.goal"),  v: goal ? t(`goals.${goal}.title`) : "-" },
+    { k: t("summary.level"), v: level ? t(`levels.${level}.title`) : "-" },
     { k: t("summary.freq"),  v: t("freqOption", { days: freq }) },
-    { k: t("summary.equip"), v: equip ? t(`equipment.${equip}.title`) : "—" },
+    { k: t("summary.equip"), v: equip ? t(`equipment.${equip}.title`) : "-" },
   ];
   return (
     <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">

@@ -38,11 +38,17 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
   const consecutiveDaysLow =
     conditionsMet.sustained_low_readiness?.consecutive_days_low ?? 0;
   const deltaPct = conditionsMet.rhr_spike?.delta_pct ?? null;
+  const lifestyleFlags = conditionsMet.lifestyle_flags ?? {
+    sick: false,
+    stressed: false,
+    short_sleep: false,
+    high_alcohol: false,
+  };
   const lifestyleAny =
-    conditionsMet.lifestyle_flags.sick ||
-    conditionsMet.lifestyle_flags.stressed ||
-    conditionsMet.lifestyle_flags.short_sleep ||
-    conditionsMet.lifestyle_flags.high_alcohol;
+    lifestyleFlags.sick ||
+    lifestyleFlags.stressed ||
+    lifestyleFlags.short_sleep ||
+    lifestyleFlags.high_alcohol;
 
   function sendNote() {
     startTransition(async () => {
@@ -78,7 +84,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
               @{alert.memberHandle}
             </Link>
           </div>
-          <div className="text-[11px] font-mono text-fg-faint">
+          <div className="text-micro text-fg-faint">
             {new Date(alert.triggeredAt).toLocaleString("da-DK", {
               hour: "2-digit",
               minute: "2-digit",
@@ -110,14 +116,14 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
 
       {/* Per-sub-flag truth for lifestyle — render all four, even when
           false, so Munk sees the negative space too. */}
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-mono mb-4">
-        <SubFlag on={conditionsMet.lifestyle_flags.sick}>syg</SubFlag>
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-micro mb-4">
+        <SubFlag on={lifestyleFlags.sick}>syg</SubFlag>
         <span className="text-fg-faint">·</span>
-        <SubFlag on={conditionsMet.lifestyle_flags.stressed}>stress</SubFlag>
+        <SubFlag on={lifestyleFlags.stressed}>stress</SubFlag>
         <span className="text-fg-faint">·</span>
-        <SubFlag on={conditionsMet.lifestyle_flags.short_sleep}>søvn</SubFlag>
+        <SubFlag on={lifestyleFlags.short_sleep}>søvn</SubFlag>
         <span className="text-fg-faint">·</span>
-        <SubFlag on={conditionsMet.lifestyle_flags.high_alcohol}>alkohol</SubFlag>
+        <SubFlag on={lifestyleFlags.high_alcohol}>alkohol</SubFlag>
       </div>
 
       <div className="flex flex-wrap items-center justify-end gap-2">
@@ -166,7 +172,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
                   maxLength={1000}
                 />
               </label>
-              <div className="mt-2 text-[11px] font-mono text-fg-faint text-right">
+              <div className="mt-2 text-micro text-fg-faint text-right">
                 {notes.length} / 1000
               </div>
             </div>
@@ -190,7 +196,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
               </button>
             </div>
 
-            <p className="mt-4 text-xs font-mono text-fg-faint text-center">
+            <p className="mt-4 text-xs text-fg-faint text-center">
               Markerer alerten som reviewet og sender beskeden til medlemmet.
             </p>
           </SheetContent>
@@ -210,7 +216,7 @@ function Chip({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border hairline px-2.5 py-1 text-[11px] font-mono uppercase tracking-[0.12em]",
+        "inline-flex items-center border hairline px-2.5 py-1 text-micro",
         active ? "text-fg font-bold" : "text-fg-faint",
       )}
     >

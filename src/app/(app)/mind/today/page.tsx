@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -18,10 +19,12 @@ import { generatePersonalSession } from "@/lib/mind/session-generator-claude";
 import { buildFallbackSession } from "@/lib/mind/session-fallback";
 import { generateMentalCoachOutput } from "@/lib/mind/coach-claude";
 import { buildFallbackCoachOutput } from "@/lib/mind/coach-fallback";
+import { personalSessionSlug } from "@/lib/mind/session-privacy";
 
-export const metadata = {
-  title: "I dag · Mind · MakeIt",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Mind.todayPage");
+  return { title: t("metaTitle") };
+}
 
 /**
  * `/mind/today` — daily destination.
@@ -35,6 +38,7 @@ export const metadata = {
 export default async function MindTodayPage() {
   const member = await getSession();
   if (!member) redirect("/login");
+  const t = await getTranslations("Mind.todayPage");
   if (!(await hasAcknowledgedMentalDisclaimer(member.id))) {
     redirect("/mind/onboarding");
   }
@@ -92,7 +96,7 @@ export default async function MindTodayPage() {
     session = persisted
       ? {
           id: persisted.id,
-          slug: `personal-${member.id}-${today}`,
+          slug: personalSessionSlug(member.id, today),
           title: script.title,
           subtitle: script.subtitle,
           body_md: script.body_md,
@@ -160,9 +164,9 @@ export default async function MindTodayPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Mind · I dag"
-        title="Dagens refleksion."
-        subtitle="Personlig refleksion + session — bygget til din mind-check, HRV og uge."
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        subtitle={t("subtitle")}
       />
       <Container size="narrow" className="py-10 md:py-14 space-y-12">
         <CoachReflection bodyMd={coachBody} />

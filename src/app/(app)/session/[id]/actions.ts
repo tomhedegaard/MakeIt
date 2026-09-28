@@ -175,6 +175,8 @@ export async function setAdaptationResponseAction(input: {
   // Re-render the session page so applyAdaptationToSession picks up
   // the new accepted_by_member value.
   revalidatePath(`/session/${input.sessionId}`);
+  // The dashboard shows "Behold original" on today's session card too.
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 

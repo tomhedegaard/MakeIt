@@ -58,6 +58,7 @@ export default function DailyCheckInCard({
   return (
     <>
     <article
+      data-domain="food"
       className="surface-2 rounded-2xl overflow-hidden"
       style={{
         borderColor: isActionable ? "var(--line-bright)" : undefined,
@@ -69,7 +70,7 @@ export default function DailyCheckInCard({
           className={isActionable ? "pulse-dot mt-1.5" : "size-2 rounded-full bg-fg/40 mt-1.5"}
         />
         <div className="flex-1 min-w-0">
-          <div className="eyebrow mb-1.5 flex items-center gap-2 flex-wrap">
+          <div className="eyebrow eyebrow-domain mb-1.5 flex items-center gap-2 flex-wrap">
             <span>{t("eyebrow")}</span>
             <span aria-hidden className="text-fg-faint">·</span>
             <span>
@@ -100,7 +101,7 @@ export default function DailyCheckInCard({
             <div className="numeric text-2xl">{checkin.streakDays}</div>
             <div className="eyebrow">{t("streak")}</div>
             {checkin.nextMilestone ? (
-              <div className="mt-1 text-[10px] font-mono text-fg-dim whitespace-nowrap">
+              <div className="mt-1 text-micro text-fg-dim whitespace-nowrap">
                 {checkin.nextMilestone.daysAway === 1
                   ? t("milestoneDaysAwayOne", { days: checkin.nextMilestone.daysAway })
                   : t("milestoneDaysAwayOther", { days: checkin.nextMilestone.daysAway })}
@@ -109,7 +110,7 @@ export default function DailyCheckInCard({
           </div>
         ) : checkin.nextMilestone ? (
           <div className="text-right shrink-0">
-            <div className="text-[11px] font-mono text-fg-dim leading-tight">
+            <div className="text-micro text-fg-dim leading-tight">
               {t("milestonePrompt", { days: checkin.nextMilestone.days })}
               <br />
               <span className="text-fg">{t("milestoneReward")}</span>
@@ -120,17 +121,17 @@ export default function DailyCheckInCard({
 
       {/* Macro pill — only when there's a meal to show */}
       {variant === "full" && checkin.meal ? (
-        <div className="px-5 pb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-mono">
+        <div className="px-5 pb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-micro">
           <span className="text-fg-dim">
-            {t("kcal", { value: checkin.meal.estKcal ?? "—" })}
+            {t("kcal", { value: checkin.meal.estKcal ?? "-" })}
           </span>
           <span className="text-fg-faint" aria-hidden>·</span>
           <span className="text-fg-dim">
-            {t("protein", { value: checkin.meal.estProteinG ?? "—" })}
+            {t("protein", { value: checkin.meal.estProteinG ?? "-" })}
           </span>
           <span className="text-fg-faint" aria-hidden>·</span>
           <span className="text-fg-dim">
-            {t("prep", { value: checkin.meal.prepMinutes ?? "—" })}
+            {t("prep", { value: checkin.meal.prepMinutes ?? "-" })}
           </span>
         </div>
       ) : null}
@@ -169,7 +170,7 @@ export default function DailyCheckInCard({
           </>
         ) : showCelebration ? (
           <>
-            <span className="px-3 py-2 text-xs font-mono text-fg-dim">
+            <span className="px-3 py-2 text-xs text-fg-dim">
               {checkin.state === "skipped"
                 ? t("skippedNote", { slot: slotLabel })
                 : t("loggedNote", { slot: slotLabel })}
@@ -180,7 +181,7 @@ export default function DailyCheckInCard({
           </>
         ) : (
           <>
-            <span className="px-3 py-2 text-xs font-mono text-fg-dim">
+            <span className="px-3 py-2 text-xs text-fg-dim">
               {t("nextNote", { slot: slotLabel, window: checkin.slotWindow ?? "" })}
             </span>
             <Link href="/nutrition" className="btn btn-ghost btn-sm ml-auto">

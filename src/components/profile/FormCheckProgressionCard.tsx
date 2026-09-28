@@ -35,7 +35,7 @@ export default async function FormCheckProgressionCard({
             <span className="numeric text-4xl">{progression.latestScore}</span>
             <span className="text-fg-dim text-sm">{t("latest")}</span>
           </div>
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-micro text-fg-faint">
             <span>
               {progression.count === 1
                 ? t("formCheckOne", { count: progression.count })

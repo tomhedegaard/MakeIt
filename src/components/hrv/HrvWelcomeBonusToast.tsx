@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 /**
  * V2.5 first-wearable-connection celebration toast (spec §5.3).
@@ -15,6 +16,7 @@ import { useSearchParams } from "next/navigation";
  * nutrition StreakCelebration register.
  */
 export function HrvWelcomeBonusToast() {
+  const t = useTranslations("Hrv.toast");
   const searchParams = useSearchParams();
   const hasParam = searchParams?.get("welcome_bonus") === "1";
   const [visible, setVisible] = useState(hasParam);
@@ -37,14 +39,14 @@ export function HrvWelcomeBonusToast() {
       style={{ borderColor: "var(--line-bright)" }}
       data-testid="hrv-welcome-bonus-toast"
     >
-      <span className="flex-1">Wearable forbundet. +100 Reps tilføjet.</span>
+      <span className="flex-1">{t("welcomeBonus", { reps: 100 })}</span>
       <button
         type="button"
         onClick={() => setVisible(false)}
         className="text-xs text-fg-dim"
-        aria-label="Luk besked"
+        aria-label={t("closeAria")}
       >
-        Luk
+        {t("close")}
       </button>
     </div>
   );

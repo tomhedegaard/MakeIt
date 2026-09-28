@@ -74,7 +74,7 @@ export default function LogMealButton({
             type="button"
             aria-label={t("closeLabel")}
             onClick={() => setOpen(false)}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-scrim backdrop-blur-sm"
           />
           <form
             ref={formRef}
@@ -88,7 +88,7 @@ export default function LogMealButton({
                   {mealTitle ?? t("freeMeal")}
                 </h3>
                 {slot ? (
-                  <div className="text-xs text-fg-faint mt-1 font-mono">
+                  <div className="text-xs text-fg-faint mt-1">
                     {t("slotDate", { slot: ts(slot), date: dateIso })}
                   </div>
                 ) : null}

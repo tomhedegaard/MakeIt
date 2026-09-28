@@ -43,7 +43,7 @@ export default async function CoachCoCoachesPage() {
     <Container className="py-6 lg:py-12 space-y-6">
       <header className="pt-2">
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
+        <h1 className="font-display text-title md:text-[2.75rem]">
           {t("title")}
         </h1>
         <p className="mt-2 text-fg-dim text-sm">
@@ -56,7 +56,7 @@ export default async function CoachCoCoachesPage() {
       </header>
 
       {beasts.length === 0 ? (
-        <div className="surface-2 rounded-lg p-6 text-center">
+        <div className="surface-2 rounded-lg p-6">
           <p className="text-fg-dim text-sm">{t("empty")}</p>
         </div>
       ) : (
@@ -70,7 +70,7 @@ export default async function CoachCoCoachesPage() {
       )}
 
       <footer className="pt-4 border-t hairline">
-        <p className="text-xs font-mono text-fg-faint">{t("footnote")}</p>
+        <p className="text-xs text-fg-faint">{t("footnote")}</p>
       </footer>
     </Container>
   );
@@ -100,11 +100,11 @@ async function BeastRow({ beast }: { beast: BeastInTraining }) {
           >
             {agreementPct === null ? "—" : `${agreementPct}%`}
           </span>
-          <span className="text-xs font-mono text-fg-faint">
+          <span className="text-xs text-fg-faint">
             {t("reviewsLabel", { count: beast.sandboxReviewCount })}
           </span>
           {beast.lastReviewAt ? (
-            <span className="text-xs font-mono text-fg-faint">
+            <span className="text-xs text-fg-faint">
               {t("lastReviewLabel", { iso: beast.lastReviewAt })}
             </span>
           ) : null}

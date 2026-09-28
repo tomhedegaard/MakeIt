@@ -19,8 +19,24 @@
     "exercises": "Exercises",
     "sets": "Sets",
     "estTime": "Est. time",
+    "minuteUnit": "m",
+    "minutes": "{count}m",
     "setCountSuffix": "× sets",
-    "start": "Start session →"
+    "start": "Start session →",
+    "mock": {
+      "dayLabel": "Day A · Squat",
+      "title": "Squat · Top set @ RPE 8, 3×3 backoff"
+    },
+    "generated": {
+      "squatFocus": "Squat focus and the posterior chain"
+    },
+    "emptyEyebrow": "Today's session",
+    "emptyTitle": "No session yet",
+    "emptyBody": "When you pick a program, today's session lands here. No demo workout.",
+    "emptyCta": "Choose a program →",
+    "keepOriginal": "Keep original",
+    "keptOriginal": "You are running the original plan today.",
+    "keepOriginalError": "That did not go through. Try again."
   },
   "stats": {
     "volume": "Volume",
@@ -40,7 +56,7 @@
       "tomorrowLabel": "Tomorrow",
       "tomorrowTitle": "Pause bench, ring row, push press",
       "thuLabel": "Thu",
-      "thuTitle": "Deadlift — building to 90% of 1RM",
+      "thuTitle": "Deadlift · building to 90% of 1RM",
       "friLabel": "Fri",
       "friTitle": "Hypertrophy: quads + shoulders"
     }
@@ -48,8 +64,9 @@
   "crew": {
     "title": "Crew right now",
     "seeFeed": "See feed →",
-    "empty": "The crew is quiet right now — be the first to share.",
+    "empty": "The crew is quiet right now. Be the first to share.",
     "share": "+ Share",
+    "prBadge": "PR",
     "mock": {
       "ninaWhat": "+2.5kg PR · Deadlift 175 kg",
       "ninaWhen": "just now",
@@ -65,5 +82,62 @@
     "stable": "Stable",
     "up": "Up {pct} percent",
     "down": "Down {pct} percent"
+  },
+  "todayProse": {
+    "ariaLabel": "Today",
+    "eyebrow": "Today",
+    "hrvLav": "HRV is low this morning. Take it easy at the top.",
+    "hrvRo": "HRV is settled. Your body is with you today.",
+    "hrvMidt": "HRV sits in your middle band.",
+    "sessionAssigned": "There is a session waiting today.",
+    "sessionAssignedWithLabel": "{label} is waiting.",
+    "sessionDone": "The session is done. Good work.",
+    "sessionDoneWithLabel": "{label} is done. Good work.",
+    "sessionRest": "Today is rest.",
+    "sessionSkipped": "Today's session was skipped. That's okay.",
+    "mindNudge": "A mind-check takes 60 seconds when you are ready.",
+    "mindLogged": "Mind-check is logged.",
+    "quiet": "Quiet start. When the signals land, we write here."
+  },
+  "hrvChip": {
+    "eyebrow": "HRV readiness",
+    "connect": "Connect a wearable",
+    "unit": "ms"
+  },
+  "installHint": {
+    "eyebrow": "Get the app",
+    "title": "MakeIt on your home screen",
+    "bodyIos": "Tap the Share icon in Safari and choose “Add to Home Screen”. MakeIt then opens as an app and you can turn on notifications.",
+    "bodyAndroid": "Install MakeIt as an app: full screen, faster launch and notifications.",
+    "install": "Install",
+    "dismiss": "Not now"
+  },
+  "morningSignal": {
+    "label": "Morning signal",
+    "kcal": "kcal",
+    "labels": {
+      "body": "Body",
+      "heart": "Heart",
+      "mind": "Mind",
+      "food": "Food"
+    },
+    "values": {
+      "adapted": "Adapted",
+      "planned": "Ready",
+      "measured": "Measured",
+      "noSession": "No session",
+      "belowBand": "Below band",
+      "inBand": "In band",
+      "aboveBand": "Above band",
+      "noReading": "No reading",
+      "checkIn": "Check in",
+      "checkedIn": "Checked in",
+      "eaten": "Eaten today"
+    },
+    "sr": {
+      "status": "{label}. {status}.",
+      "value": "{label}. {status}. {value} {unit}.",
+      "valueOf": "{label}. {status}. {value} of {of} {unit}."
+    }
   }
 }

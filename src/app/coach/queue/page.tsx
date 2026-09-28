@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import {
+  getNeedsAttentionModel,
   getOpenAdaptiveAlerts,
   getOpenHrvAlerts,
   getPendingFormChecks,
@@ -9,13 +10,18 @@ import {
 import CoachReviewButton from "@/components/coach/CoachReview";
 import HrvAlertCard from "@/components/coach/HrvAlertCard";
 import AdaptiveAlertCard from "@/components/coach/AdaptiveAlertCard";
+import NeedsAttentionStrip from "@/components/coach/NeedsAttentionStrip";
+import { loadNeedsAttentionCopy } from "@/lib/ui/sprint-b-copy";
+import { liftLabel } from "@/lib/form-queue/queue";
 
 export default async function CoachQueuePage() {
   const t = await getTranslations("Coach.queue");
-  const [adaptiveAlerts, hrvAlerts, pending] = await Promise.all([
+  const [adaptiveAlerts, hrvAlerts, pending, needs, needsCopy] = await Promise.all([
     getOpenAdaptiveAlerts(50),
     getOpenHrvAlerts(50),
     getPendingFormChecks(50),
+    getNeedsAttentionModel(),
+    loadNeedsAttentionCopy(),
   ]);
 
   return (
@@ -23,7 +29,7 @@ export default async function CoachQueuePage() {
       <header className="pt-2 flex items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
+          <h1 className="font-display text-title md:text-[2.75rem]">
             {t("title")}
           </h1>
           <p className="mt-2 text-fg-dim text-sm">
@@ -31,6 +37,8 @@ export default async function CoachQueuePage() {
           </p>
         </div>
       </header>
+
+      <NeedsAttentionStrip model={needs} copy={needsCopy} />
 
       {/*
         Adaptive engine queue — escalations the engine couldn't act on
@@ -51,7 +59,7 @@ export default async function CoachQueuePage() {
           </div>
           <ul className="space-y-3">
             {adaptiveAlerts.map((a) => (
-              <li key={a.alertId}>
+              <li key={a.alertId} id={`engine-${a.alertId}`}>
                 <AdaptiveAlertCard alert={a} />
               </li>
             ))}
@@ -90,7 +98,7 @@ export default async function CoachQueuePage() {
       </div>
 
       {pending.length === 0 ? (
-        <div className="surface-2 rounded-2xl p-8 text-center">
+        <div className="surface-2 rounded-2xl p-8">
           <div className="font-display text-2xl mb-2">{t("emptyTitle")}</div>
           <p className="text-fg-dim text-sm">
             {t("emptyBody")}
@@ -99,7 +107,7 @@ export default async function CoachQueuePage() {
       ) : (
         <ul className="space-y-3">
           {pending.map((f) => (
-            <li key={f.id} className="surface-2 rounded-2xl p-5">
+            <li key={f.id} id={`form-${f.id}`} className="surface-2 rounded-2xl p-5">
               <div className="flex items-center justify-between gap-4 mb-3">
                 <div className="min-w-0">
                   <div className="text-sm">
@@ -110,8 +118,8 @@ export default async function CoachQueuePage() {
                       @{f.memberHandle}
                     </Link>
                   </div>
-                  <div className="text-[11px] font-mono text-fg-faint">
-                    {f.exerciseName ?? t("formCheckFallback")} ·{" "}
+                  <div className="text-micro text-fg-faint">
+                    {liftLabel(f)} ·{" "}
                     {new Date(f.createdAt).toLocaleString("da-DK", {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -133,7 +141,7 @@ export default async function CoachQueuePage() {
               ) : null}
 
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                <span className="text-micro text-fg-faint">
                   {t("awaitingReview")}
                 </span>
                 <CoachReviewButton formCheck={f} />

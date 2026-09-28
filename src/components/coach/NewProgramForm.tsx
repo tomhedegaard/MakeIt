@@ -116,7 +116,7 @@ export default function NewProgramForm() {
       </div>
 
       {error ? (
-        <p className="text-sm" style={{ color: "var(--danger, #C97B3E)" }}>
+        <p className="text-sm" style={{ color: "var(--danger)" }}>
           {error}
         </p>
       ) : null}

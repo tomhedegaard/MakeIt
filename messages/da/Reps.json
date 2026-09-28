@@ -1,35 +1,35 @@
 {
   "header": {
-    "eyebrow": "04 — Reps Program",
+    "eyebrow": "Reps Program",
     "title": "Du arbejder. Du får.",
     "subtitle": "Tjen Reps for hvad du allerede gør. Bruge dem på ting du faktisk vil have."
   },
   "balance": {
     "label": "Din balance",
-    "tier": "Tier: {tier}",
+    "tier": "Niveau: {tier}",
     "toNext": "{amount} til {tier}",
-    "topCap": "Topcap nået · ★"
+    "topCap": "Topcap nået."
   },
   "tiers": {
-    "eyebrow": "Tiers",
+    "eyebrow": "Niveauer",
     "you": "Du",
     "range": "{range} Reps",
     "list": {
       "Lifter": {
-        "range": "0 — 999",
-        "perks": ["Adgang til crew-feed", "Månedlige challenges", "5% medlemsrabat"]
+        "range": "0-999",
+        "perks": ["Adgang til crewets feed", "Månedlige challenges", "5% medlemsrabat"]
       },
       "Athlete": {
-        "range": "1.000 — 4.999",
-        "perks": ["Alt fra Lifter", "Early access til drops", "10% rabat", "1 form-check pr. md."]
+        "range": "1.000-4.999",
+        "perks": ["Alt fra Lifter", "Først til drops", "10% rabat", "1 form-check pr. md."]
       },
       "Beast": {
-        "range": "5.000 — 14.999",
-        "perks": ["Alt fra Athlete", "Custom strap-farve (1 stk/år)", "15% rabat", "VIP til IRL-meets"]
+        "range": "5.000-14.999",
+        "perks": ["Alt fra Athlete", "Valgfri strap-farve (1 stk/år)", "15% rabat", "VIP til træf IRL"]
       },
       "Legend": {
         "range": "15.000+",
-        "perks": ["Alt fra Beast", "1:1 tid med Mikael Munk", "Limited drops i navnet dit", "20% rabat livstid"]
+        "perks": ["Alt fra Beast", "1:1 tid med Mikael Munk", "Begrænset drop med dit navn", "20% rabat livstid"]
       }
     }
   },
@@ -45,13 +45,74 @@
     }
   },
   "kindLabels": {
-    "drop": "Limited drop",
-    "experience": "Experience",
+    "drop": "Begrænset drop",
+    "experience": "Oplevelse",
     "physical": "Fysisk vare",
     "digital": "Digital"
   },
+  "transactions": {
+    "eyebrow": "Seneste Reps",
+    "count": "Sidste {count}",
+    "empty": "Endnu ingen Reps registreret. Træn, tjek mind-check eller skriv journal."
+  },
+  "categories": {
+    "mental": "Mental",
+    "coaching": "Coaching",
+    "training": "Træning"
+  },
+  "relativeTime": {
+    "minutes": "{count} min siden",
+    "hours": "{count} t siden",
+    "days": "{count, plural, one {# dag siden} other {# dage siden}}"
+  },
+  "status": {
+    "pending": "Afventer",
+    "approved": "Godkendt",
+    "shipped": "Sendt",
+    "fulfilled": "Modtaget",
+    "cancelled": "Annulleret"
+  },
+  "reasons": {
+    "session": "Session gennemført",
+    "session_completed": "Session gennemført",
+    "journal_entry": "Journal-post",
+    "mental_session_completed": "Mental session gennemført",
+    "mind_check_streak": "Mind-check stribe",
+    "weekly_program": "Ugentligt program",
+    "mental_buddy_interaction": "Mental check-in med buddy",
+    "cirkel_participation": "Cirkel",
+    "mental_milestone_30d": "30 dages mental engagement",
+    "mental_milestone_90d": "90 dages mental engagement",
+    "lesson_completed": "Lektion gennemført",
+    "coach_review_sandbox": "Sandbox-review matched Munk",
+    "co_coach_promotion": "Co-coach-promovering",
+    "buddy_interaction_streak": "Buddy-stribe",
+    "hrv_first_connection": "Første wearable forbundet",
+    "nutrition_log_photo": "Måltidsfoto",
+    "cooking_streak": "Mad-stribe",
+    "hrv_sync_streak": "HRV sync-stribe",
+    "reward": "Indløst belønning"
+  },
   "shop": {
-    "eyebrow": "Reward shop",
+    "eyebrow": "Belønninger",
+    "mock": {
+      "limited-cuff-olive": {
+        "name": "Limited Cuff · Olive",
+        "description": "Olive-grøn HookIt cuff. Kun 80 stk lavet i denne farve. Sendes med GLS."
+      },
+      "1on1-formcheck": {
+        "name": "1:1 Form-check med Mikael",
+        "description": "Privat videosession på 30 minutter med coach Mikael Munk."
+      },
+      "custom-broderet-strap": {
+        "name": "Broderet StrapIt",
+        "description": "Få dit handle broderet på en sort StrapIt."
+      },
+      "open-house-vip": {
+        "name": "Open House VIP-pakke",
+        "description": "Træning + middag på Amagerbro 24/05 · 12 pladser."
+      }
+    },
     "balance": "Saldo: {balance} Reps",
     "empty": "Ingen aktive belønninger lige nu. Mikael lægger nye drops ind løbende.",
     "repsLabel": "Reps",
@@ -65,10 +126,10 @@
   "redeem": {
     "errors": {
       "auth": "Du skal være logget ind.",
-      "sold_out": "Den her er udsolgt — det går stærkt!",
+      "sold_out": "Den her er udsolgt. Det går stærkt!",
       "insufficient_reps": "Du har ikke nok Reps endnu.",
       "unavailable": "Belønningen er ikke tilgængelig lige nu.",
-      "unknown": "Noget gik galt — prøv igen om lidt."
+      "unknown": "Noget gik galt. Prøv igen om lidt."
     },
     "soldOut": "Udsolgt",
     "missingReps": "Mangler {amount} Reps",

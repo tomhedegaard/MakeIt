@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import { COMPANY } from "@/lib/company";
 import {
   dominantView,
@@ -16,6 +17,7 @@ import { getSession } from "@/lib/auth";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import FormCheckTrigger from "@/components/exercise/FormCheckTrigger";
 import ExerciseHero from "./ExerciseHero";
+import { isYouthAccount } from "@/lib/youth/account";
 
 type Params = Promise<{ slug: string }>;
 
@@ -49,8 +51,11 @@ export default async function ExerciseDetailPage({
   // Form-check quota for the current member — drives the upgrade CTA
   // when they've used their tier allowance. Demo-mode = Legend (unlimited).
   let quota: FormCheckQuota;
+  let youth = false;
   if (SUPABASE_ENABLED) {
     const member = await getSession();
+    // MakeIt Ung: no form-check trigger (spec afsnit 3).
+    youth = member ? await isYouthAccount(member.id) : false;
     quota = member
       ? await getFormCheckQuota(member.id, member.tier)
       : {
@@ -98,7 +103,7 @@ export default async function ExerciseDetailPage({
                 {ex.equipment ? (
                   <>
                     <span aria-hidden>·</span>
-                    <span>{ex.equipment}</span>
+                    <span>{t.has(`equipment.${ex.equipment}`) ? t(`equipment.${ex.equipment}`) : ex.equipment}</span>
                   </>
                 ) : null}
                 {ex.difficulty ? (
@@ -112,9 +117,7 @@ export default async function ExerciseDetailPage({
                   </>
                 ) : null}
               </div>
-              <h1 className="font-display text-[clamp(2.2rem,5.5vw,4rem)] leading-[0.95]">
-                {ex.name}.
-              </h1>
+              <PageTitle size="compact" title={`${ex.name}.`} />
               {ex.whyMatters ? (
                 <p className="mt-4 max-w-2xl text-fg-dim text-base md:text-lg">
                   {ex.whyMatters}
@@ -128,6 +131,7 @@ export default async function ExerciseDetailPage({
       <Container className="py-10 md:py-14 space-y-14">
         {/* Hero: figure + cues */}
         <ExerciseHero
+          name={ex.name}
           primary={ex.primaryMuscles}
           secondary={ex.secondaryMuscles}
           tertiary={ex.tertiaryMuscles}
@@ -140,6 +144,7 @@ export default async function ExerciseDetailPage({
         {/* AI form-check — opens FormCheckSheet pre-loaded with this
             exercise's cues + mistakes so Claude evaluates against the
             specific checklist rather than generic squat/bench principles. */}
+        {youth ? null : (
         <section>
           <FormCheckTrigger
             exerciseId={ex.id}
@@ -149,16 +154,17 @@ export default async function ExerciseDetailPage({
             quota={quota}
           />
         </section>
+        )}
 
         {/* Mistakes */}
         {ex.mistakes.length > 0 ? (
           <section className="space-y-5">
-            <div className="eyebrow">{t("detail.mistakes")}</div>
+            <h2 className="eyebrow">{t("detail.mistakes")}</h2>
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
               {ex.mistakes.map((m, i) => (
                 <article
                   key={i}
-                  className="surface-2 rounded-xl p-5 border-l-2 border-l-[#C97B3E]"
+                  className="surface-2 rounded-xl p-5 border-l-2 border-l-body"
                 >
                   <div className="font-display text-lg leading-tight mb-2">
                     {m.title}
@@ -190,7 +196,7 @@ export default async function ExerciseDetailPage({
 function InfoBlock({ eyebrow, body }: { eyebrow: string; body: string }) {
   return (
     <div className="space-y-2">
-      <div className="eyebrow">{eyebrow}</div>
+      <h2 className="eyebrow">{eyebrow}</h2>
       <p className="text-base text-fg-dim leading-relaxed">{body}</p>
     </div>
   );

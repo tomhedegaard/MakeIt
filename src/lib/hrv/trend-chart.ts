@@ -1,3 +1,4 @@
+import { smoothAreaPath, smoothLinePath } from "@/lib/svg/smooth-path";
 import type { ReadinessBucket } from "./types";
 
 /** A single reading prepared for the trend chart. */
@@ -17,13 +18,29 @@ export interface ChartViewport {
   height: number;
 }
 
+/** Plot rectangle inside the viewport (axis / grid frame). */
+export interface ChartPlot {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+}
+
 /** Pure-geometry model for rendering an SVG HRV trend chart. */
 export interface TrendChartModel {
   isEmpty: boolean;
+  plot: ChartPlot;
   points: { x: number; y: number; isSick: boolean }[];
   /** SVG path "d" string through the 7-day mean. */
   meanLinePath: string;
+  /** Closed area under the 7-day mean, dropped to the plot baseline. */
+  meanAreaPath: string;
   baselineBand: { topY: number; bottomY: number; path: string } | null;
+  /**
+   * Horizontal dashed personal average (14–28d window, or the persisted
+   * 60d mean when that is what the latest reading carries).
+   */
+  personalAvg: { y: number; path: string } | null;
   yTicks: { y: number; label: string }[];
   xTicks: { x: number; label: string }[];
 }
@@ -49,22 +66,32 @@ export function buildTrendChartModel(
   readings: ChartReading[],
   viewport: ChartViewport,
 ): TrendChartModel {
+  const { width, height } = viewport;
+  const plot: ChartPlot = {
+    left: MARGIN,
+    right: width - MARGIN,
+    top: MARGIN,
+    bottom: height - MARGIN,
+  };
+
   if (readings.length === 0) {
     return {
       isEmpty: true,
+      plot,
       points: [],
       meanLinePath: "",
+      meanAreaPath: "",
       baselineBand: null,
+      personalAvg: null,
       yTicks: [],
       xTicks: [],
     };
   }
 
-  const { width, height } = viewport;
-  const innerLeft = MARGIN;
-  const innerRight = width - MARGIN;
-  const innerTop = MARGIN;
-  const innerBottom = height - MARGIN;
+  const innerLeft = plot.left;
+  const innerRight = plot.right;
+  const innerTop = plot.top;
+  const innerBottom = plot.bottom;
   const innerWidth = Math.max(0, innerRight - innerLeft);
 
   const latest = readings[readings.length - 1];
@@ -78,6 +105,15 @@ export function buildTrendChartModel(
   if (latest.baseline60dMeanLnRmssd != null && latest.baseline60dSwc != null) {
     yValues.push(latest.baseline60dMeanLnRmssd + latest.baseline60dSwc);
     yValues.push(latest.baseline60dMeanLnRmssd - latest.baseline60dSwc);
+  } else if (readings.length >= 14) {
+    const window = readings.slice(-28);
+    const mean =
+      window.reduce((acc, r) => acc + r.lnRmssd, 0) / window.length;
+    const variance =
+      window.reduce((acc, r) => acc + (r.lnRmssd - mean) ** 2, 0) /
+      Math.max(1, window.length - 1);
+    const swc = 0.5 * Math.sqrt(variance);
+    yValues.push(mean + swc, mean - swc);
   }
 
   let yMin = Math.min(...yValues);
@@ -108,19 +144,13 @@ export function buildTrendChartModel(
   }));
 
   // --- Mean line path (skip null vertices, segment gracefully) ---
-  let meanLinePath = "";
-  let penDown = false;
-  readings.forEach((r, i) => {
-    if (r.rolling7dMeanLnRmssd == null) {
-      penDown = false;
-      return;
-    }
-    const x = xFor(i);
-    const y = yFor(r.rolling7dMeanLnRmssd);
-    meanLinePath += `${penDown ? "L" : "M"} ${x} ${y} `;
-    penDown = true;
-  });
-  meanLinePath = meanLinePath.trim();
+  const meanPoints = readings.map((r, i) =>
+    r.rolling7dMeanLnRmssd == null
+      ? null
+      : { x: xFor(i), y: yFor(r.rolling7dMeanLnRmssd) },
+  );
+  const meanLinePath = smoothLinePath(meanPoints);
+  const meanAreaPath = smoothAreaPath(meanPoints, innerBottom);
 
   // --- Baseline band (flat band from the most recent reading) ---
   let baselineBand: TrendChartModel["baselineBand"] = null;
@@ -133,6 +163,40 @@ export function buildTrendChartModel(
       `L ${innerRight} ${bottomY} ` +
       `L ${innerLeft} ${bottomY} Z`;
     baselineBand = { topY, bottomY, path };
+  } else if (readings.length >= 14) {
+    // Personal 14–28d window when the persisted 60d fields are not yet
+    // written (demo fixtures, first steady mornings).
+    const window = readings.slice(-28);
+    const mean =
+      window.reduce((acc, r) => acc + r.lnRmssd, 0) / window.length;
+    const variance =
+      window.reduce((acc, r) => acc + (r.lnRmssd - mean) ** 2, 0) /
+      Math.max(1, window.length - 1);
+    const swc = 0.5 * Math.sqrt(variance);
+    const topY = yFor(mean + swc);
+    const bottomY = yFor(mean - swc);
+    const path =
+      `M ${innerLeft} ${topY} ` +
+      `L ${innerRight} ${topY} ` +
+      `L ${innerRight} ${bottomY} ` +
+      `L ${innerLeft} ${bottomY} Z`;
+    baselineBand = { topY, bottomY, path };
+  }
+
+  // --- Dashed personal average (same mean the band is centred on) ---
+  let personalAvg: TrendChartModel["personalAvg"] = null;
+  const avgLn =
+    latest.baseline60dMeanLnRmssd ??
+    (readings.length >= 14
+      ? readings.slice(-28).reduce((acc, r) => acc + r.lnRmssd, 0) /
+        Math.min(28, readings.length)
+      : null);
+  if (avgLn != null) {
+    const y = yFor(avgLn);
+    personalAvg = {
+      y,
+      path: `M ${innerLeft} ${y} L ${innerRight} ${y}`,
+    };
   }
 
   // --- Y ticks (ms-valued, inverse log) ---
@@ -162,9 +226,12 @@ export function buildTrendChartModel(
 
   return {
     isEmpty: false,
+    plot,
     points,
     meanLinePath,
+    meanAreaPath,
     baselineBand,
+    personalAvg,
     yTicks,
     xTicks,
   };

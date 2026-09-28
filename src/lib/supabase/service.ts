@@ -6,7 +6,12 @@
  *
  * Use it for server-side background work that must write tables
  * members cannot (e.g. the WHOOP OAuth callback and the HRV sync
- * cron writing OAuth tokens to `hrv_wearable_connections`).
+ * cron writing OAuth tokens to `hrv_wearable_connections`), and
+ * for invite-validated password signup: `confirmAuthUserEmail`
+ * confirms one new `auth.users` row after `is_invite_valid` so
+ * Confirm email ON does not trap invitees on a dead sent-wall.
+ * Callers live in `src/lib/data/*` — never import this from a
+ * server action directly, and never from a client component.
  *
  * Unlike `server.ts` / `client.ts`, this is a plain
  * `@supabase/supabase-js` client with no cookie/session handling.

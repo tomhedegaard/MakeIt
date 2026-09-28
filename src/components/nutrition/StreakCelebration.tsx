@@ -32,8 +32,8 @@ export default function StreakCelebration({
     <AnimatePresence>
       {milestone != null ? (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center px-6"
-          style={{ background: "rgba(10,10,11,0.92)", backdropFilter: "blur(8px)" }}
+          className="fixed inset-0 z-[100] flex items-center justify-center px-6 bg-bg/90"
+          style={{ backdropFilter: "blur(8px)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -51,7 +51,7 @@ export default function StreakCelebration({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="eyebrow text-fg-faint mb-6">
-              MakeIt <span className="mx-1">//</span> {t("brand")}
+              MakeIt <span className="mx-1">{"//"}</span> {t("brand")}
             </div>
 
             {/* Typographic stamp */}
@@ -60,7 +60,7 @@ export default function StreakCelebration({
               <span className="absolute -top-px -right-px size-2 border-r-2 border-t-2 border-fg" aria-hidden />
               <span className="absolute -bottom-px -left-px size-2 border-l-2 border-b-2 border-fg" aria-hidden />
               <span className="absolute -bottom-px -right-px size-2 border-r-2 border-b-2 border-fg" aria-hidden />
-              <div className="font-display leading-[0.85] text-[clamp(5rem,28vw,9rem)]">
+              <div className="font-display text-hero-lg tabular-nums">
                 {String(milestone).padStart(2, "0")}
               </div>
               <div className="eyebrow text-fg mt-1">{t("stamp")}</div>
@@ -72,9 +72,9 @@ export default function StreakCelebration({
                 : t("copyDefault", { days: milestone })}
             </p>
 
-            <div className="mt-5 inline-flex items-center gap-2 border hairline-strong rounded-full px-3 py-1.5">
+            <div className="mt-5 inline-flex items-center gap-2 border hairline-strong px-3 py-1.5">
               <span className="size-1.5 rounded-full bg-fg" aria-hidden />
-              <span className="numeric text-[11px] tracking-[0.16em] uppercase">
+              <span className="numeric text-micro">
                 {t("reward")}
               </span>
             </div>

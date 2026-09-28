@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { cn } from "@/lib/utils";
 import { startWearableConnect } from "@/app/(app)/hrv/connect-actions";
 
@@ -44,6 +46,8 @@ export default function WearableConnectSheet({
 }
 
 function WearableConnectBody() {
+  const t = useTranslations("Hrv.connectSheet");
+  const tPage = useTranslations("Hrv.page");
   const [pending, setPending] = useState<ProviderId | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,22 +62,18 @@ function WearableConnectBody() {
         window.location.assign(res.authUrl);
         return; // keep pending state through the navigation
       }
-      setError(messageFor(res.ok ? undefined : res.error));
+      setError(messageFor(res.ok ? undefined : res.error, t));
       setPending(null);
     } catch {
-      setError("Noget gik galt. Prøv igen.");
+      setError(t("errorGeneric"));
       setPending(null);
     }
   }
 
   return (
     <SheetContent>
-      <div className="eyebrow mb-2">Wearable</div>
-      <h2 className="font-display text-3xl mb-1">Forbind din wearable.</h2>
-      <p className="text-fg-dim text-sm mb-6">
-        Forbind en wearable for at synke din HRV automatisk — ingen manuel
-        indtastning.
-      </p>
+      <SectionHeader eyebrow={t("eyebrow")} title={t("title")} />
+      <p className="text-fg-dim text-sm mb-6">{t("body")}</p>
 
       <div className="grid gap-3">
         {PROVIDERS.map((provider) =>
@@ -93,14 +93,14 @@ function WearableConnectBody() {
                 <span className="block font-display text-lg leading-tight">
                   {provider.name}
                 </span>
-                <span className="block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-0.5">
+                <span className="block text-micro text-fg-faint mt-0.5">
                   {pending === provider.id
-                    ? `Åbner ${provider.name}…`
-                    : "HRV · søvn · recovery"}
+                    ? t("opening", { name: provider.name })
+                    : t("meta")}
                 </span>
               </span>
-              <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint shrink-0">
-                {pending === provider.id ? "···" : "Forbind →"}
+              <span className="text-micro text-fg-faint shrink-0">
+                {pending === provider.id ? "···" : t("action")}
               </span>
             </button>
           ) : (
@@ -112,8 +112,8 @@ function WearableConnectBody() {
               <span className="font-display text-lg leading-tight">
                 {provider.name}
               </span>
-              <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint border border-line-strong rounded-full px-2 py-0.5 shrink-0">
-                Kommer snart
+              <span className="text-micro text-fg-faint border border-line-strong px-2 py-0.5 shrink-0">
+                {t("comingSoon")}
               </span>
             </div>
           ),
@@ -129,23 +129,25 @@ function WearableConnectBody() {
         </p>
       ) : null}
 
-      <p className="mt-6 text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint leading-relaxed">
-        Apple Watch-support kommer med MakeIt-appen til iPhone.
+      <p className="mt-6 text-micro text-fg-faint leading-relaxed">
+        {tPage("connectAppleNote")}
       </p>
     </SheetContent>
   );
 }
 
-/** Maps a server-action error code to a member-facing Danish message. */
-function messageFor(code: string | undefined): string {
+type ConnectSheetT = ReturnType<typeof useTranslations<"Hrv.connectSheet">>;
+
+/** Maps a server-action error code to a member-facing message. */
+function messageFor(code: string | undefined, t: ConnectSheetT): string {
   switch (code) {
     case "demo_mode":
-      return "Wearable-forbindelse er ikke tilgængelig i demo-tilstand.";
+      return t("errorDemo");
     case "no_session":
-      return "Du skal være logget ind for at forbinde en wearable.";
+      return t("errorNoSession");
     case "unsupported_provider":
-      return "Denne wearable understøttes ikke endnu.";
+      return t("errorUnsupported");
     default:
-      return "Kunne ikke starte forbindelsen. Prøv igen.";
+      return t("errorStart");
   }
 }

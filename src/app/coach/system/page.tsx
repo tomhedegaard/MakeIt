@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import { getDevStatus, type Severity } from "@/lib/dev-status";
+import { getCronHealth } from "@/lib/data/cron-runs";
+import type { CronHealthRow } from "@/lib/cron/health";
 import { getSession } from "@/lib/auth";
 import { COMPANY } from "@/lib/company";
 import Backlog from "./Backlog";
@@ -23,7 +25,10 @@ export default async function CoachSystemPage() {
   const member = await getSession();
   if (!member?.isAdmin) redirect("/coach");
 
-  const status = await getDevStatus();
+  const [status, cronHealth] = await Promise.all([
+    getDevStatus(),
+    getCronHealth(),
+  ]);
 
   const configured = status.services.filter((s) => s.configured).length;
   const total = status.services.length;
@@ -32,14 +37,14 @@ export default async function CoachSystemPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2">
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">
+        <h1 className="font-display text-title md:text-[2.75rem]">
           {t("title")}
         </h1>
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
           {t("introPrefix")}
           <time
             dateTime={status.collectedAt}
-            className="font-mono text-fg"
+            className="text-fg"
             title={status.collectedAt}
           >
             {new Date(status.collectedAt).toLocaleString("da-DK", {
@@ -82,6 +87,24 @@ export default async function CoachSystemPage() {
         sub={t("remindersSub")}
       >
         <ul className="surface-2 rounded-2xl divide-y hairline overflow-hidden">
+          {cronHealth.anyAlert ? (
+            <li className="p-5">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <SeverityBadge severity="warn" />
+                    <span className="eyebrow text-fg-faint">cron</span>
+                  </div>
+                  <div className="font-display text-lg leading-tight">
+                    {t("cronsQuietLabel")}
+                  </div>
+                  <p className="mt-2 text-xs text-fg-dim">
+                    {t("cronsQuietRunbook")}
+                  </p>
+                </div>
+              </div>
+            </li>
+          ) : null}
           {status.reminders.map((r) => (
             <li key={r.id} className="p-5">
               <div className="flex flex-wrap items-start justify-between gap-4">
@@ -93,7 +116,7 @@ export default async function CoachSystemPage() {
                   <div className="font-display text-lg leading-tight">
                     {r.label}
                   </div>
-                  <p className="mt-2 text-xs font-mono text-fg-dim">
+                  <p className="mt-2 text-xs text-fg-dim">
                     {r.runbook}
                   </p>
                 </div>
@@ -105,12 +128,12 @@ export default async function CoachSystemPage() {
                           ? t("expired")
                           : `${r.daysUntilExpiry}`}
                       </div>
-                      <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-1">
+                      <div className="text-micro text-fg-faint mt-1">
                         {r.daysUntilExpiry !== null && r.daysUntilExpiry >= 0
                           ? t("daysLeft")
                           : t("sinceExpiry")}
                       </div>
-                      <div className="text-[10px] font-mono text-fg-faint mt-1">
+                      <div className="text-micro text-fg-faint mt-1">
                         {new Date(r.expiresAt).toLocaleDateString("da-DK", {
                           year: "numeric",
                           month: "short",
@@ -119,13 +142,29 @@ export default async function CoachSystemPage() {
                       </div>
                     </>
                   ) : (
-                    <div className="text-xs font-mono uppercase tracking-[0.14em] text-fg-dim">
+                    <div className="text-xs text-fg-dim">
                       {r.suggestedRotation ?? t("noHardExpiry")}
                     </div>
                   )}
                 </div>
               </div>
             </li>
+          ))}
+        </ul>
+      </Section>
+
+      {/* Cron health */}
+      <Section
+        eyebrow={t("cronsEyebrow")}
+        title={t("cronsTitle")}
+        sub={t("cronsSub")}
+      >
+        {cronHealth.mode === "demo" ? (
+          <p className="text-sm text-fg-dim">{t("cronsDemoNote")}</p>
+        ) : null}
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {cronHealth.crons.map((row) => (
+            <CronHealthCard key={row.cron} row={row} t={t} />
           ))}
         </ul>
       </Section>
@@ -144,10 +183,10 @@ export default async function CoachSystemPage() {
             >
               <span
                 className={`size-3 rounded-full shrink-0 mt-1.5 ${
-                  s.configured
-                    ? "bg-green-400"
-                    : "bg-fg-faint/30 border border-fg-faint"
-                }`}
+ s.configured
+ ? "bg-green-400"
+ : "bg-fg-faint/30 border border-fg-faint"
+ }`}
                 aria-hidden
               />
               <div className="min-w-0 flex-1">
@@ -156,22 +195,22 @@ export default async function CoachSystemPage() {
                     {s.name}
                   </span>
                   <span
-                    className={`text-[10px] font-mono uppercase tracking-[0.14em] ${
-                      s.configured ? "text-green-400" : "text-fg-faint"
-                    }`}
+                    className={`text-micro ${
+ s.configured ? "text-green-400" : "text-fg-faint"
+ }`}
                   >
                     {s.configured ? t("serviceLive") : t("serviceMissing")}
                   </span>
                 </div>
                 {s.notes ? (
-                  <p className="text-xs font-mono text-fg-dim">{s.notes}</p>
+                  <p className="text-xs text-fg-dim">{s.notes}</p>
                 ) : null}
                 {s.dashboardUrl ? (
                   <a
                     href={s.dashboardUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 inline-block text-xs font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg underline underline-offset-2"
+                    className="mt-2 inline-block text-xs text-fg-dim hover:text-fg underline underline-offset-2"
                   >
                     {t("openDashboard")}
                   </a>
@@ -185,7 +224,7 @@ export default async function CoachSystemPage() {
       {status.database.error ? (
         <section className="surface-2 rounded-2xl p-5 border border-red-400/40">
           <div className="eyebrow text-red-400 mb-2">{t("databaseError")}</div>
-          <p className="font-mono text-xs text-fg-dim break-all">
+          <p className="text-xs text-fg-dim break-all">
             {status.database.error}
           </p>
         </section>
@@ -243,7 +282,7 @@ function Row({
     <div className="px-5 py-3 flex items-center gap-4">
       <dt className="eyebrow w-36 shrink-0">{label}</dt>
       <dd
-        className={`flex-1 break-all font-mono text-xs ${dim ? "text-fg-faint" : "text-fg"}`}
+        className={`flex-1 break-all text-xs ${dim ? "text-fg-faint" : "text-fg"}`}
       >
         {value ?? "—"}
       </dd>
@@ -295,6 +334,80 @@ function Section({
   );
 }
 
+const CRON_NAME_KEY = {
+  "mental-coach-daily": "cronsNameMentalCoach",
+  "adapt-program-daily": "cronsNameAdapt",
+  "draft-form-check-replies": "cronsNameDraft",
+  "coach-morning-report": "cronsNameMorning",
+} as const;
+
+const CRON_STATUS_KEY = {
+  ok: "cronsStatusOk",
+  empty: "cronsStatusEmpty",
+  quiet: "cronsStatusQuiet",
+  none: "cronsStatusNone",
+} as const;
+
+const CRON_STATUS_SEVERITY: Record<CronHealthRow["status"], Severity> = {
+  ok: "ok",
+  empty: "info",
+  quiet: "warn",
+  none: "info",
+};
+
+function CronHealthCard({
+  row,
+  t,
+}: {
+  row: CronHealthRow;
+  t: (key: string) => string;
+}) {
+  const last = row.lastRun;
+  return (
+    <li className="surface-2 rounded-2xl p-5">
+      <div className="flex items-center justify-between gap-2 mb-2">
+        <span className="font-display text-lg leading-tight">
+          {t(CRON_NAME_KEY[row.cron])}
+        </span>
+        <SeverityBadge severity={CRON_STATUS_SEVERITY[row.status]} />
+      </div>
+      <div className="text-micro text-fg-faint">
+        {t(CRON_STATUS_KEY[row.status])}
+        {row.emptyStreak > 0 ? ` · ${row.emptyStreak}` : ""}
+      </div>
+      {last ? (
+        <dl className="mt-3 grid grid-cols-3 gap-2 text-xs">
+          <div className="col-span-3">
+            <dt className="text-fg-faint">{t("cronsLastRun")}</dt>
+            <dd>
+              <time dateTime={last.at}>
+                {new Date(last.at).toLocaleString("da-DK", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  day: "numeric",
+                  month: "short",
+                })}
+              </time>
+            </dd>
+          </div>
+          <div>
+            <dt className="text-fg-faint">{t("cronsGenerated")}</dt>
+            <dd className="numeric">{last.generated}</dd>
+          </div>
+          <div>
+            <dt className="text-fg-faint">{t("cronsCandidates")}</dt>
+            <dd className="numeric">{last.candidates}</dd>
+          </div>
+          <div>
+            <dt className="text-fg-faint">{t("cronsFailed")}</dt>
+            <dd className="numeric">{last.failed}</dd>
+          </div>
+        </dl>
+      ) : null}
+    </li>
+  );
+}
+
 function SeverityBadge({ severity }: { severity: Severity }) {
   const styles = {
     ok: "bg-green-400/15 text-green-400",
@@ -310,7 +423,7 @@ function SeverityBadge({ severity }: { severity: Severity }) {
   };
   return (
     <span
-      className={`inline-block px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-[0.14em] ${styles[severity]}`}
+      className={`inline-block px-2 py-0.5 rounded text-micro ${styles[severity]}`}
     >
       {label[severity]}
     </span>

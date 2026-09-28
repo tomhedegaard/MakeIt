@@ -1,33 +1,38 @@
 {
-  "metaTitle": "Log ind — {product}",
+  "metaTitle": "Log ind · {product}",
   "errors": {
-    "1": "Noget gik galt — prøv igen",
-    "missing": "Email og kode kræves",
+    "age": "Du skal være fyldt 18 år for at oprette en konto. Sæt kryds i feltet og prøv igen.",
+    "1": "Noget gik galt. Prøv igen",
+    "missing": "Email kræves",
     "invite": "Ugyldig invite-kode",
-    "otp": "Kunne ikke sende mail — prøv igen",
+    "need_invite": "Ny konto kræver en gyldig invite-kode",
+    "otp": "Kunne ikke sende mail. Prøv igen",
     "pw_short": "Passwordet skal være mindst 8 tegn",
-    "exists": "Email er allerede registreret — log ind i stedet",
-    "signup": "Kunne ikke oprette konto — prøv igen",
+    "exists": "Email er allerede registreret. Log ind i stedet",
+    "signup": "Kunne ikke oprette konto. Prøv igen",
     "creds": "Forkert email eller password",
-    "signin": "Kunne ikke logge ind — prøv igen",
-    "oauth": "OAuth-flow fejlede — prøv igen",
+    "signin": "Kunne ikke logge ind. Prøv igen",
+    "oauth": "OAuth-flow fejlede. Prøv igen",
     "provider": "Ukendt provider",
     "callback": "Login-link udløbet eller ugyldigt",
     "disabled": "Backend ikke tilkoblet",
-    "fallback": "Noget gik galt — prøv igen"
+    "fallback": "Noget gik galt. Prøv igen"
   },
   "beta": "Closed Beta · Invite only",
   "headline": {
     "line1": "Velkommen",
     "line2": "til crewet."
   },
-  "statusConnected": "Connected · ",
-  "statusDemo": "Demo mode · ingen backend tilkoblet",
+  "statusConnected": "Forbundet",
+  "statusDemo": "Demo-tilstand · ingen backend tilkoblet",
+  "memberOnlyHint": "Den side du prøvede at åbne er kun for medlemmer. Log ind for at fortsætte.",
+  "waitlistHint": "Ingen invite-kode?",
+  "waitlistLink": "Skriv dig på ventelisten",
   "mock": {
     "intro": "Indtast din invite-kode for at få adgang. Har du ikke en? Skriv til ",
     "inviteCodeLabel": "Invite-kode",
-    "invalidCode": "· Ugyldig kode — prøv igen",
-    "submit": "Få adgang →",
+    "invalidCode": "Ugyldig kode. Prøv igen",
+    "submit": "Få adgang",
     "testCodesLabel": "Test-koder: "
   },
   "tabs": {
@@ -36,11 +41,12 @@
     "oauth": "Google / Apple"
   },
   "magic": {
-    "intro": "Indtast email + invite-kode. Vi sender et engangs-login-link.",
+    "intro": "Indtast din email. Er du ny, skal du også have en invite-kode.",
     "emailLabel": "Email",
     "emailPlaceholder": "dig@email.com",
-    "inviteCodeLabel": "Invite-kode",
-    "submit": "Send login-link →"
+    "inviteCodeLabel": "Invite-kode (kun nye)",
+    "invitePlaceholder": "Valgfri hvis du allerede er medlem",
+    "submit": "Send login-link"
   },
   "password": {
     "introSignup": "Opret en konto med email + password. Invite-kode kræves.",
@@ -50,8 +56,8 @@
     "passwordLabel": "Password",
     "passwordPlaceholder": "Mindst 8 tegn",
     "inviteCodeLabel": "Invite-kode",
-    "submitSignup": "Opret konto →",
-    "submitSignin": "Log ind →",
+    "submitSignup": "Opret konto",
+    "submitSignin": "Log ind",
     "hasAccount": "Har du allerede en konto?",
     "signinLink": "Log ind",
     "newHere": "Ny her?",
@@ -69,5 +75,9 @@
     "fallbackEmail": "din mail",
     "bodyTail": ". Åbn linket på samme enhed, så er du inde.",
     "expiry": "Linket virker i 1 time."
+  },
+  "adult": {
+    "label": "Jeg er fyldt 18 år",
+    "labelNew": "Jeg er fyldt 18 år (kræves for nye konti)"
   }
 }

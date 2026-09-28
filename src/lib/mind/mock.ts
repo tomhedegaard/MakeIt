@@ -69,7 +69,7 @@ export function mockMindCheckLogs(days = 30): MindCheckLog[] {
       energy,
       stress,
       focus,
-      note: i === 0 ? "Lidt træt — sov dårligt." : null,
+      note: i === 0 ? "Lidt træt, sov dårligt." : null,
       source: i % 5 === 0 ? "evening_nudge" : "manual",
       created_at: isoTimestampDaysAgo(i),
     });
@@ -123,13 +123,13 @@ type HeroSeed = {
 
 const POLISHED_COHERENCE = `## Hvad du laver
 
-Du trækker vejret i et tempo der maksimerer din HRV. Det er ikke åndedrag for hyggens skyld — det er træning af nervesystemet, samme princip som styrketræning.
+Du trækker vejret i et tempo der maksimerer din HRV. Det er ikke åndedrag for hyggens skyld. Det er træning af nervesystemet, samme princip som styrketræning.
 
 5 sekunder ind. 5 sekunder ud. Ca. 6 åndedrag pr. minut. Følg den lange ring på skærmen.
 
 ## Det første minut
 
-Det er svært. Din vejrtrækning vil snyde dig — gå hurtigere, eller blive korthugget. Lad det være. Ringen trækker dig.
+Det er svært. Din vejrtrækning vil snyde dig: gå hurtigere, eller blive korthugget. Lad det være. Ringen trækker dig.
 
 ## Det andet minut
 
@@ -169,7 +169,7 @@ Du står stadig oprejst.
 
 const POLISHED_WIND_DOWN = `## Hvor du er nu
 
-Du har lige skubbet hårdt. Pulsen er nede igen, men nervesystemet er stadig oppe. Det skal det være lige efter en hård session — men hvis du vil sove i nat, vil du have det ned før du går i seng.
+Du har lige skubbet hårdt. Pulsen er nede igen, men nervesystemet er stadig oppe. Det skal det være lige efter en hård session, men hvis du vil sove i nat, vil du have det ned før du går i seng.
 
 Det her tager 4 minutter og er det stærkeste værktøj du har til søvn efter sen træning.
 
@@ -179,7 +179,7 @@ Det her tager 4 minutter og er det stærkeste værktøj du har til søvn efter s
 
 ## I de første to minutter
 
-De første otte sekunders udånding er svære. Kroppen vil have luft hurtigere. Lad være med at tvinge — gå langsommere og længere ud hver gang.
+De første otte sekunders udånding er svære. Kroppen vil have luft hurtigere. Lad være med at tvinge. Gå langsommere og længere ud hver gang.
 
 ## I de sidste to minutter
 
@@ -189,7 +189,7 @@ Ingen telefon når du går herfra. Drik et glas vand. Læs noget på papir. Elle
 
 const POLISHED_BOX_BREATH = `## Sæt dig op
 
-Fødderne i gulvet. Skulderne ned. Du behøver ikke lukke øjnene — det her er ikke meditation, det er teknik.
+Fødderne i gulvet. Skulderne ned. Du behøver ikke lukke øjnene. Det her er ikke meditation, det er teknik.
 
 ## Mønstret
 
@@ -197,7 +197,7 @@ Fødderne i gulvet. Skulderne ned. Du behøver ikke lukke øjnene — det her er
 
 ## I 3 minutter
 
-Den anden runde er nemmere end den første. Det er pointet — kroppen får signalet om at det her er sikkert.
+Den anden runde er nemmere end den første. Det er pointet: kroppen får signalet om at det her er sikkert.
 
 Tanker kommer. Lad dem passere. Tilbage til vejret.
 
@@ -207,7 +207,7 @@ To stille minutter mere. Det her er det mest pålidelige værktøj du har til at
 
 const POLISHED_RESTART = `## Du har fået en pause
 
-Træningen, arbejde, livet — du var væk. Nu skal du tilbage. Ikke ved at presse hårdere. Ved at vælge ÉN ting.
+Træningen, arbejde, livet. Du var væk. Nu skal du tilbage. Ikke ved at presse hårdere. Ved at vælge ÉN ting.
 
 ## I 90 sekunder
 
@@ -215,7 +215,7 @@ Hvad er den ene ting du vil have lavet før du går i seng i aften? Det første 
 
 ## I 90 sekunder mere
 
-Hvor starter du? Det første konkrete skridt — ikke "begynd", men noget du fysisk gør.
+Hvor starter du? Det første konkrete skridt, ikke "begynd", men noget du fysisk gør.
 
 Når alarmen ringer: gå direkte til det skridt. Ingen tilbagekig.`;
 
@@ -225,15 +225,15 @@ Læg dig på ryggen. Tæppet over. Lyset slukket. Telefonen i et andet rum.
 
 ## Scan ovenfra
 
-Isse. Pande. Øjenlåg — tunge. Mund — afslappet kæbe. For hvert område: mærk det, ånd ud, slip det.
+Isse. Pande. Øjenlåg: tunge. Mund: afslappet kæbe. For hvert område: mærk det, ånd ud, slip det.
 
 ## Ned gennem kroppen
 
-Nakke. Skuldre — lad dem falde mod gulvet. Bryst. Mave. Hofter. Lår — slap helt af. Knæ. Læg. Fødder.
+Nakke. Skuldre: lad dem falde mod gulvet. Bryst. Mave. Hofter. Lår: slap helt af. Knæ. Læg. Fødder.
 
 ## Hele kroppen samtidig
 
-Den er tung. Sengen bærer den. Tanker om i morgen kommer — send dem videre.
+Den er tung. Sengen bærer den. Tanker om i morgen kommer. Send dem videre.
 
 Hvis du falder i søvn under scanningen, godt. Det er målet.`;
 
@@ -273,9 +273,9 @@ Vær ærlig. Det er kun dig der hører dette.
 
 ## Hvad lærte du?
 
-Én lille ting. "Næste gang…" — fyld ud.
+Én lille ting. "Næste gang…" Fyld ud.
 
-Måske er det noget med at logge mind-check INDEN næste session — så Adaptive Engine kan justere før du står med stangen i hånden.
+Måske er det noget med at logge mind-check INDEN næste session, så Adaptive Engine kan justere før du står med stangen i hånden.
 
 ## Sidste ting
 
@@ -284,14 +284,14 @@ Skriv det evt. ned i journalen. To linjer. Du vil takke dig selv om en måned.
 Gå. Ingen tilbagekig.`;
 
 const HERO_SEEDS: HeroSeed[] = [
-  { slug: "box-breath-4-4-4-4-da", category: "breathing", title: "Box breath 4-4-4-4", subtitle: "For indre ro — 3 min", duration_seconds: 180, visual_pattern: "box_breath_4_4_4_4", body_md: POLISHED_BOX_BREATH },
-  { slug: "coherence-5-5-da", category: "breathing", title: "Coherence 5-5", subtitle: "For HRV-løft — 4 min", duration_seconds: 240, visual_pattern: "coherence_5_5", body_md: POLISHED_COHERENCE },
+  { slug: "box-breath-4-4-4-4-da", category: "breathing", title: "Box breath 4-4-4-4", subtitle: "For indre ro · 3 min", duration_seconds: 180, visual_pattern: "box_breath_4_4_4_4", body_md: POLISHED_BOX_BREATH },
+  { slug: "coherence-5-5-da", category: "breathing", title: "Coherence 5-5", subtitle: "For HRV-løft · 4 min", duration_seconds: 240, visual_pattern: "coherence_5_5", body_md: POLISHED_COHERENCE },
   { slug: "pre-session-priming-da", category: "focus", title: "Pre-session priming", subtitle: "90 sekunder inden du tager fat", duration_seconds: 90, visual_pattern: "still_focus", body_md: POLISHED_PRIMING },
-  { slug: "restart-from-brain-fog-da", category: "focus", title: "Genstart efter pause", subtitle: "Fra hjerne-tåge til klart sigte — 3 min", duration_seconds: 180, visual_pattern: "still_focus", body_md: POLISHED_RESTART },
-  { slug: "wind-down-beast-mode-da", category: "recovery", title: "Vind ned efter beast-mode", subtitle: "Skift fra på til af — 4 min", duration_seconds: 240, visual_pattern: "wave_4_8", body_md: POLISHED_WIND_DOWN },
-  { slug: "sleep-body-scan-da", category: "recovery", title: "Sov bedre — body scan", subtitle: "Til sengetid — 5 min", duration_seconds: 300, visual_pattern: "none", body_md: POLISHED_SLEEP_SCAN },
-  { slug: "debrief-what-worked-da", category: "debrief", title: "Hvad gik godt? Hvad næste gang?", subtitle: "Efter en god session — 2 min", duration_seconds: 120, visual_pattern: "still_focus", body_md: POLISHED_DEBRIEF_GOOD },
-  { slug: "debrief-bad-session-da", category: "debrief", title: "Når træningen var dårlig", subtitle: "Lige efter en lortesession — 3 min", duration_seconds: 180, visual_pattern: "still_focus", body_md: POLISHED_DEBRIEF_BAD },
+  { slug: "restart-from-brain-fog-da", category: "focus", title: "Genstart efter pause", subtitle: "Fra hjerne-tåge til klart sigte · 3 min", duration_seconds: 180, visual_pattern: "still_focus", body_md: POLISHED_RESTART },
+  { slug: "wind-down-beast-mode-da", category: "recovery", title: "Vind ned efter beast-mode", subtitle: "Skift fra på til af · 4 min", duration_seconds: 240, visual_pattern: "wave_4_8", body_md: POLISHED_WIND_DOWN },
+  { slug: "sleep-body-scan-da", category: "recovery", title: "Sov bedre · body scan", subtitle: "Til sengetid · 5 min", duration_seconds: 300, visual_pattern: "none", body_md: POLISHED_SLEEP_SCAN },
+  { slug: "debrief-what-worked-da", category: "debrief", title: "Hvad gik godt? Hvad næste gang?", subtitle: "Efter en god session · 2 min", duration_seconds: 120, visual_pattern: "still_focus", body_md: POLISHED_DEBRIEF_GOOD },
+  { slug: "debrief-bad-session-da", category: "debrief", title: "Når træningen var dårlig", subtitle: "Lige efter en lortesession · 3 min", duration_seconds: 180, visual_pattern: "still_focus", body_md: POLISHED_DEBRIEF_BAD },
 ];
 
 /** 8 hero sessions matching the seed in migration 0046. */

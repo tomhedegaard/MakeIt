@@ -82,7 +82,7 @@ export default function ShoppingChecklist({
             {totals.done} <span className="text-fg-dim">/ {totals.total}</span>
           </span>
         </div>
-        <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+        <div className="h-1.5 bg-bg-3 overflow-hidden">
           <div
             className="h-full bg-fg transition-all"
             style={{
@@ -95,7 +95,7 @@ export default function ShoppingChecklist({
           <button
             type="button"
             onClick={reset}
-            className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg-dim mt-3"
+            className="text-micro text-fg-faint hover:text-fg-dim mt-3"
           >
             {t("reset")}
           </button>
@@ -110,7 +110,7 @@ export default function ShoppingChecklist({
           <section key={g.category} className="surface-2 rounded-2xl overflow-hidden">
             <header className="px-5 py-3 border-b hairline flex items-baseline justify-between">
               <h2 className="font-display text-xl">{g.label}</h2>
-              <span className="numeric text-[11px] text-fg-faint">
+              <span className="numeric text-micro text-fg-faint">
                 {groupDone}/{groupTotal}
               </span>
             </header>
@@ -146,7 +146,7 @@ export default function ShoppingChecklist({
                           {item.name}
                         </div>
                         {item.mealCount > 1 ? (
-                          <div className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em] mt-0.5">
+                          <div className="text-micro text-fg-faint mt-0.5">
                             {t("itemMealCount", { count: item.mealCount })}
                           </div>
                         ) : null}
@@ -164,7 +164,7 @@ export default function ShoppingChecklist({
       })}
 
       {groups.length === 0 ? (
-        <section className="surface-2 rounded-2xl p-8 text-center text-sm text-fg-dim">
+        <section className="surface-2 rounded-2xl p-8 text-sm text-fg-dim">
           {t("empty")}
         </section>
       ) : null}

@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -14,9 +15,10 @@ import {
 } from "@/lib/mind/weekly-insights";
 import WeeklyInsightsView from "@/components/mind/WeeklyInsightsView";
 
-export const metadata = {
-  title: "Din uge · Mind · MakeIt",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("Mind.weeklyPage");
+  return { title: t("metaTitle") };
+}
 
 /**
  * `/mind/weekly` — last 7 days vs prior 7. Computed on the fly so no
@@ -26,6 +28,7 @@ export const metadata = {
 export default async function MindWeeklyPage() {
   const member = await getSession();
   if (!member) redirect("/login");
+  const t = await getTranslations("Mind.weeklyPage");
   if (!(await hasAcknowledgedMentalDisclaimer(member.id))) {
     redirect("/mind/onboarding");
   }
@@ -52,9 +55,9 @@ export default async function MindWeeklyPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Mind · Din uge"
-        title="Sidste 7 dage."
-        subtitle={`Mandage 18:00 lokal tid sender vi en mental uge-resumé som push.`}
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        subtitle={t("subtitle")}
       />
       <Container size="narrow" className="py-10 md:py-14">
         <WeeklyInsightsView insights={insights} headline={headline} />

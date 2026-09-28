@@ -27,7 +27,7 @@ export default async function CoachCirklerPage() {
       <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">Coach · Søjle 5</div>
-          <h1 className="font-display text-[clamp(2.4rem,7vw,3.5rem)] leading-[0.95]">
+          <h1 className="font-display text-title md:text-[2.75rem]">
             Cirkler.
           </h1>
           <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
@@ -52,7 +52,7 @@ export default async function CoachCirklerPage() {
           ) : (
             <div className="rounded-2xl border hairline bg-bg-2/30 overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-bg-2/60 text-fg-dim text-xs uppercase tracking-wide">
+                <thead className="bg-bg-2/60 text-fg-dim text-xs">
                   <tr>
                     <th className="text-left px-4 py-3">Navn</th>
                     <th className="text-left px-4 py-3">Leder</th>

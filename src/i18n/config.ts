@@ -16,3 +16,23 @@ export const localeLabels: Record<Locale, string> = {
 export function isLocale(value: string | undefined | null): value is Locale {
   return !!value && (locales as readonly string[]).includes(value);
 }
+
+/** BCP 47 tag for `toLocaleString` / `toLocaleDateString` in member UI. */
+export function intlLocaleTag(locale: string): string {
+  return locale === "en" ? "en-GB" : "da-DK";
+}
+
+/**
+ * Logged-in `members.locale` wins over a leftover marketing cookie.
+ * Testy evidence (21-daen-*): EN chrome with Language=Danish was a
+ * stale `mi_locale=en` on a `da` member row. Cookie still wins when
+ * there is no member preference (anonymous / demo).
+ */
+export function resolveLocale(input: {
+  cookie?: string | null;
+  memberLocale?: string | null;
+}): Locale {
+  if (isLocale(input.memberLocale)) return input.memberLocale;
+  if (isLocale(input.cookie)) return input.cookie;
+  return defaultLocale;
+}

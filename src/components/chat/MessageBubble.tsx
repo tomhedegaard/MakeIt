@@ -34,7 +34,7 @@ export default function MessageBubble({
   return (
     <li className={`flex flex-col ${align}`}>
       {!mine && message.senderHandle ? (
-        <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mb-1 px-1">
+        <div className="text-micro text-fg-faint mb-1 px-1">
           @{message.senderHandle}
           {message.senderIsCoach ? " · coach" : ""}
         </div>
@@ -60,7 +60,7 @@ export default function MessageBubble({
             controls
             playsInline
             preload="metadata"
-            className="block w-full h-auto max-h-[480px] bg-black"
+            className="block w-full h-auto max-h-[480px] bg-media"
           />
         ) : null}
 
@@ -73,7 +73,7 @@ export default function MessageBubble({
               className="w-full"
             />
             {message.mediaDurationSec ? (
-              <span className="text-[10px] font-mono text-fg-faint shrink-0">
+              <span className="text-micro text-fg-faint shrink-0">
                 {formatDuration(message.mediaDurationSec)}
               </span>
             ) : null}
@@ -89,13 +89,13 @@ export default function MessageBubble({
 
         {/* Fallback: media kind but no signed URL (storage hiccup) */}
         {message.kind !== "text" && !message.mediaUrl ? (
-          <p className="px-4 py-3 text-xs font-mono text-fg-dim">
+          <p className="px-4 py-3 text-xs text-fg-dim">
             {t("mediaError")}
           </p>
         ) : null}
       </div>
 
-      <div className="text-[10px] font-mono text-fg-faint mt-1 px-1 flex items-center gap-1.5">
+      <div className="text-micro text-fg-faint mt-1 px-1 flex items-center gap-1.5">
         <time dateTime={message.createdAt}>{formatTime(message.createdAt)}</time>
         {mine ? (
           <span

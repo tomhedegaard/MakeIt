@@ -2,20 +2,28 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { COMPANY } from "@/lib/company";
+import { getSession } from "@/lib/auth";
 import { MUSCLE_LABELS, type MuscleGroup } from "@/lib/data/muscle-groups";
+import { getActiveProgram } from "@/lib/data/coaching";
 import {
   getMemberProgramByCode,
   type ProgramDetailDay,
   type ProgramDetailExercise,
   type ProgramDetailSet,
 } from "@/lib/data/program-detail";
+import StartProgramButton from "@/app/(app)/coaching/StartProgramButton";
+import { seedProgramCopyPath } from "@/lib/i18n/member-bodycopy";
+import { memberAudience } from "@/lib/youth/account";
 
 type Params = Promise<{ code: string }>;
 
 export async function generateMetadata({ params }: { params: Params }) {
   const { code } = await params;
-  const p = await getMemberProgramByCode(code);
+  const viewer = await getSession();
+  const p = await getMemberProgramByCode(code, viewer ? await memberAudience(viewer.id) : "adult");
   const t = await getTranslations("ProgramDetail");
   return {
     title: p
@@ -30,10 +38,23 @@ export default async function ProgramDetailPage({
   params: Params;
 }) {
   const { code } = await params;
-  const program = await getMemberProgramByCode(code);
+  const member = await getSession();
+  const program = await getMemberProgramByCode(code, member ? await memberAudience(member.id) : "adult");
   if (!program) notFound();
 
+  const active = member ? await getActiveProgram(member.id) : null;
+  const isThisActive = active?.programId === program.id;
+
   const t = await getTranslations("ProgramDetail");
+  const tCoach = await getTranslations("Coaching");
+  const seedPath = seedProgramCopyPath(program.code);
+  const type = seedPath ? tCoach(`${seedPath}.type`) : program.type;
+  const level = seedPath
+    ? tCoach(`${seedPath}.level`)
+    : (program.level ?? t("meta.levelFallback"));
+  const description = seedPath
+    ? tCoach(`${seedPath}.description`)
+    : program.description;
 
   return (
     <>
@@ -46,14 +67,12 @@ export default async function ProgramDetailPage({
             <span aria-hidden>·</span>
             <span>{program.code}</span>
             <span aria-hidden>·</span>
-            <span>{program.type}</span>
+            <span>{type}</span>
           </div>
-          <h1 className="font-display text-[clamp(2.2rem,5.5vw,4rem)] leading-[0.95]">
-            {program.name}.
-          </h1>
-          {program.description ? (
+          <PageTitle title={`${program.name}.`} />
+          {description ? (
             <p className="mt-4 max-w-2xl text-fg-dim text-base md:text-lg">
-              {program.description}
+              {description}
             </p>
           ) : null}
 
@@ -62,29 +81,40 @@ export default async function ProgramDetailPage({
             <Meta label={t("meta.days")} value={program.days.length} />
             <Meta
               label={t("meta.level")}
-              value={program.level ?? t("meta.levelFallback")}
+              value={level}
             />
             <Meta
               label={t("meta.coach")}
               value={program.coachName ?? t("meta.coachFallback")}
             />
           </div>
+          <div className="mt-5 max-w-sm">
+            {isThisActive ? (
+              <Link href="/coaching" className="btn btn-sm">
+                {t("alreadyActive")}
+              </Link>
+            ) : (
+              <StartProgramButton
+                programId={program.id}
+                programName={program.name}
+                hasOtherActive={Boolean(active)}
+                hasDays={program.days.length > 0}
+              />
+            )}
+          </div>
         </Container>
       </div>
 
       <Container className="py-10 md:py-14 space-y-10">
         <section>
-          <div className="eyebrow mb-3">{t("template.eyebrow")}</div>
-          <h2 className="font-display text-2xl md:text-3xl leading-[1.05] max-w-xl">
-            {t("template.title", { weeks: program.weeks })}
-          </h2>
+          <SectionHeader eyebrow={t("template.eyebrow")} title={t("template.title", { weeks: program.weeks })} />
           <p className="mt-3 text-fg-dim text-sm md:text-base max-w-xl">
             {t("template.body")}
           </p>
         </section>
 
         {program.days.length === 0 ? (
-          <div className="surface-2 rounded-2xl p-8 text-center text-sm text-fg-dim">
+          <div className="surface-2 rounded-2xl p-8 text-sm text-fg-dim">
             {t("emptyDays")}
           </div>
         ) : (
@@ -133,7 +163,7 @@ async function DayCard({ day }: { day: ProgramDetailDay }) {
             </div>
             <div className="text-right shrink-0">
               <div className="numeric text-xl">
-                {day.estimatedMinutes ?? "—"}
+                {day.estimatedMinutes ?? "-"}
                 {day.estimatedMinutes ? (
                   <span className="text-fg-dim text-sm ml-0.5">m</span>
                 ) : null}
@@ -142,7 +172,7 @@ async function DayCard({ day }: { day: ProgramDetailDay }) {
             </div>
           </div>
           <p className="text-fg-dim text-sm md:text-base">{day.title}</p>
-          <div className="mt-3 flex items-center gap-3 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+          <div className="mt-3 flex items-center gap-3 text-micro text-fg-faint">
             <span>{t("day.exercises", { count: day.exercises.length })}</span>
             <span aria-hidden>·</span>
             <span>{t("day.sets", { count: setCount })}</span>
@@ -175,7 +205,7 @@ function ExerciseRow({
         <div className="text-sm md:text-base text-fg/90 truncate">
           {ex.exerciseName}
         </div>
-        <div className="mt-1 flex items-center gap-2 flex-wrap text-[11px] font-mono text-fg-faint">
+        <div className="mt-1 flex items-center gap-2 flex-wrap text-micro text-fg-faint">
           <span className="numeric">{formatSetScheme(ex.sets)}</span>
           {ex.primaryMuscles.length > 0 ? (
             <>
@@ -187,7 +217,7 @@ function ExerciseRow({
       </div>
       {ex.slug ? (
         <span
-          className="text-fg-dim shrink-0 text-[11px] font-mono uppercase tracking-[0.14em]"
+          className="text-fg-dim shrink-0 text-micro"
           aria-hidden
         >
           →
@@ -218,7 +248,7 @@ function MuscleChips({ muscles }: { muscles: MuscleGroup[] }) {
       {muscles.slice(0, 3).map((m) => (
         <span
           key={m}
-          className="px-1.5 py-0.5 rounded-full bg-bg-3 text-fg-dim normal-case tracking-normal"
+          className="px-1.5 py-0.5 bg-bg-3 text-fg-dim"
         >
           {MUSCLE_LABELS[m]}
         </span>
@@ -228,7 +258,7 @@ function MuscleChips({ muscles }: { muscles: MuscleGroup[] }) {
 }
 
 function formatSetScheme(sets: ProgramDetailSet[]): string {
-  if (sets.length === 0) return "—";
+  if (sets.length === 0) return "-";
   // Collapse identical sets: e.g., three (5 reps × 100 kg @ RPE 8) →
   // "3 × 5 reps · 100 kg @ RPE 8". Mixed schemes get spelled out
   // briefly to avoid a wall of text on the day card.
@@ -246,5 +276,5 @@ function describeSet(s: ProgramDetailSet): string {
   if (s.reps > 0) parts.push(`${s.reps} reps`);
   if (s.weight > 0) parts.push(`${s.weight} kg`);
   if (s.rpe) parts.push(`RPE ${s.rpe}`);
-  return parts.join(" · ") || "—";
+  return parts.join(" · ") || "-";
 }

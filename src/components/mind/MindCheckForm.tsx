@@ -2,20 +2,11 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { submitMindCheckAction } from "@/app/(app)/mind/check/actions";
+import { rangeFill } from "@/lib/ui/range";
 
-type Slider = {
-  key: "energy" | "stress" | "focus";
-  label: string;
-  low: string;
-  high: string;
-};
-
-const SLIDERS: Slider[] = [
-  { key: "energy", label: "Energi", low: "udmattet", high: "opladt" },
-  { key: "stress", label: "Stress", low: "rolig", high: "pumpet" },
-  { key: "focus", label: "Fokus", low: "spredt", high: "laserskarp" },
-];
+type SliderKey = "energy" | "stress" | "focus";
 
 /**
  * 60-second mind-check. Three 1-5 sliders + 280-char note. Idempotent
@@ -39,10 +30,17 @@ export default function MindCheckForm({
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const router = useRouter();
+  const t = useTranslations("Mind.check");
 
-  const setter = (key: Slider["key"]) =>
+  const sliders: { key: SliderKey; label: string; low: string; high: string }[] = [
+    { key: "energy", label: t("energy"), low: t("energyLow"), high: t("energyHigh") },
+    { key: "stress", label: t("stress"), low: t("stressLow"), high: t("stressHigh") },
+    { key: "focus", label: t("focus"), low: t("focusLow"), high: t("focusHigh") },
+  ];
+
+  const setter = (key: SliderKey) =>
     ({ energy: setEnergy, stress: setStress, focus: setFocus })[key];
-  const value = (key: Slider["key"]) => ({ energy, stress, focus })[key];
+  const value = (key: SliderKey) => ({ energy, stress, focus })[key];
 
   function handleSubmit(formData: FormData) {
     setError(null);
@@ -62,7 +60,7 @@ export default function MindCheckForm({
       action={handleSubmit}
       className="space-y-10"
     >
-      {SLIDERS.map((s) => (
+      {sliders.map((s) => (
         <fieldset key={s.key} className="space-y-3">
           <legend className="flex items-baseline justify-between w-full">
             <span className="font-display text-xl md:text-2xl">{s.label}</span>
@@ -78,10 +76,11 @@ export default function MindCheckForm({
             step={1}
             value={value(s.key)}
             onChange={(e) => setter(s.key)(Number(e.target.value))}
-            className="w-full accent-fg"
+            className="range w-full"
+            style={rangeFill(value(s.key), 1, 5)}
             aria-label={s.label}
           />
-          <div className="flex justify-between text-fg-dim text-xs uppercase tracking-wide">
+          <div className="flex justify-between text-fg-dim text-xs">
             <span>{s.low}</span>
             <span>{s.high}</span>
           </div>
@@ -90,7 +89,7 @@ export default function MindCheckForm({
 
       <fieldset className="space-y-2">
         <legend className="font-display text-xl md:text-2xl">
-          En sætning <span className="text-fg-dim text-sm">(valgfri)</span>
+          {t("noteLabel")} <span className="text-fg-dim text-sm">{t("noteOptional")}</span>
         </legend>
         <textarea
           name="note"
@@ -98,7 +97,7 @@ export default function MindCheckForm({
           onChange={(e) => setNote(e.target.value.slice(0, 280))}
           maxLength={280}
           rows={3}
-          placeholder="Hvad præger dig lige nu?"
+          placeholder={t("notePlaceholder")}
           className="w-full rounded-xl bg-bg-2/60 border hairline px-4 py-3 text-base resize-none focus:outline-none focus:border-fg/40"
         />
         <div className="text-fg-dim text-xs text-right tabular-nums">
@@ -107,7 +106,7 @@ export default function MindCheckForm({
       </fieldset>
 
       {error ? (
-        <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-300">
+        <div className="rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
           {error}
         </div>
       ) : null}
@@ -116,13 +115,13 @@ export default function MindCheckForm({
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex items-center justify-center rounded-full bg-fg text-bg px-7 py-3.5 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3.5 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
         >
-          {pending ? "Gemmer..." : saved ? "Opdater" : "Gem mind-check"}
+          {pending ? t("saving") : saved ? t("update") : t("save")}
         </button>
         {saved && !pending ? (
           <span className="text-fg-dim text-sm">
-            Tjekket ind i dag — du kan opdatere senere.
+            {t("savedHint")}
           </span>
         ) : null}
       </div>

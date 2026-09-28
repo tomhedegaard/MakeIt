@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
 import { getSession } from "@/lib/auth";
 import { getOrCreateNutritionProfile } from "@/lib/data/nutrition";
 import { savePreferencesAction } from "../actions";
@@ -17,7 +18,7 @@ export default async function PreferencesPage() {
 
   return (
     <Container className="py-6 lg:py-12 max-w-2xl space-y-8">
-      <header className="pt-2">
+      <div className="pt-2">
         <div className="flex items-center gap-3 mb-3">
           <Link
             href="/nutrition"
@@ -28,13 +29,11 @@ export default async function PreferencesPage() {
           <span className="text-fg-faint" aria-hidden>·</span>
           <span className="eyebrow">{t("eyebrow")}</span>
         </div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
-          {t("title")}
-        </h1>
+        <PageTitle size="compact" title={t("title")} />
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
           {t("intro")}
         </p>
-      </header>
+      </div>
 
       <form action={savePreferencesAction} className="space-y-8">
         {/* Goal */}
@@ -56,7 +55,7 @@ export default async function PreferencesPage() {
                 <div className="text-sm">
                   {g === "cut" ? t("goalCut") : g === "recomp" ? t("goalRecomp") : g === "mass" ? t("goalMass") : t("goalMaintain")}
                 </div>
-                <div className="text-[10px] font-mono uppercase tracking-[0.14em] opacity-70 mt-0.5">
+                <div className="text-micro opacity-70 mt-0.5">
                   {g === "cut" ? t("goalCutDelta") : g === "recomp" ? t("goalRecompDelta") : g === "mass" ? t("goalMassDelta") : t("goalMaintainDelta")}
                 </div>
               </label>
@@ -235,7 +234,7 @@ export default async function PreferencesPage() {
           <Link href="/nutrition" className="btn btn-ghost">
             {t("cancel")}
           </Link>
-          <span className="text-xs text-fg-faint font-mono ml-auto">
+          <span className="text-xs text-fg-faint ml-auto">
             {t("lastUpdated", { date: new Date(profile.updatedAt).toLocaleDateString("da-DK") })}
           </span>
         </div>

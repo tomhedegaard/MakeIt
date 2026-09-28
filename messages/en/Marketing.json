@@ -1,379 +1,8 @@
 {
   "nav": {
-    "crew": "Crew",
-    "engine": "Engine",
-    "coaching": "Coaching",
-    "tiers": "Tiers",
-    "app": "The App",
-    "price": "Pricing",
-    "faq": "FAQ",
-    "closedBeta": "Closed Beta",
-    "login": "Log in",
-    "menuOpen": "Open menu",
-    "menuClose": "Close menu"
-  },
-  "hero": {
-    "eyebrow": "Closed Beta · Invite only · est. 2026",
-    "stats": {
-      "members": "Active members",
-      "membersSuffix": "Closed beta",
-      "madeIn": "Made in",
-      "madeInSuffix": "Copenhagen",
-      "formCheck": "Form-check reply",
-      "formCheckValue": "6 SEC",
-      "formCheckSuffix": "AI draft · Munk review 24h",
-      "engine": "Engine runs",
-      "engineValue": "05:30",
-      "engineSuffix": "Every morning"
-    },
-    "subline": "Coaching built on your body's data.",
-    "subline2": "1:1 coaching, AI-adapted programs, form checks and HRV-aware recovery — in one place, at a fraction of market price. Built in Copenhagen. Made for athletes who lift heavy.",
-    "ctaPrimary": "Get access",
-    "ctaSecondary": "Learn more",
-    "ctaTertiary": "Try the engine ↓",
-    "waitlistLink": "No invite code? Join the waitlist",
-    "trustLine": "No lock-in · Cancel anytime · Price locked for beta members"
-  },
-  "engine": {
-    "eyebrow": "02 — Engine",
-    "heading": "Drag a slider. Watch the engine.",
-    "intro": "This is the real rule engine from the app — not a mockup. Drag a slider, and the engine recomputes its decision in your browser. No API, no waiting. Same code that runs for you every morning at 05:30.",
-    "signalsHeading": "What the engine sees right now",
-    "signalLabels": {
-      "hrv": "HRV reading",
-      "sleep": "Sleep (2-day average)",
-      "alcohol": "Alcohol (last 2 days)",
-      "feeling": "Most recent feeling"
-    },
-    "decisionHeading": "What the engine decides",
-    "reasoningHeading": "Why",
-    "previousLabel": "Before you touched it",
-    "disclaimer": "Same pure rule engine the app uses. No API, no spinner — runs in your browser.",
-    "ctaHowItWorks": "See the full reasoning chain →"
-  },
-  "crew": {
-    "eyebrow": "01 — The Crew",
-    "heading": {
-      "line1": "A closed",
-      "line2": "room for",
-      "line3": "those who",
-      "line4": "lift."
-    },
-    "intro": "MakeIt Crew isn't for everyone. It's for athletes, coaches and partners already building alongside us — and who want access to programs, community and perks before anyone else.",
-    "items": {
-      "invite": {
-        "k": "Invite-only access",
-        "v": "Only via a personal code from Mikael Munk or an existing crew member."
-      },
-      "internal": {
-        "k": "Open brain",
-        "v": "We show you how the engine thinks — and give you the knobs to move it. Every decision, every adjustment, every counterfactual is open."
-      },
-      "noNoise": {
-        "k": "No noise",
-        "v": "No ads, no pressure to perform on Instagram. Just training and community."
-      },
-      "ownData": {
-        "k": "Your data, your call",
-        "v": "HRV sharing and your journal are private by default. You choose what the coach sees — and can pull the plug anytime."
-      }
-    }
-  },
-  "worksWith": {
-    "label": "Works with",
-    "note": "Apple Watch via iPhone app"
-  },
-  "waitlist": {
-    "eyebrow": "Waitlist",
-    "heading": "No code? Get in line.",
-    "intro": "The crew is invite-only, and we open spots in small batches. The waitlist is the queue for the next batch of invites — first on the list, first in.",
-    "emailLabel": "Your email",
-    "emailPlaceholder": "you@example.com",
-    "cta": "Put me on the list",
-    "ctaPending": "One moment…",
-    "error": "That didn't seem to work — check the email and try again.",
-    "note": "Invites only · No newsletters · Remove yourself anytime",
-    "doneEyebrow": "You're in the queue",
-    "doneHeading": "We'll write when a spot opens.",
-    "doneBody": "Invites go out in small batches. You'll hear from us by email — and only about that."
-  },
-  "pillars": {
-    "engine": {
-      "label": "02 — Engine & open brain",
-      "title": "The program rewrites itself. And shows you why.",
-      "body": "Every morning at 05:30 the engine reads your HRV, your sleep, last session's RPE and your latest form checks. It adjusts today's session — or doesn't — and shows the whole chain behind the call: raw signals → rule → Claude's refinement → action → outcome. Munk sees the escalation before you do.",
-      "bullet1": "Top-set reduction, accessory cut, exercise swap — or no_change. Never more than one change per session.",
-      "bullet2": "HRV very_low → session paused, mobility + walk, Munk gets notified",
-      "bullet3": "30 days of history with counterfactual sliders: \"What if I'd slept 7h?\" — computed live in your browser",
-      "statLabel": "days of history",
-      "demoHook": "Drag the sliders",
-      "bullet4": "Reason codes in plain language, and you can always say \"keep original\" — no black box, nothing happens behind your back"
-    },
-    "munkMultiplier": {
-      "label": "03 — Coaching that scales",
-      "title": "One coach. 5× capacity. Still him.",
-      "body": "AI drafts form-check replies, cohort patterns and morning reports — Munk edits in 30 seconds or rewrites. You never get an AI reply without his signature. And when you hit Beast tier, Coach School opens: you learn to answer yourself, with Munk as senior.",
-      "bullet1": "AI-drafted form-check replies, signed by Munk before they go out",
-      "bullet2": "Cohort patterns: AI spots when 3+ athletes hit the same problem in the same week",
-      "bullet3": "Coach School: lessons → sandbox cases → live members, with safety moderation on everything outgoing",
-      "statLabel": "form check",
-      "bullet4": "AI buddy pairing on level, location and timing — plus Reps for your feedback to others, not just your own reps",
-      "demoHook": "See the ladder"
-    },
-    "mind": {
-      "label": "04 — Mental engine",
-      "title": "The head, in the equation. Not as an accessory.",
-      "body": "Real health is physical AND mental. A 60-second mind-check daily builds a mental graph parallel to your HRV. When mind-checks show strain for 3 days, the Adaptive Engine dials down without waiting for HRV to break — because the head often feels it first. Private journaling, AI coach written for your week, and — when you tier up — crew sharing so you don't go alone.",
-      "bullet1": "Mind-check × HRV × training — Adaptive Engine fuses all three. No other app does.",
-      "bullet2": "AI coach writes today's reflection based on your signal — not a generic meditation.",
-      "bullet3": "Privacy as progression: Lifter private, Athlete unlocks buddy share, Beast unlocks circles. Your journal is always yours.",
-      "statLabel": "sec/day",
-      "demoHook": "See the mind module"
-    }
-  },
-  "tiers": {
-    "eyebrow": "Reps Program",
-    "heading": {
-      "line1": "From Lifter",
-      "line2": "to Legend."
-    },
-    "intro": "Every completed session, form check and PR fills the Reps balance. Tiers aren't titles — they're proof of the work behind them. Each level unlocks new perks: form-check priority, IRL meets, exclusive gear, 1:1 coaching.",
-    "cta": "Start your journey →",
-    "ctaSecondary": "See the engine driving this →",
-    "ctaNote": "Closed beta · invite required",
-    "locked": "Locked",
-    "promotionFooter": "Reps are earned for sessions, form-checks, lifestyle logs, and — from Beast and up — for the quality of your feedback to other members. Tier promotion happens automatically via the Reps ledger.",
-    "lifter": {
-      "description": "The way in. You've banked your first reps and you're learning the system — your first session is in the app, the program is dialed to your level.",
-      "quote": "First 30 days. The program hit my level exactly, and I've never felt this on track in my life.",
-      "unlocks": {
-        "1": "Adaptive engine runs from day 1",
-        "2": "AI form-check with 24-hour Munk review",
-        "3": "Buddy pairing activates after 14 days",
-        "4": "1 IRL meet per quarter"
-      }
-    },
-    "athlete": {
-      "description": "Consistency. You log sets and form checks weekly. PRs start dropping on the big lifts, and you've made the first lifestyle shifts that won't reverse.",
-      "quote": "Three months in and I've hit PRs on all three big lifts. The Reps system keeps me accountable every single day.",
-      "unlocks": {
-        "1": "Form-check priority in Munk's queue",
-        "2": "Lifestyle-log patterns in your Open Brain",
-        "3": "Buddy pod (3 people)",
-        "4": "Custom strap colour unlocked"
-      }
-    },
-    "beast": {
-      "description": "The volume block. You know how your body responds under heavy load, and you work recovery deliberately. Coach feedback gets finer and more surgical.",
-      "quote": "The volume block was the hardest, physically and mentally — but that's where I learned what I can really handle.",
-      "unlocks": {
-        "1": "Coach School unlocked — lessons with Claude evaluation",
-        "2": "Sandbox cases: practice against simulated members",
-        "3": "1:1 30-min with Munk per quarter",
-        "4": "Limited drops before everyone else"
-      }
-    },
-    "legend": {
-      "description": "Few make it here. A multi-year commitment to building the body as a discipline, not a trend. You're the one the crew looks up to, and your sessions inspire the Lifter tier.",
-      "quote": "Three years. 200+ sessions. Two back injuries behind me. The Reps balance shows why — it's not luck, it's built kilo by kilo.",
-      "unlocks": {
-        "1": "Co-coaching: you answer form-checks with Munk as senior",
-        "2": "Pod leader for new Lifters",
-        "3": "Reps for member feedback, not just your own reps",
-        "4": "Permanent seat in the Amagerbro loft"
-      }
-    },
-    "sim": {
-      "eyebrow": "Reps simulator",
-      "heading": "How fast do you climb?",
-      "fields": {
-        "weeks": "Program weeks completed / mo.",
-        "prs": "PRs you log with video",
-        "invites": "Friends you invite in",
-        "challenges": "Challenges you win"
-      },
-      "repsEach": "reps each",
-      "perMonth": "reps per month",
-      "months": "{n} mo.",
-      "withinMonth": "First mo.",
-      "note": "Same rates as the Reps program in the app · Reps never expire",
-      "increase": "Add one — {label}",
-      "decrease": "Remove one — {label}"
-    }
-  },
-  "app": {
-    "eyebrow": "06 — The App",
-    "heading": "Here's how it looks.",
-    "intro": "Six screens that define your week — from the first morning tap, to the nudge above the first lift that adapts the day's load to your HRV, to your buddy's daily readiness and the sandbox case you practice on as a Beast.",
-    "phone": {
-      "todayLabel": "Today",
-      "todayDetail": "Today's session, one tap to start",
-      "sessionLabel": "Session · HRV-aware",
-      "sessionDetail": "Nudge above the first lift on low days",
-      "readinessLabel": "Readiness",
-      "readinessDetail": "WHOOP · Oura · Polar — auto-sync",
-      "formCheckLabel": "Form check",
-      "formCheckDetail": "Claude grades it in 6 sec.",
-      "buddyLabel": "Buddy",
-      "buddyDetail": "AI-paired · weekly rematch",
-      "coachSchoolLabel": "Coach School",
-      "coachSchoolDetail": "Sandbox case · scored vs Munk"
-    },
-    "buddy": {
-      "eyebrow": "Your buddy",
-      "pairedSinceLabel": "Paired since",
-      "pairedSince": "3 weeks",
-      "matchLabel": "Match · Athlete",
-      "matchBlurb": "Same tier, complementary program. Trains 5-7pm just like you.",
-      "readinessLabel": "Her readiness today",
-      "hrvNote": "WHOOP · synced",
-      "interaction1": "You sent fire to her 175 kg DL",
-      "interaction2": "She sent muscle to your RPE-8 squat set",
-      "interaction3": "Nudge: \"Sleep well tonight, you have Squat-A tomorrow\"",
-      "sendCta": "Send nudge →"
-    },
-    "coachSchool": {
-      "eyebrow": "Coach School",
-      "modeLabel": "Sandbox · case 47/50",
-      "agreementLabel": "Your rolling agreement",
-      "alertAge": "fired 4h ago",
-      "signalsLabel": "Signals in the alert",
-      "yourCallLabel": "Your call",
-      "decisions": {
-        "approve": "Approve",
-        "modify": "Modify",
-        "escalate": "Escalate",
-        "reject": "Reject"
-      },
-      "submitCta": "Submit → compare with Munk"
-    },
-    "today": {
-      "greeting": "Good morning",
-      "streak": "Streak",
-      "week": "STR-12 · week 4",
-      "day": "Day A — Squat",
-      "topSet": "Top set @ RPE 8, 3×3 backoff",
-      "miniExercises": "exercises",
-      "miniSets": "sets",
-      "miniTime": "time",
-      "startSession": "Start session →"
-    },
-    "session": {
-      "week": "STR-12 · week 4",
-      "exercise": "Exercise 1/4",
-      "setsLabel": "sets",
-      "cue": "Chest up, knees out, sit low and drive hard up.",
-      "miniKg": "kg",
-      "miniReps": "reps",
-      "miniRpe": "rpe",
-      "weightLabel": "Weight",
-      "logSet": "Log set →",
-      "nudgeEyebrow": "HRV LOW TODAY",
-      "nudgeBody": "Readiness below your normal range. Go light — skip the top sets.",
-      "nudgeCta": "See HRV →"
-    },
-    "readiness": {
-      "todayLabel": "Today · HRV",
-      "sevenDayLabel": "7-d avg",
-      "sevenDayUnit": "ms",
-      "rmssdUnit": "ms RMSSD",
-      "syncSource": "synced from WHOOP · 06:12",
-      "buckets": {
-        "veryHigh": "Way above",
-        "high": "Above",
-        "normal": "Normal",
-        "low": "Below",
-        "veryLow": "Way below"
-      },
-      "weeklyObservationLabel": "This week's observation",
-      "weeklyObservation": "Sleep under 7 h on three nights looks like it's pulling RMSSD down by ~8%.",
-      "miniMs": "ms",
-      "mini7d": "7-d",
-      "mini60d": "60-d"
-    },
-    "formCheck": {
-      "eyebrow": "AI form check",
-      "verdict": "Solid set — slight knee valgus",
-      "reviewed": "Reviewed · Mikael Munk",
-      "goodLabel": "✓ Good",
-      "good1": "· Depth hit",
-      "good2": "· Consistent bar path",
-      "good3": "· Good spinal control",
-      "tightenLabel": "△ Tighten up",
-      "tighten1": "· Right knee collapses at the bottom",
-      "coachTipLabel": "Coach tip",
-      "coachTip": "Drive the knees out — “spread the floor”."
-    }
-  },
-  "value": {
-    "priceLabel": "Pricing",
-    "priceLockNote": "Final price locked before launch",
-    "positioningEyebrow": "How we keep coaching accessible",
-    "positioningHeadline": "AI does the generic. People do what matters.",
-    "positioningSub": "We automate what can be automated — program building, form checks, progression — and use people where it actually counts: 1:1, milestones and community. The result is coaching that costs a fraction of the market, without feeling cheap.",
-    "marketLabel": "market average for personal coaching",
-    "pillar1": {
-      "eyebrow": "Automated",
-      "title": "AI builds the program",
-      "body": "Personal strength and hypertrophy programs are generated from your maxes, your history and your goal — and updated week by week based on how you actually lift.",
-      "foot": "No waiting · no template PDFs"
-    },
-    "pillar2": {
-      "eyebrow": "Drafted by AI, signed by Munk",
-      "title": "Form-check with Munk's signature",
-      "body": "AI drafts the reply in Munk's voice in seconds, and Munk edits or rewrites in up to 30 seconds. You never get an AI reply without his name on it.",
-      "foot": "AI draft + Munk signature · within 24h"
-    },
-    "pillar3": {
-      "eyebrow": "People for the milestones",
-      "title": "Crew + coach when it counts",
-      "body": "PR celebrations, deload talk, and 1:1 time with Mikael Munk when you're closing in on a new ceiling. The rest of the time, the community keeps you accountable.",
-      "foot": "Crew feed · 1:1 at milestones"
-    },
-    "pillar4": {
-      "eyebrow": "Recovery that measures itself",
-      "title": "Wearable + HRV in the program",
-      "body": "Connect WHOOP, Oura or Polar. Your morning RMSSD and 60-day baseline dial in the week's load, and the coach gets a heads-up when your nervous system is shouting three days running.",
-      "foot": "Auto-sync · honest numbers, no 0-100 score"
-    },
-    "includesHeading": "The whole system. One membership.",
-    "includes": {
-      "1": "AI program that adapts to your body daily",
-      "2": "Form checks signed by Munk within 24h",
-      "3": "HRV-aware recovery — WHOOP, Oura, Polar",
-      "4": "Crew feed, challenges, buddy & Reps program",
-      "5": "Mind check and the mental engine"
-    },
-    "betaValue": "Beta",
-    "betaSuffix": "invite only",
-    "marketFraction": "A fraction of the market average for personal coaching."
-  },
-  "testimonials": {
-    "eyebrow": "07 — The Crew",
-    "heading": "What they say.",
-    "intro": "Four from the crew on how it feels to train here. No ambassador deals, no discount codes. Just members who've put in the time.",
-    "kasper": {
-      "cred": "Powerbuilding · 162.5 kg squat single",
-      "quote": "The first program I've actually run from start to finish. Mikael's form checks catch things the AI misses, and the volume of notes he writes per video is insane."
-    },
-    "nina": {
-      "cred": "DL specialization · 175 kg @ 68 kg BW",
-      "quote": "+15 kg on the deadlift in 8 weeks, no injuries. The fact the Reps shop exists is dangerously good motivation — I'm saving up for the embroidered strap."
-    },
-    "anton": {
-      "cred": "Powerlifting · 2 years in the crew",
-      "quote": "First time I've seen a coach show me why he changed something. I can drag the sliders and watch the engine think. It's not a black-box program that asks me to lift less — it's coaching I understand."
-    },
-    "maria": {
-      "cred": "Hypertrophy · switching between blocks",
-      "quote": "The crew is where I post, not Instagram. Quiet, precise, and in Danish. No ads, no demands. Just people who lift."
-    }
+    "menuOpen": "Open menu"
   },
   "faq": {
-    "eyebrow": "08 — FAQ",
-    "heading": "Questions?",
-    "intro": "The things we usually get asked. Missing your answer?",
-    "introLink": "Write Mikael directly",
     "items": {
       "advanced": {
         "q": "Do I need to be advanced to join?",
@@ -404,16 +33,16 @@
         "a": "For 95% of lifters: yes. AI form check + weekly coach review catches most of it. For those who want more — the 1:1 add-on gives you direct Signal access to Mikael and a weekly 30-min video session. Limited to 8 spots at a time."
       },
       "cheaper": {
-        "q": "Why is it cheaper than traditional coaching?",
-        "a": "Because AI handles the generic stuff — program generation, progression, instant form feedback. Mikael and the crew then spend their time on what actually moves the needle: 1:1, milestones, and keeping you accountable. You pay for what counts."
+        "q": "What does it cost?",
+        "a": "Closed beta is invite-only, and the public price is not locked yet. Join the waitlist — we write when a spot opens. Already have a code? Sign in."
       },
       "wearables": {
         "q": "Which wearables does the HRV module support?",
-        "a": "WHOOP, Oura and Polar (H10 and the O20 series) are live. You connect via OAuth from settings — we never store your login details, only tokens encrypted at rest. Apple Watch support ships with the MakeIt iPhone app. Garmin is on the roadmap, but not in v1."
+        "a": "WHOOP, Oura and Polar (H10 and the O20 series) are live. You connect via OAuth from settings. We never store your login details, only tokens encrypted at rest. Apple Watch support ships with the MakeIt iPhone app. Garmin is on the roadmap, but not in v1."
       },
       "hrvScore": {
         "q": "Why don't I get an HRV score from 0 to 100?",
-        "a": "Because a number from 0 to 100 promises a precision that doesn't exist. We show your actual RMSSD in milliseconds, your own 60-day baseline band and a 5-bucket readiness ladder — so you see where you sit relative to your own normal, not a made-up scale. You also can't compare your HRV with other people's; healthy RMSSD ranges from roughly 10 to 200 ms depending on age, sex and shape."
+        "a": "Because a number from 0 to 100 promises a precision that doesn't exist. We show your actual RMSSD in milliseconds, your own 60-day baseline band and a 5-bucket readiness ladder, so you see where you sit relative to your own normal, not a made-up scale. You also can't compare your HRV with other people's; healthy RMSSD ranges from roughly 10 to 200 ms depending on age, sex and shape."
       },
       "hrvPrivacy": {
         "q": "Who sees my HRV data and lifestyle logs?",
@@ -428,7 +57,7 @@
         "a": "Every Sunday evening we correlate your week's RMSSD against your lifestyle tags (sleep, alcohol, stress, illness) and send one short observation — in Danish, never diagnoses, never made-up numbers. Example: 'Sleeping under 7h for three nights drags RMSSD down by ~8%.' The full history lives at /hrv/insights."
       },
       "openBrainWhy": {
-        "q": "Why do you show the engine publicly?",
+        "q": "Why do you show HQ publicly?",
         "a": "Because trust is built on transparency. Our rule layer is 300 lines of pure TypeScript that we show you right here on the landing page — drag the sliders and watch what it would have chosen. Competitors can copy the rules in a day; they cannot copy 6 months of audit logs, baselines, and Munk-in-the-loop UX. The moat is the flywheel, not a secret API."
       },
       "coCoach": {
@@ -441,35 +70,631 @@
       },
       "optOutAdaptive": {
         "q": "What if I don't want AI adjustments?",
-        "a": "You always have control. You can disable adaptive adjustments from the HRV settings (the program then runs as planned without daily tweaks), and even with them on you can reject each individual adjustment with 'Keep original' directly in the session. The engine is an opinion, not a command."
+        "a": "You always have control. You can disable adaptive adjustments from the HRV settings (the program then runs as planned without daily tweaks), and even with them on you can reject each individual adjustment with 'Keep original' directly in the session. HQ is an opinion, not a command."
       },
       "offPlanNutrition": {
         "q": "What do I do if I eat something that's not in the meal plan?",
         "a": "Tap 'I ate something else' in the Nutrition feed, briefly describe what you ate, and it's logged as an off-plan meal. No penalty, no scolding — just data. The coach sees it in weekly signals so next week's planning gets more realistic instead of ignoring reality."
       }
     },
-    "showAll": "Show all questions"
+    "showAll": "Show all questions ({count})"
   },
-  "footer": {
-    "blurbBefore": "{product} is the inner universe for our crew, athletes and coaches. Gear:",
-    "blurbAfter": "",
-    "universeLabel": "Universe",
-    "universeCrew": "Crew",
-    "universeCoaching": "Coaching",
-    "universeCommunity": "Community",
-    "universeReps": "Reps Program",
-    "contactLabel": "Contact",
-    "instagram": "Instagram @{handle}",
-    "getAccess": "Get access →",
-    "privacy": "Privacy",
-    "terms": "Terms",
-    "madeIn": "Made in DK · Closed Beta · v0.1"
-  },
-  "hrvChart": {
-    "title": "HRV — 30 days",
-    "exampleData": "Example data",
-    "belowBaseline": "Below baseline",
-    "withinBaseline": "Within baseline",
-    "aria": "Chart: 30 days of HRV readings in milliseconds RMSSD, ranging {low} to {high} ms, with a 7-day mean and a baseline band as reference range."
+  "landing": {
+    "nav": {
+      "engine": "How HQ works",
+      "systems": "Systems",
+      "munk": "Munk",
+      "crew": "Crew",
+      "login": "Log in",
+      "cta": "Get access"
+    },
+    "hero": {
+      "heading": "Built for those who lift.",
+      "sub": "HQ, the app's brain, reads your night and rewrites today's session before you get under the bar.",
+      "cta": "Get access",
+      "link": "See how HQ works",
+      "plateOld": "150",
+      "plateNew": "135",
+      "plateUnit": "kg"
+    },
+    "demo": {
+      "todayLabel": "Today",
+      "tryIt": "Try it yourself: move a slider.",
+      "sleepLabel": "Sleep",
+      "hrvLabel": "HRV",
+      "stressLabel": "Stress",
+      "hrvUnit": "ms",
+      "stressUnit": "/5",
+      "bandNote": "Demo band. In the app the band becomes your own, measured against your own baseline.",
+      "sessionTitle": "Back squat",
+      "topSetLabel": "Top set",
+      "keepOriginal": "Keep original",
+      "liveRegionPrefix": "Today's session updated:",
+      "whySleep": "Sleep {hours}",
+      "whyHrv": "HRV {ms} ms",
+      "accessoryDropped": "{count} accessory sets dropped",
+      "unchanged": "The session stands unchanged."
+    },
+    "engine": {
+      "eyebrow": "Every morning",
+      "heading": "The session gets rewritten while you sleep.",
+      "sub": "HQ reads last night's HRV, sleep, mind check and your recent sessions. Then it adjusts weight and volume.",
+      "night": {
+        "label": "Last night",
+        "sample": "Sample data",
+        "t0": "23:40",
+        "t1": "02:00",
+        "t2": "05:30",
+        "t3": "06:45",
+        "legendHrv": "HRV, ms",
+        "legendSleep": "Sleep stages",
+        "legendBand": "Your band"
+      },
+      "steps": {
+        "sleep": {
+          "time": "05:30:02",
+          "source": "Oura",
+          "label": "Sleep",
+          "value": "5 h 12 m",
+          "note": "2 h 18 m under your target. Awake twice after 3 am."
+        },
+        "hrv": {
+          "time": "05:30:04",
+          "source": "WHOOP",
+          "label": "HRV",
+          "value": "48",
+          "unit": "ms",
+          "note": "Below your band of 54 to 68 ms. Third day in a row of decline."
+        },
+        "stress": {
+          "time": "05:30:05",
+          "source": "Mind check yesterday 21:40",
+          "label": "Stress",
+          "value": "4",
+          "unit": "/5",
+          "note": "Twice as high as your normal week."
+        },
+        "decision": {
+          "time": "05:30:07",
+          "source": "HQ",
+          "label": "Decision",
+          "value": "Top set down",
+          "lift": "Back squat",
+          "from": "150 kg",
+          "to": "135 kg",
+          "note": "Same exercises, same week. Lighter top set so you can come back tomorrow."
+        }
+      },
+      "keepOriginal": "Keep original",
+      "keepOriginalNote": "You always see why, and you can always keep the original plan.",
+      "disclaimer": "HRV is a recovery signal, not a diagnosis.",
+      "bounds": {
+        "heading": "HQ's boundaries",
+        "lowerTopSet": "Lowers the top set",
+        "lowerVolume": "Lowers volume",
+        "lighterVariant": "Suggests a lighter variant",
+        "shorten": "Shortens the session"
+      },
+      "escalation": "HQ never touches pauses or deloads. Those always go to Munk first."
+    },
+    "systems": {
+      "heading": "Four systems. One session.",
+      "sub": "Body, food, heart and mind talk to each other. What happens in one place moves something in another.",
+      "body": {
+        "kicker": "Body",
+        "heading": "The program moves with you.",
+        "text": "Four week blocks. Top set, backoff and rest set by HQ every morning.",
+        "stat": "16",
+        "statLabel": "Sets today",
+        "clipLabel": "Deadlift, top set."
+      },
+      "food": {
+        "kicker": "Food",
+        "heading": "Fuel.",
+        "quote": "Olive oil and butter, not rapeseed oil. Skyr and cottage cheese, not protein bars.",
+        "macro": "2,740 kcal · 182 g protein",
+        "p": "Protein",
+        "c": "Carbs",
+        "f": "Fat"
+      },
+      "heart": {
+        "kicker": "Heart",
+        "heading": "Your band, not an average.",
+        "now": "HRV this morning",
+        "avg": "Your average",
+        "disclaimer": "HRV is a recovery signal, not a diagnosis."
+      },
+      "mind": {
+        "kicker": "Mind",
+        "heading": "The head is part of the session.",
+        "text": "60 seconds. How is your head today?",
+        "energy": "Energy",
+        "stress": "Stress",
+        "focus": "Focus"
+      },
+      "rack": {
+        "heading": "The app, in daylight.",
+        "sub": "Swipe sideways, and scroll down inside each screen.",
+        "sample": "Sample data",
+        "prev": "Previous screen",
+        "next": "Next screen",
+        "listLabel": "Fifteen app screens"
+      }
+    },
+    "munk": {
+      "heading": "A human signs off.",
+      "sub": "Mikael Munk is head coach. He reads your lifts.",
+      "portraitAlt": "Mikael Munk, head coach",
+      "flow": [
+        {
+          "t": "+0 h",
+          "label": "You record the set in the app"
+        },
+        {
+          "t": "+4 min",
+          "label": "AI writes a draft"
+        },
+        {
+          "t": "+6 h",
+          "label": "Munk corrects and signs off"
+        },
+        {
+          "t": "Max",
+          "label": "24 hours, every time"
+        }
+      ],
+      "card": {
+        "kicker": "Form check",
+        "lift": "Back squat · set 3",
+        "draftLabel": "AI draft",
+        "draft": "Slight knee valgus visible during the eccentric phase.",
+        "final": "Knees cave in at the bottom. Think: push the floor apart.",
+        "signed": "Munk",
+        "answered": "answered in 6 h",
+        "reference": "Reference",
+        "yours": "Your recording",
+        "signatureLabel": "Signature, Mikael Munk"
+      }
+    },
+    "crew": {
+      "eyebrow": "The crew",
+      "heading": "Load the bar, one plate at a time.",
+      "sub": "Reps are earned by training, sending form checks, setting PRs and helping others.",
+      "here": "You are here",
+      "coachSchool": "Coach School opens",
+      "tiers": {
+        "lifter": "You are in. Every session counts.",
+        "athlete": "Form checks and PRs earn the most reps.",
+        "beast": "Coach School opens. You learn to answer others.",
+        "legend": "The top of the crew."
+      },
+      "meterLabel": "Athlete · 1,240 of 5,000 reps",
+      "meterNote": "Example",
+      "earnHeading": "How reps are earned",
+      "earn": {
+        "sessions": "Sessions",
+        "formChecks": "Form checks",
+        "prs": "PRs",
+        "help": "Helping others"
+      },
+      "ladder": {
+        "listLabel": "Crew tiers",
+        "hint": "Tap a plate to see what it unlocks",
+        "perksHeading": "What you unlock",
+        "floor": "{from}+ reps",
+        "ctaStart": "Start as {tier}",
+        "ctaToward": "Start towards {tier}",
+        "ctaNote": "Everyone starts as Lifter. Reps count from your first session and never expire."
+      }
+    },
+    "voices": {
+      "enabled": "false",
+      "heading": "From the crew."
+    },
+    "access": {
+      "eyebrow": "Access",
+      "heading": "Join the list.",
+      "sub": "Invite only. Spots open in small groups.",
+      "worksWith": "Works with WHOOP, Oura, Polar and Apple Watch through the iPhone app.",
+      "emailLabel": "Your email",
+      "emailPlaceholder": "name@domain.com",
+      "cta": "Sign me up",
+      "pending": "One moment…",
+      "done": "You are on the list. We will write when the next group opens.",
+      "error": "That did not work. Check the email and try again.",
+      "fine": "Invites only. No newsletters."
+    },
+    "faq": {
+      "heading": "Questions.",
+      "sub": "Missing an answer? Write to Munk.",
+      "inviteOnly": {
+        "q": "Why is it invite only?",
+        "a": "Because Munk himself signs off on the answers. That is why we open in small groups."
+      },
+      "demo": {
+        "q": "Is the homepage demo the real HQ?",
+        "a": "Yes, the same HQ. The sliders call the same function that adjusts your real session every morning. The numbers never leave your browser."
+      }
+    },
+    "footer": {
+      "slogan": "Made for those who lift.",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "sample": "Numbers and screens on this page are sample data."
+    },
+    "screens": {
+      "time": "05:31",
+      "program": "STR-12 · week 4",
+      "dayTitle": "Day A: Squat",
+      "engineStamp": "HQ · 05:30",
+      "munkInitials": "MM",
+      "pause": "Pause",
+      "play": "Play",
+      "dashboard": {
+        "aria": "App screen, Today: HQ has rewritten today's session. Back squat top set from 150 to 135 kg, because last night's HRV sat below your band.",
+        "greeting": "Good morning",
+        "day": "Wednesday",
+        "streak": "12 day streak",
+        "sessionSub": "Squat · top set @ RPE 8, 3×3 backoff",
+        "exercisesValue": "5",
+        "setsValue": "16",
+        "timeValue": "58m",
+        "munkReply": "Mikael Munk answered 1 form check",
+        "volumeLabel": "Volume 4 weeks",
+        "volumeValue": "18,420 kg",
+        "prLabel": "PRs",
+        "prValue": "3",
+        "repsLabel": "Reps",
+        "repsValue": "1,240",
+        "weekLabel": "This week",
+        "weekDays": "M T W T F S S",
+        "weekNote": "Session 1 of 4",
+        "tomorrowLabel": "Tomorrow",
+        "tomorrow": "Day B: Bench",
+        "tomorrowSub": "4 exercises · 45m",
+        "mealLabel": "Next meal",
+        "meal": "Lunch 12:00 · Rye bread, eggs, avocado"
+      },
+      "session": {
+        "aria": "App screen, live session in dark mode: back squat, set 3 of 3 at 135 kg, with a button to log the set and record it for Munk.",
+        "day": "Day A",
+        "targetReps": "3 reps",
+        "targetRpe": "RPE 8",
+        "set": "Set {n}",
+        "setValue": "135 × 3",
+        "sendTo": "Sent to coach Munk",
+        "restValue": "2:30",
+        "nextLabel": "Rest of the session",
+        "next1": "Romanian deadlift",
+        "next1v": "3×8",
+        "next2": "Walking lunge",
+        "next2v": "3×10",
+        "next3": "Hanging knee raise",
+        "next3v": "3×12",
+        "next4": "Plank",
+        "next4v": "3×45s",
+        "noteLabel": "Note to Munk",
+        "note": "Set 2 felt heavy at the bottom."
+      },
+      "hrv": {
+        "aria": "App screen, HRV: 48 ms this morning against an average of 61 ms, below your personal band. HQ eases today's squat top set.",
+        "title": "Recovery",
+        "avgValue": "61 ms",
+        "range": "14 nights",
+        "sleepValue": "5h 12m",
+        "rhrLabel": "Resting HR",
+        "rhrValue": "54",
+        "sourceLabel": "Source",
+        "morningsLabel": "Recent mornings",
+        "m1": "Sunday",
+        "m1v": "66 ms",
+        "m2": "Monday",
+        "m2v": "58 ms",
+        "m3": "Tuesday",
+        "m3v": "52 ms",
+        "m4": "Today",
+        "m4v": "48 ms"
+      },
+      "food": {
+        "aria": "App screen, Food: today's plan on a training day with 2,740 kcal and 182 g protein, three meals and a shopping list.",
+        "trainingDay": "Training day",
+        "kcal": "2,740",
+        "kcalUnit": "kcal",
+        "protein": "182 g protein",
+        "breakfast": "Skyr, oats, blueberries",
+        "lunch": "Rye bread, eggs, avocado",
+        "dinner": "Salmon, potatoes, beans",
+        "shopping": "Shopping list · 14 items",
+        "waterLabel": "Water",
+        "waterValue": "1.8 of 3 l",
+        "swap": "Swap dinner",
+        "snackLabel": "Snack",
+        "snack": "Cottage cheese, rye crispbread",
+        "proteinLabel": "Protein per meal",
+        "pMorning": "42 g",
+        "pLunch": "38 g",
+        "pDinner": "52 g",
+        "pSnack": "30 g"
+      },
+      "mind": {
+        "aria": "App screen, 60 second mind check: energy, stress and focus on a scale from 1 to 5, a journal and the last 7 days.",
+        "title": "Mind check",
+        "journal": "Journal",
+        "journalEntry": "Slept short, but my head is clear. Looking forward to squats.",
+        "checkIn": "Check in",
+        "week": "Last 7 days",
+        "suggestLabel": "Suggestion",
+        "suggest": "Breathing · 3 min",
+        "suggestSub": "Before you sleep. Lowers your pulse.",
+        "streakLabel": "Streak",
+        "streak": "9 days of mind-checks"
+      },
+      "formCheck": {
+        "aria": "App screen, Form check: the member's own recording of set 3 on the bench press next to a reference movement, and Munk's signed reply.",
+        "videoLabel": "Reference movement: bench press",
+        "duration": "0:22",
+        "next": "Record next set",
+        "historyLabel": "Earlier replies",
+        "h1": "Set 1",
+        "h1v": "The bar lands in the same spot",
+        "h2": "Set 2",
+        "h2v": "Shoulder blades pinned",
+        "h3": "Week 3",
+        "h3v": "Feet in the floor, good",
+        "h4": "Week 2",
+        "h4v": "Pause on the chest, good",
+        "h5": "Week 1",
+        "h5v": "Filmed from the side, thanks",
+        "lift": "Bench press · set 3",
+        "final": "The elbows flare at the bottom. Think: bend the bar, elbows down towards the ribs."
+      },
+      "decision": {
+        "aria": "App screen, HQ's decision: today's session has been rewritten. Back squat top set from 150 to 135 kg, backoff from 128 to 115 kg. Why: sleep, HRV and stress. You can keep the original plan.",
+        "heading": "Today's session is rewritten.",
+        "topSet": "Top set",
+        "backoff": "Backoff 3×3",
+        "backoffFrom": "128 kg",
+        "backoffTo": "115 kg",
+        "timeTo": "52m",
+        "why": "Why",
+        "restOfWeek": "Rest of the week",
+        "dayB": "Day B: Bench",
+        "dayBStatus": "Unchanged",
+        "dayC": "Day C: Deadlift",
+        "dayCStatus": "Reviewed Thursday",
+        "historyLabel": "Last time HQ eased off",
+        "history": "Week 2: you made 150 × 3 four days later."
+      },
+      "sleep": {
+        "aria": "App screen, Sleep: 5 hours 12 minutes last night, 2 hours 18 minutes under your goal, with sleep stages and the last 7 nights.",
+        "goal": "Goal 7 h 30 m, 2 h 18 m under",
+        "awake": "Awake",
+        "rem": "REM",
+        "light": "Light",
+        "deep": "Deep",
+        "start": "23:48",
+        "end": "05:02",
+        "inBed": "In bed",
+        "deepSleep": "Deep sleep",
+        "deepValue": "38 m",
+        "remValue": "54 m",
+        "awakeValue": "2 times",
+        "nights": "7 nights",
+        "synced": "Synced from Oura at 05:14",
+        "tipLabel": "HQ note",
+        "tip": "Two short nights in a row. Bed at 22:15 tonight gives you eight hours."
+      },
+      "mindChecked": {
+        "aria": "App screen, mind check from last night: energy 3 of 5, stress 4 of 5, focus 3 of 5.",
+        "heading": "Your head last night.",
+        "energyValue": "3/5",
+        "stressValue": "4/5",
+        "focusValue": "3/5",
+        "trend": "Stress, 7 days. Your average sits at 2 of 5.",
+        "journalEntry": "Deadline moved to Friday. Slept badly after 3 am.",
+        "checkedIn": "Checked in 21:40",
+        "engineLabel": "HQ · 21:41",
+        "engine": "Stress 4 of 5 counts tomorrow morning, together with sleep and HRV."
+      },
+      "coach": {
+        "aria": "App screen, chat with coach Mikael Munk: he has seen your form check, answers about the knees and adjusts next week's squat.",
+        "title": "Munk",
+        "status": "Replies within 6 h",
+        "m1": "Saw your set 3. The knees cave a little at the bottom.",
+        "m2": "Think: spread the floor apart. Same weight Thursday.",
+        "me1": "Thanks. Should I lower the weight?",
+        "m3": "No. HQ already eased the top set. Stay at 135.",
+        "me2": "Great, I'll film again Thursday.",
+        "signed": "Replied in 6 h · Mikael Munk",
+        "input": "Write to Munk",
+        "yesterday": "Yesterday",
+        "me0": "Filmed set 3. Can you look at the knees?",
+        "clip": "Form check · set 3 · 0:22",
+        "today": "Today",
+        "m4": "And remember: sleep before a heavy session. HQ can't lift for you."
+      },
+      "progress": {
+        "aria": "App screen, progress: back squat estimated 1RM has risen from 148 to 162 kg over 12 weeks, with three new PRs and weekly volume.",
+        "title": "Progress",
+        "lift": "Back squat · e1RM",
+        "value": "162",
+        "delta": "+14 kg in 12 weeks",
+        "prsLabel": "New PRs",
+        "pr1": "Back squat",
+        "pr1v": "150 × 3",
+        "pr2": "Deadlift",
+        "pr2v": "190 × 2",
+        "pr3": "Bench press",
+        "pr3v": "105 × 4",
+        "volumeLabel": "Volume per week",
+        "weeks": "12 weeks",
+        "otherLabel": "Other lifts",
+        "dl": "Deadlift",
+        "dlv": "212 kg",
+        "bp": "Bench",
+        "bpv": "118 kg",
+        "ohp": "Press",
+        "ohpv": "74 kg",
+        "streakLabel": "Streak",
+        "streak": "12 weeks without a missed session"
+      },
+      "block": {
+        "aria": "App screen, the programme: block STR-12, week 4 of 4, with today's session, the rest of the week and a deload next week.",
+        "title": "Programme",
+        "block": "STR-12 · Strength",
+        "weekOf": "Week 4 of 4",
+        "w1": "W1",
+        "w2": "W2",
+        "w3": "W3",
+        "w4": "W4",
+        "daysLabel": "This week",
+        "dayA": "Day A: Squat",
+        "dayAStatus": "Today",
+        "dayB": "Day B: Bench",
+        "dayBStatus": "Friday",
+        "dayC": "Day C: Deadlift",
+        "dayCStatus": "Saturday",
+        "dayD": "Day D: Press",
+        "dayDStatus": "Sunday",
+        "deloadLabel": "Next week",
+        "deload": "Deload. 60 percent volume, same exercises.",
+        "exercisesLabel": "Day A",
+        "ex1": "Back squat",
+        "ex1v": "1×3 + 3×3",
+        "ex2": "Romanian deadlift",
+        "ex2v": "3×8",
+        "ex3": "Walking lunge",
+        "ex3v": "3×10",
+        "ex4": "Hanging knee raise",
+        "ex4v": "3×12",
+        "nextLabel": "Next block",
+        "next": "STR-13 starts 7 October. Top sets start at 140 kg."
+      },
+      "shopping": {
+        "aria": "App screen, shopping list for the week's meal plan: 14 items across dairy, meat and fish, greens and pantry. Four are bought.",
+        "title": "Shopping",
+        "sub": "For this week's plan · 14 items",
+        "g1": "Dairy",
+        "i1": "Skyr",
+        "i1v": "2 kg",
+        "i2": "Cottage cheese",
+        "i2v": "3 × 250 g",
+        "i3": "Eggs",
+        "i3v": "20",
+        "g2": "Meat and fish",
+        "i4": "Salmon",
+        "i4v": "600 g",
+        "i5": "Chicken breast",
+        "i5v": "1 kg",
+        "g3": "Greens",
+        "i6": "Blueberries",
+        "i6v": "500 g",
+        "i7": "Potatoes",
+        "i7v": "2 kg",
+        "i8": "Green beans",
+        "i8v": "400 g",
+        "i9": "Avocado",
+        "i9v": "3",
+        "g4": "Pantry",
+        "i10": "Oats",
+        "i10v": "1 kg",
+        "i11": "Rye bread",
+        "i11v": "2",
+        "i12": "Olive oil",
+        "i12v": "1 btl",
+        "i13": "Butter",
+        "i13v": "250 g",
+        "i14": "Rye crispbread",
+        "i14v": "1 pk",
+        "done": "4 of 14 in the basket"
+      },
+      "breath": {
+        "aria": "App screen, a three minute breathing exercise: in for four seconds, hold for seven, out for eight. Round 2 of 4.",
+        "title": "Breathing",
+        "sub": "3 min · before you sleep",
+        "phase": "Hold",
+        "count": "7",
+        "in": "In 4",
+        "hold": "Hold 7",
+        "out": "Out 8",
+        "round": "Round 2 of 4",
+        "libraryLabel": "More exercises",
+        "l1": "Box breathing",
+        "l1v": "4 min",
+        "l2": "Body scan",
+        "l2v": "8 min",
+        "l3": "Before a heavy set",
+        "l3v": "1 min",
+        "stop": "Stop",
+        "weekLabel": "Minutes this week",
+        "weekValue": "19 min",
+        "note": "Evenings with breathing gave you 34 min more sleep on average."
+      },
+      "crew": {
+        "aria": "App screen, the crew: members' new PRs and form checks, your reps towards the next tier and this week's leaderboard.",
+        "title": "The crew",
+        "tier": "Athlete · 1,240 of 5,000 reps",
+        "feedLabel": "Today",
+        "p1": "Sara K.",
+        "p1i": "SK",
+        "p1t": "New PR: deadlift 140 kg",
+        "p1m": "2 h · 14 cheers",
+        "p2": "Jonas L.",
+        "p2i": "JL",
+        "p2t": "Form check answered by Munk",
+        "p2m": "4 h · 6 cheers",
+        "p3": "Mette R.",
+        "p3i": "MR",
+        "p3t": "12 sessions in a row",
+        "p3m": "6 h · 21 cheers",
+        "boardLabel": "Reps this week",
+        "b1": "Sara K.",
+        "b1v": "310",
+        "b2": "You",
+        "b2v": "265",
+        "b3": "Jonas L.",
+        "b3v": "240",
+        "cheer": "Cheer",
+        "p4": "Ali H.",
+        "p4i": "AH",
+        "p4t": "First pull-up without a band",
+        "p4m": "8 h · 33 cheers",
+        "p5": "Line P.",
+        "p5i": "LP",
+        "p5t": "Finished the deload week",
+        "p5m": "Yesterday · 9 cheers",
+        "schoolLabel": "Coach School",
+        "school": "Opens at Beast. You learn to answer other members' form checks."
+      }
+    },
+    "ask": {
+      "open": "Ask HQ",
+      "title": "Ask HQ",
+      "sub": "Answers about MakeIt and the app. No health advice.",
+      "intro": "Ask anything about the app, HQ, Munk, the tiers or how to get in.",
+      "suggestions": {
+        "s1": "What does HQ do?",
+        "s2": "What does it cost?",
+        "s3": "Which wearables work?",
+        "s4": "How do I get in?"
+      },
+      "suggestionsLabel": "Suggestions",
+      "placeholder": "Type your question",
+      "inputLabel": "Your question for HQ",
+      "send": "Send",
+      "close": "Close the chat",
+      "thinking": "HQ is thinking…",
+      "error": "That didn't work. Try again in a moment.",
+      "limited": "You've asked a lot in a short time. Try again in a moment.",
+      "unavailable": "The chat isn't available right now. Join the waitlist and Munk will get back to you.",
+      "privacy": "Answers are written by AI and can be wrong. Questions are not stored by MakeIt.",
+      "cta": "Join the waitlist",
+      "you": "You",
+      "hq": "HQ",
+      "log": "Conversation with HQ",
+      "full": "The conversation is long now. Start over to ask more.",
+      "restart": "Start over",
+      "privacyLink": "Privacy"
+    }
   }
 }

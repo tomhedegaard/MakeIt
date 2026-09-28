@@ -11,7 +11,9 @@
   },
   "steppers": {
     "weight": "Vægt",
-    "reps": "Reps"
+    "reps": "Reps",
+    "decrease": "Mindre {label}",
+    "increase": "Mere {label}"
   },
   "sets": {
     "title": "Sæt i dette øvelse",
@@ -23,7 +25,7 @@
     "logSet": "Log sæt →"
   },
   "done": {
-    "eyebrow": "Session done",
+    "eyebrow": "Session færdig",
     "title": "Godt arbejde.",
     "body": "Du loggede {sets} sæt og holdt dig på programmet. Vi sender dataene videre til din coach for ugentlig review.",
     "sets": "Sæt",
@@ -34,7 +36,7 @@
   },
   "exit": {
     "title": "Afslut session?",
-    "description": "Dine loggede sæt er allerede gemt — du kan fortsætte senere.",
+    "description": "Dine loggede sæt er allerede gemt. Du kan fortsætte senere.",
     "stay": "Bliv",
     "confirm": "Afslut"
   },
@@ -43,18 +45,30 @@
     "sets": "sæt",
     "openDetails": "Åbn øvelsens detaljer",
     "seeFull": "Se hele øvelsen →",
-    "formCheck": "Form-check med AI",
+    "demo": "Se bevægelse",
+    "demoAria": "Se bevægelse: {lift}",
+    "demoPlay": "Afspil bevægelse",
+    "formCheck": "Optag sæt {set}",
+    "formCheckSub": "Sendes til coach Munk, bundet til {lift}",
     "moreCues": " · {count} cues mere",
-    "duration": "~6 sek →"
+    "duration": "Optag →",
+    "thread": {
+      "eyebrow": "Form-check under løftet",
+      "pending": "Afventer feedback fra coach Munk",
+      "reviewed": "Coach Munk har svaret",
+      "voice": "Lydbesked",
+      "youFilmed": "Du filmede dette sæt",
+      "munkReply": "Feedback fra coach Munk"
+    }
   },
   "restTimer": {
     "ariaLabel": "Hvile",
     "title": "Hvile",
-    "description": "Næste sæt om {time} — tag en slurk vand.",
-    "skip": "Skip"
+    "description": "Næste sæt om {time}. Tag en slurk vand.",
+    "skip": "Spring over"
   },
   "rpe": {
-    "label": "RPE — hvor tungt føltes det?",
+    "label": "RPE: hvor tungt føltes det?",
     "ariaLabel": "RPE"
   },
   "preview": {
@@ -64,6 +78,6 @@
     "sets": "Sæt",
     "estTime": "Tid",
     "summary": "{exerciseCount} øvelser · {setCount} sæt",
-    "start": "Start session"
+    "start": "Start sessionen"
   }
 }

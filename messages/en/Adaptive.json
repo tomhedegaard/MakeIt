@@ -1,0 +1,63 @@
+{
+  "strip": {
+    "why": "Why",
+    "role": "HQ",
+    "attribution": "HQ · Adaptive Engine",
+    "gloss": "Adaptive Engine adapts the week. Munk is your coach",
+    "munkRole": "Coach",
+    "munkNoteLabel": "Note from Munk",
+    "steps": {
+      "hrvLow": "Heart: last night's HRV sits below your band",
+      "hrvVeryLow": "Heart: last night's HRV is well below your band",
+      "hrvInBand": "Heart: last night's HRV sits in your normal range",
+      "sessionToday": "Body: there is a session today",
+      "lowSleep": "Mind: sleep the last nights has been short",
+      "alcohol": "Food: alcohol logged in the last two days",
+      "lowFeeling": "Mind: feeling logged as tired",
+      "rpeOvershoot": "Body: last session sat above planned RPE",
+      "rpeDrift": "Body: RPE has been climbing across recent sessions",
+      "mentalLoad": "Mind: mental load over several days",
+      "formCheck": "Body: a form check points to a step back",
+      "missed": "Body: one or more sessions were skipped",
+      "noAlcohol": "Food: no alcohol logged in the last two days",
+      "mindUnread": "Mind: no mind-check yet today"
+    }
+  },
+  "dots": {
+    "eyebrow": "Today",
+    "title": "The links",
+    "gloss": "Adaptive Engine adapts the week. Munk is your coach",
+    "moreAbout": "Tell me more about",
+    "dismiss": "Hide",
+    "snooze": "Tomorrow",
+    "motorAttribution": "HQ · Adaptive Engine",
+    "domains": {
+      "heart": "Heart",
+      "body": "Body",
+      "food": "Food",
+      "mind": "Mind"
+    },
+    "cards": {
+      "heart_body_low": {
+        "sentence": "Last night's HRV sits below your band. HQ eases today's top set.",
+        "cta": "Open today's session"
+      },
+      "heart_body_ro": {
+        "sentence": "Last night's HRV sits above your band. The body is ready, and today's session runs as planned.",
+        "cta": "Open today's session"
+      },
+      "heart_mind_tired": {
+        "sentence": "Low HRV and no mind-check yet. Recovery is still missing that last signal.",
+        "cta": "Do the mind-check"
+      },
+      "body_food_session": {
+        "sentence": "The food around the session: keep the meal simple so Body and Food pull the same way.",
+        "cta": "See nutrition"
+      },
+      "mind_body_check": {
+        "sentence": "Mind has not checked in. Today's session is waiting on that signal before HQ can adjust.",
+        "cta": "Do the mind-check"
+      }
+    }
+  }
+}

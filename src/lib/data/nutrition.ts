@@ -1,6 +1,8 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
+import type { Json } from "@/lib/supabase/database.types";
 import { generateMockPlan } from "@/lib/nutrition/mock-plan";
+import { fallbackPlanNotes } from "@/lib/nutrition/plan-macros";
 import { getMealImage, getMealImagesBatch } from "@/lib/nutrition/unsplash";
 
 /* ---------------------------------------------------------------- *
@@ -225,7 +227,7 @@ export async function saveNutritionProfile(
 
 export async function getPlanForWeek(memberId: string, weekStart: string): Promise<Plan | null> {
   const supabase = await createClient();
-  if (!supabase) return null;
+  if (!supabase) return buildDemoPlan(memberId, weekStart);
 
   const { data: plan } = await supabase
     .from("nutrition_plans")
@@ -257,16 +259,59 @@ export async function getCurrentPlan(memberId: string): Promise<Plan | null> {
  * and the "generate plan" CTA before the AI key is set.
  * ---------------------------------------------------------------- */
 
+/**
+ * Demo mode has no `nutrition_plans` table to read from — synthesize
+ * a stable in-memory plan from the deterministic mock generator so
+ * the meal dashboard, log sheet, and shopping list are exercisable
+ * without a backend. Same memberId + weekStart always yields the
+ * same plan (fixed profile, fixed generatedAt derived from the week).
+ */
+function buildDemoPlan(memberId: string, weekStart: string): Plan {
+  const profile: NutritionProfile = {
+    memberId,
+    ...DEFAULT_PROFILE,
+    updatedAt: `${weekStart}T00:00:00.000Z`,
+  };
+  const planShape = generateMockPlan({ profile, weekStart });
+  const planId = `demo-${weekStart}`;
+  return {
+    id: planId,
+    memberId,
+    weekStart,
+    dailyKcal: planShape.targets.kcal,
+    dailyProteinG: planShape.targets.proteinG,
+    dailyCarbsG: planShape.targets.carbsG,
+    dailyFatG: planShape.targets.fatG,
+    generator: "mock",
+    generatorModel: null,
+    notes: planShape.notes,
+    generatedAt: `${weekStart}T00:00:00.000Z`,
+    meals: planShape.meals.map((m, i) => ({
+      ...m,
+      id: `demo-meal-${i}`,
+      planId,
+      imageUrl: null,
+      imageThumbUrl: null,
+      imageAttributionName: null,
+      imageAttributionUrl: null,
+    })),
+  };
+}
+
 export async function generatePlan(
   memberId: string,
   weekStart: string,
-  profile: NutritionProfile
+  profile: NutritionProfile,
+  opts?: { fallbackFromClaude?: boolean },
 ): Promise<Plan> {
   // Build the plan shape (ingredients, steps, macros) from the mock
-  // generator. The real Claude generator (commit 3) will replace
-  // this call with a Sonnet-4.6 round-trip when ANTHROPIC_API_KEY is
-  // present, falling back to the same mock on miss/error.
+  // generator. Claude is tried first in generatePlanAction; this
+  // path is demo mode and the scaled fallback when the AI hook
+  // returns null (no key, timeout, or invalid output).
   const planShape = generateMockPlan({ profile, weekStart });
+  const notes = opts?.fallbackFromClaude
+    ? fallbackPlanNotes(weekStart, planShape.targets)
+    : planShape.notes;
 
   const supabase = await createClient();
   if (!supabase) {
@@ -281,7 +326,7 @@ export async function generatePlan(
       dailyFatG: planShape.targets.fatG,
       generator: "mock",
       generatorModel: null,
-      notes: planShape.notes,
+      notes,
       generatedAt: new Date().toISOString(),
       meals: planShape.meals.map((m, i) => ({
         ...m,
@@ -313,7 +358,7 @@ export async function generatePlan(
       daily_carbs_g: planShape.targets.carbsG,
       daily_fat_g: planShape.targets.fatG,
       generator: "mock",
-      notes: planShape.notes,
+      notes,
     })
     .select("*")
     .single();
@@ -449,6 +494,17 @@ export async function createLog(input: {
   offPlan?: boolean;
   kcal?: number | null;
   proteinG?: number | null;
+  /** HQ estimate (spec 2026-09-27 A.3); omitted by the manual flows. */
+  estimate?: {
+    source: "hq_photo" | "hq_text";
+    carbsG: number;
+    fatG: number;
+    confidence: "high" | "medium" | "low";
+    items: unknown;
+    edited: boolean;
+    kcalLow: number;
+    kcalHigh: number;
+  } | null;
   photoPath: string | null;
   rating: number | null;
   notes: string | null;
@@ -466,6 +522,18 @@ export async function createLog(input: {
       off_plan: input.offPlan ?? false,
       kcal: input.kcal ?? null,
       protein_g: input.proteinG ?? null,
+      ...(input.estimate
+        ? {
+            carbs_g: input.estimate.carbsG,
+            fat_g: input.estimate.fatG,
+            estimate_source: input.estimate.source,
+            estimate_confidence: input.estimate.confidence,
+            estimate_items: input.estimate.items as Json,
+            estimate_edited: input.estimate.edited,
+            estimate_kcal_low: input.estimate.kcalLow,
+            estimate_kcal_high: input.estimate.kcalHigh,
+          }
+        : {}),
       photo_path: input.photoPath,
       rating: input.rating,
       notes: input.notes,

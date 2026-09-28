@@ -119,6 +119,25 @@ export type MentalCirkelMember = {
   daily_share_opt_in: boolean;
 };
 
+export type MentalSafetyAlertStatus = "open" | "seen" | "closed";
+
+/**
+ * Member-authored crisis summary. Never contains journal body.
+ * Migration 0057. Coach-readable; member writes own row.
+ */
+export type MentalSafetyAlert = {
+  id: string;
+  member_id: string;
+  summary: string;
+  status: MentalSafetyAlertStatus;
+  created_at: string;
+  updated_at: string;
+};
+
+export type MentalSafetyAlertListItem = MentalSafetyAlert & {
+  member_handle: string;
+};
+
 /**
  * Aggregate mental signal derived from mind_check_logs — used by
  * Adaptive Engine in MH-6 and AI mental coach in MH-7.

@@ -49,7 +49,7 @@ type Props = {
  * Reasoning detail panel (T2) — rendered inside the AdaptationCard's
  * "Vis tankegang" disclosure. Three stacked subpanels:
  *
- *   1. Hvad motoren så  — signal rows from the hydrated EngineInput
+ *   1. Hvad HQ så  — signal rows from the hydrated EngineInput
  *   2. Hvilken regel fyrede  — narrateRule output
  *   3. Hvad Munks assistent justerede  — only when reasoningOutput
  *      is non-null
@@ -82,7 +82,7 @@ export default function ReasoningDetailPanel({
       {/* ------------------------------------------------------------ */}
       <section aria-labelledby="reasoning-signals-heading">
         <h3 id="reasoning-signals-heading" className="eyebrow mb-3">
-          Hvad motoren så
+          Hvad HQ så
         </h3>
         <ul className="space-y-1.5">
           <SignalRow
@@ -145,13 +145,13 @@ export default function ReasoningDetailPanel({
         <h3 id="reasoning-rule-heading" className="eyebrow mb-2">
           Hvilken regel fyrede
         </h3>
-        <p className="text-sm font-mono text-fg-dim leading-relaxed">
+        <p className="text-sm text-fg-dim leading-relaxed">
           {narrateRule({
             action: ruleDecision.action,
             reasons: ruleDecision.reasons,
           })}
         </p>
-        <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-2">
+        <p className="text-micro text-fg-faint mt-2">
           Regel-confidence {ruleDecision.confidence.toFixed(2)}
         </p>
       </section>
@@ -186,7 +186,7 @@ function SignalRow({
 }) {
   return (
     <li className="flex items-baseline justify-between gap-3 text-sm">
-      <span className="text-fg-faint text-[11px] uppercase tracking-[0.12em] shrink-0">
+      <span className="text-fg-faint text-micro shrink-0">
         {label}
       </span>
       <span className="text-fg numeric text-right">{value}</span>
@@ -209,7 +209,7 @@ function describeClaudeRefinement(
   reasoning: ReasoningOutputForPanel
 ): string {
   if (rule.action !== reasoning.finalAction) {
-    return `Reglen foreslog ${labelForAction(rule.action)}; Claude justerede til ${labelForAction(reasoning.finalAction)}.`;
+    return `Reglen foreslog ${labelForAction(rule.action)}; AI justerede til ${labelForAction(reasoning.finalAction)}.`;
   }
   const confDelta = reasoning.confidence - rule.confidence;
   if (Math.abs(confDelta) >= 0.05) {

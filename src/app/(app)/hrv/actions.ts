@@ -6,8 +6,10 @@ import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { filterEctopic, computeRmssd, computeLnRmssd, computeMeanHr } from "@/lib/hrv/rmssd";
 import { computeBaseline } from "@/lib/hrv/baseline";
+import { priorLnRmssdForSource, sameSourceSeries } from "@/lib/hrv/prior";
 import { mockInsertReading, mockListReadings } from "@/lib/hrv/mock";
 import type { HrvReading, HrvSource } from "@/lib/hrv/types";
+import { youthClaims } from "@/lib/youth/routes";
 
 const SubmitSchema = z.object({
   rrIntervals: z.array(z.number().positive()).min(2),
@@ -41,7 +43,7 @@ export async function submitHrvReading(
 
   // --- demo mode ---
   if (!SUPABASE_ENABLED) {
-    const prior = mockListReadings("demo-member").map((r) => r.lnRmssd);
+    const prior = sameSourceSeries(mockListReadings("demo-member"), source);
     const base = computeBaseline([...prior, lnRmssd]);
     const reading: HrvReading = {
       id: crypto.randomUUID(),
@@ -72,14 +74,13 @@ export async function submitHrvReading(
   if (!auth?.user) return { ok: false, error: "no_session" };
   const memberId = auth.user.id;
 
-  const { data: priorRows } = await supabase
-    .from("hrv_readings")
-    .select("ln_rmssd")
-    .eq("member_id", memberId)
-    .eq("is_sick", false)
-    .order("measured_at", { ascending: true });
-
-  const prior = (priorRows ?? []).map((r) => r.ln_rmssd as number);
+  // Baseline per source: camera and strap readings are not compared.
+  let prior: number[];
+  try {
+    prior = await priorLnRmssdForSource(supabase, { memberId, source });
+  } catch {
+    return { ok: false, error: "baseline_failed" };
+  }
   const base = computeBaseline([...prior, lnRmssd]);
 
   const { data: inserted, error } = await supabase
@@ -156,6 +157,8 @@ export async function enableAdaptiveEngineAction(): Promise<{ ok: boolean }> {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { ok: false };
+  // MakeIt Ung: no adaptive engine for a young account (spec afsnit 3).
+  if (youthClaims(user.app_metadata).youth) return { ok: false };
 
   const { error } = await supabase
     .from("hrv_settings")

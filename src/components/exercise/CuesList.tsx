@@ -41,7 +41,7 @@ export default function CuesList({
   return (
     <div className="space-y-4">
       {activePhase ? (
-        <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.14em]">
+        <div className="flex items-center gap-2 text-micro">
           <span className="size-1.5 rounded-full bg-fg" aria-hidden />
           <span className="text-fg-faint">{t("currentPhase")}</span>
           <span className="text-fg">{activePhase.name}</span>
@@ -57,7 +57,7 @@ export default function CuesList({
               key={i}
               data-active={isActive}
               className={`flex gap-4 pl-3 -ml-3 border-l-2 transition-colors duration-200 ${
-                isActive ? "border-l-[#C97B3E]" : "border-l-transparent"
+                isActive ? "border-l-body" : "border-l-transparent"
               }`}
             >
               <span

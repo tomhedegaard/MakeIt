@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import SectionHeader from "@/components/ui/SectionHeader";
+import { Modal } from "@/components/ui/Modal";
 
 const STORAGE_KEY = "mi_tour_done_v1";
 
@@ -47,93 +49,50 @@ export default function FirstTimeTour() {
     setStep((s) => s + 1);
   }
 
-  if (!open) return null;
-
   const currentKey = STEP_KEYS[step];
   const isLast = step === STEP_KEYS.length - 1;
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="tour-title"
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center px-4 pb-4 sm:pb-0"
-    >
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+    <Modal open={open} onOpenChange={(next) => (next ? setOpen(true) : dismiss())} title={t(`steps.${currentKey}.title`)}>
+      <button
+        type="button"
         onClick={dismiss}
-        aria-hidden
-      />
-
-      {/* Card */}
-      <div
-        className="relative z-10 w-full max-w-md surface-2 rounded-2xl p-6 lg:p-8"
-        style={{ borderColor: "var(--line-bright)" }}
+        className="absolute top-3 right-3 text-fg-dim hover:text-fg text-xs"
       >
-        <button
-          type="button"
-          onClick={dismiss}
-          className="absolute top-3 right-3 text-fg-dim hover:text-fg text-xs font-mono uppercase tracking-[0.14em]"
-        >
-          {t("skip")}
-        </button>
+        {t("skip")}
+      </button>
 
-        <div className="eyebrow mb-3">{t(`steps.${currentKey}.eyebrow`)}</div>
-        <h2
-          id="tour-title"
-          className="font-display text-2xl md:text-3xl leading-[1.05] mb-3"
-        >
-          {t(`steps.${currentKey}.title`)}
-        </h2>
-        <p className="text-fg-dim text-sm md:text-base leading-relaxed mb-6">
-          {t(`steps.${currentKey}.body`)}
-        </p>
+      <SectionHeader id="tour-title" eyebrow={t(`steps.${currentKey}.eyebrow`)} title={t(`steps.${currentKey}.title`)} />
+      <p className="text-fg-dim text-sm md:text-base leading-relaxed mb-6">{t(`steps.${currentKey}.body`)}</p>
 
-        {/* Progress dots */}
-        <div className="flex gap-1.5 mb-6">
-          {STEP_KEYS.map((_, i) => (
-            <span
-              key={i}
-              aria-hidden
-              className="flex-1 h-1 rounded-full"
-              style={{
-                background:
-                  i <= step ? "var(--fg)" : "var(--bg-elev)",
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="flex items-center gap-3">
-          {step > 0 ? (
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm"
-              onClick={() => setStep((s) => s - 1)}
-            >
-              {t("back")}
-            </button>
-          ) : null}
-          {isLast ? (
-            <Link
-              href="/coaching"
-              onClick={dismiss}
-              className="btn btn-primary ml-auto"
-            >
-              {t("begin")}
-            </Link>
-          ) : (
-            <button
-              type="button"
-              className="btn btn-primary ml-auto"
-              onClick={next}
-            >
-              {t("next")}
-            </button>
-          )}
-        </div>
+      {/* Progress dots */}
+      <div className="flex gap-1.5 mb-6">
+        {STEP_KEYS.map((_, i) => (
+          <span
+            key={i}
+            aria-hidden
+            className="flex-1 h-1"
+            style={{ background: i <= step ? "var(--fg)" : "var(--bg-elev)" }}
+          />
+        ))}
       </div>
-    </div>
+
+      <div className="flex items-center gap-3">
+        {step > 0 ? (
+          <button type="button" className="btn btn-ghost btn-sm" onClick={() => setStep((s) => s - 1)}>
+            {t("back")}
+          </button>
+        ) : null}
+        {isLast ? (
+          <Link href="/coaching" onClick={dismiss} className="btn btn-primary ml-auto">
+            {t("begin")}
+          </Link>
+        ) : (
+          <button type="button" className="btn btn-primary ml-auto" onClick={next}>
+            {t("next")}
+          </button>
+        )}
+      </div>
+    </Modal>
   );
 }

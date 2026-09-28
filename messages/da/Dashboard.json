@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "title": "Today"
+    "title": "I dag"
   },
   "greeting": {
     "eyebrow": "God morgen",
-    "streakLabel": "Streak",
+    "streakLabel": "Stribe",
     "streakUnit": "dage"
   },
   "formChecks": {
@@ -19,8 +19,24 @@
     "exercises": "Øvelser",
     "sets": "Sæt",
     "estTime": "Est. tid",
+    "minuteUnit": "m",
+    "minutes": "{count}m",
     "setCountSuffix": "× sæt",
-    "start": "Start session →"
+    "start": "Start pas →",
+    "mock": {
+      "dayLabel": "Dag A · Squat",
+      "title": "Squat · Top set @ RPE 8, 3×3 backoff"
+    },
+    "generated": {
+      "squatFocus": "Squat-fokus og bagside"
+    },
+    "emptyEyebrow": "Dagens session",
+    "emptyTitle": "Intet pas endnu",
+    "emptyBody": "Når du vælger et program, lander dagens session her. Ingen demo-pas.",
+    "emptyCta": "Vælg program →",
+    "keepOriginal": "Behold original",
+    "keptOriginal": "Du kører den oprindelige plan i dag.",
+    "keepOriginalError": "Det gik ikke igennem. Prøv igen."
   },
   "stats": {
     "volume": "Volumen",
@@ -40,7 +56,7 @@
       "tomorrowLabel": "I morgen",
       "tomorrowTitle": "Pause-bench, ringe-row, push-press",
       "thuLabel": "Tor",
-      "thuTitle": "Deadlift — opbygning til 90% af 1RM",
+      "thuTitle": "Deadlift · opbygning til 90% af 1RM",
       "friLabel": "Fre",
       "friTitle": "Hypertrofi: kvadriceps + skulder"
     }
@@ -48,8 +64,9 @@
   "crew": {
     "title": "Crew lige nu",
     "seeFeed": "Se feed →",
-    "empty": "Crewet er stille lige nu — vær den første til at dele.",
+    "empty": "Crewet er stille lige nu. Vær den første til at dele.",
     "share": "+ Del",
+    "prBadge": "PR",
     "mock": {
       "ninaWhat": "+2.5kg PR · Deadlift 175 kg",
       "ninaWhen": "lige nu",
@@ -65,5 +82,62 @@
     "stable": "Stabil",
     "up": "Op {pct} procent",
     "down": "Ned {pct} procent"
+  },
+  "todayProse": {
+    "ariaLabel": "I dag",
+    "eyebrow": "I dag",
+    "hrvLav": "HRV er lav i morges. Tag det roligt i toppen.",
+    "hrvRo": "HRV er i ro. Kroppen er med dig i dag.",
+    "hrvMidt": "HRV ligger i dit midterste bånd.",
+    "sessionAssigned": "Der står et pas klar i dag.",
+    "sessionAssignedWithLabel": "{label} venter.",
+    "sessionDone": "Passet er kørt. Godt arbejde.",
+    "sessionDoneWithLabel": "{label} er kørt. Godt arbejde.",
+    "sessionRest": "I dag er hvile.",
+    "sessionSkipped": "Dagens pas blev sprunget over. Det er okay.",
+    "mindNudge": "Mind-check tager 60 sekunder, når du er klar.",
+    "mindLogged": "Mind-check er logget.",
+    "quiet": "Stille start. Når signalerne lander, skriver vi her."
+  },
+  "hrvChip": {
+    "eyebrow": "HRV-klarhed",
+    "connect": "Forbind wearable",
+    "unit": "ms"
+  },
+  "installHint": {
+    "eyebrow": "Få appen",
+    "title": "MakeIt på hjemmeskærmen",
+    "bodyIos": "Tryk på Del-ikonet i Safari og vælg “Føj til hjemmeskærm”. Så åbner MakeIt som app, og du kan slå notifikationer til.",
+    "bodyAndroid": "Installér MakeIt som app: fuld skærm, hurtigere start og notifikationer.",
+    "install": "Installér",
+    "dismiss": "Ikke nu"
+  },
+  "morningSignal": {
+    "label": "Morgenens signal",
+    "kcal": "kcal",
+    "labels": {
+      "body": "Krop",
+      "heart": "Hjerte",
+      "mind": "Sind",
+      "food": "Mad"
+    },
+    "values": {
+      "adapted": "Tilpasset",
+      "planned": "Klar",
+      "measured": "Målt",
+      "noSession": "Intet pas",
+      "belowBand": "Under bånd",
+      "inBand": "I bånd",
+      "aboveBand": "Over bånd",
+      "noReading": "Ingen måling",
+      "checkIn": "Tjek ind",
+      "checkedIn": "Tjekket ind",
+      "eaten": "Spist i dag"
+    },
+    "sr": {
+      "status": "{label}. {status}.",
+      "value": "{label}. {status}. {value} {unit}.",
+      "valueOf": "{label}. {status}. {value} af {of} {unit}."
+    }
   }
 }

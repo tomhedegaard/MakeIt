@@ -81,13 +81,13 @@ export default function PhaseAnimator({
       {/* Phase label + duration */}
       <div className="flex items-baseline gap-3 text-fg-faint">
         <span className="font-display text-base text-fg">{phase.name}</span>
-        <span className="text-[10px] font-mono uppercase tracking-[0.14em]">
+        <span className="text-micro">
           {(phase.duration_ms / 1000).toFixed(1)}s
         </span>
         <button
           type="button"
           onClick={() => setPlaying((p) => !p)}
-          className="ml-auto text-[10px] font-mono uppercase tracking-[0.14em] hover:text-fg transition-colors"
+          className="ml-auto text-micro hover:text-fg transition-colors"
           aria-label={playing ? "Pause" : "Afspil"}
         >
           {playing ? "Pause" : "Play"}
@@ -95,16 +95,20 @@ export default function PhaseAnimator({
       </div>
 
       {/* Progress bar — CSS transition drives the smooth fill */}
-      <ProgressBar idx={idx} durationMs={phase.duration_ms} playing={playing} />
+      <ProgressBar
+        key={`${idx}-${playing}`}
+        durationMs={phase.duration_ms}
+        playing={playing}
+      />
 
       {/* Phase pips, sized proportional to their duration */}
       <div className="flex gap-1 w-full" aria-hidden>
         {phases.map((p, i) => (
           <div
             key={i}
-            className={`h-0.5 rounded-full transition-colors ${
-              i === idx ? "bg-fg" : i < idx ? "bg-fg-faint" : "bg-bg-3"
-            }`}
+            className={`h-0.5 transition-colors ${
+ i === idx ? "bg-fg" : i < idx ? "bg-fg-faint" : "bg-bg-3"
+ }`}
             style={{ flex: p.duration_ms / totalMs }}
           />
         ))}
@@ -114,27 +118,24 @@ export default function PhaseAnimator({
 }
 
 function ProgressBar({
-  idx,
   durationMs,
   playing,
 }: {
-  idx: number;
   durationMs: number;
   playing: boolean;
 }) {
-  // Reset to 0, then on the next paint set to 100 so the CSS
-  // transition animates the fill linearly across `durationMs`.
+  // Mounts fresh on phase/play change (parent keys this). Start at 0,
+  // then on the next paint set to 100 so the CSS transition animates
+  // the fill linearly across `durationMs`.
   const [filled, setFilled] = useState(false);
 
   useEffect(() => {
-    setFilled(false);
     if (!playing) return;
-    // Wait one paint so the transition catches the change.
     const t = requestAnimationFrame(() => {
       requestAnimationFrame(() => setFilled(true));
     });
     return () => cancelAnimationFrame(t);
-  }, [idx, playing]);
+  }, [playing]);
 
   return (
     <div className="h-px w-full bg-bg-3 overflow-hidden">

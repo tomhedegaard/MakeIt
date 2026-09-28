@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -40,24 +41,21 @@ export default async function MindJournalPage() {
   ]);
 
   const prompt = pickPromptForToday(todayMc);
+  const t = await getTranslations("Mind.journal");
 
   return (
     <>
       <PageHeader
-        eyebrow="Mind · Journal"
-        title={todayEntry ? "Journal — opdater." : "Journal — privat."}
-        subtitle={
-          todayEntry
-            ? "Du har skrevet i dag. Du kan opdatere indtil midnat."
-            : "Tre ord eller tre afsnit. Kun du ser den. Aldrig Munk, aldrig coaches."
-        }
+        eyebrow={t("eyebrow")}
+        title={todayEntry ? t("titleUpdate") : t("titleNew")}
+        subtitle={todayEntry ? t("subtitleUpdate") : t("subtitleNew")}
       />
       <Container size="narrow" className="py-10 md:py-14">
         <JournalForm prompt={prompt} initialBody={todayEntry?.body ?? ""} />
 
         {history.length > 0 ? (
           <div className="mt-16">
-            <h2 className="font-display text-2xl mb-6">Tidligere poster</h2>
+            <h2 className="font-display text-2xl mb-6">{t("history")}</h2>
             <JournalHistory entries={history.filter((e) => e.id !== todayEntry?.id)} />
           </div>
         ) : null}

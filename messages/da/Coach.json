@@ -28,7 +28,8 @@
   "overview": {
     "eyebrow": "Coach console",
     "title": "Overblik.",
-    "intro": "Hele crewets aktivitet samlet — fra form-check-kø til hvem der venter på et nyt program.",
+    "intro": "Hvem der har brug for dig i dag — derefter crewets aktivitet.",
+    "inboxOpen": "Åbn hele indbakken →",
     "kpiMembers": "Medlemmer",
     "kpiActivePrograms": "Aktive programmer",
     "kpiPendingFormChecks": "Form-checks i kø",
@@ -46,6 +47,47 @@
     "queueEmpty": "Køen er tom.",
     "formCheckFallback": "Form-check",
     "openQueue": "Åbn køen →"
+  },
+  "needsAttention": {
+    "eyebrow": "Kræver dig",
+    "title": "Needs Attention",
+    "open": "Åbn",
+    "buckets": {
+      "sprunget": {
+        "label": "Sprunget",
+        "empty": "Ingen sprunget pas."
+      },
+      "afventer_form": {
+        "label": "Afventer form",
+        "empty": "Ingen film venter."
+      },
+      "engine": {
+        "label": "Engine",
+        "empty": "Ingen flag fra HQ."
+      }
+    }
+  },
+  "inbox": {
+    "metaTitle": "Indbakke · Coach",
+    "eyebrow": "Coach console",
+    "title": "Indbakke.",
+    "intro": "Én kø: hvem der har brug for et menneske nu. AI har allerede gjort det generiske.",
+    "sectionEyebrow": "I dag",
+    "sectionTitle": "Hvem har brug for dig",
+    "count": "{count, plural, one {# der venter} other {# der venter}}",
+    "emptyTitle": "Stille.",
+    "emptyBody": "Ingen åbne sager. Form-checks, HRV, HQ og Safety er tomme — og ingen er stille i 15 dage.",
+    "emptyDemoHint": "Demo — listen er tom fordi der ikke er mock-signaler åbne.",
+    "safetyUnreadable": "Safety-tabellen kan ikke læses (migration 0057 eller RLS). Det er ikke det samme som nul sager.",
+    "chipMentalSafety": "Safety",
+    "chipHrv": "HRV",
+    "chipAdaptive": "HQ",
+    "chipFormCheck": "{exercise}",
+    "chipFormCheckFallback": "Form-check",
+    "chipStale": "{days} dage",
+    "chipStaleNever": "Aldrig trænet",
+    "openItem": "Åbn sag for @{handle}",
+    "backToOverview": "← Overview"
   },
   "analytics": {
     "metaTitle": "Coach · Analytics",
@@ -78,7 +120,7 @@
   },
   "members": {
     "eyebrow": "Coach console",
-    "title": "Medlemmer",
+    "title": "Medlemmer.",
     "count": "{count} i crewet",
     "emptyTitle": "Ingen medlemmer endnu.",
     "emptyBody": "Når invite-koder bliver brugt, dukker medlemmerne op her med tier, aktivt program og sidste session.",
@@ -134,7 +176,7 @@
   },
   "queue": {
     "eyebrow": "Coach console",
-    "title": "Coach-kø",
+    "title": "Coach-kø.",
     "waiting": "{formChecks} form-checks · {hrvAlerts} HRV-anomalier venter.",
     "hrvSectionEyebrow": "HRV-anomalier",
     "hrvSectionHeading": "{count} venter på handling.",
@@ -148,7 +190,7 @@
   },
   "redemptions": {
     "eyebrow": "Coach console",
-    "title": "Reps-indløsninger",
+    "title": "Reps-indløsninger.",
     "waiting": "{count} venter på fulfilment.",
     "emptyTitle": "Køen er tom.",
     "emptyBody": "Alle indløsninger er sendt eller modtaget. Stærkt arbejde.",
@@ -181,6 +223,9 @@
     "sending": "Sender…",
     "submit": "Godkend & send",
     "submitDraft": "Send til @{handle}",
+    "voiceLabel": "Lydbesked til @{handle}",
+    "voiceHint": "Valgfri — Munks stemme i tråden under løftet.",
+    "voiceReady": "Lydbesked klar ({sec}s)",
     "footnote": "Markerer form-checken som reviewed og sender notes til medlemmet."
   },
   "digest": {
@@ -236,7 +281,25 @@
     "rowBillingEmail": "Billing email",
     "rowTransactionalFrom": "Transactional FROM",
     "rowReplyTo": "Reply-to",
-    "rowInstagram": "Instagram"
+    "rowInstagram": "Instagram",
+    "cronsEyebrow": "Crons",
+    "cronsTitle": "Baggrundsjobs",
+    "cronsSub": "Watched daglige crons der skriver medlemsoutput. Tre tomme succeser i træk = stille død.",
+    "cronsDemoNote": "Demo — crons kører ikke. Ingen alert.",
+    "cronsQuietLabel": "Crons stille",
+    "cronsQuietRunbook": "Tre på hinanden følgende succeser med 0 nyttigt arbejde. Tjek Anthropic-nøgle, vercel logs og cron_run_log.",
+    "cronsStatusOk": "ok",
+    "cronsStatusEmpty": "tom",
+    "cronsStatusQuiet": "stille",
+    "cronsStatusNone": "ingen kørsler",
+    "cronsLastRun": "Sidste kørsel",
+    "cronsGenerated": "nyttigt",
+    "cronsCandidates": "kandidater",
+    "cronsFailed": "fejlet",
+    "cronsNameMentalCoach": "mental-coach-daily",
+    "cronsNameAdapt": "adapt-program-daily",
+    "cronsNameDraft": "draft-form-check-replies",
+    "cronsNameMorning": "coach-morning-report"
   },
   "backlog": {
     "eyebrow": "Backlog",
@@ -286,7 +349,7 @@
   },
   "patterns": {
     "eyebrow": "Coach console",
-    "title": "Mønstre på tværs",
+    "title": "Mønstre på tværs.",
     "subtitle": "{cohortSize} aktive medlemmer · seneste {windowDays} dage",
     "timeframeLabel": "Vindue:",
     "daysOption": "{days} dage",
@@ -296,7 +359,7 @@
     "codes": {
       "hrv_cluster_day": "HRV-klynge",
       "rpe_drift_program_week": "RPE-drift",
-      "engine_reject_streak": "Motor-afvisning",
+      "engine_reject_streak": "HQ-afvisning",
       "form_check_decline": "Form-fald"
     }
   }

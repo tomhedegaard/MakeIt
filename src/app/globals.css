@@ -1,29 +1,174 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------- *
- * MakeIt — design tokens (monochrome / strength editorial)
+ * MakeIt — design tokens, retning Nord
+ * (docs/superpowers/specs/2026-09-26-nord-redesign-design.md §3)
+ *
+ * Lys er standard og dækker alle medlemsflader, login og onboarding.
+ * Mørkt findes to steder — /session under et pas og coach-konsollen —
+ * via <ThemeScope theme="nat">. Webshoppen sætter tonen; token-navnene
+ * er shoppens.
  * ---------------------------------------------------------------- */
-:root {
+:root,
+[data-theme="nord"] {
+  color-scheme: light;
+
   /* Surfaces */
-  --bg:           #0A0A0B;
-  --bg-2:         #111113;
-  --bg-3:         #18181B;
-  --bg-elev:      #1F1F23;
+  --bg:           #FFFFFF;
+  --bg-2:         #F2F2F0;
+  --bg-3:         #E9E9E6;
+  --bg-elev:      #FFFFFF; /* sheets og popovers: 1 px linje, ingen skygge */
 
-  /* Text */
-  --fg:           #F5F2EC;
-  --fg-dim:       #A8A6A0;
-  --fg-faint:     #56554F;
+  /* Text. Briefens --fg-dim og --fg-faint er skubbet ned, så al
+   * neutral tekst holder AA på alle tre flader (spec §10.1). */
+  --fg:           #111111;
+  --fg-body:      #333333;
+  --fg-dim:       #5E5E59;
+  --fg-faint:     #696964;
 
-  /* Lines */
-  --line:         rgba(245, 242, 236, 0.08);
-  --line-strong:  rgba(245, 242, 236, 0.18);
-  --line-bright:  rgba(245, 242, 236, 0.34);
+  /* Lines — 1 px i stedet for skygger */
+  --line:         #E1E1DE;
+  --line-strong:  #CFCFCA;
+  --line-bright:  #B9B9B4;
 
-  /* Accents (still monochrome — depth via cool undertone) */
-  --steel:        #1A1D24;
-  --signal:       #F5F2EC; /* emphasis = white, not color */
+  --steel:        #F2F2F0;
+
+  /* Mos er den eneste brand-accent: kicker uden domæne, links,
+   * progress, aktiv tab-markør, valgt tilstand. Aldrig knapfyld,
+   * aldrig store flader (spec §7.3). 9,7:1 som tekst på hvid. */
+  --signal:       #2E4A3B;
+  --signal-ink:   #2E4A3B;
+
+  /* Domain accents — "farve er retning, ikke dekoration".
+   * Only allowed in: kickers, chart data-ink, active nav, dots,
+   * badge tints and the dashboard tile accent stroke.
+   * Never in: buttons/CTAs, alerts, body text, large fills.
+   * See docs/DOMAIN_COLOR_SYSTEM.md */
+  --heart: #BE123C; /* HRV, puls, kardiovaskulært */
+  --food:  #116A35; /* kost, måltider, vægt */
+  --body:  #A8380B; /* træning, øvelser, programmer */
+  --mind:  #1D4ED8; /* mentalt, check-in, journal, søvn */
+
+  --heart-tint: color-mix(in oklab, var(--heart) 12%, transparent);
+  --food-tint:  color-mix(in oklab, var(--food) 12%, transparent);
+  --body-tint:  color-mix(in oklab, var(--body) 12%, transparent);
+  --mind-tint:  color-mix(in oklab, var(--mind) 12%, transparent);
+
+  --heart-line: color-mix(in oklab, var(--heart) 32%, transparent);
+  --food-line:  color-mix(in oklab, var(--food) 32%, transparent);
+  --body-line:  color-mix(in oklab, var(--body) 32%, transparent);
+  --mind-line:  color-mix(in oklab, var(--mind) 32%, transparent);
+  /* Mind chart series — cool family so the graph reads as one domain
+   * while the three series stay distinguishable */
+  --mind-energy: #6D28D9;
+  --mind-stress: #1D4ED8;
+  --mind-focus:  #0E7490;
+
+  /* Status — separate from domains. Status colors only appear in
+   * filled alerts/badges WITH icon and text; domain colors never do.
+   * Ingen "info"-farve; info er monokrom (spec §3.3). */
+  --ok:     #116A35;
+  --warn:   #8A6A00;
+  --danger: #B42318;
+
+  /* Scrim (modal backdrop) and media letterbox */
+  --scrim: rgba(17, 17, 17, 0.45);
+  --media: #111111;
+
+  /* Anatomy figure — muscle map illustration. Den trænede muskel er
+   * Krop-farven i tre styrker, samme som 3D-loopsenes røde markering og
+   * øvelsessidens chips (spec §11). Tierne er blandet mod --bg, så de er
+   * uigennemsigtige og ikke summerer, hvor to stier overlapper. */
+  --anatomy-body:   #E9E9E6; /* silhuet — læser på både hvid og --bg-2 */
+  --anatomy-edge:   #CFCFCA; /* kant, led, hoved */
+  --anatomy-idle:   #DDDDD9; /* ikke-trænede muskler */
+  --anatomy-accent: #A8380B; /* = --body */
+  --muscle-primary:   var(--body);
+  --muscle-secondary: color-mix(in oklab, var(--body) 50%, var(--bg));
+  --muscle-tertiary:  color-mix(in oklab, var(--body) 24%, var(--bg));
 }
+
+/* Schibsted Grotesk er den ene stemme. Display er 500 i sentence case
+ * (spec §4): ingen uppercase, ingen kondenseret display-skrift. */
+:root {
+  --display-weight: 500;
+  --display-tracking: -0.03em;
+  --display-leading: 1;
+}
+
+/* ---------------------------------------------------------------- *
+ * Nord nat (spec §3.2) — kun /session under et pas og coach-konsollen.
+ * Samme blok bærer <html>-løftet, så root-niveau-UI (cookie-bar, sheets
+ * portalleret til body) aldrig blander de to flader. Ét sted at rette:
+ * de to selektorer kan ikke drifte fra hinanden.
+ * ---------------------------------------------------------------- */
+[data-theme="nat"],
+html:has(.theme-root[data-theme="nat"]) {
+  color-scheme: dark;
+
+  --bg:           #111111;
+  --bg-2:         #1A1A19;
+  --bg-3:         #232322;
+  --bg-elev:      #1A1A19;
+
+  --fg:           #FFFFFF;
+  --fg-body:      #E6E6E2;
+  --fg-dim:       #B9B9B4;
+  --fg-faint:     #8F8F8A;
+
+  --line:         rgba(255, 255, 255, 0.12);
+  --line-strong:  rgba(255, 255, 255, 0.24);
+  --line-bright:  rgba(255, 255, 255, 0.40);
+
+  --steel:        #232322;
+
+  /* På mørkt er hvid emfasen; ingen mos på mørkt (spec §3.2). */
+  --signal:       #FFFFFF;
+  --signal-ink:   #FFFFFF;
+
+  --heart: #F2545B;
+  --food:  #45C487;
+  --body:  #FF9C41;
+  --mind:  #5B9DF5;
+
+  --heart-tint: color-mix(in oklab, var(--heart) 12%, transparent);
+  --food-tint:  color-mix(in oklab, var(--food) 12%, transparent);
+  --body-tint:  color-mix(in oklab, var(--body) 12%, transparent);
+  --mind-tint:  color-mix(in oklab, var(--mind) 12%, transparent);
+
+  --heart-line: color-mix(in oklab, var(--heart) 32%, transparent);
+  --food-line:  color-mix(in oklab, var(--food) 32%, transparent);
+  --body-line:  color-mix(in oklab, var(--body) 32%, transparent);
+  --mind-line:  color-mix(in oklab, var(--mind) 32%, transparent);
+  --mind-energy: #9F8CFB;
+  --mind-stress: #5B9DF5;
+  --mind-focus:  #6FE0E8;
+
+  --ok:     #45C487;
+  --warn:   #FACC15;
+  --danger: #F87171;
+
+  --scrim: rgba(0, 0, 0, 0.7);
+  --media: #000000;
+
+  --anatomy-body:   #1A1A19;
+  --anatomy-edge:   #3A3A38;
+  --anatomy-idle:   #232322;
+  --anatomy-accent: #FF9C41;
+  --muscle-primary:   var(--body);
+  --muscle-secondary: color-mix(in oklab, var(--body) 50%, var(--bg));
+  --muscle-tertiary:  color-mix(in oklab, var(--body) 24%, var(--bg));
+}
+
+.theme-root { background: var(--bg); color: var(--fg); }
+
+/* data-domain scope — set once on a layout/section/card, every
+ * descendant resolves text-domain / bg-domain-tint / border-domain-line
+ * to the right hue. One component, four colors, zero props. */
+[data-domain="heart"] { --domain: var(--heart); --domain-tint: var(--heart-tint); --domain-line: var(--heart-line); }
+[data-domain="food"]  { --domain: var(--food);  --domain-tint: var(--food-tint);  --domain-line: var(--food-line); }
+[data-domain="body"]  { --domain: var(--body);  --domain-tint: var(--body-tint);  --domain-line: var(--body-line); }
+[data-domain="mind"]  { --domain: var(--mind);  --domain-tint: var(--mind-tint);  --domain-line: var(--mind-line); }
 
 @theme inline {
   --color-bg:          var(--bg);
@@ -31,6 +176,7 @@
   --color-bg-3:        var(--bg-3);
   --color-bg-elev:     var(--bg-elev);
   --color-fg:          var(--fg);
+  --color-fg-body:     var(--fg-body);
   --color-fg-dim:      var(--fg-dim);
   --color-fg-faint:    var(--fg-faint);
   --color-line:        var(--line);
@@ -38,10 +184,86 @@
   --color-line-bright: var(--line-bright);
   --color-steel:       var(--steel);
   --color-signal:      var(--signal);
+  --color-scrim:       var(--scrim);
+  --color-media:       var(--media);
 
+  /* Domain accents */
+  --color-heart:      var(--heart);
+  --color-heart-tint: var(--heart-tint);
+  --color-heart-line: var(--heart-line);
+  --color-food:       var(--food);
+  --color-food-tint:  var(--food-tint);
+  --color-food-line:  var(--food-line);
+  --color-body:       var(--body);
+  --color-body-tint:  var(--body-tint);
+  --color-body-line:  var(--body-line);
+  --color-mind:       var(--mind);
+  --color-mind-tint:  var(--mind-tint);
+  --color-mind-line:  var(--mind-line);
+  --color-mind-energy: var(--mind-energy);
+  --color-mind-stress: var(--mind-stress);
+  --color-mind-focus:  var(--mind-focus);
+
+  /* Contextual domain utilities — resolve via the nearest
+   * [data-domain] ancestor; fall back to monochrome */
+  --color-domain:      var(--domain, var(--fg-dim));
+  --color-domain-tint: var(--domain-tint, transparent);
+  --color-domain-line: var(--domain-line, var(--line-strong));
+
+  /* Status */
+  --color-ok:     var(--ok);
+  --color-warn:   var(--warn);
+  --color-danger: var(--danger);
+
+  /* Én skrift (spec §4). De tre navne bliver stående, så de 119 filer
+   * der bruger font-display og de 167 der bruger font-mono ikke skal
+   * røres — de peger alle på Schibsted Grotesk nu. */
   --font-sans:    var(--font-sans-stack);
-  --font-display: var(--font-display-stack);
-  --font-mono:    var(--font-mono-stack);
+  --font-display: var(--font-sans-stack);
+  --font-mono:    var(--font-sans-stack);
+
+  /* Radius 0 overalt (spec §7.2). Sat som tema, så hver eksisterende
+   * rounded-sm/md/lg/xl/2xl bliver 0 uden en filændring. rounded-full
+   * er en egen værdi: cirkler (avatarer, dots, skyder-knop) forbliver
+   * cirkler, præcis som briefen beskriver dem. */
+  --radius-xs:  0;
+  --radius-sm:  0;
+  --radius-md:  0;
+  --radius-lg:  0;
+  --radius-xl:  0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
+
+  /* Type-skalaen (spec §4). Hver størrelse bærer sin egen linjehøjde,
+   * spærring og vægt, så text-title alene giver hele rollen. Brød hedder
+   * text-copy, fordi text-body allerede er domænefarven Krop. */
+  --text-hero: 4rem;             /* 64 — HRV 43 ms, Reps 1.420, topsæt 135 kg */
+  --text-hero--line-height: 0.95;
+  --text-hero--letter-spacing: -0.04em;
+  --text-hero--font-weight: 500;
+  --text-hero-lg: 5.5rem;        /* 88 — samme rolle på tablet og op */
+  --text-hero-lg--line-height: 0.95;
+  --text-hero-lg--letter-spacing: -0.04em;
+  --text-hero-lg--font-weight: 500;
+  --text-title: 2.125rem;        /* 34 — "Din uge." */
+  --text-title--line-height: 1;
+  --text-title--letter-spacing: -0.03em;
+  --text-title--font-weight: 500;
+  --text-section: 1.375rem;      /* 22 */
+  --text-section--line-height: 1.1;
+  --text-section--letter-spacing: -0.02em;
+  --text-section--font-weight: 500;
+  --text-card: 1.0625rem;        /* 17 — korttitel, øvelsesnavn */
+  --text-card--line-height: 1.25;
+  --text-card--letter-spacing: -0.01em;
+  --text-card--font-weight: 500;
+  --text-copy: 0.9375rem;        /* 15 — brødtekst */
+  --text-copy--line-height: 1.5;
+  --text-meta: 0.8125rem;        /* 13 — metadata og kicker */
+  --text-meta--line-height: 1.35;
+  --text-micro: 0.75rem;         /* 12 — tabelhoveder, tidsstempler */
+  --text-micro--line-height: 1.3;
 }
 
 /* ---------------------------------------------------------------- *
@@ -49,62 +271,81 @@
  * ---------------------------------------------------------------- */
 * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
-html, body { height: 100%; }
+/* Tailwind v4 lader en kant uden farve arve currentColor, så divide-y og
+ * en bar border tegnede sorte streger. Nord har 1 px linjer i --line
+ * (spec §5); en farveklasse (border-fg, border-domain-line) vinder stadig,
+ * fordi utilities ligger i et senere lag. */
+@layer base {
+  *, ::before, ::after, ::backdrop, ::file-selector-button {
+    border-color: var(--line);
+  }
+}
+
+html { color-scheme: light; }
+/* html/body keep their natural (auto) height. Lenis used to force
+ * this on every page; the shells depend on it: the member app pins
+ * itself with h-dvh on mobile and grows with content on desktop
+ * (sticky sidebar), and a 100% body would cap it at one screen. */
 
 body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-feature-settings: "ss01", "cv11";
-  letter-spacing: -0.01em;
+  /* Brødtekst er 15/1,5 uden spærring (spec §4). Vi sender kun 400 og
+   * 500, så synthesis holdes slukket: en font-bold falder til 500 i
+   * stedet for at blive kunstigt fed. */
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: 0;
 }
 
 ::selection { background: var(--fg); color: var(--bg); }
 
-::-webkit-scrollbar       { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--bg-elev); border-radius: 8px; }
-::-webkit-scrollbar-thumb:hover { background: var(--line-bright); }
-
-/* Lenis smooth scroll */
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-stopped { overflow: hidden; }
-
-/* Custom cursor — the .cursor-custom class is applied by
- * <CustomCursor> after gating on (hover: hover) + (pointer: fine),
- * so touch + assistive setups keep the native cursor. We hide it
- * on all elements (not just html) because button/anchor styles
- * elsewhere set `cursor: pointer` which would otherwise re-show
- * the system cursor on top of our custom one. */
-html.cursor-custom,
-html.cursor-custom * {
-  cursor: none !important;
-}
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line); }
+::-webkit-scrollbar-thumb:hover { background: var(--fg-faint); }
 
 /* ---------------------------------------------------------------- *
  * Type system — strength editorial
  * ---------------------------------------------------------------- */
 .font-display {
-  font-family: var(--font-display), Impact, "Helvetica Neue", sans-serif;
-  font-weight: 900;
-  letter-spacing: -0.025em;
-  line-height: 0.92;
-  text-transform: uppercase;
+  font-family: var(--font-display), system-ui, sans-serif;
+  /* Sentence case er den største enkeltforskel fra Kalk (spec §7.1):
+   * ingen text-transform her, og ingen andre steder. */
+  font-weight: var(--display-weight);
+  font-synthesis: none;
+  letter-spacing: var(--display-tracking);
+  line-height: var(--display-leading);
 }
 
+/* Kicker: 13 px sentence case i mos, ikke 11 px spærret mono i grå
+ * (spec §4). Inde i en [data-domain]-scope overtager domænefarven. */
 .eyebrow {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--fg-dim);
+  line-height: 1.35;
+  letter-spacing: 0;
+  color: var(--signal-ink);
 }
 
+/* Opt-in domain kicker — colored only inside a [data-domain] scope,
+ * falls back to the monochrome .eyebrow color everywhere else */
+[data-domain] .eyebrow-domain { color: var(--domain); }
+
+/* Dashboard tile accent — the one place a structural stroke is allowed.
+ * Short 24×2px bar in the tile's domain hue (docs/DOMAIN_COLOR_SYSTEM.md §3) */
+.domain-stroke {
+  display: block;
+  width: 24px; height: 2px;
+  background: var(--domain, var(--line-bright));
+}
+
+/* Tal står i samme skrift som resten, men altid med tabular-nums, så
+ * en kolonne af kilo og millisekunder ikke danser (spec §4). */
 .numeric {
-  font-family: var(--font-mono), ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
@@ -117,101 +358,38 @@ html.cursor-custom * {
 .hairline        { border-color: var(--line); }
 .hairline-strong { border-color: var(--line-strong); }
 
-.grain::before {
-  content: "";
-  position: fixed; inset: -10%; pointer-events: none; z-index: 1;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1   0 0 0 0 0.95   0 0 0 0 0.92   0 0 0 0.045 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  opacity: 0.55;
-  mix-blend-mode: overlay;
-  /* Subtle film-projector drift — the tile shifts in 8 steps so
-   * it never reads as smooth motion (which would feel like a
-   * texture sliding) but instead as the grain pattern itself
-   * resampling, the way real film grain does frame-to-frame. */
-  animation: grain-drift 7s steps(8) infinite;
-}
-
-@keyframes grain-drift {
-  0%   { transform: translate(0%, 0%); }
-  10%  { transform: translate(-4%, -3%); }
-  20%  { transform: translate(3%, -5%); }
-  30%  { transform: translate(-2%, 4%); }
-  40%  { transform: translate(5%, 2%); }
-  50%  { transform: translate(-4%, -1%); }
-  60%  { transform: translate(2%, 3%); }
-  70%  { transform: translate(-5%, -4%); }
-  80%  { transform: translate(4%, -2%); }
-  90%  { transform: translate(-1%, 5%); }
-  100% { transform: translate(0%, 0%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .grain::before { animation: none; }
-}
-
-.vignette::after {
-  content: "";
-  position: fixed; inset: 0; pointer-events: none; z-index: 1;
-  background: radial-gradient(120% 80% at 50% 0%, transparent 40%, rgba(0,0,0,0.45) 100%);
-}
-
-.divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--line-strong) 20%, var(--line-strong) 80%, transparent);
-}
-
-/* Marquee */
-@keyframes marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.marquee-track {
-  animation: marquee 38s linear infinite;
-  will-change: transform;
-}
-
 /* Focus ring */
 *:focus-visible {
   outline: 2px solid var(--fg);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
-/* Reveal-on-scroll */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 900ms cubic-bezier(.2,.7,.2,1), transform 900ms cubic-bezier(.2,.7,.2,1);
-}
-[data-reveal].is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-/* Buttons */
+/* Buttons (spec §5). Primær er blæk-fyldt, sekundær er 1 px blæk-
+ * outline, tertiær er et mos-tekstlink. Ingen mos-fyldte knapper,
+ * ingen piller: 48 px høj, radius 0, 15 px 500 i sentence case. */
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
   gap: 0.5rem;
-  height: 2.75rem;
+  height: 3rem;
   padding: 0 1.25rem;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.75rem;
+  font-size: 0.9375rem;
   font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  letter-spacing: 0;
+  border: 1px solid var(--fg);
+  border-radius: 0;
   background: transparent;
   color: var(--fg);
-  transition: background 220ms ease, color 220ms ease, border-color 220ms ease, transform 220ms ease;
+  transition: background 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out;
   cursor: pointer;
   white-space: nowrap;
 }
 .btn:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .btn-primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .btn-primary:hover { background: transparent; color: var(--fg); }
-.btn-ghost { border-color: transparent; color: var(--fg-dim); }
-.btn-ghost:hover { background: var(--bg-3); color: var(--fg); border-color: var(--line); }
-.btn-sm { height: 2.25rem; padding: 0 0.875rem; font-size: 0.6875rem; }
+.btn-ghost { border-color: transparent; color: var(--signal-ink); }
+.btn-ghost:hover { background: transparent; border-color: transparent; text-decoration: underline; }
+.btn-sm { height: 2.5rem; padding: 0 0.875rem; font-size: 0.8125rem; }
 
 /* Form inputs — minimal, hairline-bordered, share the surface palette */
 .input {
@@ -219,8 +397,8 @@ html.cursor-custom * {
   appearance: none;
   background: var(--bg-3);
   color: var(--fg);
-  border: 1px solid var(--line);
-  border-radius: 0.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
   padding: 0.625rem 0.875rem;
   font: inherit;
   font-size: 0.875rem;
@@ -228,20 +406,31 @@ html.cursor-custom * {
 }
 .input:focus {
   outline: none;
+}
+.input:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+.input:focus {
   border-color: var(--line-bright, var(--fg));
   background: var(--bg-2);
 }
 .input::placeholder { color: var(--fg-faint); }
 textarea.input { min-height: 4.5rem; resize: vertical; }
 
-/* Pulse dot */
+/* Pulse dot — domain-aware: inherits hue from the nearest
+ * [data-domain] scope, stays white everywhere else */
 @keyframes pulseDot {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 242, 236, 0.55); }
-  50%      { box-shadow: 0 0 0 6px rgba(245, 242, 236, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--domain, var(--fg)) 55%, transparent); }
+  50%      { box-shadow: 0 0 0 6px transparent; }
 }
 .pulse-dot {
-  width: 8px; height: 8px; border-radius: 999px; background: var(--fg);
+  width: 8px; height: 8px; border-radius: 999px;
+  background: var(--domain, var(--fg));
   animation: pulseDot 1.8s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot { animation: none; }
 }
 
 /* Input */
@@ -249,18 +438,28 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   width: 100%;
   height: 3rem;
   padding: 0 1rem;
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  background: var(--bg-3);
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
   color: var(--fg);
-  font-family: var(--font-mono), monospace;
-  font-size: 0.875rem;
-  letter-spacing: 0.04em;
+  font-size: 0.9375rem;
+  letter-spacing: 0;
   transition: border-color 200ms ease, background 200ms ease;
 }
 .field:hover  { border-color: var(--line-strong); }
-.field:focus  { border-color: var(--fg); background: var(--bg); outline: none; }
+.field:focus  { border-color: var(--fg); background: var(--bg-2); outline: none; }
+.field:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
 .field::placeholder { color: var(--fg-faint); }
+
+/* iOS zooms on focus below 16px. With this, the root viewport can
+ * drop maximumScale and let people pinch-zoom (WCAG 1.4.4).
+ * The width query is the belt to (pointer: coarse)'s braces: a phone
+ * viewport that does not report a coarse pointer (desktop responsive
+ * mode, some in-app webviews) gets the 16px floor too. */
+@media (pointer: coarse), (max-width: 40rem) {
+  .input,
+  .field { font-size: 16px; }
+}
 
 /* Card hover lift */
 .lift { transition: transform 380ms cubic-bezier(.2,.7,.2,1), border-color 380ms ease, background 380ms ease; }
@@ -272,12 +471,45 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 :root {
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top:    env(safe-area-inset-top, 0px);
-  --tabbar-h:    64px;
+  /* Fallback chrome: 6px pad + 72px row + 6px pad. The live bar
+   * writes --tabbar-stack to its rendered height (wrap + safe-area). */
+  --tabbar-pad-y: 6px;
+  --tabbar-row-h: 72px;
+  --tabbar-h:    calc(var(--tabbar-pad-y) * 2 + var(--tabbar-row-h));
+  --tabbar-clearance: 36px;
+  --tabbar-stack: calc(var(--tabbar-h) + var(--safe-bottom));
 }
+
+/* Top chrome in the native shells sits under the status bar and the
+ * Dynamic Island unless it reserves the inset; on the web the inset is
+ * 0, so this is free there. */
+.safe-top { padding-top: var(--safe-top); }
 
 .h-dvh   { height: 100dvh; }
 .minh-dvh { min-height: 100dvh; }
-.pb-tabbar { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 8px); }
+/* Last-line air on the AppShell scrollport. The tab bar is in-flow
+ * (not a fixed overlay), so this is slack — not a second copy of
+ * the bar height. Nested page wrappers do not own this padding. */
+.pb-tabbar {
+  padding-bottom: var(--tabbar-clearance);
+  scroll-padding-bottom: var(--tabbar-clearance);
+}
+
+/* Cookie bar sits on the tab-bar on first visit unless lifted. */
+.cookie-bar {
+  bottom: 0;
+}
+@media (max-width: 1023px) {
+  html {
+    scroll-padding-bottom: calc(var(--tabbar-stack) + 16px);
+  }
+  body:has(.tabbar) .cookie-bar {
+    bottom: var(--tabbar-stack);
+  }
+  body:has(.tabbar):has(.cookie-bar) .pb-tabbar {
+    padding-bottom: calc(var(--tabbar-clearance) + 5.5rem);
+  }
+}
 
 /* ---------------------------------------------------------------- *
  * Stepper (weight / reps quick input)
@@ -287,7 +519,6 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   grid-template-columns: 56px 1fr 56px;
   align-items: stretch;
   border: 1px solid var(--line-strong);
-  border-radius: 14px;
   overflow: hidden;
   background: var(--bg-2);
   user-select: none;
@@ -309,19 +540,80 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   padding: 0.625rem 0;
 }
 .stepper-num {
-  font-family: var(--font-mono), monospace;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
   font-variant-numeric: tabular-nums;
+  font-weight: 500;
   font-size: 2rem;
   letter-spacing: -0.03em;
   line-height: 1;
 }
+.stepper-input {
+  box-sizing: content-box;
+  width: 6.5ch;
+  min-width: 4ch;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0.125rem 0.15rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: center;
+  appearance: none;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.stepper-input:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
 .stepper-label {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.625rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0;
   color: var(--fg-dim);
   margin-top: 0.25rem;
+}
+
+/* ---------------------------------------------------------------- *
+ * Skyder (spec §5): 4 px spor i --bg-3, fyld i mos op til værdien, 20 px
+ * cirkulær knop i blæk med hvid kant. Målfladen er 44 px høj, så den er
+ * en finger bred. Fyldet er et hårdt stop, ikke en gradient; --fill
+ * sættes af komponenten via rangeFill() (src/lib/ui/range.ts).
+ * ---------------------------------------------------------------- */
+.range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.range:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.range::-webkit-slider-runnable-track {
+  height: 4px;
+  background: linear-gradient(to right, var(--signal) var(--fill, 0%), var(--bg-3) var(--fill, 0%));
+}
+.range::-moz-range-track { height: 4px; background: var(--bg-3); }
+.range::-moz-range-progress { height: 4px; background: var(--signal); }
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -8px;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--fg);
+}
+.range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--fg);
 }
 
 /* ---------------------------------------------------------------- *
@@ -334,11 +626,9 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   height: 44px;
   display: inline-flex; align-items: center; justify-content: center;
   border: 1px solid var(--line-strong);
-  border-radius: 999px;
   background: transparent;
   color: var(--fg);
-  font-family: var(--font-mono), monospace;
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   font-variant-numeric: tabular-nums;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -355,9 +645,7 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
  * ---------------------------------------------------------------- */
 .sheet-overlay {
   position: fixed; inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: var(--scrim);
   z-index: 60;
   animation: sheet-fade 220ms cubic-bezier(.2,.7,.2,1);
 }
@@ -366,7 +654,6 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   left: 0; right: 0; bottom: 0;
   background: var(--bg-2);
   border-top: 1px solid var(--line-strong);
-  border-radius: 18px 18px 0 0;
   padding: 18px 18px calc(18px + var(--safe-bottom));
   z-index: 61;
   max-height: 92dvh;
@@ -374,7 +661,7 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   animation: sheet-up 320ms cubic-bezier(.2,.7,.2,1);
 }
 .sheet-grabber {
-  width: 38px; height: 4px; border-radius: 2px;
+  width: 38px; height: 4px;
   background: var(--line-bright);
   margin: 0 auto 12px;
 }
@@ -384,40 +671,58 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 /* ---------------------------------------------------------------- *
  * Mobile tab-bar
  * ---------------------------------------------------------------- */
-.tabbar {
-  position: fixed; left: 0; right: 0; bottom: 0;
-  background: rgba(10, 10, 11, 0.86);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+nav.tabbar {
+  /* In-flow inside AppShell — the scrollport ends above this bar,
+   * so copy never paints behind it. Safe-area is padding, not overlay.
+   * Inset/auto cancels a leftover `position:fixed; inset:0 auto 0 0`
+   * that Turbopack once merged from the overlay-era rule. */
+  position: relative;
+  inset: auto;
+  flex-shrink: 0;
+  width: 100%;
+  background: var(--bg);
   border-top: 1px solid var(--line);
-  padding: 0 4px calc(var(--safe-bottom));
+  padding: var(--tabbar-pad-y) 4px calc(var(--tabbar-pad-y) + var(--safe-bottom));
   z-index: 50;
 }
 .tabbar-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  height: var(--tabbar-h);
+  /* Column-flow auto-grid: every tab gets an equal column regardless of
+   * count — the bar grew from 5 to 7 tabs (Søjle 5) and a hardcoded
+   * repeat(5, 1fr) wrapped the last two tabs out of the fixed height. */
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  min-height: var(--tabbar-row-h);
+  height: auto;
 }
 .tab {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 4px;
-  color: var(--fg-faint);
-  font-family: var(--font-mono), monospace;
-  font-size: 0.625rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  gap: 2px;
+  color: var(--fg-dim);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.1;
+  text-align: center;
   -webkit-tap-highlight-color: transparent;
   position: relative;
+  min-width: 0;
+}
+.tab > span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 .tab[data-active="true"] { color: var(--fg); }
 .tab[data-active="true"]::before {
   content: "";
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
   width: 24px; height: 2px;
-  background: var(--fg);
-  border-radius: 0 0 2px 2px;
+  background: var(--signal);
 }
-.tab-icon { width: 22px; height: 22px; }
+/* Nord (spec §5): hver aktiv tab er en blæk-label og en 2 px mos-streg;
+ * ingen domænefarve i selve bjælken. */
+/* 24 px linjeikoner, 1,5 px streg (spec §5) */
+.tab-icon { width: 24px; height: 24px; }
 
 /* ---------------------------------------------------------------- *
  * Big touch primary (mobile-first session CTA)
@@ -425,11 +730,101 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 .btn-xl {
   height: 64px;
   padding: 0 24px;
-  font-size: 0.8125rem;
-  letter-spacing: 0.18em;
-  border-radius: 16px;
+  font-size: 0.9375rem;
+  letter-spacing: 0;
   width: 100%;
 }
 
 /* Disable iOS double-tap-zoom for app surfaces */
 .touch-app { touch-action: manipulation; }
+
+/* ---------------------------------------------------------------- *
+ * Landing helpers (Nord). Tokens only, scoped to the landing's theme root.
+ * ---------------------------------------------------------------- */
+
+/* Changed number: a slanted signal stroke drawn once across it. */
+@keyframes landing-strike {
+  from { transform: rotate(-8deg) scaleX(0); }
+  to   { transform: rotate(-8deg) scaleX(1); }
+}
+[data-theme="nord"] .strike-signal {
+  position: relative;
+}
+[data-theme="nord"] .strike-signal::after {
+  content: "";
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  top: 48%;
+  height: max(3px, 0.05em);
+  background: var(--signal);
+  transform: rotate(-8deg);
+  transform-origin: left center;
+  animation: landing-strike 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.5s both;
+}
+
+/* Motor-demoens ene bevaegelse (hero). EngineDemo taeller topsaettet ned
+ * fra 150 med rAF og saetter `data-motion`: "armed" naar JS lever men
+ * kortet endnu ikke er i syne, "run" naar det er. Uden JS staar
+ * attributten ikke, og stregen tegnes som for ved mount. */
+[data-theme="nord"] [data-demo-card] .strike-signal::after {
+  animation-delay: 0.12s;
+  animation-duration: 0.62s;
+}
+[data-theme="nord"] [data-demo-card][data-motion="armed"] .strike-signal::after {
+  animation-play-state: paused;
+}
+[data-theme="nord"] [data-demo-card][data-motion="run"] .landing-topset {
+  display: inline-block;
+  animation: landing-topset-land 0.7s cubic-bezier(0.2, 0, 0.1, 1) both;
+}
+@keyframes landing-topset-land {
+  from { opacity: 0.55; transform: translateY(-0.04em); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Kg ruler above a section, like the holes in a rack. */
+[data-theme="nord"] .landing-rule {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-bright);
+  background: repeating-linear-gradient(90deg, var(--line-bright) 0 1px, transparent 1px 22px) top left / 100% 7px no-repeat;
+  font-size: 12px;
+  color: var(--fg-dim);
+}
+
+/* Sticky motor rig: scale the phone down on short viewports. */
+[data-theme="nord"] [data-motor-story] { --rig-s: 1; }
+@media (max-height: 760px) {
+  [data-theme="nord"] [data-motor-story] { --rig-s: 0.88; }
+}
+@media (max-height: 660px) {
+  [data-theme="nord"] [data-motor-story] { --rig-s: 0.76; }
+}
+
+/* Night curve: hidden until NightCurveReveal (a small IntersectionObserver
+ * island, same shape as the motor rig's) marks the figure in view, then
+ * draws itself once via stroke-dashoffset. */
+[data-theme="nord"] .night-curve__path {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  transition: stroke-dashoffset 1.6s ease-out;
+}
+[data-theme="nord"] [data-night-curve][data-in-view="true"] .night-curve__path {
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="nord"] .strike-signal::after {
+    animation: none;
+    transform: rotate(-8deg);
+  }
+  [data-theme="nord"] .night-curve__path {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+  [data-theme="nord"] [data-demo-card][data-motion="run"] .landing-topset {
+    animation: none;
+  }
+}

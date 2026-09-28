@@ -1,23 +1,36 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useCallback, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import type { Exercise, Session } from "@/lib/workout";
 import type { FormCheckQuota } from "@/lib/data/form-check-quota";
 import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
+import SessionExerciseDemo from "@/components/exercise/SessionExerciseDemo";
 import { MUSCLE_LABELS } from "@/lib/data/muscle-groups";
+import { buildCuePhaseMap } from "@/lib/exercise/cue-phase-mapping";
+import { resolveSessionDemoAssetUrl } from "@/lib/data/session-demo-assets";
 import Stepper from "@/components/ui/Stepper";
 import RpeSelect from "@/components/ui/RpeSelect";
 import RestTimer from "@/components/ui/RestTimer";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import FormCheckSheet from "@/components/ui/FormCheckSheet";
+import SectionHeader from "@/components/ui/SectionHeader";
+import FormCheckThread from "@/components/form-check/FormCheckThread";
+import {
+  demoFormQueueItems,
+  threadsForLift,
+  type FormQueueItem,
+} from "@/lib/form-queue/queue";
 import Container from "@/components/Container";
 import HrvReadinessNudge from "@/components/hrv/HrvReadinessNudge";
 import AdaptationCard from "@/components/adaptive/AdaptationCard";
 import type { ActiveAdaptation } from "@/lib/adaptive/explanation";
 import { logSetAction, completeSessionAction } from "./actions";
+import { Video, X } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
+import { useYouth } from "@/components/youth/YouthContext";
 
 type Logged = Record<
   string,
@@ -87,6 +100,8 @@ export default function SessionClient({
   const [doneOpen, setDoneOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
   const [formCheckOpen, setFormCheckOpen] = useState(false);
+  const youth = useYouth();
+  const [queued, setQueued] = useState<FormQueueItem[]>([]);
   const [repsAwarded, setRepsAwarded] = useState<number>(250);
   const [, startTransition] = useTransition();
 
@@ -171,21 +186,19 @@ export default function SessionClient({
   return (
     <div className="minh-dvh flex flex-col bg-bg">
       {/* Top bar */}
-      <header className="sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
+      <header className="safe-top sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
         <div className="px-4 lg:px-6 h-14 flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={() => setExitOpen(true)}
             aria-label={t("topBar.exit")}
-            className="size-10 rounded-full surface-2 flex items-center justify-center"
+            className="size-11 rounded-full surface-2 flex items-center justify-center"
           >
-            <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
-              <path d="M6 6l12 12M6 18L18 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
+            <X {...ICON} className="size-5" />
           </button>
 
           <div className="flex-1 min-w-0 text-center">
-            <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint">
+            <div className="text-micro text-fg-faint">
               {t("topBar.programLine", {
                 programCode: session.programCode,
                 week: session.week,
@@ -197,7 +210,7 @@ export default function SessionClient({
             </div>
           </div>
 
-          <div className="size-10" aria-hidden />
+          <div className="size-11" aria-hidden />
         </div>
 
         <div className="h-1 bg-bg-3 overflow-hidden">
@@ -209,7 +222,14 @@ export default function SessionClient({
       </header>
 
       {/* Main column */}
-      <Container size="narrow" className="flex-1 py-6 pb-32 lg:pb-12 space-y-6">
+      <Container
+        size="narrow"
+        className={
+          resting
+            ? "flex-1 px-4 py-6 pb-52 md:px-10 lg:pb-12 space-y-6"
+            : "flex-1 px-4 py-6 pb-40 md:px-10 lg:pb-12 space-y-6"
+        }
+      >
         {/*
           Adaptive engine card supersedes the V2.4 nudge: if we already
           adapted the session, the card carries the richer "here's what
@@ -244,11 +264,22 @@ export default function SessionClient({
 
         {/* Exercise card */}
         <ExerciseSection
+          key={ex.id}
           ex={ex}
           exIdx={exIdx}
           setIdx={setIdx}
           totalExercises={session.exercises.length}
+          threads={mergeThreads(ex.name, queued)}
+          threadCopy={{
+            eyebrow: t("exercise.thread.eyebrow"),
+            pending: t("exercise.thread.pending"),
+            reviewed: t("exercise.thread.reviewed"),
+            voice: t("exercise.thread.voice"),
+            youFilmed: t("exercise.thread.youFilmed"),
+            munkReply: t("exercise.thread.munkReply"),
+          }}
           onOpenFormCheck={() => setFormCheckOpen(true)}
+          youth={Boolean(youth)}
         />
 
         {/* Targets row */}
@@ -258,7 +289,7 @@ export default function SessionClient({
               <span>{t("targets.goal")}</span>
               {set.adapted?.kind === "weight_reduced" ? (
                 <span
-                  className="text-[9px] font-mono uppercase tracking-[0.12em] px-1.5 py-0.5 rounded-sm bg-bg-3 text-fg-dim"
+                  className="text-micro px-1.5 py-0.5 rounded-sm bg-bg-3 text-fg-dim"
                   title={`Reduceret fra ${set.adapted.originalWeight} kg`}
                 >
                   −{set.adapted.percent}%
@@ -270,7 +301,7 @@ export default function SessionClient({
               <span className="text-fg-dim text-sm">kg</span>
             </div>
             {set.adapted?.kind === "weight_reduced" ? (
-              <div className="text-[10px] font-mono text-fg-faint mt-1 numeric">
+              <div className="text-micro text-fg-faint mt-1 numeric">
                 org {set.adapted.originalWeight} kg
               </div>
             ) : null}
@@ -281,13 +312,14 @@ export default function SessionClient({
           </div>
           <div className="bg-bg-2 p-4 text-center">
             <div className="eyebrow mb-1">{t("targets.rpe")}</div>
-            <div className="numeric text-xl">{set.targetRpe ? set.targetRpe : "—"}</div>
+            <div className="numeric text-xl">{set.targetRpe ? set.targetRpe : "-"}</div>
           </div>
         </section>
 
         {/* Steppers */}
         <section className="space-y-3">
           <Stepper
+            name="weight"
             value={current.weight}
             step={2.5}
             min={0}
@@ -296,6 +328,7 @@ export default function SessionClient({
             onChange={(weight) => patch({ weight })}
           />
           <Stepper
+            name="reps"
             value={current.reps}
             step={1}
             min={0}
@@ -338,7 +371,7 @@ export default function SessionClient({
                       : `${s.targetWeight}kg × ${s.targetReps}${s.targetRpe ? ` @ ${s.targetRpe}` : ""}`}
                   </span>
                   {isOptional ? (
-                    <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                    <span className="text-micro text-fg-faint">
                       valgfri
                     </span>
                   ) : null}
@@ -383,7 +416,7 @@ export default function SessionClient({
       {resting ? (
         <div
           className="fixed left-0 right-0 z-40 px-4"
-          style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 96px)" }}
+          style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 112px)" }}
         >
           <div className="mx-auto max-w-3xl">
             <RestTimer
@@ -399,8 +432,7 @@ export default function SessionClient({
       <Sheet open={doneOpen} onOpenChange={setDoneOpen}>
         <SheetContent>
           <div className="text-center pb-4">
-            <div className="eyebrow mb-3">{t("done.eyebrow")}</div>
-            <h2 className="font-display text-4xl mb-2">{t("done.title")}</h2>
+            <SectionHeader eyebrow={t("done.eyebrow")} title={t("done.title")} className="justify-center" />
             <p className="text-fg-dim text-sm mb-6 px-2">
               {t("done.body", { sets: completedSets })}
             </p>
@@ -456,21 +488,25 @@ export default function SessionClient({
         </SheetContent>
       </Sheet>
 
+      {youth ? null : (
       <FormCheckSheet
         open={formCheckOpen}
         onOpenChange={setFormCheckOpen}
         exerciseName={ex.name}
-        context={
-          ex.library
-            ? {
-                exerciseId: ex.library.exerciseId,
-                cues: ex.library.cues,
-                mistakes: ex.library.mistakes,
-              }
-            : undefined
+        context={{
+          exerciseId: ex.library?.exerciseId,
+          cues: ex.library?.cues,
+          mistakes: ex.library?.mistakes,
+          sessionId: session.id,
+          setIndex: setIdx + 1,
+          setId: set.id,
+        }}
+        onQueued={(item) =>
+          setQueued((prev) => [item, ...prev.filter((p) => p.id !== item.id)])
         }
         quota={formCheckQuota}
       />
+      )}
     </div>
   );
 }
@@ -479,33 +515,74 @@ export default function SessionClient({
  * Exercise header for the current set in a session. When the exercise
  * is linked to the library (`ex.library` populated via the
  * exercise_id FK on session_exercises), we render:
- *   - mini AnatomyFigure (static, shows recruited muscles)
- *   - top 3 cues from the structured array
+ *   - compact MoveKit loop when demoAssetUrl resolves
+ *   - mini AnatomyFigure when the slug has no loop (front-squat etc.)
+ *   - top 3 cues from the structured array (phase-synced when a loop plays)
  *   - "Se hele øvelsen →" deep-link to /train/exercises/[slug]
+ *
+ * The form-check «Film» CTA stays a member camera upload — it is
+ * not the library loop.
  *
  * When library is null (coach typed a free-text exercise), we fall
  * back to the legacy single-cue display so nothing breaks.
  */
+function mergeThreads(exerciseName: string, extra: FormQueueItem[]) {
+  const seeded = threadsForLift(demoFormQueueItems(), exerciseName);
+  const byId = new Map<string, FormQueueItem>();
+  for (const item of [...seeded, ...threadsForLift(extra, exerciseName)]) {
+    byId.set(item.id, item);
+  }
+  return Array.from(byId.values()).sort((a, b) =>
+    b.createdAt.localeCompare(a.createdAt),
+  );
+}
+
 function ExerciseSection({
   ex,
   exIdx,
   setIdx,
   totalExercises,
+  threads,
+  threadCopy,
   onOpenFormCheck,
+  youth = false,
 }: {
   ex: Exercise;
   exIdx: number;
   setIdx: number;
   totalExercises: number;
+  threads: FormQueueItem[];
+  threadCopy: {
+    eyebrow: string;
+    pending: string;
+    reviewed: string;
+    voice: string;
+    youFilmed: string;
+    munkReply: string;
+  };
   onOpenFormCheck: () => void;
+  /** MakeIt Ung: no coach contact, so no filming for Munk (spec afsnit 3). */
+  youth?: boolean;
 }) {
   const t = useTranslations("Session.exercise");
   const lib = ex.library;
   const figureView = lib ? dominantView(lib) : "front";
+  const demoAssetUrl = lib
+    ? resolveSessionDemoAssetUrl(lib.demoAssetUrl, lib.slug)
+    : null;
+  const phases = lib?.phases ?? [];
+  const [activePhaseIdx, setActivePhaseIdx] = useState<number | null>(null);
+  const handlePhaseChange = useCallback((idx: number) => {
+    setActivePhaseIdx(idx);
+  }, []);
   // Show 3 cues inline — keep the page focused on the active set,
   // not on reading. The full list lives on the detail page.
   const inlineCues = lib?.cues.slice(0, 3) ?? [];
   const overflowCues = lib ? lib.cues.length - inlineCues.length : 0;
+  const cuePhaseMap = useMemo(
+    () => buildCuePhaseMap(inlineCues.length, phases.length),
+    [inlineCues.length, phases.length],
+  );
 
   return (
     <section className="surface-2 rounded-2xl p-5 lg:p-7">
@@ -529,31 +606,58 @@ function ExerciseSection({
 
       {lib ? (
         <div className="flex gap-4 border-t hairline pt-4">
-          <Link
-            href={`/train/exercises/${lib.slug}`}
-            className="shrink-0 lift rounded-md surface p-1.5"
-            aria-label={t("openDetails")}
-          >
-            <AnatomyFigure
-              view={figureView}
-              primary={lib.primaryMuscles}
-              secondary={lib.secondaryMuscles}
-              tertiary={lib.tertiaryMuscles}
-              style={{ width: 56, height: 112 }}
+          {demoAssetUrl ? (
+            <SessionExerciseDemo
+              demoAssetUrl={demoAssetUrl}
+              phases={phases}
+              onPhaseChange={handlePhaseChange}
+              label={t("demoAria", { lift: ex.name })}
+              playLabel={t("demoPlay")}
+              eyebrow={t("demo")}
             />
-          </Link>
+          ) : (
+            <Link
+              href={`/train/exercises/${lib.slug}`}
+              className="shrink-0 lift rounded-md surface p-1.5"
+              aria-label={t("openDetails")}
+            >
+              <AnatomyFigure
+                view={figureView}
+                primary={lib.primaryMuscles}
+                secondary={lib.secondaryMuscles}
+                tertiary={lib.tertiaryMuscles}
+                style={{ width: 56, height: 112 }}
+              />
+            </Link>
+          )}
 
           <div className="min-w-0 flex-1 space-y-3">
             {inlineCues.length > 0 ? (
               <ol className="space-y-1.5">
-                {inlineCues.map((cue, i) => (
-                  <li key={i} className="flex gap-2 text-sm leading-snug">
-                    <span className="font-mono text-fg-faint shrink-0 text-[11px] mt-0.5">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span>{cue}</span>
-                  </li>
-                ))}
+                {inlineCues.map((cue, i) => {
+                  const isActive =
+                    demoAssetUrl != null &&
+                    activePhaseIdx != null &&
+                    cuePhaseMap[i] === activePhaseIdx;
+                  return (
+                    <li
+                      key={i}
+                      data-active={isActive}
+                      className={`flex gap-2 text-sm leading-snug pl-2 -ml-2 border-l-2 transition-colors duration-200 ${
+                        isActive ? "border-l-body text-fg" : "border-l-transparent"
+                      }`}
+                    >
+                      <span
+                        className={` shrink-0 text-micro mt-0.5 ${
+ isActive ? "text-fg" : "text-fg-faint"
+ }`}
+                      >
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span>{cue}</span>
+                    </li>
+                  );
+                })}
               </ol>
             ) : null}
 
@@ -561,7 +665,7 @@ function ExerciseSection({
               <PrimaryMuscleTags muscles={lib.primaryMuscles} />
               <Link
                 href={`/train/exercises/${lib.slug}`}
-                className="ml-auto text-[10px] font-mono uppercase tracking-[0.14em] text-fg-dim hover:text-fg transition-colors"
+                className="ml-auto text-micro text-fg-dim hover:text-fg transition-colors"
               >
                 {t("seeFull")}
               </Link>
@@ -575,28 +679,33 @@ function ExerciseSection({
         </p>
       ) : null}
 
+      {youth ? null : (
       <button
         type="button"
+        data-form-film-cta=""
+        data-form-set={setIdx + 1}
         onClick={onOpenFormCheck}
-        className="mt-4 w-full text-left flex items-center justify-between gap-3 surface rounded-xl px-4 py-3 lift touch-app"
+        className="mt-4 w-full min-h-11 text-left flex items-start gap-3 rounded-xl px-4 py-3 lift touch-app bg-fg text-bg overflow-x-clip"
       >
-        <span className="flex items-center gap-3">
-          <svg viewBox="0 0 24 24" className="size-4 text-fg-dim" fill="none" aria-hidden>
-            <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
-            <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-            <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
-          </svg>
-          <span className="text-sm">
-            {t("formCheck")}
-            {overflowCues > 0 ? (
-              <span className="text-fg-faint">{t("moreCues", { count: overflowCues })}</span>
-            ) : null}
+        <Video {...ICON} className="size-4 mt-1 shrink-0" />
+        <span className="flex-1 min-w-0">
+          <span className="flex items-baseline justify-between gap-2">
+            <span className="text-sm leading-snug">{t("formCheck", { set: setIdx + 1 })}</span>
+            <span className="text-micro shrink-0">
+              {t("duration")}
+            </span>
           </span>
-        </span>
-        <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-          {t("duration")}
+          <span className="block text-micro opacity-70 mt-0.5 leading-snug break-words">
+            {t("formCheckSub", { lift: ex.name })}
+          </span>
+          {overflowCues > 0 ? (
+            <span className="block opacity-60 mt-0.5">{t("moreCues", { count: overflowCues })}</span>
+          ) : null}
         </span>
       </button>
+      )}
+
+      <FormCheckThread items={threads} copy={threadCopy} />
     </section>
   );
 }
@@ -608,7 +717,7 @@ function PrimaryMuscleTags({ muscles }: { muscles: import("@/lib/data/muscle-gro
       {muscles.map((m) => (
         <span
           key={m}
-          className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-[0.14em] bg-bg-3 text-fg-dim"
+          className="px-2 py-0.5 text-micro bg-bg-3 text-fg-dim"
         >
           {MUSCLE_LABELS[m]}
         </span>

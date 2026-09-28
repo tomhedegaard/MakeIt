@@ -124,7 +124,7 @@ const MOCK_LESSONS: LessonDetail[] = [
           "En henvisning til en YouTube-video",
         ],
         correct_index: 1,
-        explanation: "Én ting at fokusere på pr. sæt — listen overvælder.",
+        explanation: "Én ting at fokusere på pr. sæt. Listen overvælder.",
       },
       {
         question: "Hvad bør du undgå i et cue?",
@@ -154,7 +154,7 @@ const MOCK_LESSONS: LessonDetail[] = [
     id: "demo-lesson-2",
     slug: "nudge-eller-stoj",
     requiredTier: "athlete",
-    titleDa: "Hvornår sender du et nudge — og hvornår er det støj",
+    titleDa: "Hvornår sender du et nudge, og hvornår er det støj",
     videoUrl: "",
     durationSec: 95,
     repsAward: 20,
@@ -182,7 +182,7 @@ const MOCK_LESSONS: LessonDetail[] = [
     ],
     practiceScenario: {
       prompt:
-        "En lærling har sprunget to sessioner over på en uge, men loggede søvn på 5.4 timer i går. Skriv et nudge — eller forklar hvorfor du IKKE sender et.",
+        "En lærling har sprunget to sessioner over på en uge, men loggede søvn på 5.4 timer i går. Skriv et nudge, eller forklar hvorfor du IKKE sender et.",
       context: null,
       rubric_for_claude:
         "Lærlingen skal vise: nudge eller ej er en valid afgørelse her; hvis nudge → skal være knyttet til søvn ikke session-fravær. strong=tager standpunkt + begrunder.",

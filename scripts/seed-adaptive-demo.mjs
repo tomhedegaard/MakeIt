@@ -277,6 +277,8 @@ async function seedProgramAndSessions(memberId) {
   await sb.from("sessions").delete().eq("member_id", memberId);
 
   // Look up existing demo program; insert if missing.
+  // Always unpublished: programs.is_published defaults to true, and
+  // the member library denylists ADAPTIVE-DEMO* — keep both layers.
   let { data: program } = await sb
     .from("programs")
     .select("id")
@@ -292,11 +294,18 @@ async function seedProgramAndSessions(memberId) {
         weeks: 12,
         level: "Intermediate",
         description: "Synthetic program used by scripts/seed-adaptive-demo.mjs.",
+        is_published: false,
       })
       .select("id")
       .single();
     if (error) throw new Error(`programs: ${error.message}`);
     program = created;
+  } else {
+    const { error: unpubErr } = await sb
+      .from("programs")
+      .update({ is_published: false })
+      .eq("id", program.id);
+    if (unpubErr) throw new Error(`programs unpublish: ${unpubErr.message}`);
   }
 
   // Active program_assignment (one per member, enforced by partial unique).

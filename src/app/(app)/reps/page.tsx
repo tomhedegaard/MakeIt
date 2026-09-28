@@ -1,4 +1,5 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { intlLocaleTag } from "@/i18n/config";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
@@ -7,9 +8,46 @@ import {
   getRewardCatalog,
   getMyRedemptions,
   getRepsBalance,
-  statusLabel,
+  type Reward,
 } from "@/lib/data/rewards";
+import {
+  relativeAgoBucket,
+  repsReasonMessageKey,
+} from "@/lib/i18n/member-bodycopy";
 import RedeemButton from "./RedeemButton";
+
+type RepsT = Awaited<ReturnType<typeof getTranslations<"Reps">>>;
+
+const MOCK_REWARD_SLUGS = [
+  "limited-cuff-olive",
+  "1on1-formcheck",
+  "custom-broderet-strap",
+  "open-house-vip",
+] as const;
+
+function localizeReward(r: Reward, t: RepsT): Reward {
+  if (!(MOCK_REWARD_SLUGS as readonly string[]).includes(r.slug)) return r;
+  return {
+    ...r,
+    name: t(`shop.mock.${r.slug}.name`),
+    description: t(`shop.mock.${r.slug}.description`),
+  };
+}
+
+const DEMO_REWARD_NAME_SLUG: Record<string, (typeof MOCK_REWARD_SLUGS)[number]> = {
+  "Limited Cuff · Olive": "limited-cuff-olive",
+  // Legacy name still stored on older redemption rows.
+  "Limited Cuff — Olive": "limited-cuff-olive",
+  "1:1 Form-check med Mikael": "1on1-formcheck",
+  "Custom-broderet strap": "custom-broderet-strap",
+  "Broderet StrapIt": "custom-broderet-strap",
+  "Open House VIP-pakke": "open-house-vip",
+};
+
+function localizeRewardName(name: string, t: RepsT): string {
+  const slug = DEMO_REWARD_NAME_SLUG[name];
+  return slug ? t(`shop.mock.${slug}.name`) : name;
+}
 
 /** Categorize a reference_type for icon + accent. */
 function txCategory(refType: string | null): "mental" | "coaching" | "training" {
@@ -34,22 +72,6 @@ function txCategory(refType: string | null): "mental" | "coaching" | "training" 
     return "coaching";
   }
   return "training";
-}
-
-const CATEGORY_LABEL: Record<"mental" | "coaching" | "training", string> = {
-  mental: "Mental",
-  coaching: "Coaching",
-  training: "Træning",
-};
-
-function formatRelative(iso: string): string {
-  const ms = Date.now() - new Date(iso).getTime();
-  const m = Math.floor(ms / 60_000);
-  if (m < 60) return `${Math.max(1, m)} min siden`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h} t siden`;
-  const d = Math.floor(h / 24);
-  return `${d} dage siden`;
 }
 
 const TIER_NAMES = ["Lifter", "Athlete", "Beast", "Legend"] as const;
@@ -81,16 +103,18 @@ function tierProgress(balance: number) {
 
 export default async function RepsPage() {
   const member = (await getSession())!;
+  const locale = await getLocale();
+  const tag = intlLocaleTag(locale);
+  const t = await getTranslations("Reps");
 
-  const [rewards, redemptions, balance, transactions] = await Promise.all([
+  const [rewardsRaw, redemptions, balance, transactions] = await Promise.all([
     getRewardCatalog(),
     getMyRedemptions(member.id, 10),
     getRepsBalance(member.id),
     getRecentRepsTransactions(member.id, 20),
   ]);
+  const rewards = rewardsRaw.map((r) => localizeReward(r, t));
   const progress = tierProgress(balance);
-
-  const t = await getTranslations("Reps");
 
   const tiers = TIER_NAMES.map((name) => ({
     name,
@@ -113,31 +137,33 @@ export default async function RepsPage() {
         title={t("header.title")}
         subtitle={t("header.subtitle")}
         right={
-          <div className="surface-2 rounded-lg px-6 py-4 text-right min-w-[220px]">
-            <div className="eyebrow mb-1">{t("balance.label")}</div>
-            <div className="numeric text-4xl">
-              {balance.toLocaleString("da-DK")}
+          // Nord §6.7: saldoen er hero-tallet, venstrestillet, med
+          // niveau og afstand til næste niveau under og progress i mos.
+          <div className="min-w-[220px]">
+            <div className="eyebrow mb-2">{t("balance.label")}</div>
+            <div className="numeric text-hero md:text-hero-lg">
+              {balance.toLocaleString(tag)}
             </div>
-            <div className="text-xs text-fg-faint font-mono mt-1">
+            <div className="text-meta text-fg-dim mt-2">
               {t("balance.tier", { tier: progress.current })}
             </div>
             {progress.next ? (
               <>
-                <div className="mt-3 h-1 bg-bg-3 rounded-full overflow-hidden">
+                <div className="mt-3 h-1 bg-bg-3 overflow-hidden">
                   <div
-                    className="h-full bg-fg"
+                    className="h-full bg-signal"
                     style={{ width: `${progress.pct}%` }}
                   />
                 </div>
-                <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-2">
+                <div className="text-meta text-fg-dim mt-2">
                   {t("balance.toNext", {
-                    amount: progress.toNext?.toLocaleString("da-DK") ?? "",
+                    amount: progress.toNext?.toLocaleString(tag) ?? "",
                     tier: progress.next,
                   })}
                 </div>
               </>
             ) : (
-              <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-3">
+              <div className="text-micro text-fg-faint mt-3">
                 {t("balance.topCap")}
               </div>
             )}
@@ -163,7 +189,7 @@ export default async function RepsPage() {
                   <div className="flex items-center justify-between mb-1">
                     <div className="font-display text-2xl">{tier.name}</div>
                     {active ? (
-                      <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5 inline-flex items-center gap-1.5">
+                      <span className="numeric text-micro border hairline-strong px-2 py-0.5 inline-flex items-center gap-1.5">
                         <span className="size-1.5 rounded-full bg-fg" />
                         {t("tiers.you")}
                       </span>
@@ -188,37 +214,43 @@ export default async function RepsPage() {
 
         <section>
           <div className="flex items-end justify-between mb-6">
-            <div className="eyebrow">Seneste Reps</div>
-            <span className="text-xs text-fg-dim font-mono uppercase tracking-[0.14em]">
-              Sidste {transactions.length}
+            <div className="eyebrow">{t("transactions.eyebrow")}</div>
+            <span className="text-xs text-fg-dim">
+              {t("transactions.count", { count: transactions.length })}
             </span>
           </div>
           {transactions.length === 0 ? (
             <p className="text-fg-dim text-sm">
-              Endnu ingen Reps registreret. Træn, tjek mind-check eller skriv journal.
+              {t("transactions.empty")}
             </p>
           ) : (
             <ul className="divide-y divide-line border hairline rounded-lg overflow-hidden">
               {transactions.map((tx) => {
                 const cat = txCategory(tx.reference_type);
+                const reasonKey = repsReasonMessageKey(tx.reference_type);
+                const ago = relativeAgoBucket(tx.created_at);
+                // Domain hues: mental → mind, training → body.
+                // Coach-school stays monochrome (no domain color in v1).
                 const dot =
                   cat === "mental"
-                    ? "bg-emerald-300"
+                    ? "bg-mind"
                     : cat === "coaching"
-                      ? "bg-yellow-300"
-                      : "bg-sky-300";
+                      ? "bg-fg/50"
+                      : "bg-body";
                 return (
                   <li
                     key={tx.id}
                     className="flex items-center gap-3 px-4 py-3 bg-bg-2/30"
                   >
                     <span className={`inline-block w-2 h-2 rounded-full shrink-0 ${dot}`} />
-                    <span className="text-xs uppercase tracking-wide text-fg-faint font-mono w-16 shrink-0">
-                      {CATEGORY_LABEL[cat]}
+                    <span className="text-xs text-fg-faint w-16 shrink-0">
+                      {t(`categories.${cat}`)}
                     </span>
-                    <span className="flex-1 text-sm">{tx.reason}</span>
+                    <span className="flex-1 text-sm">
+                      {reasonKey ? t(reasonKey) : tx.reason}
+                    </span>
                     <span className="text-xs text-fg-dim shrink-0">
-                      {formatRelative(tx.created_at)}
+                      {t(`relativeTime.${ago.key}`, { count: ago.count })}
                     </span>
                     <span
                       className={`numeric text-sm tabular-nums shrink-0 w-14 text-right ${
@@ -242,7 +274,7 @@ export default async function RepsPage() {
               <div key={row.k} className="bg-bg p-6">
                 <div className="numeric text-3xl text-fg mb-2">{row.v}</div>
                 <div className="text-fg/90 text-sm">{row.k}</div>
-                <div className="text-xs text-fg-faint font-mono mt-1">{row.sub}</div>
+                <div className="text-xs text-fg-faint mt-1">{row.sub}</div>
               </div>
             ))}
           </div>
@@ -252,7 +284,7 @@ export default async function RepsPage() {
           <div className="flex items-end justify-between mb-6">
             <div className="eyebrow">{t("shop.eyebrow")}</div>
             <span className="numeric text-xs text-fg-dim">
-              {t("shop.balance", { balance: balance.toLocaleString("da-DK") })}
+              {t("shop.balance", { balance: balance.toLocaleString(tag) })}
             </span>
           </div>
           {rewards.length === 0 ? (
@@ -264,16 +296,16 @@ export default async function RepsPage() {
               {rewards.map((r) => (
                 <article key={r.id} className="surface-2 rounded-lg p-6 lift flex flex-col">
                   <div className="numeric text-3xl mb-1">
-                    {r.costReps.toLocaleString("da-DK")}
+                    {r.costReps.toLocaleString(tag)}
                   </div>
                   <div className="eyebrow mb-3">{t("shop.repsLabel")}</div>
                   <div className="font-display text-lg mb-1">{r.name}</div>
                   {r.description ? (
-                    <p className="text-xs text-fg-dim font-mono mb-3 flex-1">
+                    <p className="text-xs text-fg-dim mb-3 flex-1">
                       {r.description}
                     </p>
                   ) : <div className="flex-1" />}
-                  <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+                  <div className="flex items-center justify-between text-micro text-fg-faint">
                     <span>{kindLabels[r.kind] ?? r.kind}</span>
                     {r.stock !== null ? (
                       <span>{t("shop.stockLeft", { stock: r.stock })}</span>
@@ -292,7 +324,7 @@ export default async function RepsPage() {
           <section>
             <div className="flex items-end justify-between mb-3">
               <div className="eyebrow">{t("redemptions.eyebrow")}</div>
-              <span className="text-[10px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+              <span className="text-micro text-fg-faint">
                 {t("redemptions.total", { count: redemptions.length })}
               </span>
             </div>
@@ -300,17 +332,17 @@ export default async function RepsPage() {
               {redemptions.map((r) => (
                 <li key={r.id} className="px-5 py-3 flex items-center gap-4 text-sm">
                   <span className="numeric text-xs text-fg-faint w-20 shrink-0">
-                    {new Date(r.redeemedAt).toLocaleDateString("da-DK", {
+                    {new Date(r.redeemedAt).toLocaleDateString(tag, {
                       day: "numeric",
                       month: "short",
                     })}
                   </span>
-                  <span className="flex-1 truncate">{r.rewardName}</span>
+                  <span className="flex-1 truncate">{localizeRewardName(r.rewardName, t)}</span>
                   <span className="numeric text-fg-dim text-xs shrink-0">
-                    − {r.costReps.toLocaleString("da-DK")}
+                    − {r.costReps.toLocaleString(tag)}
                   </span>
                   <span
-                    className="text-[10px] font-mono uppercase tracking-[0.14em] border hairline-strong rounded-full px-2 py-0.5 shrink-0"
+                    className="text-micro border hairline-strong px-2 py-0.5 shrink-0"
                     style={{
                       color:
                         r.status === "fulfilled" || r.status === "shipped"
@@ -320,7 +352,7 @@ export default async function RepsPage() {
                             : "var(--fg-dim)",
                     }}
                   >
-                    {statusLabel(r.status)}
+                    {t(`status.${r.status}`)}
                   </span>
                 </li>
               ))}

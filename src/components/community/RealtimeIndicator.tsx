@@ -44,11 +44,11 @@ export default function RealtimeIndicator() {
         setCount(0);
         router.refresh();
       }}
-      className="fixed left-1/2 -translate-x-1/2 top-[72px] lg:top-6 z-30 surface-2 rounded-full px-4 py-2 flex items-center gap-2 lift"
+      className="fixed left-1/2 -translate-x-1/2 top-[72px] lg:top-6 z-30 surface-2 px-4 py-2 flex items-center gap-2 lift"
       style={{ borderColor: "var(--line-bright)" }}
     >
       <span className="pulse-dot" aria-hidden />
-      <span className="text-xs font-mono uppercase tracking-[0.14em] text-fg">
+      <span className="text-xs text-fg">
         {count === 1
           ? t("newPostsOne", { count })
           : t("newPostsOther", { count })}

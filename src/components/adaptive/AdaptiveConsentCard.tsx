@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 
 import { enableAdaptiveEngineAction } from "@/app/(app)/hrv/actions";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 type Props = {
   /**
@@ -57,15 +58,11 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
       aria-labelledby="adaptive-consent-heading"
       className="surface-2 rounded-2xl p-6 lg:p-7 space-y-4 border hairline"
     >
-      <div>
-        <div className="eyebrow mb-2">Nyt for dig</div>
-        <h2
-          id="adaptive-consent-heading"
-          className="font-display text-2xl leading-tight"
-        >
-          Din baseline er klar — vil du have din session tilpasset hver dag?
-        </h2>
-      </div>
+      <SectionHeader
+        id="adaptive-consent-heading"
+        eyebrow="Nyt for dig"
+        title="Din baseline er klar. Vil du have din session tilpasset hver dag?"
+      />
 
       <div className="text-sm text-fg-dim leading-relaxed space-y-3">
         <p>
@@ -74,7 +71,7 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
           kort søvn → topsæt-vægten reduceres 10% i dag.
         </p>
         <p>
-          <strong className="text-fg">Hvad motoren må selv:</strong> reducere
+          <strong className="text-fg">Hvad HQ må selv:</strong> reducere
           topsæt-vægten, markere accessory-sæt som valgfri, foreslå en lettere
           variant af hovedløftet.
         </p>
@@ -94,16 +91,16 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
           type="button"
           disabled={pending}
           onClick={enable}
-          className="flex-1 rounded-lg border hairline bg-fg text-bg px-4 py-3 text-[12px] font-mono uppercase tracking-[0.12em] lift touch-app disabled:opacity-60"
+          className="flex-1 rounded-lg border hairline bg-fg text-bg px-4 py-3 text-[12px] lift touch-app disabled:opacity-60"
         >
           Slå adaptiv tilpasning til
         </button>
       </div>
       <Link
         href="/hrv/learn/adaptive"
-        className="inline-block text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint hover:text-fg lift touch-app"
+        className="inline-block text-micro text-fg-faint hover:text-fg lift touch-app"
       >
-        Hvordan motoren tænker →
+        Hvordan HQ tænker →
       </Link>
     </section>
   );

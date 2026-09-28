@@ -21,8 +21,8 @@ import "server-only";
 import { sendEmail, type SendResult } from "@/lib/email/resend";
 import { emailFooterHtml } from "@/lib/email/footer";
 
-const ACCENT = "#F5F2EC";
-const DIM = "#A8A6A0";
+const ACCENT = "#111111";
+const DIM = "#5E5E59";
 
 function esc(s: string): string {
   return s
@@ -52,9 +52,9 @@ export async function sendDemotionEmailToCoach(
   const floorPct = `${Math.round(args.agreementFloor * 100)}%`;
   const score = pct(args.rollingAgreement);
   const subject = "Du er flyttet tilbage til sandbox-coaching";
-  const html = `<!doctype html><html><body style="background:#0E0E0C;color:${ACCENT};font-family:-apple-system,system-ui,sans-serif;padding:24px;">
+  const html = `<!doctype html><html><body style="background:#FFFFFF;color:${ACCENT};font-family:'Schibsted Grotesk',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;padding:24px;">
     <div style="max-width:560px;margin:0 auto;">
-      <h1 style="font-size:20px;margin:0 0 16px;font-weight:600;">Hej @${esc(args.handle)} —</h1>
+      <h1 style="font-size:20px;margin:0 0 16px;font-weight:500;">Hej @${esc(args.handle)} —</h1>
       <p style="font-size:14px;line-height:1.6;color:${ACCENT};">
         Din rolling agreement-score med Munk faldt under tærsklen denne uge, så vi har flyttet dig tilbage til sandbox-coaching.
       </p>
@@ -67,7 +67,7 @@ export async function sendDemotionEmailToCoach(
       <p style="font-size:13px;line-height:1.5;color:${DIM};margin-top:24px;">
         <a href="${args.baseUrl}/coach-school/sandbox" style="color:${ACCENT};">Åbn sandbox →</a>
       </p>
-      <p style="font-size:11px;line-height:1.5;color:${DIM};margin-top:24px;">${emailFooterHtml()}</p>
+      <p style="font-size:12px;line-height:1.5;color:${DIM};margin-top:24px;">${emailFooterHtml()}</p>
     </div>
   </body></html>`;
   const text = [
@@ -94,9 +94,9 @@ export async function sendDemotionEmailToMunk(
   const floorPct = `${Math.round(args.agreementFloor * 100)}%`;
   const score = pct(args.rollingAgreement);
   const subject = `Co-coach demotion · @${args.handle}`;
-  const html = `<!doctype html><html><body style="background:#0E0E0C;color:${ACCENT};font-family:-apple-system,system-ui,sans-serif;padding:24px;">
+  const html = `<!doctype html><html><body style="background:#FFFFFF;color:${ACCENT};font-family:'Schibsted Grotesk',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;padding:24px;">
     <div style="max-width:560px;margin:0 auto;">
-      <h1 style="font-size:20px;margin:0 0 16px;font-weight:600;">Co-coach demotion · @${esc(args.handle)}</h1>
+      <h1 style="font-size:20px;margin:0 0 16px;font-weight:500;">Co-coach demotion · @${esc(args.handle)}</h1>
       <p style="font-size:14px;line-height:1.6;color:${ACCENT};">
         Quality-cron flyttede <strong>@${esc(args.handle)}</strong> tilbage til <code>beast_sandbox</code> denne uge.
       </p>
@@ -108,7 +108,7 @@ export async function sendDemotionEmailToMunk(
       <p style="font-size:13px;line-height:1.5;color:${DIM};margin-top:24px;">
         <a href="${args.baseUrl}/coach/co-coaches" style="color:${ACCENT};">Åbn /coach/co-coaches →</a>
       </p>
-      <p style="font-size:11px;line-height:1.5;color:${DIM};margin-top:24px;">${emailFooterHtml()}</p>
+      <p style="font-size:12px;line-height:1.5;color:${DIM};margin-top:24px;">${emailFooterHtml()}</p>
     </div>
   </body></html>`;
   const text = [

@@ -45,7 +45,7 @@ export default function CookieBanner() {
     <div
       role="dialog"
       aria-label={t("title")}
-      className="fixed bottom-0 inset-x-0 z-50 border-t hairline-strong"
+      className="cookie-bar fixed inset-x-0 z-50 border-t hairline-strong"
       style={{ background: "var(--bg)" }}
     >
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-3 flex flex-wrap items-center gap-x-6 gap-y-2">

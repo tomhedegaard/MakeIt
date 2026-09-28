@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import Logo from "@/components/Logo";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 
 export async function generateMetadata() {
@@ -20,7 +21,7 @@ export default async function PrivacyPage() {
         </Link>
 
         <div className="eyebrow mb-3">{t("eyebrow")}</div>
-        <h1 className="font-display text-4xl md:text-6xl mb-6 leading-[0.95]">
+        <h1 className="font-display text-title md:text-[2.75rem] mb-6">
           {t("title")}
         </h1>
         <p className="text-fg-dim text-base leading-relaxed mb-10">
@@ -44,9 +45,17 @@ export default async function PrivacyPage() {
               [t("s01.items.training.k"), t("s01.items.training.v")],
               [t("s01.items.formChecks.k"), t("s01.items.formChecks.v")],
               [t("s01.items.wearable.k"), t("s01.items.wearable.v")],
+              [t("s01.items.journal.k"), t("s01.items.journal.v")],
+              [t("s01.items.mindCheck.k"), t("s01.items.mindCheck.v")],
+              [t("s01.items.mentalCoach.k"), t("s01.items.mentalCoach.v")],
+              [t("s01.items.cirkler.k"), t("s01.items.cirkler.v")],
+              [t("s01.items.nutrition.k"), t("s01.items.nutrition.v")],
+              [t("s01.items.messages.k"), t("s01.items.messages.v")],
+              [t("s01.items.weight.k"), t("s01.items.weight.v")],
               [t("s01.items.social.k"), t("s01.items.social.v")],
               [t("s01.items.reps.k"), t("s01.items.reps.v")],
               [t("s01.items.technical.k"), t("s01.items.technical.v")],
+              [t("s01.items.askHq.k"), t("s01.items.askHq.v")],
             ]}
           />
         </Section>
@@ -58,6 +67,7 @@ export default async function PrivacyPage() {
               [t("s02.items.deliver.k"), t("s02.items.deliver.v")],
               [t("s02.items.notify.k"), t("s02.items.notify.v")],
               [t("s02.items.improve.k"), t("s02.items.improve.v")],
+              [t("s02.items.askHq.k"), t("s02.items.askHq.v")],
               [t("s02.items.legal.k"), t("s02.items.legal.v")],
             ]}
           />
@@ -109,41 +119,36 @@ export default async function PrivacyPage() {
           </p>
         </Section>
 
-        <Section eyebrow="08" title="Wearable-integrationer">
-          <p>
-            {COMPANY.product} kan forbindes med din wearable, så din træning kan
-            tilpasses din restitution. Integrationen er <strong>frivillig</strong> og
-            sker først efter du udtrykkeligt giver samtykke i et OAuth-flow hos
-            udbyderen.
-          </p>
-          <p className="mt-4">
-            <strong>Whoop:</strong> Når du forbinder din Whoop-konto, henter vi via
-            Whoops API følgende på dine vegne:
-          </p>
+        <Section eyebrow={t("s08.eyebrow")} title={t("s08.title")}>
+          <p>{t("s08.intro")}</p>
           <List
             items={[
-              ["Recovery", "Daglig recovery-score, hvilepuls, HRV."],
-              ["Søvn", "Søvnvarighed, søvnfaser, søvn-performance."],
-              ["Strain & workouts", "Dagligt strain samt registrerede træningspas."],
-              ["Cyklus", "Whoops fysiologiske døgncyklus-data."],
-              ["Profil", "Navn og basale profildata fra din Whoop-konto."],
+              [t("s08.items.category.k"), t("s08.items.category.v")],
+              [t("s08.items.basis.k"), t("s08.items.basis.v")],
+              [t("s08.items.stop.k"), t("s08.items.stop.v")],
             ]}
           />
+        </Section>
+
+        <Section eyebrow={t("s09.eyebrow")} title={t("s09.title")}>
+          <p>{t("s09.intro", { product: COMPANY.product })}</p>
+          <p className="mt-4">{t("s09.whoopLead")}</p>
+          <List
+            items={[
+              [t("s09.items.recovery.k"), t("s09.items.recovery.v")],
+              [t("s09.items.sleep.k"), t("s09.items.sleep.v")],
+              [t("s09.items.strain.k"), t("s09.items.strain.v")],
+              [t("s09.items.cycle.k"), t("s09.items.cycle.v")],
+              [t("s09.items.profile.k"), t("s09.items.profile.v")],
+            ]}
+          />
+          <p className="mt-4">{t("s09.use", { product: COMPANY.product })}</p>
           <p className="mt-4">
-            Disse data bruges udelukkende til at personalisere dit program og din
-            form-feedback inde i {COMPANY.product}. De gemmes i EU (Supabase,
-            Frankfurt), deles ikke videre, og sælges aldrig.
-          </p>
-          <p className="mt-4">
-            Du kan til enhver tid afbryde forbindelsen under Indstillinger. Når du
-            gør det, tilbagekaldes vores adgangstoken hos Whoop, og de hentede
-            wearable-data slettes inden for 30 dage. Det samme sker hvis du sletter
-            din {COMPANY.product}-konto. Du kan også tilbagekalde adgangen direkte i
-            din Whoop-konto.
+            {t("s09.disconnect", { product: COMPANY.product })}
           </p>
         </Section>
 
-        <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint mt-16">
+        <p className="text-xs text-fg-faint mt-16">
           {COMPANY.legal.entity ?? COMPANY.name}
           {COMPANY.legal.address ? ` · ${COMPANY.legal.address}` : ""}
         </p>
@@ -165,8 +170,7 @@ function Section({
     <section className="py-8 border-t hairline">
       <div className="grid md:grid-cols-12 gap-6">
         <div className="md:col-span-3">
-          <div className="eyebrow mb-2">{eyebrow}</div>
-          <h2 className="font-display text-2xl leading-tight">{title}</h2>
+          <SectionHeader eyebrow={eyebrow} title={title} />
         </div>
         <div className="md:col-span-9 space-y-4 text-fg/90 text-base leading-relaxed">
           {children}

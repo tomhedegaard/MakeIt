@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import type { Meal } from "@/lib/data/nutrition";
 import { swapMealAction } from "./actions";
 import LogMealButton from "./LogMealButton";
+import { Camera } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 const CARB_DENSITY_KEYS: Record<Meal["carbDensity"], string> = {
   low: "carbLow",
@@ -57,8 +59,8 @@ export default function MealCard({
         ) : null}
         <div className="flex-1 min-w-0">
           <div className="text-sm truncate">{meal.title}</div>
-          <div className="text-[11px] font-mono text-fg-faint">
-            {meal.estKcal ?? "—"} kcal · {meal.estProteinG ?? "—"}g P · {meal.prepMinutes ?? "—"}m
+          <div className="text-micro text-fg-faint">
+            {meal.estKcal ?? "-"} kcal · {meal.estProteinG ?? "-"}g P · {meal.prepMinutes ?? "-"}m
           </div>
         </div>
         {meal.swappable ? (
@@ -103,8 +105,12 @@ export default function MealCard({
               className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
             />
             {meal.imageAttributionName ? (
-              <span className="absolute bottom-2 right-2 text-[9px] font-mono uppercase tracking-[0.14em] text-white/85 bg-black/40 backdrop-blur-sm rounded px-1.5 py-0.5">
-                📷 {meal.imageAttributionName}
+              <span
+                data-theme="nat"
+                className="absolute bottom-2 right-2 inline-flex items-center gap-1 text-micro text-fg bg-bg px-1.5 py-0.5"
+              >
+                <Camera {...ICON} className="size-3.5" />
+                {meal.imageAttributionName}
               </span>
             ) : null}
           </a>
@@ -120,7 +126,7 @@ export default function MealCard({
                 {meal.kind === "recipe" ? (
                   <>
                     <span className="text-fg-faint" aria-hidden>·</span>
-                    <span className="numeric border hairline-strong rounded-full px-2 py-0.5 text-[10px]">
+                    <span className="numeric border hairline-strong px-2 py-0.5 text-micro">
                       {t("anchor")}
                     </span>
                   </>
@@ -134,20 +140,20 @@ export default function MealCard({
               ) : null}
             </div>
             <div className="text-right shrink-0">
-              <div className="numeric text-2xl">{meal.estKcal ?? "—"}</div>
+              <div className="numeric text-2xl">{meal.estKcal ?? "-"}</div>
               <div className="eyebrow">{t("kcal")}</div>
             </div>
           </div>
 
           {/* Macro pills */}
-          <div className="px-5 pb-3 flex flex-wrap items-center gap-2 text-[11px] font-mono">
-            <span className="text-fg-dim">{t("macroProtein", { value: meal.estProteinG ?? "—" })}</span>
+          <div className="px-5 pb-3 flex flex-wrap items-center gap-2 text-micro">
+            <span className="text-fg-dim">{t("macroProtein", { value: meal.estProteinG ?? "-" })}</span>
             <span className="text-fg-faint" aria-hidden>·</span>
-            <span className="text-fg-dim">{t("macroCarbs", { value: meal.estCarbsG ?? "—" })}</span>
+            <span className="text-fg-dim">{t("macroCarbs", { value: meal.estCarbsG ?? "-" })}</span>
             <span className="text-fg-faint" aria-hidden>·</span>
-            <span className="text-fg-dim">{t("macroFat", { value: meal.estFatG ?? "—" })}</span>
+            <span className="text-fg-dim">{t("macroFat", { value: meal.estFatG ?? "-" })}</span>
             <span className="text-fg-faint" aria-hidden>·</span>
-            <span className="text-fg-dim">{t("macroPrep", { value: meal.prepMinutes ?? "—" })}</span>
+            <span className="text-fg-dim">{t("macroPrep", { value: meal.prepMinutes ?? "-" })}</span>
           </div>
         </div>
       </div>

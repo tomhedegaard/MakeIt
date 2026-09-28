@@ -247,7 +247,7 @@ export default function VideoRecorder({
           >
             {t("cancel")}
           </button>
-          <span className="text-[10px] font-mono text-fg-faint ml-auto">
+          <span className="text-micro text-fg-faint ml-auto">
             {t("max")}
           </span>
         </div>
@@ -255,7 +255,7 @@ export default function VideoRecorder({
 
       {state === "recording" ? (
         <>
-          <div className="relative rounded-lg overflow-hidden bg-black aspect-video max-h-[280px] mx-auto">
+          <div className="relative rounded-lg overflow-hidden bg-media aspect-video max-h-[280px] mx-auto">
             <video
               ref={liveVideoRef}
               muted
@@ -263,15 +263,18 @@ export default function VideoRecorder({
               playsInline
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-black/60 rounded-full px-2 py-1">
-              <span className="size-2 rounded-full bg-red-500 animate-pulse" aria-hidden />
-              <span className="font-mono text-[11px] tabular-nums text-white">
+            <div
+              data-theme="nat"
+              className="absolute top-2 left-2 flex items-center gap-1.5 bg-bg/70 px-2 py-1"
+            >
+              <span className="size-2 rounded-full bg-danger animate-pulse" aria-hidden />
+              <span className="text-micro tabular-nums text-fg">
                 {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}
               </span>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-[10px] font-mono text-fg-faint">
+            <span className="text-micro text-fg-faint">
               {t("max")}
             </span>
             <button
@@ -292,7 +295,7 @@ export default function VideoRecorder({
             src={previewUrlRef.current}
             controls
             playsInline
-            className="rounded-lg w-full max-h-[280px] mx-auto bg-black"
+            className="rounded-lg w-full max-h-[280px] mx-auto bg-media"
           />
           <div className="flex items-center gap-3">
             <button
@@ -303,7 +306,7 @@ export default function VideoRecorder({
             >
               {t("discard")}
             </button>
-            <span className="text-[10px] font-mono text-fg-faint">
+            <span className="text-micro text-fg-faint">
               {(() => {
                 const d = blobRef.current?.durationSec ?? 0;
                 return `${Math.floor(d / 60)}:${String(d % 60).padStart(2, "0")}`;
@@ -322,7 +325,7 @@ export default function VideoRecorder({
       ) : null}
 
       {error ? (
-        <p className="text-[10px] font-mono text-red-400">{error}</p>
+        <p className="text-micro text-danger">{error}</p>
       ) : null}
     </div>
   );

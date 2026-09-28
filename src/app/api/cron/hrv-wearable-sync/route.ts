@@ -1,8 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { assertCronAuth } from "@/lib/cron/auth";
 import { createServiceClient } from "@/lib/supabase/service";
 import { getProvider } from "@/lib/hrv/wearables/registry";
 import { encryptToken, decryptToken } from "@/lib/hrv/wearables/crypto";
 import { syncConnection } from "@/lib/hrv/wearables/sync";
+import { priorLnRmssdForConnection } from "@/lib/hrv/prior";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -20,11 +22,8 @@ export const dynamic = "force-dynamic";
  * persisted; auth failures flip the connection to `needs_reauth`.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  // --- Step 1: verify the Vercel Cron bearer secret. ---
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("unauthorized", { status: 401 });
-  }
+  const unauthorized = assertCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   const encKey = process.env.HRV_TOKEN_ENC_KEY;
   if (!encKey) {
@@ -73,16 +72,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           ? decryptToken(conn.refresh_token, encKey)
           : null;
 
-      // Step 4b: prior lnRMSSD series scoped to THIS connection, chronological.
-      const { data: priorRows, error: priorError } = await supabase
-        .from("hrv_readings")
-        .select("ln_rmssd")
-        .eq("connection_id", conn.id)
-        .order("measured_at", { ascending: true });
-      if (priorError) {
-        throw new Error(`prior readings query failed: ${priorError.message}`);
-      }
-      const priorLnRmssd = (priorRows ?? []).map((r) => r.ln_rmssd);
+      // Step 4b: prior lnRMSSD series scoped to THIS connection, chronological,
+      // without sick days. Throws on a failed read, like before.
+      const priorLnRmssd = await priorLnRmssdForConnection(supabase, conn.id);
 
       // Step 4b': most recent stored provider_recorded_at for dedup.
       const { data: lastReadingRows, error: lastReadingError } = await supabase

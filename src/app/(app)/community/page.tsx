@@ -1,10 +1,15 @@
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
+import PageTitle from "@/components/ui/PageTitle";
+import SectionHeader from "@/components/ui/SectionHeader";
 import PostComposer from "@/components/community/PostComposer";
 import PostCard from "@/components/community/PostCard";
 import RealtimeIndicator from "@/components/community/RealtimeIndicator";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getFeedPosts, type FeedPost } from "@/lib/data/community";
+import { communityChallengeProgress } from "@/lib/community/challenge-progress";
+import { Star } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 const STORIES = [
   { who: "@Munk",      tier: "Legend",  trained: true },
@@ -19,7 +24,7 @@ const STORIES = [
 const MOCK_FEED: FeedPost[] = [
   {
     id: "m1", who: "@nina_dl", tier: "Beast",
-    content: "Ny DL PR — 175 kg @ 68 kg BW. Brugte sorte StrapIts, hænderne overlevede.",
+    content: "Ny DL PR: 175 kg @ 68 kg BW. Brugte sorte StrapIts, hænderne overlevede.",
     tag: "PR", isPr: true, whenLabel: "2m",
     reactionsCount: 84, commentsCount: 12, reactedByMe: false,
   },
@@ -31,13 +36,13 @@ const MOCK_FEED: FeedPost[] = [
   },
   {
     id: "m3", who: "@maria.lift", tier: "Beast",
-    content: "Form-check video uploadet — bench-pause med 90 kg. Tager gerne kommentarer.",
+    content: "Form-check video uploadet: bench-pause med 90 kg. Tager gerne kommentarer.",
     tag: "Form-check", isPr: false, formcheck: true, whenLabel: "3t",
     reactionsCount: 28, commentsCount: 8, reactedByMe: false,
   },
   {
     id: "m4", who: "@Munk", tier: "Legend",
-    content: "Limited cuff-farve drops på fredag — kun for crewet. Olive er tilbage.",
+    content: "Limited cuff-farve drops på fredag, kun for crewet. Olive er tilbage.",
     tag: null, isPr: false, whenLabel: "5t",
     reactionsCount: 122, commentsCount: 31, reactedByMe: false,
   },
@@ -66,32 +71,35 @@ export default async function CrewPage() {
   const useReal = SUPABASE_ENABLED && realFeed !== null;
   const feed = useReal ? realFeed : MOCK_FEED;
   const isEmpty = useReal && feed.length === 0;
+  const challenge = communityChallengeProgress(useReal ? "connected" : "demo");
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
       <RealtimeIndicator />
       {/* Header + post composer */}
-      <header className="flex items-end justify-between gap-4 pt-2">
-        <div>
-          <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-[clamp(2.4rem,8vw,4rem)] leading-[0.92]">
-            {t("title")}
-          </h1>
-        </div>
-        <PostComposer
-          trigger={
-            <button
-              type="button"
-              className="btn btn-primary btn-sm"
-              aria-label={t("shareAria")}
-            >
-              {t("shareButton")}
-            </button>
+      <div className="pt-2">
+        <PageTitle
+          kicker={t("eyebrow")}
+          title={t("title")}
+          action={
+            <PostComposer
+              trigger={
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  aria-label={t("shareAria")}
+                >
+                  {t("shareButton")}
+                </button>
+              }
+            />
           }
         />
-      </header>
+      </div>
 
-      {/* Story strip — who trained today */}
+      {/* Story strip — demo only. Connected members see an
+          honest empty line until we have a real trained-today query. */}
+      {!useReal ? (
       <section
         aria-label={t("storiesAria")}
         className="-mx-6 md:mx-0 px-6 md:px-0 overflow-x-auto"
@@ -109,26 +117,33 @@ export default async function CrewPage() {
                       : undefined,
                   }}
                 />
-                <div className="absolute inset-[2px] rounded-full bg-bg-2 flex items-center justify-center text-[11px] font-mono uppercase">
+                <div className="absolute inset-[2px] rounded-full bg-bg-2 flex items-center justify-center text-micro">
                   {s.who.slice(1, 3).toUpperCase()}
                 </div>
               </div>
-              <div className="text-[10px] font-mono text-fg-dim">{s.who.replace("@", "")}</div>
-              <div className="text-[9px] font-mono text-fg-faint uppercase tracking-[0.14em]">
+              <div className="text-micro text-fg-dim">{s.who.replace("@", "")}</div>
+              <div className="text-micro text-fg-faint">
                 {s.trained ? t("trained") : t("resting")}
               </div>
             </li>
           ))}
         </ol>
       </section>
+      ) : (
+      <p className="text-xs text-fg-faint">
+        {t("storiesEmpty")}
+      </p>
+      )}
 
-      {/* Monthly challenge hero */}
+      {/* Monthly challenge hero — demo only. Fail-closed on connected
+          env (not feed-null), so a new member never sees May as live. */}
+      {!SUPABASE_ENABLED ? (
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 pt-5 pb-3">
           <div className="flex items-center justify-between mb-3">
             <div className="eyebrow">{t("challengeEyebrow")}</div>
             <span className="numeric text-xs text-fg-dim">
-              {t("challengeParticipants")}
+              {t("challengeParticipants", { count: challenge.participantCount })}
             </span>
           </div>
           <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-3">
@@ -140,13 +155,17 @@ export default async function CrewPage() {
         </div>
         <div className="px-5 pb-3">
           <div className="flex items-baseline justify-between mb-2">
-            <span className="numeric text-2xl">68.4 / 100K</span>
-            <span className="text-xs font-mono text-fg-dim">
-              {t("challengeProgress")}
+            <span className="numeric text-2xl">{challenge.currentLabel}</span>
+            <span className="text-xs text-fg-dim">
+              {t("challengeProgress", { pct: challenge.youPercent })}
             </span>
           </div>
-          <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
-            <div className="h-full bg-fg" style={{ width: "68.4%" }} />
+          <div className="h-1.5 bg-bg-3 overflow-hidden">
+            <div
+              className="h-full bg-fg"
+              style={{ width: `${challenge.barPercent}%` }}
+              data-challenge-bar=""
+            />
           </div>
         </div>
         <div className="border-t hairline grid grid-cols-2">
@@ -156,16 +175,26 @@ export default async function CrewPage() {
           </button>
           <button type="button" className="px-5 py-4 text-left hover:bg-bg-3">
             <div className="eyebrow mb-1">{t("challengeStatusLabel")}</div>
-            <div className="text-sm">{t("challengeStatusValue")}</div>
+            <div className="text-sm">
+              {challenge.enrolled
+                ? t("challengeStatusValue")
+                : t("challengeStatusEmpty")}
+            </div>
           </button>
         </div>
       </section>
+      ) : (
+      <section className="surface-2 rounded-2xl overflow-hidden px-5 py-6">
+        <SectionHeader eyebrow={t("challengeEmptyEyebrow")} title={t("challengeEmptyTitle")} />
+        <p className="text-fg-dim text-sm max-w-md">{t("challengeEmptyBody")}</p>
+      </section>
+      )}
 
       {/* Feed */}
       <section>
         <div className="flex items-end justify-between mb-3">
           <div className="eyebrow">{t("feedEyebrow")}</div>
-          <span className="text-xs font-mono text-fg-faint">
+          <span className="text-xs text-fg-faint">
             {useReal
               ? t("feedCount", { count: feed.length })
               : t("feedUpdated")}
@@ -173,9 +202,9 @@ export default async function CrewPage() {
         </div>
 
         {isEmpty ? (
-          <div className="surface-2 rounded-2xl p-8 text-center">
+          <div className="surface-2 rounded-2xl p-8">
             <div className="font-display text-2xl mb-2">{t("emptyTitle")}</div>
-            <p className="text-fg-dim text-sm mb-4 max-w-sm mx-auto">
+            <p className="text-fg-dim text-sm mb-4 max-w-sm">
               {t("emptyBody")}
             </p>
             <PostComposer
@@ -197,7 +226,9 @@ export default async function CrewPage() {
         )}
       </section>
 
-      {/* Leaderboard */}
+      {/* Leaderboard — demo only. Invented totals stay in demo;
+          connected members see an honest empty line. */}
+      {!useReal ? (
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 py-4 border-b hairline flex items-center justify-between">
           <div>
@@ -210,23 +241,31 @@ export default async function CrewPage() {
           {LEADERBOARD.map((row, i) => (
             <li key={row.rank} className="px-5 py-3 flex items-center gap-4 text-sm">
               <span className="numeric text-fg-faint w-7">{row.rank}</span>
-              <div className="size-8 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-[10px] font-mono shrink-0">
+              <div className="size-8 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
                 {row.who.slice(1, 3).toUpperCase()}
               </div>
               <span className="flex-1 truncate">{row.who}</span>
               <span className="numeric text-fg/90">{row.score}</span>
-              <span className="text-[10px] font-mono text-fg-faint hidden sm:inline">{row.lift}</span>
+              <span className="text-micro text-fg-faint hidden sm:inline">{row.lift}</span>
               {i < 3 ? (
-                <span className="numeric text-[10px] tracking-[0.16em] uppercase border hairline-strong rounded-full px-2 py-0.5">
-                  ★
+                <span className="inline-flex items-center border hairline-strong px-2 py-1">
+                  <Star {...ICON} className="size-3" />
                 </span>
               ) : null}
             </li>
           ))}
         </ul>
       </section>
+      ) : (
+      <section className="surface-2 rounded-2xl overflow-hidden px-5 py-5">
+        <div className="eyebrow mb-1">{t("leaderboardEyebrow")}</div>
+        <p className="text-sm text-fg-dim">{t("leaderboardEmpty")}</p>
+      </section>
+      )}
 
-      {/* IRL meet */}
+      {/* IRL meet — demo fixture only. Connected members get an honest
+          empty, not 24/05 Open House as a live event. */}
+      {!SUPABASE_ENABLED ? (
       <section className="surface-2 rounded-2xl p-5">
         <div className="eyebrow mb-2">{t("meetEyebrow")}</div>
         <div className="font-display text-2xl mb-1">{t("meetTitle")}</div>
@@ -240,6 +279,15 @@ export default async function CrewPage() {
           <button type="button" className="btn btn-sm">{t("meetReadMore")}</button>
         </div>
       </section>
+      ) : (
+      <section className="surface-2 rounded-2xl p-5">
+        <div className="eyebrow mb-2">{t("meetEmptyEyebrow")}</div>
+        <div className="font-display text-2xl mb-1">{t("meetEmptyTitle")}</div>
+        <p className="text-sm text-fg-dim">
+          {t("meetEmptyBody")}
+        </p>
+      </section>
+      )}
     </Container>
   );
 }

@@ -1,12 +1,13 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { mockListReadings } from "@/lib/hrv/mock";
-import { getTodayLifestyleLogs, getHrvSyncProgress } from "@/lib/data/hrv";
+import { getTodayLifestyleLogs, getHrvSyncProgress, getHrvReadingSeries } from "@/lib/data/hrv";
 import {
   getAdaptiveConsentEligibility,
   getRecentAdaptations,
@@ -15,8 +16,13 @@ import AdaptiveConsentCard from "@/components/adaptive/AdaptiveConsentCard";
 import AdaptationHistory from "@/components/adaptive/AdaptationHistory";
 import type { ReadinessBucket, WarmUpState } from "@/lib/hrv/types";
 import HrvSubNav from "@/components/hrv/HrvSubNav";
+import SectionHeader from "@/components/ui/SectionHeader";
 import ReadinessLadder from "@/components/hrv/ReadinessLadder";
+import HrvBandHero from "@/components/hrv/HrvBandHero";
 import LifestyleLogCard from "@/components/hrv/LifestyleLogCard";
+import { buildHrvBandView } from "@/lib/hrv/band";
+import { demoSteadySeries } from "@/lib/hrv/demo-series";
+import { loadHrvBandCopy } from "@/lib/ui/sprint-a-copy";
 import { HrvSyncStreakLine } from "@/components/hrv/HrvSyncStreakLine";
 import { HrvMilestoneToast } from "@/components/hrv/HrvMilestoneToast";
 import { HrvWelcomeBonusToast } from "@/components/hrv/HrvWelcomeBonusToast";
@@ -37,14 +43,7 @@ import ConnectButton from "./ConnectButton";
  * renders State A.
  */
 
-/** Danish labels for each readiness bucket. */
-const READINESS_LABEL: Record<ReadinessBucket, string> = {
-  very_low: "Langt under din norm",
-  low: "Under din norm",
-  normal: "I dit normale område",
-  high: "Over din norm",
-  very_high: "Langt over din norm",
-};
+type PageT = Awaited<ReturnType<typeof getTranslations<"Hrv.page">>>;
 
 type LatestReading = {
   rmssdMs: number;
@@ -158,16 +157,26 @@ function daysRemaining(warmUpState: WarmUpState, count: number): number {
 }
 
 /** Maps a provider id to its display name. */
-function providerName(provider: string | null): string {
+function providerName(provider: string | null, t: PageT): string {
   if (provider === "whoop") return "WHOOP";
   if (provider === "oura") return "Oura";
   if (provider === "polar") return "Polar";
-  return "din wearable";
+  return t("yourWearable");
 }
 
 export default async function HrvPage() {
   const member = await getSession();
   if (!member) redirect("/login");
+  const tPage = await getTranslations("Hrv.page");
+
+  const series = SUPABASE_ENABLED
+    ? await getHrvReadingSeries(member.id)
+    : demoSteadySeries();
+  const band = buildHrvBandView(series);
+  const bandCopy = await loadHrvBandCopy({
+    count: band.nightsCollected,
+    needed: band.nightsNeeded,
+  });
 
   const state = SUPABASE_ENABLED
     ? await resolveConnectedState(member.id)
@@ -175,13 +184,14 @@ export default async function HrvPage() {
         connected: false,
         needsReauth: false,
         provider: null,
-        // Demo mode: there's no connection, so this only feeds the
-        // (unused) reading count. Kept consistent for completeness.
+        // Demo mode: fixture series below drives the band hero so Munk
+        // can walk Heart without a wearable. The connect wall stays
+        // available for real empty members.
         readingCount: mockListReadings("demo-member").length,
         latest: null,
       } satisfies HrvState);
 
-  const provider = providerName(state.provider);
+  const provider = providerName(state.provider, tPage);
 
   // Sync-streak progress (V2.5). Demo-safe: returns the zero-state when
   // Supabase is unavailable, in which case the component renders nothing.
@@ -212,9 +222,9 @@ export default async function HrvPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Recovery"
-        title="HRV"
-        subtitle="Din hjerterytmevariabilitet — et dagligt mål for, hvor klar din krop er til at træne."
+        eyebrow={tPage("eyebrow")}
+        title={tPage("title")}
+        subtitle={tPage("subtitle")}
       />
       <Container className="py-8 lg:py-12 space-y-8">
         <HrvSubNav />
@@ -253,18 +263,19 @@ export default async function HrvPage() {
             style={{ borderColor: "var(--line-bright)" }}
           >
             <div className="flex-1">
-              <div className="eyebrow mb-1">Forbindelse afbrudt</div>
+              <div className="eyebrow mb-1">{tPage("reauth.eyebrow")}</div>
               <p className="text-sm text-fg-dim">
-                Din forbindelse til {provider} skal fornyes for at fortsætte
-                med at synke din HRV.
+                {tPage("reauth.body", { provider })}
               </p>
             </div>
-            <ConnectButton label="Forny forbindelse" variant="reauth" />
+            <ConnectButton label={tPage("reauth.cta")} variant="reauth" />
           </div>
         ) : null}
 
-        {!state.connected ? (
-          <StateNotConnected />
+        {!SUPABASE_ENABLED || band.state !== "empty" ? (
+          <HrvBandHero view={band} copy={bandCopy} />
+        ) : !state.connected ? (
+          <StateNotConnected t={tPage} />
         ) : state.latest && state.latest.warmUpState !== "active" ? (
           <StateWarmingUp
             rmssdMs={state.latest.rmssdMs}
@@ -273,12 +284,13 @@ export default async function HrvPage() {
               state.readingCount,
             )}
             provider={provider}
+            t={tPage}
           />
         ) : state.latest ? (
-          <StateActive latest={state.latest} provider={provider} />
+          <StateActive latest={state.latest} provider={provider} t={tPage} />
         ) : (
           // Connected, but no readings synced yet — first sync pending.
-          <StatePendingFirstSync provider={provider} />
+          <StatePendingFirstSync provider={provider} t={tPage} />
         )}
 
         <HrvSyncStreakLine progress={progress} />
@@ -293,46 +305,28 @@ export default async function HrvPage() {
 /* State A — no active wearable connection                          */
 /* ---------------------------------------------------------------- */
 
-function StateNotConnected() {
+function StateNotConnected({ t }: { t: PageT }) {
   return (
     <section className="surface-2 rounded-2xl overflow-hidden">
       <div className="px-6 py-7 md:px-8 md:py-10 border-b hairline">
-        <div className="eyebrow mb-3">Kom i gang</div>
-        <h2 className="font-display text-3xl md:text-4xl leading-[1.02] mb-3">
-          Lad din HRV køre i baggrunden.
-        </h2>
+        <SectionHeader eyebrow={t("connectEyebrow")} title={t("connectTitle")} />
         <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-xl">
-          HRV — hjerterytmevariabilitet — fortæller, hvor restitueret du er.
-          Forbind en wearable, så synker MakeIt din HRV automatisk hver
-          morgen. Ingen manuel måling, ingen ekstra rutine — den er der bare,
-          når du vågner.
+          {t("connectBody")}
         </p>
       </div>
 
       <ol className="divide-y hairline">
         {[
-          {
-            n: "01",
-            t: "Forbind dit wearable",
-            d: "Ét tryk — du godkender adgang hos din wearable-udbyder.",
-          },
-          {
-            n: "02",
-            t: "HRV synker hver morgen",
-            d: "MakeIt henter nattens måling automatisk. Du gør ingenting.",
-          },
-          {
-            n: "03",
-            t: "Vi bygger din baseline",
-            d: "De første par uger lærer MakeIt din normal — derefter ser du din readiness.",
-          },
+          { n: "01", title: t("connectStep1Title"), d: t("connectStep1Body") },
+          { n: "02", title: t("connectStep2Title"), d: t("connectStep2Body") },
+          { n: "03", title: t("connectStep3Title"), d: t("connectStep3Body") },
         ].map((row) => (
           <li key={row.n} className="px-6 py-4 md:px-8 flex items-start gap-4">
             <span className="numeric text-fg-faint text-xs w-7 pt-0.5 shrink-0">
               {row.n}
             </span>
             <div className="min-w-0">
-              <div className="text-fg/90 text-sm md:text-base">{row.t}</div>
+              <div className="text-fg/90 text-sm md:text-base">{row.title}</div>
               <div className="text-fg-dim text-xs md:text-sm mt-0.5 leading-relaxed">
                 {row.d}
               </div>
@@ -342,9 +336,9 @@ function StateNotConnected() {
       </ol>
 
       <div className="p-5 md:p-8 space-y-4">
-        <ConnectButton label="Forbind dit wearable" />
-        <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint leading-relaxed">
-          Apple Watch-support kommer med MakeIt-appen til iPhone.
+        <ConnectButton label={t("connectCta")} />
+        <p className="text-micro text-fg-faint leading-relaxed">
+          {t("connectAppleNote")}
         </p>
       </div>
     </section>
@@ -359,37 +353,37 @@ function StateWarmingUp({
   rmssdMs,
   daysLeft,
   provider,
+  t,
 }: {
   rmssdMs: number;
   daysLeft: number;
   provider: string;
+  t: PageT;
 }) {
   return (
     <section className="surface-2 rounded-2xl overflow-hidden">
       <div className="px-6 py-5 md:px-8 border-b hairline flex items-center gap-2">
         <span className="pulse-dot" />
-        <span className="eyebrow">Bygger din baseline</span>
+        <span className="eyebrow">{t("warmingUp.eyebrow")}</span>
       </div>
 
       <div className="px-6 py-8 md:px-8 md:py-10">
-        <div className="eyebrow mb-2">Seneste HRV</div>
-        <div className="numeric text-6xl md:text-7xl leading-[0.9]">
+        <div className="eyebrow mb-2">{t("warmingUp.latest")}</div>
+        <div className="numeric text-hero md:text-hero-lg">
           {Math.round(rmssdMs)}
-          <span className="text-fg-dim text-2xl md:text-3xl ml-2">ms</span>
+          <span className="text-fg-dim text-2xl md:text-3xl ml-2">{t("unit")}</span>
         </div>
         <p className="text-fg-dim text-sm md:text-base mt-5 max-w-md leading-relaxed">
-          Vi bygger din baseline.{" "}
-          <span className="text-fg">
-            {daysLeft} {daysLeft === 1 ? "dag" : "dage"} tilbage.
-          </span>{" "}
-          Indtil da viser vi din rå måling — readiness kommer, når MakeIt
-          kender din normal.
+          {t.rich("warmingUp.body", {
+            count: daysLeft,
+            em: (chunks) => <span className="text-fg">{chunks}</span>,
+          })}
         </p>
       </div>
 
       <div className="px-6 py-3 md:px-8 border-t hairline">
-        <span className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-          Synket fra {provider}
+        <span className="text-micro text-fg-faint">
+          {t("syncedFrom", { provider })}
         </span>
       </div>
     </section>
@@ -403,30 +397,32 @@ function StateWarmingUp({
 function StateActive({
   latest,
   provider,
+  t,
 }: {
   latest: LatestReading;
   provider: string;
+  t: PageT;
 }) {
   const meanMs =
     latest.rolling7dMeanLnRmssd != null
       ? Math.round(Math.exp(latest.rolling7dMeanLnRmssd))
       : null;
   const readinessLabel = latest.readinessBucket
-    ? READINESS_LABEL[latest.readinessBucket]
+    ? t(`readiness.${latest.readinessBucket}`)
     : null;
 
   return (
     <section className="surface-2 rounded-2xl overflow-hidden">
       <div className="px-6 py-5 md:px-8 border-b hairline flex items-center gap-2">
         <span className="pulse-dot" />
-        <span className="eyebrow">Dagens readiness</span>
+        <span className="eyebrow">{t("active.eyebrow")}</span>
       </div>
 
       <div className="px-6 py-8 md:px-8 md:py-10">
-        <div className="eyebrow mb-2">HRV i morges</div>
-        <div className="numeric text-7xl md:text-8xl leading-[0.85]">
+        <div className="eyebrow mb-2">{t("active.latest")}</div>
+        <div className="numeric text-hero md:text-hero-lg">
           {Math.round(latest.rmssdMs)}
-          <span className="text-fg-dim text-2xl md:text-3xl ml-2">ms</span>
+          <span className="text-fg-dim text-2xl md:text-3xl ml-2">{t("unit")}</span>
         </div>
         {readinessLabel ? (
           <p className="font-display text-2xl md:text-3xl mt-5 leading-tight">
@@ -441,23 +437,23 @@ function StateActive({
 
       <div className="grid grid-cols-2 gap-px bg-line border-t hairline">
         <div className="bg-bg-2 px-6 py-4 md:px-8">
-          <div className="eyebrow mb-1">7-dages snit</div>
+          <div className="eyebrow mb-1">{t("active.mean7d")}</div>
           <div className="numeric text-2xl">
-            {meanMs != null ? meanMs : "—"}
+            {meanMs != null ? meanMs : "-"}
             {meanMs != null ? (
-              <span className="text-fg-dim text-sm ml-1">ms</span>
+              <span className="text-fg-dim text-sm ml-1">{t("unit")}</span>
             ) : null}
           </div>
         </div>
         <div className="bg-bg-2 px-6 py-4 md:px-8">
-          <div className="eyebrow mb-1">Kilde</div>
+          <div className="eyebrow mb-1">{t("active.source")}</div>
           <div className="text-sm text-fg/90 pt-1">{provider}</div>
         </div>
       </div>
 
       <div className="px-6 py-3 md:px-8 border-t hairline">
-        <span className="text-[11px] font-mono uppercase tracking-[0.14em] text-fg-faint">
-          Synket fra {provider}
+        <span className="text-micro text-fg-faint">
+          {t("syncedFrom", { provider })}
         </span>
       </div>
     </section>
@@ -468,16 +464,15 @@ function StateActive({
 /* Connected, but no readings synced yet                            */
 /* ---------------------------------------------------------------- */
 
-function StatePendingFirstSync({ provider }: { provider: string }) {
+function StatePendingFirstSync({ provider, t }: { provider: string; t: PageT }) {
   return (
     <section className="surface-2 rounded-2xl px-6 py-8 md:px-8 md:py-10">
-      <div className="eyebrow mb-3">Forbundet</div>
-      <h2 className="font-display text-2xl md:text-3xl leading-tight mb-3">
-        {provider} er forbundet.
-      </h2>
+      <SectionHeader
+        eyebrow={t("pending.eyebrow")}
+        title={t("pending.title", { provider })}
+      />
       <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-md">
-        Din første HRV-måling synker næste gang {provider} har en nats data.
-        Kig forbi i morgen tidlig.
+        {t("pending.body", { provider })}
       </p>
     </section>
   );

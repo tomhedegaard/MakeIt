@@ -188,7 +188,7 @@ export default function AnatomyPreview() {
                   }`}
                 >
                   <div className="font-display">{ex.name}</div>
-                  <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint mt-0.5">
+                  <div className="text-micro text-fg-faint mt-0.5">
                     {ex.primary.length}P · {ex.secondary.length}S · {ex.tertiary.length}T
                   </div>
                 </button>
@@ -205,9 +205,9 @@ export default function AnatomyPreview() {
                 key={g}
                 type="button"
                 onClick={() => setGender(g)}
-                className={`flex-1 px-3 py-2 rounded-md text-xs font-mono uppercase tracking-[0.14em] ${
-                  gender === g ? "bg-bg-3 text-fg" : "text-fg-dim hover:text-fg"
-                }`}
+                className={`flex-1 px-3 py-2 rounded-md text-xs ${
+ gender === g ? "bg-bg-3 text-fg" : "text-fg-dim hover:text-fg"
+ }`}
               >
                 {g === "male" ? t("genderMale") : t("genderFemale")}
               </button>
@@ -223,9 +223,9 @@ export default function AnatomyPreview() {
                 key={v}
                 type="button"
                 onClick={() => setView(v)}
-                className={`flex-1 px-3 py-2 rounded-md text-xs font-mono uppercase tracking-[0.14em] ${
-                  view === v ? "bg-bg-3 text-fg" : "text-fg-dim hover:text-fg"
-                }`}
+                className={`flex-1 px-3 py-2 rounded-md text-xs ${
+ view === v ? "bg-bg-3 text-fg" : "text-fg-dim hover:text-fg"
+ }`}
               >
                 {v === "front" ? t("viewFront") : t("viewBack")}
               </button>
@@ -246,7 +246,7 @@ export default function AnatomyPreview() {
             style={{ width: 260, height: 520 }}
           />
         </div>
-        <div className="mt-3 flex items-center gap-4 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+        <div className="mt-3 flex items-center gap-4 text-micro text-fg-faint">
           <span className="flex items-center gap-1.5">
             <span
               className="size-2 rounded-full"
@@ -304,11 +304,11 @@ export default function AnatomyPreview() {
                           key={tier}
                           type="button"
                           onClick={() => toggleMuscle(m, tier)}
-                          className={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-[0.14em] rounded border hairline ${
-                            isOn
-                              ? "border-transparent"
-                              : "text-fg-dim hover:text-fg"
-                          }`}
+                          className={`px-2 py-0.5 text-micro rounded border hairline ${
+ isOn
+ ? "border-transparent"
+ : "text-fg-dim hover:text-fg"
+ }`}
                           style={
                             isOn
                               ? {
@@ -329,15 +329,15 @@ export default function AnatomyPreview() {
           </ul>
         </div>
 
-        <div className="border-t hairline pt-3 text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+        <div className="border-t hairline pt-3 text-micro text-fg-faint">
           <div>{t("activeSelection")}</div>
-          <div className="mt-2 text-fg-dim font-mono normal-case tracking-normal text-xs">
+          <div className="mt-2 text-fg-dim text-xs">
             <code className="text-fg">primary</code>: [{tiered.primary.join(", ") || "—"}]
           </div>
-          <div className="mt-1 text-fg-dim font-mono normal-case tracking-normal text-xs">
+          <div className="mt-1 text-fg-dim text-xs">
             <code className="text-fg">secondary</code>: [{tiered.secondary.join(", ") || "—"}]
           </div>
-          <div className="mt-1 text-fg-dim font-mono normal-case tracking-normal text-xs">
+          <div className="mt-1 text-fg-dim text-xs">
             <code className="text-fg">tertiary</code>: [{tiered.tertiary.join(", ") || "—"}]
           </div>
         </div>

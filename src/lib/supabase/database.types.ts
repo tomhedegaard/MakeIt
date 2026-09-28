@@ -664,6 +664,36 @@ export type Database = {
           },
         ]
       }
+      cron_run_log: {
+        Row: {
+          candidates: number
+          cron: string
+          failed: number
+          generated: number
+          id: string
+          ok: boolean
+          ran_at: string
+        }
+        Insert: {
+          candidates?: number
+          cron: string
+          failed?: number
+          generated?: number
+          id?: string
+          ok: boolean
+          ran_at?: string
+        }
+        Update: {
+          candidates?: number
+          cron?: string
+          failed?: number
+          generated?: number
+          id?: string
+          ok?: boolean
+          ran_at?: string
+        }
+        Relationships: []
+      }
       exercise_variant_map: {
         Row: {
           created_at: string
@@ -1379,6 +1409,120 @@ export type Database = {
           },
         ]
       }
+      guardian_notices: {
+        Row: {
+          created_at: string
+          detail: Json
+          email_error: string | null
+          emailed_at: string | null
+          guardian_member_id: string
+          guardianship_id: string
+          id: string
+          level: string
+          observed_from: string | null
+          observed_to: string | null
+          signal: string
+          youth_member_id: string
+          youth_seen_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          detail?: Json
+          email_error?: string | null
+          emailed_at?: string | null
+          guardian_member_id: string
+          guardianship_id: string
+          id?: string
+          level: string
+          observed_from?: string | null
+          observed_to?: string | null
+          signal: string
+          youth_member_id: string
+          youth_seen_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          detail?: Json
+          email_error?: string | null
+          emailed_at?: string | null
+          guardian_member_id?: string
+          guardianship_id?: string
+          id?: string
+          level?: string
+          observed_from?: string | null
+          observed_to?: string | null
+          signal?: string
+          youth_member_id?: string
+          youth_seen_at?: string | null
+        }
+        Relationships: []
+      }
+      guardianships: {
+        Row: {
+          created_at: string
+          guardian_consent_mind: boolean
+          guardian_consent_recovery: boolean
+          guardian_declared_at: string
+          guardian_member_id: string
+          id: string
+          invite_expires_at: string
+          invite_token_hash: string
+          status: string
+          updated_at: string
+          withdrawn_at: string | null
+          withdrawn_by: string | null
+          youth_birth_date: string
+          youth_consent_mind: boolean
+          youth_consent_recovery: boolean
+          youth_consented_at: string | null
+          youth_email: string
+          youth_first_name: string
+          youth_member_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          guardian_consent_mind?: boolean
+          guardian_consent_recovery?: boolean
+          guardian_declared_at: string
+          guardian_member_id: string
+          id?: string
+          invite_expires_at: string
+          invite_token_hash: string
+          status?: string
+          updated_at?: string
+          withdrawn_at?: string | null
+          withdrawn_by?: string | null
+          youth_birth_date: string
+          youth_consent_mind?: boolean
+          youth_consent_recovery?: boolean
+          youth_consented_at?: string | null
+          youth_email: string
+          youth_first_name: string
+          youth_member_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          guardian_consent_mind?: boolean
+          guardian_consent_recovery?: boolean
+          guardian_declared_at?: string
+          guardian_member_id?: string
+          id?: string
+          invite_expires_at?: string
+          invite_token_hash?: string
+          status?: string
+          updated_at?: string
+          withdrawn_at?: string | null
+          withdrawn_by?: string | null
+          youth_birth_date?: string
+          youth_consent_mind?: boolean
+          youth_consent_recovery?: boolean
+          youth_consented_at?: string | null
+          youth_email?: string
+          youth_first_name?: string
+          youth_member_id?: string | null
+        }
+        Relationships: []
+      }
       invite_codes: {
         Row: {
           code: string
@@ -1615,6 +1759,7 @@ export type Database = {
       }
       members: {
         Row: {
+          account_type: string
           acknowledged_mental_disclaimer_at: string | null
           avatar_url: string | null
           bio: string | null
@@ -1627,6 +1772,7 @@ export type Database = {
           goal_focus: string | null
           handle: string
           id: string
+          invite_consumed_at: string | null
           is_admin: boolean
           is_coach: boolean
           joined_at: string
@@ -1648,6 +1794,7 @@ export type Database = {
           weekly_frequency: number | null
         }
         Insert: {
+          account_type?: string
           acknowledged_mental_disclaimer_at?: string | null
           avatar_url?: string | null
           bio?: string | null
@@ -1660,6 +1807,7 @@ export type Database = {
           goal_focus?: string | null
           handle: string
           id: string
+          invite_consumed_at?: string | null
           is_admin?: boolean
           is_coach?: boolean
           joined_at?: string
@@ -1681,6 +1829,7 @@ export type Database = {
           weekly_frequency?: number | null
         }
         Update: {
+          account_type?: string
           acknowledged_mental_disclaimer_at?: string | null
           avatar_url?: string | null
           bio?: string | null
@@ -1693,6 +1842,7 @@ export type Database = {
           goal_focus?: string | null
           handle?: string
           id?: string
+          invite_consumed_at?: string | null
           is_admin?: boolean
           is_coach?: boolean
           joined_at?: string
@@ -2052,6 +2202,48 @@ export type Database = {
         }
         Relationships: []
       }
+      mental_safety_alerts: {
+        Row: {
+          created_at: string
+          id: string
+          member_id: string
+          status: string
+          summary: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          member_id: string
+          status?: string
+          summary: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          member_id?: string
+          status?: string
+          summary?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mental_safety_alerts_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "mental_safety_alerts_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mental_settings: {
         Row: {
           ai_coach_enabled: boolean
@@ -2276,7 +2468,15 @@ export type Database = {
         Row: {
           ai_headline: string | null
           ai_notes: string | null
+          carbs_g: number | null
           created_at: string
+          estimate_confidence: string | null
+          estimate_edited: boolean
+          estimate_items: Json | null
+          estimate_kcal_high: number | null
+          estimate_kcal_low: number | null
+          estimate_source: string
+          fat_g: number | null
           graded_at: string | null
           id: string
           kcal: number | null
@@ -2297,6 +2497,14 @@ export type Database = {
           ai_headline?: string | null
           ai_notes?: string | null
           created_at?: string
+          carbs_g?: number | null
+          estimate_confidence?: string | null
+          estimate_edited?: boolean
+          estimate_items?: Json | null
+          estimate_kcal_high?: number | null
+          estimate_kcal_low?: number | null
+          estimate_source?: string
+          fat_g?: number | null
           graded_at?: string | null
           id?: string
           kcal?: number | null
@@ -2317,6 +2525,14 @@ export type Database = {
           ai_headline?: string | null
           ai_notes?: string | null
           created_at?: string
+          carbs_g?: number | null
+          estimate_confidence?: string | null
+          estimate_edited?: boolean
+          estimate_items?: Json | null
+          estimate_kcal_high?: number | null
+          estimate_kcal_low?: number | null
+          estimate_source?: string
+          fat_g?: number | null
           graded_at?: string | null
           id?: string
           kcal?: number | null
@@ -2888,6 +3104,7 @@ export type Database = {
       }
       programs: {
         Row: {
+          audience: string
           coach_id: string | null
           code: string
           created_at: string
@@ -2900,6 +3117,7 @@ export type Database = {
           weeks: number
         }
         Insert: {
+          audience?: string
           coach_id?: string | null
           code: string
           created_at?: string
@@ -2912,6 +3130,7 @@ export type Database = {
           weeks: number
         }
         Update: {
+          audience?: string
           coach_id?: string | null
           code?: string
           created_at?: string
@@ -2949,6 +3168,7 @@ export type Database = {
           last_seen_at: string
           member_id: string
           p256dh: string
+          platform: string
           user_agent: string | null
         }
         Insert: {
@@ -2959,6 +3179,7 @@ export type Database = {
           last_seen_at?: string
           member_id: string
           p256dh: string
+          platform?: string
           user_agent?: string | null
         }
         Update: {
@@ -2969,6 +3190,7 @@ export type Database = {
           last_seen_at?: string
           member_id?: string
           p256dh?: string
+          platform?: string
           user_agent?: string | null
         }
         Relationships: [
@@ -3578,8 +3800,10 @@ export type Database = {
         Args: { p_member_id: string }
         Returns: number
       }
+      consume_invite: { Args: { p_code: string }; Returns: boolean }
       is_current_user_admin: { Args: never; Returns: boolean }
       is_current_user_coach: { Args: never; Returns: boolean }
+      is_current_user_invite_admitted: { Args: never; Returns: boolean }
       is_current_user_munk: { Args: never; Returns: boolean }
       is_invite_valid: { Args: { p_code: string }; Returns: boolean }
       mind_check_visible_to: {

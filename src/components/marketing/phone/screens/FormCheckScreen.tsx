@@ -1,0 +1,83 @@
+import { useTranslations } from "next-intl";
+import DemoLoop from "../../DemoLoop";
+import PhoneFrame from "../PhoneFrame";
+import { Avatar, Chip, Headline, Kicker, Label, Pill, Row } from "./parts";
+import { Play } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
+
+/**
+ * The rack's form-check shows the bench press, so the landing never plays
+ * the same loop twice: Munk's card has the back squat, the body cell the
+ * deadlift.
+ */
+export const FORM_CHECK_DEMO_SRC = "/exercise-demos/bench.webm";
+
+/**
+ * Træn, form-check (reference B "Form-check", spec §3.4). The member's
+ * own recording is the subject; the MoveKit loop sits beside it as a
+ * labelled reference and is never presented as the member's video.
+ *
+ * The loop has a real pause control, so the frame is `interactive` and
+ * this screen hides its own static parts from assistive tech.
+ */
+export default function FormCheckScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
+  const s = useTranslations("Marketing.landing.screens");
+  const card = useTranslations("Marketing.landing.munk.card");
+
+  return (
+    <PhoneFrame label={s("formCheck.aria")} tab="train" width={width} scroll={scroll} interactive>
+      <div aria-hidden="true">
+        <Kicker>{card("kicker")}</Kicker>
+        <Headline>{s("formCheck.lift")}</Headline>
+      </div>
+
+      <DemoLoop
+        src={FORM_CHECK_DEMO_SRC}
+        label={s("formCheck.videoLabel")}
+        pauseLabel={s("pause")}
+        playLabel={s("play")}
+        tag={card("reference")}
+        className="aspect-[16/11] flex-none"
+        compact
+      />
+
+      <div aria-hidden="true" className="flex flex-col gap-[9px]">
+        <div className="flex items-center gap-2 py-0.5 text-[10px] text-fg-dim">
+          <span className="grid h-6 w-[34px] flex-none place-items-center rounded-md bg-fg text-bg">
+            <Play {...ICON} className="size-[9px]" />
+          </span>
+          <span>
+            {card("yours")} · {s("session.set", { n: 3 }).toLowerCase()}
+          </span>
+          <span className="ml-auto">{s("formCheck.duration")}</span>
+        </div>
+
+        <div className="border border-line bg-bg-2 px-[11px] py-2.5 text-[11.5px] font-medium leading-[1.4]">
+          {s("formCheck.final")}
+        </div>
+
+        <div className="flex items-center justify-between">
+          <p className="flex items-center gap-1.5 font-display text-[16px]">
+            <Avatar className="size-[22px] text-[9px]">{s("munkInitials")}</Avatar>
+            {card("signed")}
+          </p>
+          <Chip>{card("answered")}</Chip>
+        </div>
+
+        <Pill>{s("formCheck.next")}</Pill>
+      </div>
+      {scroll ? (
+        <>
+          <div aria-hidden="true">
+            <Label className="mb-1">{s("formCheck.historyLabel")}</Label>
+            <Row k={s("formCheck.h1")} v={s("formCheck.h1v")} />
+            <Row k={s("formCheck.h2")} v={s("formCheck.h2v")} />
+            <Row k={s("formCheck.h3")} v={s("formCheck.h3v")} />
+            <Row k={s("formCheck.h4")} v={s("formCheck.h4v")} />
+            <Row k={s("formCheck.h5")} v={s("formCheck.h5v")} last />
+          </div>
+        </>
+      ) : null}
+    </PhoneFrame>
+  );
+}

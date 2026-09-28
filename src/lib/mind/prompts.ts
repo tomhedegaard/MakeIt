@@ -23,7 +23,7 @@ export const PROMPTS: Record<PromptKey, string> = {
   best_of_day: "Hvad var bedst ved i dag?",
   training_takeaway: "Hvad tager du med fra dagens træning?",
   worry_now: "Hvad bekymrer dig lige nu?",
-  thank_someone: "Hvem hjalp dig — og fortjener tak?",
+  thank_someone: "Hvem hjalp dig, og fortjener tak?",
   proud_of: "En ting du er stolt af denne uge.",
   self_message:
     "Hvis du kunne sige noget til dig selv fra i morges, hvad ville det være?",

@@ -105,7 +105,7 @@ const MOCK_COMMENTS: Comment[] = [
     id: "cm-1",
     who: "@kasper_s",
     tier: "Athlete",
-    content: "Stærkt @nina_dl — hvad var dit warm-up sæt?",
+    content: "Stærkt @nina_dl. Hvad var dit warm-up sæt?",
     whenLabel: "5m",
     createdAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
   },

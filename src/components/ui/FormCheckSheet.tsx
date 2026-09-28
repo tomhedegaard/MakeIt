@@ -9,8 +9,15 @@ import {
   analyzeFormCheckAction,
   attachFormCheckVideoAction,
 } from "@/app/(app)/form-check/actions";
+import {
+  createFormQueueItem,
+  type FormQueueItem,
+} from "@/lib/form-queue/queue";
 import { createClient as createBrowserSupabase } from "@/lib/supabase/client";
 import { describeReset, type FormCheckQuota } from "@/lib/data/form-check-quota";
+import { Upload, Video } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
+import MotorGlyph from "@/components/adaptive/MotorGlyph";
 
 const FORM_CHECK_BUCKET = "form-check-videos";
 
@@ -42,6 +49,11 @@ export type FormCheckExerciseContext = {
   exerciseId?: string;
   cues?: string[];
   mistakes?: { title: string; body: string }[];
+  sessionId?: string;
+  setIndex?: number;
+  setId?: string;
+  memberId?: string;
+  memberHandle?: string;
 };
 
 export default function FormCheckSheet({
@@ -50,12 +62,14 @@ export default function FormCheckSheet({
   exerciseName,
   context,
   quota,
+  onQueued,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   exerciseName?: string;
   context?: FormCheckExerciseContext;
   quota?: FormCheckQuota;
+  onQueued?: (item: FormQueueItem) => void;
 }) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -66,6 +80,7 @@ export default function FormCheckSheet({
           context={context}
           quota={quota}
           onClose={() => onOpenChange(false)}
+          onQueued={onQueued}
         />
       ) : null}
     </Sheet>
@@ -77,11 +92,13 @@ function FormCheckBody({
   context,
   quota,
   onClose,
+  onQueued,
 }: {
   exerciseName?: string;
   context?: FormCheckExerciseContext;
   quota?: FormCheckQuota;
   onClose: () => void;
+  onQueued?: (item: FormQueueItem) => void;
 }) {
   const t = useTranslations("FormCheck");
   const [step, setStep] = useState<Step>("choose");
@@ -97,6 +114,24 @@ function FormCheckBody({
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   /** Build a localized demo verdict for the given exercise name. */
+  function enqueue(verdict: AIVerdict) {
+    if (!onQueued) return;
+    onQueued(
+      createFormQueueItem({
+        memberId: context?.memberId ?? "mock-munk",
+        memberHandle: context?.memberHandle ?? "Munk",
+        exerciseName: exerciseName ?? "Form-check",
+        setIndex: context?.setIndex ?? 1,
+        sessionId: context?.sessionId ?? null,
+        aiScore: verdict.score,
+        aiHeadline: verdict.headline,
+        aiPos: verdict.pos,
+        aiNeg: verdict.neg,
+        aiFix: verdict.fix,
+      }),
+    );
+  }
+
   function pickVerdict(name?: string): AIVerdict {
     const key = pickVerdictKey(name);
     return {
@@ -150,7 +185,9 @@ function FormCheckBody({
     } catch (err) {
       console.warn("[form-check] extraction failed:", err);
       setIsMockResult(true);
-      setVerdict(pickVerdict(exerciseName));
+      const fallback = pickVerdict(exerciseName);
+      setVerdict(fallback);
+      enqueue(fallback);
       setStep("result");
       return;
     }
@@ -165,6 +202,8 @@ function FormCheckBody({
         frames,
         exerciseName,
         exerciseId: context?.exerciseId,
+        setIndex: context?.setIndex,
+        sessionId: context?.sessionId,
         context:
           context?.cues || context?.mistakes
             ? { cues: context.cues, mistakes: context.mistakes }
@@ -172,13 +211,15 @@ function FormCheckBody({
       });
       if (res.ok && res.verdict) {
         setIsMockResult(false);
-        setVerdict({
+        const next = {
           score: res.verdict.score,
           headline: res.verdict.headline,
           pos: res.verdict.pos,
           neg: res.verdict.neg,
           fix: res.verdict.fix,
-        });
+        };
+        setVerdict(next);
+        enqueue(next);
         setStep("result");
         formCheckId = res.formCheckId;
       } else if (res.quotaExceeded) {
@@ -188,13 +229,17 @@ function FormCheckBody({
         setStep("choose");
       } else {
         setIsMockResult(true);
-        setVerdict(pickVerdict(exerciseName));
+        const fallback = pickVerdict(exerciseName);
+        setVerdict(fallback);
+        enqueue(fallback);
         setStep("result");
       }
     } catch (err) {
       console.warn("[form-check] action failed:", err);
       setIsMockResult(true);
-      setVerdict(pickVerdict(exerciseName));
+      const fallback = pickVerdict(exerciseName);
+      setVerdict(fallback);
+      enqueue(fallback);
       setStep("result");
     }
 
@@ -220,7 +265,9 @@ function FormCheckBody({
       setStep("analyzing");
     }, 700);
     window.setTimeout(() => {
-      setVerdict(pickVerdict(exerciseName));
+      const fallback = pickVerdict(exerciseName);
+      setVerdict(fallback);
+      enqueue(fallback);
       setStep("result");
     }, 2200);
   }
@@ -239,6 +286,7 @@ function FormCheckBody({
                 : exerciseName
                 ? t("choose.descriptionExercise", {
                     exercise: exerciseName.toLowerCase(),
+                    set: context?.setIndex ?? 1,
                   })
                 : t("choose.descriptionDefault")}
             </p>
@@ -368,7 +416,7 @@ function FormCheckBody({
               </div>
             </div>
 
-            <p className="text-[10px] font-mono uppercase tracking-[0.16em] text-fg-faint mb-5">
+            <p className="text-micro text-fg-faint mb-5">
               {isMockResult
                 ? t("result.mockNote")
                 : t("result.realNote")}
@@ -402,7 +450,7 @@ function FormCheckBody({
               </button>
             </div>
 
-            <p className="mt-4 text-xs font-mono text-fg-faint text-center">
+            <p className="mt-4 text-xs text-fg-faint text-center">
               {t("result.coachReviewNote")}
             </p>
           </div>
@@ -427,14 +475,14 @@ function QuotaLine({
   return (
     <div
       className={cn(
-        "mb-6 px-3 py-2 rounded-lg surface text-xs font-mono uppercase tracking-[0.14em] flex items-center justify-between gap-3",
+        "mb-6 px-3 py-2 rounded-lg surface text-xs flex items-center justify-between gap-3",
         blocked ? "text-fg" : "text-fg-dim",
       )}
     >
       <span>
         {t("quota.used", { used: quota.used, limit: quota.limit })}
       </span>
-      <span className="text-fg-faint normal-case tracking-normal">
+      <span className="text-fg-faint">
         {describeReset(quota.resetsAt)}
       </span>
     </div>
@@ -460,7 +508,7 @@ function UpgradeCta({
           {t("upgrade.body")}
         </div>
       </Link>
-      <div className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint text-center">
+      <div className="text-micro text-fg-faint text-center">
         {t("upgrade.orWait")}
       </div>
     </div>
@@ -469,7 +517,7 @@ function UpgradeCta({
 
 function ProgressLine({ value }: { value: number }) {
   return (
-    <div className="h-1.5 bg-bg-3 rounded-full overflow-hidden">
+    <div className="h-1.5 bg-bg-3 overflow-hidden">
       <div
         className="h-full bg-fg transition-all"
         style={{ width: `${value}%`, transitionDuration: "180ms" }}
@@ -491,7 +539,7 @@ function Step({
     <li className="flex items-center gap-3">
       <span
         className={cn(
-          "size-5 rounded-full border flex items-center justify-center text-[10px]",
+          "size-5 rounded-full border flex items-center justify-center text-micro",
           done
             ? "bg-fg text-bg border-fg"
             : active
@@ -522,7 +570,7 @@ function Card({
         <div className="eyebrow">{title}</div>
         <span
           className={cn(
-            "text-[10px] font-mono uppercase tracking-[0.14em] rounded-full px-2 py-0.5 border",
+            "text-micro px-2 py-0.5 border",
             kind === "pos" ? "border-line-strong text-fg" : "border-line-strong text-fg-dim"
           )}
         >
@@ -542,28 +590,14 @@ function Card({
 }
 
 function CameraIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
-      <rect x="3" y="6" width="14" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M17 10l4-2v8l-4-2v-4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-      <circle cx="9" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  );
+  return <Video {...ICON} className="size-5" />;
 }
 function UploadIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
-      <path d="M12 16V5m0 0l-4 4m4-4l4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      <path d="M5 16v3h14v-3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
+  return <Upload {...ICON} className="size-5" />;
 }
+/** HQ's analysis is attributed with the HQ mark, as everywhere else (spec §11). */
 function SparkIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
-      <path d="M12 3v6M12 15v6M3 12h6M15 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M5.6 18.4l4.2-4.2M14.2 9.8l4.2-4.2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
-  );
+  return <MotorGlyph className="size-5" />;
 }
 
 /* ---------------------------------------------------------------- *

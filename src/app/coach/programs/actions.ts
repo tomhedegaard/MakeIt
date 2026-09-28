@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import type { ProgramSetScheme } from "@/lib/data/coach-programs";
+import { assignProgramFromBlueprint } from "@/lib/programs/assign-from-blueprint";
 
 /* ---------------------------------------------------------------- *
  * Create
@@ -91,6 +92,10 @@ export async function saveProgramAction(
 
   const supabase = await createClient();
   if (!supabase) return { ok: false, error: "Ingen forbindelse" };
+
+  if (payload.isPublished && payload.days.length === 0) {
+    return { ok: false, error: "Kan ikke publicere et program uden dage" };
+  }
 
   // 1. Program metadata
   const { error: pErr } = await supabase
@@ -205,164 +210,17 @@ export async function assignProgramAction(input: {
   const supabase = await createClient();
   if (!supabase) return { ok: false, error: "Ingen forbindelse" };
 
-  const startWeek = Math.max(1, Math.floor(input.startWeek || 1));
-
-  // Load the program + blueprint tree.
-  const { data: program } = await supabase
-    .from("programs")
-    .select(
-      `
-      id, weeks,
-      days:program_days(
-        id, position, day_label, title, estimated_minutes,
-        exercises:program_day_exercises(
-          id, exercise_id, exercise_name, cue, position, sets
-        )
-      )
-    `,
-    )
-    .eq("id", input.programId)
-    .maybeSingle();
-
-  if (!program) return { ok: false, error: "Program ikke fundet" };
-
-  type Bp = {
-    weeks: number;
-    days: {
-      position: number;
-      day_label: string;
-      title: string;
-      estimated_minutes: number | null;
-      exercises: {
-        exercise_id: string | null;
-        exercise_name: string;
-        cue: string | null;
-        position: number;
-        sets: unknown;
-      }[];
-    }[];
-  };
-  const bp = program as unknown as Bp;
-  const days = (bp.days ?? [])
-    .slice()
-    .sort((a, b) => a.position - b.position);
-
-  if (days.length === 0) {
-    return { ok: false, error: "Programmet har ingen dage at generere fra" };
-  }
-
-  // Supersede any existing active assignment for this member.
-  await supabase
-    .from("program_assignments")
-    .update({ status: "abandoned" })
-    .eq("member_id", input.memberId)
-    .eq("status", "active");
-
-  const { error: aErr } = await supabase.from("program_assignments").insert({
-    member_id: input.memberId,
-    program_id: input.programId,
-    status: "active",
-    current_week: startWeek,
+  const result = await assignProgramFromBlueprint(supabase, {
+    memberId: input.memberId,
+    programId: input.programId,
+    startWeek: input.startWeek,
+    supersedeStatus: "abandoned",
   });
-  if (aErr) return { ok: false, error: aErr.message };
-
-  // --- Wave 1: sessions. One per (week, day) from startWeek..weeks.
-  type SessionSeed = { week: number; dayIdx: number };
-  const sessionRows: Record<string, unknown>[] = [];
-  const sessionSeeds: SessionSeed[] = [];
-  for (let week = startWeek; week <= bp.weeks; week++) {
-    days.forEach((day, dayIdx) => {
-      sessionRows.push({
-        member_id: input.memberId,
-        program_id: input.programId,
-        week,
-        day_label: day.day_label,
-        title: day.title,
-        estimated_minutes: day.estimated_minutes,
-        status: "scheduled",
-      });
-      sessionSeeds.push({ week, dayIdx });
-    });
-  }
-
-  if (sessionRows.length === 0) {
-    return { ok: true, sessionsCreated: 0 };
-  }
-
-  const { data: insertedSessions, error: sErr } = await supabase
-    .from("sessions")
-    .insert(sessionRows)
-    .select("id");
-  if (sErr || !insertedSessions) {
-    return { ok: false, error: sErr?.message ?? "Kunne ikke oprette sessioner" };
-  }
-
-  // --- Wave 2: session_exercises. Returned rows track input order.
-  const exerciseRows: Record<string, unknown>[] = [];
-  const exerciseSeeds: { dayIdx: number; exIdx: number }[] = [];
-  insertedSessions.forEach((session, i) => {
-    const { dayIdx } = sessionSeeds[i];
-    days[dayIdx].exercises
-      .slice()
-      .sort((a, b) => a.position - b.position)
-      .forEach((ex, exIdx) => {
-        exerciseRows.push({
-          session_id: session.id,
-          exercise_id: ex.exercise_id,
-          exercise_name: ex.exercise_name,
-          cue: ex.cue,
-          position: ex.position,
-        });
-        exerciseSeeds.push({ dayIdx, exIdx });
-      });
-  });
-
-  if (exerciseRows.length > 0) {
-    const { data: insertedEx, error: eErr } = await supabase
-      .from("session_exercises")
-      .insert(exerciseRows)
-      .select("id");
-    if (eErr || !insertedEx) {
-      return { ok: false, error: eErr?.message ?? "Kunne ikke oprette øvelser" };
-    }
-
-    // --- Wave 3: session_sets.
-    const setRows: Record<string, unknown>[] = [];
-    insertedEx.forEach((sx, i) => {
-      const { dayIdx, exIdx } = exerciseSeeds[i];
-      const sortedEx = days[dayIdx].exercises
-        .slice()
-        .sort((a, b) => a.position - b.position);
-      const sets = Array.isArray(sortedEx[exIdx]?.sets)
-        ? (sortedEx[exIdx].sets as Record<string, unknown>[])
-        : [];
-      sets.forEach((set, setIdx) => {
-        setRows.push({
-          session_exercise_id: sx.id,
-          position: setIdx + 1,
-          target_reps: numOr(set.reps, null),
-          target_weight: numOr(set.weight, null),
-          target_rpe: set.rpe == null ? null : numOr(set.rpe, null),
-          rest_sec: numOr(set.rest_sec, null),
-        });
-      });
-    });
-    if (setRows.length > 0) {
-      const { error: setErr } = await supabase
-        .from("session_sets")
-        .insert(setRows);
-      if (setErr) return { ok: false, error: setErr.message };
-    }
-  }
+  if (!result.ok) return result;
 
   revalidatePath("/coach/programs");
   revalidatePath(`/coach/members/${input.memberId}`);
   revalidatePath("/coaching");
   revalidatePath("/dashboard");
-  return { ok: true, sessionsCreated: insertedSessions.length };
-}
-
-function numOr(v: unknown, fallback: number | null): number | null {
-  const n = typeof v === "number" ? v : Number(v);
-  return Number.isFinite(n) ? n : fallback;
+  return result;
 }

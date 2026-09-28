@@ -1,4 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { assertCronAuth } from "@/lib/cron/auth";
+import { recordWatchedCronRun } from "@/lib/data/cron-runs";
 import { createServiceClient } from "@/lib/supabase/service";
 import { mindDb } from "@/lib/data/mind";
 import { sendPushToMember } from "@/lib/push";
@@ -30,10 +32,8 @@ export const maxDuration = 60;
  * so re-runs on the same day silently skip via the maybeSingle check.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const auth = request.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("unauthorized", { status: 401 });
-  }
+  const unauthorized = assertCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   const svc = createServiceClient();
   const db = mindDb(svc);
@@ -54,7 +54,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   const optedInRows = (optedIn ?? []) as { member_id: string; notif_ai_coach_morning: boolean }[];
   if (optedInRows.length === 0) {
-    return NextResponse.json({ ok: true, generated: 0, fallback: 0, nudged: 0 });
+    const body = { ok: true, generated: 0, fallback: 0, nudged: 0, candidates: 0 };
+    await recordWatchedCronRun(svc, "mental-coach-daily", body);
+    return NextResponse.json(body);
   }
 
   // Pre-fetch members' handles + tiers so we can build the context
@@ -217,7 +219,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     failed: failures.length,
   });
 
-  return NextResponse.json({
+  const body = {
     ok: true,
     candidates: optedInRows.length,
     generated,
@@ -225,7 +227,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     nudged,
     skipped,
     failed: failures.length,
-  });
+  };
+  await recordWatchedCronRun(svc, "mental-coach-daily", body);
+  return NextResponse.json(body);
 }
 
 function isoDateNDaysAgo(n: number): string {

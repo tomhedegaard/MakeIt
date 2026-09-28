@@ -29,17 +29,24 @@ export function useVideoPhaseSync(
   phases: ExercisePhase[],
 ): number | null {
   const [phaseIdx, setPhaseIdx] = useState<number | null>(null);
-  // Snapshot phases in a ref so the rAF callback doesn't see a stale
-  // closure if phases swap mid-loop (rare, but happens on the spike
-  // page where presets change). The cumulative table is derived from
-  // this snapshot — also stored in the ref so we don't recompute it
-  // every animation frame.
-  const phasesRef = useRef(phases);
+  // Cumulative table lives in refs so the rAF callback doesn't see a
+  // stale closure if phases swap mid-loop (rare, but happens on the
+  // spike page where presets change).
   const cumulativeRef = useRef<number[]>([]);
   const totalRef = useRef(0);
+  const [trackedPhases, setTrackedPhases] = useState(phases);
+
+  // Reset reported idx during render when phases swap so the next poll
+  // fires a fresh onChange even if the new list produces the same
+  // numeric index — protects against stale highlights on exercise change.
+  // (Adjusting state during render is the react-hooks replacement for
+  // "reset state in an effect when a prop changes".)
+  if (phases !== trackedPhases) {
+    setTrackedPhases(phases);
+    setPhaseIdx(null);
+  }
 
   useEffect(() => {
-    phasesRef.current = phases;
     const cum: number[] = [];
     let running = 0;
     for (const p of phases) {
@@ -48,10 +55,6 @@ export function useVideoPhaseSync(
     }
     cumulativeRef.current = cum;
     totalRef.current = running;
-    // Reset reported idx so the next poll fires a fresh onChange even
-    // if the new phases produce the same numeric index — protects
-    // against stale highlights when the exercise changes.
-    setPhaseIdx(null);
   }, [phases]);
 
   useEffect(() => {

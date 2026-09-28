@@ -1,7 +1,9 @@
+import type { Viewport } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Logo from "@/components/Logo";
 import LanguageSelector from "@/components/LanguageSelector";
+import ThemeScope from "@/components/ui/ThemeScope";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 import {
@@ -10,13 +12,26 @@ import {
   passwordAction,
   oauthAction,
 } from "./actions";
+import { CircleAlert } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 export async function generateMetadata() {
   const t = await getTranslations("Login");
   return { title: t("metaTitle", { product: COMPANY.product }) };
 }
 
+// Kalk pilot (spec 2026-09-17). Merges with the root viewport.
+export const viewport: Viewport = {
+  themeColor: "#FFFFFF",
+  colorScheme: "light",
+};
+
 type Tab = "magic" | "password" | "oauth";
+
+/** Safe display gate: only show the members-only hint for in-app paths. */
+function isMemberNext(next: string | undefined): boolean {
+  return Boolean(next && next.startsWith("/") && !next.startsWith("//"));
+}
 
 export default async function LoginPage({
   searchParams,
@@ -27,54 +42,59 @@ export default async function LoginPage({
     email?: string;
     tab?: Tab;
     mode?: string;
+    next?: string;
   }>;
 }) {
-  const { err, sent, email, tab = "magic", mode = "signin" } = await searchParams;
+  const { err, sent, email, tab = "magic", mode = "signin", next } = await searchParams;
   const t = await getTranslations("Login");
 
   return (
-    <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-24">
-      <div className="absolute inset-0 -z-0 pointer-events-none">
-        <div className="absolute left-1/2 top-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(245,242,236,0.08),transparent_70%)] blur-2xl" />
-      </div>
+    <ThemeScope theme="nord" className="flex-1 flex flex-col">
+      <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-24">
+        <div className="relative z-10 w-full max-w-md">
+          <div className="mb-12 flex items-center justify-between">
+            <Link href="/" className="inline-block text-fg">
+              <Logo />
+            </Link>
+            <LanguageSelector />
+          </div>
 
-      <div className="relative z-10 w-full max-w-md">
-        <div className="mb-12 flex items-center justify-between">
-          <Link href="/" className="inline-block text-fg">
-            <Logo />
-          </Link>
-          <LanguageSelector />
-        </div>
+          <div className="eyebrow mb-3 flex items-center gap-2">
+            <span className="pulse-dot" /> {t("beta")}
+          </div>
 
-        <div className="eyebrow mb-3 flex items-center gap-2">
-          <span className="pulse-dot" /> {t("beta")}
-        </div>
+          <h1 className="font-display text-title md:text-[2.75rem] mb-4">
+            {t("headline.line1")}
+            <br /> {t("headline.line2")}
+          </h1>
 
-        <h1 className="font-display text-5xl md:text-6xl mb-4">
-          {t("headline.line1")}
-          <br /> {t("headline.line2")}
-        </h1>
+          {isMemberNext(next) ? (
+            <p className="mb-8 text-sm text-fg-dim leading-relaxed">{t("memberOnlyHint")}</p>
+          ) : null}
 
-        {sent ? (
-          <SentState email={email} />
-        ) : SUPABASE_ENABLED ? (
-          <SupabaseForm err={err} tab={tab} mode={mode as "signin" | "signup"} />
-        ) : (
-          <MockForm err={err} />
-        )}
-
-        <p className="mt-10 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
-          {SUPABASE_ENABLED ? (
-            <>
-              {t("statusConnected")}
-              {process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/^https?:\/\//, "").split(".")[0]}
-            </>
+          {sent ? (
+            <SentState email={email} />
+          ) : SUPABASE_ENABLED ? (
+            <SupabaseForm err={err} tab={tab} mode={mode as "signin" | "signup"} />
           ) : (
-            <>{t("statusDemo")}</>
+            <MockForm err={err} />
           )}
-        </p>
-      </div>
-    </main>
+
+          {!sent ? (
+            <p className="mt-6 text-sm text-fg-dim">
+              {t("waitlistHint")}{" "}
+              <Link href="/#waitlist" className="underline hover:text-fg">
+                {t("waitlistLink")}
+              </Link>
+            </p>
+          ) : null}
+
+          <p className="mt-10 text-xs text-fg-faint">
+            {SUPABASE_ENABLED ? t("statusConnected") : t("statusDemo")}
+          </p>
+        </div>
+      </main>
+    </ThemeScope>
   );
 }
 
@@ -108,18 +128,14 @@ async function MockForm({ err }: { err?: string }) {
           />
         </label>
 
-        {err ? (
-          <p className="text-sm text-fg font-mono uppercase tracking-[0.14em]">
-            {t("invalidCode")}
-          </p>
-        ) : null}
+        {err ? <LoginErrorAlert>{t("invalidCode")}</LoginErrorAlert> : null}
 
         <button type="submit" className="btn btn-primary w-full mt-2">
           {t("submit")}
         </button>
       </form>
 
-      <p className="mt-6 text-xs text-fg-faint font-mono uppercase tracking-[0.14em]">
+      <p className="mt-6 text-xs text-fg-faint">
         {t("testCodesLabel")}<span className="text-fg-dim">MUNK-01 · MAKEIT-CREW · STRAPIT-50K</span>
       </p>
     </>
@@ -151,12 +167,7 @@ async function SupabaseForm({
       <TabBar active={tab} />
 
       {errLabel ? (
-        <p
-          className="mb-4 text-sm font-mono uppercase tracking-[0.14em] text-red-400"
-          role="alert"
-        >
-          · {errLabel}
-        </p>
+        <LoginErrorAlert className="mb-4">{errLabel}</LoginErrorAlert>
       ) : null}
 
       {tab === "password" ? (
@@ -178,7 +189,7 @@ async function TabBar({ active }: { active: Tab }) {
     { key: "oauth", label: t("oauth") },
   ];
   return (
-    <div className="flex gap-1 mb-6 surface-2 rounded-lg p-1 text-xs font-mono uppercase tracking-[0.14em]">
+    <div className="flex gap-1 mb-6 surface-2 rounded-lg p-1 text-xs">
       {tabs.map((t) => (
         <Link
           key={t.key}
@@ -223,13 +234,16 @@ async function MagicLinkForm() {
           <span className="eyebrow block mb-2">{t("inviteCodeLabel")}</span>
           <input
             name="code"
-            required
             autoComplete="off"
             spellCheck={false}
-            placeholder="MUNK-01"
+            placeholder={t("invitePlaceholder")}
             className="field"
           />
         </label>
+
+        {/* Existing members use this form too, so the box is only enforced
+            when the email is new (magicLinkAction → send-signup). */}
+        <AdultCheckbox required={false} />
 
         <button type="submit" className="btn btn-primary w-full mt-2">
           {t("submit")}
@@ -291,12 +305,14 @@ async function PasswordForm({ mode }: { mode: "signin" | "signup" }) {
           </label>
         ) : null}
 
+        {isSignup ? <AdultCheckbox required /> : null}
+
         <button type="submit" className="btn btn-primary w-full mt-2">
           {isSignup ? t("submitSignup") : t("submitSignin")}
         </button>
       </form>
 
-      <p className="mt-4 text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <p className="mt-4 text-xs text-fg-faint">
         {isSignup ? (
           <>
             {t("hasAccount")}{" "}
@@ -346,6 +362,8 @@ async function OAuthForm() {
           />
         </label>
 
+        <AdultCheckbox required />
+
         <div className="grid grid-cols-1 gap-3 mt-2">
           <button
             type="submit"
@@ -366,6 +384,30 @@ async function OAuthForm() {
         </div>
       </form>
     </>
+  );
+}
+
+function LoginErrorAlert({
+  children,
+  className = "",
+}: {
+  children: string;
+  className?: string;
+}) {
+  return (
+    <p
+      role="alert"
+      className={`flex items-center gap-2 rounded-lg border border-danger/40 bg-danger/15 px-3 py-2 text-sm text-danger ${className}`}
+    >
+      <DangerGlyph />
+      <span>{children}</span>
+    </p>
+  );
+}
+
+function DangerGlyph() {
+  return (
+    <CircleAlert {...ICON} className="size-3.5 shrink-0" />
   );
 }
 
@@ -401,7 +443,8 @@ function AppleGlyph() {
 }
 
 /* ---------------------------------------------------------------- *
- * Sent confirmation (post-magic-link / post-signup)
+ * Sent confirmation — magic-link only. Password signup never
+ * lands here (`finishInvitePasswordSignup` → /dashboard or err).
  * ---------------------------------------------------------------- */
 
 async function SentState({ email }: { email?: string }) {
@@ -414,9 +457,24 @@ async function SentState({ email }: { email?: string }) {
         <span className="text-fg">{email ?? t("fallbackEmail")}</span>
         {t("bodyTail")}
       </p>
-      <p className="text-xs font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <p className="text-xs text-fg-faint">
         {t("expiry")}
       </p>
     </div>
+  );
+}
+
+/**
+ * "Jeg er fyldt 18 år" (terms, "Alder"). Required where the form always
+ * creates or may create an account; optional on the magic-link form,
+ * where the server enforces it only for a new email.
+ */
+async function AdultCheckbox({ required }: { required: boolean }) {
+  const t = await getTranslations("Login.adult");
+  return (
+    <label className="flex items-start gap-3 text-meta">
+      <input type="checkbox" name="adult" required={required} className="mt-0.5 size-5 shrink-0 accent-fg" />
+      <span>{required ? t("label") : t("labelNew")}</span>
+    </label>
   );
 }

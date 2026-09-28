@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { assertCronAuth } from "@/lib/cron/auth";
 import { createServiceClient } from "@/lib/supabase/service";
 import { mindDb } from "@/lib/data/mind";
 import { sendPushToMember } from "@/lib/push";
@@ -19,16 +20,14 @@ export const maxDuration = 60;
  *   - notif_buddy_mental_alert = true
  *   - no buddy_interactions row between them in the last 7 days
  * Send a gentle push to both:
- *   "Spørg X hvordan ugen ligger — det er noget af det stærkeste I har."
+ *   "Spørg X hvordan ugen ligger. Det er noget af det stærkeste I har."
  *
  * Idempotent within a Monday — the no-interactions-in-7-days check
  * means a manual rerun the same day still only fires when truly needed.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const auth = request.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("unauthorized", { status: 401 });
-  }
+  const unauthorized = assertCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   const svc = createServiceClient();
   const db = mindDb(svc);
@@ -112,13 +111,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     try {
       await sendPushToMember(pair.member_a, {
         title: "Buddy-tjek",
-        body: `Spørg ${handleB} hvordan ugen ligger — det er noget af det stærkeste I har.`,
+        body: `Spørg ${handleB} hvordan ugen ligger. Det er noget af det stærkeste I har.`,
         url: "/buddy",
         tag: "buddy-mental-checkin",
       });
       await sendPushToMember(pair.member_b, {
         title: "Buddy-tjek",
-        body: `Spørg ${handleA} hvordan ugen ligger — det er noget af det stærkeste I har.`,
+        body: `Spørg ${handleA} hvordan ugen ligger. Det er noget af det stærkeste I har.`,
         url: "/buddy",
         tag: "buddy-mental-checkin",
       });

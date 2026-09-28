@@ -21,6 +21,15 @@
     "intermediate": "Intermediate",
     "advanced": "Advanced"
   },
+  "equipment": {
+    "barbell": "Barbell",
+    "dumbbell": "Dumbbell",
+    "kettlebell": "Kettlebell",
+    "cable": "Cable",
+    "machine": "Machine",
+    "band": "Band",
+    "bodyweight": "Bodyweight"
+  },
   "detail": {
     "metaFallback": "Exercise",
     "breadcrumb": "Exercises",
@@ -39,14 +48,17 @@
     "tierTertiary": "Tertiary",
     "howTo": "How to do it",
     "musclesInvolved": "Muscles involved",
-    "currentPhase": "Active phase"
+    "currentPhase": "Active phase",
+    "demoPlay": "Play",
+    "demoPause": "Pause",
+    "demoAria": "3D demo of {lift}, with the working muscles highlighted"
   },
   "card": {
     "primaryPrefix": "Primary: ",
-    "metaEmpty": "—"
+    "metaEmpty": "-"
   },
   "formCheck": {
-    "limitReached": "AI form check — monthly limit reached",
+    "limitReached": "AI form check: monthly limit reached",
     "test": "Test your form with AI",
     "stats": "{cues} cues · {mistakes} common mistakes",
     "used": " · {used}/{limit} used",

@@ -119,19 +119,19 @@ export function computeWeeklyInsights(
  */
 export function headlineFromInsights(w: WeeklyInsights): string {
   if (w.current.mindCheckDays === 0) {
-    return "Vi mangler din mentale data — start ugen med et mind-check.";
+    return "Vi mangler din mentale data. Start ugen med et mind-check.";
   }
   if (w.delta.stress !== null && w.delta.stress <= -1) {
     return `Stress er nede ${Math.abs(w.delta.stress)} trin sammenlignet med sidste uge.`;
   }
   if (w.delta.energy !== null && w.delta.energy >= 1) {
-    return `Energi op ${w.delta.energy} trin — god uge.`;
+    return `Energi op ${w.delta.energy} trin. God uge.`;
   }
   if (w.delta.stress !== null && w.delta.stress >= 1) {
-    return `Stress op ${w.delta.stress} trin — værd at lægge mærke til.`;
+    return `Stress op ${w.delta.stress} trin. Værd at lægge mærke til.`;
   }
   if (w.current.mindCheckDays >= 6) {
-    return `Stærk uge — du tjekkede ind ${w.current.mindCheckDays} af 7 dage.`;
+    return `Stærk uge: du tjekkede ind ${w.current.mindCheckDays} af 7 dage.`;
   }
-  return `Din uge i tal — ${w.current.mindCheckDays} mind-check, ${w.current.sessionsCompleted} sessioner.`;
+  return `Din uge i tal: ${w.current.mindCheckDays} mind-check, ${w.current.sessionsCompleted} sessioner.`;
 }

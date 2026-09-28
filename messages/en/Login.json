@@ -1,33 +1,38 @@
 {
-  "metaTitle": "Sign in — {product}",
+  "metaTitle": "Sign in · {product}",
   "errors": {
-    "1": "Something went wrong — try again",
-    "missing": "Email and code are required",
+    "age": "You must be 18 or older to create an account. Tick the box and try again.",
+    "1": "Something went wrong. Try again",
+    "missing": "Email is required",
     "invite": "Invalid invite code",
-    "otp": "Could not send email — try again",
+    "need_invite": "New accounts need a valid invite code",
+    "otp": "Could not send email. Try again",
     "pw_short": "Password must be at least 8 characters",
-    "exists": "Email is already registered — sign in instead",
-    "signup": "Could not create account — try again",
+    "exists": "Email is already registered. Sign in instead",
+    "signup": "Could not create account. Try again",
     "creds": "Wrong email or password",
-    "signin": "Could not sign in — try again",
-    "oauth": "OAuth flow failed — try again",
+    "signin": "Could not sign in. Try again",
+    "oauth": "OAuth flow failed. Try again",
     "provider": "Unknown provider",
     "callback": "Login link expired or invalid",
     "disabled": "Backend not connected",
-    "fallback": "Something went wrong — try again"
+    "fallback": "Something went wrong. Try again"
   },
   "beta": "Closed Beta · Invite only",
   "headline": {
     "line1": "Welcome",
     "line2": "to the crew."
   },
-  "statusConnected": "Connected · ",
+  "statusConnected": "Connected",
   "statusDemo": "Demo mode · no backend connected",
+  "memberOnlyHint": "The page you tried to open is for members only. Sign in to continue.",
+  "waitlistHint": "No invite code?",
+  "waitlistLink": "Join the waitlist",
   "mock": {
     "intro": "Enter your invite code to get access. Don't have one? Write to ",
     "inviteCodeLabel": "Invite code",
-    "invalidCode": "· Invalid code — try again",
-    "submit": "Get access →",
+    "invalidCode": "Invalid code. Try again",
+    "submit": "Get access",
     "testCodesLabel": "Test codes: "
   },
   "tabs": {
@@ -36,11 +41,12 @@
     "oauth": "Google / Apple"
   },
   "magic": {
-    "intro": "Enter email + invite code. We'll send a one-time login link.",
+    "intro": "Enter your email. New accounts also need an invite code.",
     "emailLabel": "Email",
     "emailPlaceholder": "you@email.com",
-    "inviteCodeLabel": "Invite code",
-    "submit": "Send login link →"
+    "inviteCodeLabel": "Invite code (new accounts)",
+    "invitePlaceholder": "Optional if you already have an account",
+    "submit": "Send login link"
   },
   "password": {
     "introSignup": "Create an account with email + password. Invite code required.",
@@ -50,8 +56,8 @@
     "passwordLabel": "Password",
     "passwordPlaceholder": "At least 8 characters",
     "inviteCodeLabel": "Invite code",
-    "submitSignup": "Create account →",
-    "submitSignin": "Sign in →",
+    "submitSignup": "Create account",
+    "submitSignin": "Sign in",
     "hasAccount": "Already have an account?",
     "signinLink": "Sign in",
     "newHere": "New here?",
@@ -69,5 +75,9 @@
     "fallbackEmail": "your email",
     "bodyTail": ". Open the link on the same device and you're in.",
     "expiry": "The link works for 1 hour."
+  },
+  "adult": {
+    "label": "I am 18 or older",
+    "labelNew": "I am 18 or older (required for new accounts)"
   }
 }

@@ -140,7 +140,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           <span aria-hidden>·</span>
           <span className="numeric">{exercise.slug}</span>
         </div>
-        <h1 className="font-display text-[clamp(2rem,5vw,3rem)] leading-[0.95]">
+        <h1 className="font-display text-title md:text-[2.75rem]">
           {name || t("untitled")}.
         </h1>
       </header>
@@ -221,9 +221,9 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
                   key={v}
                   type="button"
                   onClick={() => setView(v)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-mono uppercase tracking-[0.14em] ${
-                    view === v ? "bg-bg-3 text-fg" : "text-fg-dim"
-                  }`}
+                  className={`px-3 py-1.5 rounded-md text-xs ${
+ view === v ? "bg-bg-3 text-fg" : "text-fg-dim"
+ }`}
                 >
                   {v === "front" ? t("viewFront") : t("viewBack")}
                 </button>
@@ -434,7 +434,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           {saving ? t("saving") : t("save")}
         </button>
         {savedAt ? (
-          <span className="text-[11px] font-mono text-fg-faint">
+          <span className="text-micro text-fg-faint">
             {t("savedAt", { time: savedAt })}
           </span>
         ) : null}

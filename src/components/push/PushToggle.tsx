@@ -103,6 +103,9 @@ export default function PushToggle({
         p256dh: json.keys!.p256dh!,
         auth: json.keys!.auth!,
         userAgent: navigator.userAgent,
+        // This component is the web-push path; native shells register
+        // APNs/FCM tokens via their own bridge (APP_STORE_PLAN Fase 3).
+        platform: "web",
       });
       if (res.ok) setState("on");
       else {
@@ -168,7 +171,7 @@ export default function PushToggle({
           >
             {t("test")}
           </button>
-          <span className="text-[10px] font-mono text-fg-faint">
+          <span className="text-micro text-fg-faint">
             {testSentAt
               ? t("testSent", { seconds: secondsAgo(testSentAt) })
               : t("dailyReminder")}
@@ -190,7 +193,7 @@ export default function PushToggle({
               : t("turnOn")}
           </button>
           {noKey ? (
-            <span className="text-[10px] font-mono text-fg-faint">
+            <span className="text-micro text-fg-faint">
               {t("vapidNotConfigured")}
             </span>
           ) : null}

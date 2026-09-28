@@ -1,36 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Archivo_Black, JetBrains_Mono } from "next/font/google";
+import { Schibsted_Grotesk } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 import "./globals.css";
-import SmoothScroll from "@/components/SmoothScroll";
-import RevealObserver from "@/components/RevealObserver";
 import CookieBanner from "@/components/marketing/CookieBanner";
-import CustomCursor from "@/components/CustomCursor";
+import SWRegister from "@/components/pwa/SWRegister";
+import NativeChrome from "@/components/native/NativeChrome";
 import { COMPANY } from "@/lib/company";
 
-const sans = Inter({
+// Nord (spec 2026-09-26 §4) has ONE typographic voice: Schibsted Grotesk in
+// 400 and 500. Display, body and numerals are the same family, so a single
+// next/font call feeds all three token stacks (see @theme inline in
+// globals.css) and no surface can reach for a second font.
+const sans = Schibsted_Grotesk({
   variable: "--font-sans-stack",
   subsets: ["latin"],
   display: "swap",
-});
-
-const display = Archivo_Black({
-  variable: "--font-display-stack",
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-});
-
-const mono = JetBrains_Mono({
-  variable: "--font-mono-stack",
-  subsets: ["latin"],
-  display: "swap",
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
   title: COMPANY.product,
-  description: `${COMPANY.product} — ${COMPANY.tagline} Made in Denmark.`,
+  description: `${COMPANY.product}: ${COMPANY.tagline} Made in Denmark.`,
   metadataBase: new URL(COMPANY.appUrl),
   openGraph: {
     title: COMPANY.product,
@@ -38,13 +29,22 @@ export const metadata: Metadata = {
     type: "website",
   },
   robots: { index: false, follow: false },
+  icons: {
+    icon: [{ url: "/icons/favicon-32.png", sizes: "32x32", type: "image/png" }],
+    apple: "/icons/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: COMPANY.name,
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0A0A0B",
+  themeColor: "#FFFFFF",
+  colorScheme: "light",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
   viewportFit: "cover",
 };
 
@@ -56,14 +56,13 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${sans.variable} ${display.variable} ${mono.variable} h-full antialiased`}
+      className={`${sans.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col grain vignette">
+      <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
-          <SmoothScroll />
-          <RevealObserver />
-          <CustomCursor />
+          <SWRegister />
+          <NativeChrome />
           {children}
           <CookieBanner />
         </NextIntlClientProvider>

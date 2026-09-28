@@ -11,7 +11,7 @@ export default async function CoachRedemptionsPage() {
     <Container className="py-6 lg:py-12 space-y-6">
       <header className="pt-2">
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-[clamp(2rem,6vw,3rem)] leading-[0.95]">
+        <h1 className="font-display text-title md:text-[2.75rem]">
           {t("title")}
         </h1>
         <p className="mt-2 text-fg-dim text-sm">
@@ -20,7 +20,7 @@ export default async function CoachRedemptionsPage() {
       </header>
 
       {items.length === 0 ? (
-        <div className="surface-2 rounded-2xl p-8 text-center">
+        <div className="surface-2 rounded-2xl p-8">
           <div className="font-display text-2xl mb-2">{t("emptyTitle")}</div>
           <p className="text-fg-dim text-sm">
             {t("emptyBody")}
@@ -34,7 +34,7 @@ export default async function CoachRedemptionsPage() {
         </ul>
       )}
 
-      <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-fg-faint">
+      <p className="text-micro text-fg-faint">
         {t("statusFlow")}
       </p>
     </Container>

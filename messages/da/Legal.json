@@ -3,8 +3,8 @@
     "metaTitle": "Privacy Policy — {product}",
     "eyebrow": "Privacy Policy",
     "title": "Hvad vi gemmer.",
-    "introUpdated": "Senest opdateret: maj 2026 · Dataansvarlig: ",
-    "introCvrFallback": "CVR — kontakt",
+    "introUpdated": "Senest opdateret: september 2026 · Dataansvarlig: ",
+    "introCvrFallback": "CVR er endnu ikke offentliggjort — selskabet er under registrering. Kontakt",
     "s01": {
       "eyebrow": "01",
       "title": "Hvad vi indsamler",
@@ -24,7 +24,35 @@
         },
         "wearable": {
           "k": "Wearable-data",
-          "v": "Hvis du forbinder en wearable (fx Whoop): recovery, søvn, strain/workout, cyklus og basale profildata — kun efter dit samtykke. Se sektion 08."
+          "v": "Hvis du forbinder en wearable (fx Whoop): recovery, søvn, strain/workout, cyklus og basale profildata — kun efter dit samtykke. Se sektion 09."
+        },
+        "journal": {
+          "k": "Journal",
+          "v": "Den tekst du skriver i din journal (søjle 5). Munk, coaches og andre medlemmer kan ikke læse den. Et uddrag kan sendes til Anthropic (Claude Haiku) for krise-tekstmoderering."
+        },
+        "mindCheck": {
+          "k": "Mind-check",
+          "v": "Dagligt signal: energi, stress, fokus, og en valgfri note. Noten kan indgå i den daglige mental-coach (Anthropic Claude Sonnet)."
+        },
+        "mentalCoach": {
+          "k": "Mental coach",
+          "v": "AI-genererede daglige refleksioner, session-gennemførsler, og dine mental-indstillinger. Output gemmes så du kan læse det igen."
+        },
+        "cirkler": {
+          "k": "Cirkler",
+          "v": "Opslag og reaktioner i mentale cirkler, hvis du deler. Kun synlige for cirkel-medlemmer."
+        },
+        "nutrition": {
+          "k": "Ernæring",
+          "v": "Ernæringsprofil, måltidsplaner, logs og skip-dage — sundhedsdata (art. 9)."
+        },
+        "messages": {
+          "k": "Beskeder",
+          "v": "1:1-tråde med coach (tekst og media-stier)."
+        },
+        "weight": {
+          "k": "Vægt",
+          "v": "Vægtlogs du selv indtaster."
         },
         "social": {
           "k": "Social",
@@ -37,6 +65,10 @@
         "technical": {
           "k": "Tekniske data",
           "v": "Session-cookie, IP-adresse til log-formål, request-tidspunkter."
+        },
+        "askHq": {
+          "k": "Spørg HQ (forsiden)",
+          "v": "Bruger du chatten på forsiden, sendes dine spørgsmål og samtalen til vores AI-databehandler (se sektion 03) for at blive besvaret. Vi gemmer ikke samtalen; den findes kun i din browser, til du lukker siden. Din IP-adresse bruges kortvarigt i serverens hukommelse til at begrænse misbrug og gemmes ikke. Skriv ikke helbreds- eller personoplysninger i chatten. Den gælder også for besøgende uden konto."
         }
       }
     },
@@ -47,7 +79,7 @@
       "items": {
         "deliver": {
           "k": "Levere tjenesten",
-          "v": "Personligt program, form-check feedback, fællesskabs-feed, Reps-loyalty."
+          "v": "Personligt program, form-check, ernæring, HRV, mind-check, journal-moderering, daglig mental coach, fællesskabs-feed, Reps-loyalty."
         },
         "notify": {
           "k": "Sende notifikationer",
@@ -60,6 +92,10 @@
         "legal": {
           "k": "Opfylde lovkrav",
           "v": "Bogføring, GDPR-rettigheder, sikkerhed."
+        },
+        "askHq": {
+          "k": "Besvare spørgsmål på forsiden",
+          "v": "Svar i \"Spørg HQ\"-chatten til besøgende, der overvejer MakeIt, og beskyttelse af chatten mod misbrug (legitim interesse)."
         }
       }
     },
@@ -82,7 +118,7 @@
         },
         "anthropic": {
           "k": "Anthropic (Claude)",
-          "v": "AI-program-generation og form-check-vurdering. Anthropic gemmer ikke prompts/output udover request-livscyklus i deres business-tier."
+          "v": "AI-program-generation, form-check-vurdering, krise-tekstmoderering af journaluddrag (Haiku), den daglige mental-coach ud fra mind-check inkl. valgfri note (Sonnet) og svarene i \"Spørg HQ\"-chatten på forsiden (Haiku). Anthropic er databehandler. I deres business-tier gemmes prompts/output ikke udover request-livscyklussen."
         }
       },
       "outro": "Vi sælger aldrig dine data. Vi deler dem ikke til markedsføring uden eksplicit samtykke."
@@ -93,7 +129,7 @@
       "items": {
         "access": {
           "k": "Indsigt + portabilitet",
-          "v": "Eksportér alle dine data som JSON fra Indstillinger → Data."
+          "v": "Eksportér dine egne medlemsrækker som JSON fra Indstillinger → Data (GDPR art. 20)."
         },
         "rectify": {
           "k": "Berigtigelse",
@@ -131,6 +167,55 @@
       "eyebrow": "07",
       "title": "Ændringer",
       "body": "Vi opdaterer denne politik når funktionalitet ændrer sig. Materielle ændringer varsles på email til registrerede medlemmer mindst 14 dage før de træder i kraft."
+    },
+    "s08": {
+      "eyebrow": "08",
+      "title": "Særlige kategorier (GDPR art. 9)",
+      "intro": "Journal, mind-check, mental coach, cirkler, HRV/biometri og ernæring er sundhedsdata. Vi behandler dem kun når du bruger de moduler.",
+      "items": {
+        "category": {
+          "k": "Kategori",
+          "v": "Helbredsoplysninger (art. 9) — tekst om mentalt helbred, biometriske HRV-målinger, ernærings- og vægtdata."
+        },
+        "basis": {
+          "k": "Retsgrundlag",
+          "v": "Udtrykkeligt samtykke (art. 9, stk. 2, litra a): Mind-onboarding-disclaimeret, og for wearables OAuth hos udbyderen. Der er ikke en separat samtykke-checkbox pr. datakategori i denne version."
+        },
+        "stop": {
+          "k": "Stop",
+          "v": "Stop behandlingen ved at holde op med at bruge modulet og slette din konto. Wearable-forbindelse kan afbrydes under Indstillinger (se sektion 09)."
+        }
+      }
+    },
+    "s09": {
+      "eyebrow": "09",
+      "title": "Wearable-integrationer",
+      "intro": "{product} kan forbindes med din wearable, så din træning kan tilpasses din restitution. Integrationen er frivillig og sker først efter du udtrykkeligt giver samtykke i et OAuth-flow hos udbyderen.",
+      "whoopLead": "Whoop: Når du forbinder din Whoop-konto, henter vi via Whoops API følgende på dine vegne:",
+      "items": {
+        "recovery": {
+          "k": "Recovery",
+          "v": "Daglig recovery-score, hvilepuls, HRV."
+        },
+        "sleep": {
+          "k": "Søvn",
+          "v": "Søvnvarighed, søvnfaser, søvn-performance."
+        },
+        "strain": {
+          "k": "Strain & workouts",
+          "v": "Dagligt strain samt registrerede træningspas."
+        },
+        "cycle": {
+          "k": "Cyklus",
+          "v": "Whoops fysiologiske døgncyklus-data."
+        },
+        "profile": {
+          "k": "Profil",
+          "v": "Navn og basale profildata fra din Whoop-konto."
+        }
+      },
+      "use": "Disse data bruges til at personalisere dit program og din form-feedback inde i {product}. De gemmes i EU (Supabase, Frankfurt) og sælges aldrig.",
+      "disconnect": "Du kan til enhver tid afbryde forbindelsen under Indstillinger. Når du gør det, sættes forbindelsen til revoked, og vores adgangstoken hos Whoop bruges ikke mere. Allerede hentede aflæsninger og forbindelses-metadata slettes ikke automatisk — de gemmes indtil du sletter din {product}-konto. Der kører ikke et 30-dages slettejob ved afbrydelse. Du kan også tilbagekalde adgangen direkte i din Whoop-konto."
     }
   },
   "terms": {
@@ -143,11 +228,16 @@
       "title": "Tjenesten",
       "bodyBefore": "{product} er en lukket coaching-platform leveret af {entity}",
       "cvr": " (CVR {cvr})",
-      "cvrFallback": " (CVR — kontakt)",
+      "cvrFallback": " (CVR er endnu ikke offentliggjort — selskabet er under registrering)",
       "bodyAfter": ". Vi giver adgang til AI-genererede styrketrænings-programmer, video-baseret form-feedback, et community af crew-medlemmer, og et Reps-loyalty program. Adgang kræver invite-kode og aktivt medlemskab."
     },
-    "s02": {
+    "age": {
       "eyebrow": "02",
+      "title": "Alder",
+      "body": "Du skal være fyldt 18 år for at oprette en konto og bruge {product}. Ved oprettelse bekræfter du, at du er fyldt 18, og vi gemmer tidspunktet for din bekræftelse. Tjenesten behandler oplysninger om træning, søvn, restitution og mental sundhed og er ikke tilpasset børn og unge. Får vi at vide, at en konto tilhører en person under 18, lukker vi kontoen og sletter oplysningerne som beskrevet i privatlivspolitikken."
+    },
+    "s02": {
+      "eyebrow": "03",
       "title": "Medlemskab og betaling",
       "items": {
         "billed": {
@@ -169,14 +259,14 @@
       }
     },
     "s03": {
-      "eyebrow": "03",
+      "eyebrow": "04",
       "title": "Sundheds-disclaimer",
       "p1Emphasis": "Du træner på eget ansvar.",
       "p1": " Vores coaching og AI-feedback erstatter ikke medicinsk eller fysioterapeutisk rådgivning. Du bør konsultere en læge før start af et nyt træningsprogram, særligt hvis du har eksisterende skader, hjertesygdomme, eller andre helbredsmæssige forhold.",
       "p2": "AI form-checks er en teknisk vurdering, ikke en endelig kvalitetssikring. Mikael Munk gennemgår personligt inden for 24 timer, men ansvaret for at løfte sikkert ligger hos dig."
     },
     "s04": {
-      "eyebrow": "04",
+      "eyebrow": "05",
       "title": "Acceptabel brug",
       "items": {
         "personal": {
@@ -198,18 +288,18 @@
       }
     },
     "s05": {
-      "eyebrow": "05",
+      "eyebrow": "06",
       "title": "Reps og indløsninger",
       "p1": "Reps har ingen kontant-værdi og kan ikke konverteres til penge eller overføres mellem medlemmer. De udløber ikke — men hvis du sletter din konto eller opsiger dit medlemskab, mister du adgangen til både balance og indløsninger.",
       "p2": "Limited drops sendes med GLS når Mikael har bekræftet — typisk inden for 5 hverdage. Custom-broderede produkter har 2-3 ugers leveringstid."
     },
     "s06": {
-      "eyebrow": "06",
+      "eyebrow": "07",
       "title": "Ansvarsbegrænsning",
       "body": "Vores samlede ansvar over for dig er begrænset til det beløb du har betalt i medlemsskab de seneste 12 måneder. Vi er ikke ansvarlige for indirekte tab, tabt fortjeneste eller skader som følge af tjenestens utilgængelighed. Dette begrænser ikke ansvar der ikke kan fraskrives efter dansk lov."
     },
     "s07": {
-      "eyebrow": "07",
+      "eyebrow": "08",
       "title": "Lovvalg + tvister",
       "body": "Disse vilkår er underlagt dansk ret. Tvister der ikke kan løses i mindelighed, afgøres ved Københavns Byret som første instans."
     }

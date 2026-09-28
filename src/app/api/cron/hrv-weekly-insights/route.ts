@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { assertCronAuth } from "@/lib/cron/auth";
 import { createServiceClient } from "@/lib/supabase/service";
 import {
   weekStartFor,
@@ -34,11 +35,8 @@ const MIN_INSIGHT_DAYS = 14;
  * processed in its own try/catch so one failure cannot abort the batch.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  // --- Step 1: verify the Vercel Cron bearer secret. ---
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse("unauthorized", { status: 401 });
-  }
+  const unauthorized = assertCronAuth(request);
+  if (unauthorized) return unauthorized;
 
   // --- Step 2: service-role client (RLS bypass for background work). ---
   const supabase = createServiceClient();

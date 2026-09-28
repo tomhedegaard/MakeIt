@@ -141,7 +141,7 @@ export function buildMorningHeadline(
   }
   if (escalations > 0) {
     parts.push(
-      `${escalations} ${escalations === 1 ? "eskalering" : "eskaleringer"} fra motoren`
+      `${escalations} ${escalations === 1 ? "eskalering" : "eskaleringer"} fra HQ`
     );
   }
   return `Kræver dig nu: ${parts.join(" · ")}.`;
