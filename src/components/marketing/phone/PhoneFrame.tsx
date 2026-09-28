@@ -19,6 +19,11 @@ const TABS: readonly PhoneTab[] = ["today", "train", "food", "mind", "crew"];
  * passes `interactive`: the frame becomes a labelled group and the
  * screen hides its own static parts, so the control stays reachable.
  *
+ * The device is hardware, not interface: the frame, screen, island
+ * and home bar keep a real phone's rounded shapes, while everything
+ * drawn on the screen follows Nord's radius 0. The corner ratios match
+ * EngineDemo and the MotorStoryRig backplate (16 % / 13 % of width).
+ *
  * `dark` wraps the screen in a plain `data-theme="nat"` block (no
  * `.theme-root`, spec §2), so one screen can be dark on a Kalk page.
  *
@@ -52,7 +57,7 @@ export default function PhoneFrame({
     <div
       role={interactive || scroll ? "group" : "img"}
       aria-label={label}
-      className="relative flex h-full flex-col overflow-hidden bg-bg text-[11px] leading-[1.4] text-fg"
+      className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--pw)*0.13)] bg-bg text-[11px] leading-[1.4] text-fg"
     >
       <PhoneStatusBar />
       {scroll ? (
@@ -85,7 +90,7 @@ export default function PhoneFrame({
     <div
       style={{ "--pw": `${width}px` } as CSSProperties}
       className={cn(
-        "relative aspect-[9/19.5] w-[var(--pw)] flex-none bg-fg p-[calc(var(--pw)*0.032)]",
+        "relative aspect-[9/19.5] w-[var(--pw)] flex-none rounded-[calc(var(--pw)*0.16)] bg-fg p-[calc(var(--pw)*0.032)]",
         className,
       )}
     >
@@ -99,7 +104,7 @@ export default function PhoneFrame({
       {/* Island sits on the bezel, outside any Nat block, so it stays ink. */}
       <i
         aria-hidden="true"
-        className="absolute left-1/2 top-[calc(var(--pw)*0.032_+_9px)] z-10 h-6 w-[31%] -translate-x-1/2 bg-fg"
+        className="absolute left-1/2 top-[calc(var(--pw)*0.032_+_9px)] z-10 h-6 w-[31%] -translate-x-1/2 rounded-full bg-fg"
       />
     </div>
   );
@@ -172,7 +177,7 @@ export function PhoneTabBar({
           </span>
         );
       })}
-      <i className="absolute bottom-1.5 left-1/2 h-1 w-[34%] -translate-x-1/2 bg-fg opacity-85" />
+      <i className="absolute bottom-1.5 left-1/2 h-1 w-[34%] -translate-x-1/2 rounded-full bg-fg opacity-85" />
     </div>
   );
 }
