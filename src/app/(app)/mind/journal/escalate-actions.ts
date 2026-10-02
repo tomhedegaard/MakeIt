@@ -7,6 +7,7 @@ import {
   ESCALATION_SUMMARY_MAX,
   ESCALATION_SUMMARY_MIN,
 } from "@/lib/mind/escalate";
+import { isYouthAccount } from "@/lib/youth/account";
 
 const Schema = z.object({
   summary: z.string().min(ESCALATION_SUMMARY_MIN).max(ESCALATION_SUMMARY_MAX),
@@ -26,6 +27,8 @@ export async function escalateMentalSafetyAction(
 > {
   const member = await getSession();
   if (!member) return { error: "not_authed" };
+  // MakeIt Ung: no coach contact with minors (Toms beslutning 4).
+  if (await isYouthAccount(member.id)) return { error: "not_available" };
 
   const parsed = Schema.safeParse({ summary: formData.get("summary") });
   if (!parsed.success) return { error: "invalid_input" };

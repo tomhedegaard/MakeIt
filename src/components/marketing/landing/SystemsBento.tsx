@@ -132,9 +132,11 @@ export default function SystemsBento() {
               className="font-display absolute bottom-[-0.12em] right-[clamp(16px,2vw,30px)] text-[160px] leading-[0.8]! tracking-[-0.03em]! sm:text-[200px] md:text-[clamp(200px,24vw,360px)]"
             >
               {t("body.stat")}
+              {/* tracking-normal: the parent's -0.03em is inherited as an absolute
+                  length (about -7px at 240px), which stacks 12px letters. */}
               <small
                 aria-hidden="true"
-                className="absolute right-[0.1em] top-[-2.2em] whitespace-nowrap text-[12px] font-medium"
+                className="absolute right-[0.1em] top-[-2.2em] whitespace-nowrap text-[12px] font-medium tracking-normal"
               >
                 {t("body.statLabel")}
               </small>

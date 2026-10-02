@@ -1409,6 +1409,54 @@ export type Database = {
           },
         ]
       }
+      guardian_notices: {
+        Row: {
+          created_at: string
+          detail: Json
+          email_error: string | null
+          emailed_at: string | null
+          guardian_member_id: string
+          guardianship_id: string
+          id: string
+          level: string
+          observed_from: string | null
+          observed_to: string | null
+          signal: string
+          youth_member_id: string
+          youth_seen_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          detail?: Json
+          email_error?: string | null
+          emailed_at?: string | null
+          guardian_member_id: string
+          guardianship_id: string
+          id?: string
+          level: string
+          observed_from?: string | null
+          observed_to?: string | null
+          signal: string
+          youth_member_id: string
+          youth_seen_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          detail?: Json
+          email_error?: string | null
+          emailed_at?: string | null
+          guardian_member_id?: string
+          guardianship_id?: string
+          id?: string
+          level?: string
+          observed_from?: string | null
+          observed_to?: string | null
+          signal?: string
+          youth_member_id?: string
+          youth_seen_at?: string | null
+        }
+        Relationships: []
+      }
       guardianships: {
         Row: {
           created_at: string

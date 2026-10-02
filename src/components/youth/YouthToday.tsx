@@ -8,19 +8,28 @@ import { ICON } from "@/components/ui/icon";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { getActiveProgram } from "@/lib/data/coaching";
 import { getTodayCard } from "@/lib/data/dashboard";
+import { unseenNoticesForYouth } from "@/lib/youth/notices";
+import YouthNotices from "./YouthNotices";
 
 /**
  * I dag for MakeIt Ung (spec afsnit 3). Today's session, food around
  * training without numbers, and Mind when consented. No kcal, no body
  * weight, no HRV numbers, no streak pressure. Help lines always shown.
+ * A notice sent to the guardian is shown first, until it is seen.
  */
 export default async function YouthToday({ memberId, name, mind }: { memberId: string; name: string; mind: boolean }) {
   const t = await getTranslations("Youth.today");
-  const [today, active] = await Promise.all([getTodayCard(memberId), getActiveProgram(memberId)]);
+  const [today, active, notices] = await Promise.all([
+    getTodayCard(memberId),
+    getActiveProgram(memberId),
+    unseenNoticesForYouth(memberId),
+  ]);
   const hasProgram = Boolean(active);
   return (
     <Container className="py-6 lg:py-12 space-y-6" data-youth-today="">
       <PageTitle kicker={t("eyebrow")} title={t("title", { name })} />
+
+      <YouthNotices notices={notices} name={name} />
 
       {today ? (
         <Card variant="primary" domain="body" as="section" className="space-y-3">

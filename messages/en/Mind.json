@@ -62,7 +62,9 @@
     "errorTooLong": "The message is too long.",
     "errorRls": "The message could not be saved. Call Livslinien if you need help now.",
     "errorWrite": "The message could not be saved. Try again, or call Livslinien.",
-    "errorGeneric": "The message could not be saved. Try again, or call Livslinien."
+    "errorGeneric": "The message could not be saved. Try again, or call Livslinien.",
+    "youthNotified": "We have also sent your parent a short message that you are having a hard time. Your parent does not see what you wrote.",
+    "youthPrivacy": "Your journal is saved. Only you can read it."
   },
   "journal": {
     "eyebrow": "Mind · Journal",

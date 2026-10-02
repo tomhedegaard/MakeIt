@@ -15,7 +15,7 @@
     "consentRecovery": "Sleep and recovery (from a watch or ring, if your teen connects one)",
     "consentMind": "Mind: check-in and a private journal",
     "alertTitle": "When you are told",
-    "alertBody": "You are told automatically if the app sees signs of a strained relationship with training, e.g. training almost every day for two weeks, or very little sleep alongside hard training. If there are signs of self-harm, you are told immediately. Your teen sees every message you get. You never see the journal, messages or check-in answers.",
+    "alertBody": "You are told automatically if the app sees signs that training is taking up too much room: training on 12 or more of 14 days, or several sessions on the same day again and again for at least a week. At signs of self-harm you are told at once. The young person sees every message you get. You never see their journal, messages or check-in answers.",
     "declaration": "I am 18 or older and hold parental responsibility for this teen",
     "send": "Send invitation",
     "statusInvited": "Invitation sent",
@@ -57,7 +57,7 @@
     "outBody": "There is no calorie counter, no weight and no goals for your body. That is on purpose.",
     "alertTitle": "When your parent is told",
     "alertAcute": "If you write something suggesting you want to hurt yourself, your parent is told immediately, and you see Børnetelefonen, headspace and 112.",
-    "alertConcern": "If for at least 7 days the app sees signs that training is taking up too much, e.g. training almost every day or hard training with very little sleep, your parent gets one neutral message about what we saw.",
+    "alertConcern": "If for at least 7 days the app sees signs that training is taking up too much room, meaning training on 12 or more of 14 days, or several sessions on the same day again and again, your parent gets one neutral message about what we saw.",
     "alertSeen": "You see every message your parent gets. Your parent never sees your journal, your messages or your answers.",
     "consentTitle": "Your consent",
     "consentTraining": "Training is always included.",
@@ -132,5 +132,27 @@
       "examples": "Potatoes, pasta or rice · meat, fish, eggs or beans · vegetables or fruit."
     },
     "footer": "If you're unsure about food or energy, talk to your parents, your school nurse or your doctor."
+  },
+  "notices": {
+    "crisis_language": "{name} has written something in their MakeIt journal that may be about self-harm or about not wanting to be here. We do not show what it says.",
+    "daily_training": "{name} has trained on {trainedDays} of the last {windowDays} days.",
+    "double_sessions": "{name} has trained two or more times on the same day on {doubleDays} of the last {windowDays} days.",
+    "acuteNext": "Talk with {name} today, calmly and without pressure. If there is immediate danger, call 112. Børnetelefonen (116 111), headspace.dk and your own doctor can also help. {name} has been shown the same numbers in the app.",
+    "concernNext": "This is not a diagnosis, only what the app has seen. Have a calm talk about how much room training takes up. If you are worried, talk to your own doctor or to LMS, the Danish association against eating disorders and self-harm (lms.dk).",
+    "seenByYouth": "{name} sees the same message in the app.",
+    "subjectAcute": "MakeIt Ung: important message about {name}",
+    "subjectConcern": "MakeIt Ung: a message about {name}",
+    "eyebrowAcute": "Important message",
+    "eyebrowConcern": "Message",
+    "why": "You receive this because you gave consent to MakeIt Ung for {name}. You can end it at any time at {url}.",
+    "youthEyebrow": "Message to your parent",
+    "youthTitle": "We have sent your parent this message",
+    "youthBody": "You have not done anything wrong. We tell you so nothing happens behind your back.",
+    "youthHelp": "Want to talk to someone? Børnetelefonen 116 111 (day and night) · headspace.dk · emergency 112",
+    "youthAck": "Got it",
+    "listTitle": "Messages",
+    "listEmpty": "No messages. You get an e-mail if the app sees one of the signs.",
+    "seen": "{name} has seen it",
+    "notSeen": "{name} has not seen it yet"
   }
 }

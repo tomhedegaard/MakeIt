@@ -231,6 +231,24 @@ export async function fetchMemberExport(
       "member_action_logs",
       supabase.from("member_action_logs").select("*").eq("member_id", userId),
     ),
+    // MakeIt Ung: both the guardian and the young member get the rows
+    // they are party to. The invitation token hash is never exported.
+    settle(
+      "guardianships",
+      supabase
+        .from("guardianships")
+        .select(
+          "id, guardian_member_id, youth_member_id, youth_first_name, youth_email, youth_birth_date, status, guardian_consent_recovery, guardian_consent_mind, youth_consent_recovery, youth_consent_mind, guardian_declared_at, youth_consented_at, withdrawn_at, withdrawn_by, invite_expires_at, created_at, updated_at",
+        )
+        .or(`guardian_member_id.eq.${userId},youth_member_id.eq.${userId}`),
+    ),
+    settle(
+      "guardian_notices",
+      supabase
+        .from("guardian_notices")
+        .select("*")
+        .or(`guardian_member_id.eq.${userId},youth_member_id.eq.${userId}`),
+    ),
   ];
 
   const settled = await Promise.all(queries);

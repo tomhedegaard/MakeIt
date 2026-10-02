@@ -17,18 +17,25 @@ import { escalateMentalSafetyAction } from "@/app/(app)/mind/journal/escalate-ac
 export default function MentalResourcesModal({
   open,
   onClose,
+  guardianNotified = false,
 }: {
   open: boolean;
   onClose: () => void;
+  /** MakeIt Ung: the guardian has been told (spec afsnit 5). */
+  guardianNotified?: boolean;
 }) {
   // Unmount the dialog when closed so the next open starts on
   // "resources" without a setState-in-effect reset.
   if (!open) return null;
-  return <MentalResourcesDialog onClose={onClose} />;
+  return <MentalResourcesDialog onClose={onClose} guardianNotified={guardianNotified} />;
 }
 
-function MentalResourcesDialog({ onClose }: { onClose: () => void }) {
+function MentalResourcesDialog({ onClose, guardianNotified }: { onClose: () => void; guardianNotified: boolean }) {
   const t = useTranslations("Mind.safety");
+  // MakeIt Ung has no coach contact with minors (Toms beslutning 4), so
+  // "Skriv til Munk" is not offered; the young member is told plainly
+  // when their guardian has been sent a notice.
+  const youth = useYouth();
   const [mode, setMode] = useState<"resources" | "escalate" | "sent">("resources");
   const [persisted, setPersisted] = useState(false);
   const [summary, setSummary] = useState("");
@@ -90,16 +97,22 @@ function MentalResourcesDialog({ onClose }: { onClose: () => void }) {
 
             <CrisisLines t={t} />
 
-            <p className="text-fg-dim text-sm">{t("privacy")}</p>
+            {youth && guardianNotified ? (
+              <p className="text-fg leading-relaxed" data-guardian-notified>{t("youthNotified")}</p>
+            ) : null}
+
+            <p className="text-fg-dim text-sm">{youth ? t("youthPrivacy") : t("privacy")}</p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setMode("escalate")}
-                className="inline-flex items-center justify-center border hairline px-5 py-2.5 text-sm font-medium hover:bg-bg/30 transition-colors"
-              >
-                {t("tellMunk")}
-              </button>
+              {youth ? null : (
+                <button
+                  type="button"
+                  onClick={() => setMode("escalate")}
+                  className="inline-flex items-center justify-center border hairline px-5 py-2.5 text-sm font-medium hover:bg-bg/30 transition-colors"
+                >
+                  {t("tellMunk")}
+                </button>
+              )}
               <button
                 type="button"
                 onClick={close}

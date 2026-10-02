@@ -1,11 +1,14 @@
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { getSession } from "@/lib/auth";
 import { guardianshipsFor, youthPilotAllowed, type Guardianship } from "@/lib/youth/guardianship";
+import { intlLocaleTag } from "@/i18n/config";
+import { noticesForGuardian, type GuardianNotice } from "@/lib/youth/notices";
 import { effectiveConsent } from "@/lib/youth/rules";
+import { noticeValues, type NoticeSignal, type SignalDetail } from "@/lib/youth/signals";
 import { endGuardianshipAction, inviteYouthAction, resendInvitationAction, updateConsentAction } from "./actions";
 
 export async function generateMetadata() {
@@ -15,7 +18,8 @@ export async function generateMetadata() {
 
 /**
  * MakeIt Ung for the guardian (spec afsnit 2): invite a 15–17-year-old,
- * give consent per area, see the status, change consent, end it.
+ * give consent per area, see the status, change consent, end it, and
+ * read every notice they have been sent (del 3, afsnit 5).
  * Closed pilot: only YOUTH_PILOT_GUARDIANS and admins reach this page.
  */
 export default async function YouthGuardianPage({
@@ -27,7 +31,12 @@ export default async function YouthGuardianPage({
   if (!youthPilotAllowed(member)) redirect("/dashboard");
   const t = await getTranslations("Youth.guardian");
   const { sent, saved, ended, err } = await searchParams;
-  const rows = await guardianshipsFor(member.id);
+  const [rows, notices, locale, tn] = await Promise.all([
+    guardianshipsFor(member.id),
+    noticesForGuardian(member.id),
+    getLocale(),
+    getTranslations("Youth.notices"),
+  ]);
 
   const notice = err ? t(`errors.${err}` as never) : sent ? t("sent") : saved ? t("saved") : ended ? t("ended") : null;
 
@@ -42,7 +51,14 @@ export default async function YouthGuardianPage({
         ) : null}
 
         {rows.map((g) => (
-          <GuardianshipCard key={g.id} g={g} t={t} />
+          <GuardianshipCard
+            key={g.id}
+            g={g}
+            t={t}
+            notices={
+              <NoticeList notices={notices.filter((n) => n.guardianship_id === g.id)} name={g.youth_first_name} tn={tn} locale={locale} />
+            }
+          />
         ))}
 
         {rows.length === 0 ? (
@@ -100,7 +116,7 @@ function Check({ name, label, required, defaultChecked }: { name: string; label:
 
 type T = Awaited<ReturnType<typeof getTranslations<"Youth.guardian">>>;
 
-function GuardianshipCard({ g, t }: { g: Guardianship; t: T }) {
+function GuardianshipCard({ g, t, notices }: { g: Guardianship; t: T; notices: React.ReactNode }) {
   const active = g.status === "active";
   return (
     <section data-guardianship={g.status} className="border hairline bg-bg-2 p-5 space-y-5">
@@ -126,6 +142,8 @@ function GuardianshipCard({ g, t }: { g: Guardianship; t: T }) {
         <button type="submit" className="btn btn-sm">{t("saveConsent")}</button>
       </form>
 
+      {active ? notices : null}
+
       {!active ? (
         <form action={resendInvitationAction}>
           <input type="hidden" name="id" value={g.id} />
@@ -141,5 +159,31 @@ function GuardianshipCard({ g, t }: { g: Guardianship; t: T }) {
         <button type="submit" className="btn btn-sm">{active ? t("end") : t("withdraw")}</button>
       </form>
     </section>
+  );
+}
+
+type TN = Awaited<ReturnType<typeof getTranslations<"Youth.notices">>>;
+
+function NoticeList({ notices, name, tn, locale }: { notices: GuardianNotice[]; name: string; tn: TN; locale: string }) {
+  const date = new Intl.DateTimeFormat(intlLocaleTag(locale), { day: "numeric", month: "long", timeZone: "Europe/Copenhagen" });
+  return (
+    <div className="border-t hairline pt-4 space-y-3" data-guardian-notices="">
+      <p className="text-meta font-medium">{tn("listTitle")}</p>
+      {notices.length === 0 ? (
+        <p className="text-meta text-fg-dim">{tn("listEmpty")}</p>
+      ) : (
+        <ul className="divide-y divide-line">
+          {notices.map((n) => (
+            <li key={n.id} data-notice-level={n.level} className="py-3 space-y-1">
+              <p className="text-micro text-fg-dim">
+                {date.format(new Date(n.created_at))} · {n.level === "acute" ? tn("eyebrowAcute") : tn("eyebrowConcern")}
+              </p>
+              <p className="text-copy text-fg">{tn(n.signal as NoticeSignal, noticeValues(n.detail as SignalDetail, name))}</p>
+              <p className="text-micro text-fg-dim">{n.youth_seen_at ? tn("seen", { name }) : tn("notSeen", { name })}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

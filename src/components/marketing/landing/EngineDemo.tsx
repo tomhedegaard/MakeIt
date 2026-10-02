@@ -226,7 +226,7 @@ export default function EngineDemo() {
         {/* Øen ligger på kanten, som på PhoneFrame. Kun telefon-formen. */}
         <i
           aria-hidden="true"
-          className="absolute left-1/2 top-[calc(var(--pw)*0.032_+_9px)] z-10 hidden h-6 w-[31%] -translate-x-1/2 bg-fg lg:block"
+          className="absolute left-1/2 top-[calc(var(--pw)*0.032_+_9px)] z-10 hidden h-6 w-[31%] -translate-x-1/2 rounded-full bg-fg lg:block"
         />
       </div>
     </div>
