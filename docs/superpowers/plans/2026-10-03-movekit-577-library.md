@@ -425,6 +425,7 @@ describe("equipmentHint", () => {
     ["slider-leg-curl", "accessory"],
     ["towel-slide-leg-curl", "bodyweight"],
     ["backpack-row", "bodyweight"],
+    ["bodyweight-squat-to-stand", "bodyweight"],
     ["thoracic-extension-over-foam-roller", "bodyweight"],
   ])("%s -> %s", (slug, expected) => {
     expect(equipmentHint(slug)).toBe(expected);
@@ -529,6 +530,21 @@ describe("interleavedOrder", () => {
   it("does not depend on the order of the existing rows", () => {
     expect(interleavedOrder([...existing].reverse(), "band-pull-through")).toBe(1045);
   });
+
+  it("keeps the order of a slug that is already seeded", () => {
+    expect(interleavedOrder(existing, "band-row")).toBe(1050);
+  });
+
+  it("joins the slot of a predecessor that is itself interleaved (a third batch)", () => {
+    const withSecondBatch = [
+      ...existing,
+      { slug: "arnold-press", order: 995 },
+      { slug: "band-pull-through", order: 1045 },
+    ];
+    expect(interleavedOrder(withSecondBatch, "assault-bike")).toBe(995);
+    expect(interleavedOrder(withSecondBatch, "band-pullover")).toBe(1045);
+    expect(interleavedOrder(withSecondBatch, "band-shrug")).toBe(1055);
+  });
 });
 ```
 
@@ -584,7 +600,7 @@ const EQUIPMENT_RULES = [
   ],
   ["machine", token("machine|hammer-strength|selectorized|pendulum|lever|leg-press|pec-deck|captains-chair")],
   ["accessory", token("medicine-ball|wall-ball|stability-ball|plate|jump-rope|battle-ropes|slider|wrist-roller")],
-  ["bodyweight", token("towel|backpack|broomstick|foam-roller")],
+  ["bodyweight", token("bodyweight|towel|backpack|broomstick|foam-roller")],
 ];
 
 /**
@@ -658,17 +674,22 @@ export function parseSeedOrders(sql) {
 
 /**
  * display_order for a new slug so it sorts next to its alphabetical
- * neighbours among the existing library rows without renumbering them:
- * the value of the closest preceding existing slug plus 5, or 995 when
- * none precedes it. New rows that share a value are ordered by name in
- * the app (the list's secondary sort).
+ * neighbours among the existing library rows without renumbering them.
+ * The first import numbered its rows in steps of 10; a later row takes
+ * the slot 5 above the closest preceding slug, or 995 when none
+ * precedes it. Rows that share a slot are ordered by name in the app
+ * (the list's secondary sort), so a predecessor that already sits in
+ * such a slot is joined there rather than passed. A slug that is
+ * already seeded keeps its order.
  */
 export function interleavedOrder(existing, slug) {
   let best = null;
   for (const row of existing) {
+    if (row.slug === slug) return row.order;
     if (row.slug < slug && (best === null || row.slug > best.slug)) best = row;
   }
-  return best ? best.order + 5 : 995;
+  if (best === null) return 995;
+  return best.order % 10 === 0 ? best.order + 5 : best.order;
 }
 ```
 

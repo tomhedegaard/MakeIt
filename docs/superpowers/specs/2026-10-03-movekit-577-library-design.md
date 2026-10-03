@@ -286,7 +286,9 @@ taksonomi-valideringen. Rækkerne sorteres på slug, så outputtet er determinis
 eksisterende biblioteksøvelser uden at røre dem. De 188 har `1000 + 10 × j`, hvor `j` er
 deres plads i slug-orden. En ny øvelse får værdien for den nærmeste foregående gamle slug
 plus 5, eller 995 hvis ingen går forud. Flere nye øvelser mellem to gamle deler værdi og
-ordnes af listens sekundære sortering på navn (9.1). Sådan viser "Alle" kerneøvelserne
+ordnes af listens sekundære sortering på navn (9.1). Ved en senere pakke, hvor den foregående
+slug selv står på en sådan mellemplads, deler den nye øvelse pladsen i stedet for at lægge 5
+til igen. Sådan viser "Alle" kerneøvelserne
 først og derefter ét alfabetisk forløb, og en coach-rettet `display_order` overskrives ikke.
 
 ---
