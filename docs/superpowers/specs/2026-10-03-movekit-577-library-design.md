@@ -335,7 +335,9 @@ For hvert klip i batchen: landskabstrio via `ingest-exercise-demo.mjs` og portr�
 `{slug}.webm`, `.mp4`, `-poster.jpg`, `-portrait.webm`, `-portrait.mp4`,
 `-portrait-poster.jpg`.
 
-- Genoptageligt: et klip springes over når alle seks filer findes og er større end 0 bytes.
+- Genoptageligt: et klip er færdigt, når mærket `<dir>/.done/<slug>` findes. Mærket skrives
+  først, når begge trin lykkedes og alle seks filer har indhold, så en afbrudt encoding
+  aldrig tæller som færdig.
 - `--jobs` klip parallelt som børneprocesser.
 - Fejl samles pr. klip. Scriptet kører listen færdig, skriver fejlede klip til sidst og
   slutter med exit 1 hvis der var nogen.

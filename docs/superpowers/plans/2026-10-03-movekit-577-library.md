@@ -36,7 +36,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
 | vitest kører kun `src/**/*.test.ts(x)`; `allowJs` og `resolveJsonModule` er slået til | `vitest.config.ts`, `tsconfig.json` |
 | ESLint dækker `scripts/` og ignorerer `MoveKit/**` | `eslint.config.mjs` |
 | `ingest-exercise-demo.mjs <src> <slug>` skriver `{slug}.webm`, `.mp4`, `-poster.jpg` til `MI_DEMO_OUT` (default `public/exercise-demos/`) | `scripts/ingest-exercise-demo.mjs:44-48` |
-| `make-portrait-demo.mjs <src> <slug>` skriver portrættrioen til `MI_DEMO_OUT` (default `public/exercise-demos`) | `scripts/make-portrait-demo.mjs:163` |
+| `make-portrait-demo.mjs <src> <slug>` skriver portrættrioen til `MI_DEMO_OUT` (default `public/exercise-demos`) | `scripts/make-portrait-demo.mjs:164` |
 | `upload-demos-to-storage.mjs` uploader alle `.webm/.mp4/.jpg` i `MI_DEMO_OUT` med `upsert: true` | `scripts/upload-demos-to-storage.mjs` |
 | Bucketen `exercise-demos` har 5 MB-grænse og rummer 1182 objekter | migration 0033, Storage-listing |
 | `exercise-meta.test.ts` har en håndskrevet `CATALOGUE` og bruger `sled` som eksempel på en værdi uden label | `src/lib/data/exercise-meta.test.ts` |
@@ -1084,7 +1084,7 @@ const args = process.argv.slice(2);
 const flag = (name) => args.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const batch = flag("batch");
 const out = flag("out");
-const jobs = Math.max(1, Number(flag("jobs") ?? 3));
+const jobs = Math.max(1, Math.floor(Number(flag("jobs")) || 3));
 const only = flag("only");
 
 if (!batch || !out) {
@@ -1170,7 +1170,7 @@ console.log(`\n${done}/${slugs.length} klip færdige · ${files.length} filer ·
 if (tooBig.length) console.log(`Over 5 MB (afvises af bucketen):\n  ${tooBig.join("\n  ")}`);
 if (failures.length) {
   console.log(`\n${failures.length} fejlede:`);
-  for (const f of failures) console.log(`  · ${f.slug}: ${f.error.split("\n").at(-1)}`);
+  for (const f of failures) console.log(`  · ${f.slug}:\n      ${f.error.split("\n").slice(-4).join("\n      ")}`);
   process.exit(1);
 }
 ```
@@ -1189,8 +1189,8 @@ ls -la MoveKit/.staging/2026-10/ MoveKit/.staging/2026-10/.done/
 
 Expected: linjen `✓ arnold-press  (1/1, … min)`, derefter `1/1 klip færdige · 6 filer`. Mappen rummer `arnold-press.webm`, `arnold-press.mp4`, `arnold-press-poster.jpg`, `arnold-press-portrait.webm`, `arnold-press-portrait.mp4`, `arnold-press-portrait-poster.jpg`, alle større end 0 bytes, og `.done/arnold-press`.
 
-Run: `ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 MoveKit/.staging/2026-10/arnold-press.webm MoveKit/.staging/2026-10/arnold-press-portrait.webm`
-Expected: `720,398` (eller 720×400, lige tal) for landskab og `406,720` for portræt.
+Run: `for f in arnold-press.webm arnold-press-portrait.webm; do ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 MoveKit/.staging/2026-10/$f; done`
+Expected: `720,398` for landskab og `406,720` for portræt.
 
 Run igen: `node scripts/ingest-manifest.mjs --batch=2026-10 --out=MoveKit/.staging/2026-10 --only=arnold-press`
 Expected: `1 klip i batch 2026-10 · 1 færdige · 0 encodes med 3 job`. Genoptagelsen virker.
@@ -1331,12 +1331,14 @@ console.log(`Public URL-mønster: ${URL}/storage/v1/object/public/${BUCKET}/<slu
 Run: `npx eslint scripts/upload-demos-to-storage.mjs`
 Expected: ingen fejl.
 
-- [ ] **Step 2: Prøv tørkørslen mod bucketen**
+- [ ] **Step 2: [operatør] Prøv tørkørslen mod bucketen**
 
-Tørkørslen lister bucketen (kun læsning) og uploader intet. Staging-mappen rummer på dette tidspunkt mindst røgtestens seks filer.
+Tørkørslen lister produktions-bucketen med service-role-nøglen (kun læsning) og uploader intet. Staging-mappen rummer på dette tidspunkt mindst røgtestens seks filer.
 
 Run: `MI_DEMO_OUT=MoveKit/.staging/2026-10 node scripts/upload-demos-to-storage.mjs --dry`
-Expected: første linje slutter med `(1182 objekter i forvejen)`, `findes allerede: 0 (springes over)` og `uploades: <antal filer i staging> (DRY RUN)`. Antallet afhænger af, hvor langt encodingen er nået.
+Expected: første linje slutter med `(1182 objekter i forvejen)`, og `uploades: <tal> (DRY RUN)`. Begge tal afhænger af, hvor langt encodingen er nået: `findes allerede` er 0, 3, 6, 9 eller 12, efterhånden som de fire klip med portrætfiler i bucketen bliver encodet. Summen af de to tal er antallet af filer i staging.
+
+Den rigtige upload sker først i Task 11, når alle 369 klip er færdige; en upload midt i encodingen kunne sende en halvskrevet fil.
 
 - [ ] **Step 3: Commit**
 
