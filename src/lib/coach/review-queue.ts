@@ -4,6 +4,8 @@
  * calls; this only decides what the screen shows next.
  */
 
+import { orderByTaxonomy } from "@/lib/data/exercise-taxonomy";
+
 export type Decision = "approved" | "skipped";
 
 export type QueueState = {
@@ -59,4 +61,34 @@ export function tally(decisions: Record<string, Decision>) {
     else skipped += 1;
   }
   return { approved, skipped };
+}
+
+/**
+ * The category the review page filters on, straight from `?category=`.
+ * It is deliberately not checked against the categories that still have
+ * drafts: approving the last draft of a category re-renders the page,
+ * and if the filter then fell back to "all", the queue would remount on
+ * the full list and the coach's next keypress would approve an exercise
+ * from another category.
+ */
+export function pickReviewCategory(raw: string | string[] | undefined): string | undefined {
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  return value?.trim() || undefined;
+}
+
+/**
+ * Drafts per category, in taxonomy order, for the queue's filter. A
+ * draft without a category is only reachable under "all".
+ */
+export function draftCategoryCounts(
+  drafts: readonly { category: string | null }[],
+): { category: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const d of drafts) {
+    if (d.category) counts.set(d.category, (counts.get(d.category) ?? 0) + 1);
+  }
+  return orderByTaxonomy("categories", counts.keys()).map((category) => ({
+    category,
+    count: counts.get(category) ?? 0,
+  }));
 }

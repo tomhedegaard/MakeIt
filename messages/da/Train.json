@@ -5,7 +5,16 @@
     "title": "Øvelser.",
     "subtitle": "Hver øvelse: hvilke muskler den rammer, hvordan du udfører den rigtigt, og hvad du skal undgå. Vores form-coach på print.",
     "allFilter": "Alle",
-    "empty": "Ingen øvelser i biblioteket endnu."
+    "empty": "Ingen øvelser i biblioteket endnu.",
+    "searchLabel": "Søg øvelse",
+    "searchPlaceholder": "Navn, fx squat",
+    "equipmentLabel": "Redskab",
+    "allEquipment": "Alle redskaber",
+    "submit": "Søg",
+    "categoryNav": "Kategorier",
+    "count": "{count, plural, one {# øvelse} other {# øvelser}}",
+    "emptyFiltered": "Ingen øvelser matcher.",
+    "reset": "Nulstil filtre"
   },
   "categories": {
     "lower-body": "Ben",
@@ -14,7 +23,10 @@
     "full-body": "Helkrop",
     "shoulders": "Skuldre",
     "arms": "Arme",
-    "core": "Core"
+    "core": "Core",
+    "power": "Power",
+    "mobility": "Mobilitet",
+    "cardio": "Kondition"
   },
   "difficulty": {
     "beginner": "Begynder",
@@ -28,7 +40,12 @@
     "cable": "Kabel",
     "machine": "Maskine",
     "band": "Elastik",
-    "bodyweight": "Kropsvægt"
+    "bodyweight": "Kropsvægt",
+    "trap-bar": "Trap bar",
+    "sled": "Slæde",
+    "suspension": "Slynge",
+    "cardio-machine": "Kardiomaskine",
+    "accessory": "Småudstyr"
   },
   "detail": {
     "metaFallback": "Øvelse",

@@ -14,6 +14,10 @@
  *  3. If it is wider, keep the whole span, scale it down to 406 wide and
  *     stretch the plain backdrop rows above and below it to fill 9:16, so
  *     nothing is cut and no ghost of the figure shows in the fill.
+ *  4. If the subject reaches the bottom edge of the frame (a machine
+ *     base, a bench leg), the stretched bottom rows would drag it down
+ *     like stilts. Then the subject sits flush with the bottom and all
+ *     the fill goes on top, so the frame's own edge is the natural cut.
  *
  * Usage:
  *   node scripts/make-portrait-demo.mjs <src.mp4> <slug>       one clip
@@ -80,12 +84,36 @@ export function subjectSpan(frames, sw, sh, srcW) {
 }
 
 /**
+ * Whether the subject reaches the bottom edge of the frame. `span` is
+ * the result of subjectSpan. The backdrop's floor is smooth, so inside
+ * the span a column of the bottom rows that is clearly darker or
+ * lighter than the typical one holds part of the subject. Three such
+ * columns are needed, so a speck of noise does not count.
+ */
+export function reachesBottom(frames, sw, sh, span, srcW) {
+  const c0 = Math.max(0, Math.floor((span.x0 / srcW) * sw));
+  const c1 = Math.min(sw, Math.ceil((span.x1 / srcW) * sw));
+  const rows = Math.max(2, Math.round(sh / 90));
+  const means = [];
+  for (let x = c0; x < c1; x++) {
+    let sum = 0;
+    for (const f of frames) for (let y = sh - rows; y < sh; y++) sum += f[y * sw + x];
+    means.push(sum / (frames.length * rows));
+  }
+  if (means.length === 0) return false;
+  const median = [...means].sort((a, b) => a - b)[Math.floor(means.length / 2)];
+  return means.filter((m) => Math.abs(m - median) > 12).length >= 3;
+}
+
+/**
  * The ffmpeg filter that turns the source into a 406×720 portrait loop.
  * A wide subject keeps its full span, scaled to the portrait width, with
  * the rows just above and below it stretched into the empty space: the
  * backdrop is plain there, so the fill reads as more of the same wall.
+ * With `anchorBottom` the subject sits flush with the bottom of the frame
+ * and all the fill goes on top.
  */
-export function portraitFilter({ x0, x1 }, srcW, srcH) {
+export function portraitFilter({ x0, x1, anchorBottom = false }, srcW, srcH) {
   const cropW = Math.round(((OUT_W / OUT_H) * srcH) / 2) * 2; // 9:16 at source height
   const span = x1 - x0;
   const cx = (x0 + x1) / 2;
@@ -96,9 +124,19 @@ export function portraitFilter({ x0, x1 }, srcW, srcH) {
   const w = Math.min(srcW, Math.round(span / 2) * 2);
   const x = Math.round(Math.min(Math.max(cx - w / 2, 0), srcW - w));
   const fgH = Math.round((srcH * OUT_W) / w / 2) * 2;
+  const strip = Math.max(4, Math.round(srcH / 90));
+  if (anchorBottom) {
+    // The subject stands on the frame's bottom edge: no fill below it.
+    return {
+      complex:
+        `[0:v]fps=30,crop=${w}:${srcH}:${x}:0,split=2[a][b];` +
+        `[a]scale=${OUT_W}:${fgH}[fg];` +
+        `[b]crop=${w}:${strip}:0:0,scale=${OUT_W}:${OUT_H - fgH}[top];` +
+        `[top][fg]vstack=inputs=2`,
+    };
+  }
   const top = Math.floor((OUT_H - fgH) / 4) * 2;
   const bottom = OUT_H - fgH - top;
-  const strip = Math.max(4, Math.round(srcH / 90));
   return {
     complex:
       `[0:v]fps=30,crop=${w}:${srcH}:${x}:0,split=3[a][b][c];` +
@@ -118,7 +156,8 @@ function analyse(src, { w, h }) {
   const size = SAMPLE_W * sh;
   const frames = [];
   for (let i = 0; i + size <= r.stdout.length; i += size) frames.push(r.stdout.subarray(i, i + size));
-  return subjectSpan(frames, SAMPLE_W, sh, w);
+  const span = subjectSpan(frames, SAMPLE_W, sh, w);
+  return { ...span, anchorBottom: reachesBottom(frames, SAMPLE_W, sh, span, w) };
 }
 
 function ffmpeg(label, args) {
@@ -139,7 +178,7 @@ export async function makePortrait(src, slug, outDir) {
   ffmpeg("poster", ["-ss", "00:00:01", "-i", src, ...vf("yuvj420p"), "-frames:v", "1", "-q:v", "3", `${base}-poster.jpg`]);
 
   const kb = async (p) => Math.round((await stat(p)).size / 1024);
-  const mode = f.simple ? "crop" : `fit ${Math.round(span.x1 - span.x0)}px`;
+  const mode = f.simple ? "crop" : `fit ${Math.round(span.x1 - span.x0)}px${span.anchorBottom ? ", i bund" : ""}`;
   console.log(`✓ ${slug}-portrait  ${mode}  webm ${await kb(`${base}.webm`)} KB · mp4 ${await kb(`${base}.mp4`)} KB`);
 }
 

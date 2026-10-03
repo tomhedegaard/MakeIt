@@ -24,10 +24,9 @@ describe("resolveSessionDemoAssetUrl", () => {
     ).toBe("/exercise-demos/lunge.webm");
   });
 
-  it("stays null for front-squat and any slug without files", () => {
-    expect(resolveSessionDemoAssetUrl(null, "front-squat")).toBeNull();
-    expect(resolveSessionDemoAssetUrl("", "front-squat")).toBeNull();
+  it("stays null for a slug without files", () => {
     expect(resolveSessionDemoAssetUrl(null, "no-such-lift")).toBeNull();
+    expect(resolveSessionDemoAssetUrl("", "no-such-lift")).toBeNull();
     expect(resolveSessionDemoAssetUrl(null, null)).toBeNull();
   });
 });
@@ -54,7 +53,7 @@ describe("hydrateDemoSessionLibrary", () => {
     expect(rdl?.library?.demoAssetUrl).toBe("/exercise-demos/rdl.webm");
   });
 
-  it("leaves front-squat demoAssetUrl null and unknown names library-less", () => {
+  it("gives front-squat its bundled loop and leaves unknown names library-less", () => {
     const session: Session = {
       ...TODAY_SESSION,
       exercises: [
@@ -74,7 +73,7 @@ describe("hydrateDemoSessionLibrary", () => {
 
     const hydrated = hydrateDemoSessionLibrary(session);
     expect(hydrated.exercises[0].library?.slug).toBe("front-squat");
-    expect(hydrated.exercises[0].library?.demoAssetUrl).toBeNull();
+    expect(hydrated.exercises[0].library?.demoAssetUrl).toBe("/exercise-demos/front-squat.webm");
     expect(hydrated.exercises[1].library).toBeUndefined();
     expect(hydrated.exercises[1].cue).toBe("Hold it tight.");
   });

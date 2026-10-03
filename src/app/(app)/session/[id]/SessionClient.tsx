@@ -516,7 +516,7 @@ export default function SessionClient({
  * is linked to the library (`ex.library` populated via the
  * exercise_id FK on session_exercises), we render:
  *   - compact MoveKit loop when demoAssetUrl resolves
- *   - mini AnatomyFigure when the slug has no loop (front-squat etc.)
+ *   - mini AnatomyFigure when the slug has no loop (coach-made exercises)
  *   - top 3 cues from the structured array (phase-synced when a loop plays)
  *   - "Se hele øvelsen →" deep-link to /train/exercises/[slug]
  *

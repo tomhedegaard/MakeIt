@@ -1,0 +1,182 @@
+export const meta = {
+  name: 'generate-exercise-library',
+  description: 'Generér dansk coaching-metadata for __COUNT__ MoveKit-øvelser (kladder til review)',
+  phases: [{ title: 'Generér', detail: '__AGENTS__ agenter, 10 øvelser pr. agent' }],
+};
+
+// GENERERET af scripts/build-wf-exercises.mjs fra scripts/movekit-manifest.json
+// og src/lib/data/exercise-taxonomy.json. Ret skabelonen, ikke denne fil.
+
+const ITEMS = __ITEMS__;
+
+const MUSCLES = __MUSCLES__;
+const CATEGORIES = __CATEGORIES__;
+const PATTERNS = __PATTERNS__;
+const EQUIPMENT = __EQUIPMENT__;
+
+const EX = {
+  type: "object",
+  additionalProperties: false,
+  required: [
+    "slug", "name", "category", "pattern", "equipment", "difficulty",
+    "primary_muscle", "primary_muscles", "secondary_muscles", "tertiary_muscles",
+    "cue", "cues", "mistakes", "why_matters", "setup", "progression", "regression",
+  ],
+  properties: {
+    slug: { type: "string", description: "Kopiér VERBATIM fra input" },
+    name: { type: "string", description: "Engelsk navn, pænt formateret" },
+    category: { type: "string", enum: CATEGORIES },
+    pattern: { type: "string", enum: PATTERNS },
+    equipment: { type: "string", enum: EQUIPMENT },
+    difficulty: { type: "string", enum: ["beginner", "intermediate", "advanced"] },
+    primary_muscle: { type: "string", description: "Kort engelsk display-label, fx 'Chest' eller 'Quads'" },
+    primary_muscles: { type: "array", items: { type: "string", enum: MUSCLES }, minItems: 1, maxItems: 3 },
+    secondary_muscles: { type: "array", items: { type: "string", enum: MUSCLES }, maxItems: 4 },
+    tertiary_muscles: { type: "array", items: { type: "string", enum: MUSCLES }, maxItems: 4 },
+    cue: { type: "string", description: "Én dansk one-liner-cue" },
+    cues: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 6, description: "Danske coaching-cues, imperativ" },
+    mistakes: {
+      type: "array", minItems: 2, maxItems: 3,
+      items: {
+        type: "object", additionalProperties: false,
+        required: ["title", "body"],
+        properties: { title: { type: "string" }, body: { type: "string" } },
+      },
+    },
+    why_matters: { type: "string", description: "Dansk, 1-2 sætninger" },
+    setup: { type: "string", description: "Dansk, opstilling/udgangsposition" },
+    progression: { type: "string", description: "Dansk, hårdere variant" },
+    regression: { type: "string", description: "Dansk, lettere variant" },
+  },
+};
+
+const SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: ["exercises"],
+  properties: { exercises: { type: "array", items: EX } },
+};
+
+const EXAMPLE_STRENGTH = {
+  slug: "back-squat", name: "Back Squat", category: "lower-body", pattern: "squat",
+  equipment: "barbell", difficulty: "intermediate", primary_muscle: "Quads",
+  primary_muscles: ["quads", "glutes"], secondary_muscles: ["hamstrings", "lower_back"],
+  tertiary_muscles: ["abs", "adductors", "calves_back"],
+  cue: "Bryst op, knæ ud, sid lavt og driv hårdt op fra hullet.",
+  cues: [
+    "Bryst op og spændt mave før du drukner under baren.",
+    "Knæ sporer tæerne. Pres dem aktivt ud.",
+    "Sid lavt: hofte under knæ.",
+    "Driv gulvet væk og lås ud uden hyperextension.",
+  ],
+  mistakes: [
+    { title: "Knæene falder ind", body: "Skubber kraften gennem inderlåret i stedet for glutes. Cue: pres knæene aktivt ud mod lilletåen." },
+    { title: "Bryst kollapser frem", body: "Mister bar-position. Hold albuerne ind under baren og pres brystet op." },
+  ],
+  why_matters: "Bygger benstyrke fra bunden og tvinger hele kæden (core, ryg, hofte) til at arbejde samtidig.",
+  setup: "Bar i high-bar position på øvre traps. Fødderne skulderbredde, lille udadrotation. Spændt mave før liften.",
+  progression: "Tilføj pause i bunden, eller skift til front squat for mere quads.",
+  regression: "Goblet squat med en kettlebell, eller box squat for dybdetilvænning.",
+};
+
+// Ikke et klip i pakken, så ingen agent får sit eget svar forærende.
+const EXAMPLE_MOBILITY = {
+  slug: "cat-cow", name: "Cat-Cow", category: "mobility", pattern: "mobility",
+  equipment: "bodyweight", difficulty: "beginner", primary_muscle: "Spine",
+  primary_muscles: ["lower_back", "abs"], secondary_muscles: ["obliques", "traps"],
+  tertiary_muscles: ["neck", "front_delts"],
+  cue: "Rund ryggen på udåndingen, svaj på indåndingen, ét led ad gangen.",
+  cues: [
+    "Stå på alle fire med hænder under skuldre og knæ under hofter.",
+    "Pust ud og rund ryggen op mod loftet, hagen mod brystet.",
+    "Træk vejret ind og lad brystet synke, mens blikket løftes.",
+    "Bevæg dig langsomt, så hvert led i rygsøjlen følger med.",
+  ],
+  mistakes: [
+    { title: "Kun lænden bevæger sig", body: "Brystryggen står stille, og lænden tager hele udslaget. Tænk på at skubbe gulvet væk og runde mellem skulderbladene." },
+    { title: "For hurtigt tempo", body: "Sving giver ingen mobilitet. Brug tre til fire sekunder hver vej og følg vejrtrækningen." },
+  ],
+  why_matters: "Varmer rygsøjlen op led for led og løsner en stiv ryg efter mange timer siddende. God før squat, dødløft og overhead-arbejde.",
+  setup: "Stå på alle fire på en måtte. Hænderne under skuldrene, knæene under hofterne, ryggen neutral.",
+  progression: "Hold en pause på to sekunder i hver yderposition, eller lav bevægelsen med knæene løftet lidt fra gulvet.",
+  regression: "Gør udslaget mindre, eller lav øvelsen siddende på en stol med hænderne på knæene.",
+};
+
+function chunk(arr, n) {
+  const out = [];
+  for (let i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n));
+  return out;
+}
+
+function buildPrompt(batch) {
+  return [
+    "Du er strength-coach for MakeIt, en dansk online coaching-platform. Skriv struktureret øvelsesdata for følgende øvelser.",
+    "",
+    "STEMME: Direkte, kompetent, ingen fyld. Engelske øvelsesnavne, men ALT coaching-tekst (cue, cues, mistakes, why_matters, setup, progression, regression) på DANSK. Cues er imperative kommandoer. Se eksemplerne.",
+    "",
+    "MUSKEL-TAXONOMI: brug KUN disse 18 slugs i muscle-arrays (intet andet):",
+    MUSCLES.join(", "),
+    "",
+    "KATEGORI OG MØNSTER:",
+    "- mobility + mobility: stræk, rotationer, ledcirkler, balance, nakke- og holdningsdrills.",
+    "- cardio + conditioning: løb, gang, cykling, roning, svømning, kardiomaskiner, sjippetov, battle ropes, skyggeboksning.",
+    "- power + jump: plyometri (hop, bounds, kast).",
+    "- power + olympic: olympisk vægtløftning (clean, jerk, snatch og deres træk-varianter).",
+    "- Alt andet: lower-body, upper-body-push, upper-body-pull, shoulders, arms, core eller full-body med et af mønstrene squat, hinge, lunge, push-horizontal, push-vertical, pull-horizontal, pull-vertical, core, isolation, carry.",
+    "- Kategorierne mobility, cardio og power bruges KUN sammen med deres egne mønstre, og mønstrene mobility, conditioning, jump og olympic bruges KUN i de kategorier.",
+    "- 'isolation' bruges til curls, raises, flyes og extensions. 'carry' til farmer's carries og lignende.",
+    "- En styrkeøvelse for core (plank, dead bug, crunch, pallof press) er core + core, ikke mobility.",
+    "",
+    "REDSKAB:",
+    "- equipmentHint er udledt af øvelsens navn. Brug den, når den passer til øvelsen. Er den null, vælger du selv.",
+    "- Smith machine og andre faste maskiner: machine. EZ-bar og landmine: barbell. Trap bar: trap-bar. Slæde: sled. TRX og slynger: suspension.",
+    "- Håndklæde, rygsæk, kosteskaft og foam roller: bodyweight.",
+    "- Bold, vægtskive, sjippetov, battle ropes, slider og wrist roller: accessory.",
+    "- Løbebånd, cykel, romaskine, ski-erg, crosstrainer, trappemaskine og lignende: cardio-machine.",
+    "- Løb, gang og svømning uden maskine: bodyweight.",
+    "",
+    "REGLER:",
+    "- slug: kopiér verbatim fra input nedenfor. Returnér præcis én øvelse pr. input, ingen ekstra.",
+    "- name: engelsk navn, pænt formateret (fx 'EZ Bar Skullcrusher', 'TRX Row', '90/90 Hip Switches').",
+    "- Brug aldrig tankestreger (\u2014 eller \u2013) i nogen tekst. Brug punktum, komma, kolon eller parentes.",
+    "- primary_muscles = prime movers (1-3, stærkeste først). secondary = synergister. tertiary = stabilisatorer.",
+    "- primary_muscle: kort engelsk label der opsummerer primary_muscles (fx 'Chest', 'Quads', 'Back/Hams').",
+    "- Vær anatomisk korrekt. cues og mistakes skal vise den KORREKTE udførelse.",
+    "- For cardio og mobility: cues handler om tempo, åndedræt, kadence, holdning og intensitet. mistakes er de typiske fejl i netop den aktivitet. progression og regression handler om varighed, intensitet eller bevægeudslag. Muskel-arrays udfyldes stadig fra de 18 muskler.",
+    "- Hvert tekstfelt skal udfyldes. cues: 4-6. mistakes: 2-3, hver med title og body.",
+    "- Disse er kladder til coach-review. Vær præcis.",
+    "",
+    "EKSEMPEL 1 (styrke; format og stemme du skal matche):",
+    JSON.stringify(EXAMPLE_STRENGTH, null, 1),
+    "",
+    "EKSEMPEL 2 (mobilitet):",
+    JSON.stringify(EXAMPLE_MOBILITY, null, 1),
+    "",
+    "ØVELSER DU SKAL GENERERE (" + batch.length + " stk):",
+    JSON.stringify(batch),
+    "",
+    "Returnér ét objekt pr. øvelse i samme rækkefølge.",
+  ].join("\n");
+}
+
+phase('Generér');
+const batches = chunk(ITEMS, 10);
+log(ITEMS.length + " øvelser i " + batches.length + " batches");
+
+const results = await parallel(
+  batches.map((batch, bi) => () =>
+    agent(buildPrompt(batch), {
+      label: "batch-" + (bi + 1) + "/" + batches.length,
+      phase: 'Generér',
+      schema: SCHEMA,
+    })
+  )
+);
+
+// Selve øvelserne læses fra workflow-journalen af gen-exercise-seed.mjs.
+// Returværdien holdes lille: antal, og hvilke slugs der mangler.
+const all = results.filter(Boolean).flatMap((r) => (r && r.exercises) || []);
+const got = new Set(all.map((e) => e.slug));
+const missing = ITEMS.map((i) => i.slug).filter((s) => !got.has(s));
+log(all.length + " øvelser genereret, " + missing.length + " mangler");
+return { count: all.length, missing: missing };

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
+import ExercisePicker, { type PickerExercise } from "@/components/coach/ExercisePicker";
 import type { ProgramBuilder as ProgramData } from "@/lib/data/coach-programs";
 import type { AssignableMember } from "@/lib/data/coach-programs";
 import {
@@ -13,8 +14,6 @@ import {
 
 const TYPES = ["Strength", "Hypertrophy", "Hybrid", "Specialization"];
 const LEVELS = ["Beginner", "Intermediate", "Advanced", "All levels"];
-
-type LibraryExercise = { id: string; name: string };
 
 /* Draft state — `id` null = new row, `key` is the stable React key. */
 type DraftSet = { reps: number; weight: number; rpe: number | null; rest_sec: number };
@@ -44,7 +43,7 @@ export default function ProgramBuilder({
   members,
 }: {
   program: ProgramData;
-  library: LibraryExercise[];
+  library: PickerExercise[];
   members: AssignableMember[];
 }) {
   const t = useTranslations("CoachStudio.programBuilder");
@@ -366,28 +365,18 @@ export default function ProgramBuilder({
                     <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
                       <label className="space-y-1.5">
                         <span className="text-xs text-fg-dim">{t("exerciseLabel")}</span>
-                        <select
-                          value={ex.exerciseId ?? ""}
-                          onChange={(e) => {
-                            const lib = library.find(
-                              (l) => l.id === e.target.value,
-                            );
+                        <ExercisePicker
+                          value={ex.exerciseId}
+                          library={library}
+                          onChange={(lib) =>
                             patchExercise(di, ei, {
                               exerciseId: lib?.id ?? null,
                               exerciseName: lib?.name ?? "",
-                            });
-                          }}
-                          className="input w-full"
-                        >
-                          {library.length === 0 ? (
-                            <option value="">{t("libraryEmpty")}</option>
-                          ) : null}
-                          {library.map((l) => (
-                            <option key={l.id} value={l.id}>
-                              {l.name}
-                            </option>
-                          ))}
-                        </select>
+                            })
+                          }
+                          emptyLabel={t("libraryEmpty")}
+                          uncategorisedLabel={t("libraryUncategorised")}
+                        />
                       </label>
                       <label className="space-y-1.5">
                         <span className="text-xs text-fg-dim">{t("cueLabel")}</span>

@@ -284,15 +284,14 @@ on conflict (slug) do update set
 -- plus {slug}-poster.jpg. Demo mode and resolveDemoAssets() use the
 -- same public path. Coach uploads write a Storage URL
 -- (…/storage/v1/object/public/exercise-demos/{slug}.webm?v=) via
--- DemoAssetUploader — leave those rows alone. front-squat has no
--- trio; keep demo_asset_url null (PhaseAnimator / AnatomyFigure).
+-- DemoAssetUploader — leave those rows alone. All 20 lifts have a trio.
 --
--- 0051 already ran this UPDATE, but migrations run BEFORE seed, so
--- a fresh db:reset would otherwise insert these 20 rows with null.
+-- 0051 and 0067 already ran this UPDATE, but migrations run BEFORE seed,
+-- so a fresh db:reset would otherwise insert these 20 rows with null.
 update public.exercises
 set demo_asset_url = '/exercise-demos/' || slug || '.webm'
 where slug in (
-  'back-squat', 'deadlift', 'bench', 'paused-bench', 'ohp',
+  'back-squat', 'front-squat', 'deadlift', 'bench', 'paused-bench', 'ohp',
   'pull-up', 'row', 'lunge', 'khr', 'push-up',
   'dip', 'plank', 'barbell-curl', 'tricep-pushdown', 'lateral-raise',
   'rdl', 'push-press', 'hip-thrust', 'standing-calf-raise'

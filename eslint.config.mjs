@@ -17,6 +17,7 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Gitignored workspaces and artifacts:
     ".worktrees/**",
+    ".claude/worktrees/**",
     "coverage/**",
     "MoveKit/**",
     ".vercel/**",

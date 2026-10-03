@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import da from "../../../messages/da/Train.json";
 import en from "../../../messages/en/Train.json";
 import { exerciseMetaLabels } from "./exercise-meta";
+import { TAXONOMY } from "./exercise-taxonomy";
 
 function translator(messages: Record<string, unknown>) {
   const get = (key: string) =>
@@ -12,9 +13,9 @@ function translator(messages: Record<string, unknown>) {
 }
 
 const CATALOGUE = {
-  categories: ["lower-body", "upper-body-push", "upper-body-pull", "arms", "shoulders", "core", "full-body"],
-  equipment: ["dumbbell", "bodyweight", "barbell", "cable", "machine", "kettlebell", "band"],
-  difficulty: ["beginner", "intermediate", "advanced"],
+  categories: TAXONOMY.categories,
+  equipment: TAXONOMY.equipment,
+  difficulty: TAXONOMY.difficulty,
 };
 
 describe("exerciseMetaLabels", () => {
@@ -35,6 +36,8 @@ describe("exerciseMetaLabels", () => {
   });
 
   it("falls back to the raw value when a new one has no translation yet", () => {
-    expect(exerciseMetaLabels(translator(da), { category: null, equipment: "sled", difficulty: null })).toEqual(["sled"]);
+    expect(
+      exerciseMetaLabels(translator(da), { category: null, equipment: "hoverboard", difficulty: null }),
+    ).toEqual(["hoverboard"]);
   });
 });

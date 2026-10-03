@@ -27,7 +27,7 @@ export default async function ProgramBuilderPage({
   if (!program) notFound();
 
   // Minimal shape for the exercise picker dropdown.
-  const library = libraryRaw.map((e) => ({ id: e.id, name: e.name }));
+  const library = libraryRaw.map((e) => ({ id: e.id, name: e.name, category: e.category }));
 
   return (
     <Container className="py-6 lg:py-12">

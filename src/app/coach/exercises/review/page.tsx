@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import ExerciseReviewQueue from "@/components/coach/ExerciseReviewQueue";
+import FilterPill from "@/components/exercise/FilterPill";
+import { draftCategoryCounts, pickReviewCategory } from "@/lib/coach/review-queue";
 import { listAllExercisesForCoach } from "@/lib/data/exercises";
 
 export async function generateMetadata() {
@@ -9,10 +11,26 @@ export async function generateMetadata() {
   return { title: t("metaTitle") };
 }
 
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
 /** Drafts with a video, in library order. Drafts without one stay in the editor. */
-export default async function CoachExerciseReviewPage() {
+export default async function CoachExerciseReviewPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
   const t = await getTranslations("CoachStudio.exercises.review");
-  const drafts = (await listAllExercisesForCoach()).filter((ex) => !ex.isPublished && ex.demoAssetUrl);
+  const tTrain = await getTranslations("Train");
+  const all = (await listAllExercisesForCoach()).filter((ex) => !ex.isPublished && ex.demoAssetUrl);
+
+  // The filter stays on the requested category even when it has no drafts
+  // left: approving the last one re-renders this page, and falling back to
+  // "all" would remount the queue on the full list (see pickReviewCategory).
+  const counts = draftCategoryCounts(all);
+  const category = pickReviewCategory((await searchParams).category);
+  const drafts = category ? all.filter((ex) => ex.category === category) : all;
+
+  const categoryLabel = (c: string) => (tTrain.has(`categories.${c}`) ? tTrain(`categories.${c}`) : c);
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
@@ -25,7 +43,22 @@ export default async function CoachExerciseReviewPage() {
         </Link>
       </header>
 
-      <ExerciseReviewQueue drafts={drafts} />
+      {counts.length > 1 || category ? (
+        <nav aria-label={tTrain("index.categoryNav")} className="flex flex-wrap gap-2">
+          <FilterPill href="/coach/exercises/review" active={!category} label={t("filterAll", { count: all.length })} />
+          {counts.map((c) => (
+            <FilterPill
+              key={c.category}
+              href={`/coach/exercises/review?category=${encodeURIComponent(c.category)}`}
+              active={category === c.category}
+              label={t("filterCategory", { label: categoryLabel(c.category), count: c.count })}
+            />
+          ))}
+        </nav>
+      ) : null}
+
+      {/* The queue freezes its list at mount; a new key restarts it when the filter changes. */}
+      <ExerciseReviewQueue key={category ?? "all"} drafts={drafts} />
     </Container>
   );
 }

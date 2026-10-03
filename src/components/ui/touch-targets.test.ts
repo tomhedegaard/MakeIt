@@ -64,12 +64,14 @@ describe("section header 'see all' links", () => {
 });
 
 describe("/train/exercises category chips", () => {
-  const src = read("../../app/(app)/train/exercises/page.tsx");
+  const page = read("../../app/(app)/train/exercises/page.tsx");
+  const pill = read("../exercise/FilterPill.tsx");
 
-  it("keeps the ?category= link pattern and raises the chips to 44px", () => {
-    expect(src).toContain("?category=");
-    expect(src).toContain("inline-flex min-h-11 items-center px-4");
-    expect(src).not.toContain("px-3 py-1.5 rounded-full");
+  it("keeps the filters in the URL and the chips at 44px", () => {
+    expect(page).toContain("libraryHref(");
+    expect(page).toContain("<FilterPill");
+    expect(pill).toContain("inline-flex min-h-11 items-center px-4");
+    expect(pill).not.toContain("px-3 py-1.5 rounded-full");
   });
 });
 

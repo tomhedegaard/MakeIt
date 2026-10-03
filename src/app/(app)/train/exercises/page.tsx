@@ -3,8 +3,11 @@ import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import ExerciseCard from "@/components/exercise/ExerciseCard";
+import FilterPill from "@/components/exercise/FilterPill";
+import LibraryFilterForm from "@/components/exercise/LibraryFilterForm";
 import { COMPANY } from "@/lib/company";
-import { listPublishedExercises } from "@/lib/data/exercises";
+import { libraryHref, normalizeSearch, pickFacet } from "@/lib/data/exercise-library-url";
+import { listPublishedExerciseFacets, listPublishedExercises } from "@/lib/data/exercises";
 
 export async function generateMetadata() {
   const t = await getTranslations("Train.index");
@@ -13,27 +16,28 @@ export async function generateMetadata() {
   };
 }
 
-type SearchParams = Promise<{ category?: string }>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 export default async function ExercisesIndexPage({
   searchParams,
 }: {
   searchParams: SearchParams;
 }) {
-  const { category } = await searchParams;
+  const params = await searchParams;
   const t = await getTranslations("Train");
-  const exercises = await listPublishedExercises(
-    category ? { category } : undefined,
-  );
 
-  // Build the category pill list from the full set so the filter row
-  // is stable regardless of which subset is currently selected.
-  const allExercises = category
-    ? await listPublishedExercises()
-    : exercises;
-  const categories = Array.from(
-    new Set(allExercises.map((e) => e.category).filter(Boolean)),
-  ) as string[];
+  // The filter choices come from what is actually published, so a
+  // category or an implement nobody can find never shows, and a made-up
+  // value in the URL is ignored.
+  const facets = await listPublishedExerciseFacets();
+  const q = normalizeSearch(params.q);
+  const category = pickFacet(params.category, facets.categories);
+  const equipment = pickFacet(params.equipment, facets.equipment);
+  const exercises = await listPublishedExercises({ q, category, equipment });
+  const filtered = Boolean(q || category || equipment);
+
+  const label = (group: "categories" | "equipment", value: string) =>
+    t.has(`${group}.${value}`) ? t(`${group}.${value}`) : value;
 
   return (
     <>
@@ -44,28 +48,55 @@ export default async function ExercisesIndexPage({
       />
 
       <Container className="py-10 md:py-14 space-y-8">
-        {/* Filter row */}
-        {categories.length > 0 ? (
-          <nav className="flex flex-wrap gap-2">
-            <FilterPill
-              href="/train/exercises"
-              active={!category}
-              label={t("index.allFilter")}
-            />
-            {categories.map((c) => (
-              <FilterPill
-                key={c}
-                href={`/train/exercises?category=${c}`}
-                active={category === c}
-                label={t.has(`categories.${c}`) ? t(`categories.${c}`) : c}
-              />
-            ))}
-          </nav>
-        ) : null}
+        <div className="space-y-4">
+          <LibraryFilterForm
+            q={q ?? ""}
+            category={category ?? ""}
+            equipment={equipment ?? ""}
+            equipmentOptions={facets.equipment.map((value) => ({ value, label: label("equipment", value) }))}
+            labels={{
+              search: t("index.searchLabel"),
+              placeholder: t("index.searchPlaceholder"),
+              equipment: t("index.equipmentLabel"),
+              allEquipment: t("index.allEquipment"),
+              submit: t("index.submit"),
+            }}
+          />
 
-        {/* Grid */}
+          {facets.categories.length > 0 ? (
+            <nav aria-label={t("index.categoryNav")} className="flex flex-wrap gap-2">
+              <FilterPill
+                href={libraryHref({ q, equipment })}
+                active={!category}
+                label={t("index.allFilter")}
+              />
+              {facets.categories.map((c) => (
+                <FilterPill
+                  key={c}
+                  href={libraryHref({ q, equipment, category: c })}
+                  active={category === c}
+                  label={label("categories", c)}
+                />
+              ))}
+            </nav>
+          ) : null}
+        </div>
+
+        <p className="text-sm text-fg-dim" role="status">
+          {t("index.count", { count: exercises.length })}
+        </p>
+
         {exercises.length === 0 ? (
-          <p className="text-fg-dim">{t("index.empty")}</p>
+          filtered ? (
+            <p className="text-fg-dim">
+              {t("index.emptyFiltered")}{" "}
+              <Link href={libraryHref()} className="underline underline-offset-4">
+                {t("index.reset")}
+              </Link>
+            </p>
+          ) : (
+            <p className="text-fg-dim">{t("index.empty")}</p>
+          )
         ) : (
           <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {exercises.map((ex) => (
@@ -77,28 +108,5 @@ export default async function ExercisesIndexPage({
         )}
       </Container>
     </>
-  );
-}
-
-function FilterPill({
-  href,
-  active,
-  label,
-}: {
-  href: string;
-  active: boolean;
-  label: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className={`inline-flex min-h-11 items-center px-4 text-xs border hairline transition-colors ${
- active
- ? "bg-fg text-bg border-transparent"
- : "text-fg-dim hover:text-fg hover:border-fg/30"
- }`}
-    >
-      {label}
-    </Link>
   );
 }
