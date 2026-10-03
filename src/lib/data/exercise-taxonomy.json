@@ -1,0 +1,45 @@
+{
+  "categories": [
+    "lower-body",
+    "upper-body-push",
+    "upper-body-pull",
+    "shoulders",
+    "arms",
+    "core",
+    "full-body",
+    "power",
+    "mobility",
+    "cardio"
+  ],
+  "patterns": [
+    "squat",
+    "hinge",
+    "lunge",
+    "push-horizontal",
+    "push-vertical",
+    "pull-horizontal",
+    "pull-vertical",
+    "core",
+    "isolation",
+    "carry",
+    "jump",
+    "olympic",
+    "mobility",
+    "conditioning"
+  ],
+  "equipment": [
+    "barbell",
+    "dumbbell",
+    "kettlebell",
+    "cable",
+    "machine",
+    "band",
+    "bodyweight",
+    "trap-bar",
+    "sled",
+    "suspension",
+    "cardio-machine",
+    "accessory"
+  ],
+  "difficulty": ["beginner", "intermediate", "advanced"]
+}

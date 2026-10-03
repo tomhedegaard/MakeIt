@@ -14,7 +14,10 @@
     "full-body": "Full body",
     "shoulders": "Shoulders",
     "arms": "Arms",
-    "core": "Core"
+    "core": "Core",
+    "power": "Power",
+    "mobility": "Mobility",
+    "cardio": "Cardio"
   },
   "difficulty": {
     "beginner": "Beginner",
@@ -28,7 +31,12 @@
     "cable": "Cable",
     "machine": "Machine",
     "band": "Band",
-    "bodyweight": "Bodyweight"
+    "bodyweight": "Bodyweight",
+    "trap-bar": "Trap bar",
+    "sled": "Sled",
+    "suspension": "Suspension",
+    "cardio-machine": "Cardio machine",
+    "accessory": "Accessories"
   },
   "detail": {
     "metaFallback": "Exercise",

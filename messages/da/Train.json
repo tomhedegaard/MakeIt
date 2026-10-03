@@ -14,7 +14,10 @@
     "full-body": "Helkrop",
     "shoulders": "Skuldre",
     "arms": "Arme",
-    "core": "Core"
+    "core": "Core",
+    "power": "Power",
+    "mobility": "Mobilitet",
+    "cardio": "Kondition"
   },
   "difficulty": {
     "beginner": "Begynder",
@@ -28,7 +31,12 @@
     "cable": "Kabel",
     "machine": "Maskine",
     "band": "Elastik",
-    "bodyweight": "Kropsvægt"
+    "bodyweight": "Kropsvægt",
+    "trap-bar": "Trap bar",
+    "sled": "Slæde",
+    "suspension": "Slynge",
+    "cardio-machine": "Kardiomaskine",
+    "accessory": "Småudstyr"
   },
   "detail": {
     "metaFallback": "Øvelse",
