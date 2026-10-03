@@ -32,6 +32,12 @@ const DOC =
   "Genereres og vedligeholdes af scripts/movekit-audit.mjs.";
 
 const args = process.argv.slice(2);
+const unknown = args.filter((a) => a !== "--no-measure" && !/^--(assign|skip)=.+/.test(a));
+if (unknown.length) {
+  console.error(`✗ ukendt eller ufuldstændigt flag: ${unknown.join(" ")}`);
+  console.error("Brug: node scripts/movekit-audit.mjs [--no-measure] [--skip=<klip>=<grund>]… [--assign=<batch>]");
+  process.exit(1);
+}
 const flag = (name) => args.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const assign = flag("assign") ?? null;
 const noMeasure = args.includes("--no-measure");
@@ -46,18 +52,31 @@ const skips = new Map(
 
 function run(cmd, argv) {
   return new Promise((resolve, reject) => {
-    const p = spawn(cmd, argv, { stdio: ["ignore", "pipe", "ignore"] });
+    const p = spawn(cmd, argv, { stdio: ["ignore", "pipe", "pipe"] });
     const chunks = [];
+    let err = "";
     p.stdout.on("data", (d) => chunks.push(d));
+    p.stderr.on("data", (d) => {
+      err = (err + d).slice(-400);
+    });
     p.on("error", reject);
     p.on("close", (code) =>
-      code === 0 ? resolve(Buffer.concat(chunks)) : reject(new Error(`${cmd} exit ${code} (${argv.at(-1)})`)),
+      code === 0 ? resolve(Buffer.concat(chunks)) : reject(new Error(`${cmd} exit ${code}: ${err.trim()}`)),
     );
   });
 }
 
-/** Rød muskelmarkering: pixels med r>120, r-g>45, r-b>45 over 16 frames i 480 px bredde. */
+/** Måler ét klip. En fejl navngiver klippet, så en lang kørsel ikke dør anonymt. */
 async function measure(clip) {
+  try {
+    return await measureClip(clip);
+  } catch (e) {
+    throw new Error(`${clip}: ${e.message}`);
+  }
+}
+
+/** Rød muskelmarkering: pixels med r>120, r-g>45, r-b>45 over 16 frames i 480 px bredde. */
+async function measureClip(clip) {
   const src = `${SRC}/${clip}.mp4`;
   const probe = JSON.parse(
     (
@@ -75,6 +94,8 @@ async function measure(clip) {
     "-vf", `fps=16/${seconds},scale=480:-2`,
     "-frames:v", "16", "-f", "rawvideo", "-pix_fmt", "rgb24", "-",
   ]);
+  // Uden frames ville klippet ligne et uden markering.
+  if (raw.length === 0) throw new Error("ffmpeg gav ingen frames");
   let redPixels = 0;
   for (let i = 0; i + 2 < raw.length; i += 3) {
     const r = raw[i];
@@ -119,7 +140,8 @@ for (const clip of skips.keys()) {
 let measured = 0;
 const clips = await pool(onDisk, JOBS, async (clip) => {
   const old = before.get(clip);
-  const reuse = noMeasure && old && typeof old.redPixels === "number";
+  // Et klip der var væk og er kommet tilbage kan være en ny render: mål det igen.
+  const reuse = noMeasure && old && !old.missing && typeof old.redPixels === "number";
   const m = reuse
     ? { width: old.width, height: old.height, duration: old.duration, redPixels: old.redPixels, highlight: old.highlight }
     : await measure(clip);
@@ -131,15 +153,20 @@ const clips = await pool(onDisk, JOBS, async (clip) => {
     library: old?.library ?? (bootstrap.has(clip) ? BOOTSTRAP.batch : null),
     skipped: skips.get(clip) ?? old?.skipped ?? null,
   };
+}).catch((e) => {
+  console.error(`✗ ${e.message}`);
+  process.exit(1);
 });
 
 // Klip der stod i manifestet, men er væk fra mappen, beholdes og mærkes.
 for (const [clip, old] of before) {
-  if (!onDisk.includes(clip)) clips.push({ ...old, missing: true });
+  if (!onDisk.includes(clip)) clips.push({ ...old, core: core.get(clip) ?? [], missing: true });
 }
 clips.sort((a, b) => (a.clip < b.clip ? -1 : a.clip > b.clip ? 1 : 0));
 
-const manifest = { _doc: DOC, auditedAt: new Date().toISOString().slice(0, 10), clips };
+// Datoen for seneste måling: en ren --no-measure-kørsel ændrer ikke filen.
+const auditedAt = measured > 0 || !previous ? new Date().toISOString().slice(0, 10) : previous.auditedAt;
+const manifest = { _doc: DOC, auditedAt, clips };
 
 let assigned = [];
 if (assign) {
