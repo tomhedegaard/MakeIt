@@ -12,13 +12,15 @@
  * Mærket skrives først, når begge trin lykkedes og alle seks filer
  * har indhold, så en afbrudt encoding aldrig tæller som færdig.
  * Fejl stopper ikke kørslen: de samles og listes til sidst (exit 1).
+ * Afbrydes scriptet (Ctrl-C, SIGTERM), stoppes de kørende encodere med
+ * det samme, så en genkørsel ikke får to encodere på samme fil.
  *
  * Selve encodingen ligger i ingest-exercise-demo.mjs (landskab) og
  * make-portrait-demo.mjs (portræt); dette script orkestrerer dem.
  */
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
-import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { batchClips } from "./lib/movekit.mjs";
 
@@ -26,7 +28,7 @@ const args = process.argv.slice(2);
 const flag = (name) => args.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const batch = flag("batch");
 const out = flag("out");
-const jobs = Math.max(1, Math.floor(Number(flag("jobs")) || 3));
+const jobs = Math.min(8, Math.max(1, Math.floor(Number(flag("jobs")) || 3)));
 const only = flag("only");
 
 if (!batch || !out) {
@@ -48,25 +50,52 @@ if (slugs.length === 0) {
 const doneDir = join(out, ".done");
 await mkdir(doneDir, { recursive: true });
 
+const children = new Set();
+
 /** Kører et node-script med MI_DEMO_OUT sat. Giver null ved succes, ellers slutningen af stderr. */
 function node(script, argv) {
   return new Promise((resolve) => {
-    const p = spawn("node", [script, ...argv], {
+    // detached: barnet leder sin egen procesgruppe, så dets ffmpeg kan stoppes sammen med det.
+    const p = spawn(process.execPath, [script, ...argv], {
       env: { ...process.env, MI_DEMO_OUT: out },
       stdio: ["ignore", "ignore", "pipe"],
+      detached: true,
     });
+    children.add(p);
     let err = "";
     p.stderr.on("data", (d) => {
       err = (err + d).slice(-1500);
     });
-    p.on("error", (e) => resolve(String(e)));
-    p.on("close", (code) => resolve(code === 0 ? null : err.trim() || `exit ${code}`));
+    p.on("error", (e) => {
+      children.delete(p);
+      resolve(String(e));
+    });
+    p.on("close", (code) => {
+      children.delete(p);
+      resolve(code === 0 ? null : err.trim() || `exit ${code}`);
+    });
+  });
+}
+
+for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) {
+  process.on(signal, () => {
+    for (const p of children) {
+      try {
+        process.kill(-p.pid, "SIGTERM");
+      } catch {
+        /* allerede væk */
+      }
+    }
+    console.error(`\nAfbrudt (${signal}). Kør kommandoen igen for at fortsætte.`);
+    process.exit(1);
   });
 }
 
 async function encode(slug) {
   const src = `MoveKit/${slug}.mp4`;
   if (!existsSync(src)) return `kilde mangler: ${src}`;
+  // Rester fra et afbrudt forsøg må ikke kunne gå for at være dette forsøgs output.
+  for (const suffix of SUFFIXES) await rm(join(out, slug + suffix), { force: true });
   const failed =
     (await node("scripts/ingest-exercise-demo.mjs", [src, slug])) ??
     (await node("scripts/make-portrait-demo.mjs", [src, slug]));
@@ -109,7 +138,10 @@ for (const f of files) {
 }
 const done = slugs.filter((s) => existsSync(join(doneDir, s))).length;
 console.log(`\n${done}/${slugs.length} klip færdige · ${files.length} filer · ${(bytes / 1024 / 1024).toFixed(0)} MB i ${out}`);
-if (tooBig.length) console.log(`Over 5 MB (afvises af bucketen):\n  ${tooBig.join("\n  ")}`);
+if (tooBig.length) {
+  console.log(`Over 5 MB (afvises af bucketen):\n  ${tooBig.join("\n  ")}`);
+  process.exitCode = 1;
+}
 if (failures.length) {
   console.log(`\n${failures.length} fejlede:`);
   for (const f of failures) console.log(`  · ${f.slug}:\n      ${f.error.split("\n").slice(-4).join("\n      ")}`);
