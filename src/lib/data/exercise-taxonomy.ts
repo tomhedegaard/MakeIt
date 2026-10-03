@@ -16,7 +16,7 @@ export function orderByTaxonomy(group: TaxonomyGroup, values: Iterable<string>):
   const present = new Set(values);
   const order = TAXONOMY[group];
   const known = order.filter((v) => present.has(v));
-  const unknown = [...present].filter((v) => !order.includes(v)).sort((a, b) => a.localeCompare(b));
+  const unknown = [...present].filter((v) => !order.includes(v)).sort((a, b) => a.localeCompare(b, "en"));
   return [...known, ...unknown];
 }
 
@@ -37,7 +37,8 @@ export function groupByCategory<T extends { name: string; category: string | nul
     if (bucket) bucket.push(item);
     else buckets.set(key, [item]);
   }
-  const byName = (a: T, b: T) => a.name.localeCompare(b.name);
+  // A fixed locale: the grouped picker renders on the server and hydrates in the browser.
+  const byName = (a: T, b: T) => a.name.localeCompare(b.name, "en");
   const named = orderByTaxonomy(
     "categories",
     [...buckets.keys()].filter((k): k is string => k !== null),
