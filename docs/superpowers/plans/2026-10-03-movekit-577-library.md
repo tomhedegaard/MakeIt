@@ -59,14 +59,14 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
 | `scripts/ingest-manifest.mjs` (ny) | Encoder en batch til staging, genoptageligt | 2 |
 | `scripts/upload-demos-to-storage.mjs` | Upload der springer eksisterende over | 2 |
 | `public/exercise-demos/*`, `bundled-demo-assets.ts`, seeds, tests | Kerneøvelsernes loops | 2 |
-| `scripts/build-wf-exercises.mjs` (ny), `scripts/wf-exercises.mjs` (genereret) | Workflow-script fra manifestet | 3 |
+| `scripts/wf-exercises.template.txt` (ny), `scripts/build-wf-exercises.mjs` (ny), `scripts/wf-exercises.mjs` (genereret) | Workflow-script fra manifestet | 3 |
 | `scripts/lib/exercise-seed.mjs` (ny), `scripts/gen-exercise-seed.mjs` | JSON til seed-SQL med validering | 3 |
-| `scripts/gen-demo-urls.mjs` (ny) | URL-blokken til 0067 | 3 |
-| `supabase/migrations/0066_…`, `0067_…` (nye) | Seed og wiring | 3 |
-| `src/lib/data/exercises.ts`, `exercise-library-url.ts` (ny) | Søgning, facetter, URL-bygger | 4 |
-| `src/app/(app)/train/exercises/page.tsx`, `LibraryFilterForm.tsx` (ny) | Bibliotekets filtre | 4 |
-| `src/app/coach/exercises/review/page.tsx`, `src/lib/coach/review-queue.ts` | Kategori-filter i review-køen | 4 |
-| `ExerciseEditor.tsx`, `ProgramBuilder.tsx` | Taksonomi i coach-fladerne | 4 |
+| `scripts/gen-demo-urls.mjs` (ny) | URL-blokken til 0067 | 4 |
+| `supabase/migrations/0066_…`, `0067_…` (nye) | Seed og wiring | 4 |
+| `src/lib/data/exercises.ts`, `exercise-library-url.ts` (ny) | Søgning, facetter, URL-bygger | 5 |
+| `src/app/(app)/train/exercises/page.tsx`, `LibraryFilterForm.tsx` (ny) | Bibliotekets filtre | 5 |
+| `src/app/coach/exercises/review/page.tsx`, `src/lib/coach/review-queue.ts` | Kategori-filter i review-køen | 5 |
+| `ExerciseEditor.tsx`, `ProgramBuilder.tsx` | Taksonomi i coach-fladerne | 5 |
 
 ---
 
@@ -346,8 +346,8 @@ I `messages/en/Train.json` tilføjes de samme nøgler sidst i de to objekter. L�
 Run: `npx vitest run src/lib/data/exercise-taxonomy.test.ts src/lib/data/exercise-meta.test.ts`
 Expected: PASS, 2 filer. `exercise-meta`-testen "has a da/en label for every value in the live catalogue" dækker nu også de nye værdier.
 
-Run: `npx vitest run messages src/i18n`
-Expected: PASS. Eventuelle paritetstests mellem dansk og engelsk er stadig grønne, fordi begge sprog fik de samme nøgler.
+Run: `npx vitest run src/lib/i18n/app-copy-gate.test.ts`
+Expected: PASS. Paritetstesten mellem dansk og engelsk er stadig grøn, fordi begge sprog fik de samme nøgler, og de nye labels har ingen tankestreger.
 
 - [ ] **Step 6: Commit**
 
@@ -422,6 +422,9 @@ describe("equipmentHint", () => {
     ["medicine-ball-throw", "accessory"],
     ["plate-pinch", "accessory"],
     ["slider-leg-curl", "accessory"],
+    ["towel-slide-leg-curl", "bodyweight"],
+    ["backpack-row", "bodyweight"],
+    ["thoracic-extension-over-foam-roller", "bodyweight"],
   ])("%s -> %s", (slug, expected) => {
     expect(equipmentHint(slug)).toBe(expected);
   });
@@ -429,7 +432,7 @@ describe("equipmentHint", () => {
   it("gives no hint when the slug names no equipment", () => {
     expect(equipmentHint("long-run")).toBeNull();
     expect(equipmentHint("spider-curl")).toBeNull();
-    expect(equipmentHint("towel-slide-leg-curl")).toBeNull();
+    expect(equipmentHint("copenhagen-plank")).toBeNull();
   });
 });
 
@@ -580,9 +583,14 @@ const EQUIPMENT_RULES = [
   ],
   ["machine", token("machine|hammer-strength|selectorized|pendulum|lever|leg-press|pec-deck|captains-chair")],
   ["accessory", token("medicine-ball|wall-ball|stability-ball|plate|jump-rope|battle-ropes|slider|wrist-roller")],
+  ["bodyweight", token("towel|backpack|broomstick|foam-roller")],
 ];
 
-/** The equipment a slug names, or null when it names none. Advisory: the agent may overrule it. */
+/**
+ * The equipment a slug names, or null when it names none. Advisory: the agent may overrule it.
+ * @param {string} slug
+ * @returns {string | null}
+ */
 export function equipmentHint(slug) {
   for (const [equipment, re] of EQUIPMENT_RULES) if (re.test(slug)) return equipment;
   return null;
@@ -695,7 +703,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 
 - [ ] **Step 1: Opdatér kildekortet**
 
-I `scripts/movekit-map.json` erstattes `_doc` og fire poster. Resten er uændret.
+I `scripts/movekit-map.json` erstattes `_doc` og fire poster. Resten er uændret. Behold filens nuværende formatering, så diffen kun viser de fem ændringer; blokkene herunder viser indholdet, ikke linjebrydningen.
 
 `_doc` bliver:
 
@@ -920,7 +928,8 @@ console.log(`  kernekilder:        ${count((c) => c.core.length > 0)}`);
 for (const b of batches) console.log(`  bibliotek ${b}:  ${count((c) => c.library === b)}`);
 console.log(`  sprunget over:      ${count((c) => c.skipped)}`);
 console.log(`  utildelt:           ${free.length}${free.length ? "  → " + free.join(", ") : ""}`);
-console.log(`  uden rød markering: ${count((c) => !c.highlight && !c.skipped)}`);
+const dark = live.filter((c) => !c.highlight && !c.skipped).map((c) => c.clip);
+console.log(`  uden rød markering: ${dark.length}${dark.length ? "  → " + dark.join(", ") : ""}`);
 if (assign) console.log(`  tildelt ${assign}:    ${assigned.length}`);
 const gone = manifest.clips.filter((c) => c.missing).map((c) => c.clip);
 if (gone.length) console.log(`  mangler i mappen:   ${gone.join(", ")}`);
@@ -950,18 +959,15 @@ Expected output:
   bibliotek 2026-10:  369
   sprunget over:      2
   utildelt:           0
-  uden rød markering: 48
+  uden rød markering: 48  → <de 48 klip>
   tildelt 2026-10:    369
 → scripts/movekit-manifest.json
 ```
 
 Afviger et tal, så stop og undersøg før manifestet committes. `kernekilder` er 19, fordi `bench` og `paused-bench` deler klip.
 
-Run: `node scripts/movekit-audit.mjs --no-measure | head -8`
-Expected: samme tal uden linjen `tildelt`, på et øjeblik. Det viser, at en genkørsel er stabil.
-
-Run: `shasum scripts/movekit-manifest.json` før og efter genkørslen
-Expected: samme checksum. Genkørslen ændrer ikke filen, når intet er ændret (samme dag).
+Run: `shasum scripts/movekit-manifest.json; node scripts/movekit-audit.mjs --no-measure | head -8; shasum scripts/movekit-manifest.json`
+Expected: samme tal uden linjen `tildelt`, på et øjeblik, og samme checksum før og efter. En genkørsel ændrer ikke filen, når intet er ændret (samme dag).
 
 - [ ] **Step 4: Skriv manifest-testen**
 
@@ -1509,4 +1515,1210 @@ git commit -m "feat(exercises): front squat får loop, og rdl, hip thrust og cal
 
 Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
+
+---
+
+## Chunk 3: Metadata-værktøjer
+
+Efter denne chunk kan workflowets output valideres og blive til seed-SQL, og workflow-scriptet for de 369 øvelser er genereret og tørkørt.
+
+### Task 7: Seed-logik som ren, testet kode
+
+`gen-exercise-seed.mjs` blander i dag indlæsning, validering og SQL. Logikken flyttes til `scripts/lib/exercise-seed.mjs`, så den kan testes, og CLI'en bliver tynd.
+
+**Files:**
+- Create: `scripts/lib/exercise-seed.mjs`
+- Create: `src/lib/data/exercise-seed.test.ts`
+- Modify: `scripts/gen-exercise-seed.mjs` (hele filen erstattes)
+
+- [ ] **Step 1: Skriv de fejlende tests**
+
+`src/lib/data/exercise-seed.test.ts`:
+
+```ts
+import { describe, expect, it } from "vitest";
+import taxonomy from "./exercise-taxonomy.json";
+import { MUSCLE_LABELS } from "./muscle-groups";
+import { parseSeedOrders } from "../../../scripts/lib/movekit.mjs";
+import {
+  MUSCLES,
+  collectExercises,
+  mergeExercises,
+  parseExerciseSource,
+  renderSeed,
+  validateExercises,
+} from "../../../scripts/lib/exercise-seed.mjs";
+
+const ex = (over: Record<string, unknown> = {}) => ({
+  slug: "arnold-press",
+  name: "Arnold Press",
+  category: "shoulders",
+  pattern: "push-vertical",
+  equipment: "dumbbell",
+  difficulty: "intermediate",
+  primary_muscle: "Shoulders",
+  primary_muscles: ["front_delts"],
+  secondary_muscles: ["triceps"],
+  tertiary_muscles: ["abs"],
+  cue: "Rotér og pres.",
+  cues: ["a", "b", "c", "d"],
+  mistakes: [
+    { title: "t1", body: "b1" },
+    { title: "t2", body: "b2" },
+  ],
+  why_matters: "w",
+  setup: "s",
+  progression: "p",
+  regression: "r",
+  ...over,
+});
+
+describe("MUSCLES", () => {
+  it("is the app's 18-muscle taxonomy", () => {
+    expect([...MUSCLES].sort()).toEqual(Object.keys(MUSCLE_LABELS).sort());
+  });
+});
+
+describe("collectExercises", () => {
+  it("finds exercise lists at any depth, also inside stringified JSON", () => {
+    const a = ex({ slug: "a" });
+    const b = ex({ slug: "b" });
+    const value = { result: { exercises: [a] }, nested: [{ output: JSON.stringify({ exercises: [b] }) }] };
+    expect(collectExercises(value).map((e: { slug: string }) => e.slug)).toEqual(["a", "b"]);
+  });
+
+  it("ignores lists that are not exercises (the workflow's input items have no cues)", () => {
+    expect(collectExercises({ items: [{ slug: "a", name: "A", equipmentHint: null }] })).toEqual([]);
+  });
+
+  it("takes a bare list", () => {
+    expect(collectExercises([ex()])).toHaveLength(1);
+  });
+});
+
+describe("parseExerciseSource", () => {
+  it("reads a JSON document", () => {
+    expect(parseExerciseSource(JSON.stringify({ exercises: [ex()] }))).toHaveLength(1);
+  });
+
+  it("reads JSON Lines and skips lines that are not JSON", () => {
+    const text = [
+      JSON.stringify({ agent: 1, result: { exercises: [ex({ slug: "a" })] } }),
+      "not json",
+      "",
+      JSON.stringify({ agent: 2, result: { exercises: [ex({ slug: "b" })] } }),
+    ].join("\n");
+    expect(parseExerciseSource(text).map((e: { slug: string }) => e.slug)).toEqual(["a", "b"]);
+  });
+});
+
+describe("mergeExercises", () => {
+  it("lets a later list win on slug and sorts by slug", () => {
+    const first = [ex({ slug: "b", name: "Old B" }), ex({ slug: "a" })];
+    const second = [ex({ slug: "b", name: "New B" })];
+    const { merged, conflicts } = mergeExercises([first, second]);
+    expect(merged.map((e: { slug: string; name: string }) => [e.slug, e.name])).toEqual([
+      ["a", "Arnold Press"],
+      ["b", "New B"],
+    ]);
+    expect(conflicts).toEqual([]);
+  });
+
+  it("tolerates an exact duplicate inside one list but reports a differing one", () => {
+    const same = mergeExercises([[ex({ slug: "a" }), ex({ slug: "a" })]]);
+    expect(same.merged).toHaveLength(1);
+    expect(same.conflicts).toEqual([]);
+    const differing = mergeExercises([[ex({ slug: "a" }), ex({ slug: "a", name: "Other" })]]);
+    expect(differing.conflicts).toEqual(["a"]);
+  });
+});
+
+describe("validateExercises", () => {
+  const check = (list: unknown[], batchSlugs: string[] | null = null) =>
+    validateExercises(list, { taxonomy, batchSlugs });
+
+  it("accepts a valid exercise", () => {
+    expect(check([ex()], ["arnold-press"])).toEqual([]);
+  });
+
+  it.each([
+    [{ category: "legs" }, /ukendt category "legs"/],
+    [{ pattern: "twist" }, /ukendt pattern "twist"/],
+    [{ equipment: "hoverboard" }, /ukendt equipment "hoverboard"/],
+    [{ difficulty: "easy" }, /ukendt difficulty "easy"/],
+    [{ secondary_muscles: ["delts"] }, /ukendt muskel "delts" i secondary_muscles/],
+    [{ primary_muscles: [] }, /mangler primary_muscles/],
+    [{ setup: "  " }, /tomt felt setup/],
+    [{ cues: ["a", "b", "c"] }, /cues/],
+    [{ mistakes: [{ title: "t", body: "b" }] }, /mistakes/],
+    [{ mistakes: [{ title: "t", body: "b" }, { title: "", body: "b" }] }, /mistakes/],
+    [{ why_matters: "pris $ex$ her" }, /\$ex\$/],
+    [{ category: "cardio", pattern: "squat" }, /passer ikke sammen/],
+    [{ category: "lower-body", pattern: "jump" }, /passer ikke sammen/],
+    [{ slug: "Arnold Press" }, /ugyldig eller manglende slug/],
+  ])("rejects %j", (over, message) => {
+    const errors = check([ex(over)]);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatch(message);
+  });
+
+  it("accepts the paired categories with their own patterns", () => {
+    expect(check([ex({ category: "power", pattern: "olympic" })])).toEqual([]);
+    expect(check([ex({ category: "power", pattern: "jump" })])).toEqual([]);
+    expect(check([ex({ category: "mobility", pattern: "mobility" })])).toEqual([]);
+    expect(check([ex({ category: "cardio", pattern: "conditioning", equipment: "cardio-machine" })])).toEqual([]);
+  });
+
+  it("reports slugs outside the batch and batch slugs that are missing", () => {
+    const errors = check([ex({ slug: "stranger" })], ["arnold-press", "z-press"]);
+    expect(errors).toEqual([
+      "stranger: hører ikke til batchen",
+      "arnold-press: mangler i JSON",
+      "z-press: mangler i JSON",
+    ]);
+  });
+});
+
+describe("renderSeed", () => {
+  const sql = renderSeed([ex({ slug: "a", setup: "Coach's bænk" }), ex({ slug: "b" })], {
+    orderFor: (e: { slug: string }) => (e.slug === "a" ? 995 : 1045),
+    subtitle: "batch 2026-10",
+  });
+
+  it("writes rows that parseSeedOrders reads back", () => {
+    expect(parseSeedOrders(sql)).toEqual([
+      { slug: "a", order: 995 },
+      { slug: "b", order: 1045 },
+    ]);
+  });
+
+  it("escapes single quotes, writes muscle arrays and dollar-quoted jsonb", () => {
+    expect(sql).toContain("'Coach''s bænk'");
+    expect(sql).toContain("'{front_delts}', '{triceps}', '{abs}'");
+    expect(sql).toContain('$ex$["a","b","c","d"]$ex$');
+  });
+
+  it("is an idempotent draft upsert that leaves is_published and demo_asset_url alone", () => {
+    expect(sql).toContain("(2 MoveKit-øvelser, batch 2026-10)");
+    expect(sql).toMatch(/on conflict \(slug\) do update set/);
+    expect(sql).toMatch(/995, false\)/);
+    const conflict = sql.slice(sql.indexOf("on conflict"));
+    expect(conflict).not.toMatch(/is_published|demo_asset_url|display_order/);
+  });
+});
+```
+
+- [ ] **Step 2: Kør testen og se den fejle**
+
+Run: `npx vitest run src/lib/data/exercise-seed.test.ts`
+Expected: FAIL. `scripts/lib/exercise-seed.mjs` findes ikke.
+
+- [ ] **Step 3: Skriv modulet**
+
+`scripts/lib/exercise-seed.mjs`:
+
+```js
+/**
+ * Pure logic for turning workflow output into seed SQL: collect, merge,
+ * validate, render. No file or process access; gen-exercise-seed.mjs is
+ * the thin CLI around it.
+ */
+
+/** The app's 18 muscle slugs (src/lib/data/muscle-groups.ts). A test keeps the two in step. */
+export const MUSCLES = [
+  "neck", "chest", "front_delts", "biceps", "forearms", "abs", "obliques",
+  "adductors", "quads", "calves_front", "traps", "rear_delts", "lats",
+  "triceps", "lower_back", "glutes", "hamstrings", "calves_back",
+];
+
+const looksLikeExercise = (v) =>
+  Boolean(v) && typeof v === "object" && typeof v.slug === "string" && Array.isArray(v.cues);
+
+/**
+ * Every exercise object found anywhere inside `value`: a workflow
+ * result, one line of a workflow journal, or a plain list. Strings that
+ * hold JSON are opened too, since a journal may store results that way.
+ */
+export function collectExercises(value) {
+  const found = [];
+  const walk = (v) => {
+    if (typeof v === "string") {
+      if (v.length > 1 && (v[0] === "{" || v[0] === "[")) {
+        try {
+          walk(JSON.parse(v));
+        } catch {
+          /* not JSON after all */
+        }
+      }
+    } else if (Array.isArray(v)) {
+      if (v.length > 0 && v.every(looksLikeExercise)) found.push(...v);
+      else v.forEach(walk);
+    } else if (v && typeof v === "object") {
+      Object.values(v).forEach(walk);
+    }
+  };
+  walk(value);
+  return found;
+}
+
+/** Exercises from a file's text: one JSON document, or JSON Lines (a workflow journal). */
+export function parseExerciseSource(text) {
+  try {
+    return collectExercises(JSON.parse(text));
+  } catch {
+    const found = [];
+    for (const line of text.split("\n")) {
+      if (!line.trim()) continue;
+      try {
+        found.push(...collectExercises(JSON.parse(line)));
+      } catch {
+        /* a line that is not JSON */
+      }
+    }
+    return found;
+  }
+}
+
+/**
+ * One list per source file; a later file wins on slug, which is how a
+ * re-run batch replaces the first attempt. An exact duplicate inside
+ * one file is fine (a journal can hold the same result twice); the
+ * same slug with different content inside one file is a conflict.
+ */
+export function mergeExercises(lists) {
+  const bySlug = new Map();
+  const conflicts = new Set();
+  for (const list of lists) {
+    const local = new Map();
+    for (const e of list) {
+      const prev = local.get(e.slug);
+      if (prev && JSON.stringify(prev) !== JSON.stringify(e)) conflicts.add(e.slug);
+      local.set(e.slug, e);
+    }
+    for (const [slug, e] of local) bySlug.set(slug, e);
+  }
+  const merged = [...bySlug.values()].sort((a, b) => (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0));
+  return { merged, conflicts: [...conflicts].sort() };
+}
+
+const TEXT_FIELDS = ["name", "primary_muscle", "cue", "why_matters", "setup", "progression", "regression"];
+const ENUM_FIELDS = [
+  ["categories", "category"],
+  ["patterns", "pattern"],
+  ["equipment", "equipment"],
+  ["difficulty", "difficulty"],
+];
+/** Categories that only go with their own patterns, and patterns that only go with them. */
+const PAIRED = { mobility: ["mobility"], cardio: ["conditioning"], power: ["jump", "olympic"] };
+
+const blank = (v) => typeof v !== "string" || v.trim() === "";
+
+/**
+ * Readable errors for everything that would make the seed wrong.
+ * `taxonomy` is src/lib/data/exercise-taxonomy.json. With `batchSlugs`
+ * the list must hold exactly those slugs.
+ */
+export function validateExercises(list, { taxonomy, batchSlugs = null }) {
+  const errors = [];
+  const muscles = new Set(MUSCLES);
+  const batch = batchSlugs ? new Set(batchSlugs) : null;
+
+  list.forEach((e, i) => {
+    const id = typeof e.slug === "string" && e.slug ? e.slug : `#${i}`;
+    if (typeof e.slug !== "string" || !/^[a-z0-9-]+$/.test(e.slug)) {
+      errors.push(`${id}: ugyldig eller manglende slug`);
+      return;
+    }
+    if (batch && !batch.has(e.slug)) {
+      errors.push(`${id}: hører ikke til batchen`);
+      return;
+    }
+    for (const [group, field] of ENUM_FIELDS) {
+      if (!taxonomy[group].includes(e[field])) errors.push(`${id}: ukendt ${field} "${e[field]}"`);
+    }
+    for (const tier of ["primary_muscles", "secondary_muscles", "tertiary_muscles"]) {
+      for (const m of e[tier] ?? []) {
+        if (!muscles.has(m)) errors.push(`${id}: ukendt muskel "${m}" i ${tier}`);
+      }
+    }
+    if (!Array.isArray(e.primary_muscles) || e.primary_muscles.length === 0) {
+      errors.push(`${id}: mangler primary_muscles`);
+    }
+    for (const f of TEXT_FIELDS) if (blank(e[f])) errors.push(`${id}: tomt felt ${f}`);
+    if (!Array.isArray(e.cues) || e.cues.length < 4 || e.cues.some(blank)) {
+      errors.push(`${id}: cues skal være mindst 4 ikke-tomme tekster`);
+    }
+    if (
+      !Array.isArray(e.mistakes) ||
+      e.mistakes.length < 2 ||
+      e.mistakes.some((m) => !m || blank(m.title) || blank(m.body))
+    ) {
+      errors.push(`${id}: mistakes skal være mindst 2 med title og body`);
+    }
+    if (JSON.stringify(e).includes("$ex$")) errors.push(`${id}: tekst indeholder "$ex$", som bryder SQL-citeringen`);
+    const wants = PAIRED[e.category];
+    const owner = Object.keys(PAIRED).find((c) => PAIRED[c].includes(e.pattern));
+    if (taxonomy.categories.includes(e.category) && taxonomy.patterns.includes(e.pattern)) {
+      if ((wants && !wants.includes(e.pattern)) || (owner && owner !== e.category)) {
+        errors.push(`${id}: kategori "${e.category}" og mønster "${e.pattern}" passer ikke sammen`);
+      }
+    }
+  });
+
+  if (batch) {
+    const have = new Set(list.map((e) => e.slug));
+    for (const slug of batchSlugs) if (!have.has(slug)) errors.push(`${slug}: mangler i JSON`);
+  }
+  return errors;
+}
+
+// Postgres single-quote string literal ('' escapes a quote).
+const q = (s) => `'${String(s ?? "").replace(/'/g, "''")}'`;
+// Postgres text-array literal {a,b,c}.
+const arr = (a) => `'{${(a ?? []).join(",")}}'`;
+// jsonb via dollar-quote: Danish text can hold ' but never $ex$ (validated).
+const jsonb = (v) => `$ex$${JSON.stringify(v ?? [])}$ex$`;
+
+function renderRow(e, order) {
+  return `  (${q(e.slug)}, ${q(e.name)}, ${q(e.category)}, ${q(e.pattern)}, ${q(e.equipment)}, ${q(e.difficulty)},
+   ${q(e.primary_muscle)}, ${arr(e.primary_muscles)}, ${arr(e.secondary_muscles)}, ${arr(e.tertiary_muscles)},
+   ${q(e.cue)}, ${jsonb(e.cues)}, ${jsonb(e.mistakes)},
+   ${q(e.why_matters)}, ${q(e.setup)}, ${q(e.progression)}, ${q(e.regression)},
+   ${order}, false)`;
+}
+
+/**
+ * The whole seed migration. `orderFor(exercise, index)` gives each row
+ * its display_order. Drafts only: is_published=false on insert, and the
+ * conflict clause never touches is_published, demo_asset_url or
+ * display_order, so a re-run cannot unpublish or reorder anything.
+ */
+export function renderSeed(list, { orderFor, subtitle = null }) {
+  const header = `-- =================================================================
+-- MakeIt // HQ — øvelsesbibliotek-udvidelse (${list.length} MoveKit-øvelser${subtitle ? `, ${subtitle}` : ""})
+-- =================================================================
+-- AI-genereret coaching-data (draft) fra MoveKit-biblioteket. ALLE
+-- importeres med is_published=false — Munk reviewer og publicerer i
+-- batches via coach-fladerne. demo_asset_url sættes separat ved
+-- video-ingestion. Muskel-highlighting + cues virker uden video.
+--
+-- Idempotent: upsert on slug. Genereret af scripts/gen-exercise-seed.mjs.
+
+insert into public.exercises (
+  slug, name, category, pattern, equipment, difficulty,
+  primary_muscle, primary_muscles, secondary_muscles, tertiary_muscles,
+  cue, cues, mistakes,
+  why_matters, setup, progression, regression,
+  display_order, is_published
+) values
+`;
+  const conflict = `
+on conflict (slug) do update set
+  name = excluded.name, category = excluded.category, pattern = excluded.pattern,
+  equipment = excluded.equipment, difficulty = excluded.difficulty,
+  primary_muscle = excluded.primary_muscle, primary_muscles = excluded.primary_muscles,
+  secondary_muscles = excluded.secondary_muscles, tertiary_muscles = excluded.tertiary_muscles,
+  cue = excluded.cue, cues = excluded.cues, mistakes = excluded.mistakes,
+  why_matters = excluded.why_matters, setup = excluded.setup,
+  progression = excluded.progression, regression = excluded.regression;
+`;
+  return header + list.map((e, i) => renderRow(e, orderFor(e, i))).join(",\n") + conflict;
+}
+```
+
+- [ ] **Step 4: Kør testen og se den bestå**
+
+Run: `npx vitest run src/lib/data/exercise-seed.test.ts`
+Expected: PASS, alle tests grønne.
+
+- [ ] **Step 5: Gør CLI'en tynd**
+
+`scripts/gen-exercise-seed.mjs` (hele filen):
+
+```js
+/**
+ * Genererer seed-SQL fra workflowets øvelses-output (struktureret
+ * output fra scripts/wf-exercises.mjs). Alle rækker er kladder
+ * (is_published=false); demo_asset_url sættes af en wiring-migration.
+ *
+ * Brug:
+ *   node scripts/gen-exercise-seed.mjs <kilde> [<kilde> …] > out.sql
+ *   node scripts/gen-exercise-seed.mjs <kilde> [<kilde> …] --batch=2026-10 \
+ *        --after=supabase/migrations/0052_exercise_library_expansion.sql > out.sql
+ *
+ * En kilde er en JSON-fil (liste eller {exercises:[…]}) eller en
+ * workflow-journal (JSON Lines). Flere kilder flettes på slug, og en
+ * senere kilde vinder: sådan lægges en genkørt batch oven på den første.
+ *
+ * --batch  kræver præcis manifest-batchens slugs og fletter
+ *          display_order ind mellem rækkerne i --after-migrationerne.
+ * Uden --batch: display_order 1000, 1010, … i slug-orden.
+ *
+ * Valideringsfejl skrives til stderr, én pr. linje med slug forrest, og
+ * giver exit 1.
+ */
+import { readFile } from "node:fs/promises";
+import { mergeExercises, parseExerciseSource, renderSeed, validateExercises } from "./lib/exercise-seed.mjs";
+import { batchClips, interleavedOrder, parseSeedOrders } from "./lib/movekit.mjs";
+
+const argv = process.argv.slice(2);
+const files = argv.filter((a) => !a.startsWith("--"));
+const flag = (name) => argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
+const batch = flag("batch") ?? null;
+const after = (flag("after") ?? "").split(",").filter(Boolean);
+
+if (files.length === 0 || (batch && after.length === 0)) {
+  console.error("Brug: node scripts/gen-exercise-seed.mjs <kilde> [<kilde> …] [--batch=<batch> --after=<seed.sql>[,<seed.sql>]]");
+  process.exit(1);
+}
+
+const repo = (p) => new URL(`../${p}`, import.meta.url);
+const taxonomy = JSON.parse(await readFile(repo("src/lib/data/exercise-taxonomy.json"), "utf8"));
+
+const lists = [];
+for (const f of files) lists.push(parseExerciseSource(await readFile(f, "utf8")));
+const { merged, conflicts } = mergeExercises(lists);
+
+const batchSlugs = batch
+  ? batchClips(JSON.parse(await readFile(repo("scripts/movekit-manifest.json"), "utf8")), batch)
+  : null;
+
+const errors = [
+  ...conflicts.map((slug) => `${slug}: står to gange med forskelligt indhold i samme kilde`),
+  ...validateExercises(merged, { taxonomy, batchSlugs }),
+];
+if (errors.length) {
+  console.error(`VALIDERINGSFEJL (${errors.length}):\n${errors.join("\n")}`);
+  process.exit(1);
+}
+
+let orderFor = (_e, i) => 1000 + i * 10;
+if (batch) {
+  const existing = [];
+  for (const f of after) existing.push(...parseSeedOrders(await readFile(f, "utf8")));
+  if (existing.length === 0) {
+    console.error(`--after: ingen rækker fundet i ${after.join(", ")}`);
+    process.exit(1);
+  }
+  orderFor = (e) => interleavedOrder(existing, e.slug);
+}
+
+process.stdout.write(renderSeed(merged, { orderFor, subtitle: batch ? `batch ${batch}` : null }));
+console.error(`✓ ${merged.length} øvelser → SQL`);
+```
+
+- [ ] **Step 6: Prøv CLI'en mod en lille kilde**
+
+Run:
+
+```bash
+mkdir -p MoveKit/.staging
+node -e '
+const e = { slug: "arnold-press", name: "Arnold Press", category: "shoulders", pattern: "push-vertical", equipment: "dumbbell", difficulty: "intermediate", primary_muscle: "Shoulders", primary_muscles: ["front_delts"], secondary_muscles: ["triceps"], tertiary_muscles: ["abs"], cue: "c", cues: ["a","b","c","d"], mistakes: [{title:"t",body:"b"},{title:"t2",body:"b2"}], why_matters: "w", setup: "s", progression: "p", regression: "r" };
+require("fs").writeFileSync("MoveKit/.staging/fixture-ok.json", JSON.stringify({ exercises: [e] }));
+require("fs").writeFileSync("MoveKit/.staging/fixture-bad.json", JSON.stringify({ exercises: [{ ...e, category: "legs" }] }));
+'
+node scripts/gen-exercise-seed.mjs MoveKit/.staging/fixture-ok.json | head -22 | tail -6
+node scripts/gen-exercise-seed.mjs MoveKit/.staging/fixture-bad.json > /dev/null; echo "exit $?"
+node scripts/gen-exercise-seed.mjs MoveKit/.staging/fixture-ok.json --batch=2026-10 --after=supabase/migrations/0052_exercise_library_expansion.sql > /dev/null 2> MoveKit/.staging/fixture-err.txt; echo "exit $?"; head -1 MoveKit/.staging/fixture-err.txt; grep -c "mangler i JSON" MoveKit/.staging/fixture-err.txt
+rm MoveKit/.staging/fixture-*.json MoveKit/.staging/fixture-err.txt
+```
+
+Expected:
+- første kørsel viser rækken for `arnold-press`, der slutter med `   1000, false)`, og stderr `✓ 1 øvelser → SQL`;
+- anden kørsel skriver `VALIDERINGSFEJL (1):` og `arnold-press: ukendt category "legs"`, derefter `exit 1`;
+- tredje kørsel giver `exit 1`, `VALIDERINGSFEJL (368):` og tallet `368` (alle batchens øvrige slugs mangler).
+
+Run: `npx eslint scripts/gen-exercise-seed.mjs scripts/lib/exercise-seed.mjs src/lib/data/exercise-seed.test.ts && npx tsc --noEmit -p . 2>&1 | head`
+Expected: ingen fejl.
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add scripts/lib/exercise-seed.mjs scripts/gen-exercise-seed.mjs src/lib/data/exercise-seed.test.ts
+git commit -m "refactor(movekit): seed-generatoren validerer mod taksonomi og manifest og fletter rækkefølgen
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 8: Workflow-scriptet genereres fra manifestet
+
+Workflow-runtime har ingen filadgang, så øvelseslisten og taksonomien skal stå inline i scriptet. `build-wf-exercises.mjs` sætter dem ind i en skabelon.
+
+**Files:**
+- Create: `scripts/wf-exercises.template.txt`
+- Create: `scripts/build-wf-exercises.mjs`
+- Replace (genereret): `scripts/wf-exercises.mjs`
+
+- [ ] **Step 1: Skriv skabelonen**
+
+Skabelonen er workflow-scriptet med syv pladsholdere: `__COUNT__`, `__AGENTS__`, `__ITEMS__`, `__MUSCLES__`, `__CATEGORIES__`, `__PATTERNS__`, `__EQUIPMENT__`. Den er en `.txt`-fil, fordi den ikke er gyldig JavaScript, før pladsholderne er udfyldt. Scriptet bruger bevidst ingen backticks.
+
+`scripts/wf-exercises.template.txt`:
+
+```js
+export const meta = {
+  name: 'generate-exercise-library',
+  description: 'Generér dansk coaching-metadata for __COUNT__ MoveKit-øvelser (kladder til review)',
+  phases: [{ title: 'Generér', detail: '__AGENTS__ agenter, 10 øvelser pr. agent' }],
+};
+
+// GENERERET af scripts/build-wf-exercises.mjs fra scripts/movekit-manifest.json
+// og src/lib/data/exercise-taxonomy.json. Ret skabelonen, ikke denne fil.
+
+const ITEMS = __ITEMS__;
+
+const MUSCLES = __MUSCLES__;
+const CATEGORIES = __CATEGORIES__;
+const PATTERNS = __PATTERNS__;
+const EQUIPMENT = __EQUIPMENT__;
+
+const EX = {
+  type: "object",
+  additionalProperties: false,
+  required: [
+    "slug", "name", "category", "pattern", "equipment", "difficulty",
+    "primary_muscle", "primary_muscles", "secondary_muscles", "tertiary_muscles",
+    "cue", "cues", "mistakes", "why_matters", "setup", "progression", "regression",
+  ],
+  properties: {
+    slug: { type: "string", description: "Kopiér VERBATIM fra input" },
+    name: { type: "string", description: "Engelsk navn, pænt formateret" },
+    category: { type: "string", enum: CATEGORIES },
+    pattern: { type: "string", enum: PATTERNS },
+    equipment: { type: "string", enum: EQUIPMENT },
+    difficulty: { type: "string", enum: ["beginner", "intermediate", "advanced"] },
+    primary_muscle: { type: "string", description: "Kort engelsk display-label, fx 'Chest' eller 'Quads'" },
+    primary_muscles: { type: "array", items: { type: "string", enum: MUSCLES }, minItems: 1, maxItems: 3 },
+    secondary_muscles: { type: "array", items: { type: "string", enum: MUSCLES }, maxItems: 4 },
+    tertiary_muscles: { type: "array", items: { type: "string", enum: MUSCLES }, maxItems: 4 },
+    cue: { type: "string", description: "Én dansk one-liner-cue" },
+    cues: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 6, description: "Danske coaching-cues, imperativ" },
+    mistakes: {
+      type: "array", minItems: 2, maxItems: 3,
+      items: {
+        type: "object", additionalProperties: false,
+        required: ["title", "body"],
+        properties: { title: { type: "string" }, body: { type: "string" } },
+      },
+    },
+    why_matters: { type: "string", description: "Dansk, 1-2 sætninger" },
+    setup: { type: "string", description: "Dansk, opstilling/udgangsposition" },
+    progression: { type: "string", description: "Dansk, hårdere variant" },
+    regression: { type: "string", description: "Dansk, lettere variant" },
+  },
+};
+
+const SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: ["exercises"],
+  properties: { exercises: { type: "array", items: EX } },
+};
+
+const EXAMPLE_STRENGTH = {
+  slug: "back-squat", name: "Back Squat", category: "lower-body", pattern: "squat",
+  equipment: "barbell", difficulty: "intermediate", primary_muscle: "Quads",
+  primary_muscles: ["quads", "glutes"], secondary_muscles: ["hamstrings", "lower_back"],
+  tertiary_muscles: ["abs", "adductors", "calves_back"],
+  cue: "Bryst op, knæ ud, sid lavt og driv hårdt op fra hullet.",
+  cues: [
+    "Bryst op og spændt mave før du drukner under baren.",
+    "Knæ sporer tæerne — pres dem aktivt ud.",
+    "Sid lavt: hofte under knæ.",
+    "Driv gulvet væk og lås ud uden hyperextension.",
+  ],
+  mistakes: [
+    { title: "Knæene falder ind", body: "Skubber kraften gennem inderlåret i stedet for glutes. Cue: pres knæene aktivt ud mod lilletåen." },
+    { title: "Bryst kollapser frem", body: "Mister bar-position. Hold albuerne ind under baren og pres brystet op." },
+  ],
+  why_matters: "Bygger benstyrke fra bunden og tvinger hele kæden — core, ryg, hofte — til at arbejde samtidig.",
+  setup: "Bar i high-bar position på øvre traps. Fødderne skulderbredde, lille udadrotation. Spændt mave før liften.",
+  progression: "Tilføj pause i bunden, eller skift til front squat for mere quads.",
+  regression: "Goblet squat med en kettlebell, eller box squat for dybdetilvænning.",
+};
+
+const EXAMPLE_MOBILITY = {
+  slug: "90-90-hip-switches", name: "90/90 Hip Switches", category: "mobility", pattern: "mobility",
+  equipment: "bodyweight", difficulty: "beginner", primary_muscle: "Hips",
+  primary_muscles: ["glutes", "adductors"], secondary_muscles: ["obliques", "lower_back"],
+  tertiary_muscles: ["abs"],
+  cue: "Sid højt, rotér fra hofterne og lad knæene falde roligt fra side til side.",
+  cues: [
+    "Sid med begge knæ i 90 grader og ryggen lang.",
+    "Rotér fra hofterne og lad fødderne blive i gulvet.",
+    "Lad knæene falde kontrolleret til modsat side.",
+    "Træk vejret roligt og hold brystet løftet gennem skiftet.",
+  ],
+  mistakes: [
+    { title: "Ryggen runder", body: "Bevægelsen flytter fra hoften til lænden. Sid højt på siddeknoglerne, og støt med hænderne bag dig hvis det er nødvendigt." },
+    { title: "For hurtigt tempo", body: "Sving giver ingen mobilitet. Brug to til tre sekunder pr. skift og stop dér, hvor hoften strammer." },
+  ],
+  why_matters: "Åbner hoftens ind- og udadrotation, som squat og dødløft kræver. God som opvarmning før benpas.",
+  setup: "Sid på gulvet med det forreste ben bøjet 90 grader foran dig og det bagerste 90 grader ud til siden. Hænderne i gulvet bag dig som støtte.",
+  progression: "Løft hænderne fra gulvet, eller rejs dig op på knæene i hver yderposition.",
+  regression: "Støt med begge hænder bag dig, og gør bevægelsen mindre.",
+};
+
+function chunk(arr, n) {
+  const out = [];
+  for (let i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n));
+  return out;
+}
+
+function buildPrompt(batch) {
+  return [
+    "Du er strength-coach for MakeIt — en dansk online coaching-platform. Skriv struktureret øvelsesdata for følgende øvelser.",
+    "",
+    "STEMME: Direkte, kompetent, ingen fyld. Engelske øvelsesnavne, men ALT coaching-tekst (cue, cues, mistakes, why_matters, setup, progression, regression) på DANSK. Cues er imperative kommandoer. Se eksemplerne.",
+    "",
+    "MUSKEL-TAXONOMI — brug KUN disse 18 slugs i muscle-arrays (intet andet):",
+    MUSCLES.join(", "),
+    "",
+    "KATEGORI OG MØNSTER:",
+    "- mobility + mobility: stræk, rotationer, ledcirkler, balance, nakke- og holdningsdrills.",
+    "- cardio + conditioning: løb, gang, cykling, roning, svømning, kardiomaskiner, sjippetov, battle ropes, skyggeboksning.",
+    "- power + jump: plyometri (hop, bounds, kast).",
+    "- power + olympic: olympisk vægtløftning (clean, jerk, snatch og deres træk-varianter).",
+    "- Alt andet: lower-body, upper-body-push, upper-body-pull, shoulders, arms, core eller full-body med et af mønstrene squat, hinge, lunge, push-horizontal, push-vertical, pull-horizontal, pull-vertical, core, isolation, carry.",
+    "- Kategorierne mobility, cardio og power bruges KUN sammen med deres egne mønstre, og mønstrene mobility, conditioning, jump og olympic bruges KUN i de kategorier.",
+    "- 'isolation' bruges til curls, raises, flyes og extensions. 'carry' til farmer's carries og lignende.",
+    "- En styrkeøvelse for core (plank, dead bug, crunch, pallof press) er core + core, ikke mobility.",
+    "",
+    "REDSKAB:",
+    "- equipmentHint er udledt af øvelsens navn. Brug den, når den passer til øvelsen. Er den null, vælger du selv.",
+    "- Smith machine og andre faste maskiner: machine. EZ-bar og landmine: barbell. Trap bar: trap-bar. Slæde: sled. TRX og slynger: suspension.",
+    "- Håndklæde, rygsæk, kosteskaft og foam roller: bodyweight.",
+    "- Bold, vægtskive, sjippetov, battle ropes, slider og wrist roller: accessory.",
+    "- Løbebånd, cykel, romaskine, ski-erg, crosstrainer, trappemaskine og lignende: cardio-machine.",
+    "- Løb, gang og svømning uden maskine: bodyweight.",
+    "",
+    "REGLER:",
+    "- slug: kopiér verbatim fra input nedenfor. Returnér præcis én øvelse pr. input, ingen ekstra.",
+    "- name: engelsk navn, pænt formateret (fx 'EZ Bar Skullcrusher', 'TRX Row', '90/90 Hip Switches').",
+    "- primary_muscles = prime movers (1-3, stærkeste først). secondary = synergister. tertiary = stabilisatorer.",
+    "- primary_muscle: kort engelsk label der opsummerer primary_muscles (fx 'Chest', 'Quads', 'Back/Hams').",
+    "- Vær anatomisk korrekt. cues og mistakes skal vise den KORREKTE udførelse.",
+    "- For cardio og mobility: cues handler om tempo, åndedræt, kadence, holdning og intensitet. mistakes er de typiske fejl i netop den aktivitet. progression og regression handler om varighed, intensitet eller bevægeudslag. Muskel-arrays udfyldes stadig fra de 18 muskler.",
+    "- Hvert tekstfelt skal udfyldes. cues: 4-6. mistakes: 2-3, hver med title og body.",
+    "- Disse er kladder til coach-review. Vær præcis.",
+    "",
+    "EKSEMPEL 1 (styrke; format og stemme du skal matche):",
+    JSON.stringify(EXAMPLE_STRENGTH, null, 1),
+    "",
+    "EKSEMPEL 2 (mobilitet):",
+    JSON.stringify(EXAMPLE_MOBILITY, null, 1),
+    "",
+    "ØVELSER DU SKAL GENERERE (" + batch.length + " stk):",
+    JSON.stringify(batch),
+    "",
+    "Returnér ét objekt pr. øvelse i samme rækkefølge.",
+  ].join("\n");
+}
+
+phase('Generér');
+const batches = chunk(ITEMS, 10);
+log(ITEMS.length + " øvelser i " + batches.length + " batches");
+
+const results = await parallel(
+  batches.map((batch, bi) => () =>
+    agent(buildPrompt(batch), {
+      label: "batch-" + (bi + 1) + "/" + batches.length,
+      phase: 'Generér',
+      schema: SCHEMA,
+    })
+  )
+);
+
+// Selve øvelserne læses fra workflow-journalen af gen-exercise-seed.mjs.
+// Returværdien holdes lille: antal, og hvilke slugs der mangler.
+const all = results.filter(Boolean).flatMap((r) => (r && r.exercises) || []);
+const got = new Set(all.map((e) => e.slug));
+const missing = ITEMS.map((i) => i.slug).filter((s) => !got.has(s));
+log(all.length + " øvelser genereret, " + missing.length + " mangler");
+return { count: all.length, missing: missing };
+```
+
+- [ ] **Step 2: Skriv generatoren**
+
+`scripts/build-wf-exercises.mjs`:
+
+```js
+#!/usr/bin/env node
+/**
+ * Skriver scripts/wf-exercises.mjs: workflow-scriptet der genererer
+ * dansk coaching-metadata for en manifest-batch. Workflow-runtime har
+ * ingen filadgang, så øvelseslisten og taksonomien sættes ind i
+ * skabelonen scripts/wf-exercises.template.txt.
+ *
+ * Brug:
+ *   node scripts/build-wf-exercises.mjs --batch=2026-10
+ *   node scripts/build-wf-exercises.mjs --batch=2026-10 --only=<fil med én slug pr. linje>
+ *
+ * --only bruges til at genkøre de slugs, gen-exercise-seed.mjs afviste.
+ */
+import { readFile, writeFile } from "node:fs/promises";
+import { MUSCLES } from "./lib/exercise-seed.mjs";
+import { batchClips, equipmentHint, titleCase } from "./lib/movekit.mjs";
+
+const argv = process.argv.slice(2);
+const flag = (name) => argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
+const batch = flag("batch");
+const only = flag("only");
+if (!batch) {
+  console.error("Brug: node scripts/build-wf-exercises.mjs --batch=<batch> [--only=<fil>]");
+  process.exit(1);
+}
+
+const repo = (p) => new URL(`../${p}`, import.meta.url);
+const manifest = JSON.parse(await readFile(repo("scripts/movekit-manifest.json"), "utf8"));
+const taxonomy = JSON.parse(await readFile(repo("src/lib/data/exercise-taxonomy.json"), "utf8"));
+
+let slugs = batchClips(manifest, batch);
+if (only) {
+  const pick = new Set(
+    (await readFile(only, "utf8"))
+      .split("\n")
+      .map((s) => s.trim())
+      .filter(Boolean),
+  );
+  const unknown = [...pick].filter((s) => !slugs.includes(s));
+  if (unknown.length) {
+    console.error(`--only: ikke i batch ${batch}: ${unknown.join(", ")}`);
+    process.exit(1);
+  }
+  slugs = slugs.filter((s) => pick.has(s));
+}
+if (slugs.length === 0) {
+  console.error(`Ingen klip i batch ${batch}`);
+  process.exit(1);
+}
+
+const items = slugs.map((slug) => ({ slug, name: titleCase(slug), equipmentHint: equipmentHint(slug) }));
+const fill = {
+  __COUNT__: String(items.length),
+  __AGENTS__: String(Math.ceil(items.length / 10)),
+  __ITEMS__: JSON.stringify(items),
+  __MUSCLES__: JSON.stringify(MUSCLES),
+  __CATEGORIES__: JSON.stringify(taxonomy.categories),
+  __PATTERNS__: JSON.stringify(taxonomy.patterns),
+  __EQUIPMENT__: JSON.stringify(taxonomy.equipment),
+};
+
+let script = await readFile(repo("scripts/wf-exercises.template.txt"), "utf8");
+for (const [key, value] of Object.entries(fill)) {
+  if (!script.includes(key)) {
+    console.error(`Skabelonen mangler pladsholderen ${key}`);
+    process.exit(1);
+  }
+  script = script.replaceAll(key, () => value);
+}
+await writeFile(repo("scripts/wf-exercises.mjs"), script);
+
+const hinted = items.filter((i) => i.equipmentHint).length;
+console.log(`✓ scripts/wf-exercises.mjs: ${items.length} øvelser, ${fill.__AGENTS__} agenter, ${hinted} med redskabshint`);
+```
+
+`replaceAll(key, () => value)` bruger en funktion, så `$`-tegn i JSON'en ikke tolkes som erstatningsmønstre.
+
+- [ ] **Step 3: Generér og tørkør scriptet**
+
+Run: `node scripts/build-wf-exercises.mjs --batch=2026-10`
+Expected: `✓ scripts/wf-exercises.mjs: 369 øvelser, 37 agenter, <n> med redskabshint` (n er omkring 250).
+
+Tørkørslen udfører workflow-scriptet med stubbe i stedet for agenter og viser, at det er gyldigt og fordeler alle øvelser:
+
+```bash
+node -e '
+const fs = require("fs");
+const src = fs.readFileSync("scripts/wf-exercises.mjs", "utf8").replace("export const meta", "const meta");
+const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+const calls = [];
+const run = new AsyncFunction("agent", "parallel", "phase", "log", src);
+run(
+  async (prompt, opts) => { calls.push({ label: opts.label, chars: prompt.length, schema: Boolean(opts.schema) }); return { exercises: [] }; },
+  (thunks) => Promise.all(thunks.map((t) => t())),
+  () => {},
+  (m) => console.log("log:", m),
+).then((r) => console.log("agenter:", calls.length, "| første:", calls[0].label, "| sidste:", calls.at(-1).label, "| count:", r.count, "| missing:", r.missing.length, "| prompt-tegn:", calls[0].chars, "| schema:", calls.every((c) => c.schema)));
+'
+```
+
+Expected:
+
+```
+log: 369 øvelser i 37 batches
+log: 0 øvelser genereret, 369 mangler
+agenter: 37 | første: batch-1/37 | sidste: batch-37/37 | count: 0 | missing: 369 | prompt-tegn: <cirka 7000> | schema: true
+```
+
+Run: `head -5 scripts/wf-exercises.mjs; grep -c "__[A-Z]*__" scripts/wf-exercises.mjs; npx eslint scripts/build-wf-exercises.mjs scripts/wf-exercises.mjs`
+Expected: filen begynder med `export const meta = {` og beskrivelsen nævner 369; `0` tilbageværende pladsholdere; ESLint uden fejl.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add scripts/wf-exercises.template.txt scripts/build-wf-exercises.mjs scripts/wf-exercises.mjs
+git commit -m "feat(movekit): workflow-scriptet genereres fra manifest og taksonomi
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+```
+
+---
+
+## Chunk 4: Workflow-kørsel, migrationer og upload
+
+Efter denne chunk findes de to migrationer, genereret fra workflowets output og manifestet, og videoerne ligger i Storage.
+
+### Task 9: [operatør] Kør workflowet og generér migration 0066
+
+**Files:**
+- Create: `supabase/migrations/0066_exercise_library_expansion_2.sql` (genereret)
+
+- [ ] **Step 1: Kør workflowet**
+
+Tom har godkendt kørslen med 37 agenter (beslutning 2 i spec'en). Start med `Workflow({ scriptPath: "/Users/tomhedegaard/MakeIt/scripts/wf-exercises.mjs" })`. Afvises stien, så send filens indhold som `script`.
+
+Workflowet kører i baggrunden. Fortsæt med chunk 5 (UI) imens. Når det er færdigt, giver resultatet `{ count, missing }` og stien til kørslens transcript-mappe med `journal.jsonl`.
+
+Expected: `count: 369`, `missing: []`. En agent, der fejlede, giver færre; det håndteres i Step 3.
+
+- [ ] **Step 2: Generér migrationen fra journalen**
+
+Run (erstat `<journal>` med stien til kørslens `journal.jsonl`):
+
+```bash
+node scripts/gen-exercise-seed.mjs <journal> --batch=2026-10 \
+  --after=supabase/migrations/0052_exercise_library_expansion.sql \
+  > supabase/migrations/0066_exercise_library_expansion_2.sql
+```
+
+Expected: stderr `✓ 369 øvelser → SQL`, exit 0.
+
+- [ ] **Step 3: Ved valideringsfejl, genkør kun de afviste**
+
+Scriptet skriver én fejl pr. linje med slug forrest. Saml slugs og byg et lille workflow for dem:
+
+```bash
+node scripts/gen-exercise-seed.mjs <journal> --batch=2026-10 --after=supabase/migrations/0052_exercise_library_expansion.sql 2>&1 >/dev/null \
+  | grep -v "^VALIDERINGSFEJL" | cut -d: -f1 | sort -u > MoveKit/.staging/rerun.txt
+wc -l MoveKit/.staging/rerun.txt
+node scripts/build-wf-exercises.mjs --batch=2026-10 --only=MoveKit/.staging/rerun.txt
+```
+
+Kør workflowet igen, og giv begge journaler til generatoren. Den sidste vinder på slug:
+
+```bash
+node scripts/gen-exercise-seed.mjs <journal> <journal-2> --batch=2026-10 \
+  --after=supabase/migrations/0052_exercise_library_expansion.sql \
+  > supabase/migrations/0066_exercise_library_expansion_2.sql
+```
+
+Gentag til exit 0. Slut af med `node scripts/build-wf-exercises.mjs --batch=2026-10`, så den committede `wf-exercises.mjs` igen dækker hele batchen (ingen diff, hvis der ikke var genkørsler).
+
+- [ ] **Step 4: Kontrollér migrationen**
+
+Run:
+
+```bash
+node -e '
+const fs = require("fs");
+const sql = fs.readFileSync("supabase/migrations/0066_exercise_library_expansion_2.sql", "utf8");
+const rows = [...sql.matchAll(/^\s*\(\x27([a-z0-9-]+)\x27, \x27((?:[^\x27]|\x27\x27)*)\x27, \x27([a-z-]+)\x27, \x27([a-z-]+)\x27, \x27([a-z-]+)\x27, \x27([a-z]+)\x27,/gm)];
+const tally = (i) => Object.entries(rows.reduce((a, r) => ((a[r[i]] = (a[r[i]] || 0) + 1), a), {})).sort((a, b) => b[1] - a[1]).map(([k, v]) => k + " " + v).join(" · ");
+console.log("rækker:", rows.length);
+console.log("kategori:", tally(3));
+console.log("mønster:", tally(4));
+console.log("redskab:", tally(5));
+console.log("niveau:", tally(6));
+const orders = [...sql.matchAll(/^\s+(\d+), false\)/gm)].map((m) => Number(m[1]));
+console.log("display_order:", Math.min(...orders), "til", Math.max(...orders), "| alle ender på 5:", orders.every((o) => o % 10 === 5));
+'
+```
+
+Expected: `rækker: 369`. Kategorierne `mobility`, `cardio` og `power` er alle til stede, i størrelsesordenen 35 til 45, 30 til 40 og 20 til 30. `display_order` går fra 995 til 2875, og alle ender på 5.
+
+Læs 12 øvelser igennem med øjnene, mindst to fra hver af `mobility`, `cardio`, `power` og resten spredt over styrke (for eksempel `tempo-run`, `freestyle-swim`, `worlds-greatest-stretch`, `open-book-rotation`, `power-clean`, `broad-jump`, `trap-bar-deadlift`, `nordic-hamstring-curl`, `sled-push`, `copenhagen-plank`, `landmine-press`, `seated-calf-raise`):
+
+```bash
+for s in tempo-run freestyle-swim worlds-greatest-stretch open-book-rotation power-clean broad-jump trap-bar-deadlift nordic-hamstring-curl sled-push copenhagen-plank landmine-press seated-calf-raise; do
+  grep -A5 "^  ('$s'," supabase/migrations/0066_exercise_library_expansion_2.sql | cut -c1-700; echo
+done
+```
+
+Tjek: dansk tekst, imperative cues, rigtige muskler, og at kategori, mønster og redskab giver mening. Er noget systematisk forkert (for eksempel alle konditionsøvelser med løftecues), så ret skabelonens prompt og genkør de berørte slugs som i Step 3. Enkeltstående skævheder er acceptable: det er kladder til Munks review.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add supabase/migrations/0066_exercise_library_expansion_2.sql scripts/wf-exercises.mjs
+git commit -m "feat(exercises): 369 nye MoveKit-øvelser som kladder (migration 0066)
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 10: Wiring-migration 0067
+
+**Files:**
+- Create: `scripts/gen-demo-urls.mjs`
+- Create: `supabase/migrations/0067_expansion_2_wiring.sql`
+- Modify: `src/lib/data/movekit-manifest.test.ts`
+
+- [ ] **Step 1: Udvid manifest-testen (fejler)**
+
+Tilføj i `src/lib/data/movekit-manifest.test.ts`. Importen udvides med `parseSeedOrders`:
+
+```ts
+import { batchClips, parseSeedOrders, unassigned, validateManifest } from "../../../scripts/lib/movekit.mjs";
+```
+
+og en ny `describe` sidst i filen:
+
+```ts
+describe("migrations for batch 2026-10", () => {
+  const text = (p: string) => readFileSync(join(process.cwd(), p), "utf8");
+  const batch = batchClips(manifest, "2026-10");
+
+  it("0066 seeds exactly the batch", () => {
+    const seeded = parseSeedOrders(text("supabase/migrations/0066_exercise_library_expansion_2.sql"))
+      .map((r: { slug: string }) => r.slug)
+      .sort();
+    expect(seeded).toEqual(batch);
+  });
+
+  it("0067 points exactly the batch at Storage", () => {
+    const sql = text("supabase/migrations/0067_expansion_2_wiring.sql");
+    const begin = sql.indexOf("-- BEGIN demo-urls 2026-10");
+    const end = sql.indexOf("-- END demo-urls 2026-10");
+    expect(begin).toBeGreaterThan(-1);
+    expect(end).toBeGreaterThan(begin);
+    const wired = [...sql.slice(begin, end).matchAll(/'([a-z0-9-]+)'/g)].map((m) => m[1]).sort();
+    expect(wired).toEqual(batch);
+  });
+
+  it("0067 gives front-squat its bundled loop without touching a coach upload", () => {
+    const sql = text("supabase/migrations/0067_expansion_2_wiring.sql");
+    expect(sql).toContain("set demo_asset_url = '/exercise-demos/front-squat.webm'");
+    expect(sql).toContain("demo_asset_url like '/exercise-demos/%'");
+  });
+});
+```
+
+Run: `npx vitest run src/lib/data/movekit-manifest.test.ts`
+Expected: FAIL på de to 0067-tests (filen findes ikke). 0066-testen består.
+
+- [ ] **Step 2: Skriv URL-generatoren**
+
+`scripts/gen-demo-urls.mjs`:
+
+```js
+#!/usr/bin/env node
+/**
+ * Skriver URL-blokken til en wiring-migration: demo_asset_url for alle
+ * biblioteksøvelser i en manifest-batch, pegende på Storage-bucketen
+ * `exercise-demos`. resolveDemoAssets() afleder .mp4, poster og
+ * portræt-trioen fra .webm-URL'en.
+ *
+ * Kun rækker uden demo_asset_url sættes, så en coach-upload ikke
+ * overskrives ved genkørsel. Blokken afgrænses af BEGIN/END-linjer,
+ * som manifest-testen læser.
+ *
+ * Brug: node scripts/gen-demo-urls.mjs --batch=2026-10
+ */
+import { readFile } from "node:fs/promises";
+import { batchClips } from "./lib/movekit.mjs";
+
+// Produktionsprojektets public bucket (samme base som migration 0053).
+const BASE = "https://wtxhsbrtzoukkhhtsqnu.supabase.co/storage/v1/object/public/exercise-demos/";
+
+const batch = process.argv.find((a) => a.startsWith("--batch="))?.slice("--batch=".length);
+if (!batch) {
+  console.error("Brug: node scripts/gen-demo-urls.mjs --batch=<batch>");
+  process.exit(1);
+}
+
+const manifest = JSON.parse(await readFile(new URL("./movekit-manifest.json", import.meta.url), "utf8"));
+const slugs = batchClips(manifest, batch);
+if (slugs.length === 0) {
+  console.error(`Ingen klip i batch ${batch}`);
+  process.exit(1);
+}
+
+const lines = [];
+for (let i = 0; i < slugs.length; i += 4) {
+  lines.push("    " + slugs.slice(i, i + 4).map((s) => `'${s}'`).join(", "));
+}
+
+process.stdout.write(`-- BEGIN demo-urls ${batch}
+update public.exercises
+set demo_asset_url = '${BASE}' || slug || '.webm'
+where demo_asset_url is null
+  and slug in (
+${lines.join(",\n")}
+  );
+-- END demo-urls ${batch}
+`);
+console.error(`✓ ${slugs.length} slugs`);
+```
+
+- [ ] **Step 3: Skriv migrationen**
+
+Run:
+
+```bash
+{
+cat <<'SQL'
+-- =================================================================
+-- MakeIt // HQ — wiring for MoveKit-batch 2026-10
+-- =================================================================
+-- 1. demo_asset_url for de 369 øvelser fra 0066. Videoerne ligger i
+--    Storage-bucket'en 'exercise-demos' (upload:
+--    scripts/upload-demos-to-storage.mjs). Blokken er skrevet af
+--    scripts/gen-demo-urls.mjs ud fra scripts/movekit-manifest.json.
+-- 2. front-squat får sit bundlede loop (public/exercise-demos/).
+-- 3. Eksisterende øvelser flyttes til de nye kategorier Power og
+--    Mobilitet, så samme slags øvelse ikke ligger to steder.
+--
+-- Kør EFTER upload, EFTER 0066 og EFTER deploy af koden: front-squat-
+-- filen og labels for de nye kategorier findes først i det deploy.
+-- Idempotent: UPDATE-by-slug med guards, ingen skemaændring.
+
+SQL
+node scripts/gen-demo-urls.mjs --batch=2026-10
+cat <<'SQL'
+
+-- front-squat: klippet fandtes ikke i den første MoveKit-pakke.
+-- En coach-upload (Storage-URL) overskrives ikke.
+update public.exercises
+set demo_asset_url = '/exercise-demos/front-squat.webm'
+where slug = 'front-squat'
+  and (demo_asset_url is null or demo_asset_url like '/exercise-demos/%');
+
+-- Olympiske løft og plyometri → Power. Kun rækker der stadig har den
+-- oprindelige kategori, så en coach-rettelse ikke overskrives.
+update public.exercises
+set category = 'power', pattern = 'olympic'
+where slug in (
+    'barbell-snatch', 'barbell-power-snatch', 'barbell-muscle-snatch',
+    'barbell-clean-and-press', 'dumbbell-single-arm-clean-and-press'
+  )
+  and category = 'full-body';
+
+update public.exercises
+set category = 'power', pattern = 'jump'
+where slug = 'box-jump'
+  and category = 'full-body';
+
+update public.exercises
+set category = 'power', pattern = 'jump'
+where slug = 'jump-squats'
+  and category = 'lower-body';
+
+-- Mavestræk → Mobilitet.
+update public.exercises
+set category = 'mobility', pattern = 'mobility'
+where slug in (
+    'abdominals-stretch-variation-one', 'abdominals-stretch-variation-two',
+    'abdominals-stretch-variation-three', 'abdominals-stretch-variation-four'
+  )
+  and category = 'core';
+SQL
+} > supabase/migrations/0067_expansion_2_wiring.sql
+grep -c "" supabase/migrations/0067_expansion_2_wiring.sql
+```
+
+Expected: stderr `✓ 369 slugs`. Filen er omkring 150 linjer.
+
+- [ ] **Step 4: Kør testene**
+
+Run: `npx vitest run src/lib/data/movekit-manifest.test.ts`
+Expected: PASS, 9 tests.
+
+Run: `grep -n "update public.exercises" supabase/migrations/0067_expansion_2_wiring.sql | wc -l; grep -c ";" supabase/migrations/0067_expansion_2_wiring.sql`
+Expected: `6` UPDATE-sætninger og `6` semikoloner.
+
+Run: `npx eslint scripts/gen-demo-urls.mjs src/lib/data/movekit-manifest.test.ts`
+Expected: ingen fejl.
+
+Migrationerne køres ikke. `supabase db push` er Toms trin efter merge og deploy.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add scripts/gen-demo-urls.mjs supabase/migrations/0067_expansion_2_wiring.sql src/lib/data/movekit-manifest.test.ts
+git commit -m "feat(exercises): migration 0067 kobler de nye øvelser til video og samler Power og Mobilitet
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 11: [operatør] Upload til Storage
+
+Forudsætter at encodingen fra Task 4 er færdig.
+
+- [ ] **Step 1: Bekræft at encodingen er komplet**
+
+Run:
+
+```bash
+tail -4 MoveKit/.staging/ingest-2026-10.log
+ls MoveKit/.staging/2026-10/.done | wc -l
+ls MoveKit/.staging/2026-10 | grep -c -E "\.(webm|mp4|jpg)$"
+find MoveKit/.staging/2026-10 -maxdepth 1 -type f -size +5M | wc -l
+find MoveKit/.staging/2026-10 -maxdepth 1 -type f -size 0 | wc -l
+```
+
+Expected: loggen slutter med `369/369 klip færdige · 2214 filer`; `369`; `2214`; `0` filer over 5 MB; `0` tomme filer. Ved fejlede klip: kør `ingest-manifest.mjs` igen. Ved filer over 5 MB: stop og rapportér hvilke.
+
+- [ ] **Step 2: Se på et udsnit af portrætbeskæringerne**
+
+De nye klip har motiver, beskæringen ikke har mødt før (svømning, kardiomaskiner, slæde). Åbn disse posters og bekræft, at figur og redskab er helt med:
+
+`MoveKit/.staging/2026-10/freestyle-swim-portrait-poster.jpg`, `assault-bike-portrait-poster.jpg`, `sled-push-portrait-poster.jpg`, `rowing-machine-steady-state-portrait-poster.jpg`, `trap-bar-deadlift-portrait-poster.jpg`, `worlds-greatest-stretch-portrait-poster.jpg`, `battle-ropes-portrait-poster.jpg`, `machine-hack-squat-portrait-poster.jpg`.
+
+En beskæring, der skærer motivet over, noteres til slutrapporten. Den blokerer ikke uploaden: landskabsversionen bruges på detaljesiden, og Munk ser klippet i review.
+
+- [ ] **Step 3: Tørkørsel**
+
+Run: `MI_DEMO_OUT=MoveKit/.staging/2026-10 node scripts/upload-demos-to-storage.mjs --dry`
+Expected:
+
+```
+2214 filer i MoveKit/.staging/2026-10 → bucket 'exercise-demos' (1182 objekter i forvejen)
+  findes allerede: 12 (springes over)
+  uploades:        2202  (DRY RUN)
+  eksempler på eksisterende: barbell-stiff-leg-deadlifts-portrait-poster.jpg, …
+```
+
+De 12 eksisterende er portrætfilerne for `barbell-stiff-leg-deadlifts`, `cable-bar-pushdown`, `kettlebell-calf-raise` og `kettlebell-hip-thrust`. Er tallet et andet, så stop og undersøg.
+
+- [ ] **Step 4: Upload**
+
+Uploaden skriver til produktions-bucketen. Den er additiv: ingen eksisterende fil ændres, og ingen databaserække peger på de nye filer, før 0067 køres.
+
+Run: `MI_DEMO_OUT=MoveKit/.staging/2026-10 node scripts/upload-demos-to-storage.mjs`
+Expected: `✓ 2202 uploadet, 0 fejl`. Ved fejl: kør kommandoen igen; den tager kun de manglende.
+
+- [ ] **Step 5: Verificér**
+
+Run:
+
+```bash
+MI_DEMO_OUT=MoveKit/.staging/2026-10 node scripts/upload-demos-to-storage.mjs --dry | head -3
+B=https://wtxhsbrtzoukkhhtsqnu.supabase.co/storage/v1/object/public/exercise-demos
+for s in arnold-press tempo-run freestyle-swim worlds-greatest-stretch power-clean broad-jump trap-bar-deadlift sled-push trx-row zercher-squat barbell-stiff-leg-deadlifts kettlebell-calf-raise; do
+  for f in .webm .mp4 -poster.jpg -portrait.webm -portrait.mp4 -portrait-poster.jpg; do
+    printf "%s " "$(curl -s -o /dev/null -w '%{http_code}' -I "$B/$s$f")"
+  done; echo " $s"
+done
+```
+
+Expected: `(3384 objekter i forvejen)`, `findes allerede: 2214`, `uploades: 0`. Alle 72 svar er `200`.
+
+Der er intet at committe i dette trin.
 
