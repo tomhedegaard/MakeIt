@@ -55,7 +55,7 @@ export default function LibraryFilterForm({
           className="input w-full"
         />
       </label>
-      <label className="min-w-0 basis-44 space-y-1.5">
+      <label className="min-w-0 grow basis-44 space-y-1.5 sm:grow-0">
         <span className="block text-xs text-fg-dim">{labels.equipment}</span>
         <select
           name="equipment"
