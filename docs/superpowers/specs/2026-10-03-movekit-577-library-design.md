@@ -371,6 +371,20 @@ springes derfor over. Det er samme bevægelse fra samme kilde i lavere opløsnin
 Uploaden skriver til produktions-bucketen med service-role-nøglen fra `.env.local`. Den er
 additiv, og ingen række peger på filerne før 0067 er kørt.
 
+### 7.2b Portræt-loops forankres i bunden (tilføjet under implementeringen)
+
+Gennemsynet af de nye loops viste en fejl i portrætudgaverne, som også findes i loops, der
+har været live siden PR #115: når motivet når billedets underkant (maskinfod, bænkben,
+løbebånd), strækker udfyldningen under motivet det ud som grå søjler. En måling fandt 114
+af de 577 klip berørt.
+
+`scripts/make-portrait-demo.mjs` er derfor rettet før upload: `reachesBottom` opdager, at
+motivet når underkanten, og forgrunden lægges så helt i bund med al udfyldning øverst.
+Billedets egen underkant bliver det naturlige snit, som i landskabsudgaven. Frit stående
+figurer er uændrede. Rettelsen er brugt på de 369 nye klip og på standing calf raise.
+Loops, der allerede er live (batch 2026-06 og de øvrige kerneøvelser), er ikke lavet om:
+det ville kræve at overskrive filer i produktion og er lagt som en opfølgende opgave.
+
 ### 7.3 Ikke re-encoding af eksisterende
 
 De 204 klip, der allerede er i brug, re-encodes ikke fra de nye 1936-kilder. Output er
