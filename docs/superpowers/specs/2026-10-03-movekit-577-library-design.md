@@ -257,18 +257,27 @@ Resultatet gemmes som JSON uden for repoet. Den genererede SQL er den varige art
 `scripts/gen-exercise-seed.mjs` udvides:
 
 ```
-node scripts/gen-exercise-seed.mjs <json> [<json> …] --batch=2026-10 > 0066….sql
+node scripts/gen-exercise-seed.mjs <kilde> [<kilde> …] --batch=2026-10 \
+     --after=supabase/migrations/0052_exercise_library_expansion.sql > 0066….sql
 ```
 
-Flere JSON-filer flettes på slug, og en senere fil vinder over en tidligere. Sådan lægges
-en genkørt batch oven på første kørsel.
+En kilde er en JSON-fil eller en workflow-journal (JSON Lines). Flere kilder flettes på
+slug, og en senere kilde vinder over en tidligere. Sådan lægges en genkørt batch oven på
+første kørsel. `--after` peger på de tidligere seed-migrationer, som rækkefølgen flettes
+ind i. `--rerun-out=<fil>` skriver de slugs, der fejlede eller mangler, til genkørsel.
 
 Fejler med liste og exit 1 når:
 
 - en muskel, kategori, et mønster, redskab eller en sværhedsgrad ikke findes i taksonomien,
-- en slug ikke hører til batchen i manifestet, eller forekommer to gange i samme fil,
+- en slug forekommer to gange med forskelligt indhold i samme kilde, uden at en senere
+  kilde afgør den (en præcis gentagelse tåles, da en journal kan rumme samme resultat to gange),
+- en tekst indeholder tankestreg (— eller –), jf. appens copy-regel,
 - en slug fra batchen mangler i JSON'en,
-- et tekstfelt er tomt, `cues` har færre end 4 eller `mistakes` færre end 2.
+- et tekstfelt er tomt, `cues` har færre end 4 eller `mistakes` færre end 2,
+- kategori og mønster ikke passer sammen (mobility, cardio og power har deres egne mønstre).
+
+En øvelse med en slug uden for batchen droppes med en advarsel i stedet for at fejle: det er
+en agent, der har ændret en slug, og den rigtige meldes som manglende.
 
 Uden `--batch` opfører scriptet sig som i dag (`display_order` 1000 + i × 10), bortset fra
 taksonomi-valideringen. Rækkerne sorteres på slug, så outputtet er deterministisk.
