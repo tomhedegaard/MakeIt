@@ -51,6 +51,7 @@ describe("equipmentHint", () => {
     ["slider-leg-curl", "accessory"],
     ["towel-slide-leg-curl", "bodyweight"],
     ["backpack-row", "bodyweight"],
+    ["bodyweight-squat-to-stand", "bodyweight"],
     ["thoracic-extension-over-foam-roller", "bodyweight"],
   ])("%s -> %s", (slug, expected) => {
     expect(equipmentHint(slug)).toBe(expected);
@@ -154,5 +155,20 @@ describe("interleavedOrder", () => {
 
   it("does not depend on the order of the existing rows", () => {
     expect(interleavedOrder([...existing].reverse(), "band-pull-through")).toBe(1045);
+  });
+
+  it("keeps the order of a slug that is already seeded", () => {
+    expect(interleavedOrder(existing, "band-row")).toBe(1050);
+  });
+
+  it("joins the slot of a predecessor that is itself interleaved (a third batch)", () => {
+    const withSecondBatch = [
+      ...existing,
+      { slug: "arnold-press", order: 995 },
+      { slug: "band-pull-through", order: 1045 },
+    ];
+    expect(interleavedOrder(withSecondBatch, "assault-bike")).toBe(995);
+    expect(interleavedOrder(withSecondBatch, "band-pullover")).toBe(1045);
+    expect(interleavedOrder(withSecondBatch, "band-shrug")).toBe(1055);
   });
 });
