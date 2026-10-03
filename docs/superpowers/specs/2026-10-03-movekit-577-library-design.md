@@ -113,7 +113,7 @@ for medlemmer og får ingen labels.
   cykel, romaskine, ski-erg, crosstrainer, trappemaskine og lignende er `cardio-machine`.
   Løb, gang og svømning uden maskine er `bodyweight`.
 
-### 3.4 Flyt af eksisterende øvelser til Power
+### 3.4 Flyt af eksisterende øvelser til de nye kategorier
 
 I migration 0067 (afsnit 6.2). Kun rækker der stadig har den kategori, de har i dag, så en
 coach-rettelse ikke overskrives:
@@ -123,9 +123,11 @@ coach-rettelse ikke overskrives:
 | barbell-snatch, barbell-power-snatch, barbell-muscle-snatch, barbell-clean-and-press, dumbbell-single-arm-clean-and-press | full-body | power / olympic |
 | box-jump | full-body | power / jump |
 | jump-squats | lower-body | power / jump |
+| abdominals-stretch-variation-one, -two, -three, -four | core | mobility / mobility |
 
-`jump-squats` var ikke nævnt i gennemgangen med Tom, men er plyometri på linje med box-jump
-og flyttes af samme grund. Burpee, thruster og kettlebell-swing bliver hvor de er.
+`jump-squats` og de fire mavestræk var ikke nævnt i gennemgangen med Tom. De flyttes af
+samme grund som de øvrige: ellers ligger samme slags øvelse i to kategorier. Burpee,
+thruster og kettlebell-swing bliver hvor de er.
 
 ---
 
@@ -166,7 +168,7 @@ og flyttes af samme grund. Burpee, thruster og kettlebell-swing bliver hvor de e
   med samme slug som klippet og loops i Storage. Ellers `null`.
 - `skipped`: begrundelse når klippet bevidst ikke bruges. Ellers `null`.
 - Et klip uden `core`, `library` og `skipped` er **utildelt**.
-- `core` og `library` kan begge være sat (`cable-rope-pushdown`, `dumbbell-single-leg-calf-raise`).
+- `core` og `library` kan begge være sat. Efter denne import gælder det kun `cable-rope-pushdown`.
 - `skipped` udelukker de to andre.
 
 ### 4.2 `scripts/movekit-audit.mjs`
@@ -254,19 +256,28 @@ Resultatet gemmes som JSON uden for repoet. Den genererede SQL er den varige art
 `scripts/gen-exercise-seed.mjs` udvides:
 
 ```
-node scripts/gen-exercise-seed.mjs <json> --batch=2026-10 --order-start=3000 > 0066….sql
+node scripts/gen-exercise-seed.mjs <json> [<json> …] --batch=2026-10 > 0066….sql
 ```
+
+Flere JSON-filer flettes på slug, og en senere fil vinder over en tidligere. Sådan lægges
+en genkørt batch oven på første kørsel.
 
 Fejler med liste og exit 1 når:
 
 - en muskel, kategori, et mønster, redskab eller en sværhedsgrad ikke findes i taksonomien,
-- en slug ikke hører til batchen i manifestet, eller forekommer to gange,
+- en slug ikke hører til batchen i manifestet, eller forekommer to gange i samme fil,
 - en slug fra batchen mangler i JSON'en,
 - et tekstfelt er tomt, `cues` har færre end 4 eller `mistakes` færre end 2.
 
-Uden `--batch` opfører scriptet sig som i dag, bortset fra taksonomi-valideringen.
-`display_order` er `order-start + i × 10` i slug-orden. Rækkerne sorteres på slug, så
-outputtet er deterministisk.
+Uden `--batch` opfører scriptet sig som i dag (`display_order` 1000 + i × 10), bortset fra
+taksonomi-valideringen. Rækkerne sorteres på slug, så outputtet er deterministisk.
+
+**`display_order` med `--batch`:** de nye rækker flettes alfabetisk ind mellem de
+eksisterende biblioteksøvelser uden at røre dem. De 188 har `1000 + 10 × j`, hvor `j` er
+deres plads i slug-orden. En ny øvelse får værdien for den nærmeste foregående gamle slug
+plus 5, eller 995 hvis ingen går forud. Flere nye øvelser mellem to gamle deler værdi og
+ordnes af listens sekundære sortering på navn (9.1). Sådan viser "Alle" kerneøvelserne
+først og derefter ét alfabetisk forløb, og en coach-rettet `display_order` overskrives ikke.
 
 ---
 
@@ -276,20 +287,23 @@ Begge er idempotente og ændrer ikke skemaet. `db:types` er ikke nødvendig.
 
 ### 6.1 `0066_exercise_library_expansion_2.sql`
 
-Ren generator-output: 369 rækker, `is_published=false`, `display_order` 3000–6680,
-`on conflict (slug) do update` på metadatafelterne som i 0052. `is_published` og
+Ren generator-output: 369 rækker, `is_published=false`, `display_order` flettet ind som
+beskrevet i 5.2, `on conflict (slug) do update` på metadatafelterne som i 0052. `is_published` og
 `demo_asset_url` røres ikke ved konflikt.
 
 ### 6.2 `0067_expansion_2_wiring.sql`
 
-Genereres af `scripts/gen-wiring-migration.mjs --batch=2026-10` og indeholder:
+Indeholder:
 
 1. `demo_asset_url` for de 369 til
    `https://wtxhsbrtzoukkhhtsqnu.supabase.co/storage/v1/object/public/exercise-demos/<slug>.webm`,
-   som i 0053, med eksplicit slug-liste fra manifestet.
+   som i 0053, med eksplicit slug-liste. Blokken skrives af
+   `scripts/gen-demo-urls.mjs --batch=2026-10` ud fra manifestet.
 2. `demo_asset_url = '/exercise-demos/front-squat.webm'` for `front-squat`, kun hvor feltet
    er `null` eller allerede peger på `/exercise-demos/`, så en coach-upload ikke overskrives.
-3. Flyt til Power fra 3.4, hver med `and category = '<nuværende>'`.
+3. Flyttene fra 3.4, hver med `and category = '<nuværende>'`.
+
+Punkt 2 og 3 er engangsændringer og håndskrives i filen.
 
 rdl, hip-thrust og standing-calf-raise beholder deres URL. Filerne i `public/` udskiftes
 under samme navn. `public/` serveres med `must-revalidate`, service workeren cacher kun
@@ -335,7 +349,9 @@ For hvert klip i batchen: landskabstrio via `ingest-exercise-demo.mjs` og portr�
 først (pagineret) og springer filer over, der allerede findes. `--overwrite` genindfører
 upsert. `--dry` viser hvad der ville ske.
 
-Portrætfilerne for de to frigjorte proxy-klip ligger allerede i bucketen fra PR #115 og
+Fire klip i batchen fandtes i den gamle pakke uden at være biblioteksøvelser: de to
+frigjorte proxies samt `cable-bar-pushdown` og `kettlebell-calf-raise`, som tidligere var
+kernekilder. Deres portrætfiler (12 i alt) ligger allerede i bucketen fra PR #115 og
 springes derfor over. Det er samme bevægelse fra samme kilde i lavere opløsning.
 
 Uploaden skriver til produktions-bucketen med service-role-nøglen fra `.env.local`. Den er
@@ -365,20 +381,23 @@ tricep-pushdown forbliver på `cable-rope-pushdown`: `cable-bar-pushdown` har in
 
 De fire re-ingestes til `public/exercise-demos/` i landskab og portræt (24 filer, heraf 6 nye
 for front-squat). `ingest-movekit-batch.mjs` og `make-portrait-demo.mjs` læser i forvejen
-kortet; de køres med `--only` og pr. klip, så de øvrige 15 ikke re-encodes.
+kortet; de køres med `--only` og pr. klip, så de øvrige 16 kerneøvelser ikke re-encodes.
 
 Følgeændringer, som eksisterende tests kræver:
 
-- `src/lib/data/bundled-demo-assets.ts`: `front-squat` ind i `BUNDLED_DEMO_SLUGS`.
-- `src/lib/data/exercise-mocks.ts`: front-squat får `demoAssetUrl`.
+- `src/lib/data/bundled-demo-assets.ts`: `front-squat` ind i `BUNDLED_DEMO_SLUGS`. Mocks
+  får dermed `demoAssetUrl` af sig selv, da `exercise-mocks.ts` slår op med
+  `bundledDemoAssetUrl(slug)`.
 - `supabase/seed-exercises.sql` og `supabase/seed.sql`: front-squat ind i UPDATE-listen,
   kommentaren om at front-squat mangler klip fjernes.
 - `src/lib/data/demo-assets.test.ts`: testen "front-squat stays null" erstattes af en test
   af, at alle 20 kerneøvelser har bundlet loop.
-- `src/lib/data/session-demo-assets.test.ts`: null-tilfældene bruger en slug uden filer i
-  stedet for front-squat.
-- Kommentarer i `session-demo-assets.ts` og `exercises.ts`, der nævner front-squat som
-  undtagelse, rettes.
+- `src/lib/data/session-demo-assets.test.ts`: null-tilfældene bruger en slug uden filer.
+  Hydrerings-testen, der forventer at front-squat ikke får loop, vendes til at forvente
+  loopet, da ingen mock længere mangler et.
+- Forældede kommentarer og dokumentation om front-squat som undtagelse rettes:
+  `bundled-demo-assets.ts`, `exercise-mocks.ts`, `session-demo-assets.ts`, `exercises.ts`,
+  `SessionClient.tsx`, `docs/PLATFORM_OVERVIEW.md`, `docs/EXERCISE_VISUAL_BRIEF.md`.
 
 ---
 
@@ -402,7 +421,8 @@ Før der skrives Next.js-kode læses den relevante guide i `node_modules/next/di
 ### 9.2 Biblioteket (`/train/exercises`)
 
 - `searchParams`: `q`, `category`, `equipment`. `category` og `equipment` ignoreres hvis
-  værdien ikke findes i taksonomien.
+  værdien ikke forekommer blandt de publicerede øvelser (facetterne fra 9.1). En værdi, der
+  findes i databasen men ikke i taksonomien, får altså både pille og virkende filter.
 - Ny ren hjælper `libraryHref({ q, category, equipment })` i
   `src/lib/data/exercise-library-url.ts` bygger URL'en og udelader tomme parametre.
 - Øverst en GET-formular: søgefelt (`type="search"`, `name="q"`, label "Søg øvelse"),
@@ -424,9 +444,12 @@ HTML-vægten måles i verifikationen og rapporteres til Tom.
 ### 9.3 Review-køen (`/coach/exercises/review`)
 
 - `searchParams.category`. Siden filtrerer kladderne, før de gives til
-  `ExerciseReviewQueue`, som er uændret.
+  `ExerciseReviewQueue`. Komponenten fryser sin liste ved mount, så siden giver den
+  `key={category ?? "all"}`, og køen starter forfra når filteret skiftes. Komponenten selv
+  er uændret.
 - Pille-række over køen: "Alle (n)" og én pille pr. kategori med kladder, med antal, i
-  taksonomiens rækkefølge. Labels fra `Train.categories`.
+  taksonomiens rækkefølge. Labels fra `Train.categories`; "Alle (n)" er ny nøgle
+  `CoachStudio.exercises.review.filterAll` på dansk og engelsk.
 - Ren hjælper `draftCategoryCounts(drafts)` i `src/lib/coach/review-queue.ts`.
 
 ### 9.4 Coach-editoren
@@ -434,21 +457,30 @@ HTML-vægten måles i verifikationen og rapporteres til Tom.
 `ExerciseEditor.tsx` læser kategorier, mønstre, redskaber og sværhedsgrader fra
 taksonomien. Det retter, at editoren i dag ikke kan vise kettlebell, band, isolation og carry.
 
+### 9.5 Program-byggeren
+
+`/coach/programs/[code]` giver i dag alle publicerede øvelser til én flad `<select>` pr.
+øvelseslinje. Med op mod 580 valg grupperes listen: siden sender `category` med i den
+minimale form, og `ProgramBuilder.tsx` viser `<optgroup>` pr. kategori i taksonomiens
+rækkefølge med labels fra `Train.categories`, øvelserne alfabetisk i hver gruppe. Alle
+kategorier er med, også kondition og mobilitet, så en coach kan lægge opvarmning i et
+program. Ren hjælper `groupByCategory(library)` i `src/lib/data/exercise-taxonomy.ts`.
+
 ---
 
 ## 10. Fejl og kanttilfælde
 
 | Situation | Håndtering |
 |---|---|
-| En workflow-batch fejler eller returnerer færre øvelser | `gen-exercise-seed` lister manglende slugs; `build-wf-exercises --only` genkører dem; resultaterne flettes før SQL genereres |
+| En workflow-batch fejler eller returnerer færre øvelser | `gen-exercise-seed` lister manglende slugs; `build-wf-exercises --only` genkører dem; `gen-exercise-seed` får begge JSON-filer og fletter på slug |
 | En agent ændrer en slug eller opfinder en enum-værdi | Skemaet har enums; valideringen fanger resten og fejler |
 | ffmpeg fejler på et klip | Klippet rapporteres, resten kører færdigt, genkørsel tager kun de manglende |
 | En fil overstiger bucketens 5 MB | Rapporteres af `ingest-manifest`; klippet re-encodes med højere CRF før upload |
 | Upload afbrydes | Genkørsel springer eksisterende over |
 | 0067 køres før upload eller før deploy | Kladder er usynlige for medlemmer; front-squat ville mangle video indtil deploy. Rækkefølgen i 6.3 står i PR-beskrivelsen |
-| Ukendt `category`/`equipment` i URL | Ignoreres |
+| `category`/`equipment` i URL, som ingen publiceret øvelse har | Ignoreres |
 | Ukendt værdi i DB uden label | `exerciseMetaLabels` falder tilbage til råværdien som i dag; `orderByTaxonomy` lægger den sidst |
-| Klip uden rød markering (2 nye) | Importeres; `highlight: false` i manifestet; Munk afgør i review |
+| Klip uden rød markering (3 i batchen: `cable-bar-pushdown`, `kettlebell-calf-raise`, `barbell-stiff-leg-deadlifts`) | Importeres; `highlight: false` i manifestet; Munk afgør i review |
 
 ---
 
@@ -457,12 +489,15 @@ taksonomien. Det retter, at editoren i dag ikke kan vise kettlebell, band, isola
 **Enhedstests (vitest):**
 
 - Taksonomi: hver kategori, hvert redskab og hver sværhedsgrad har label på dansk og
-  engelsk (erstatter den håndskrevne `CATALOGUE` i `exercise-meta.test.ts`).
-  `orderByTaxonomy` sorterer og lægger ukendte sidst.
+  engelsk (erstatter den håndskrevne `CATALOGUE` i `exercise-meta.test.ts`). Testen af
+  fallback til råværdi bruger i dag `sled`, som nu får label; den skifter til en værdi
+  uden for taksonomien. `orderByTaxonomy` sorterer og lægger ukendte sidst.
+  `groupByCategory` grupperer og sorterer.
 - `libraryHref`: udelader tomme parametre, bevarer de øvrige, URL-encoder `q`.
 - Søgefilter i demo-mode: delstreng, case-insensitivt, kombineret med kategori og redskab.
   Escape af `%` og `_`.
 - `draftCategoryCounts`: tæller pr. kategori, i taksonomiens rækkefølge.
+- `gen-exercise-seed`: flettet `display_order` for en ny slug før, mellem og efter de gamle.
 - Manifest-integritet: hvert klip unikt; `skipped` udelukker `core` og `library`; hver
   `core`-slug findes i `movekit-map.json` og omvendt; ingen utildelte klip; 369 klip i batch
   `2026-10`; batchens slugs er præcis dem i migration 0066 og i 0067's slug-liste.
@@ -479,7 +514,7 @@ kategori-pille, kombination, tomt resultat, nulstil. Review-køens filter dække
 enhedstest, da siden kræver coach-login mod live.
 
 **Data:** stikprøve af 12 nye slugs i Storage: `.webm`, `.mp4`, `-poster.jpg` og de tre
-portrætfiler svarer 200. Antal objekter i bucketen efter upload er 1182 + 2214 − 6 = 3390.
+portrætfiler svarer 200. Antal objekter i bucketen efter upload er 1182 + 2214 − 12 = 3384.
 
 **Vægt:** HTML-størrelsen af "Alle"-visningen estimeres ved at rendere 580 kort (mock-data
 gentaget) og rapporteres.
