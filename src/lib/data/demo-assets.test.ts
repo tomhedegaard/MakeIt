@@ -101,22 +101,11 @@ describe("bundled v1 demo loops", () => {
     }
   });
 
-  it("front-squat (no files) stays null in mock, helper, and seed lists", () => {
-    expect(disk).not.toContain("front-squat");
-    expect(existsSync(join(DEMO_DIR, "front-squat.webm"))).toBe(false);
-    expect(bundledDemoAssetUrl("front-squat")).toBeNull();
-
-    const mock = MOCK_EXERCISES.find((e) => e.slug === "front-squat");
-    expect(mock, "front-squat must exist in demo mock").toBeTruthy();
-    expect(mock?.demoAssetUrl).toBeNull();
-
-    // Seed inserts the row but the bundled-loop UPDATE must not include it.
-    expect(SEED_EXERCISES).toMatch(/front-squat has no/);
-    const updateStart = SEED_EXERCISES.lastIndexOf(
-      "set demo_asset_url = '/exercise-demos/' || slug || '.webm'",
-    );
-    const updateBlock = SEED_EXERCISES.slice(updateStart);
-    expect(updateBlock).not.toMatch(/'front-squat'/);
+  it("covers all 20 core exercises, front-squat included", () => {
+    expect(disk).toHaveLength(20);
+    expect(disk).toEqual(MOCK_EXERCISES.map((e) => e.slug).sort());
+    expect(bundledDemoAssetUrl("front-squat")).toBe("/exercise-demos/front-squat.webm");
+    expect(bundledDemoAssetUrl("no-such-lift")).toBeNull();
   });
 
   it("does not overwrite Storage URLs on seed (coach upload contract)", () => {

@@ -2,8 +2,8 @@
  * Demo-mode exercise library — the 20 v1 lifts from
  * supabase/seed-exercises.sql so /train/exercises/[slug] works
  * without Supabase. `demoAssetUrl` comes from bundledDemoAssetUrl:
- * slugs with files in public/exercise-demos/ get the public WebM
- * path; front-squat stays null (PhaseAnimator fallback).
+ * all 20 have files in public/exercise-demos/ and get the public
+ * WebM path.
  */
 import { bundledDemoAssetUrl } from "@/lib/data/bundled-demo-assets";
 import type { Exercise, ExercisePhase, ExerciseMistake } from "@/lib/data/exercises";

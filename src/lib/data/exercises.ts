@@ -5,7 +5,7 @@
  * a typed view + a mock dataset for demo mode so the UI can
  * render without Supabase. Mock is the 20 v1 lifts from
  * supabase/seed-exercises.sql; demoAssetUrl is set for every slug
- * that has a trio in public/exercise-demos/ (front-squat stays null).
+ * that has a trio in public/exercise-demos/ (all 20 do).
  */
 import { createClient } from "@/lib/supabase/server";
 import { MOCK_EXERCISES } from "@/lib/data/exercise-mocks";

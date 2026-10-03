@@ -77,11 +77,10 @@ visual should show the "correct" version of every cue.
 ## Delivery
 
 Drop into Supabase Storage bucket `exercise-demos/` (path: bucket
-root) **or** `public/exercise-demos/` for the 19 bundled v1 loops.
+root) **or** `public/exercise-demos/` for the 20 bundled v1 loops.
 `demo_asset_url` is the WebM (`/exercise-demos/{slug}.webm` in demo
 mode / seed; Storage public URL after coach upload). MP4 + poster
-resolve via `resolveDemoAssets`. `front-squat` stays null until a
-real trio exists.
+resolve via `resolveDemoAssets`.
 
 ## Source files
 

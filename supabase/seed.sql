@@ -28,13 +28,13 @@ insert into public.exercises (slug, name, cue, primary_muscle) values
   ('khr',              'Hanging Knee Raise','Kontrolleret tempo, brug ikke momentum.',                                         'Core')
 on conflict (slug) do nothing;
 
--- Same public-path contract as seed-exercises.sql. front-squat is
--- in this insert but has no bundled loop — leave it null. Storage
--- URLs from DemoAssetUploader are not overwritten.
+-- Same public-path contract as seed-exercises.sql: every lift in this
+-- insert has a bundled loop. Storage URLs from DemoAssetUploader are
+-- not overwritten.
 update public.exercises
 set demo_asset_url = '/exercise-demos/' || slug || '.webm'
 where slug in (
-  'back-squat', 'deadlift', 'bench', 'paused-bench', 'ohp',
+  'back-squat', 'front-squat', 'deadlift', 'bench', 'paused-bench', 'ohp',
   'pull-up', 'row', 'lunge', 'khr', 'push-up',
   'dip', 'plank', 'barbell-curl', 'tricep-pushdown', 'lateral-raise',
   'rdl', 'push-press', 'hip-thrust', 'standing-calf-raise'

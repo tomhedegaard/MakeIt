@@ -8,7 +8,7 @@ import { bundledDemoAssetUrl } from "@/lib/data/bundled-demo-assets";
  *  2. Slug → bundled public path from #86 (`/exercise-demos/{slug}.webm`)
  *  3. null — caller falls back to AnatomyFigure / nothing
  *
- * `front-squat` and any other slug without files stay null.
+ * A slug without files stays null.
  * Client-safe: no server-only imports.
  */
 export function resolveSessionDemoAssetUrl(

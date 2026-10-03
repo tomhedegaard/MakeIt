@@ -10,7 +10,7 @@
  *    writes a Supabase Storage public URL
  *    (`…/storage/v1/object/public/exercise-demos/{slug}.webm?v=`).
  *    Same sibling derivation; do not overwrite those rows on seed.
- *  - `front-squat` (and any other slug without files) stays null
+ *  - All 20 core lifts have a trio here. Any other slug stays null
  *    and falls back to PhaseAnimator / AnatomyFigure. Do not invent
  *    a loop for a missing trio.
  */
@@ -21,6 +21,7 @@ export const BUNDLED_DEMO_SLUGS = [
   "bench",
   "deadlift",
   "dip",
+  "front-squat",
   "hip-thrust",
   "khr",
   "lateral-raise",
