@@ -412,7 +412,7 @@ ingen bearer (401), forkert bearer (401), korrekt bearer (happy path).
 | 7 | Adaptive engine ↔ mental-wiring ikke aktiveret | Produkt | Pure helpers + 23 tests findes i `src/lib/mind/snapshot-contribution.ts`; `buildEngineInput` kalder dem ikke. Afventer ~2 ugers live mind-check-data |
 | 8 | Voice-retning for mentale sessioner | Produkt | `audio_url`-kolonne + `AudioPlayer` klar; ingen lydfiler. Munk-optagelser vs. ElevenLabs |
 | 9 | ~~`front-squat` mangler demovideo~~ | **Løst** | MoveKit-pakken fra 09.2026 har klippet; alle 20 kerneøvelser har loop |
-| 10 | 188 nye øvelser er `is_published=false` | Indhold | Venter på Munk-review |
+| 10 | 369 nye øvelser er `is_published=false` | Indhold | MoveKit-batch 2026-10 (migration 0066 og 0067); venter på Munk-review i `/coach/exercises/review`, som kan filtreres på kategori. De 188 fra første batch er gennemgået |
 | 11 | Android-shell aldrig bygget | Native | Ingen Android Studio/JDK på maskinen |
 | 12 | Modul-model Fase B–D | Produkt | Se §5. Fase A er rebaset på ny `main`, men branchen er aldrig pushet |
 | 13 | `SUPABASE_DB_PASSWORD` har været eksporteret i shell | Sikkerhed | Overvej rotation |

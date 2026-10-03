@@ -124,6 +124,34 @@ pr. de 20 slugs i `seed-exercises.sql`, (3) upload + sæt `demo_asset_url`.
 `useVideoPhaseSync` rammer allerede `phases[]` — tjek at MoveKit-loopets rytme
 passer hver øvelses faser; ellers fintune `duration_ms` i seed.
 
+### 4b. Hele pakken: manifest-pipelinen (oktober 2026)
+
+MoveKit-pakken er opdateret til 577 klip (1936×1072). `scripts/movekit-manifest.json`
+er ledger over pakken: ét objekt pr. klip med mål, rød muskelmarkering og rolle
+(`core` = kilde til en kerneøvelse via `scripts/movekit-map.json`, `library` = batch-label
+når klippet er en biblioteksøvelse med samme slug, `skipped` = bevidst ubrugt).
+Kerneøvelsernes loops ligger i `public/exercise-demos/`, bibliotekets i Storage-bucket'en
+`exercise-demos`. Taksonomien (kategorier, mønstre, redskaber) ligger i
+`src/lib/data/exercise-taxonomy.json` og deles af app, tests og scripts.
+
+En ny pakke håndteres i denne rækkefølge:
+
+```bash
+node scripts/movekit-audit.mjs --assign=<batch>            # mål klip, tildel nye til en batch
+node scripts/build-wf-exercises.mjs --batch=<batch>        # skriv workflow-scriptet (scripts/wf-exercises.mjs)
+#   kør workflowet i Claude Code; øvelserne læses fra kørslens journal.jsonl
+node scripts/gen-exercise-seed.mjs <journal> --batch=<batch> --after=<tidligere seed.sql,…> > <seed-migration>.sql
+node scripts/ingest-manifest.mjs --batch=<batch> --out=MoveKit/.staging/<batch>   # seks filer pr. klip
+MI_DEMO_OUT=MoveKit/.staging/<batch> node scripts/upload-demos-to-storage.mjs --dry  # derefter uden --dry
+node scripts/gen-demo-urls.mjs --batch=<batch>             # URL-blokken til wiring-migrationen
+```
+
+Uploaden springer filer over, der allerede findes i bucketen, og holder klip uden
+`.done`-mærke tilbage. Udrulning: upload, derefter merge og deploy, til sidst
+`supabase db push`. Nye øvelser er kladder, til en coach godkender dem i
+`/coach/exercises/review`. Design og plan for første kørsel:
+`docs/superpowers/specs/2026-10-03-movekit-577-library-design.md`.
+
 ## 5. Teknisk udvidelse til v2 (video + 3D side om side)
 
 ```ts
