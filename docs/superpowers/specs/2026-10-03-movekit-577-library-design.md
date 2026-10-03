@@ -76,7 +76,8 @@ values)`, der sorterer en mængde værdier i taksonomiens rækkefølge og lægge
 værdier sidst i alfabetisk orden.
 
 Læses af: coach-editoren (`ExerciseEditor.tsx`, i dag egne lister der mangler kettlebell,
-band, isolation og carry), bibliotekets filtre, review-køens filter, `exercise-meta.test.ts`,
+band, isolation og carry), bibliotekets filtre, review-køens filter, program-byggeren,
+`exercise-meta.test.ts`,
 `scripts/build-wf-exercises.mjs` og `scripts/gen-exercise-seed.mjs`.
 
 Databasen har ingen check-constraints på `category`, `pattern` eller `equipment`. Ingen
@@ -416,7 +417,9 @@ Før der skrives Next.js-kode læses den relevante guide i `node_modules/next/di
   værdier i taksonomiens rækkefølge. Erstatter sidens andet kald til
   `listPublishedExercises()`, som i dag henter alle kolonner for alle rækker blot for at
   finde kategorierne.
-- Sortering: `display_order`, derefter `name`.
+- Sortering: `display_order`, derefter `name`. Gælder både `listPublishedExercises` og
+  `listAllExercisesForCoach`, da mange nye rækker deler `display_order` (5.2), og review-køen
+  og coach-listen ellers ville ordne dem tilfældigt fra besøg til besøg.
 
 ### 9.2 Biblioteket (`/train/exercises`)
 
@@ -465,6 +468,7 @@ minimale form, og `ProgramBuilder.tsx` viser `<optgroup>` pr. kategori i taksono
 rækkefølge med labels fra `Train.categories`, øvelserne alfabetisk i hver gruppe. Alle
 kategorier er med, også kondition og mobilitet, så en coach kan lægge opvarmning i et
 program. Ren hjælper `groupByCategory(library)` i `src/lib/data/exercise-taxonomy.ts`.
+Øvelser med ukendt kategori kommer efter de kendte, og øvelser uden kategori til sidst.
 
 ---
 
@@ -500,7 +504,10 @@ program. Ren hjælper `groupByCategory(library)` i `src/lib/data/exercise-taxono
 - `gen-exercise-seed`: flettet `display_order` for en ny slug før, mellem og efter de gamle.
 - Manifest-integritet: hvert klip unikt; `skipped` udelukker `core` og `library`; hver
   `core`-slug findes i `movekit-map.json` og omvendt; ingen utildelte klip; 369 klip i batch
-  `2026-10`; batchens slugs er præcis dem i migration 0066 og i 0067's slug-liste.
+  `2026-10`; batchens slugs er præcis dem i migration 0066 og i URL-blokken i 0067.
+  Blokken afgrænses af kommentarlinjerne `-- BEGIN demo-urls 2026-10` og
+  `-- END demo-urls 2026-10`, som `gen-demo-urls.mjs` skriver, så testen ikke læser de
+  håndskrevne slug-lister.
 - Bundlede loops: alle 20 kerneøvelser har seks filer i `public/exercise-demos/`.
 - Eksisterende tests forbliver grønne, herunder "landing loops er unikke".
 
@@ -528,8 +535,9 @@ gentaget) og rapporteres.
 - `phases` for de nye øvelser.
 - Re-encoding af de 204 eksisterende klip.
 - Markerede udgaver af de 48 klip uden rød markering (afventer MoveKit).
-- Brug af kondition og mobilitet i programmer, sessioner eller Adaptive Engine. Denne
-  leverance gør dem til biblioteksindhold.
+- Særlig håndtering af kondition og mobilitet i sessioner og Adaptive Engine (varighed,
+  puls, distance). De kan vælges i program-byggeren som enhver anden øvelse, men logges med
+  de eksisterende sæt-felter.
 - Oprydning i Munks kladde `overhead-triceps-cable-extensions`.
 
 ---
