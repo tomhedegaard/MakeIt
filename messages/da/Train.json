@@ -5,7 +5,16 @@
     "title": "Øvelser.",
     "subtitle": "Hver øvelse: hvilke muskler den rammer, hvordan du udfører den rigtigt, og hvad du skal undgå. Vores form-coach på print.",
     "allFilter": "Alle",
-    "empty": "Ingen øvelser i biblioteket endnu."
+    "empty": "Ingen øvelser i biblioteket endnu.",
+    "searchLabel": "Søg øvelse",
+    "searchPlaceholder": "Navn, fx squat",
+    "equipmentLabel": "Redskab",
+    "allEquipment": "Alle redskaber",
+    "submit": "Søg",
+    "categoryNav": "Kategorier",
+    "count": "{count, plural, one {# øvelse} other {# øvelser}}",
+    "emptyFiltered": "Ingen øvelser matcher.",
+    "reset": "Nulstil filtre"
   },
   "categories": {
     "lower-body": "Ben",

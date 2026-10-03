@@ -5,7 +5,16 @@
     "title": "Exercises.",
     "subtitle": "Every exercise: which muscles it hits, how to do it right, and what to avoid. Our form coach in print.",
     "allFilter": "All",
-    "empty": "No exercises in the library yet."
+    "empty": "No exercises in the library yet.",
+    "searchLabel": "Search exercises",
+    "searchPlaceholder": "Name, e.g. squat",
+    "equipmentLabel": "Equipment",
+    "allEquipment": "All equipment",
+    "submit": "Search",
+    "categoryNav": "Categories",
+    "count": "{count, plural, one {# exercise} other {# exercises}}",
+    "emptyFiltered": "No exercises match.",
+    "reset": "Clear filters"
   },
   "categories": {
     "lower-body": "Legs",
