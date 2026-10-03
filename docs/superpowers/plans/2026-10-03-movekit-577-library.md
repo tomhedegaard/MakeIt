@@ -1687,7 +1687,7 @@ describe("validateExercises", () => {
     [{ mistakes: [{ title: "t", body: "b" }, { title: "", body: "b" }] }, /mistakes/],
     [{ why_matters: "pris $ex$ her" }, /\$ex\$/],
     [{ cue: "Bryst op — knæ ud." }, /tankestreg/],
-    [{ setup: "Stang i rack – hofte­bredde." }, /tankestreg/],
+    [{ setup: "Stang i rack – hoftebredde." }, /tankestreg/],
     [{ category: "cardio", pattern: "squat" }, /passer ikke sammen/],
     [{ category: "lower-body", pattern: "jump" }, /passer ikke sammen/],
     [{ slug: "Arnold Press" }, /ugyldig eller manglende slug/],
@@ -2109,6 +2109,8 @@ if (batch) {
 }
 
 process.stdout.write(renderSeed(list, { orderFor, subtitle: batch ? `batch ${batch}` : null }));
+// Nothing left to re-run: an old list from a failed round must not linger.
+if (rerunOut) await writeFile(rerunOut, "");
 console.error(`✓ ${list.length} øvelser → SQL`);
 ```
 
@@ -2529,7 +2531,7 @@ node scripts/gen-exercise-seed.mjs <journal> <journal-2> --batch=2026-10 \
 
 Gentag til exit 0, højst tre runder. Fejler de samme slugs stadig, så læs fejlene: er reglen i prompten uklar, rettes skabelonen; er det en enkelt øvelse, rettes dens JSON i hånden i en lille ekstra kildefil, som gives sidst på kommandolinjen. Slut af med `node scripts/build-wf-exercises.mjs --batch=2026-10`, så den committede `wf-exercises.mjs` igen dækker hele batchen.
 
-Finder generatoren ingen øvelser i journalen (formatet er ikke set før), så genoptag workflowet med en version af scriptet, hvis sidste linje returnerer `{ count: all.length, missing: missing, exercises: all }`. Agent-kaldene er uændrede og hentes fra cachen; gem resultatet som JSON-fil og brug den som kilde.
+Finder generatoren ingen øvelser i journalen (formatet er ikke set før), så genoptag workflowet (`resumeFromRunId` med samme `scriptPath`) med en version af scriptet, hvis sidste linje returnerer `{ count: all.length, missing: missing, exercises: all }`. Agent-kaldene er uændrede og hentes fra cachen; gem resultatet som JSON-fil og brug den som kilde.
 
 - [ ] **Step 4: Kontrollér migrationen**
 
@@ -2561,7 +2563,7 @@ for s in tempo-run freestyle-swim worlds-greatest-stretch open-book-rotation pow
 done
 ```
 
-Tjek: dansk tekst, imperative cues, rigtige muskler, og at kategori, mønster og redskab giver mening. Er noget systematisk forkert (for eksempel alle konditionsøvelser med løftecues), så ret skabelonens prompt og genkør de berørte slugs som i Step 3. Enkeltstående skævheder er acceptable: det er kladder til Munks review.
+Tjek: dansk tekst, imperative cues, rigtige muskler, og at kategori, mønster og redskab giver mening. Er noget systematisk forkert (for eksempel alle konditionsøvelser med løftecues), så ret skabelonens prompt, skriv de berørte slugs i `MoveKit/.staging/rerun.txt` (én pr. linje) og genkør dem som i Step 3. Enkeltstående skævheder er acceptable: det er kladder til Munks review.
 
 - [ ] **Step 5: Commit**
 
