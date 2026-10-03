@@ -11,27 +11,13 @@ import MuscleTierPicker, {
 } from "@/components/coach/MuscleTierPicker";
 import DemoAssetUploader from "@/components/coach/DemoAssetUploader";
 import { saveExerciseAction } from "@/app/coach/exercises/actions";
+import { TAXONOMY } from "@/lib/data/exercise-taxonomy";
 
-const CATEGORIES = [
-  "lower-body",
-  "upper-body-push",
-  "upper-body-pull",
-  "full-body",
-  "shoulders",
-  "arms",
-  "core",
-];
-const PATTERNS = [
-  "squat",
-  "hinge",
-  "push-horizontal",
-  "push-vertical",
-  "pull-horizontal",
-  "pull-vertical",
-  "lunge",
-  "core",
-];
-const EQUIPMENT = ["barbell", "dumbbell", "bodyweight", "machine", "cable"];
+// The editor offers exactly what the catalogue knows. The hand-written
+// lists that stood here lacked kettlebell, band, isolation and carry.
+const CATEGORIES = [...TAXONOMY.categories];
+const PATTERNS = [...TAXONOMY.patterns];
+const EQUIPMENT = [...TAXONOMY.equipment];
 const DIFFICULTIES = ["beginner", "intermediate", "advanced"] as const;
 
 type DraftMistake = { title: string; body: string };

@@ -152,6 +152,7 @@
     "deleteDay": "Delete day",
     "exerciseLabel": "Exercise",
     "libraryEmpty": "No exercises in library",
+    "libraryUncategorised": "No category",
     "cueLabel": "Cue (optional)",
     "removeExercise": "Remove",
     "setsColIndex": "#",

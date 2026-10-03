@@ -152,6 +152,7 @@
     "deleteDay": "Slet dag",
     "exerciseLabel": "Øvelse",
     "libraryEmpty": "Ingen øvelser i bibliotek",
+    "libraryUncategorised": "Uden kategori",
     "cueLabel": "Cue (valgfri)",
     "removeExercise": "Fjern",
     "setsColIndex": "#",
