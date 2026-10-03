@@ -10,6 +10,13 @@
 import { createClient } from "@/lib/supabase/server";
 import { MOCK_EXERCISES } from "@/lib/data/exercise-mocks";
 import type { MuscleGroup } from "@/lib/data/muscle-groups";
+import {
+  escapeLike,
+  facetsOf,
+  matchesFilters,
+  type ExerciseFacets,
+  type ExerciseFilters,
+} from "@/lib/data/exercise-filters";
 
 export type ExerciseDifficulty = "beginner" | "intermediate" | "advanced";
 
@@ -140,35 +147,53 @@ function asExercise(r: ExerciseRow): Exercise {
  * Public API
  * ---------------------------------------------------------------- */
 
-export type ExerciseFilters = {
-  category?: string;
-  equipment?: string;
-  pattern?: string;
-  difficulty?: ExerciseDifficulty;
-};
+export type { ExerciseFacets, ExerciseFilters } from "@/lib/data/exercise-filters";
 
 export async function listPublishedExercises(
   filters: ExerciseFilters = {},
 ): Promise<Exercise[]> {
   const supabase = await createClient();
-  if (!supabase) return MOCK_EXERCISES.filter((e) => matches(e, filters));
+  if (!supabase) return MOCK_EXERCISES.filter((e) => matchesFilters(e, filters));
 
-  let q = supabase
+  // Many library rows share a display_order (the 2026-10 batch is
+  // interleaved between older rows), so name breaks the tie.
+  let query = supabase
     .from("exercises")
     .select(SELECT_COLS)
     .eq("is_published", true)
-    .order("display_order", { ascending: true });
+    .order("display_order", { ascending: true })
+    .order("name", { ascending: true });
 
-  if (filters.category) q = q.eq("category", filters.category);
-  if (filters.equipment) q = q.eq("equipment", filters.equipment);
-  if (filters.pattern) q = q.eq("pattern", filters.pattern);
-  if (filters.difficulty) q = q.eq("difficulty", filters.difficulty);
+  if (filters.category) query = query.eq("category", filters.category);
+  if (filters.equipment) query = query.eq("equipment", filters.equipment);
+  if (filters.pattern) query = query.eq("pattern", filters.pattern);
+  if (filters.difficulty) query = query.eq("difficulty", filters.difficulty);
+  // PostgREST reads * as a wildcard in ilike and has no escape for it, so it is dropped.
+  const search = filters.q?.replaceAll("*", "").trim();
+  if (search) query = query.ilike("name", `%${escapeLike(search)}%`);
 
-  const { data } = await q;
+  const { data } = await query;
   // Supabase's generated DB types don't yet include the columns added
   // in migration 0028 — cast via unknown until `npm run db:types` is
   // re-run against the cloud project.
   return (data ?? []).map((r) => asExercise(r as unknown as ExerciseRow));
+}
+
+/**
+ * The categories and equipment that occur among published exercises,
+ * in taxonomy order. Two columns only: the library page needs the
+ * filter choices without loading every exercise in full.
+ */
+export async function listPublishedExerciseFacets(): Promise<ExerciseFacets> {
+  const supabase = await createClient();
+  if (!supabase) return facetsOf(MOCK_EXERCISES);
+
+  const { data } = await supabase
+    .from("exercises")
+    .select("category, equipment")
+    .eq("is_published", true);
+
+  return facetsOf((data ?? []) as unknown as { category: string | null; equipment: string | null }[]);
 }
 
 export async function getExerciseBySlug(slug: string): Promise<Exercise | null> {
@@ -199,7 +224,8 @@ export async function listAllExercisesForCoach(): Promise<Exercise[]> {
   const { data } = await supabase
     .from("exercises")
     .select(SELECT_COLS)
-    .order("display_order", { ascending: true });
+    .order("display_order", { ascending: true })
+    .order("name", { ascending: true });
 
   return (data ?? []).map((r) => asExercise(r as unknown as ExerciseRow));
 }
@@ -244,14 +270,6 @@ export function dominantView(ex: Exercise): "front" | "back" {
 // client components can use it without pulling this server-tainted
 // file (it imports @/lib/supabase/server) into the browser bundle.
 export { resolveDemoAssets, type DemoAssets } from "@/lib/data/demo-assets";
-
-function matches(e: Exercise, f: ExerciseFilters): boolean {
-  if (f.category && e.category !== f.category) return false;
-  if (f.equipment && e.equipment !== f.equipment) return false;
-  if (f.pattern && e.pattern !== f.pattern) return false;
-  if (f.difficulty && e.difficulty !== f.difficulty) return false;
-  return true;
-}
 
 /* Demo-mode mocks live in exercise-mocks.ts (20 v1 lifts). */
 
