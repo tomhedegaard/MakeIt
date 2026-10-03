@@ -25,9 +25,13 @@ export function libraryHref(query: LibraryQuery = {}): string {
   return search ? `${LIBRARY_PATH}?${search}` : LIBRARY_PATH;
 }
 
-/** Search text as the page uses it: trimmed, at most 80 characters, undefined when blank. */
+/**
+ * Search text as the page uses it: trimmed, at most 80 characters,
+ * undefined when blank. `*` is dropped: PostgREST reads it as a
+ * wildcard in ilike and has no escape for it.
+ */
 export function normalizeSearch(raw: RawParam): string | undefined {
-  return first(raw)?.trim().slice(0, 80) || undefined;
+  return first(raw)?.replaceAll("*", "").trim().slice(0, 80) || undefined;
 }
 
 /** A category or equipment filter is honoured only when some published exercise has that value. */

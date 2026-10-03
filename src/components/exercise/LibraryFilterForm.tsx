@@ -40,7 +40,7 @@ export default function LibraryFilterForm({
   }
 
   return (
-    <Form action="/train/exercises" className="flex flex-wrap items-end gap-3">
+    <Form action="/train/exercises" role="search" className="flex flex-wrap items-end gap-3">
       {category ? <input type="hidden" name="category" value={category} /> : null}
       <label className="min-w-0 flex-1 basis-56 space-y-1.5">
         <span className="block text-xs text-fg-dim">{labels.search}</span>

@@ -18,6 +18,8 @@ describe("movekit-manifest.json", () => {
     expect(unassigned(manifest)).toEqual([]);
   });
 
+  // These numbers describe the pack as of batch 2026-10. A new MoveKit
+  // delivery changes them on purpose: update them together with the manifest.
   it("has 577 clips: two library batches, the core sources and two skipped duplicates", () => {
     expect(manifest.clips).toHaveLength(577);
     expect(batchClips(manifest, "2026-06")).toHaveLength(188);

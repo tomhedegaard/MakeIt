@@ -10,7 +10,9 @@
  *   node scripts/ingest-manifest.mjs --batch=2026-10 --out=<dir> --portrait-only
  *
  * --portrait-only laver kun portrættrioen om, for alle klip i batchen,
- * også de færdige. Bruges når make-portrait-demo.mjs er ændret.
+ * også de færdige. Bruges når make-portrait-demo.mjs er ændret. Afbrydes
+ * kørslen, så kør den igen med --portrait-only til den er færdig: klip,
+ * den ikke nåede, har stadig deres .done-mærke og den gamle portrætfil.
  *
  * Genoptageligt: et klip er færdigt, når <dir>/.done/<slug> findes.
  * Mærket skrives først, når begge trin lykkedes og alle seks filer

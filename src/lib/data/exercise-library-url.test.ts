@@ -28,6 +28,11 @@ describe("normalizeSearch", () => {
     expect(normalizeSearch(undefined)).toBeUndefined();
     expect(normalizeSearch("   ")).toBeUndefined();
   });
+
+  it("drops the * wildcard, which the database would otherwise expand", () => {
+    expect(normalizeSearch("squ*t")).toBe("squt");
+    expect(normalizeSearch("*")).toBeUndefined();
+  });
 });
 
 describe("pickFacet", () => {

@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import ExerciseReviewQueue from "@/components/coach/ExerciseReviewQueue";
 import FilterPill from "@/components/exercise/FilterPill";
-import { draftCategoryCounts } from "@/lib/coach/review-queue";
+import { draftCategoryCounts, pickReviewCategory } from "@/lib/coach/review-queue";
 import { listAllExercisesForCoach } from "@/lib/data/exercises";
 
 export async function generateMetadata() {
@@ -23,11 +23,11 @@ export default async function CoachExerciseReviewPage({
   const tTrain = await getTranslations("Train");
   const all = (await listAllExercisesForCoach()).filter((ex) => !ex.isPublished && ex.demoAssetUrl);
 
-  // A category the queue has no drafts for is ignored, like a made-up one.
+  // The filter stays on the requested category even when it has no drafts
+  // left: approving the last one re-renders this page, and falling back to
+  // "all" would remount the queue on the full list (see pickReviewCategory).
   const counts = draftCategoryCounts(all);
-  const raw = (await searchParams).category;
-  const wanted = Array.isArray(raw) ? raw[0] : raw;
-  const category = counts.some((c) => c.category === wanted) ? wanted : undefined;
+  const category = pickReviewCategory((await searchParams).category);
   const drafts = category ? all.filter((ex) => ex.category === category) : all;
 
   const categoryLabel = (c: string) => (tTrain.has(`categories.${c}`) ? tTrain(`categories.${c}`) : c);
@@ -43,7 +43,7 @@ export default async function CoachExerciseReviewPage({
         </Link>
       </header>
 
-      {counts.length > 1 ? (
+      {counts.length > 1 || category ? (
         <nav aria-label={tTrain("index.categoryNav")} className="flex flex-wrap gap-2">
           <FilterPill href="/coach/exercises/review" active={!category} label={t("filterAll", { count: all.length })} />
           {counts.map((c) => (

@@ -26,6 +26,7 @@ describe("LibraryFilterForm", () => {
       <LibraryFilterForm q="squat" category="" equipment="barbell" equipmentOptions={equipmentOptions} labels={labels} />,
     );
     expect(html).toContain('action="/train/exercises"');
+    expect(html).toContain('role="search"');
     expect(html).toMatch(/<input[^>]*type="search"[^>]*name="q"[^>]*value="squat"/);
     expect(html).toContain('maxLength="80"');
     expect(html).toContain('<option value="">Alle redskaber</option>');

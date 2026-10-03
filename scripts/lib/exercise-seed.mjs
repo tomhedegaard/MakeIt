@@ -212,6 +212,8 @@ export function renderSeed(list, { orderFor, subtitle = null }) {
 -- video-ingestion. Muskel-highlighting + cues virker uden video.
 --
 -- Idempotent: upsert on slug. Genereret af scripts/gen-exercise-seed.mjs.
+-- En genkørsel overskriver tekstfelterne, også en coach' rettelser;
+-- is_published, demo_asset_url og display_order røres ikke.
 
 insert into public.exercises (
   slug, name, category, pattern, equipment, difficulty,

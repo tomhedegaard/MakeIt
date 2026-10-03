@@ -64,6 +64,19 @@ export function tally(decisions: Record<string, Decision>) {
 }
 
 /**
+ * The category the review page filters on, straight from `?category=`.
+ * It is deliberately not checked against the categories that still have
+ * drafts: approving the last draft of a category re-renders the page,
+ * and if the filter then fell back to "all", the queue would remount on
+ * the full list and the coach's next keypress would approve an exercise
+ * from another category.
+ */
+export function pickReviewCategory(raw: string | string[] | undefined): string | undefined {
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  return value?.trim() || undefined;
+}
+
+/**
  * Drafts per category, in taxonomy order, for the queue's filter. A
  * draft without a category is only reachable under "all".
  */

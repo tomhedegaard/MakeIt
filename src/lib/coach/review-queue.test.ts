@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { draftCategoryCounts, initialQueue, keyToAction, queueReducer, tally } from "./review-queue";
+import {
+  draftCategoryCounts,
+  initialQueue,
+  keyToAction,
+  pickReviewCategory,
+  queueReducer,
+  tally,
+} from "./review-queue";
 
 describe("exercise review queue", () => {
   it("moves on after approving or skipping and records the decision", () => {
@@ -32,6 +39,25 @@ describe("exercise review queue", () => {
     expect(keyToAction("ArrowRight")).toBe("skip");
     expect(keyToAction("ArrowLeft")).toBe("back");
     expect(keyToAction("x")).toBeNull();
+  });
+});
+
+describe("pickReviewCategory", () => {
+  it("takes the category from the query string", () => {
+    expect(pickReviewCategory("mobility")).toBe("mobility");
+    expect(pickReviewCategory(["cardio", "arms"])).toBe("cardio");
+  });
+
+  it("is undefined when there is none", () => {
+    expect(pickReviewCategory(undefined)).toBeUndefined();
+    expect(pickReviewCategory("  ")).toBeUndefined();
+  });
+
+  it("keeps a category that has no drafts left, so the queue is not remounted on the full list", () => {
+    const drafts = [{ category: "cardio" }];
+    const counts = draftCategoryCounts(drafts);
+    expect(counts.some((c) => c.category === "mobility")).toBe(false);
+    expect(pickReviewCategory("mobility")).toBe("mobility");
   });
 });
 
