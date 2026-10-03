@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { initialQueue, keyToAction, queueReducer, tally } from "./review-queue";
+import { draftCategoryCounts, initialQueue, keyToAction, queueReducer, tally } from "./review-queue";
 
 describe("exercise review queue", () => {
   it("moves on after approving or skipping and records the decision", () => {
@@ -32,5 +32,32 @@ describe("exercise review queue", () => {
     expect(keyToAction("ArrowRight")).toBe("skip");
     expect(keyToAction("ArrowLeft")).toBe("back");
     expect(keyToAction("x")).toBeNull();
+  });
+});
+
+describe("draftCategoryCounts", () => {
+  it("counts drafts per category in taxonomy order", () => {
+    const drafts = [
+      { category: "cardio" },
+      { category: "lower-body" },
+      { category: "cardio" },
+      { category: "mobility" },
+    ];
+    expect(draftCategoryCounts(drafts)).toEqual([
+      { category: "lower-body", count: 1 },
+      { category: "mobility", count: 1 },
+      { category: "cardio", count: 2 },
+    ]);
+  });
+
+  it("leaves drafts without a category out, and puts unknown categories last", () => {
+    expect(draftCategoryCounts([{ category: null }, { category: "odd" }, { category: "arms" }])).toEqual([
+      { category: "arms", count: 1 },
+      { category: "odd", count: 1 },
+    ]);
+  });
+
+  it("is empty for no drafts", () => {
+    expect(draftCategoryCounts([])).toEqual([]);
   });
 });

@@ -38,7 +38,9 @@
       "doneTitle": "Done.",
       "doneBody": "{approved} approved and {skipped} skipped. Skipped exercises stay drafts and come back next time.",
       "again": "Start over",
-      "error": "That didn't work: {message}"
+      "error": "That didn't work: {message}",
+      "filterAll": "All ({count})",
+      "filterCategory": "{label} ({count})"
     }
   },
   "exerciseEditor": {

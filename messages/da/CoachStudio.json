@@ -38,7 +38,9 @@
       "doneTitle": "Færdig.",
       "doneBody": "{approved} godkendt og {skipped} sprunget over. Sprungne øvelser er stadig kladder og kommer igen næste gang.",
       "again": "Start forfra",
-      "error": "Det virkede ikke: {message}"
+      "error": "Det virkede ikke: {message}",
+      "filterAll": "Alle ({count})",
+      "filterCategory": "{label} ({count})"
     }
   },
   "exerciseEditor": {
