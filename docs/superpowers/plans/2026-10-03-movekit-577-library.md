@@ -253,7 +253,7 @@ export function orderByTaxonomy(group: TaxonomyGroup, values: Iterable<string>):
   const present = new Set(values);
   const order = TAXONOMY[group];
   const known = order.filter((v) => present.has(v));
-  const unknown = [...present].filter((v) => !order.includes(v)).sort((a, b) => a.localeCompare(b));
+  const unknown = [...present].filter((v) => !order.includes(v)).sort((a, b) => a.localeCompare(b, "en"));
   return [...known, ...unknown];
 }
 
@@ -274,7 +274,8 @@ export function groupByCategory<T extends { name: string; category: string | nul
     if (bucket) bucket.push(item);
     else buckets.set(key, [item]);
   }
-  const byName = (a: T, b: T) => a.name.localeCompare(b.name);
+  // A fixed locale: the grouped picker renders on the server and hydrates in the browser.
+  const byName = (a: T, b: T) => a.name.localeCompare(b.name, "en");
   const named = orderByTaxonomy(
     "categories",
     [...buckets.keys()].filter((k): k is string => k !== null),
@@ -2723,4 +2724,1234 @@ done
 Expected: `(3384 objekter i forvejen)`, `findes allerede: 2214`, `uploades: 0`. Alle 72 svar er `200`.
 
 Der er intet at committe i dette trin.
+
+---
+
+## Chunk 5: Bibliotek, review-kø og coach-flader
+
+Efter denne chunk kan biblioteket søges og filtreres på redskab, review-køen kan filtreres på kategori, og coach-editoren og program-byggeren bruger taksonomien. Læs `node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/page.md` (afsnittet om `searchParams`) og `…/02-components/form.md` før Task 14 og 15: i denne Next-version er `searchParams` et Promise, og `next/form` giver klientnavigation på GET-formularer.
+
+### Task 12: Rene filter-hjælpere
+
+**Files:**
+- Create: `src/lib/data/exercise-filters.ts`
+- Create: `src/lib/data/exercise-filters.test.ts`
+- Create: `src/lib/data/exercise-library-url.ts`
+- Create: `src/lib/data/exercise-library-url.test.ts`
+
+- [ ] **Step 1: Skriv de fejlende tests**
+
+`src/lib/data/exercise-filters.test.ts`:
+
+```ts
+import { describe, expect, it } from "vitest";
+import { escapeLike, facetsOf, matchesFilters } from "./exercise-filters";
+
+const squat = { name: "Back Squat", category: "lower-body", equipment: "barbell", pattern: "squat", difficulty: "intermediate" as const };
+const run = { name: "Tempo Run", category: "cardio", equipment: "bodyweight", pattern: "conditioning", difficulty: "beginner" as const };
+
+describe("matchesFilters", () => {
+  it("matches everything with no filters", () => {
+    expect(matchesFilters(squat, {})).toBe(true);
+  });
+
+  it("searches the name as a case-insensitive substring", () => {
+    expect(matchesFilters(squat, { q: "squat" })).toBe(true);
+    expect(matchesFilters(squat, { q: "  SQUA " })).toBe(true);
+    expect(matchesFilters(run, { q: "squat" })).toBe(false);
+  });
+
+  it("treats a blank search as no search", () => {
+    expect(matchesFilters(run, { q: "   " })).toBe(true);
+  });
+
+  it("combines search with category and equipment", () => {
+    expect(matchesFilters(squat, { q: "squat", category: "lower-body", equipment: "barbell" })).toBe(true);
+    expect(matchesFilters(squat, { q: "squat", equipment: "dumbbell" })).toBe(false);
+    expect(matchesFilters(squat, { category: "cardio" })).toBe(false);
+  });
+
+  it("filters on pattern and difficulty as before", () => {
+    expect(matchesFilters(squat, { pattern: "hinge" })).toBe(false);
+    expect(matchesFilters(squat, { difficulty: "intermediate" })).toBe(true);
+  });
+});
+
+describe("escapeLike", () => {
+  it("escapes the LIKE wildcards and the escape character", () => {
+    expect(escapeLike("50%")).toBe("50\\%");
+    expect(escapeLike("a_b")).toBe("a\\_b");
+    expect(escapeLike("back\\slash")).toBe("back\\\\slash");
+    expect(escapeLike("squat")).toBe("squat");
+  });
+});
+
+describe("facetsOf", () => {
+  it("lists the categories and equipment that occur, in taxonomy order, unknown last", () => {
+    expect(
+      facetsOf([
+        { category: "cardio", equipment: "cardio-machine" },
+        { category: "lower-body", equipment: "barbell" },
+        { category: "lower-body", equipment: null },
+        { category: null, equipment: "hoverboard" },
+      ]),
+    ).toEqual({
+      categories: ["lower-body", "cardio"],
+      equipment: ["barbell", "cardio-machine", "hoverboard"],
+    });
+  });
+
+  it("is empty for no rows", () => {
+    expect(facetsOf([])).toEqual({ categories: [], equipment: [] });
+  });
+});
+```
+
+`src/lib/data/exercise-library-url.test.ts`:
+
+```ts
+import { describe, expect, it } from "vitest";
+import { libraryHref, normalizeSearch, pickFacet } from "./exercise-library-url";
+
+describe("libraryHref", () => {
+  it("is the bare library path with no filters", () => {
+    expect(libraryHref()).toBe("/train/exercises");
+    expect(libraryHref({ q: "  ", category: null, equipment: "" })).toBe("/train/exercises");
+  });
+
+  it("keeps only the filters that are set, in a stable order", () => {
+    expect(libraryHref({ equipment: "barbell", q: "squat" })).toBe("/train/exercises?q=squat&equipment=barbell");
+    expect(libraryHref({ category: "cardio" })).toBe("/train/exercises?category=cardio");
+  });
+
+  it("encodes the search text", () => {
+    expect(libraryHref({ q: "push up & pull" })).toBe("/train/exercises?q=push+up+%26+pull");
+  });
+});
+
+describe("normalizeSearch", () => {
+  it("trims, takes the first of repeated params and caps the length at 80", () => {
+    expect(normalizeSearch("  squat ")).toBe("squat");
+    expect(normalizeSearch(["row", "curl"])).toBe("row");
+    expect(normalizeSearch("x".repeat(200))).toHaveLength(80);
+  });
+
+  it("is undefined for missing or blank input", () => {
+    expect(normalizeSearch(undefined)).toBeUndefined();
+    expect(normalizeSearch("   ")).toBeUndefined();
+  });
+});
+
+describe("pickFacet", () => {
+  it("honours a value only when a published exercise has it", () => {
+    expect(pickFacet("cardio", ["lower-body", "cardio"])).toBe("cardio");
+    expect(pickFacet("made-up", ["lower-body", "cardio"])).toBeUndefined();
+    expect(pickFacet(undefined, ["cardio"])).toBeUndefined();
+    expect(pickFacet(["cardio", "arms"], ["cardio"])).toBe("cardio");
+  });
+});
+```
+
+- [ ] **Step 2: Kør testene og se dem fejle**
+
+Run: `npx vitest run src/lib/data/exercise-filters.test.ts src/lib/data/exercise-library-url.test.ts`
+Expected: FAIL. Ingen af de to moduler findes.
+
+- [ ] **Step 3: Skriv modulerne**
+
+`src/lib/data/exercise-filters.ts`:
+
+```ts
+/**
+ * Exercise filtering as pure functions, free of the server-only
+ * Supabase client, so the demo-mode path and the tests share one
+ * definition with the SQL filters in exercises.ts.
+ */
+import type { Exercise, ExerciseDifficulty } from "./exercises";
+import { orderByTaxonomy } from "./exercise-taxonomy";
+
+export type ExerciseFilters = {
+  category?: string;
+  equipment?: string;
+  pattern?: string;
+  difficulty?: ExerciseDifficulty;
+  /** Free-text search on the exercise name. */
+  q?: string;
+};
+
+type Filterable = Pick<Exercise, "name" | "category" | "equipment" | "pattern" | "difficulty">;
+
+/** The in-memory twin of the SQL filters in listPublishedExercises. */
+export function matchesFilters(e: Filterable, f: ExerciseFilters): boolean {
+  if (f.category && e.category !== f.category) return false;
+  if (f.equipment && e.equipment !== f.equipment) return false;
+  if (f.pattern && e.pattern !== f.pattern) return false;
+  if (f.difficulty && e.difficulty !== f.difficulty) return false;
+  const q = f.q?.trim().toLowerCase();
+  if (q && !e.name.toLowerCase().includes(q)) return false;
+  return true;
+}
+
+/** Escapes LIKE wildcards so a search for "50%" or "a_b" matches those characters literally. */
+export function escapeLike(text: string): string {
+  return text.replace(/[\\%_]/g, (c) => `\\${c}`);
+}
+
+export type ExerciseFacets = { categories: string[]; equipment: string[] };
+
+/** The categories and equipment that occur in `rows`, in taxonomy order. */
+export function facetsOf(rows: readonly { category: string | null; equipment: string | null }[]): ExerciseFacets {
+  const present = (key: "category" | "equipment") =>
+    rows.map((r) => r[key]).filter((v): v is string => Boolean(v));
+  return {
+    categories: orderByTaxonomy("categories", present("category")),
+    equipment: orderByTaxonomy("equipment", present("equipment")),
+  };
+}
+```
+
+`src/lib/data/exercise-library-url.ts`:
+
+```ts
+/**
+ * The library's filter state lives in the URL (?q=&category=&equipment=)
+ * so a filtered view can be shared and the page stays server-rendered.
+ */
+
+export type LibraryQuery = {
+  q?: string | null;
+  category?: string | null;
+  equipment?: string | null;
+};
+
+const LIBRARY_PATH = "/train/exercises";
+
+type RawParam = string | string[] | undefined;
+const first = (raw: RawParam) => (Array.isArray(raw) ? raw[0] : raw);
+
+/** The library URL for a filter state. Empty values are left out. */
+export function libraryHref(query: LibraryQuery = {}): string {
+  const params = new URLSearchParams();
+  const q = query.q?.trim();
+  if (q) params.set("q", q);
+  if (query.category) params.set("category", query.category);
+  if (query.equipment) params.set("equipment", query.equipment);
+  const search = params.toString();
+  return search ? `${LIBRARY_PATH}?${search}` : LIBRARY_PATH;
+}
+
+/** Search text as the page uses it: trimmed, at most 80 characters, undefined when blank. */
+export function normalizeSearch(raw: RawParam): string | undefined {
+  return first(raw)?.trim().slice(0, 80) || undefined;
+}
+
+/** A category or equipment filter is honoured only when some published exercise has that value. */
+export function pickFacet(raw: RawParam, available: readonly string[]): string | undefined {
+  const value = first(raw);
+  return value && available.includes(value) ? value : undefined;
+}
+```
+
+- [ ] **Step 4: Kør testene og se dem bestå**
+
+Run: `npx vitest run src/lib/data/exercise-filters.test.ts src/lib/data/exercise-library-url.test.ts`
+Expected: PASS, 2 filer.
+
+Run: `npx tsc --noEmit -p . 2>&1 | head; npx eslint src/lib/data/exercise-filters.ts src/lib/data/exercise-filters.test.ts src/lib/data/exercise-library-url.ts src/lib/data/exercise-library-url.test.ts`
+Expected: ingen fejl.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add src/lib/data/exercise-filters.ts src/lib/data/exercise-filters.test.ts src/lib/data/exercise-library-url.ts src/lib/data/exercise-library-url.test.ts
+git commit -m "feat(exercises): rene hjælpere til søgning, facetter og bibliotekets URL
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 13: Søgning, facetter og stabil sortering i datalaget
+
+**Files:**
+- Modify: `src/lib/data/exercises.ts`
+- Create: `src/lib/data/exercises.demo.test.ts`
+
+- [ ] **Step 1: Skriv den fejlende test**
+
+Testen kører datalaget i demo-mode (ingen Supabase), hvor det filtrerer de 20 mocks.
+
+`src/lib/data/exercises.demo.test.ts`:
+
+```ts
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("@/lib/supabase/server", () => ({ createClient: async () => null }));
+
+const { listPublishedExerciseFacets, listPublishedExercises } = await import("./exercises");
+
+describe("exercise library in demo mode", () => {
+  it("lists all 20 mocks without filters", async () => {
+    expect(await listPublishedExercises()).toHaveLength(20);
+  });
+
+  it("searches by name", async () => {
+    const hits = await listPublishedExercises({ q: "squat" });
+    expect(hits.map((e) => e.slug).sort()).toEqual(["back-squat", "front-squat"]);
+  });
+
+  it("combines search with equipment", async () => {
+    const all = await listPublishedExercises({ q: "press" });
+    const barbell = await listPublishedExercises({ q: "press", equipment: "barbell" });
+    expect(all.length).toBeGreaterThan(0);
+    expect(barbell.every((e) => e.equipment === "barbell")).toBe(true);
+    expect(await listPublishedExercises({ q: "squat", equipment: "kettlebell" })).toEqual([]);
+  });
+
+  it("reports the categories and equipment that occur, in taxonomy order", async () => {
+    const facets = await listPublishedExerciseFacets();
+    expect(facets.categories[0]).toBe("lower-body");
+    expect(facets.categories).toContain("core");
+    expect(facets.equipment[0]).toBe("barbell");
+    expect(facets.equipment).not.toContain("sled");
+  });
+});
+```
+
+Run: `npx vitest run src/lib/data/exercises.demo.test.ts`
+Expected: FAIL. `listPublishedExerciseFacets` findes ikke, og `q` filtrerer ikke endnu.
+
+- [ ] **Step 2: Udvid datalaget**
+
+I `src/lib/data/exercises.ts`:
+
+1. Tilføj importen under de eksisterende:
+
+```ts
+import {
+  escapeLike,
+  facetsOf,
+  matchesFilters,
+  type ExerciseFacets,
+  type ExerciseFilters,
+} from "@/lib/data/exercise-filters";
+```
+
+2. Erstat den lokale typedefinition
+
+```ts
+export type ExerciseFilters = {
+  category?: string;
+  equipment?: string;
+  pattern?: string;
+  difficulty?: ExerciseDifficulty;
+};
+```
+
+med en re-eksport, så eksisterende importer af typen fra `exercises.ts` stadig virker:
+
+```ts
+export type { ExerciseFacets, ExerciseFilters } from "@/lib/data/exercise-filters";
+```
+
+3. Erstat hele `listPublishedExercises` med:
+
+```ts
+export async function listPublishedExercises(
+  filters: ExerciseFilters = {},
+): Promise<Exercise[]> {
+  const supabase = await createClient();
+  if (!supabase) return MOCK_EXERCISES.filter((e) => matchesFilters(e, filters));
+
+  // Many library rows share a display_order (the 2026-10 batch is
+  // interleaved between older rows), so name breaks the tie.
+  let query = supabase
+    .from("exercises")
+    .select(SELECT_COLS)
+    .eq("is_published", true)
+    .order("display_order", { ascending: true })
+    .order("name", { ascending: true });
+
+  if (filters.category) query = query.eq("category", filters.category);
+  if (filters.equipment) query = query.eq("equipment", filters.equipment);
+  if (filters.pattern) query = query.eq("pattern", filters.pattern);
+  if (filters.difficulty) query = query.eq("difficulty", filters.difficulty);
+  const search = filters.q?.trim();
+  if (search) query = query.ilike("name", `%${escapeLike(search)}%`);
+
+  const { data } = await query;
+  // Supabase's generated DB types don't yet include the columns added
+  // in migration 0028 — cast via unknown until `npm run db:types` is
+  // re-run against the cloud project.
+  return (data ?? []).map((r) => asExercise(r as unknown as ExerciseRow));
+}
+
+/**
+ * The categories and equipment that occur among published exercises,
+ * in taxonomy order. Two columns only: the library page needs the
+ * filter choices without loading every exercise in full.
+ */
+export async function listPublishedExerciseFacets(): Promise<ExerciseFacets> {
+  const supabase = await createClient();
+  if (!supabase) return facetsOf(MOCK_EXERCISES);
+
+  const { data } = await supabase
+    .from("exercises")
+    .select("category, equipment")
+    .eq("is_published", true);
+
+  return facetsOf((data ?? []) as unknown as { category: string | null; equipment: string | null }[]);
+}
+```
+
+4. I `listAllExercisesForCoach` tilføjes den sekundære sortering, så review-køen og coach-listen ikke ordner rækker med samme `display_order` tilfældigt:
+
+```ts
+  const { data } = await supabase
+    .from("exercises")
+    .select(SELECT_COLS)
+    .order("display_order", { ascending: true })
+    .order("name", { ascending: true });
+```
+
+5. Slet den private funktion `matches` nederst i filen (den er erstattet af `matchesFilters`).
+
+- [ ] **Step 3: Kør testene**
+
+Run: `npx vitest run src/lib/data/exercises.demo.test.ts src/lib/data/exercise-filters.test.ts`
+Expected: PASS.
+
+Run: `grep -n "function matches\|matches(e, f" src/lib/data/exercises.ts; npx tsc --noEmit -p . 2>&1 | head; npx eslint src/lib/data/exercises.ts src/lib/data/exercises.demo.test.ts`
+Expected: ingen grep-linjer, ingen type- eller lint-fejl.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/lib/data/exercises.ts src/lib/data/exercises.demo.test.ts
+git commit -m "feat(exercises): søgning på navn, facetter og stabil sortering i datalaget
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 14: Biblioteket får søgning og redskabsfilter
+
+**Files:**
+- Create: `src/components/exercise/FilterPill.tsx`
+- Create: `src/components/exercise/LibraryFilterForm.tsx`
+- Create: `src/components/exercise/LibraryFilterForm.test.tsx`
+- Modify: `src/app/(app)/train/exercises/page.tsx` (hele filen erstattes)
+- Modify: `messages/da/Train.json`, `messages/en/Train.json`
+
+- [ ] **Step 1: Skriv den fejlende test**
+
+`next/form` kræver appens router; testen erstatter den med en almindelig `<form>`.
+
+`src/components/exercise/LibraryFilterForm.test.tsx`:
+
+```tsx
+import type { ComponentProps } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("next/form", () => ({
+  default: (props: ComponentProps<"form">) => <form {...props} />,
+}));
+
+const { default: LibraryFilterForm } = await import("./LibraryFilterForm");
+
+const labels = {
+  search: "Søg øvelse",
+  placeholder: "Navn, fx squat",
+  equipment: "Redskab",
+  allEquipment: "Alle redskaber",
+  submit: "Søg",
+};
+const equipmentOptions = [
+  { value: "barbell", label: "Vægtstang" },
+  { value: "dumbbell", label: "Håndvægt" },
+];
+
+describe("LibraryFilterForm", () => {
+  it("is a GET form on the library with the applied search and equipment filled in", () => {
+    const html = renderToStaticMarkup(
+      <LibraryFilterForm q="squat" category="" equipment="barbell" equipmentOptions={equipmentOptions} labels={labels} />,
+    );
+    expect(html).toContain('action="/train/exercises"');
+    expect(html).toMatch(/<input[^>]*type="search"[^>]*name="q"[^>]*value="squat"/);
+    expect(html).toContain('maxLength="80"');
+    expect(html).toContain('<option value="">Alle redskaber</option>');
+    expect(html).toContain('<option value="barbell" selected="">Vægtstang</option>');
+    expect(html).toContain('<option value="dumbbell">Håndvægt</option>');
+    expect(html).toMatch(/<button[^>]*type="submit"[^>]*>Søg<\/button>/);
+  });
+
+  it("labels both fields", () => {
+    const html = renderToStaticMarkup(
+      <LibraryFilterForm q="" category="" equipment="" equipmentOptions={equipmentOptions} labels={labels} />,
+    );
+    expect(html).toMatch(/<label[^>]*>.*Søg øvelse.*<input/);
+    expect(html).toMatch(/<label[^>]*>.*Redskab.*<select/);
+  });
+
+  it("carries the chosen category along, and only when one is chosen", () => {
+    const withCategory = renderToStaticMarkup(
+      <LibraryFilterForm q="" category="cardio" equipment="" equipmentOptions={equipmentOptions} labels={labels} />,
+    );
+    expect(withCategory).toContain('<input type="hidden" name="category" value="cardio"/>');
+    const without = renderToStaticMarkup(
+      <LibraryFilterForm q="" category="" equipment="" equipmentOptions={equipmentOptions} labels={labels} />,
+    );
+    expect(without).not.toContain('name="category"');
+  });
+});
+```
+
+Run: `npx vitest run src/components/exercise/LibraryFilterForm.test.tsx`
+Expected: FAIL. Komponenten findes ikke.
+
+- [ ] **Step 2: Skriv komponenterne**
+
+`src/components/exercise/FilterPill.tsx`:
+
+```tsx
+import Link from "next/link";
+
+/**
+ * A filter choice that is a link, so the filter state lives in the URL.
+ * The active one is filled, the rest outlined; 44 px tall for touch.
+ */
+export default function FilterPill({
+  href,
+  active,
+  label,
+}: {
+  href: string;
+  active: boolean;
+  label: string;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "true" : undefined}
+      className={`inline-flex min-h-11 items-center px-4 text-xs border hairline transition-colors ${
+        active ? "bg-fg text-bg border-transparent" : "text-fg-dim hover:text-fg hover:border-fg/30"
+      }`}
+    >
+      {label}
+    </Link>
+  );
+}
+```
+
+`src/components/exercise/LibraryFilterForm.tsx`:
+
+```tsx
+"use client";
+
+import Form from "next/form";
+
+type Option = { value: string; label: string };
+
+/**
+ * Search and equipment filter for the exercise library. A GET form, so
+ * the state lives in the URL and it works without JavaScript; with
+ * JavaScript, next/form navigates on the client and the equipment
+ * choice submits on change. The page gives this component a key made
+ * of the applied filters, so the fields reset when a pill or the
+ * reset link changes them.
+ */
+export default function LibraryFilterForm({
+  q,
+  category,
+  equipment,
+  equipmentOptions,
+  labels,
+}: {
+  q: string;
+  category: string;
+  equipment: string;
+  equipmentOptions: Option[];
+  labels: { search: string; placeholder: string; equipment: string; allEquipment: string; submit: string };
+}) {
+  return (
+    <Form action="/train/exercises" className="flex flex-wrap items-end gap-3">
+      {category ? <input type="hidden" name="category" value={category} /> : null}
+      <label className="min-w-0 flex-1 basis-56 space-y-1.5">
+        <span className="block text-xs text-fg-dim">{labels.search}</span>
+        <input
+          type="search"
+          name="q"
+          defaultValue={q}
+          placeholder={labels.placeholder}
+          maxLength={80}
+          autoComplete="off"
+          className="input w-full"
+        />
+      </label>
+      <label className="min-w-0 basis-44 space-y-1.5">
+        <span className="block text-xs text-fg-dim">{labels.equipment}</span>
+        <select
+          name="equipment"
+          defaultValue={equipment}
+          onChange={(e) => e.currentTarget.form?.requestSubmit()}
+          className="input w-full"
+        >
+          <option value="">{labels.allEquipment}</option>
+          {equipmentOptions.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+      </label>
+      <button type="submit" className="btn btn-primary">
+        {labels.submit}
+      </button>
+    </Form>
+  );
+}
+```
+
+Run: `npx vitest run src/components/exercise/LibraryFilterForm.test.tsx`
+Expected: PASS, 3 tests. Fejler en regex på attributrækkefølgen (React skriver attributterne i den rækkefølge, de står i JSX), så ret regex'en til den faktiske rækkefølge, ikke komponenten.
+
+- [ ] **Step 3: Tilføj tekster**
+
+I `messages/da/Train.json` udvides `index` (de seks eksisterende nøgler er uændrede):
+
+```json
+  "index": {
+    "metaTitle": "Øvelser · Train",
+    "eyebrow": "Train · Øvelses-bibliotek",
+    "title": "Øvelser.",
+    "subtitle": "Hver øvelse: hvilke muskler den rammer, hvordan du udfører den rigtigt, og hvad du skal undgå. Vores form-coach på print.",
+    "allFilter": "Alle",
+    "empty": "Ingen øvelser i biblioteket endnu.",
+    "searchLabel": "Søg øvelse",
+    "searchPlaceholder": "Navn, fx squat",
+    "equipmentLabel": "Redskab",
+    "allEquipment": "Alle redskaber",
+    "submit": "Søg",
+    "categoryNav": "Kategorier",
+    "count": "{count, plural, one {# øvelse} other {# øvelser}}",
+    "emptyFiltered": "Ingen øvelser matcher.",
+    "reset": "Nulstil filtre"
+  },
+```
+
+I `messages/en/Train.json` tilføjes de samme ni nøgler sidst i `index`:
+
+```json
+    "searchLabel": "Search exercises",
+    "searchPlaceholder": "Name, e.g. squat",
+    "equipmentLabel": "Equipment",
+    "allEquipment": "All equipment",
+    "submit": "Search",
+    "categoryNav": "Categories",
+    "count": "{count, plural, one {# exercise} other {# exercises}}",
+    "emptyFiltered": "No exercises match.",
+    "reset": "Clear filters"
+```
+
+- [ ] **Step 4: Skriv siden**
+
+`src/app/(app)/train/exercises/page.tsx` (hele filen):
+
+```tsx
+import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import Container from "@/components/Container";
+import PageHeader from "@/components/app/PageHeader";
+import ExerciseCard from "@/components/exercise/ExerciseCard";
+import FilterPill from "@/components/exercise/FilterPill";
+import LibraryFilterForm from "@/components/exercise/LibraryFilterForm";
+import { COMPANY } from "@/lib/company";
+import { libraryHref, normalizeSearch, pickFacet } from "@/lib/data/exercise-library-url";
+import { listPublishedExerciseFacets, listPublishedExercises } from "@/lib/data/exercises";
+
+export async function generateMetadata() {
+  const t = await getTranslations("Train.index");
+  return {
+    title: `${t("metaTitle")} · ${COMPANY.product}`,
+  };
+}
+
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+export default async function ExercisesIndexPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const params = await searchParams;
+  const t = await getTranslations("Train");
+
+  // The filter choices come from what is actually published, so a
+  // category or an implement nobody can find never shows, and a made-up
+  // value in the URL is ignored.
+  const facets = await listPublishedExerciseFacets();
+  const q = normalizeSearch(params.q);
+  const category = pickFacet(params.category, facets.categories);
+  const equipment = pickFacet(params.equipment, facets.equipment);
+  const exercises = await listPublishedExercises({ q, category, equipment });
+  const filtered = Boolean(q || category || equipment);
+
+  const label = (group: "categories" | "equipment", value: string) =>
+    t.has(`${group}.${value}`) ? t(`${group}.${value}`) : value;
+
+  return (
+    <>
+      <PageHeader
+        eyebrow={t("index.eyebrow")}
+        title={t("index.title")}
+        subtitle={t("index.subtitle")}
+      />
+
+      <Container className="py-10 md:py-14 space-y-8">
+        <div className="space-y-4">
+          <LibraryFilterForm
+            key={`${q ?? ""}|${category ?? ""}|${equipment ?? ""}`}
+            q={q ?? ""}
+            category={category ?? ""}
+            equipment={equipment ?? ""}
+            equipmentOptions={facets.equipment.map((value) => ({ value, label: label("equipment", value) }))}
+            labels={{
+              search: t("index.searchLabel"),
+              placeholder: t("index.searchPlaceholder"),
+              equipment: t("index.equipmentLabel"),
+              allEquipment: t("index.allEquipment"),
+              submit: t("index.submit"),
+            }}
+          />
+
+          {facets.categories.length > 0 ? (
+            <nav aria-label={t("index.categoryNav")} className="flex flex-wrap gap-2">
+              <FilterPill
+                href={libraryHref({ q, equipment })}
+                active={!category}
+                label={t("index.allFilter")}
+              />
+              {facets.categories.map((c) => (
+                <FilterPill
+                  key={c}
+                  href={libraryHref({ q, equipment, category: c })}
+                  active={category === c}
+                  label={label("categories", c)}
+                />
+              ))}
+            </nav>
+          ) : null}
+        </div>
+
+        <p className="text-sm text-fg-dim" role="status">
+          {t("index.count", { count: exercises.length })}
+        </p>
+
+        {exercises.length === 0 ? (
+          filtered ? (
+            <p className="text-fg-dim">
+              {t("index.emptyFiltered")}{" "}
+              <Link href={libraryHref()} className="underline underline-offset-4">
+                {t("index.reset")}
+              </Link>
+            </p>
+          ) : (
+            <p className="text-fg-dim">{t("index.empty")}</p>
+          )
+        ) : (
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {exercises.map((ex) => (
+              <li key={ex.slug} className="min-w-0">
+                <ExerciseCard exercise={ex} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </Container>
+    </>
+  );
+}
+```
+
+- [ ] **Step 5: Kør tests, typer og lint**
+
+Run: `npx vitest run src/components/exercise src/lib/i18n/app-copy-gate.test.ts src/lib/data/exercise-meta.test.ts`
+Expected: PASS. Copy-gaten bekræfter, at dansk og engelsk har de samme nøgler og ingen tankestreger.
+
+Run: `npx tsc --noEmit -p . 2>&1 | head; npx eslint "src/app/(app)/train/exercises" src/components/exercise`
+Expected: ingen fejl.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add src/components/exercise/FilterPill.tsx src/components/exercise/LibraryFilterForm.tsx src/components/exercise/LibraryFilterForm.test.tsx "src/app/(app)/train/exercises/page.tsx" messages/da/Train.json messages/en/Train.json
+git commit -m "feat(exercises): søgning og redskabsfilter i øvelsesbiblioteket
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 15: Kategori-filter i review-køen
+
+**Files:**
+- Modify: `src/lib/coach/review-queue.ts`
+- Modify: `src/lib/coach/review-queue.test.ts`
+- Modify: `src/app/coach/exercises/review/page.tsx` (hele filen erstattes)
+- Modify: `messages/da/CoachStudio.json`, `messages/en/CoachStudio.json`
+
+- [ ] **Step 1: Skriv den fejlende test**
+
+I `src/lib/coach/review-queue.test.ts` udvides importen med `draftCategoryCounts`:
+
+```ts
+import { draftCategoryCounts, initialQueue, keyToAction, queueReducer, tally } from "./review-queue";
+```
+
+og en ny `describe` tilføjes sidst i filen:
+
+```ts
+describe("draftCategoryCounts", () => {
+  it("counts drafts per category in taxonomy order", () => {
+    const drafts = [
+      { category: "cardio" },
+      { category: "lower-body" },
+      { category: "cardio" },
+      { category: "mobility" },
+    ];
+    expect(draftCategoryCounts(drafts)).toEqual([
+      { category: "lower-body", count: 1 },
+      { category: "mobility", count: 1 },
+      { category: "cardio", count: 2 },
+    ]);
+  });
+
+  it("leaves drafts without a category out, and puts unknown categories last", () => {
+    expect(draftCategoryCounts([{ category: null }, { category: "odd" }, { category: "arms" }])).toEqual([
+      { category: "arms", count: 1 },
+      { category: "odd", count: 1 },
+    ]);
+  });
+
+  it("is empty for no drafts", () => {
+    expect(draftCategoryCounts([])).toEqual([]);
+  });
+});
+```
+
+Run: `npx vitest run src/lib/coach/review-queue.test.ts`
+Expected: FAIL. `draftCategoryCounts` er ikke eksporteret.
+
+- [ ] **Step 2: Skriv hjælperen**
+
+I `src/lib/coach/review-queue.ts` tilføjes importen øverst (efter filens hovedkommentar):
+
+```ts
+import { orderByTaxonomy } from "@/lib/data/exercise-taxonomy";
+```
+
+og funktionen sidst i filen:
+
+```ts
+/**
+ * Drafts per category, in taxonomy order, for the queue's filter. A
+ * draft without a category is only reachable under "all".
+ */
+export function draftCategoryCounts(
+  drafts: readonly { category: string | null }[],
+): { category: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const d of drafts) {
+    if (d.category) counts.set(d.category, (counts.get(d.category) ?? 0) + 1);
+  }
+  return orderByTaxonomy("categories", counts.keys()).map((category) => ({
+    category,
+    count: counts.get(category) ?? 0,
+  }));
+}
+```
+
+Run: `npx vitest run src/lib/coach/review-queue.test.ts`
+Expected: PASS.
+
+- [ ] **Step 3: Tilføj tekster**
+
+I `messages/da/CoachStudio.json`, i `exercises.review`, efter linjen `"error": "Det virkede ikke: {message}"` (husk kommaet efter den):
+
+```json
+      "filterAll": "Alle ({count})",
+      "filterCategory": "{label} ({count})"
+```
+
+I `messages/en/CoachStudio.json` samme sted:
+
+```json
+      "filterAll": "All ({count})",
+      "filterCategory": "{label} ({count})"
+```
+
+- [ ] **Step 4: Skriv siden**
+
+`src/app/coach/exercises/review/page.tsx` (hele filen):
+
+```tsx
+import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import Container from "@/components/Container";
+import ExerciseReviewQueue from "@/components/coach/ExerciseReviewQueue";
+import FilterPill from "@/components/exercise/FilterPill";
+import { draftCategoryCounts } from "@/lib/coach/review-queue";
+import { listAllExercisesForCoach } from "@/lib/data/exercises";
+
+export async function generateMetadata() {
+  const t = await getTranslations("CoachStudio.exercises.review");
+  return { title: t("metaTitle") };
+}
+
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+/** Drafts with a video, in library order. Drafts without one stay in the editor. */
+export default async function CoachExerciseReviewPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const t = await getTranslations("CoachStudio.exercises.review");
+  const tTrain = await getTranslations("Train");
+  const all = (await listAllExercisesForCoach()).filter((ex) => !ex.isPublished && ex.demoAssetUrl);
+
+  // A category the queue has no drafts for is ignored, like a made-up one.
+  const counts = draftCategoryCounts(all);
+  const raw = (await searchParams).category;
+  const wanted = Array.isArray(raw) ? raw[0] : raw;
+  const category = counts.some((c) => c.category === wanted) ? wanted : undefined;
+  const drafts = category ? all.filter((ex) => ex.category === category) : all;
+
+  const categoryLabel = (c: string) => (tTrain.has(`categories.${c}`) ? tTrain(`categories.${c}`) : c);
+
+  return (
+    <Container className="py-6 lg:py-12 space-y-8">
+      <header className="pt-2">
+        <div className="eyebrow mb-2">{t("eyebrow")}</div>
+        <h1 className="font-display text-title md:text-[2.75rem]">{t("title")}</h1>
+        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">{t("intro")}</p>
+        <Link href="/coach/exercises" className="mt-4 inline-block text-sm text-fg-dim underline underline-offset-4">
+          {t("back")}
+        </Link>
+      </header>
+
+      {counts.length > 1 ? (
+        <nav aria-label={tTrain("index.categoryNav")} className="flex flex-wrap gap-2">
+          <FilterPill href="/coach/exercises/review" active={!category} label={t("filterAll", { count: all.length })} />
+          {counts.map((c) => (
+            <FilterPill
+              key={c.category}
+              href={`/coach/exercises/review?category=${encodeURIComponent(c.category)}`}
+              active={category === c.category}
+              label={t("filterCategory", { label: categoryLabel(c.category), count: c.count })}
+            />
+          ))}
+        </nav>
+      ) : null}
+
+      {/* The queue freezes its list at mount; a new key restarts it when the filter changes. */}
+      <ExerciseReviewQueue key={category ?? "all"} drafts={drafts} />
+    </Container>
+  );
+}
+```
+
+- [ ] **Step 5: Kør tests, typer og lint**
+
+Run: `npx vitest run src/lib/coach/review-queue.test.ts src/components/coach/ExerciseReviewQueue.test.tsx`
+Expected: PASS. Køens egen test er uændret og grøn.
+
+Run: `node -e "for (const l of ['da','en']) { const r=require('./messages/'+l+'/CoachStudio.json').exercises.review; console.log(l, r.filterAll, '|', r.filterCategory) }"`
+Expected: `da Alle ({count}) | {label} ({count})` og `en All ({count}) | {label} ({count})`.
+
+Run: `npx tsc --noEmit -p . 2>&1 | head; npx eslint src/app/coach/exercises/review src/lib/coach/review-queue.ts src/lib/coach/review-queue.test.ts`
+Expected: ingen fejl.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add src/lib/coach/review-queue.ts src/lib/coach/review-queue.test.ts src/app/coach/exercises/review/page.tsx messages/da/CoachStudio.json messages/en/CoachStudio.json
+git commit -m "feat(coach): review-køen kan filtreres på kategori
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 16: Taksonomien i coach-editoren og program-byggeren
+
+**Files:**
+- Modify: `src/app/coach/exercises/[slug]/ExerciseEditor.tsx`
+- Create: `src/components/coach/ExercisePicker.tsx`
+- Create: `src/components/coach/ExercisePicker.test.tsx`
+- Modify: `src/app/coach/programs/[code]/ProgramBuilder.tsx`
+- Modify: `src/app/coach/programs/[code]/page.tsx`
+- Modify: `messages/da/CoachStudio.json`, `messages/en/CoachStudio.json`
+
+- [ ] **Step 1: Skriv den fejlende test for vælgeren**
+
+`src/components/coach/ExercisePicker.test.tsx`:
+
+```tsx
+import { describe, expect, it } from "vitest";
+import { render } from "../marketing/test-render";
+import ExercisePicker from "./ExercisePicker";
+
+const library = [
+  { id: "3", name: "Tempo Run", category: "cardio" },
+  { id: "1", name: "Back Squat", category: "lower-body" },
+  { id: "2", name: "Air Squat", category: "lower-body" },
+  { id: "4", name: "Mystery Move", category: "odd" },
+  { id: "5", name: "Coach Draft", category: null },
+];
+const props = { onChange: () => {}, emptyLabel: "Ingen øvelser i bibliotek", uncategorisedLabel: "Uden kategori" };
+
+describe("ExercisePicker", () => {
+  it("groups the options by category in taxonomy order with translated labels", () => {
+    const html = render(<ExercisePicker value="1" library={library} {...props} />);
+    const order = ["Ben", "Kondition", "odd", "Uden kategori"].map((l) => html.indexOf(`<optgroup label="${l}">`));
+    expect(order.every((i) => i > -1)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+  });
+
+  it("sorts names inside a group and marks the chosen exercise", () => {
+    const html = render(<ExercisePicker value="1" library={library} {...props} />);
+    expect(html.indexOf("Air Squat")).toBeLessThan(html.indexOf("Back Squat"));
+    expect(html).toContain('<option value="1" selected="">Back Squat</option>');
+  });
+
+  it("shows the empty label when the library is empty", () => {
+    const html = render(<ExercisePicker value={null} library={[]} {...props} />);
+    expect(html).toContain('<option value="">Ingen øvelser i bibliotek</option>');
+    expect(html).not.toContain("<optgroup");
+  });
+});
+```
+
+Run: `npx vitest run src/components/coach/ExercisePicker.test.tsx`
+Expected: FAIL. Komponenten findes ikke.
+
+- [ ] **Step 2: Skriv vælgeren**
+
+`src/components/coach/ExercisePicker.tsx`:
+
+```tsx
+"use client";
+
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
+import { groupByCategory } from "@/lib/data/exercise-taxonomy";
+
+export type PickerExercise = { id: string; name: string; category: string | null };
+
+/**
+ * The exercise dropdown in the program builder. With several hundred
+ * exercises a flat list is unusable, so the options are grouped by
+ * category in taxonomy order and sorted by name inside each group.
+ */
+export default function ExercisePicker({
+  value,
+  library,
+  onChange,
+  emptyLabel,
+  uncategorisedLabel,
+}: {
+  value: string | null;
+  library: PickerExercise[];
+  onChange: (exercise: PickerExercise | null) => void;
+  emptyLabel: string;
+  uncategorisedLabel: string;
+}) {
+  const tTrain = useTranslations("Train");
+  const groups = useMemo(() => groupByCategory(library), [library]);
+  const groupLabel = (category: string | null) =>
+    category === null
+      ? uncategorisedLabel
+      : tTrain.has(`categories.${category}`)
+        ? tTrain(`categories.${category}`)
+        : category;
+
+  return (
+    <select
+      value={value ?? ""}
+      onChange={(e) => onChange(library.find((l) => l.id === e.target.value) ?? null)}
+      className="input w-full"
+    >
+      {library.length === 0 ? <option value="">{emptyLabel}</option> : null}
+      {groups.map((group) => (
+        <optgroup key={group.category ?? ""} label={groupLabel(group.category)}>
+          {group.items.map((l) => (
+            <option key={l.id} value={l.id}>
+              {l.name}
+            </option>
+          ))}
+        </optgroup>
+      ))}
+    </select>
+  );
+}
+```
+
+Run: `npx vitest run src/components/coach/ExercisePicker.test.tsx`
+Expected: PASS, 3 tests.
+
+- [ ] **Step 3: Brug vælgeren i program-byggeren**
+
+I `src/app/coach/programs/[code]/ProgramBuilder.tsx`:
+
+1. Tilføj importen under de eksisterende:
+
+```ts
+import ExercisePicker, { type PickerExercise } from "@/components/coach/ExercisePicker";
+```
+
+2. Slet linjen `type LibraryExercise = { id: string; name: string };`, og ret prop-typen `library: LibraryExercise[];` til `library: PickerExercise[];`.
+
+3. Erstat hele `<select … > … </select>`-elementet inde i `<label>` med `{t("exerciseLabel")}` (det med `value={ex.exerciseId ?? ""}`) med:
+
+```tsx
+                        <ExercisePicker
+                          value={ex.exerciseId}
+                          library={library}
+                          onChange={(lib) =>
+                            patchExercise(di, ei, {
+                              exerciseId: lib?.id ?? null,
+                              exerciseName: lib?.name ?? "",
+                            })
+                          }
+                          emptyLabel={t("libraryEmpty")}
+                          uncategorisedLabel={t("libraryUncategorised")}
+                        />
+```
+
+I `src/app/coach/programs/[code]/page.tsx` sendes kategorien med:
+
+```ts
+  // Minimal shape for the exercise picker dropdown.
+  const library = libraryRaw.map((e) => ({ id: e.id, name: e.name, category: e.category }));
+```
+
+I `messages/da/CoachStudio.json`, i `programBuilder`, efter linjen `"libraryEmpty": "Ingen øvelser i bibliotek",`:
+
+```json
+    "libraryUncategorised": "Uden kategori",
+```
+
+I `messages/en/CoachStudio.json` samme sted:
+
+```json
+    "libraryUncategorised": "No category",
+```
+
+- [ ] **Step 4: Lad coach-editoren læse taksonomien**
+
+I `src/app/coach/exercises/[slug]/ExerciseEditor.tsx` tilføjes importen under de eksisterende:
+
+```ts
+import { TAXONOMY } from "@/lib/data/exercise-taxonomy";
+```
+
+og de tre håndskrevne lister `const CATEGORIES = [ … ];`, `const PATTERNS = [ … ];` og `const EQUIPMENT = [ … ];` erstattes med:
+
+```ts
+// The editor offers exactly what the catalogue knows. The hand-written
+// lists that stood here lacked kettlebell, band, isolation and carry.
+const CATEGORIES = [...TAXONOMY.categories];
+const PATTERNS = [...TAXONOMY.patterns];
+const EQUIPMENT = [...TAXONOMY.equipment];
+```
+
+`const DIFFICULTIES = ["beginner", "intermediate", "advanced"] as const;` bliver stående.
+
+- [ ] **Step 5: Kør tests, typer og lint**
+
+Run: `npx vitest run src/components/coach src/lib/data/exercise-taxonomy.test.ts`
+Expected: PASS.
+
+Run: `grep -n '"upper-body-push"\|"push-horizontal"' "src/app/coach/exercises/[slug]/ExerciseEditor.tsx"; grep -n "LibraryExercise" "src/app/coach/programs/[code]/ProgramBuilder.tsx"`
+Expected: ingen linjer.
+
+Run: `npx tsc --noEmit -p . 2>&1 | head; npx eslint src/app/coach src/components/coach/ExercisePicker.tsx src/components/coach/ExercisePicker.test.tsx`
+Expected: ingen fejl.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add "src/app/coach/exercises/[slug]/ExerciseEditor.tsx" src/components/coach/ExercisePicker.tsx src/components/coach/ExercisePicker.test.tsx "src/app/coach/programs/[code]/ProgramBuilder.tsx" "src/app/coach/programs/[code]/page.tsx" messages/da/CoachStudio.json messages/en/CoachStudio.json
+git commit -m "feat(coach): editor og program-bygger bruger taksonomien, og øvelsesvælgeren grupperes
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 17: [operatør] Samlet verifikation, dokumentation og PR
+
+- [ ] **Step 1: Hele suiten**
+
+Run: `npm test 2>&1 | tail -8; npx tsc --noEmit -p . 2>&1 | head; npm run lint 2>&1 | tail -5; npm run build 2>&1 | tail -15`
+Expected: alle tests grønne, ingen type- eller lint-fejl, og build gennemført. Notér antal tests.
+
+- [ ] **Step 2: Browser i demo-mode**
+
+Følg browser-verify-protokollen: `.env.local` flyttes til `.env.local.bak`, så appen kører på mocks, dev-serveren startes, og login sker med invitationskoden for Munk. Kør ikke samtidig med Storage-uploaden, som læser `.env.local`. Flyt filen tilbage bagefter, og bekræft at den er der.
+
+På `/train/exercises`, i 375 px og desktop-bredde:
+
+| Handling | Forventet |
+|---|---|
+| Åbn siden | Søgefelt, redskabsvælger, kategori-piller, "20 øvelser", 20 kort |
+| Søg `squat` | URL `?q=squat`, "2 øvelser": Back Squat og Front Squat |
+| Vælg et redskab i vælgeren | Siden filtrerer uden klik på knappen, URL får `equipment=` og beholder `q` |
+| Klik en kategori-pille | URL får `category=` og beholder de andre filtre; pillen er markeret |
+| Søg `zzz` | "0 øvelser", teksten "Ingen øvelser matcher." og linket "Nulstil filtre", som fører til siden uden parametre med tomt søgefelt |
+| Åbn `?category=findes-ikke` | Parameteren ignoreres, alle 20 vises |
+| Front Squat-kortet, derefter detaljesiden | Loopet afspilles (det nye klip) |
+
+Ingen fejl i konsollen. Ingen vandret scroll i 375 px.
+
+Coach-fladerne: `/coach/exercises/back-squat` viser redskabslisten med alle 12 værdier; program-byggeren viser øvelsesvælgeren grupperet (Ben, Push, Pull …).
+
+Tag et skærmbillede af biblioteket på mobil og desktop til PR'en.
+
+- [ ] **Step 3: Vægten af "Alle"-visningen**
+
+Mål i browseren på `/train/exercises`:
+
+```js
+({ html: document.documentElement.outerHTML.length, card: document.querySelector("ul.grid > li").outerHTML.length, cards: document.querySelectorAll("ul.grid > li").length })
+```
+
+Anslå vægten ved 580 kort som `html + (580 − cards) × card` og rapportér tallet i slutrapporten sammen med en vurdering af, om paginering bør følge.
+
+- [ ] **Step 4: Dokumentation**
+
+- `docs/PLATFORM_OVERVIEW.md`, række 10: `| 10 | 369 nye øvelser er `is_published=false` | Indhold | MoveKit-batch 2026-10 (migration 0066); venter på Munk-review i `/coach/exercises/review` |`.
+- `docs/EXERCISE_3D_RESEARCH.md`, i afsnit 4 (v1-ingestion): et kort afsnit om, at pakken nu er 577 klip, at `scripts/movekit-manifest.json` er ledger, og at en ny pakke håndteres med `movekit-audit.mjs`, `build-wf-exercises.mjs`, `gen-exercise-seed.mjs`, `ingest-manifest.mjs`, `upload-demos-to-storage.mjs` og `gen-demo-urls.mjs` i den rækkefølge.
+
+Commit: `docs: MoveKit-pipelinen og status efter batch 2026-10`.
+
+- [ ] **Step 5: Afsluttende kode-review**
+
+Send hele branchens diff (`git diff main...HEAD`, uden `docs/superpowers/` og `scripts/movekit-manifest.json`) til en code-reviewer-agent med spec'en som krav. Ret kritiske og vigtige fund, og kør Step 1 igen.
+
+- [ ] **Step 6: Push og PR**
+
+Push branchen og åbn en PR mod `main`. Merge ikke. PR-beskrivelsen skal indeholde:
+
+- hvad der er lavet, med tallene (369 kladder, 4 kerneøvelser, 2214 filer i Storage);
+- **udrulningsrækkefølgen**: merge og deploy først, derefter `supabase db push` (0066 og 0067). Før deploy ville front-squat pege på en fil, der ikke findes, og Power-labelen mangle;
+- at Storage-uploaden er sket og er additiv;
+- at de 369 er kladder og først ses af medlemmer, når Munk godkender dem;
+- afvigelser fra gennemgangen med Tom (369 i stedet for 373, intet `?v=2`, flyt af jump-squats og mavestræk, grupperet øvelsesvælger);
+- skærmbilleder og testtal.
+
+Bind PR'en i appen, og læs CI-status.
 
