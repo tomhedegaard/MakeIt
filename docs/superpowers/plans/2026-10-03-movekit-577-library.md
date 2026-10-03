@@ -1341,3 +1341,172 @@ git commit -m "feat(movekit): Storage-upload springer eksisterende filer over so
 Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
+---
+
+### Task 6: Rigtige klip til fire kerneøvelser
+
+Kildekortet blev opdateret i Task 3. Her encodes de fire loops til `public/exercise-demos/`, og alt, der antog at front-squat mangler klip, rettes.
+
+**Files:**
+- Create/replace: `public/exercise-demos/{front-squat,rdl,hip-thrust,standing-calf-raise}{.webm,.mp4,-poster.jpg,-portrait.webm,-portrait.mp4,-portrait-poster.jpg}` (24 filer, 6 nye)
+- Modify: `src/lib/data/bundled-demo-assets.ts`
+- Modify: `src/lib/data/demo-assets.test.ts`
+- Modify: `src/lib/data/session-demo-assets.test.ts`
+- Modify: `supabase/seed-exercises.sql`, `supabase/seed.sql`
+- Modify (kun kommentarer): `src/lib/data/exercise-mocks.ts`, `src/lib/data/session-demo-assets.ts`, `src/lib/data/exercises.ts`, `src/app/(app)/session/[id]/SessionClient.tsx`
+- Modify (docs): `docs/EXERCISE_VISUAL_BRIEF.md`, `docs/PLATFORM_OVERVIEW.md`
+
+- [ ] **Step 1: Ret testene, så de forventer 20 loops**
+
+I `src/lib/data/demo-assets.test.ts` erstattes hele testen `it("front-squat (no files) stays null in mock, helper, and seed lists", …)` med:
+
+```ts
+  it("covers all 20 core exercises, front-squat included", () => {
+    expect(disk).toHaveLength(20);
+    expect(disk).toEqual(MOCK_EXERCISES.map((e) => e.slug).sort());
+    expect(bundledDemoAssetUrl("front-squat")).toBe("/exercise-demos/front-squat.webm");
+    expect(bundledDemoAssetUrl("no-such-lift")).toBeNull();
+  });
+```
+
+I `src/lib/data/session-demo-assets.test.ts` erstattes testen `it("stays null for front-squat and any slug without files", …)` med:
+
+```ts
+  it("stays null for a slug without files", () => {
+    expect(resolveSessionDemoAssetUrl(null, "no-such-lift")).toBeNull();
+    expect(resolveSessionDemoAssetUrl("", "no-such-lift")).toBeNull();
+    expect(resolveSessionDemoAssetUrl(null, null)).toBeNull();
+  });
+```
+
+I samme fil omdøbes testen `it("leaves front-squat demoAssetUrl null and unknown names library-less", …)` til `it("gives front-squat its bundled loop and leaves unknown names library-less", …)`, og linjen
+
+```ts
+    expect(hydrated.exercises[0].library?.demoAssetUrl).toBeNull();
+```
+
+bliver
+
+```ts
+    expect(hydrated.exercises[0].library?.demoAssetUrl).toBe("/exercise-demos/front-squat.webm");
+```
+
+- [ ] **Step 2: Kør testene og se dem fejle**
+
+Run: `npx vitest run src/lib/data/demo-assets.test.ts src/lib/data/session-demo-assets.test.ts`
+Expected: FAIL. `disk` har 19 slugs, og `bundledDemoAssetUrl("front-squat")` er `null`.
+
+- [ ] **Step 3: Encode de fire loops**
+
+`MI_DEMO_OUT` må ikke være sat, så filerne lander i `public/exercise-demos/`.
+
+Run:
+
+```bash
+unset MI_DEMO_OUT
+for slug in front-squat rdl hip-thrust standing-calf-raise; do node scripts/ingest-movekit-batch.mjs --only=$slug; done
+node scripts/make-portrait-demo.mjs MoveKit/front-squat.mp4 front-squat
+node scripts/make-portrait-demo.mjs MoveKit/barbell-romanian-deadlift.mp4 rdl
+node scripts/make-portrait-demo.mjs MoveKit/barbell-hip-thrust.mp4 hip-thrust
+node scripts/make-portrait-demo.mjs MoveKit/standing-calf-raise-machine.mp4 standing-calf-raise
+```
+
+Expected: hver `ingest-movekit-batch`-kørsel slutter med `=== 1 øvelser ingested ===` og viser kildeklippet (`▸ rdl  ←  barbell-romanian-deadlift`). Hver portræt-kørsel skriver `✓ <slug>-portrait  …`.
+
+Run: `ls public/exercise-demos | wc -l; git status --short public/exercise-demos | awk '{print $1}' | sort | uniq -c`
+Expected: `120` filer. 18 ændrede (`M`) og 6 nye (`??`).
+
+- [ ] **Step 4: Se på de fire loops**
+
+Åbn posterne og bekræft øjensynligt, at bevægelsen er den rigtige, at figuren og redskabet er helt med i portrætbeskæringen, og at den røde muskelmarkering ses:
+
+- `public/exercise-demos/front-squat-poster.jpg` og `front-squat-portrait-poster.jpg`: stang i front rack.
+- `public/exercise-demos/rdl-poster.jpg` og `rdl-portrait-poster.jpg`: vægtstang, hofte-hængsel.
+- `public/exercise-demos/hip-thrust-poster.jpg` og `hip-thrust-portrait-poster.jpg`: vægtstang over hoften, skuldre mod bænk.
+- `public/exercise-demos/standing-calf-raise-poster.jpg` og `standing-calf-raise-portrait-poster.jpg`: stående lægmaskine.
+
+Er en portrætbeskæring forkert (afskåret redskab), så stop og rapportér; ret ikke `make-portrait-demo.mjs` uden at spørge.
+
+- [ ] **Step 5: Opdatér den bundlede liste og seeds**
+
+I `src/lib/data/bundled-demo-assets.ts` indsættes `"front-squat",` mellem `"dip",` og `"hip-thrust",` i `BUNDLED_DEMO_SLUGS`, og det sidste punkt i kontrakt-kommentaren (de tre linjer der begynder med `` *  - `front-squat` (and any other slug without files) stays null``) erstattes med:
+
+```ts
+ *  - All 20 core lifts have a trio here. Any other slug stays null
+ *    and falls back to PhaseAnimator / AnatomyFigure. Do not invent
+ *    a loop for a missing trio.
+```
+
+I `supabase/seed-exercises.sql` erstattes kommentaren og listen over `update public.exercises set demo_asset_url …` (fra linjen `-- Bundled v1 demo loops live in …` til og med den afsluttende `)` i `where slug in (…)`) med:
+
+```sql
+-- Bundled v1 demo loops live in public/exercise-demos/{slug}.{webm,mp4}
+-- plus {slug}-poster.jpg. Demo mode and resolveDemoAssets() use the
+-- same public path. Coach uploads write a Storage URL
+-- (…/storage/v1/object/public/exercise-demos/{slug}.webm?v=) via
+-- DemoAssetUploader — leave those rows alone. All 20 lifts have a trio.
+--
+-- 0051 and 0067 already ran this UPDATE, but migrations run BEFORE seed,
+-- so a fresh db:reset would otherwise insert these 20 rows with null.
+update public.exercises
+set demo_asset_url = '/exercise-demos/' || slug || '.webm'
+where slug in (
+  'back-squat', 'front-squat', 'deadlift', 'bench', 'paused-bench', 'ohp',
+  'pull-up', 'row', 'lunge', 'khr', 'push-up',
+  'dip', 'plank', 'barbell-curl', 'tricep-pushdown', 'lateral-raise',
+  'rdl', 'push-press', 'hip-thrust', 'standing-calf-raise'
+)
+```
+
+Resten af sætningen (`and ( demo_asset_url is null or demo_asset_url like '/exercise-demos/%' );`) er uændret.
+
+I `supabase/seed.sql` erstattes de tre kommentarlinjer over UPDATE'en med:
+
+```sql
+-- Same public-path contract as seed-exercises.sql: every lift in this
+-- insert has a bundled loop. Storage URLs from DemoAssetUploader are
+-- not overwritten.
+```
+
+og første linje i slug-listen bliver:
+
+```sql
+  'back-squat', 'front-squat', 'deadlift', 'bench', 'paused-bench', 'ohp',
+```
+
+- [ ] **Step 6: Kør testene og se dem bestå**
+
+Run: `npx vitest run src/lib/data/demo-assets.test.ts src/lib/data/session-demo-assets.test.ts src/lib/data/movekit-manifest.test.ts`
+Expected: PASS, 3 filer.
+
+Run: `npx vitest run src/components/marketing`
+Expected: PASS. Landingens loops (back-squat, deadlift, bench) er urørte, og testen for unikke loops er stadig grøn.
+
+- [ ] **Step 7: Ret forældede kommentarer og dokumentation**
+
+| Fil | Fra | Til |
+|---|---|---|
+| `src/lib/data/exercise-mocks.ts` (hovedkommentar) | `slugs with files in public/exercise-demos/ get the public WebM` / ` * path; front-squat stays null (PhaseAnimator fallback).` | `all 20 have files in public/exercise-demos/ and get the public` / ` * WebM path.` |
+| `src/lib/data/session-demo-assets.ts` | `` * `front-squat` and any other slug without files stay null.`` | `` * A slug without files stays null.`` |
+| `src/lib/data/exercises.ts` (hovedkommentar) | `that has a trio in public/exercise-demos/ (front-squat stays null).` | `that has a trio in public/exercise-demos/ (all 20 do).` |
+| `src/app/(app)/session/[id]/SessionClient.tsx` | `mini AnatomyFigure when the slug has no loop (front-squat etc.)` | `mini AnatomyFigure when the slug has no loop (coach-made exercises)` |
+| `docs/EXERCISE_VISUAL_BRIEF.md` | ``for the 19 bundled v1 loops.`` og sætningen `` `front-squat` stays null until a real trio exists.`` | ``for the 20 bundled v1 loops.`` og sætningen fjernes |
+| `docs/PLATFORM_OVERVIEW.md` (række 9) | ``| 9 | `front-squat` mangler demovideo | Indhold | Eneste hul i 20 kerneøvelser; MoveKit er et lukket katalog |`` | ``| 9 | ~~`front-squat` mangler demovideo~~ | **Løst** | MoveKit-pakken fra 09.2026 har klippet; alle 20 kerneøvelser har loop |`` |
+
+Læs hver fil omkring stedet før du retter, og bevar linjebrydning og kommentarstil.
+
+Run: `grep -rn "front-squat stays null\|front-squat (no files)\|19 bundled" src docs supabase | grep -v superpowers`
+Expected: ingen linjer.
+
+Run: `npx tsc --noEmit -p . 2>&1 | head; npx eslint src/lib/data "src/app/(app)/session"`
+Expected: ingen fejl.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add public/exercise-demos src/lib/data/bundled-demo-assets.ts src/lib/data/demo-assets.test.ts src/lib/data/session-demo-assets.test.ts src/lib/data/exercise-mocks.ts src/lib/data/session-demo-assets.ts src/lib/data/exercises.ts "src/app/(app)/session/[id]/SessionClient.tsx" supabase/seed-exercises.sql supabase/seed.sql docs/EXERCISE_VISUAL_BRIEF.md docs/PLATFORM_OVERVIEW.md
+git commit -m "feat(exercises): front squat får loop, og rdl, hip thrust og calf raise får det rigtige klip
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+```
+
