@@ -7,6 +7,10 @@
  *
  * Brug:
  *   node scripts/ingest-manifest.mjs --batch=2026-10 --out=<dir> [--jobs=3] [--only=<slug>]
+ *   node scripts/ingest-manifest.mjs --batch=2026-10 --out=<dir> --portrait-only
+ *
+ * --portrait-only laver kun portrættrioen om, for alle klip i batchen,
+ * også de færdige. Bruges når make-portrait-demo.mjs er ændret.
  *
  * Genoptageligt: et klip er færdigt, når <dir>/.done/<slug> findes.
  * Mærket skrives først, når begge trin lykkedes og alle seks filer
@@ -30,13 +34,16 @@ const batch = flag("batch");
 const out = flag("out");
 const jobs = Math.min(8, Math.max(1, Math.floor(Number(flag("jobs")) || 3)));
 const only = flag("only");
+const portraitOnly = args.includes("--portrait-only");
 
 if (!batch || !out) {
-  console.error("Brug: node scripts/ingest-manifest.mjs --batch=<batch> --out=<dir> [--jobs=3] [--only=<slug>]");
+  console.error("Brug: node scripts/ingest-manifest.mjs --batch=<batch> --out=<dir> [--jobs=3] [--only=<slug>] [--portrait-only]");
   process.exit(1);
 }
 
-const SUFFIXES = [".webm", ".mp4", "-poster.jpg", "-portrait.webm", "-portrait.mp4", "-portrait-poster.jpg"];
+const LANDSCAPE = [".webm", ".mp4", "-poster.jpg"];
+const PORTRAIT = ["-portrait.webm", "-portrait.mp4", "-portrait-poster.jpg"];
+const SUFFIXES = [...LANDSCAPE, ...PORTRAIT];
 const LIMIT = 5 * 1024 * 1024; // bucketens file_size_limit (migration 0033)
 
 const manifest = JSON.parse(await readFile("scripts/movekit-manifest.json", "utf8"));
@@ -94,11 +101,14 @@ for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) {
 async function encode(slug) {
   const src = `MoveKit/${slug}.mp4`;
   if (!existsSync(src)) return `kilde mangler: ${src}`;
+  // Mærket fjernes først: mens filerne skrives, er klippet ikke færdigt.
+  await rm(join(doneDir, slug), { force: true });
   // Rester fra et afbrudt forsøg må ikke kunne gå for at være dette forsøgs output.
-  for (const suffix of SUFFIXES) await rm(join(out, slug + suffix), { force: true });
-  const failed =
-    (await node("scripts/ingest-exercise-demo.mjs", [src, slug])) ??
-    (await node("scripts/make-portrait-demo.mjs", [src, slug]));
+  for (const suffix of portraitOnly ? PORTRAIT : SUFFIXES) await rm(join(out, slug + suffix), { force: true });
+  const failed = portraitOnly
+    ? await node("scripts/make-portrait-demo.mjs", [src, slug])
+    : ((await node("scripts/ingest-exercise-demo.mjs", [src, slug])) ??
+      (await node("scripts/make-portrait-demo.mjs", [src, slug])));
   if (failed) return failed;
   for (const suffix of SUFFIXES) {
     const file = join(out, slug + suffix);
@@ -108,8 +118,12 @@ async function encode(slug) {
   return null;
 }
 
-const todo = slugs.filter((s) => !existsSync(join(doneDir, s)));
-console.log(`${slugs.length} klip i batch ${batch} · ${slugs.length - todo.length} færdige · ${todo.length} encodes med ${jobs} job`);
+const todo = portraitOnly ? slugs : slugs.filter((s) => !existsSync(join(doneDir, s)));
+console.log(
+  portraitOnly
+    ? `${slugs.length} klip i batch ${batch} · portrættrioen laves om for alle med ${jobs} job`
+    : `${slugs.length} klip i batch ${batch} · ${slugs.length - todo.length} færdige · ${todo.length} encodes med ${jobs} job`,
+);
 
 const failures = [];
 let finished = 0;
