@@ -63,10 +63,12 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
 | `scripts/lib/exercise-seed.mjs` (ny), `scripts/gen-exercise-seed.mjs` | JSON til seed-SQL med validering | 3 |
 | `scripts/gen-demo-urls.mjs` (ny) | URL-blokken til 0067 | 4 |
 | `supabase/migrations/0066_…`, `0067_…` (nye) | Seed og wiring | 4 |
-| `src/lib/data/exercises.ts`, `exercise-library-url.ts` (ny) | Søgning, facetter, URL-bygger | 5 |
-| `src/app/(app)/train/exercises/page.tsx`, `LibraryFilterForm.tsx` (ny) | Bibliotekets filtre | 5 |
+| `src/lib/data/exercise-filters.ts` (ny), `exercise-library-url.ts` (ny) | Rene filtre, facetter og URL-bygger | 5 |
+| `src/lib/data/exercises.ts` | Søgning, facetter og stabil sortering mod Supabase | 5 |
+| `src/components/exercise/FilterPill.tsx` (ny), `LibraryFilterForm.tsx` (ny) | Filter-pille og søgeformular | 5 |
+| `src/app/(app)/train/exercises/page.tsx` | Bibliotekssiden | 5 |
 | `src/app/coach/exercises/review/page.tsx`, `src/lib/coach/review-queue.ts` | Kategori-filter i review-køen | 5 |
-| `ExerciseEditor.tsx`, `ProgramBuilder.tsx` | Taksonomi i coach-fladerne | 5 |
+| `src/components/coach/ExercisePicker.tsx` (ny), `ProgramBuilder.tsx`, `ExerciseEditor.tsx` | Taksonomi i coach-fladerne | 5 |
 
 ---
 
@@ -3188,7 +3190,8 @@ export async function listPublishedExercises(
   if (filters.equipment) query = query.eq("equipment", filters.equipment);
   if (filters.pattern) query = query.eq("pattern", filters.pattern);
   if (filters.difficulty) query = query.eq("difficulty", filters.difficulty);
-  const search = filters.q?.trim();
+  // PostgREST reads * as a wildcard in ilike and has no escape for it, so it is dropped.
+  const search = filters.q?.replaceAll("*", "").trim();
   if (search) query = query.ilike("name", `%${escapeLike(search)}%`);
 
   const { data } = await query;
@@ -3254,6 +3257,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 - Create: `src/components/exercise/LibraryFilterForm.tsx`
 - Create: `src/components/exercise/LibraryFilterForm.test.tsx`
 - Modify: `src/app/(app)/train/exercises/page.tsx` (hele filen erstattes)
+- Modify: `src/components/ui/touch-targets.test.ts`
 - Modify: `messages/da/Train.json`, `messages/en/Train.json`
 
 - [ ] **Step 1: Skriv den fejlende test**
@@ -3363,6 +3367,7 @@ export default function FilterPill({
 "use client";
 
 import Form from "next/form";
+import { useState } from "react";
 
 type Option = { value: string; label: string };
 
@@ -3370,9 +3375,12 @@ type Option = { value: string; label: string };
  * Search and equipment filter for the exercise library. A GET form, so
  * the state lives in the URL and it works without JavaScript; with
  * JavaScript, next/form navigates on the client and the equipment
- * choice submits on change. The page gives this component a key made
- * of the applied filters, so the fields reset when a pill or the
- * reset link changes them.
+ * choice submits on change.
+ *
+ * The fields are controlled so they can follow the URL when a category
+ * pill or the reset link changes the filters. Remounting the form with
+ * a key would do the same, but it drops keyboard focus after every
+ * search.
  */
 export default function LibraryFilterForm({
   q,
@@ -3387,6 +3395,16 @@ export default function LibraryFilterForm({
   equipmentOptions: Option[];
   labels: { search: string; placeholder: string; equipment: string; allEquipment: string; submit: string };
 }) {
+  const [applied, setApplied] = useState({ q, equipment });
+  const [text, setText] = useState(q);
+  const [chosen, setChosen] = useState(equipment);
+  // The URL changed under the form: take its values (state adjusted during render, no effect needed).
+  if (applied.q !== q || applied.equipment !== equipment) {
+    setApplied({ q, equipment });
+    setText(q);
+    setChosen(equipment);
+  }
+
   return (
     <Form action="/train/exercises" className="flex flex-wrap items-end gap-3">
       {category ? <input type="hidden" name="category" value={category} /> : null}
@@ -3395,7 +3413,8 @@ export default function LibraryFilterForm({
         <input
           type="search"
           name="q"
-          defaultValue={q}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           placeholder={labels.placeholder}
           maxLength={80}
           autoComplete="off"
@@ -3406,8 +3425,12 @@ export default function LibraryFilterForm({
         <span className="block text-xs text-fg-dim">{labels.equipment}</span>
         <select
           name="equipment"
-          defaultValue={equipment}
-          onChange={(e) => e.currentTarget.form?.requestSubmit()}
+          value={chosen}
+          onChange={(e) => {
+            setChosen(e.target.value);
+            // The element already holds the new value, so the submit carries it.
+            e.currentTarget.form?.requestSubmit();
+          }}
           className="input w-full"
         >
           <option value="">{labels.allEquipment}</option>
@@ -3524,7 +3547,6 @@ export default async function ExercisesIndexPage({
       <Container className="py-10 md:py-14 space-y-8">
         <div className="space-y-4">
           <LibraryFilterForm
-            key={`${q ?? ""}|${category ?? ""}|${equipment ?? ""}`}
             q={q ?? ""}
             category={category ?? ""}
             equipment={equipment ?? ""}
@@ -3587,18 +3609,36 @@ export default async function ExercisesIndexPage({
 }
 ```
 
-- [ ] **Step 5: Kør tests, typer og lint**
+- [ ] **Step 5: Flyt touch-target-gaten med**
 
-Run: `npx vitest run src/components/exercise src/lib/i18n/app-copy-gate.test.ts src/lib/data/exercise-meta.test.ts`
+`src/components/ui/touch-targets.test.ts` læser bibliotekssidens kildetekst og kræver `?category=` og pillens klasser dér. Pillen ligger nu i `FilterPill.tsx`, og URL'en bygges af `libraryHref`. Erstat hele blokken `describe("/train/exercises category chips", () => { … });` med:
+
+```ts
+describe("/train/exercises category chips", () => {
+  const page = read("../../app/(app)/train/exercises/page.tsx");
+  const pill = read("../exercise/FilterPill.tsx");
+
+  it("keeps the filters in the URL and the chips at 44px", () => {
+    expect(page).toContain("libraryHref(");
+    expect(page).toContain("<FilterPill");
+    expect(pill).toContain("inline-flex min-h-11 items-center px-4");
+    expect(pill).not.toContain("px-3 py-1.5 rounded-full");
+  });
+});
+```
+
+- [ ] **Step 6: Kør tests, typer og lint**
+
+Run: `npx vitest run src/components/exercise src/components/ui/touch-targets.test.ts src/lib/i18n/app-copy-gate.test.ts src/lib/data/exercise-meta.test.ts`
 Expected: PASS. Copy-gaten bekræfter, at dansk og engelsk har de samme nøgler og ingen tankestreger.
 
-Run: `npx tsc --noEmit -p . 2>&1 | head; npx eslint "src/app/(app)/train/exercises" src/components/exercise`
+Run: `npx tsc --noEmit -p . 2>&1 | head; npx eslint "src/app/(app)/train/exercises" src/components/exercise src/components/ui/touch-targets.test.ts`
 Expected: ingen fejl.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
-git add src/components/exercise/FilterPill.tsx src/components/exercise/LibraryFilterForm.tsx src/components/exercise/LibraryFilterForm.test.tsx "src/app/(app)/train/exercises/page.tsx" messages/da/Train.json messages/en/Train.json
+git add src/components/exercise/FilterPill.tsx src/components/exercise/LibraryFilterForm.tsx src/components/exercise/LibraryFilterForm.test.tsx "src/app/(app)/train/exercises/page.tsx" src/components/ui/touch-targets.test.ts messages/da/Train.json messages/en/Train.json
 git commit -m "feat(exercises): søgning og redskabsfilter i øvelsesbiblioteket
 
 Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
@@ -3841,7 +3881,7 @@ describe("ExercisePicker", () => {
 
   it("shows the empty label when the library is empty", () => {
     const html = render(<ExercisePicker value={null} library={[]} {...props} />);
-    expect(html).toContain('<option value="">Ingen øvelser i bibliotek</option>');
+    expect(html).toContain('<option value="" selected="">Ingen øvelser i bibliotek</option>');
     expect(html).not.toContain("<optgroup");
   });
 });
@@ -4020,7 +4060,7 @@ På `/train/exercises`, i 375 px og desktop-bredde:
 | Handling | Forventet |
 |---|---|
 | Åbn siden | Søgefelt, redskabsvælger, kategori-piller, "20 øvelser", 20 kort |
-| Søg `squat` | URL `?q=squat`, "2 øvelser": Back Squat og Front Squat |
+| Søg `squat` | URL `?q=squat&equipment=` (en GET-formular sender alle felter; den tomme værdi ignoreres), "2 øvelser": Back Squat og Front Squat. Fokus bliver i søgefeltet |
 | Vælg et redskab i vælgeren | Siden filtrerer uden klik på knappen, URL får `equipment=` og beholder `q` |
 | Klik en kategori-pille | URL får `category=` og beholder de andre filtre; pillen er markeret |
 | Søg `zzz` | "0 øvelser", teksten "Ingen øvelser matcher." og linket "Nulstil filtre", som fører til siden uden parametre med tomt søgefelt |

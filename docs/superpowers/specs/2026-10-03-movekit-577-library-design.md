@@ -444,8 +444,11 @@ Før der skrives Next.js-kode læses den relevante guide i `node_modules/next/di
 - Øverst en GET-formular: søgefelt (`type="search"`, `name="q"`, label "Søg øvelse"),
   redskabsvælger (`<select name="equipment">` med "Alle redskaber" først), skjult
   `category`, og en submit-knap. Virker uden JavaScript.
-- Lille klientkomponent `LibraryFilterForm` omkring formularen: submitter ved ændring af
-  redskabsvælgeren. Ingen debounce-søgning; Enter eller knappen søger.
+- Lille klientkomponent `LibraryFilterForm` omkring formularen (`next/form`, så en søgning
+  er klientnavigation): submitter ved ændring af redskabsvælgeren. Ingen debounce-søgning;
+  Enter eller knappen søger. Felterne er kontrollerede og følger URL'en, når en pille eller
+  nulstil-linket ændrer filtrene, uden at formularen remountes; fokus bliver derfor i
+  søgefeltet efter en søgning.
 - Kategori-piller som i dag, i taksonomiens rækkefølge, med `q` og `equipment` bevaret i
   linket. Kun kategorier og redskaber, der findes blandt publicerede øvelser, vises.
 - Resultattal over grid'et ("42 øvelser"). Tomt resultat med aktive filtre viser en besked
