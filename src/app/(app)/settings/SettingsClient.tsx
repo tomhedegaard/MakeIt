@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useId } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -13,6 +13,7 @@ import PushToggle from "@/components/push/PushToggle";
 import NativePushToggle from "@/components/push/NativePushToggle";
 import LanguageSelector from "@/components/LanguageSelector";
 import HrvSettingsSection from "@/components/hrv/HrvSettingsSection";
+import Switch from "@/components/ui/Switch";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { Modal } from "@/components/ui/Modal";
 
@@ -362,33 +363,14 @@ function Toggle({
   checked: boolean;
   onChange: (v: boolean) => void;
 }) {
+  const id = useId();
   return (
     <li className="py-3 flex items-start justify-between gap-4">
       <div className="flex-1 min-w-0">
-        <div className="text-meta">{label}</div>
+        <div id={id} className="text-meta">{label}</div>
         <div className="text-meta text-fg-dim mt-0.5">{sub}</div>
       </div>
-      <label className="shrink-0 cursor-pointer touch-app">
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
-          className="sr-only peer"
-        />
-        <span
-          aria-hidden
-          className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
-          style={{ background: checked ? "var(--fg)" : "var(--bg-3)" }}
-        >
-          <span
-            className="absolute top-0.5 left-0.5 size-6 rounded-full transition-transform"
-            style={{
-              background: checked ? "var(--bg)" : "var(--fg-dim)",
-              transform: checked ? "translateX(20px)" : "translateX(0)",
-            }}
-          />
-        </span>
-      </label>
+      <Switch checked={checked} onCheckedChange={onChange} labelledBy={id} />
     </li>
   );
 }

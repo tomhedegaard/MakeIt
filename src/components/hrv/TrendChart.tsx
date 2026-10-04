@@ -207,7 +207,7 @@ export default function TrendChart({
           {t("legendMean")}
         </li>
         <li className="inline-flex items-center gap-2">
-          <span className="inline-block size-1 rounded-full bg-domain" />
+          <span className="inline-block size-[3px] rounded-full bg-domain" />
           {t("legendNight")}
         </li>
         <li className="inline-flex items-center gap-2">

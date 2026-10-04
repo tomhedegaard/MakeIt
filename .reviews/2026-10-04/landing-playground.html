@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Landing playground · MakeIt // HQ</title>
+<style>
+  :root {
+    --ui-bg: #0f0f10; --ui-panel: #17171a; --ui-line: #2a2a2e; --ui-fg: #e8e8e6; --ui-dim: #9a9a96;
+    --ui-acc: #8fb8a0;
+    --n-bg: #FFFFFF; --n-bg2: #F2F2F0; --n-fg: #111111; --n-dim: #5E5E59; --n-line: #E1E1DE; --mos: #2E4A3B;
+    --nat-body: #E6E6E2; --nat-dim: #B9B9B4;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ui-bg); color: var(--ui-fg); font: 13px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .app { display: grid; grid-template-columns: 340px 1fr; height: 100vh; }
+  .controls { border-right: 1px solid var(--ui-line); overflow-y: auto; padding: 16px; background: var(--ui-panel); }
+  .controls h1 { font-size: 15px; margin: 0 0 4px; }
+  .controls .lede { color: var(--ui-dim); margin: 0 0 14px; }
+  fieldset { border: 1px solid var(--ui-line); padding: 10px 12px 12px; margin: 0 0 12px; }
+  legend { color: var(--ui-dim); padding: 0 4px; font-size: 11px; letter-spacing: .04em; }
+  label.row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin: 8px 0; }
+  label.row span.val { font-family: ui-monospace, monospace; color: var(--ui-dim); font-size: 11px; }
+  input[type=range] { width: 100%; grid-column: 1 / -1; accent-color: var(--ui-acc); }
+  select { width: 100%; background: #0f0f10; color: var(--ui-fg); border: 1px solid var(--ui-line); padding: 6px; font: inherit; }
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .presets button, .seg button { background: #0f0f10; color: var(--ui-fg); border: 1px solid var(--ui-line); padding: 6px 9px; font: inherit; cursor: pointer; }
+  .presets button:hover, .seg button:hover { border-color: var(--ui-acc); }
+  .seg { display: flex; gap: 4px; flex-wrap: wrap; }
+  .seg button[aria-pressed=true] { background: var(--ui-acc); color: #0f0f10; border-color: var(--ui-acc); }
+  .sections { list-style: none; padding: 0; margin: 0; }
+  .sections li { display: grid; grid-template-columns: auto 1fr auto auto auto; gap: 6px; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--ui-line); }
+  .sections li:last-child { border-bottom: 0; }
+  .sections button { background: none; border: 1px solid var(--ui-line); color: var(--ui-dim); width: 24px; height: 22px; cursor: pointer; font: inherit; }
+  .sections .band { font-size: 10px; color: var(--ui-dim); display: flex; gap: 3px; align-items: center; }
+  .right { display: grid; grid-template-rows: 1fr auto; min-height: 0; }
+  .stage { overflow: auto; padding: 18px; background: #232326; display: flex; justify-content: center; align-items: flex-start; }
+  .frame { background: var(--n-bg); color: var(--n-fg); transition: width .25s ease; outline: 1px solid #000; }
+  .out { border-top: 1px solid var(--ui-line); background: var(--ui-panel); padding: 12px 16px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; }
+  .out pre { margin: 0; white-space: pre-wrap; font: 12px/1.5 ui-monospace, monospace; color: var(--ui-fg); max-height: 150px; overflow: auto; }
+  .out button { background: var(--ui-acc); color: #0f0f10; border: 0; padding: 9px 14px; font: inherit; font-weight: 600; cursor: pointer; }
+
+  /* ---------- Nord preview ---------- */
+  .p { font-family: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif; font-size: 15px; line-height: 1.5; }
+  .p .wrap { margin: 0 auto; padding: 0 var(--gutter); max-width: var(--maxw); }
+  .p nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; border-bottom: 1px solid var(--n-line); }
+  .p nav .links { display: flex; gap: 22px; color: var(--n-dim); font-size: 14px; }
+  .p .logo { font-weight: 500; }
+  .p .btn { display: inline-flex; align-items: center; height: 48px; padding: 0 20px; font-weight: 500; border: 1px solid var(--n-fg); }
+  .p .btn.primary { background: var(--n-fg); color: var(--n-bg); }
+  .p .btn.outline { background: transparent; color: var(--n-fg); }
+  .p .btn.sm { height: 40px; padding: 0 14px; font-size: 13px; }
+  .p .link { color: var(--mos); text-decoration: underline; text-underline-offset: 3px; }
+  .p .kicker { font-size: 13px; color: var(--n-dim); margin-bottom: 10px; }
+  .p .kicker.mos { color: var(--mos); }
+  .p h1, .p h2, .p h3 { font-weight: 500; margin: 0; letter-spacing: -0.03em; }
+  .p h2 { font-size: var(--h2); line-height: 1.02; }
+  .p h3 { font-size: 17px; letter-spacing: -0.01em; }
+  .p .sub { color: var(--n-dim); max-width: 46ch; margin-top: 12px; }
+  .p section { padding: var(--sec) 0; border-top: 1px solid var(--n-line); }
+  .p section.band { background: var(--n-fg); color: #fff; border-top-color: var(--n-fg); }
+  .p section.band .sub, .p section.band .kicker { color: var(--nat-dim); }
+  .p section.band .kicker.mos { color: #9fc1ad; }
+  .p section.band .card { background: transparent; border-color: #3A3A38; }
+  .p section.band .btn.primary { background: #fff; color: var(--n-fg); border-color: #fff; }
+  .p .hero { padding: var(--heroPad) 0 calc(var(--heroPad) * .8); border-top: 0; }
+  .p .hero h1 { font-size: var(--h1); line-height: .9; letter-spacing: -0.045em; max-width: 9.5em; }
+  .p .hero .ctas { display: flex; gap: 16px; align-items: center; margin-top: 28px; flex-wrap: wrap; }
+  .p .hero.split .grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: end; }
+  .p .hero.center { text-align: center; }
+  .p .hero.center h1, .p .hero.center .sub { margin-left: auto; margin-right: auto; }
+  .p .hero.center .ctas { justify-content: center; }
+  .p .hero.bleed { position: relative; color: #fff; padding-top: calc(var(--heroPad) * 1.6); }
+  .p .hero.bleed .sub { color: var(--nat-body); }
+  .p .hero.bleed .btn.primary { background: #fff; color: var(--n-fg); border-color: #fff; }
+  .p .hero.bleed .btn.outline, .p .hero.bleed .link { color: #fff; border-color: #fff; }
+  .p .photo { background: repeating-linear-gradient(135deg, #d9d9d5 0 10px, #cfcfca 10px 20px); position: relative; overflow: hidden; }
+  .p .photo::after { content: attr(data-label); position: absolute; left: 10px; bottom: 8px; font-size: 11px; color: #555; background: rgba(255,255,255,.8); padding: 2px 6px; }
+  .p .photo.grey { filter: grayscale(.3); }
+  .p .hero.bleed .photo { position: absolute; inset: 0; background: repeating-linear-gradient(135deg, #2b2b2a 0 10px, #252524 10px 20px); }
+  .p .hero.bleed .photo::after { background: rgba(0,0,0,.6); color: #ccc; }
+  .p .hero.bleed .wrap { position: relative; }
+  .p .plates { display: flex; gap: 10px; align-items: baseline; font-size: 72px; font-weight: 500; letter-spacing: -0.04em; }
+  .p .plates s { color: var(--n-dim); font-size: 40px; text-decoration-thickness: 3px; }
+  .p .plates .unit { font-size: 18px; color: var(--n-dim); }
+  .p .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+  .p .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px; }
+  .p .card { border: 1px solid var(--n-line); padding: 20px; background: var(--n-bg); }
+  .p .card .stat { font-size: 40px; font-weight: 500; letter-spacing: -0.04em; margin-top: 10px; }
+  .p .meter { height: 4px; background: var(--n-line); margin-top: 14px; }
+  .p .meter i { display: block; height: 100%; width: 25%; background: var(--mos); }
+  .p .meter.ink i { background: var(--n-fg); }
+  .p section.band .meter { background: #3A3A38; }
+  .p section.band .meter.ink i { background: #fff; }
+  .p .faq details { border-top: 1px solid var(--n-line); padding: 14px 0; }
+  .p .faq summary { font-weight: 500; cursor: pointer; }
+  .p footer { border-top: 1px solid var(--n-line); padding: 28px 0; color: var(--n-dim); font-size: 13px; }
+  .p .mobile .grid2, .p .mobile .grid4, .p .mobile .hero.split .grid { grid-template-columns: 1fr; }
+  .p .mobile nav .links { display: none; }
+  .p .mobile .plates { font-size: 52px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="controls">
+    <h1>Landingssiden · playground</h1>
+    <p class="lede">Juster, se det live i Nord, og kopiér prompten tilbage til Claude.</p>
+    <div class="presets" id="presets"></div>
+
+    <fieldset><legend>Visning</legend><div class="seg" id="viewport"></div></fieldset>
+
+    <fieldset>
+      <legend>Hero</legend>
+      <div class="seg" id="heroLayout"></div>
+      <label class="row">Overskrift <span class="val" id="h1v"></span><input type="range" id="h1" min="48" max="128" step="2"></label>
+      <label class="row">Luft over/under <span class="val" id="heroPadv"></span><input type="range" id="heroPad" min="32" max="200" step="4"></label>
+      <label class="row">Primær CTA
+        <select id="cta"><option value="primary">Blæk (fyldt)</option><option value="outline">Outline</option></select>
+      </label>
+      <label class="row">Sekundær handling
+        <select id="second"><option value="link">Mos-link</option><option value="outline">Outline-knap</option><option value="none">Ingen</option></select>
+      </label>
+      <label class="row">Plade-visual (150 → 135 kg) <input type="checkbox" id="plates"></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Sektioner: synlig · rækkefølge · mørkt bånd</legend>
+      <ul class="sections" id="sections"></ul>
+    </fieldset>
+
+    <fieldset>
+      <legend>Rytme</legend>
+      <label class="row">Sektionsluft <span class="val" id="secv"></span><input type="range" id="sec" min="40" max="200" step="4"></label>
+      <label class="row">Sektionstitel <span class="val" id="h2v"></span><input type="range" id="h2" min="28" max="72" step="2"></label>
+      <label class="row">Maks. bredde <span class="val" id="maxwv"></span><input type="range" id="maxw" min="960" max="1440" step="20"></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Farve og billeder</legend>
+      <label class="row">Mos-dosering
+        <select id="mos"><option value="minimal">Kun links</option><option value="kicker">Links + kickers</option><option value="full">Links, kickers og progress</option></select>
+      </label>
+      <label class="row">Fotos (pladsholdere) <input type="checkbox" id="photos"></label>
+      <label class="row">Let affarvning (grayscale 0,3) <input type="checkbox" id="grey"></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Navigation</legend>
+      <label class="row">Sektionslinks i nav <input type="checkbox" id="navLinks"></label>
+      <label class="row">CTA i nav <input type="checkbox" id="navCta"></label>
+    </fieldset>
+  </aside>
+
+  <div class="right">
+    <div class="stage"><div class="frame p" id="frame"></div></div>
+    <div class="out">
+      <pre id="prompt"></pre>
+      <button id="copy" type="button">Kopiér prompt</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// All preview markup below is built from constants in this file, never from
+// user input, so rendering it via a DOM fragment is safe.
+const SECTIONS = {
+  motor:   { name: "Motor (HQ om natten)", file: "MotorStory.tsx" },
+  systems: { name: "Fire systemer", file: "SystemsBento.tsx" },
+  munk:    { name: "Munk skriver under", file: "LandingMunk.tsx" },
+  crew:    { name: "Crew og Reps", file: "CrewPlates.tsx" },
+  voices:  { name: "Stemmer (slået fra i dag)", file: "Voices.tsx" },
+  access:  { name: "Adgang / venteliste", file: "AccessPanel.tsx" },
+  faq:     { name: "Spørgsmål", file: "LandingFaq.tsx" },
+};
+
+// "Nu (live)" mirrors today's landing as closely as a sketch can.
+const DEFAULTS = {
+  viewport: "desktop", heroLayout: "editorial", h1: 110, heroPad: 120, cta: "primary", second: "link", plates: true,
+  order: ["motor", "systems", "munk", "crew", "voices", "access", "faq"],
+  visible: { motor: true, systems: true, munk: true, crew: true, voices: false, access: true, faq: true },
+  band: { motor: false, systems: false, munk: false, crew: false, voices: false, access: false, faq: false },
+  sec: 120, h2: 52, maxw: 1280, mos: "kicker", photos: false, grey: true, navLinks: true, navCta: true,
+};
+
+const PRESETS = {
+  "Nu (live)": {},
+  "Shop-tone": { heroLayout: "bleed", h1: 96, heroPad: 140, photos: true, band: { munk: true, access: true }, sec: 112, h2: 48, mos: "minimal", second: "outline" },
+  "Editorial ro": { h1: 84, heroPad: 96, plates: false, sec: 160, h2: 44, maxw: 1120, mos: "minimal", navLinks: false },
+  "Mørk fortælling": { band: { motor: true, munk: true, access: true }, photos: true, h2: 56 },
+  "Kort og direkte": { order: ["motor", "munk", "systems", "access", "faq", "crew", "voices"], visible: { crew: false }, sec: 88, h1: 96, heroPad: 88, h2: 40 },
+};
+
+let state = structuredClone(DEFAULTS);
+const $ = (id) => document.getElementById(id);
+const html = (s) => document.createRange().createContextualFragment(s);
+
+function applyPreset(name) {
+  state = structuredClone(DEFAULTS);
+  for (const [k, v] of Object.entries(PRESETS[name])) {
+    state[k] = (k === "band" || k === "visible") ? { ...state[k], ...v } : structuredClone(v);
+  }
+  syncControls(); updateAll();
+}
+
+/* ---------- controls ---------- */
+function seg(id, options, key) {
+  const el = $(id); el.replaceChildren();
+  for (const [val, label] of options) {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = label;
+    b.setAttribute("aria-pressed", String(state[key] === val));
+    b.onclick = () => { state[key] = val; syncControls(); updateAll(); };
+    el.appendChild(b);
+  }
+}
+function syncControls() {
+  seg("viewport", [["desktop", "Desktop 1280"], ["mobile", "Mobil 375"]], "viewport");
+  seg("heroLayout", [["editorial", "Editorial"], ["split", "Split med visual"], ["center", "Centreret"], ["bleed", "Fuldbillede, mørk"]], "heroLayout");
+  for (const k of ["h1", "heroPad", "sec", "h2", "maxw"]) $(k).value = state[k];
+  for (const k of ["cta", "second", "mos"]) $(k).value = state[k];
+  for (const k of ["plates", "photos", "grey", "navLinks", "navCta"]) $(k).checked = state[k];
+  renderSectionList();
+}
+function renderSectionList() {
+  const ul = $("sections"); ul.replaceChildren();
+  state.order.forEach((key, i) => {
+    const li = document.createElement("li");
+    const vis = document.createElement("input"); vis.type = "checkbox"; vis.checked = state.visible[key]; vis.title = "Synlig";
+    vis.onchange = () => { state.visible[key] = vis.checked; updateAll(); };
+    const name = document.createElement("span"); name.textContent = SECTIONS[key].name;
+    const up = document.createElement("button"); up.type = "button"; up.textContent = "↑"; up.title = "Op"; up.disabled = i === 0;
+    up.onclick = () => { [state.order[i - 1], state.order[i]] = [state.order[i], state.order[i - 1]]; renderSectionList(); updateAll(); };
+    const down = document.createElement("button"); down.type = "button"; down.textContent = "↓"; down.title = "Ned"; down.disabled = i === state.order.length - 1;
+    down.onclick = () => { [state.order[i + 1], state.order[i]] = [state.order[i], state.order[i + 1]]; renderSectionList(); updateAll(); };
+    const band = document.createElement("label"); band.className = "band";
+    const bc = document.createElement("input"); bc.type = "checkbox"; bc.checked = state.band[key];
+    bc.onchange = () => { state.band[key] = bc.checked; updateAll(); };
+    band.append(bc, "bånd");
+    li.append(vis, name, up, down, band); ul.appendChild(li);
+  });
+}
+for (const k of ["h1", "heroPad", "sec", "h2", "maxw"]) $(k).addEventListener("input", (e) => { state[k] = +e.target.value; updateAll(); });
+for (const k of ["cta", "second", "mos"]) $(k).addEventListener("change", (e) => { state[k] = e.target.value; updateAll(); });
+for (const k of ["plates", "photos", "grey", "navLinks", "navCta"]) $(k).addEventListener("change", (e) => { state[k] = e.target.checked; updateAll(); });
+
+/* ---------- preview ---------- */
+const photo = (label, ratio) => state.photos ? `<div class="photo ${state.grey ? "grey" : ""}" data-label="${label}" style="aspect-ratio:${ratio};margin-top:24px"></div>` : "";
+const kick = (t) => `<div class="kicker ${state.mos !== "minimal" ? "mos" : ""}">${t}</div>`;
+const meter = () => `<div class="meter ${state.mos === "full" ? "" : "ink"}"><i></i></div>`;
+
+const RENDER = {
+  motor: () => `${kick("Hver morgen")}<h2>Passet bliver skrevet om, mens du sover.</h2>
+    <p class="sub">HQ læser nattens HRV, søvn, mind-check og dine seneste pas. Så justerer den vægt og volumen.</p>
+    <div class="grid2"><div class="card"><h3>I dag · Back squat</h3><div class="stat">135 kg</div><div class="kicker" style="margin-top:6px">Topsæt · HRV under dit bånd</div></div>
+    <div class="card"><h3>Prøv selv: flyt en skyder.</h3>${meter()}<p class="sub" style="margin-top:12px">Søvn 6 t · HRV 43 ms</p></div></div>`,
+  systems: () => `<h2>Fire systemer. Ét pas.</h2><p class="sub">Krop, mad, hjerte og sind taler sammen. Det der sker ét sted, flytter noget et andet sted.</p>
+    <div class="grid4">${[["Krop", "Programmet flytter sig med dig.", "16"], ["Mad", "Brændstof.", "2.740"], ["Hjerte", "Dit bånd, ikke et gennemsnit.", "43"], ["Sind", "Hovedet er en del af passet.", "3/5"]]
+      .map(([k, h, s]) => `<div class="card">${kick(k)}<h3>${h}</h3><div class="stat">${s}</div></div>`).join("")}</div>`,
+  munk: () => `${kick("Coach")}<h2>Et menneske skriver under.</h2><p class="sub">Mikael Munk er hovedcoach. Han læser dine løft.</p>
+    ${photo("Portræt · Munk · 3:2", "3/2")}
+    <div class="grid2"><div class="card"><div class="kicker">AI-udkast</div><p>Der ses let valgus i knæleddet under den excentriske fase.</p></div>
+    <div class="card"><div class="kicker">Munk · svaret på 6 t</div><p>Knæene falder ind i bunden. Tænk: skub gulvet fra hinanden.</p></div></div>`,
+  crew: () => `${kick("Crewet")}<h2>Læs på, en skive ad gangen.</h2><p class="sub">Reps optjenes ved at træne, sende form-checks, sætte PR'er og hjælpe andre.</p>
+    <div class="grid4">${["Lifter", "Athlete", "Beast", "Legend"].map((t, i) => `<div class="card"><h3>${t}</h3><div class="kicker" style="margin-top:6px">${["0–999", "1.000–4.999", "5.000–14.999", "15.000+"][i]}</div></div>`).join("")}</div>${meter()}`,
+  voices: () => `<h2>Fra crewet.</h2><p class="sub">Citater fra rigtige medlemmer.</p>`,
+  access: () => `${kick("Adgang")}<h2>Skriv dig på listen.</h2><p class="sub">Invite-only. Pladser åbnes i små hold.</p>
+    <div style="display:flex;gap:10px;margin-top:22px;flex-wrap:wrap"><div class="card" style="flex:1;min-width:200px;padding:13px 14px;color:var(--n-dim)">navn@domæne.dk</div><span class="btn primary">Skriv mig op</span></div>
+    <p class="sub" style="font-size:13px">Virker med WHOOP, Oura, Polar og Apple Watch via iPhone-appen.</p>`,
+  faq: () => `<h2>Spørgsmål.</h2><div class="faq" style="margin-top:20px"><details open><summary>Hvorfor er det invite-only?</summary><p class="sub">Fordi Munk selv skriver under på svarene. Derfor åbner vi i små hold.</p></details><details><summary>Er demoen på forsiden det rigtige HQ?</summary></details></div>`,
+};
+
+function hero() {
+  const second = state.second === "link" ? `<a class="link">Se hvordan HQ virker</a>` : state.second === "outline" ? `<span class="btn outline">Se hvordan HQ virker</span>` : "";
+  const ctas = `<div class="ctas"><span class="btn ${state.cta}">Få adgang</span>${second}</div>`;
+  const text = `<h1>Bygget til dem der løfter.</h1><p class="sub" style="font-size:19px;max-width:30ch">HQ, appens hjerne, læser din nat og skriver dagens pas om, før du står under stangen.</p>${ctas}`;
+  const plates = state.plates ? `<div class="plates"><s>150</s><span>135</span><span class="unit">kg</span></div>` : "";
+  if (state.heroLayout === "split")
+    return `<section class="hero split"><div class="wrap"><div class="grid"><div>${text}</div><div>${state.photos ? photo("Løfter · dagslys · 4:5", "4/5") : plates}</div></div></div></section>`;
+  if (state.heroLayout === "bleed")
+    return `<section class="hero bleed"><div class="photo" data-label="Fuldbillede · løft i dagslys"></div><div class="wrap">${text}</div></section>`;
+  return `<section class="hero ${state.heroLayout}"><div class="wrap">${text}${plates ? `<div style="margin-top:36px">${plates}</div>` : ""}</div></section>`;
+}
+
+function renderPreview() {
+  const f = $("frame"), mobile = state.viewport === "mobile";
+  f.style.width = mobile ? "375px" : "1280px";
+  f.style.setProperty("--h1", Math.round(state.h1 * (mobile ? 0.62 : 1)) + "px");
+  f.style.setProperty("--h2", Math.round(state.h2 * (mobile ? 0.7 : 1)) + "px");
+  f.style.setProperty("--sec", Math.round(state.sec * (mobile ? 0.6 : 1)) + "px");
+  f.style.setProperty("--heroPad", Math.round(state.heroPad * (mobile ? 0.6 : 1)) + "px");
+  f.style.setProperty("--maxw", state.maxw + "px");
+  f.style.setProperty("--gutter", mobile ? "20px" : "40px");
+  for (const k of ["h1", "heroPad", "sec", "h2", "maxw"]) $(k + "v").textContent = state[k] + "px";
+  const links = state.navLinks ? `<span class="links"><span>Sådan virker HQ</span><span>Systemer</span><span>Munk</span><span>Crew</span><span>Log ind</span></span>` : `<span class="links"><span>Log ind</span></span>`;
+  const nav = `<nav class="wrap"><span class="logo">MakeIt // HQ</span>${links}${state.navCta ? `<span class="btn primary sm">Få adgang</span>` : ""}</nav>`;
+  const body = state.order.filter((k) => state.visible[k])
+    .map((k) => `<section class="${state.band[k] ? "band" : ""}"><div class="wrap">${RENDER[k]()}</div></section>`).join("");
+  f.replaceChildren(html(`<div class="${mobile ? "mobile" : ""}">${nav}${hero()}${body}<footer><div class="wrap">Made for those who lift. · Privatliv · Vilkår</div></footer></div>`));
+}
+
+/* ---------- prompt ---------- */
+function updatePrompt() {
+  const d = DEFAULTS, s = state, parts = [];
+  const heroNames = { editorial: "venstrestillet editorial", split: "split med en visual til højre", center: "centreret", bleed: "fuldbillede med mørkt foto bag teksten" };
+  if (s.heroLayout !== d.heroLayout) parts.push(`Hero (LandingHero.tsx): skift til ${heroNames[s.heroLayout]}${s.heroLayout === "bleed" || (s.heroLayout === "split" && s.photos) ? "; billedet er en pladsholder, indtil Tom leverer et rigtigt foto" : ""}.`);
+  if (s.h1 !== d.h1) parts.push(`Hero-overskriften maks. ca. ${s.h1}px på desktop (i dag clamp op til 118px)${s.h1 < 96 ? ", så den føles roligere" : ""}.`);
+  if (s.heroPad !== d.heroPad) parts.push(`Luften over og under hero ${s.heroPad < d.heroPad ? "strammes" : "øges"} til ca. ${s.heroPad}px på desktop.`);
+  if (s.cta !== d.cta) parts.push(`Primær CTA "Få adgang" som ${s.cta === "outline" ? "outline-knap" : "blæk-fyldt knap"}.`);
+  if (s.second !== d.second) parts.push(s.second === "none" ? `Fjern den sekundære handling "Se hvordan HQ virker" fra hero.` : `Den sekundære handling "Se hvordan HQ virker" bliver en outline-knap i stedet for mos-link.`);
+  if (s.plates !== d.plates) parts.push(s.plates ? `Behold plade-visualen 150 → 135 kg i hero.` : `Fjern plade-visualen (150 → 135 kg) fra hero.`);
+  const shownOrder = s.order.filter((k) => s.visible[k]);
+  if (JSON.stringify(s.order) !== JSON.stringify(d.order)) parts.push(`Ny rækkefølge i LandingPage.tsx: ${shownOrder.map((k) => SECTIONS[k].name).join(" → ")}.`);
+  const hidden = Object.keys(SECTIONS).filter((k) => d.visible[k] && !s.visible[k]);
+  const shown = Object.keys(SECTIONS).filter((k) => !d.visible[k] && s.visible[k]);
+  if (hidden.length) parts.push(`Skjul ${hidden.map((k) => `${SECTIONS[k].name} (${SECTIONS[k].file})`).join(", ")}.`);
+  if (shown.length) parts.push(`Vis ${shown.map((k) => SECTIONS[k].name).join(", ")}.`);
+  const bands = shownOrder.filter((k) => s.band[k]);
+  if (bands.length) parts.push(`Gør ${bands.map((k) => SECTIONS[k].name).join(", ")} til mørke fortællebånd (blæk #111, hvid titel, brød #E6E6E2, kanter #3A3A38) som briefens §5; resten forbliver Nord lys.`);
+  if (s.sec !== d.sec) parts.push(`Sektionsluft ca. ${s.sec}px på desktop (${s.sec > d.sec ? "luftigere" : "tættere"}).`);
+  if (s.h2 !== d.h2) parts.push(`Sektionstitler ca. ${s.h2}px på desktop.`);
+  if (s.maxw !== d.maxw) parts.push(`Indholdets maks. bredde ${s.maxw}px.`);
+  if (s.mos !== d.mos) parts.push({ minimal: "Mos kun på links; kickers bliver dæmpet grå.", kicker: "Mos på links og kickers.", full: "Mos på links, kickers og progress-barer (meter i Crew og Motor)." }[s.mos]);
+  if (s.photos !== d.photos) parts.push(s.photos ? `Tilføj fotopladser (Munk-portræt 3:2${s.heroLayout === "split" ? ", hero 4:5" : ""}) i dagslys${s.grey ? " med let affarvning (grayscale 0,3)" : ""}; markér dem som pladsholdere, indtil der er rigtige billeder.` : `Ingen fotos.`);
+  if (s.navLinks !== d.navLinks) parts.push(s.navLinks ? `Vis sektionslinks i nav.` : `Nav med kun logo, "Log ind" og CTA (ingen sektionslinks).`);
+  if (s.navCta !== d.navCta) parts.push(s.navCta ? `CTA i nav.` : `Fjern CTA fra nav.`);
+  $("prompt").textContent = parts.length
+    ? `Landingssiden (src/components/marketing/landing/) i Nord-retningen; behold copy, tokens, radius 0 og 1 px linjer.\n- ${parts.join("\n- ")}\nVerificér på 375 og 1440, og kør landing-gates-testene.`
+    : "Ingen ændringer endnu: juster en kontrol eller vælg et preset.";
+}
+
+function updateAll() { renderPreview(); updatePrompt(); }
+
+$("copy").onclick = async () => {
+  try { await navigator.clipboard.writeText($("prompt").textContent); $("copy").textContent = "Kopieret!"; }
+  catch { $("copy").textContent = "Markér og kopiér"; }
+  setTimeout(() => ($("copy").textContent = "Kopiér prompt"), 1400);
+};
+
+for (const name of Object.keys(PRESETS)) {
+  const b = document.createElement("button"); b.type = "button"; b.textContent = name; b.onclick = () => applyPreset(name); $("presets").appendChild(b);
+}
+syncControls(); updateAll();
+</script>
+</body>
+</html>
