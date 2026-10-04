@@ -35,6 +35,6 @@ describe("no iOS focus zoom on touch", () => {
 
   it.each(["textarea", "select", "input:not("])("covers %s at 16px", (sel) => {
     expect(rule).toContain(sel);
-    expect(rule).toContain("font-size: 16px");
+    expect(rule).toContain("font-size: max(16px, 100%)");
   });
 });

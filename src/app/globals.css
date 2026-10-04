@@ -750,7 +750,10 @@ nav.tabbar {
   .field,
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
   textarea,
-  select { font-size: 16px; }
+  /* max(): mindst 16 px, men et felt der arver mere (stepperens 32 px
+   * tal) beholder det. 100 % er forælderens størrelse (1em foldes af
+   * CSS-minifieren til 16px). */
+  select { font-size: max(16px, 100%); }
 }
 
 
