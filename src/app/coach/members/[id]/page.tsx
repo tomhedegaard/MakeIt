@@ -210,14 +210,14 @@ export default async function CoachMemberDetailPage({
           </div>
           {adherence.suggestedAction ? (
             <div className="md:col-span-1">
-              <div className="eyebrow text-yellow-400 mb-1">{t("coachActionLabel")}</div>
+              <div className="eyebrow text-fg mb-1">{t("coachActionLabel")}</div>
               <p className="text-copy">
                 {adherence.suggestedAction}
               </p>
             </div>
           ) : (
             <div className="md:col-span-1">
-              <div className="eyebrow text-green-400 mb-1">{t("statusLabel")}</div>
+              <div className="eyebrow text-fg mb-1">{t("statusLabel")}</div>
               <p className="text-meta text-fg-dim">
                 {t("statusNormal")}
               </p>

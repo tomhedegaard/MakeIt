@@ -124,7 +124,7 @@ export default async function ProfilePage() {
                       month: "short",
                     })}
                   </span>
-                  <span className="flex-1 truncate">{pr.exerciseName}</span>
+                  <span className="flex-1 min-w-0 break-words">{pr.exerciseName}</span>
                   <span className="numeric text-fg-dim text-micro shrink-0">
                     {pr.weight} × {pr.reps}
                   </span>

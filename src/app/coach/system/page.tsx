@@ -184,7 +184,7 @@ export default async function CoachSystemPage() {
               <span
                 className={`size-3 rounded-full shrink-0 mt-1.5 ${
  s.configured
- ? "bg-green-400"
+ ? "bg-fg"
  : "bg-fg-faint/30 border border-fg-faint"
  }`}
                 aria-hidden
@@ -196,7 +196,7 @@ export default async function CoachSystemPage() {
                   </span>
                   <span
                     className={`text-micro ${
- s.configured ? "text-green-400" : "text-fg-faint"
+ s.configured ? "text-fg" : "text-fg-faint"
  }`}
                   >
                     {s.configured ? t("serviceLive") : t("serviceMissing")}
@@ -222,8 +222,8 @@ export default async function CoachSystemPage() {
       </Section>
 
       {status.database.error ? (
-        <section className="surface-2 rounded-2xl p-5 border border-red-400/40">
-          <div className="eyebrow text-red-400 mb-2">{t("databaseError")}</div>
+        <section className="surface-2 p-5 border border-danger">
+          <div className="eyebrow text-danger mb-2">{t("databaseError")}</div>
           <p className="text-meta text-fg-dim break-all">
             {status.database.error}
           </p>
@@ -410,10 +410,10 @@ function CronHealthCard({
 
 function SeverityBadge({ severity }: { severity: Severity }) {
   const styles = {
-    ok: "bg-green-400/15 text-green-400",
-    info: "bg-fg-faint/15 text-fg-dim",
-    warn: "bg-yellow-400/15 text-yellow-400",
-    critical: "bg-red-400/15 text-red-400",
+    ok: "border hairline-strong text-fg-dim",
+    info: "border hairline text-fg-dim",
+    warn: "border hairline-strong text-fg",
+    critical: "border border-danger text-danger",
   };
   const label = {
     ok: "OK",

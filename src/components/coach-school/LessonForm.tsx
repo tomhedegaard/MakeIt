@@ -18,8 +18,8 @@ import type { LessonDetail } from "@/lib/data/lessons";
 type EvalScore = "needs_work" | "on_track" | "strong";
 
 const SCORE_PILL: Record<EvalScore, string> = {
-  needs_work: "bg-red-900/40",
-  on_track: "bg-amber-700/30",
+  needs_work: "border border-danger text-danger",
+  on_track: "border hairline-strong",
   strong: "bg-bg-3",
 };
 
@@ -188,7 +188,7 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
 
       {error ? (
         <p
-          className="text-meta text-red-400"
+          className="text-meta text-danger"
           role="alert"
           aria-live="polite"
         >

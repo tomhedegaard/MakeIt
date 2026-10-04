@@ -90,7 +90,7 @@ export default function PromoteToLiveButton({
       </button>
       {result?.kind === "error" ? (
         <span
-          className="text-micro text-red-400"
+          className="text-meta text-danger"
           role="alert"
         >
           {t("promoteError", { reason: result.reason })}

@@ -17,9 +17,9 @@ import type { LiveCase } from "@/lib/data/coach-school";
  */
 const PILL_FOR_DECISION: Record<CoachDecision, string> = {
   approve: "bg-bg-3",
-  modify: "bg-amber-700/30",
-  escalate: "bg-amber-800/40",
-  reject: "bg-red-900/40",
+  modify: "border hairline-strong",
+  escalate: "border border-fg",
+  reject: "border border-danger text-danger",
 };
 
 export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
@@ -60,7 +60,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
       <div className="surface rounded-lg p-5 space-y-3" aria-live="polite">
         <div className="flex items-center justify-between gap-4">
           <div className="eyebrow">@{liveCase.memberHandle}</div>
-          <div className="text-micro text-amber-400">
+          <div className="text-meta text-fg-dim">
             {t("held.badge")}
           </div>
         </div>
@@ -162,7 +162,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
 
       {error ? (
         <p
-          className="text-meta text-red-400"
+          className="text-meta text-danger"
           role="alert"
           aria-live="polite"
         >
