@@ -4,7 +4,9 @@ import { useCallback, useMemo, useState, useTransition } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocaleTag } from "@/i18n/config";
+import { formatNumber } from "@/lib/utils";
 import type { Exercise, Session } from "@/lib/workout";
 import type { FormCheckQuota } from "@/lib/data/form-check-quota";
 import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
@@ -95,6 +97,8 @@ export default function SessionClient({
 }) {
   const router = useRouter();
   const t = useTranslations("Session");
+  const tag = intlLocaleTag(useLocale());
+  const fmt = (n: number) => formatNumber(n, tag);
 
   const initialLogged = useMemo(() => buildInitialLogged(session), [session]);
   const initialPoint = useMemo(() => findResumePoint(session), [session]);
@@ -306,19 +310,19 @@ export default function SessionClient({
               {set.adapted?.kind === "weight_reduced" ? (
                 <span
                   className="text-micro px-1.5 py-0.5 bg-bg-3 text-fg-dim"
-                  title={t("targets.reducedFrom", { weight: set.adapted.originalWeight })}
+                  title={t("targets.reducedFrom", { weight: fmt(set.adapted.originalWeight) })}
                 >
                   −{set.adapted.percent}%
                 </span>
               ) : null}
             </div>
             <div className="numeric text-xl">
-              {set.targetWeight}
+              {fmt(set.targetWeight)}{" "}
               <span className="text-fg-dim text-sm">kg</span>
             </div>
             {set.adapted?.kind === "weight_reduced" ? (
               <div className="text-micro text-fg-dim mt-1 numeric">
-                {t("targets.original", { weight: set.adapted.originalWeight })}
+                {t("targets.original", { weight: fmt(set.adapted.originalWeight) })}
               </div>
             ) : null}
           </div>
@@ -328,7 +332,7 @@ export default function SessionClient({
           </div>
           <div className="bg-bg-2 p-4 text-center">
             <div className="eyebrow mb-1">{t("targets.rpe")}</div>
-            <div className="numeric text-xl">{set.targetRpe ? set.targetRpe : "-"}</div>
+            <div className="numeric text-xl">{set.targetRpe ? fmt(set.targetRpe) : "-"}</div>
           </div>
         </section>
 
@@ -381,8 +385,8 @@ export default function SessionClient({
                   </span>
                   <span className="flex-1 numeric">
                     {lg?.done
-                      ? `${lg.weight}kg × ${lg.reps}${lg.rpe ? ` @ ${lg.rpe}` : ""}`
-                      : `${s.targetWeight}kg × ${s.targetReps}${s.targetRpe ? ` @ ${s.targetRpe}` : ""}`}
+                      ? `${fmt(lg.weight)} kg × ${lg.reps}${lg.rpe ? ` @ ${fmt(lg.rpe)}` : ""}`
+                      : `${fmt(s.targetWeight)} kg × ${s.targetReps}${s.targetRpe ? ` @ ${fmt(s.targetRpe)}` : ""}`}
                   </span>
                   {isOptional ? (
                     <span className="text-micro text-fg-dim border hairline px-1.5 py-0.5">
@@ -458,7 +462,7 @@ export default function SessionClient({
 
             <div className="grid grid-cols-3 gap-px bg-line border hairline overflow-hidden mb-6">
               <StatCell label={t("done.sets")} value={completedSets} />
-              <StatCell label={t("done.volume")} value={sessionVolume} suffix={t("units.kg")} />
+              <StatCell label={t("done.volume")} value={fmt(sessionVolume)} suffix={t("units.kg")} />
               <StatCell
                 label={t("done.reps")}
                 value={

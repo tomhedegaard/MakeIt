@@ -1,4 +1,6 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { intlLocaleTag } from "@/i18n/config";
+import { formatNumber } from "@/lib/utils";
 import Progress from "@/components/ui/Progress";
 import type { DailyIntake } from "@/lib/data/nutrition-intake";
 
@@ -13,6 +15,8 @@ type T = Awaited<ReturnType<typeof getTranslations<"Nutrition.intake">>>;
  */
 export default async function DailyIntakeCard({ intake }: { intake: DailyIntake }) {
   const t = await getTranslations("Nutrition.intake");
+  const tag = intlLocaleTag(await getLocale());
+  const fmt = (n: number) => formatNumber(n, tag);
   const {
     consumedKcal,
     consumedProtein,
@@ -27,17 +31,17 @@ export default async function DailyIntakeCard({ intake }: { intake: DailyIntake 
       <div className="eyebrow mb-4">{t("eyebrow")}</div>
 
       <div className="grid grid-cols-2 gap-5">
-        <Metric t={t} label={t("kcal")} unit="kcal" consumed={consumedKcal} target={targetKcal} />
-        <Metric t={t} label={t("protein")} unit="g" consumed={consumedProtein} target={targetProtein} />
+        <Metric t={t} fmt={fmt} label={t("kcal")} unit="kcal" consumed={consumedKcal} target={targetKcal} />
+        <Metric t={t} fmt={fmt} label={t("protein")} unit="g" consumed={consumedProtein} target={targetProtein} />
       </div>
 
       {offPlanKcal > 0 ? (
         <p className="text-xs text-fg-dim mt-4">
           {t("offPlan")}{" "}
-          <span className="numeric text-fg-body">{offPlanKcal} kcal</span>
+          <span className="numeric text-fg-body">{fmt(offPlanKcal)} kcal</span>
           {" · "}
           <span className="numeric text-fg-body">
-            {t("offPlanProtein", { protein: offPlanProtein })}
+            {t("offPlanProtein", { protein: fmt(offPlanProtein) })}
           </span>
         </p>
       ) : null}
@@ -47,12 +51,14 @@ export default async function DailyIntakeCard({ intake }: { intake: DailyIntake 
 
 function Metric({
   t,
+  fmt,
   label,
   unit,
   consumed,
   target,
 }: {
   t: T;
+  fmt: (n: number) => string;
   label: string;
   unit: string;
   consumed: number;
@@ -62,9 +68,9 @@ function Metric({
     <div>
       <div className="text-sm text-fg-dim">{label}</div>
       <div className="font-display text-3xl leading-[1] mt-1 numeric">
-        {consumed}
+        {fmt(consumed)}
         {target != null ? (
-          <span className="text-fg-dim text-lg"> / {target}</span>
+          <span className="text-fg-dim text-lg"> / {fmt(target)}</span>
         ) : null}
         <span className="text-fg-dim text-sm"> {unit}</span>
       </div>
@@ -74,7 +80,7 @@ function Metric({
           value={Math.min(consumed, target)}
           max={target}
           label={label}
-          valueText={t("progress", { consumed, target, unit })}
+          valueText={t("progress", { consumed: fmt(consumed), target: fmt(target), unit })}
         />
       ) : (
         <div className="mt-2 h-1 bg-line" aria-hidden />

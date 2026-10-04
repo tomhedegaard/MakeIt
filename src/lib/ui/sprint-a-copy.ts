@@ -43,7 +43,6 @@ export async function loadHrvBandCopy(
   ) as Record<QualitativeBand, string>;
 
   return {
-    eyebrow: t("eyebrow"),
     latest: t("latest"),
     unit: t("unit"),
     avg: t("avg"),
@@ -95,11 +94,9 @@ export async function loadDotsCopy(): Promise<DotsCopy> {
 
   return {
     title: t("title"),
-    gloss: t("gloss"),
     moreAbout: t("moreAbout"),
     dismiss: t("dismiss"),
     snooze: t("snooze"),
-    motorAttribution: t("motorAttribution"),
     domains,
     cards,
   };

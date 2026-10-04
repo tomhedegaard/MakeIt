@@ -1,5 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { intlLocaleTag } from "@/i18n/config";
+import { dayMonth, demoCalendar } from "@/lib/dates/demo-calendar";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import Progress from "@/components/ui/Progress";
@@ -28,12 +29,12 @@ const MOCK_REWARD_SLUGS = [
   "open-house-vip",
 ] as const;
 
-function localizeReward(r: Reward, t: RepsT): Reward {
+function localizeReward(r: Reward, t: RepsT, meetDate: string): Reward {
   if (!(MOCK_REWARD_SLUGS as readonly string[]).includes(r.slug)) return r;
   return {
     ...r,
     name: t(`shop.mock.${r.slug}.name`),
-    description: t(`shop.mock.${r.slug}.description`),
+    description: t(`shop.mock.${r.slug}.description`, { date: meetDate }),
   };
 }
 
@@ -116,7 +117,8 @@ export default async function RepsPage() {
     getRepsBalance(member.id),
     getRecentRepsTransactions(member.id, 20),
   ]);
-  const rewards = rewardsRaw.map((r) => localizeReward(r, t));
+  const meetDate = dayMonth(demoCalendar().meet);
+  const rewards = rewardsRaw.map((r) => localizeReward(r, t, meetDate));
   const progress = tierProgress(balance);
 
   const tiers = TIER_NAMES.map((name) => ({
@@ -261,14 +263,15 @@ export default async function RepsPage() {
                     className="flex items-center gap-3 px-4 py-3 bg-bg-2/30"
                   >
                     <span className={`inline-block w-2 h-2 rounded-full shrink-0 ${dot}`} />
-                    <span className="text-xs text-fg-faint w-16 shrink-0">
-                      {t(`categories.${cat}`)}
-                    </span>
-                    <span className="flex-1 text-sm">
-                      {reasonKey ? t(reasonKey) : tx.reason}
-                    </span>
-                    <span className="text-xs text-fg-dim shrink-0">
-                      {t(`relativeTime.${ago.key}`, { count: ago.count })}
+                    {/* Title on its own line, category and time under it:
+                        four columns broke titles over three lines at 375 px. */}
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-sm">
+                        {reasonKey ? t(reasonKey) : tx.reason}
+                      </span>
+                      <span className="block text-xs text-fg-faint mt-0.5">
+                        {t(`categories.${cat}`)} · {t(`relativeTime.${ago.key}`, { count: ago.count })}
+                      </span>
                     </span>
                     <span
                       className={`numeric text-sm tabular-nums shrink-0 w-14 text-right ${
@@ -276,7 +279,7 @@ export default async function RepsPage() {
                       }`}
                     >
                       {tx.delta > 0 ? "+" : ""}
-                      {tx.delta}
+                      {tx.delta.toLocaleString(tag)}
                     </span>
                   </li>
                 );

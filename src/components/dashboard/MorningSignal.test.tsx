@@ -31,7 +31,8 @@ describe("MorningSignal", () => {
     expect(html).toMatch(/numeric[^"]*"[^>]*>48/);
     expect(html).toContain("Under bånd");
     expect(html).toContain("sr-only");
-    expect(html).toContain("2740");
+    expect(html).toContain("/2.740");
+    expect(html).toContain("640 af 2.740 kcal");
   });
 
   it("uses no raw colours or status colours", () => {

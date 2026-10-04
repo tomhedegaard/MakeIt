@@ -1,7 +1,7 @@
 /**
  * Monthly challenge hero numbers.
  *
- * Demo mode keeps the rich 68.4 / 100K fixture Munk demos with.
+ * Demo mode keeps the rich 68,4 / 100K fixture Munk demos with.
  * Connected mode fail-closes to 0 — there is no live aggregate wired
  * yet, and the hardcoded bar destroyed first-run trust.
  */
@@ -9,7 +9,8 @@
 export type ChallengeSurface = "demo" | "connected";
 
 export type ChallengeProgressModel = {
-  currentLabel: string;
+  /** Tonnes lifted so far, of the 100K goal; the page formats it. */
+  currentK: number;
   barPercent: number;
   youPercent: number;
   participantCount: number;
@@ -17,7 +18,7 @@ export type ChallengeProgressModel = {
 };
 
 const DEMO: ChallengeProgressModel = {
-  currentLabel: "68.4 / 100K",
+  currentK: 68.4,
   barPercent: 68.4,
   youPercent: 68,
   participantCount: 128,
@@ -25,7 +26,7 @@ const DEMO: ChallengeProgressModel = {
 };
 
 const CONNECTED_EMPTY: ChallengeProgressModel = {
-  currentLabel: "0 / 100K",
+  currentK: 0,
   barPercent: 0,
   youPercent: 0,
   participantCount: 0,

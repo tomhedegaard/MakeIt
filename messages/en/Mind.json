@@ -170,7 +170,6 @@
     "save": "Check in",
     "update": "Update",
     "saving": "Saving...",
-    "savedHint": "Checked in today. You can update later.",
     "pageTitle": "Mental health. Our 5th pillar.",
     "valueText": "{value} of 5"
   },
@@ -325,12 +324,12 @@
       "streak_7": {
         "eyebrow": "Mind · 7-day streak",
         "title": "A whole week done.",
-        "body": "You are now among the members building mental data consistently. Next: 30 days and +100 Reps."
+        "body": "You are now among the members building mental data consistently. Next: 30 days and +150 Reps."
       },
       "streak_30": {
         "eyebrow": "Mind · 30-day streak",
         "title": "30 days. Solid.",
-        "body": "A month of mental data. Now the AI coach can really see patterns in your week. +100 Reps + milestone bonus landed."
+        "body": "A month of mental data. Now HQ can see patterns in your week. +150 Reps added to your balance."
       },
       "streak_90": {
         "eyebrow": "Mind · 90-day streak",

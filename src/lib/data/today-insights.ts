@@ -20,12 +20,9 @@ import { hasMindCheckToday } from "./mind";
 
 export async function getTodayInsightCards(
   memberId: string,
-  sessionHref: string | null,
 ): Promise<InsightCardModel[]> {
-  const href = sessionHref ?? "/coaching";
-
   if (!SUPABASE_ENABLED) {
-    return demoInsightStream(href);
+    return demoInsightStream();
   }
 
   const [reading, session, mindChecked] = await Promise.all([
@@ -42,7 +39,6 @@ export async function getTodayInsightCards(
       session.state === "skipped");
 
   return buildTodayInsightStream({
-    sessionHref: href,
     hasHrv: reading != null,
     qualitative: qualitativeFromBucket(bucket),
     outOfBand: isOutOfBand(bucket),

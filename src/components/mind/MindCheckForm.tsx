@@ -126,11 +126,6 @@ export default function MindCheckForm({
         >
           {pending ? t("saving") : saved ? t("update") : t("save")}
         </button>
-        {saved && !pending ? (
-          <span className="text-fg-dim text-sm">
-            {t("savedHint")}
-          </span>
-        ) : null}
       </div>
     </form>
   );

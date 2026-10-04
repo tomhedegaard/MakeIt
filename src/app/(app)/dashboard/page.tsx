@@ -262,14 +262,13 @@ export default async function TodayPage() {
 
   const insightCards = connected
     ? buildTodayInsightStream({
-        sessionHref: today ? `/session/${today.id}` : "/coaching",
         hasHrv: hrv != null,
         qualitative: qualitativeFromBucket(hrv?.bucket ?? null),
         outOfBand: isOutOfBand(hrv?.bucket ?? null),
         mindCheckedToday: mindChecked,
         hasSession: today != null,
       })
-    : demoInsightStream(`/session/${today?.id ?? TODAY_SESSION.id}`);
+    : demoInsightStream();
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
@@ -350,7 +349,7 @@ export default async function TodayPage() {
             <div className="bg-bg-2 px-4 py-3">
               <div className="eyebrow mb-1">{t("todaySession.estTime")}</div>
               <div className="numeric text-2xl">
-                {today.estimatedMinutes}
+                {today.estimatedMinutes}{" "}
                 <span className="text-fg-dim text-sm">{t("todaySession.minuteUnit")}</span>
               </div>
             </div>
@@ -520,7 +519,7 @@ export default async function TodayPage() {
         <div>
           <Stat
             label={t("stats.prs")}
-            value={stats ? String(stats.prs4w).padStart(2, "0") : connected ? "00" : "03"}
+            value={stats ? String(stats.prs4w) : connected ? "0" : "3"}
           />
           <div className="text-micro text-fg-faint mt-1 flex items-center gap-1">
             <span>{t("stats.prsMeta")}</span>

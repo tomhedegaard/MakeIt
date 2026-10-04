@@ -10,7 +10,6 @@ import {
 } from "@/lib/hrv/demo-series";
 
 const COPY: HrvBandCopy = {
-  eyebrow: "Hjerte",
   latest: "HRV i morges",
   unit: "ms",
   avg: "Dit snit",
@@ -23,7 +22,7 @@ const COPY: HrvBandCopy = {
   steadyEyebrow: "Dit normalområde",
   engineBelow: "Motoren letter dagens squat-topsæt.",
   engineAbove: "kroppen er klar",
-  disclaimer: "HRV er et restitutions-signal, ikke en diagnose.",
+  disclaimer: "HRV er et restitutionssignal, ikke en diagnose.",
   legendBand: "Dit bånd",
   legendAvg: "Dit snit",
   rangeLabel: "Personligt normalområde",

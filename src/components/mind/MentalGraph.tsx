@@ -1,7 +1,7 @@
 import type { MindCheckLog } from "@/lib/mind/types";
 import { utcDateNDaysAgo } from "@/lib/mind/streak";
 import { CHART_CRAFT } from "@/lib/svg/chart-craft";
-import { smoothAreaPath, smoothLinePath } from "@/lib/svg/smooth-path";
+import { linePath } from "@/lib/svg/smooth-path";
 import ChartEmptyFrame from "@/components/ui/ChartEmptyFrame";
 
 /**
@@ -94,7 +94,6 @@ export default function MentalGraph({
 
   const xStep = (w - padL - padR) / Math.max(1, days - 1);
   const y = (v: number) => padT + ((5 - v) / 4) * (h - padT - padB);
-  const baselineY = h - padB;
 
   const seriesPoints = (key: "energy" | "stress" | "focus", invert = false) =>
     points.map((p) => {
@@ -185,25 +184,13 @@ export default function MentalGraph({
                   </g>
                 ))}
 
-                {SERIES.map((s) => {
-                  const pts = seriesPoints(s.key, s.invert);
-                  return (
-                    <path
-                      key={`${s.key}-fill`}
-                      d={smoothAreaPath(pts, baselineY)}
-                      // Flat tint, not a fade (Nord, spec §7.2): the three
-                      // series stack as 6 % washes of their own colour.
-                      fill={s.token}
-                      fillOpacity={0.06}
-                      stroke="none"
-                    />
-                  );
-                })}
-
+                {/* Straight segments, no area fills: a curve overshot 5 and
+                    1 on this discrete scale, and three stacked washes buried
+                    the lines (Nord §11, data stays honest). */}
                 {SERIES.map((s) => (
                   <path
                     key={`${s.key}-stroke`}
-                    d={smoothLinePath(seriesPoints(s.key, s.invert))}
+                    d={linePath(seriesPoints(s.key, s.invert))}
                     fill="none"
                     stroke={s.token}
                     strokeWidth={CHART_CRAFT.meanStrokeWidth + 0.4}

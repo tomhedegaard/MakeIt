@@ -19,13 +19,13 @@
     "exercises": "Øvelser",
     "sets": "Sæt",
     "estTime": "Est. tid",
-    "minuteUnit": "m",
-    "minutes": "{count}m",
+    "minuteUnit": "min",
+    "minutes": "{count} min",
     "setCountSuffix": "× sæt",
     "start": "Start pas →",
     "mock": {
       "dayLabel": "Dag A · Squat",
-      "title": "Squat · Top set @ RPE 8, 3×3 backoff"
+      "title": "Squat · topsæt @ RPE 8, 3×3 backoff"
     },
     "generated": {
       "squatFocus": "Squat-fokus og bagside"
@@ -68,12 +68,12 @@
     "share": "+ Del",
     "prBadge": "PR",
     "mock": {
-      "ninaWhat": "+2.5kg PR · Deadlift 175 kg",
+      "ninaWhat": "+2,5 kg PR · dødløft 175 kg",
       "ninaWhen": "lige nu",
       "kasperWhat": "afsluttet uge 8 af PR-Block",
-      "kasperWhen": "12m",
+      "kasperWhen": "12 min",
       "mariaWhat": "delt formcheck-video",
-      "mariaWhen": "32m"
+      "mariaWhen": "32 min"
     }
   },
   "trend": {

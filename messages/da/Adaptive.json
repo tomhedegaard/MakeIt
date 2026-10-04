@@ -12,47 +12,45 @@
       "hrvInBand": "Hjerte: nattens HRV ligger i dit normalområde",
       "sessionToday": "Krop: der står et pas i dag",
       "lowSleep": "Sind: søvn de sidste nætter er kort",
-      "alcohol": "Kost: alkohol logget de sidste to dage",
+      "alcohol": "Mad: alkohol logget de sidste to dage",
       "lowFeeling": "Sind: følelse logget som træt",
       "rpeOvershoot": "Krop: sidste pas sad over planlagt RPE",
       "rpeDrift": "Krop: RPE er steget over de sidste pas",
       "mentalLoad": "Sind: mental belastning over flere dage",
       "formCheck": "Krop: form-check peger på tilbageskridt",
       "missed": "Krop: et eller flere pas er sprunget over",
-      "noAlcohol": "Kost: ingen alkohol logget de sidste to dage",
+      "noAlcohol": "Mad: ingen alkohol logget de sidste to dage",
       "mindUnread": "Sind: intet mind-check i dag endnu"
     }
   },
   "dots": {
     "eyebrow": "I dag",
     "title": "Sammenhængene",
-    "gloss": "Adaptive Engine tilpasser ugen. Munk er din coach",
     "moreAbout": "Sig mere om",
     "dismiss": "Skjul",
     "snooze": "I morgen",
-    "motorAttribution": "HQ · Adaptive Engine",
     "domains": {
       "heart": "Hjerte",
       "body": "Krop",
-      "food": "Kost",
+      "food": "Mad",
       "mind": "Sind"
     },
     "cards": {
       "heart_body_low": {
         "sentence": "Nattens HRV ligger under dit bånd. HQ letter dagens topsæt.",
-        "cta": "Åbn dagens pas"
+        "cta": "Se hvorfor"
       },
       "heart_body_ro": {
         "sentence": "Nattens HRV ligger over dit bånd. Kroppen er klar, og dagens pas kører som planlagt.",
-        "cta": "Åbn dagens pas"
+        "cta": "Se hvorfor"
       },
       "heart_mind_tired": {
         "sentence": "Lav HRV og intet mind-check endnu. Restitutionen mangler det sidste signal.",
         "cta": "Tag mind-check"
       },
       "body_food_session": {
-        "sentence": "Kosten omkring passet: hold måltidet simpelt, så Krop og Kost trækker samme vej.",
-        "cta": "Se kosten"
+        "sentence": "Maden omkring passet: hold måltidet simpelt, så Krop og Mad trækker samme vej.",
+        "cta": "Se madplanen"
       },
       "mind_body_check": {
         "sentence": "Sindet er ikke tjekket ind. Dagens pas venter på det signal, før HQ kan justere.",

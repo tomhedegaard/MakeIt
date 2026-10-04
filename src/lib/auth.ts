@@ -37,7 +37,8 @@ const MOCK_MEMBER: Member = {
   handle: "Munk",
   displayName: "Mikael Munk",
   email: "munk@nowmakeit.eu",
-  tier: "Legend",
+  // Matches the demo Reps balance (1.420), so shell, I dag and /reps agree.
+  tier: "Athlete",
   joinedAt: "2024-09-12",
   onboardedAt: "2024-09-12T00:00:00Z",
   isCoach: true, // demo mode: treat MUNK-01 as the head coach

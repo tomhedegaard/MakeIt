@@ -18,7 +18,7 @@
     "increase": "Mere {label}"
   },
   "sets": {
-    "title": "Sæt i dette øvelse",
+    "title": "Sæt i denne øvelse",
     "done": "Færdig",
     "now": "Nu",
     "optional": "valgfri"
@@ -35,7 +35,7 @@
     "volume": "Volumen",
     "reps": "Reps",
     "share": "Del til crew",
-    "toToday": "Til Today",
+    "toToday": "Til I dag",
     "repsPending": "Reps beregnes"
   },
   "exit": {
@@ -54,7 +54,7 @@
     "demoPlay": "Afspil bevægelse",
     "formCheck": "Optag sæt {set}",
     "formCheckSub": "Sendes til coach Munk, bundet til {lift}",
-    "moreCues": " · {count} cues mere",
+    "moreCues": " · {count} flere cues",
     "duration": "Optag →",
     "thread": {
       "eyebrow": "Form-check under løftet",

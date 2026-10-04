@@ -20,9 +20,9 @@ describe("buildMorningSignal", () => {
     expect(body).toMatchObject({ valueKey: "adapted" });
     expect(buildMorningSignal({ ...base, session: { adapted: false } })[0].valueKey).toBe("planned");
     expect(buildMorningSignal({ ...base, hrv: { rmssdMs: 50, bucket: null } })[1].valueKey).toBe("measured");
-    expect(heart).toMatchObject({ value: "48", unit: "ms", valueKey: "belowBand" });
+    expect(heart).toMatchObject({ value: 48, unit: "ms", valueKey: "belowBand" });
     expect(mind).toMatchObject({ valueKey: "checkIn" });
-    expect(food).toMatchObject({ value: "640", unit: "kcal", of: "2740" });
+    expect(food).toMatchObject({ value: 640, unit: "kcal", of: 2740 });
   });
 
   it("maps every readiness bucket to a band fact", () => {

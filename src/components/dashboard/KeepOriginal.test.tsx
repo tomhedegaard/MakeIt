@@ -10,10 +10,11 @@ import { render } from "@/components/marketing/test-render";
 import KeepOriginal, { claimKeepSubmit, nextKeepState } from "./KeepOriginal";
 
 describe("KeepOriginal", () => {
-  it("offers a ghost 'Behold original' while undecided", () => {
+  it("offers 'Behold original' as a secondary outline button while undecided", () => {
     const html = render(<KeepOriginal modifierId="m" sessionId="s" accepted={null} />);
     expect(html).toContain("Behold original");
-    expect(html).toContain("btn-ghost");
+    expect(html).toContain('class="btn btn-sm"');
+    expect(html).not.toContain("btn-ghost");
     expect(html).not.toContain("btn-primary");
   });
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import {
   commitStepperInput,
@@ -30,6 +30,12 @@ export default function Stepper({
   className?: string;
 }) {
   const t = useTranslations("Session.steppers");
+  // Danish shows 137,5; the parser already accepts both "," and ".".
+  const comma = useLocale() === "da";
+  const shown = (n: number) => {
+    const s = formatStepperNumber(n);
+    return comma ? s.replace(".", ",") : s;
+  };
   const inputId = useId();
   const [draft, setDraft] = useState<string | null>(null);
   const allowDecimal = !Number.isInteger(step);
@@ -74,7 +80,7 @@ export default function Stepper({
             spellCheck={false}
             pattern={allowDecimal ? "[0-9]*[.,]?[0-9]*" : "[0-9]*"}
             className="stepper-input"
-            value={draft ?? formatStepperNumber(value)}
+            value={draft ?? shown(value)}
             aria-label={fieldLabel}
             onChange={(event) => {
               const raw = event.target.value;
@@ -86,7 +92,7 @@ export default function Stepper({
               setDraft(null);
             }}
             onFocus={(event) => {
-              setDraft(formatStepperNumber(value));
+              setDraft(shown(value));
               event.currentTarget.select();
             }}
             onKeyDown={(event) => {

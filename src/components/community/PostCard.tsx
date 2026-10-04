@@ -31,7 +31,7 @@ function MentionText({ text }: { text: string }) {
 
 // Feed actions: selected = ink fill like a selected chip, hover = a quiet bg-2.
 // The 44 px height stays literal on each button: touch-targets.test counts it.
-const TOGGLE = "px-3 flex items-center gap-2 transition-colors duration-200 ease-out";
+const TOGGLE = "px-2 sm:px-3 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap transition-colors duration-200 ease-out";
 const TOGGLE_ON = "bg-fg text-bg";
 const TOGGLE_OFF = "hover:text-fg hover:bg-bg-2";
 

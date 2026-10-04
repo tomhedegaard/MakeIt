@@ -113,7 +113,7 @@
       },
       "open-house-vip": {
         "name": "Open House VIP pack",
-        "description": "Training + dinner on Amagerbro 24/05 · 12 spots."
+        "description": "Training + dinner on Amagerbro {date} · 12 spots."
       }
     },
     "balance": "Balance: {balance} Reps",

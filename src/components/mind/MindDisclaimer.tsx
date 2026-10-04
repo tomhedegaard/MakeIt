@@ -68,15 +68,15 @@ export default async function MindDisclaimer() {
             </h2>
             <ul className="space-y-3 text-fg-dim leading-relaxed text-base md:text-lg">
               <li>
-                <span className="text-fg font-medium">{t("privacy_journal_label")} — </span>
+                <span className="text-fg font-medium">{t("privacy_journal_label")}: </span>
                 {t("privacy_journal")}
               </li>
               <li>
-                <span className="text-fg font-medium">{t("privacy_mind_check_label")} — </span>
+                <span className="text-fg font-medium">{t("privacy_mind_check_label")}: </span>
                 {t("privacy_mind_check")}
               </li>
               <li>
-                <span className="text-fg font-medium">{t("privacy_ai_label")} — </span>
+                <span className="text-fg font-medium">{t("privacy_ai_label")}: </span>
                 {t("privacy_ai")}
               </li>
             </ul>

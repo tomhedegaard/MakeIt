@@ -46,7 +46,7 @@ export function StatCell({
       <div className="eyebrow mb-1">{label}</div>
       <div className="numeric text-2xl">
         {value}
-        {suffix ? <span className="text-fg-dim text-sm ml-0.5">{suffix}</span> : null}
+        {suffix ? <span className="text-fg-dim text-sm ml-1">{suffix}</span> : null}
       </div>
     </div>
   );

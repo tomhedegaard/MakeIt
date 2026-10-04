@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocaleTag } from "@/i18n/config";
+import { formatNumber } from "@/lib/utils";
 import type { DailyCheckIn } from "@/lib/data/nutrition-checkin";
 import { quickLogAction } from "@/app/(app)/nutrition/actions";
 import LogMealButton from "@/app/(app)/nutrition/LogMealButton";
 import StreakCelebration from "@/components/nutrition/StreakCelebration";
+import ConfirmSheet from "@/components/ui/ConfirmSheet";
 
 /**
  * Daily check-in card. Renders only when there's a meal to surface
@@ -30,6 +33,9 @@ export default function DailyCheckInCard({
   const ts = useTranslations("Nutrition.slotLabels");
   const [pending, startTransition] = useTransition();
   const [celebration, setCelebration] = useState<number | null>(null);
+  const [skipOpen, setSkipOpen] = useState(false);
+  const tag = intlLocaleTag(useLocale());
+  const fmt = (n: number | null) => (n == null ? "-" : formatNumber(n, tag));
 
   if (checkin.state === "no-plan" || !checkin.slot) return null;
 
@@ -40,7 +46,6 @@ export default function DailyCheckInCard({
 
   function handleQuickLog(status: "eaten" | "skipped") {
     if (pending || !checkin.slot) return;
-    if (status === "skipped" && !confirm(t("skipConfirm"))) return;
     const fd = new FormData();
     if (checkin.meal?.id) fd.set("mealId", checkin.meal.id);
     fd.set("loggedForDate", checkin.dateIso);
@@ -123,11 +128,11 @@ export default function DailyCheckInCard({
       {variant === "full" && checkin.meal ? (
         <div className="px-5 pb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-micro">
           <span className="text-fg-dim">
-            {t("kcal", { value: checkin.meal.estKcal ?? "-" })}
+            {t("kcal", { value: fmt(checkin.meal.estKcal) })}
           </span>
           <span className="text-fg-faint" aria-hidden>·</span>
           <span className="text-fg-dim">
-            {t("protein", { value: checkin.meal.estProteinG ?? "-" })}
+            {t("protein", { value: fmt(checkin.meal.estProteinG) })}
           </span>
           <span className="text-fg-faint" aria-hidden>·</span>
           <span className="text-fg-dim">
@@ -158,7 +163,7 @@ export default function DailyCheckInCard({
             ) : null}
             <button
               type="button"
-              onClick={() => handleQuickLog("skipped")}
+              onClick={() => setSkipOpen(true)}
               disabled={pending}
               className="btn btn-ghost btn-sm"
             >
@@ -191,6 +196,13 @@ export default function DailyCheckInCard({
         )}
       </div>
     </article>
+    <ConfirmSheet
+      open={skipOpen}
+      onOpenChange={setSkipOpen}
+      title={t("skipConfirm")}
+      confirmLabel={t("skipConfirmCta")}
+      onConfirm={() => handleQuickLog("skipped")}
+    />
     <StreakCelebration
       milestone={celebration}
       onClose={() => setCelebration(null)}

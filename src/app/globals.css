@@ -631,7 +631,6 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   background: transparent;
   color: var(--fg);
   font-size: 0.9375rem;
-  font-variant-numeric: tabular-nums;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: background 160ms ease, color 160ms ease, border-color 160ms ease;

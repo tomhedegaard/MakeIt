@@ -59,10 +59,11 @@ describe("CDO identity — Munk (coach) vs Motor (engine)", () => {
       "Adaptive Engine adapts the week. Munk is your coach",
     );
 
+    // The gloss is said once on I dag: on the strip, not again on the dots.
     const daDots = daAdaptive.dots as Record<string, unknown>;
     const enDots = enAdaptive.dots as Record<string, unknown>;
-    expect(daDots.gloss).toBe(daStrip.gloss);
-    expect(enDots.gloss).toBe(enStrip.gloss);
+    expect(daDots.gloss).toBeUndefined();
+    expect(enDots.gloss).toBeUndefined();
     assertEditorial(String(daStrip.gloss));
     assertEditorial(String(enStrip.gloss));
   });
@@ -139,8 +140,8 @@ describe("CDO identity — Munk (coach) vs Motor (engine)", () => {
     expect(strip).not.toMatch(/Mind-coach/);
 
     const dots = read("src/components/dashboard/ConnectDotsStream.tsx");
-    expect(dots).toContain("copy.gloss");
-    expect(dots).toContain("data-engine-gloss");
+    expect(dots).not.toContain("copy.gloss");
+    expect(dots).not.toContain("data-engine-gloss");
 
     const streams = read("src/components/chat/DualStreamMessages.tsx");
     expect(streams).toContain("copy.munkRole");

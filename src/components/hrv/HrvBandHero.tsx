@@ -7,7 +7,6 @@ import {
 } from "@/lib/hrv/band";
 
 export type HrvBandCopy = {
-  eyebrow: string;
   latest: string;
   unit: string;
   avg: string;
@@ -28,7 +27,7 @@ export type HrvBandCopy = {
 
 /**
  * Daily Heart hero: large HRV, Ro/Midt/Lav, personal band, engine cue.
- * Charcoal card; heart ink only on the kicker, pulse, and data marks.
+ * Heart ink only on the data marks; the page carries the "Hjerte" kicker.
  */
 export default function HrvBandHero({
   view,
@@ -57,11 +56,6 @@ export default function HrvBandHero({
       data-domain="heart"
       className="surface-2 rounded-2xl overflow-hidden"
     >
-      <div className="px-6 py-5 md:px-8 border-b hairline flex items-center gap-2">
-        {view.state !== "empty" ? <span className="pulse-dot" /> : null}
-        <span className="eyebrow eyebrow-domain">{copy.eyebrow}</span>
-      </div>
-
       {view.state === "empty" ? (
         <div className="px-6 py-8 md:px-8 md:py-10">
           <h2 className="font-display text-2xl md:text-3xl leading-tight mb-3">
@@ -79,7 +73,7 @@ export default function HrvBandHero({
           <div className="eyebrow mb-2">{copy.latest}</div>
           <div className="flex items-end gap-x-8 gap-y-3 flex-wrap">
             <div className="numeric text-hero md:text-hero-lg">
-              {view.latestMs ?? "—"}
+              {view.latestMs ?? "-"}
               <span className="text-fg-dim text-2xl md:text-3xl ml-2">
                 {copy.unit}
               </span>

@@ -4,7 +4,7 @@
     "today": "I dag",
     "check": "Mind-check",
     "journal": "Journal",
-    "sessions": "Sessions",
+    "sessions": "Sessioner",
     "settings": "Indstillinger",
     "aria": "Mind",
     "weekly": "Din uge",
@@ -170,7 +170,6 @@
     "save": "Tjek ind",
     "update": "Opdater",
     "saving": "Gemmer...",
-    "savedHint": "Tjekket ind i dag. Du kan opdatere senere.",
     "pageTitle": "Mental sundhed. Vores 5. søjle.",
     "valueText": "{value} af 5"
   },
@@ -224,8 +223,8 @@
     "subtitle": "Mandage 18:00 lokal tid sender vi en mental uge-resumé som push."
   },
   "sessionsPage": {
-    "metaTitle": "Sessions · Mind · MakeIt",
-    "eyebrow": "Mind · Sessions",
+    "metaTitle": "Sessioner · Mind · MakeIt",
+    "eyebrow": "Mind · Sessioner",
     "title": "Bibliotek.",
     "subtitle": "Vejrtrækning, fokus, recovery, debrief. Vælg én. 1-5 minutter pr. session.",
     "category": {
@@ -320,17 +319,17 @@
       "streak_3": {
         "eyebrow": "Mind · 3-dages stribe",
         "title": "Tre dage i streg.",
-        "body": "Det er der vanen sætter sig. Fortsæt. Næste milestone er 7 dage og +20 Reps."
+        "body": "Det er der, vanen sætter sig. Fortsæt. Næste mål er 7 dage og +20 Reps."
       },
       "streak_7": {
         "eyebrow": "Mind · 7-dages stribe",
         "title": "Hel uge i mål.",
-        "body": "Du er nu blandt de medlemmer der bygger mental data konsistent. Næste: 30 dage og +100 Reps."
+        "body": "Du er nu blandt de medlemmer, der bygger mental data hver dag. Næste mål: 30 dage og +150 Reps."
       },
       "streak_30": {
         "eyebrow": "Mind · 30-dages stribe",
-        "title": "30 dage. Solidt.",
-        "body": "En måneds mental data. Nu kan AI-coach reelt se mønstre i din uge. +100 Reps + milestone-bonus tikkede ind."
+        "title": "30 dage i træk.",
+        "body": "En måneds mental data. Nu kan HQ se mønstre i din uge. +150 Reps er lagt på din saldo."
       },
       "streak_90": {
         "eyebrow": "Mind · 90-dages stribe",

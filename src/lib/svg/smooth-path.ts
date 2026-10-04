@@ -133,3 +133,18 @@ export function smoothAreaPath(
     })
     .join(" ");
 }
+
+/**
+ * Straight segments through a sparse series, broken at gaps. For
+ * discrete scales (Mind's 1–5) where a curve would overshoot the
+ * scale and show values nobody logged.
+ */
+export function linePath(
+  points: Array<PathPoint | null | undefined>,
+  options: SmoothPathOptions = {},
+): string {
+  const digits = options.digits ?? 1;
+  return contiguousSegments(points)
+    .map((seg) => seg.map((p, i) => `${i === 0 ? "M" : "L"} ${pt(p, digits)}`).join(" "))
+    .join(" ");
+}

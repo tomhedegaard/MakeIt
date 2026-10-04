@@ -1,7 +1,7 @@
 /**
- * MentalGraph is presentational SVG. These tests lock the smooth
- * Catmull-Rom stroke, stacked dosage fills, gap-break, and inverted
- * stress so a polyline regression cannot land unnoticed.
+ * MentalGraph is presentational SVG. These tests lock the straight,
+ * in-scale strokes (no overshooting curve, no area washes), gap-break,
+ * and inverted stress.
  */
 
 import { createElement } from "react";
@@ -49,23 +49,30 @@ function pathD(html: string, token: string): string {
 }
 
 describe("MentalGraph", () => {
-  it("smooths contiguous days with C commands and stacked series fills", () => {
+  it("draws straight in-scale segments without area fills", () => {
     const html = render(
-      [3, 2, 1, 0].map((ago) => log(ago, 3, 2, 4)),
+      [3, 2, 1, 0].map((ago, i) => log(ago, [1, 5, 1, 5][i]!, 2, 4)),
       8,
     );
 
-    // Stacked series fills are flat 6 % tints of each series (Nord §7.2).
-    for (const series of ["energy", "stress", "focus"]) {
-      expect(html).toMatch(new RegExp(`fill="var\\(--mind-${series}\\)" fill-opacity="0.06"`));
-    }
+    expect(html).not.toMatch(/<path[^>]*fill-opacity/);
     expect(html).not.toContain("mix-blend-mode");
-    expect(html).not.toContain("mixBlendMode");
 
     const energy = pathD(html, "var(--mind-energy)");
-    expect(energy).toContain("C ");
-    expect(energy).not.toMatch(/ L /);
+    expect(energy).toMatch(/ L /);
+    expect(energy).not.toContain("C ");
     expect(energy).not.toMatch(/NaN/);
+
+    // Every vertex sits on or between the 5 and 1 grid lines.
+    const gridYs = [...html.matchAll(/<line[^>]*y1="([\d.]+)"/g)].map((m) => Number(m[1]));
+    const top = Math.min(...gridYs);
+    const bottom = Math.max(...gridYs);
+    const ys = [...energy.matchAll(/[ML] [\d.]+ ([\d.]+)/g)].map((m) => Number(m[1]));
+    expect(ys.length).toBe(4);
+    for (const yv of ys) {
+      expect(yv).toBeGreaterThanOrEqual(top - 0.1);
+      expect(yv).toBeLessThanOrEqual(bottom + 0.1);
+    }
 
     // Grid and frame are the theme's own lines (Nord, spec §11).
     expect(html).toContain('stroke="var(--line)"');

@@ -2,7 +2,6 @@
 
 import { useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
-import MotorGlyph from "@/components/adaptive/MotorGlyph";
 import DomainMark, { type Domain } from "@/components/brand/DomainMark";
 import SectionHeader from "@/components/ui/SectionHeader";
 import type {
@@ -13,11 +12,9 @@ import type {
 
 export type DotsCopy = {
   title: string;
-  gloss: string;
   moreAbout: string;
   dismiss: string;
   snooze: string;
-  motorAttribution: string;
   domains: Record<InsightDomain, string>;
   cards: Record<InsightCardId, { sentence: string; cta: string }>;
 };
@@ -84,6 +81,8 @@ function isVisible(card: InsightCardModel, store: Stored): boolean {
 
 /**
  * Ranked Today insight cards. Dismiss / snooze is local-only for v1.
+ * The HQ gloss and "HQ · Adaptive Engine" live once, on the session
+ * card's reason strip; repeating them here made the cards identical.
  */
 export default function ConnectDotsStream({
   cards,
@@ -115,12 +114,7 @@ export default function ConnectDotsStream({
 
   return (
     <section data-adapt-dots="" aria-label={copy.title} className="space-y-3">
-      <div>
-        <SectionHeader title={copy.title} />
-        <p data-engine-gloss="" className="mt-2 text-sm text-fg-dim leading-relaxed max-w-md">
-          {copy.gloss}
-        </p>
-      </div>
+      <SectionHeader title={copy.title} />
 
       <ul className="space-y-2.5">
         {visible.map((card) => {
@@ -133,10 +127,6 @@ export default function ConnectDotsStream({
               className="surface-2 overflow-hidden"
             >
               <div className="px-5 pt-4 pb-3 space-y-3">
-                <div className="flex items-center gap-2 text-micro text-fg-faint">
-                  <MotorGlyph className="size-3" />
-                  <span>{copy.motorAttribution}</span>
-                </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   {card.domains.map((domain) => (
                     <span
