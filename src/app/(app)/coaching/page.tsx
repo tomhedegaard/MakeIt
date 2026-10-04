@@ -115,7 +115,7 @@ export default async function TrainPage() {
       {/* Week strip — horizontal scroll on mobile */}
       <section
         aria-label={t("week.ariaLabel")}
-        className="-mx-6 md:mx-0 px-6 md:px-0 overflow-x-auto"
+        className="-mx-5 md:mx-0 px-5 md:px-0 overflow-x-auto"
       >
         <ol className="flex gap-2 md:grid md:grid-cols-7 min-w-max md:min-w-0">
           {week.map((day) => {

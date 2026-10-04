@@ -95,8 +95,10 @@ export default async function BuddyPage() {
         </p>
       </div>
 
-      <section className="surface rounded-xl p-5 space-y-4">
-        <div className="flex items-center justify-between gap-4">
+      <section className="surface p-5 space-y-4">
+        {/* Wraps on a phone: the readiness and the "why" link do not fit
+            side by side at 375 px. */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <div className="eyebrow mb-1">
               {t("readinessLabel", { handle: buddy.buddyHandle })}

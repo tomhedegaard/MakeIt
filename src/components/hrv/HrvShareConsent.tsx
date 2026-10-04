@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { setHrvShareToCoach } from "@/app/(app)/hrv/connect-actions";
 
@@ -24,12 +24,23 @@ export default function HrvShareConsent({
   const [answered, setAnswered] = useState(decided);
   const [error, setError] = useState(false);
   const [pending, startTransition] = useTransition();
+  // Answering the question swaps its buttons for the switch; hand focus to
+  // the switch so keyboard and screen-reader users are not dropped on <body>.
+  const switchRef = useRef<HTMLButtonElement>(null);
+  const focusSwitch = useRef(false);
+  useEffect(() => {
+    if (answered && focusSwitch.current) {
+      focusSwitch.current = false;
+      switchRef.current?.focus();
+    }
+  }, [answered]);
 
   function save(next: boolean) {
     // Guard instead of `disabled`: a disabled button drops keyboard focus
     // to <body> mid-save.
     if (pending) return;
     const before = { share, answered };
+    if (!answered) focusSwitch.current = true;
     setShare(next);
     setAnswered(true);
     setError(false);
@@ -74,6 +85,7 @@ export default function HrvShareConsent({
           <p className="mt-1 text-meta text-fg-dim">{share ? t("onHint") : t("offHint")}</p>
         </div>
         <button
+          ref={switchRef}
           type="button"
           role="switch"
           aria-checked={share}
