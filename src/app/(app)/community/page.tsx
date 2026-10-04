@@ -15,7 +15,7 @@ import Progress from "@/components/ui/Progress";
 import { cn, formatNumber } from "@/lib/utils";
 
 const STORIES = [
-  { who: "@Munk",      tier: "Legend",  trained: true },
+  { who: "@Munk",      tier: "Athlete", trained: true },
   { who: "@nina_dl",    tier: "Beast",   trained: true },
   { who: "@kasper_s",   tier: "Athlete", trained: true },
   { who: "@maria.lift", tier: "Beast",   trained: true },
@@ -44,7 +44,7 @@ const MOCK_FEED: FeedPost[] = [
     reactionsCount: 28, commentsCount: 8, reactedByMe: false,
   },
   {
-    id: "m4", who: "@Munk", tier: "Legend",
+    id: "m4", who: "@Munk", tier: "Athlete",
     content: "Ny limited cuff-farve på fredag, kun for crewet. Olive er tilbage.",
     tag: null, isPr: false, whenLabel: "5t",
     reactionsCount: 122, commentsCount: 31, reactedByMe: false,

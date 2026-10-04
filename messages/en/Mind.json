@@ -24,7 +24,7 @@
     "resources_doctor": "Your doctor or the psychiatric ER",
     "privacy_title": "How we handle your data",
     "privacy_journal": "Munk, coaches and other members cannot read your journal (only you in the app). An excerpt may be sent to Anthropic (Claude) for crisis-text moderation. That is a processor, not a coach.",
-    "privacy_mind_check": "Your mind-check is private by default. When you tier up, you can choose to share your signal with your buddy. Both must opt in. An optional note may be included in the daily mental coach at Anthropic.",
+    "privacy_mind_check": "Your mind-check is private by default. When you tier up, you can choose to share your signal with your buddy. Both must opt in. An optional note may be included in the daily reflection HQ writes (data processor: Anthropic).",
     "privacy_journal_label": "Journal",
     "privacy_mind_check_label": "Mind-check",
     "privacy_ai_label": "HQ",

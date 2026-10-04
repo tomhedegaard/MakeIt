@@ -120,7 +120,7 @@ const MOCK_COMMENTS: Comment[] = [
   {
     id: "cm-3",
     who: "@Munk",
-    tier: "Legend",
+    tier: "Athlete",
     content: "Bemærk: hold lidt længere pause mellem sættene næste gang. +1.",
     whenLabel: "32m",
     createdAt: new Date(Date.now() - 1000 * 60 * 32).toISOString(),
