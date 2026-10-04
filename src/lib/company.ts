@@ -21,7 +21,7 @@ export const COMPANY = {
 
   /** One-line description shown in footer + OG meta. */
   tagline:
-    "Det interne univers for crewet bag MakeIt — coaching, community og loyalitet samlet ét sted.",
+    "Det interne univers for crewet bag MakeIt: coaching, community og loyalitet samlet ét sted.",
 
   /** Pithy version for hero / og:description short form. */
   taglineShort: "MakeIt — for those who lift.",

@@ -86,7 +86,7 @@ export default async function ShoppingPage() {
         groups={list.groups}
       />
 
-      <section className="text-micro text-fg-faint">
+      <section className="text-meta text-fg-faint">
         {t("footerNote")}
       </section>
     </Container>

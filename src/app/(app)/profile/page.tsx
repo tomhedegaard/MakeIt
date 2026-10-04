@@ -316,7 +316,7 @@ export default async function ProfilePage() {
                     </div>
                   ) : (
                     <div className="px-5 py-3 border-t hairline">
-                      <span className="text-micro text-fg-faint">
+                      <span className="text-meta text-fg-faint">
                         {t("formChecks.awaitingReview")}
                       </span>
                     </div>

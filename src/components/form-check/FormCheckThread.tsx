@@ -44,7 +44,7 @@ export default function FormCheckThread({
             >
               <div className="flex items-center justify-between gap-3">
                 <span className="text-copy">{liftLabel(item)}</span>
-                <span className="text-micro text-fg-faint">
+                <span className="text-meta text-fg-faint">
                   {reviewed ? copy.reviewed : copy.pending}
                 </span>
               </div>

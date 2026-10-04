@@ -124,14 +124,14 @@ export function demoNeedsAttention(): NeedsAttentionModel {
         memberId: "m-anders",
         memberHandle: "anders",
         lift: null,
-        detail: "intet pas logged",
+        detail: "intet pas logget",
       },
       {
         id: "skip-oliver",
         memberId: "m-oliver",
         memberHandle: "oliver",
         lift: "Squat",
-        detail: "sprang Dag A — Squat",
+        detail: "sprang Dag A",
       },
     ],
     pendingForm: [

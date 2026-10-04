@@ -65,7 +65,7 @@ export default async function CoachAnalyticsPage() {
       <section className="surface-2 rounded-xl px-5 py-4 flex flex-wrap items-center gap-x-6 gap-y-2">
         <div className="flex items-baseline gap-2">
           <span className="numeric text-title">{activePct}%</span>
-          <span className="text-micro text-fg-dim">
+          <span className="text-meta text-fg-dim">
             {t("trainedLastWeek")}
           </span>
         </div>
@@ -165,7 +165,7 @@ export default async function CoachAnalyticsPage() {
             <div className="text-micro text-fg-faint">
               {t("tierThresholdsLabel")}
             </div>
-            <div className="text-micro text-fg-dim mt-1.5">
+            <div className="text-meta text-fg-dim mt-1.5">
               {t("tierThresholds")}
             </div>
           </div>

@@ -509,7 +509,7 @@ function PlanView({
                       : t("page.supplementConsider")}
                   </span>
                 </div>
-                <div className="text-micro text-fg-dim">{s.why}</div>
+                <div className="text-meta text-fg-dim">{s.why}</div>
               </li>
             ))}
           </ul>
@@ -525,7 +525,7 @@ function PlanView({
           quotaResetLabel={resetLabel}
         />
         <LogMealButton dateIso={isoToday()} />
-        <span className="text-micro text-fg-dim ml-auto">
+        <span className="text-meta text-fg-dim ml-auto">
           {plan.generator === "claude"
             ? t("page.generatedByClaude")
             : t("page.generatedLocally")}

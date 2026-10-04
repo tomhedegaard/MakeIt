@@ -443,7 +443,7 @@ export default async function TodayPage() {
                     {t("formChecks.answeredCount", { count: reviewedCount })}
                   </span>
                 </div>
-                <div className="text-micro text-fg-faint mt-0.5">
+                <div className="text-meta text-fg-faint mt-0.5">
                   {t("formChecks.readNotes")}
                 </div>
               </div>

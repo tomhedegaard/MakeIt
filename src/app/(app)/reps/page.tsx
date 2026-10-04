@@ -296,7 +296,7 @@ export default async function RepsPage() {
                 <span className="numeric w-16 shrink-0 text-right text-card text-fg">{row.v}</span>
                 <span className="min-w-0">
                   <span className="block text-copy text-fg-body">{row.k}</span>
-                  <span className="block text-micro text-fg-faint mt-0.5">{row.sub}</span>
+                  <span className="block text-meta text-fg-faint mt-0.5">{row.sub}</span>
                 </span>
               </li>
             ))}

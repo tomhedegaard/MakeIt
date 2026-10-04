@@ -142,7 +142,7 @@ export default async function CoachSystemPage() {
                       </div>
                     </>
                   ) : (
-                    <div className="text-micro text-fg-dim">
+                    <div className="text-meta text-fg-dim">
                       {r.suggestedRotation ?? t("noHardExpiry")}
                     </div>
                   )}
@@ -282,9 +282,9 @@ function Row({
     <div className="px-5 py-3 flex items-center gap-4">
       <dt className="eyebrow w-36 shrink-0">{label}</dt>
       <dd
-        className={`flex-1 break-all text-micro ${dim ? "text-fg-faint" : "text-fg"}`}
+        className={`flex-1 break-all text-meta ${dim ? "text-fg-faint" : "text-fg"}`}
       >
-        {value ?? "—"}
+        {value ?? "-"}
       </dd>
     </div>
   );

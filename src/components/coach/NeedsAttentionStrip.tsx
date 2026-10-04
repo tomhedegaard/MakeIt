@@ -1,3 +1,4 @@
+import { normalizeDayLabel } from "@/lib/dashboard/week-strip";
 import Link from "next/link";
 import type { NeedsAttentionModel, NeedsBucketId } from "@/lib/coach/needs-attention";
 
@@ -69,7 +70,7 @@ export default function NeedsAttentionStrip({
                       >
                         <div className="text-copy">@{row.memberHandle}</div>
                         <div className="text-micro text-fg-faint truncate">
-                          {row.lift ? `${row.lift} · ${row.detail}` : row.detail}
+                          {row.lift && row.lift !== row.detail ? `${row.lift} · ${normalizeDayLabel(row.detail)}` : normalizeDayLabel(row.detail)}
                         </div>
                       </Link>
                     </li>
