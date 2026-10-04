@@ -34,7 +34,7 @@ export default async function CoachSchoolLessonPage({
     <Container className="py-6 lg:py-12 space-y-6">
       <Link
         href="/coach-school"
-        className="inline-flex items-center text-micro text-fg-faint hover:text-fg"
+        className="inline-flex items-center text-meta text-fg-faint hover:text-fg"
       >
         {t("lesson.backToTree")}
       </Link>

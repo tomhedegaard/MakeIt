@@ -96,7 +96,7 @@ export default function DailyCheckInCard({
             {headline}
           </h3>
           {variant === "full" && checkin.meal?.description ? (
-            <p className="text-fg-dim text-copy leading-relaxed">
+            <p className="text-fg-dim text-copy">
               {checkin.meal.description}
             </p>
           ) : null}
@@ -115,7 +115,7 @@ export default function DailyCheckInCard({
           </div>
         ) : checkin.nextMilestone ? (
           <div className="text-right shrink-0">
-            <div className="text-micro text-fg-dim leading-tight">
+            <div className="text-micro text-fg-dim">
               {t("milestonePrompt", { days: checkin.nextMilestone.days })}
               <br />
               <span className="text-fg">{t("milestoneReward")}</span>

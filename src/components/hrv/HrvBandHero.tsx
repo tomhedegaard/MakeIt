@@ -61,7 +61,7 @@ export default function HrvBandHero({
           <h2 className="font-display text-section mb-3">
             {copy.emptyTitle}
           </h2>
-          <p className="text-fg-dim text-copy leading-relaxed max-w-md">
+          <p className="text-fg-dim text-copy max-w-md">
             {copy.emptyBody}
           </p>
           <div className="mt-6" aria-hidden>
@@ -88,14 +88,14 @@ export default function HrvBandHero({
                 {copy.qualitative[view.qualitative]}
               </p>
             ) : (
-              <p className="text-meta text-fg-dim max-w-[12rem] leading-relaxed">
+              <p className="text-meta text-fg-dim max-w-[12rem]">
                 {copy.buildingNights}
               </p>
             )}
           </div>
 
           {view.state === "building" ? (
-            <p className="text-fg-dim text-copy mt-5 max-w-md leading-relaxed">
+            <p className="text-fg-dim text-copy mt-5 max-w-md">
               {copy.buildingBody}
             </p>
           ) : (
@@ -138,7 +138,7 @@ export default function HrvBandHero({
           {view.engineCue ? (
             <p
               data-engine-cue={view.engineCue}
-              className="text-copy text-fg-dim leading-relaxed mt-6 max-w-lg"
+              className="text-copy text-fg-dim mt-6 max-w-lg"
             >
               {view.engineCue === "below" ? copy.engineBelow : copy.engineAbove}
             </p>
@@ -147,7 +147,7 @@ export default function HrvBandHero({
       )}
 
       <div className="px-6 py-3 md:px-8 border-t hairline">
-        <p className="text-meta text-fg-dim leading-relaxed">
+        <p className="text-meta text-fg-dim">
           {copy.disclaimer}
         </p>
       </div>

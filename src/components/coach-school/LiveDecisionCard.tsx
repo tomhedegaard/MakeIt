@@ -64,7 +64,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
             {t("held.badge")}
           </div>
         </div>
-        <p className="text-copy text-fg/90 leading-snug">
+        <p className="text-copy text-fg/90">
           {t("held.title")}
         </p>
         <p className="text-meta text-fg-faint">
@@ -94,7 +94,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
         {sent.reasoning ? (
           <div>
             <div className="eyebrow mb-1">{t("revealed.yourReasoning")}</div>
-            <p className="text-copy text-fg/90 leading-snug">{sent.reasoning}</p>
+            <p className="text-copy text-fg/90">{sent.reasoning}</p>
           </div>
         ) : null}
       </div>

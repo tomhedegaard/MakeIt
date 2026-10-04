@@ -212,7 +212,7 @@ export default function AppShell({
               {unreadMessages > 0 ? (
                 <span
                   aria-hidden="true"
-                  className="absolute top-1.5 right-1 numeric text-micro tabular-nums px-1 py-0.5 bg-fg text-bg leading-none min-w-[14px] text-center"
+                  className="absolute top-1.5 right-1 numeric text-micro tabular-nums px-1 py-0.5 bg-fg text-bg min-w-[14px] text-center"
                 >
                   {unreadMessages > 9 ? "9+" : unreadMessages}
                 </span>

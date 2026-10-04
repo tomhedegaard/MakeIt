@@ -56,7 +56,7 @@ export default function FormCheckThread({
                     {copy.munkReply}
                   </p>
                   {item.coachNotes ? (
-                    <p className="text-copy text-fg-dim leading-relaxed">
+                    <p className="text-copy text-fg-dim">
                       {item.coachNotes}
                     </p>
                   ) : null}

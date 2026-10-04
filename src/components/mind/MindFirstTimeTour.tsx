@@ -72,7 +72,7 @@ export default function MindFirstTimeTour() {
         {t(`steps.${currentKey}.title`)}
       </h2>
 
-      <p className="text-fg-dim leading-relaxed text-copy">{t(`steps.${currentKey}.body`)}</p>
+      <p className="text-fg-dim text-copy">{t(`steps.${currentKey}.body`)}</p>
 
       <div className="h-1 bg-bg-3 overflow-hidden">
         <div

@@ -24,7 +24,7 @@ export default async function MindDisclaimer() {
             <h2 className="font-display text-section mb-3">
               {t("important_title")}
             </h2>
-            <p className="text-fg-dim leading-relaxed text-copy">
+            <p className="text-fg-dim text-copy">
               {t.rich("important_body", {
                 strong: (chunks) => <strong className="font-medium text-fg">{chunks}</strong>,
               })}
@@ -66,7 +66,7 @@ export default async function MindDisclaimer() {
             <h2 className="font-display text-section mb-4">
               {t("privacy_title")}
             </h2>
-            <ul className="space-y-3 text-fg-dim leading-relaxed text-copy">
+            <ul className="space-y-3 text-fg-dim text-copy">
               <li>
                 <span className="text-fg font-medium">{t("privacy_journal_label")}: </span>
                 {t("privacy_journal")}

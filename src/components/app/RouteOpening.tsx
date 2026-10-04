@@ -22,7 +22,7 @@ export default function RouteOpening({
       <h1 className="font-display text-title mb-4">
         {title}
       </h1>
-      <p className="text-fg-dim text-copy max-w-md leading-relaxed mb-8">
+      <p className="text-fg-dim text-copy max-w-md mb-8">
         {body}
       </p>
       <div className="flex gap-2" aria-hidden>

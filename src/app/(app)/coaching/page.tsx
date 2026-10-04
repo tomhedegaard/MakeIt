@@ -306,7 +306,7 @@ export default async function TrainPage() {
                 </div>
 
                 {p.description ? (
-                  <p className="text-fg-dim text-meta leading-relaxed mb-4">
+                  <p className="text-fg-dim text-meta mb-4">
                     {p.description}
                   </p>
                 ) : null}

@@ -88,7 +88,7 @@ export default function SandboxCaseCard({
             {t("held.badge")}
           </div>
         </div>
-        <p className="text-copy text-fg/90 leading-snug">
+        <p className="text-copy text-fg/90">
           {t("held.title")}
         </p>
         <p className="text-meta text-fg-faint">
@@ -133,7 +133,7 @@ export default function SandboxCaseCard({
         {reasoning ? (
           <div>
             <div className="eyebrow mb-1">{t("revealed.yourReasoning")}</div>
-            <p className="text-copy text-fg/90 leading-snug">{reasoning}</p>
+            <p className="text-copy text-fg/90">{reasoning}</p>
           </div>
         ) : null}
         <p className="text-meta text-fg-faint">

@@ -151,7 +151,7 @@ function MentalResourcesDialog({
             eyebrow={t("escalateEyebrow")}
             title={t("escalateTitle")}
           />
-          <p className="text-fg-dim text-copy leading-relaxed">
+          <p className="text-fg-dim text-copy">
             {t("escalateBody")}
           </p>
           <CrisisLines t={t} />

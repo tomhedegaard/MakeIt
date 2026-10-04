@@ -30,10 +30,10 @@ export default function HrvReadinessNudge({ nudge }: Props) {
       <p id="hrv-nudge-heading" className="eyebrow">
         {eyebrow}
       </p>
-      <p className="text-copy leading-relaxed text-fg-dim">{body}</p>
+      <p className="text-copy text-fg-dim">{body}</p>
       <Link
         href={NUDGE_HREF}
-        className="inline-block text-micro text-fg-dim lift touch-app"
+        className="inline-block text-meta text-fg-dim lift touch-app"
       >
         {t("cta")}
       </Link>

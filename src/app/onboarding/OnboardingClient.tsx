@@ -426,7 +426,7 @@ function Intro({ eyebrow, title, sub }: { eyebrow: string; title: string; sub: s
       <h1 className="font-display text-title mb-4">
         {title}
       </h1>
-      <p className="text-fg-dim text-copy max-w-md leading-relaxed">{sub}</p>
+      <p className="text-fg-dim text-copy max-w-md">{sub}</p>
     </div>
   );
 }

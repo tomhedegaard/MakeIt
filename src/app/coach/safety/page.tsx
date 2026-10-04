@@ -39,7 +39,7 @@ export default async function CoachSafetyPage() {
         <h2 className="font-display text-section mb-4">Åbne eskaleringer</h2>
         {!week.alertsReadable ? (
           <div className="rounded-2xl border hairline bg-bg-2/30 p-6 space-y-2">
-            <p className="text-fg-dim text-meta leading-relaxed">
+            <p className="text-fg-dim text-meta">
               <code className="text-fg">mental_safety_alerts</code> kan ikke
               læses. Enten mangler migration 0057, eller RLS blokerede
               læsningen. Det er ikke det samme som &laquo;nul sager&raquo;.
@@ -100,7 +100,7 @@ export default async function CoachSafetyPage() {
           </div>
         ) : (
           <div className="rounded-2xl border hairline bg-bg-2/30 p-6">
-            <p className="text-fg-dim text-meta leading-relaxed">
+            <p className="text-fg-dim text-meta">
               Journal-tal vises ikke. <code className="text-fg">journal_entries</code>{" "}
               er owner-only — Munk kan ikke se andres poster, og et 0-0-0-0
               her ville være falsk dækning. Claude-nulls tælles i logs som{" "}
@@ -112,7 +112,7 @@ export default async function CoachSafetyPage() {
 
       <section>
         <h2 className="font-display text-section mb-4">Sådan virker pipelinen</h2>
-        <ol className="space-y-2 text-fg-dim text-meta leading-relaxed list-decimal pl-5">
+        <ol className="space-y-2 text-fg-dim text-meta list-decimal pl-5">
           <li>
             <strong className="text-fg">Keyword pre-filter:</strong> hurtig regex
             over entry-body. Conservative — false-positives OK.

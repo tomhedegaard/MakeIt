@@ -145,7 +145,7 @@ export default function ReasoningDetailPanel({
         <p id="reasoning-rule-heading" className="eyebrow mb-2">
           Hvilken regel fyrede
         </p>
-        <p className="text-copy text-fg-dim leading-relaxed">
+        <p className="text-copy text-fg-dim">
           {narrateRule({
             action: ruleDecision.action,
             reasons: ruleDecision.reasons,
@@ -164,7 +164,7 @@ export default function ReasoningDetailPanel({
           <p id="reasoning-claude-heading" className="eyebrow mb-2">
             Hvad Munks assistent justerede
           </p>
-          <p className="text-copy text-fg-dim leading-relaxed">
+          <p className="text-copy text-fg-dim">
             {describeClaudeRefinement(ruleDecision, reasoningOutput)}
           </p>
         </section>

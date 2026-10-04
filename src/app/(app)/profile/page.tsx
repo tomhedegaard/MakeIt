@@ -227,7 +227,7 @@ export default async function ProfilePage() {
                       <div className="eyebrow mb-1">
                         {f.exerciseName ?? t("formChecks.exerciseFallback")}
                       </div>
-                      <h3 className="font-display text-card leading-snug">
+                      <h3 className="font-display text-card">
                         {f.aiHeadline ?? t("formChecks.aiHeadlineFallback")}
                       </h3>
                       <div className="mt-1 text-micro text-fg-faint">
@@ -310,7 +310,7 @@ export default async function ProfilePage() {
                           })}
                         </span>
                       </div>
-                      <p className="text-copy text-fg leading-relaxed whitespace-pre-wrap">
+                      <p className="text-copy text-fg whitespace-pre-wrap">
                         {f.coachNotes}
                       </p>
                     </div>

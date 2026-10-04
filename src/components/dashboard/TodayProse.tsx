@@ -37,7 +37,7 @@ export default async function TodayProse({ model }: { model: TodayProseModel }) 
           aria-hidden
         />
       ) : null}
-      <p className="text-fg-dim text-copy leading-relaxed">
+      <p className="text-fg-dim text-copy">
         {model.lines.map((line, i) => (
           <span key={line.key} data-today-prose-key={line.key}>
             {i > 0 ? " " : null}

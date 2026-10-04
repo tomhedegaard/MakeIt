@@ -92,7 +92,7 @@ export default function AdaptiveAlertCard({
 
       {/* Member-facing copy — what they'd see if approved. */}
       {alert.explanationDa ? (
-        <p className="text-fg/90 text-copy leading-relaxed mb-3 italic">
+        <p className="text-fg/90 text-copy mb-3 italic">
           “{alert.explanationDa}”
         </p>
       ) : null}

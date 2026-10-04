@@ -67,7 +67,7 @@ export default async function SessionPreview({ session }: { session: Session }) 
           <h1 className="font-display text-title mb-2">
             {session.dayLabel}
           </h1>
-          <p className="text-fg-dim text-meta md:text-copy leading-relaxed">
+          <p className="text-fg-dim text-meta md:text-copy">
             {session.title}
           </p>
           <div className="grid grid-cols-3 gap-px bg-line border hairline overflow-hidden mt-5">
@@ -169,7 +169,7 @@ async function PreviewExercise({
             {inlineCues.length > 0 ? (
               <ol className="space-y-1.5">
                 {inlineCues.map((cue, i) => (
-                  <li key={i} className="flex gap-2 text-copy leading-snug">
+                  <li key={i} className="flex gap-2 text-copy">
                     <span className="text-fg-faint shrink-0 text-micro mt-0.5">
                       {String(i + 1).padStart(2, "0")}
                     </span>
@@ -182,7 +182,7 @@ async function PreviewExercise({
           </div>
         </div>
       ) : ex.cue ? (
-        <p className="text-meta text-fg-dim leading-relaxed border-t hairline pt-4">
+        <p className="text-meta text-fg-dim border-t hairline pt-4">
           {ex.cue}
         </p>
       ) : null}

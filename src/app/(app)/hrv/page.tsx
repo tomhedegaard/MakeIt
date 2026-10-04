@@ -310,7 +310,7 @@ function StateNotConnected({ t }: { t: PageT }) {
     <section className="surface-2 rounded-2xl overflow-hidden">
       <div className="px-6 py-7 md:px-8 md:py-10 border-b hairline">
         <SectionHeader eyebrow={t("connectEyebrow")} title={t("connectTitle")} />
-        <p className="text-fg-dim text-copy leading-relaxed max-w-xl">
+        <p className="text-fg-dim text-copy max-w-xl">
           {t("connectBody")}
         </p>
       </div>
@@ -327,7 +327,7 @@ function StateNotConnected({ t }: { t: PageT }) {
             </span>
             <div className="min-w-0">
               <div className="text-fg/90 text-copy">{row.title}</div>
-              <div className="text-fg-dim text-micro md:text-meta mt-0.5 leading-relaxed">
+              <div className="text-fg-dim text-micro md:text-meta mt-0.5">
                 {row.d}
               </div>
             </div>
@@ -337,7 +337,7 @@ function StateNotConnected({ t }: { t: PageT }) {
 
       <div className="p-5 md:p-8 space-y-4">
         <ConnectButton label={t("connectCta")} />
-        <p className="text-meta text-fg-faint leading-relaxed">
+        <p className="text-meta text-fg-faint">
           {t("connectAppleNote")}
         </p>
       </div>
@@ -371,9 +371,9 @@ function StateWarmingUp({
         <div className="eyebrow mb-2">{t("warmingUp.latest")}</div>
         <div className="numeric text-hero md:text-hero-lg">
           {Math.round(rmssdMs)}
-          <span className="text-fg-dim text-section md:text-title ml-2">{t("unit")}</span>
+          <span className="text-fg-dim text-section ml-2">{t("unit")}</span>
         </div>
-        <p className="text-fg-dim text-copy mt-5 max-w-md leading-relaxed">
+        <p className="text-fg-dim text-copy mt-5 max-w-md">
           {t.rich("warmingUp.body", {
             count: daysLeft,
             em: (chunks) => <span className="text-fg">{chunks}</span>,
@@ -422,7 +422,7 @@ function StateActive({
         <div className="eyebrow mb-2">{t("active.latest")}</div>
         <div className="numeric text-hero md:text-hero-lg">
           {Math.round(latest.rmssdMs)}
-          <span className="text-fg-dim text-section md:text-title ml-2">{t("unit")}</span>
+          <span className="text-fg-dim text-section ml-2">{t("unit")}</span>
         </div>
         {readinessLabel ? (
           <p className="font-display text-section mt-5">
@@ -471,7 +471,7 @@ function StatePendingFirstSync({ provider, t }: { provider: string; t: PageT }) 
         eyebrow={t("pending.eyebrow")}
         title={t("pending.title", { provider })}
       />
-      <p className="text-fg-dim text-copy leading-relaxed max-w-md">
+      <p className="text-fg-dim text-copy max-w-md">
         {t("pending.body", { provider })}
       </p>
     </section>

@@ -171,7 +171,7 @@ export default function SettingsClient({
             <div className="text-copy font-medium mb-1">
               {t("notifications.pushTitle")}
             </div>
-            <div className="text-micro text-fg-dim leading-relaxed">
+            <div className="text-meta text-fg-dim">
               {t("notifications.pushDescription")}
             </div>
           </div>
@@ -275,7 +275,7 @@ export default function SettingsClient({
             {deletePending ? t("danger.deleting") : t("danger.delete")}
           </button>
           {deleteMsg ? (
-            <span className="text-micro text-fg-dim">
+            <span className="text-meta text-fg-dim">
               {deleteMsg}
             </span>
           ) : null}
@@ -291,7 +291,7 @@ export default function SettingsClient({
         <SectionHeader eyebrow={t("danger.eyebrow")} title={t("danger.confirmTitle")} />
         <p className="text-fg-dim text-meta">{t("danger.confirmBody")}</p>
         <label className="block space-y-1.5">
-          <span className="text-micro text-fg-dim">
+          <span className="text-meta text-fg-dim">
             {t("danger.confirmLabel", { phrase: deletePhrase })}
           </span>
           <input
@@ -366,7 +366,7 @@ function Toggle({
     <li className="py-3 flex items-start justify-between gap-4">
       <div className="flex-1 min-w-0">
         <div className="text-meta">{label}</div>
-        <div className="text-micro text-fg-dim mt-0.5">{sub}</div>
+        <div className="text-meta text-fg-dim mt-0.5">{sub}</div>
       </div>
       <label className="shrink-0 cursor-pointer touch-app">
         <input

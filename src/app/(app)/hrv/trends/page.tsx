@@ -114,7 +114,7 @@ function StateProvisional({
       </div>
       <div className="px-6 py-7 md:px-8 md:py-9">
         <TrendChart readings={series} />
-        <p className="text-fg-dim text-copy leading-relaxed mt-6 max-w-md">
+        <p className="text-fg-dim text-copy mt-6 max-w-md">
           {copy.buildingBody}
         </p>
         <p className="text-meta text-fg-faint mt-4">
@@ -179,7 +179,7 @@ function StateActive({
           {band.engineCue ? (
             <p
               data-engine-cue={band.engineCue}
-              className="text-copy text-fg-dim leading-relaxed mt-5 max-w-lg"
+              className="text-copy text-fg-dim mt-5 max-w-lg"
             >
               {band.engineCue === "below" ? copy.engineBelow : copy.engineAbove}
             </p>
@@ -215,7 +215,7 @@ function StateActive({
               </div>
             );
           })}
-          <p className="text-fg-dim text-meta leading-relaxed pt-3">
+          <p className="text-fg-dim text-meta pt-3">
             {dist.total > 0
               ? t("distribution.summary", {
                   days: DISTRIBUTION_DAYS,

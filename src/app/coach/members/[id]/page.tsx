@@ -53,7 +53,7 @@ export default async function CoachMemberDetailPage({
     <Container className="py-6 lg:py-12 space-y-8">
       <Link
         href="/coach/members"
-        className="text-micro text-fg-dim hover:text-fg"
+        className="text-meta text-fg-dim hover:text-fg"
       >
         {t("backToMembers")}
       </Link>
@@ -211,14 +211,14 @@ export default async function CoachMemberDetailPage({
           {adherence.suggestedAction ? (
             <div className="md:col-span-1">
               <div className="eyebrow text-yellow-400 mb-1">{t("coachActionLabel")}</div>
-              <p className="text-copy leading-relaxed">
+              <p className="text-copy">
                 {adherence.suggestedAction}
               </p>
             </div>
           ) : (
             <div className="md:col-span-1">
               <div className="eyebrow text-green-400 mb-1">{t("statusLabel")}</div>
-              <p className="text-meta text-fg-dim leading-relaxed">
+              <p className="text-meta text-fg-dim">
                 {t("statusNormal")}
               </p>
             </div>
@@ -239,7 +239,7 @@ export default async function CoachMemberDetailPage({
               <li key={f.id} className="surface-2 rounded-2xl p-5">
                 <div className="mb-2 text-copy">{f.exerciseName ?? t("formCheckFallback")}</div>
                 {f.aiHeadline ? (
-                  <p className="text-fg/90 text-copy leading-relaxed">{f.aiHeadline}</p>
+                  <p className="text-fg/90 text-copy">{f.aiHeadline}</p>
                 ) : null}
                 <div className="mt-2 text-micro text-fg-faint">
                   {f.reviewedAt ? t("reviewed") : t("awaitingReview")}

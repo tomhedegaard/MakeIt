@@ -490,7 +490,7 @@ function RemoveBtn({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="text-fg-dim hover:text-fg text-card leading-none px-1.5 shrink-0"
+      className="text-fg-dim hover:text-fg text-card px-1.5 shrink-0"
       aria-label={t("removeAria")}
     >
       ×

@@ -130,7 +130,7 @@ export function FormCheckReview({
         {formCheck.aiFix ? (
           <div className="surface-2 rounded-lg p-4">
             <div className="eyebrow mb-2">{t("aiTip")}</div>
-            <p className="text-copy text-fg-body leading-relaxed">{formCheck.aiFix}</p>
+            <p className="text-copy text-fg-body">{formCheck.aiFix}</p>
           </div>
         ) : null}
       </div>

@@ -12,7 +12,7 @@ export default async function NutritionSetupView() {
       <Container size="narrow">
         <div className="mb-10">
           <PageTitle kicker={t("eyebrow")} title={`${t("title")} ${t("titleLine2")}`} />
-          <p className="mt-4 text-fg-dim text-copy leading-relaxed max-w-md">
+          <p className="mt-4 text-fg-dim text-copy max-w-md">
             {t("intro")}
           </p>
         </div>

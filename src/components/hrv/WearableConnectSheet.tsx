@@ -90,7 +90,7 @@ function WearableConnectBody() {
               )}
             >
               <span>
-                <span className="block font-display text-card leading-tight">
+                <span className="block font-display text-card">
                   {provider.name}
                 </span>
                 <span className="block text-micro text-fg-faint mt-0.5">
@@ -109,7 +109,7 @@ function WearableConnectBody() {
               aria-disabled
               className="surface-2 rounded-2xl p-5 flex items-center justify-between gap-4 opacity-45"
             >
-              <span className="font-display text-card leading-tight">
+              <span className="font-display text-card">
                 {provider.name}
               </span>
               <span className="text-micro text-fg-faint border border-line-strong px-2 py-0.5 shrink-0">
@@ -129,7 +129,7 @@ function WearableConnectBody() {
         </p>
       ) : null}
 
-      <p className="mt-6 text-meta text-fg-faint leading-relaxed">
+      <p className="mt-6 text-meta text-fg-faint">
         {tPage("connectAppleNote")}
       </p>
     </SheetContent>

@@ -278,7 +278,7 @@ export default function CounterfactualSliders({
           <button
             type="button"
             onClick={reset}
-            className="text-micro text-fg-faint hover:text-fg lift touch-app"
+            className="text-meta text-fg-faint hover:text-fg lift touch-app"
           >
             ← Nulstil til faktiske værdier
           </button>
@@ -376,7 +376,7 @@ function ResultBlock({
       >
         → {headline}
       </div>
-      <p className="text-meta text-fg-dim leading-relaxed">{detail}</p>
+      <p className="text-meta text-fg-dim">{detail}</p>
       {previous ? (
         <p className="text-meta text-fg-faint">
           {previous}

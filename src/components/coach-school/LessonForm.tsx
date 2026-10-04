@@ -99,7 +99,7 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
               </span>
             </div>
             {result.practiceFeedback ? (
-              <p className="text-copy text-fg/90 leading-snug">
+              <p className="text-copy text-fg/90">
                 {result.practiceFeedback}
               </p>
             ) : null}
@@ -129,7 +129,7 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
                 <span className="numeric text-section text-fg-faint shrink-0">
                   {String(qIdx + 1).padStart(2, "0")}
                 </span>
-                <p className="text-copy text-fg/90 leading-relaxed flex-1">
+                <p className="text-copy text-fg/90 flex-1">
                   {q.question}
                 </p>
               </div>
@@ -172,7 +172,7 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
                 {lesson.practiceScenario.context}
               </p>
             ) : null}
-            <p className="text-copy text-fg/90 leading-relaxed">
+            <p className="text-copy text-fg/90">
               {lesson.practiceScenario.prompt}
             </p>
             <textarea

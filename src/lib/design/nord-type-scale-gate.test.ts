@@ -10,6 +10,7 @@ import { describe, expect, it } from "vitest";
 const SRC = fileURLToPath(new URL("../../", import.meta.url));
 const ROOTS = ["app/(app)", "app/coach", "app/onboarding", "app/login", "components"];
 const ROOT_FILES = ["app/error.tsx", "app/loading.tsx"];
+ROOTS.push("app/privacy", "app/terms");
 const EXEMPT = /\/(marketing|landing)\//;
 
 function walk(dir: string): string[] {
@@ -50,6 +51,11 @@ const HEADING_AS_LABEL = /<h[1-3]\b[^>]*className=["'`{][^>]*\b(?:text-micro|tex
 const SENTENCE_AS_MICRO = /<p\b[^>]*className=[^>]*\btext-micro\b/;
 // h3 er en korttitel (text-card); en sektionstitel er h2.
 const H3_AS_SECTION = /<h3\b[^>]*className=[^>]*\btext-section\b/;
+// Knapper og links er handlinger, ikke tidsstempler: mindst text-meta.
+// Matcher hele åbnings-tagget, også når className står på en ny linje.
+const ACTION_AS_MICRO = /<(?:button|a|Link)\b[^<>]*?\btext-micro\b[^<>]*?>/;
+// Tokenet bærer linjehøjden; leading-* ved siden af er drift.
+const TOKEN_LEADING = /\btext-(?:micro|meta|copy|card|section|title|hero(?:-lg)?)\b[^"'`\n]*\bleading-|\bleading-[^"'`\s]+[^"'`\n]*\btext-(?:micro|meta|copy|card|section|title|hero(?:-lg)?)\b/;
 const HEADING_LEADING = /\btext-(?:section|title|hero(?:-lg)?)\b[^"'`]*\bleading-|\bleading-[^"'`\s]+[^"'`]*\btext-(?:section|title|hero(?:-lg)?)\b/;
 
 describe("type roles hold (DESIGN.md)", () => {
@@ -60,6 +66,9 @@ describe("type roles hold (DESIGN.md)", () => {
       .filter(({ l }) => HEAVY.test(l) || SUBHEAD_AS_TITLE.test(l) || HEADING_AS_LABEL.test(l) || HEADING_LEADING.test(l) || SENTENCE_AS_MICRO.test(l) || H3_AS_SECTION.test(l))
       .map(({ l, i }) => `${i}: ${l.trim().slice(0, 120)}`);
     expect(bad).toEqual([]);
+    const src = lines.join("\n");
+    expect(src.match(ACTION_AS_MICRO)?.[0] ?? null).toBeNull();
+    expect(lines.filter((l) => TOKEN_LEADING.test(l)).map((l) => l.trim().slice(0, 120))).toEqual([]);
   });
 
   it("catches what it is meant to catch (self-test)", () => {
@@ -73,5 +82,8 @@ describe("type roles hold (DESIGN.md)", () => {
     expect('<p className="text-micro text-fg-faint">').toMatch(SENTENCE_AS_MICRO);
     expect('<span className="text-micro">').not.toMatch(SENTENCE_AS_MICRO);
     expect('<h3 className="font-display text-section">').toMatch(H3_AS_SECTION);
+    expect('<button\n  type="button"\n  className="text-micro">').toMatch(ACTION_AS_MICRO);
+    expect('<button className="text-meta">').not.toMatch(ACTION_AS_MICRO);
+    expect('className="text-copy leading-relaxed"').toMatch(TOKEN_LEADING);
   });
 });

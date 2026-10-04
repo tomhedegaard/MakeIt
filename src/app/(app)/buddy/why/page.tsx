@@ -73,7 +73,7 @@ export default async function BuddyWhyPage() {
             </span>
             <div>
               <div className="eyebrow mb-1">{t(`factors.${code}.title`)}</div>
-              <p className="text-copy text-fg/90 leading-relaxed">
+              <p className="text-copy text-fg/90">
                 {t(`factors.${code}.body`, { handle: buddy.buddyHandle })}
               </p>
             </div>

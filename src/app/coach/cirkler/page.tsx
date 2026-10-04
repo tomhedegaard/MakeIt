@@ -45,7 +45,7 @@ export default async function CoachCirklerPage() {
         <div className="md:col-span-2 space-y-4">
           <h2 className="font-display text-section">Aktive cirkler</h2>
           {cirkler.length === 0 ? (
-            <p className="text-fg-dim text-meta leading-relaxed">
+            <p className="text-fg-dim text-meta">
               Ingen cirkler endnu. Opret den første til venstre — Beast-tier
               medlemmer kan derefter joines via SQL eller fast-follow UI.
             </p>
@@ -80,7 +80,7 @@ export default async function CoachCirklerPage() {
             </div>
           )}
 
-          <p className="text-fg-dim text-meta leading-relaxed">
+          <p className="text-fg-dim text-meta">
             Cirkel-poster + reactions surfacer i medlemmernes
             <code className="px-1 mx-1 rounded bg-bg-2 text-fg">/mind/cirkler</code>.
             Du har ikke direct moderation-værktøjer i v0 — eskaler via

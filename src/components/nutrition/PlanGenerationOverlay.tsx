@@ -93,7 +93,7 @@ function PlanGenerationOverlayActive({
           ))}
         </div>
 
-        <p className="text-copy text-fg leading-relaxed mb-3">
+        <p className="text-copy text-fg mb-3">
           {t("stageProgress", { label: t(currentStage.labelKey) })}
         </p>
 

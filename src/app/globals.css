@@ -413,7 +413,7 @@ body {
   border-radius: 0;
   padding: 0.625rem 0.875rem;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-copy);
   transition: border-color 180ms ease, background 180ms ease;
 }
 .input:focus {
@@ -746,14 +746,13 @@ nav.tabbar {
  * viewport that does not report a coarse pointer (desktop responsive
  * mode, some in-app webviews) gets the 16px floor too. */
 @media (pointer: coarse), (max-width: 40rem) {
-  .input,
-  .field,
-  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-  textarea,
   /* max(): mindst 16 px, men et felt der arver mere (stepperens 32 px
    * tal) beholder det. 100 % er forælderens størrelse (1em foldes af
-   * CSS-minifieren til 16px). */
-  select { font-size: max(16px, 100%); }
+   * CSS-minifieren til 16px). Felter med en skala-størrelse over 16 px
+   * (vægtfeltet i text-section) er undtaget, så de ikke skrumper. */
+  :is(.input, .field, input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select):not(
+    [class*="text-card"], [class*="text-section"], [class*="text-title"], [class*="text-hero"]
+  ) { font-size: max(16px, 100%); }
 }
 
 

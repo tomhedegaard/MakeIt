@@ -30,7 +30,7 @@ export default function CoachError({
         <h1 className="font-display text-title mb-4">
           {t("title")}
         </h1>
-        <p className="text-fg-dim text-copy leading-relaxed mb-8">
+        <p className="text-fg-dim text-copy mb-8">
           {t("description")}
         </p>
         {error.digest && (

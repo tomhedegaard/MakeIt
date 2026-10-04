@@ -72,7 +72,7 @@ export default function WeeklyInsightsView({
         </div>
       </section>
 
-      <p className="text-fg-dim text-meta leading-relaxed">
+      <p className="text-fg-dim text-meta">
         {t.rich("footer", {
           link: (chunks) => (
             <Link href="/mind/settings" className="text-fg">

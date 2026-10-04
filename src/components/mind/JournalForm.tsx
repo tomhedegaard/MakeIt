@@ -69,7 +69,7 @@ export default function JournalForm({
           rows={10}
           required
           placeholder={t("placeholder")}
-          className="w-full rounded-2xl bg-bg-2/60 border hairline px-5 py-4 text-copy leading-relaxed resize-none focus:outline-none focus:border-fg/40"
+          className="w-full rounded-2xl bg-bg-2/60 border hairline px-5 py-4 text-copy resize-none focus:outline-none focus:border-fg/40"
         />
         <div className="flex items-center justify-between text-fg-dim text-micro">
           <span>{t("helper")}</span>

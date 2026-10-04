@@ -32,7 +32,7 @@ export default function AppError({
         <h1 className="font-display text-title mb-4">
           {t("title")}
         </h1>
-        <p className="text-fg-dim text-copy leading-relaxed mb-8">
+        <p className="text-fg-dim text-copy mb-8">
           {t("descriptionBefore")}{" "}
           <a className="underline hover:text-fg" href={SUPPORT_MAILTO}>
             {COMPANY.emails.support}

@@ -40,7 +40,7 @@ export default function AdaptationHistory({
         <h2 id="adaptation-history-heading" className="font-display text-section">
           Tidligere tilpasninger
         </h2>
-        <p className="text-copy text-fg-dim leading-relaxed">
+        <p className="text-copy text-fg-dim">
           HQ starter når dit HRV-baseline er klart og du har slået
           adaptiv tilpasning til. Når den begynder at justere dine
           sessioner, ser du dem her, så du kan se hvad der virkede.

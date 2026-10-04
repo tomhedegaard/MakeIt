@@ -69,14 +69,14 @@ export default function RestTimer({
 
       <div className="min-w-0">
         <div className="eyebrow mb-0.5">{t("title")}</div>
-        <div className="text-meta text-fg-dim leading-snug whitespace-normal break-words">
+        <div className="text-meta text-fg-dim whitespace-normal break-words">
           {t("description", { time: fmt(left) })}
         </div>
       </div>
 
       <button
         type="button"
-        className="shrink-0 min-h-11 px-3 text-micro border hairline touch-app"
+        className="shrink-0 min-h-11 px-3 text-meta border hairline touch-app"
         onClick={onSkip}
       >
         {t("skip")}

@@ -165,7 +165,7 @@ export default async function CoachAnalyticsPage() {
             <div className="text-micro text-fg-faint">
               {t("tierThresholdsLabel")}
             </div>
-            <div className="text-micro text-fg-dim mt-1.5 leading-relaxed">
+            <div className="text-micro text-fg-dim mt-1.5">
               {t("tierThresholds")}
             </div>
           </div>

@@ -68,7 +68,7 @@ export default function CuesList({
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span
-                className={`text-copy leading-snug transition-colors duration-200 ${
+                className={`text-copy transition-colors duration-200 ${
                   isActive ? "text-fg" : "text-fg/85"
                 }`}
               >

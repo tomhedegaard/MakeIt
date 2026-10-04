@@ -45,7 +45,7 @@ export default function DualStreamBubble({
           </div>
         ) : null}
         {message.body ? (
-          <p className="text-copy leading-relaxed whitespace-pre-wrap break-words">
+          <p className="text-copy whitespace-pre-wrap break-words">
             {message.body}
           </p>
         ) : null}

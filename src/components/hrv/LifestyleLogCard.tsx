@@ -331,7 +331,7 @@ export default function LifestyleLogCard({
             disabled={pending || menstruationLogged}
             aria-pressed={menstruationLogged}
             className={cn(
-              "w-full text-micro border px-4 py-2.5 touch-app transition-colors",
+              "w-full text-meta border px-4 py-2.5 touch-app transition-colors",
               menstruationLogged
                 ? "bg-fg text-bg border-fg"
                 : "border-line-strong text-fg-dim lift",

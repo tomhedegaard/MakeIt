@@ -114,7 +114,7 @@ function Card({ item }: { item: ScienceFeedItem }) {
             </span>
           )}
         </div>
-        <h2 className="mb-2 text-card leading-snug">{item.title}</h2>
+        <h2 className="mb-2 text-card">{item.title}</h2>
         <p className="mb-2 leading-relaxed">{item.tldrDa}</p>
         {item.effectDa && (
           <p className="mb-2 text-meta text-fg-dim">

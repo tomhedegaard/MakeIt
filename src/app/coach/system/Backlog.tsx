@@ -150,7 +150,7 @@ function BacklogRow({ item, t }: { item: BacklogItem; t: Translator }) {
             ) : null}
           </div>
           <div
-            className={`font-display text-copy leading-snug ${
+            className={`font-display text-copy ${
               isTerminal ? "text-fg-dim line-through decoration-fg-faint" : ""
             }`}
           >
@@ -209,7 +209,7 @@ function StatusActions({ item, t }: { item: BacklogItem; t: Translator }) {
           <input type="hidden" name="status" value={tr.status} />
           <button
             type="submit"
-            className="text-micro px-2 py-1 rounded border hairline-strong hover:bg-bg-3 transition-colors"
+            className="text-meta px-2 py-1 rounded border hairline-strong hover:bg-bg-3 transition-colors"
           >
             {tr.label}
           </button>
@@ -219,7 +219,7 @@ function StatusActions({ item, t }: { item: BacklogItem; t: Translator }) {
         <input type="hidden" name="id" value={item.id} />
         <button
           type="submit"
-          className="text-micro px-2 py-1 rounded text-fg-faint hover:text-red-400 transition-colors"
+          className="text-meta px-2 py-1 rounded text-fg-faint hover:text-red-400 transition-colors"
           aria-label={t("delete")}
         >
           ×

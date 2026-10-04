@@ -54,7 +54,7 @@ export default function PatternRow({ pattern }: { pattern: PatternForDisplay }) 
                 {t("affectedCount", { count: pattern.affected.length })}
               </span>
             </div>
-            <p className="text-copy text-fg leading-relaxed">{pattern.summaryDa}</p>
+            <p className="text-copy text-fg">{pattern.summaryDa}</p>
           </div>
           <span
             aria-hidden="true"
@@ -73,7 +73,7 @@ export default function PatternRow({ pattern }: { pattern: PatternForDisplay }) 
               <li key={m.memberId}>
                 <Link
                   href={`/coach/members/${m.memberId}`}
-                  className="inline-flex items-center surface-2 px-3 py-1 text-micro text-fg hover:bg-bg-3 transition-colors"
+                  className="inline-flex items-center surface-2 px-3 py-1 text-meta text-fg hover:bg-bg-3 transition-colors"
                 >
                   @{m.handle}
                 </Link>

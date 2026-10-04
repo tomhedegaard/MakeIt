@@ -138,7 +138,7 @@ export default function SessionRunner({
               {sec.heading ? (
                 <p className="eyebrow mb-2">{sec.heading}</p>
               ) : null}
-              <p className="text-copy leading-relaxed whitespace-pre-wrap">
+              <p className="text-copy whitespace-pre-wrap">
                 {sec.body}
               </p>
             </section>

@@ -422,7 +422,7 @@ function FormCheckBody({
               <Card title={t("result.cardNeg")} items={verdict.neg} kind="neg" />
               <div className="surface-2 rounded-lg p-4">
                 <div className="eyebrow mb-2">{t("result.coachTip")}</div>
-                <p className="text-copy text-fg/90 leading-relaxed">{verdict.fix}</p>
+                <p className="text-copy text-fg/90">{verdict.fix}</p>
               </div>
             </div>
 

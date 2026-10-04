@@ -152,7 +152,7 @@ export default async function BuddyPage() {
                       {relativeTimeDa(i.createdAt)}
                     </div>
                     {i.body ? (
-                      <p className="text-copy text-fg/90 leading-snug">{i.body}</p>
+                      <p className="text-copy text-fg/90">{i.body}</p>
                     ) : null}
                   </div>
                 </li>

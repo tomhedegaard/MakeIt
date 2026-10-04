@@ -45,7 +45,7 @@ export default async function CoachExercisesPage() {
                 className="flex items-center gap-4 px-5 py-3.5 hover:bg-bg-3/60 transition-colors"
               >
                 <div className="min-w-0 flex-1">
-                  <div className="font-display text-card leading-tight truncate">
+                  <div className="font-display text-card truncate">
                     {ex.name}
                   </div>
                   <div className="text-micro text-fg-faint truncate">

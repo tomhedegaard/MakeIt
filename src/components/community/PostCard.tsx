@@ -160,11 +160,11 @@ export default function PostCard({ post }: { post: FeedPost }) {
         </div>
       </div>
 
-      <p className="text-fg-body text-copy leading-relaxed mb-4 whitespace-pre-wrap">
+      <p className="text-fg-body text-copy mb-4 whitespace-pre-wrap">
         <MentionText text={post.content} />
       </p>
 
-      <div className="border-t hairline pt-3 flex items-center gap-1 text-micro text-fg-dim">
+      <div className="border-t hairline pt-3 flex items-center gap-1 text-meta text-fg-dim">
         <button
           type="button"
           onClick={handleToggleReaction}
@@ -212,7 +212,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
                         {c.whenLabel}
                       </span>
                     </div>
-                    <p className="text-copy text-fg-body leading-relaxed whitespace-pre-wrap">
+                    <p className="text-copy text-fg-body whitespace-pre-wrap">
                       <MentionText text={c.content} />
                     </p>
                   </div>

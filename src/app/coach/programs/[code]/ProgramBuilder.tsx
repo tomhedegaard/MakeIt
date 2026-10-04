@@ -464,7 +464,7 @@ export default function ProgramBuilder({
                           <button
                             type="button"
                             onClick={() => removeSet(di, ei, si)}
-                            className="text-fg-dim hover:text-fg text-card leading-none px-1"
+                            className="text-fg-dim hover:text-fg text-card px-1"
                             aria-label={t("removeSetAria")}
                           >
                             ×

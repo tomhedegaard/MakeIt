@@ -276,7 +276,7 @@ export default function SessionClient({
             <h2 id="paused-heading" className="text-section numeric tracking-tight">
               {session.pausedReplacement.title}
             </h2>
-            <p className="text-copy leading-relaxed text-fg-dim">
+            <p className="text-copy text-fg-dim">
               {session.pausedReplacement.body}
             </p>
           </section>
@@ -664,7 +664,7 @@ function ExerciseSection({
                     <li
                       key={i}
                       data-active={isActive}
-                      className={`flex gap-2 text-copy leading-snug pl-2 -ml-2 border-l-2 transition-colors duration-200 ${
+                      className={`flex gap-2 text-copy pl-2 -ml-2 border-l-2 transition-colors duration-200 ${
                         isActive ? "border-l-body text-fg" : "border-l-transparent"
                       }`}
                     >
@@ -686,7 +686,7 @@ function ExerciseSection({
               <PrimaryMuscleTags muscles={lib.primaryMuscles} />
               <Link
                 href={`/train/exercises/${lib.slug}`}
-                className="ml-auto inline-flex min-h-11 items-center text-micro text-fg-dim hover:text-fg transition-colors"
+                className="ml-auto inline-flex min-h-11 items-center text-meta text-fg-dim hover:text-fg transition-colors"
               >
                 {t("seeFull")}
               </Link>
@@ -695,7 +695,7 @@ function ExerciseSection({
         </div>
       ) : ex.cue ? (
         // Legacy fallback — single cue line for free-text exercises
-        <p className="text-meta text-fg-dim leading-relaxed border-t hairline pt-4">
+        <p className="text-meta text-fg-dim border-t hairline pt-4">
           {ex.cue}
         </p>
       ) : null}
@@ -711,12 +711,12 @@ function ExerciseSection({
         <Camera {...ICON} className="size-5 mt-0.5 shrink-0" />
         <span className="flex-1 min-w-0">
           <span className="flex items-baseline justify-between gap-2">
-            <span className="text-copy leading-snug">{t("formCheck", { set: setIdx + 1 })}</span>
+            <span className="text-copy">{t("formCheck", { set: setIdx + 1 })}</span>
             <span className="text-micro shrink-0">
               {t("duration")}
             </span>
           </span>
-          <span className="block text-micro text-fg-dim mt-0.5 leading-snug break-words">
+          <span className="block text-meta text-fg-dim mt-0.5 break-words">
             {t("formCheckSub", { lift: ex.name })}
             {overflowCues > 0 ? t("moreCues", { count: overflowCues }) : null}
           </span>

@@ -161,7 +161,7 @@ export default function MealCard({
                 {meal.title}
               </h3>
               {meal.description ? (
-                <p className="text-fg-dim text-meta leading-relaxed">{meal.description}</p>
+                <p className="text-fg-dim text-meta">{meal.description}</p>
               ) : null}
             </div>
             <div className="text-right shrink-0">

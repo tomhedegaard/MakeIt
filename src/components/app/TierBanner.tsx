@@ -39,7 +39,7 @@ export default function TierBanner({
         <div className="text-micro text-fg-faint mb-0.5">
           {t("eyebrow")}
         </div>
-        <div className="font-display text-card leading-snug">
+        <div className="font-display text-card">
           {t("title", { fromTier, toTier })}
         </div>
         <div className="text-micro text-fg-dim mt-0.5">

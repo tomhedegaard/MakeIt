@@ -69,7 +69,7 @@ export default async function LoginPage({
           </h1>
 
           {isMemberNext(next) ? (
-            <p className="mb-8 text-meta text-fg-dim leading-relaxed">{t("memberOnlyHint")}</p>
+            <p className="mb-8 text-meta text-fg-dim">{t("memberOnlyHint")}</p>
           ) : null}
 
           {sent ? (

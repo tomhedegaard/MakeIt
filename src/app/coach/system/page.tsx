@@ -95,7 +95,7 @@ export default async function CoachSystemPage() {
                     <SeverityBadge severity="warn" />
                     <span className="eyebrow text-fg-faint">cron</span>
                   </div>
-                  <div className="font-display text-card leading-tight">
+                  <div className="font-display text-card">
                     {t("cronsQuietLabel")}
                   </div>
                   <p className="mt-2 text-meta text-fg-dim">
@@ -113,7 +113,7 @@ export default async function CoachSystemPage() {
                     <SeverityBadge severity={r.severity} />
                     <span className="eyebrow text-fg-faint">{r.service}</span>
                   </div>
-                  <div className="font-display text-card leading-tight">
+                  <div className="font-display text-card">
                     {r.label}
                   </div>
                   <p className="mt-2 text-meta text-fg-dim">
@@ -191,7 +191,7 @@ export default async function CoachSystemPage() {
               />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2 mb-1">
-                  <span className="font-display text-card leading-tight">
+                  <span className="font-display text-card">
                     {s.name}
                   </span>
                   <span
@@ -210,7 +210,7 @@ export default async function CoachSystemPage() {
                     href={s.dashboardUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 inline-block text-micro text-fg-dim hover:text-fg underline underline-offset-2"
+                    className="mt-2 inline-block text-meta text-fg-dim hover:text-fg underline underline-offset-2"
                   >
                     {t("openDashboard")}
                   </a>
@@ -366,7 +366,7 @@ function CronHealthCard({
   return (
     <li className="surface-2 rounded-2xl p-5">
       <div className="flex items-center justify-between gap-2 mb-2">
-        <span className="font-display text-card leading-tight">
+        <span className="font-display text-card">
           {t(CRON_NAME_KEY[row.cron])}
         </span>
         <SeverityBadge severity={CRON_STATUS_SEVERITY[row.status]} />

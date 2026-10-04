@@ -131,7 +131,7 @@ export default async function CoachQueuePage() {
               </div>
 
               {f.aiHeadline ? (
-                <p className="text-fg/90 text-copy leading-relaxed mb-3">
+                <p className="text-fg/90 text-copy mb-3">
                   {f.aiHeadline}
                 </p>
               ) : null}

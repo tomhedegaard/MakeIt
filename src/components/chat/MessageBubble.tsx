@@ -82,7 +82,7 @@ export default function MessageBubble({
 
         {(message.kind === "text" && message.body) ||
         (message.kind !== "text" && message.body) ? (
-          <p className="px-4 py-3 text-copy leading-relaxed whitespace-pre-wrap break-words">
+          <p className="px-4 py-3 text-copy whitespace-pre-wrap break-words">
             {message.body}
           </p>
         ) : null}

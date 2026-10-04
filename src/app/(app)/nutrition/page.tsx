@@ -509,7 +509,7 @@ function PlanView({
                       : t("page.supplementConsider")}
                   </span>
                 </div>
-                <div className="text-micro text-fg-dim leading-relaxed">{s.why}</div>
+                <div className="text-micro text-fg-dim">{s.why}</div>
               </li>
             ))}
           </ul>

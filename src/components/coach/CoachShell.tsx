@@ -100,7 +100,7 @@ export default function CoachShell({
             </div>
             <Link
               href="/dashboard"
-              className="inline-flex min-h-11 items-center text-micro text-fg-dim"
+              className="inline-flex min-h-11 items-center text-meta text-fg-dim"
             >
               {t("memberApp")}
             </Link>
@@ -118,7 +118,7 @@ export default function CoachShell({
                       href={item.href}
                       aria-current={active ? "page" : undefined}
                       className={cn(
-                        "flex min-h-11 items-center px-3 text-micro",
+                        "flex min-h-11 items-center px-3 text-meta",
                         active ? "bg-bg-3 text-fg" : "text-fg-dim"
                       )}
                     >

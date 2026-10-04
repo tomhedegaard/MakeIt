@@ -58,7 +58,7 @@ export default function MentalToggleRow({
     <div className="flex items-start justify-between gap-6 py-5 border-b hairline">
       <div className="flex-1 space-y-1">
         <div className="font-display text-card">{title}</div>
-        <p className="text-fg-dim text-meta leading-relaxed">{description}</p>
+        <p className="text-fg-dim text-meta">{description}</p>
         {disabled && disabledReason ? (
           <p className="text-fg-dim text-meta italic mt-1">{disabledReason}</p>
         ) : null}

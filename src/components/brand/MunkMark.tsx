@@ -18,7 +18,7 @@ export default function MunkMark({
       className={cn("inline-flex items-center gap-2 min-w-0", className)}
     >
       <span
-        className="size-6 rounded-full border hairline-strong flex items-center justify-center font-display text-micro leading-none shrink-0"
+        className="size-6 rounded-full border hairline-strong flex items-center justify-center font-display text-micro shrink-0"
         aria-hidden
       >
         {initial}

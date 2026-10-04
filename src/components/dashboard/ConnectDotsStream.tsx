@@ -150,7 +150,7 @@ export default function ConnectDotsStream({
                   ))}
                 </div>
 
-                <p className="text-copy text-fg-dim leading-relaxed">
+                <p className="text-copy text-fg-dim">
                   {cardCopy.sentence}
                 </p>
 
@@ -162,7 +162,7 @@ export default function ConnectDotsStream({
                   <Link
                     href={card.moreHref}
                     data-more-about={card.moreAbout}
-                    className="inline-flex min-h-11 items-center text-micro text-fg-dim hover:text-fg border hairline px-4"
+                    className="inline-flex min-h-11 items-center text-meta text-fg-dim hover:text-fg border hairline px-4"
                   >
                     {copy.moreAbout} {copy.domains[card.moreAbout]}
                   </Link>
@@ -173,14 +173,14 @@ export default function ConnectDotsStream({
                 <button
                   type="button"
                   onClick={() => hide(card.id)}
-                  className="inline-flex min-h-11 items-center text-micro text-fg-faint hover:text-fg"
+                  className="inline-flex min-h-11 items-center text-meta text-fg-faint hover:text-fg"
                 >
                   {copy.dismiss}
                 </button>
                 <button
                   type="button"
                   onClick={() => snooze(card.id)}
-                  className="inline-flex min-h-11 items-center text-micro text-fg-faint hover:text-fg"
+                  className="inline-flex min-h-11 items-center text-meta text-fg-faint hover:text-fg"
                 >
                   {copy.snooze}
                 </button>

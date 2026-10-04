@@ -34,7 +34,7 @@ export default async function HrvLearnPage() {
               <h2 className="font-display text-section mb-3">
                 {t(`sections.${key}.heading`)}
               </h2>
-              <p className="text-fg-dim text-copy leading-relaxed">
+              <p className="text-fg-dim text-copy">
                 {t(`sections.${key}.body`)}
               </p>
             </section>
