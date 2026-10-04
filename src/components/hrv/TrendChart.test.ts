@@ -34,7 +34,8 @@ describe("TrendChart", () => {
     expect(html).toContain('data-trend-chart="ready"');
     expect(html).toContain("vector-effect");
     expect(html).toContain("var(--domain, currentColor)");
-    expect(html).toContain('r="1.45"');
+    // 2.2 viewBox units: visible at 375 px, still fine at 1440 (UI-REVIEW-7).
+    expect(html).toContain('r="2.2"');
     expect(html).not.toContain('r="2.5"');
     expect(html).not.toContain('r="3"');
     expect(html).toContain("stroke-dasharray");

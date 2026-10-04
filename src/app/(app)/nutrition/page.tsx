@@ -462,17 +462,17 @@ function PlanView({
               className="group"
               open={i === todayIndex + 1}
             >
-              <summary className="cursor-pointer flex items-center gap-4 px-5 py-4 list-none">
-                <div className="eyebrow w-12 shrink-0">{t(`dayLabels.${DAY_KEYS[i]}`)}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-copy truncate">
-                    {meals.map((m) => m.title).join(" · ")}
+              <summary className="cursor-pointer block px-5 py-4 list-none">
+                <div className="flex items-center gap-4">
+                  <div className="eyebrow flex-1">{t(`dayLabels.${DAY_KEYS[i]}`)}</div>
+                  <div className="numeric text-micro text-fg-dim shrink-0">
+                    {fmt(dayKcal)} kcal
                   </div>
+                  <span aria-hidden className="text-fg-faint group-open:rotate-90 transition-transform">→</span>
                 </div>
-                <div className="numeric text-micro text-fg-dim shrink-0">
-                  {fmt(dayKcal)} kcal
+                <div className="mt-1 text-copy text-pretty">
+                  {meals.map((m) => m.title).join(" · ")}
                 </div>
-                <span aria-hidden className="text-fg-faint group-open:rotate-90 transition-transform">→</span>
               </summary>
               <ul className="border-t hairline divide-y hairline">
                 {meals.map((m) => (

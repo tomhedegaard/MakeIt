@@ -77,7 +77,7 @@ export default function MealCard({
           />
         ) : null}
         <div className="flex-1 min-w-0">
-          <div className="text-copy truncate">{meal.title}</div>
+          <div className="text-copy text-pretty">{meal.title}</div>
           <div className="text-micro text-fg-faint">
             {fmt(meal.estKcal)} kcal · {t("macroProtein", { value: fmt(meal.estProteinG) })} · {fmt(meal.prepMinutes)} min
           </div>

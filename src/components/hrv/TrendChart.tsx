@@ -134,15 +134,6 @@ export default function TrendChart({
           />
         ) : null}
 
-        {/* Soft volume under the 7-day mean. */}
-        {model.meanAreaPath ? (
-          <path
-            d={model.meanAreaPath}
-            fill="var(--domain, currentColor)"
-            fillOpacity={CHART_CRAFT.areaFillOpacity}
-            stroke="none"
-          />
-        ) : null}
 
         {/* Dashed personal average — the centre of the band. */}
         {model.personalAvg ? (
@@ -177,7 +168,9 @@ export default function TrendChart({
             key={i}
             cx={p.x}
             cy={p.y}
-            r={CHART_CRAFT.pointR}
+            // The viewBox is 640 wide and scales down: 2.2 units is a ~2 px
+            // dot at phone width (1.45 was ~0.7 px) and ~4 px on desktop.
+            r={2.2}
             fill={p.isSick ? "none" : "var(--domain, currentColor)"}
             stroke="var(--domain, currentColor)"
             strokeWidth={p.isSick ? 1 : 0}

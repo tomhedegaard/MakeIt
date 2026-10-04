@@ -23,6 +23,7 @@ import {
   type ProgramListing,
   type WeekDay,
 } from "@/lib/data/coaching";
+import { hasDemoProgramDetail } from "@/lib/data/coach-programs";
 import StartProgramButton from "./StartProgramButton";
 import AdaptiveReasonStrip from "@/components/adaptive/AdaptiveReasonStrip";
 import {
@@ -353,12 +354,14 @@ export default async function TrainPage() {
                       hasDays={p.dayCount > 0}
                     />
                   )}
-                  <Link
-                    href={`/program/${p.code}`}
-                    className="btn btn-sm"
-                  >
-                    {t("library.details")}
-                  </Link>
+                  {connected || hasDemoProgramDetail(p.code) ? (
+                    <Link
+                      href={`/program/${p.code}`}
+                      className="btn btn-sm"
+                    >
+                      {t("library.details")}
+                    </Link>
+                  ) : null}
                 </div>
               </article>
             </li>

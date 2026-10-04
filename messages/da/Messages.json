@@ -23,7 +23,7 @@
   },
   "bubble": {
     "photoAlt": "Foto",
-    "mediaError": "Kunne ikke hente medie · prøv at refreshe",
+    "mediaError": "Kunne ikke hente medie · prøv at opdatere siden",
     "seen": "Set",
     "sent": "Sendt"
   },

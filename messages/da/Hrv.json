@@ -71,7 +71,7 @@
         "body": "Der findes mange HRV-tal; vi viser RMSSD, fordi det er det mest robuste for korte, daglige målinger. Vi viser dig din faktiske værdi i millisekunder, ikke et opfundet “score”."
       },
       "noScore": {
-        "heading": "Hvorfor du ikke får et 0-100 score",
+        "heading": "Hvorfor du ikke får et 0–100 score",
         "body": "Et tal fra 0 til 100 lover en præcision, der ikke findes. Vi viser dit rigtige tal og dit eget baseline-bånd, så du ser, hvor du ligger i forhold til din egen normal."
       },
       "noCompare": {

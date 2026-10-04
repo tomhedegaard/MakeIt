@@ -456,7 +456,7 @@ export default async function TodayPage() {
                   className="px-4 py-3 flex items-center gap-4 lift"
                 >
                   <span className="eyebrow w-16 shrink-0">{fmtUpcomingDate(row.scheduledFor, t, locale)}</span>
-                  <span className="flex-1 text-copy text-fg/90 truncate">{row.title}</span>
+                  <span className="flex-1 min-w-0 text-copy text-fg/90 text-pretty">{row.title}</span>
                   <span className="numeric text-fg-faint text-micro shrink-0">{t("todaySession.minutes", { count: row.estimatedMinutes })}</span>
                 </Link>
               </li>
@@ -467,7 +467,7 @@ export default async function TodayPage() {
             {mockUpcoming(t).map((row) => (
               <li key={row.d} className="px-4 py-3 flex items-center gap-4">
                 <span className="eyebrow w-16 shrink-0">{row.d}</span>
-                <span className="flex-1 text-copy text-fg/90 truncate">{row.t}</span>
+                <span className="flex-1 min-w-0 text-copy text-fg/90 text-pretty">{row.t}</span>
                 <span className="numeric text-fg-faint text-micro shrink-0">{row.m}</span>
               </li>
             ))}
@@ -612,6 +612,11 @@ function formatReps(n: number, locale = "da"): string {
   return new Intl.NumberFormat(intlLocaleTag(locale)).format(n);
 }
 
+/** "Deadlift" → "Dead\u00ADlift": a break point before common lift suffixes. */
+function softHyphenateLift(label: string): string {
+  return label.replace(/(?<=\p{L}{3})(lift|press|head|squat|row|pull|push)/giu, "\u00AD$1");
+}
+
 /**
  * Mon–Sun under the header (spec §6.1): "Man 21 Squat". Today carries the
  * 2 px mos stroke, the same marker the tab bar uses for the active tab.
@@ -642,12 +647,18 @@ function WeekStrip({
                   <Check {...ICON} aria-label={copy.done} className="size-3.5 text-fg-dim" />
                 ) : null}
               </span>
-              <span className={`block truncate text-micro ${day.rest ? "text-fg-dim" : "text-fg"}`}>
-                {day.sessionLabel || copy.rest}
+              {/* Lift names wrap to two lines at 375 instead of clipping:
+                  a soft hyphen splits compounds ("Dead-lift") even where the
+                  browser has no hyphenation dictionary. */}
+              <span
+                lang={day.rest ? undefined : "en"}
+                className={`block hyphens-auto [overflow-wrap:anywhere] text-micro ${day.rest ? "text-fg-dim" : "text-fg"}`}
+              >
+                {day.sessionLabel ? softHyphenateLift(day.sessionLabel) : copy.rest}
               </span>
             </>
           );
-          const cell = `block h-full px-1.5 pt-2 pb-2.5 sm:px-3 border-t-2 ${
+          const cell = `block h-full px-1 pt-2 pb-2.5 sm:px-3 border-t-2 ${
             day.today ? "border-t-signal" : "border-t-transparent"
           }`;
           return (

@@ -71,7 +71,7 @@
         "body": "There are many HRV numbers; we show RMSSD because it is the most robust for short, daily readings. We show you your actual value in milliseconds, not an invented “score”."
       },
       "noScore": {
-        "heading": "Why you don't get a 0-100 score",
+        "heading": "Why you don't get a 0–100 score",
         "body": "A number from 0 to 100 promises a precision that does not exist. We show your real number and your own baseline band, so you see where you sit relative to your own normal."
       },
       "noCompare": {

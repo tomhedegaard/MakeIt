@@ -22,7 +22,7 @@
       },
       "responseTime": {
         "q": "Hvor hurtigt får jeg svar på en form-check?",
-        "a": "AI svarer typisk inden for 6-15 sekunder. Mikaels personlige verifikation lander inden for 24 timer på hverdage, og du får både in-app notifikation og email når den er klar."
+        "a": "AI svarer typisk inden for 6–15 sekunder. Mikaels personlige verifikation lander inden for 24 timer på hverdage, og du får både in-app notifikation og email når den er klar."
       },
       "pause": {
         "q": "Kan jeg pause på grund af rejse, sygdom eller skade?",
@@ -66,7 +66,7 @@
       },
       "coCoach": {
         "q": "Hvad er en co-coach?",
-        "a": "En co-coach er et Beast-tier medlem (5.000+ Reps) som Munk har valgt til at hjælpe med form-check-svar og HRV-eskaleringer. Du starter i Coach School: kuraterede lektioner, sandbox-cases du øver på, og — hvis du rammer 80% agreement med Munk over 50 cases — bliver du promoveret til live med 2-3 tildelte medlemmer. Munk co-signerer alt. Du er hans håndlangere, ikke en uafhængig operatør."
+        "a": "En co-coach er et Beast-tier medlem (5.000+ Reps) som Munk har valgt til at hjælpe med form-check-svar og HRV-eskaleringer. Du starter i Coach School: kuraterede lektioner, sandbox-cases du øver på, og — hvis du rammer 80% agreement med Munk over 50 cases — bliver du promoveret til live med 2–3 tildelte medlemmer. Munk co-signerer alt. Du er hans håndlangere, ikke en uafhængig operatør."
       },
       "hrvSharing": {
         "q": "Sender I min HRV til Munk?",

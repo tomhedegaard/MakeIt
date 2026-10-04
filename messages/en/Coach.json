@@ -173,7 +173,7 @@
     "mealsLogged": "{logged}/{planned} meals logged",
     "weightTrendLabel": "Weight trend",
     "weightUnit": "kg / 7 days",
-    "skipDaysLabel": "Skip days",
+    "skipDaysLabel": "Days off the plan",
     "skipDaysSub": "pre-declared off-plan",
     "coachActionLabel": "Coach action",
     "statusLabel": "Status",
@@ -374,5 +374,25 @@
       "engine_reject_streak": "HQ reject",
       "form_check_decline": "Form decline"
     }
+  },
+  "hrvAlert": {
+    "baselineActive": "Baseline active",
+    "baselineBuilding": "Baseline building",
+    "daysLow": "{count} days low",
+    "lifestyle": "Lifestyle",
+    "sick": "sick",
+    "stressed": "stress",
+    "shortSleep": "sleep",
+    "highAlcohol": "alcohol",
+    "markSeen": "Mark as seen",
+    "suggestPause": "Suggest pause",
+    "sendMessage": "Send message",
+    "sheetTitle": "Send a personal message",
+    "messageTo": "Message to @{handle}",
+    "placeholder": "Write a personal message to @{handle}…",
+    "cancel": "Cancel",
+    "sending": "Sending…",
+    "send": "Send",
+    "sheetFoot": "Marks the alert as seen and sends the message to the member."
   }
 }

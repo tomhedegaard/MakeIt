@@ -169,7 +169,7 @@ function strengthDayB(p: ProfileInput): GeneratedSession {
     exercises: [
       {
         name: "Paused Bench",
-        cue: "Pause 1-2 sek med baren rørende brystet før eksplosiv pres.",
+        cue: "Pause 1–2 sek med baren rørende brystet før eksplosiv pres.",
         sets: [
           set(5, rm * 0.55, restFor("main_strength")),
           set(5, rm * 0.65, restFor("main_strength")),

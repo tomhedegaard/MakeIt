@@ -160,7 +160,7 @@ const MOCK_HRV_ALERTS: HrvAlertRow[] = [
     memberHandle: "nina_dl",
     triggeredAt: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
     conditionsMet: {
-      warm_up_active: false,
+      warm_up_active: true,
       sustained_low_readiness: { consecutive_days_low: 3 },
       rhr_spike: null,
       lifestyle_flags: {
