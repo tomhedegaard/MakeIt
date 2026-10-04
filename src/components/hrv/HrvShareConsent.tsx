@@ -12,9 +12,12 @@ import { setHrvShareToCoach } from "@/app/(app)/hrv/connect-actions";
 export default function HrvShareConsent({
   initialShare,
   decided,
+  inline = false,
 }: {
   initialShare: boolean;
   decided: boolean;
+  /** Inside another section (Indstillinger): no own card, h3 question. */
+  inline?: boolean;
 }) {
   const t = useTranslations("Hrv.share");
   const [share, setShare] = useState(initialShare);
@@ -23,6 +26,9 @@ export default function HrvShareConsent({
   const [pending, startTransition] = useTransition();
 
   function save(next: boolean) {
+    // Guard instead of `disabled`: a disabled button drops keyboard focus
+    // to <body> mid-save.
+    if (pending) return;
     const before = { share, answered };
     setShare(next);
     setAnswered(true);
@@ -39,15 +45,19 @@ export default function HrvShareConsent({
 
   if (!answered) {
     return (
-      <section aria-labelledby="hrv-share-q" className="surface-2 p-5 border-line-strong">
-        <h2 id="hrv-share-q" className="font-display text-section">{t("question")}</h2>
+      <section aria-labelledby="hrv-share-q" className={inline ? "" : "surface-2 p-5 border-line-strong"}>
+        {inline ? (
+          <h3 id="hrv-share-q" className="font-display text-card">{t("question")}</h3>
+        ) : (
+          <h2 id="hrv-share-q" className="font-display text-section">{t("question")}</h2>
+        )}
         <p className="mt-2 text-copy text-fg-body">{t("body")}</p>
         <p className="mt-2 text-meta text-fg-dim">{t("revoke")}</p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <button type="button" className="btn btn-primary" disabled={pending} onClick={() => save(true)}>
+          <button type="button" className="btn btn-primary" aria-disabled={pending} onClick={() => save(true)}>
             {t("yes")}
           </button>
-          <button type="button" className="btn" disabled={pending} onClick={() => save(false)}>
+          <button type="button" className="btn" aria-disabled={pending} onClick={() => save(false)}>
             {t("notNow")}
           </button>
         </div>
@@ -57,7 +67,7 @@ export default function HrvShareConsent({
   }
 
   return (
-    <section aria-label={t("label")} className="surface-2 p-5">
+    <section aria-label={t("label")} className={inline ? "" : "surface-2 p-5"}>
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="text-copy text-fg">{t("label")}</p>
@@ -68,7 +78,7 @@ export default function HrvShareConsent({
           role="switch"
           aria-checked={share}
           aria-label={t("label")}
-          disabled={pending}
+          aria-disabled={pending}
           onClick={() => save(!share)}
           className={`relative h-7 w-12 shrink-0 border transition-colors duration-200 ease-out ${
             share ? "bg-fg border-fg" : "bg-bg border-line-strong"

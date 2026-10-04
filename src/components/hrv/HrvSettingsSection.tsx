@@ -102,7 +102,7 @@ export default function HrvSettingsSection({
       <SectionHeader eyebrow={t("eyebrow")} title={t("title")} />
 
       {/* Consent to share HRV with coaches (0068): same control as on /hrv. */}
-      <HrvShareConsent initialShare={hrv.shareToCoach} decided={hrv.shareDecidedAt != null} />
+      <HrvShareConsent inline initialShare={hrv.shareToCoach} decided={hrv.shareDecidedAt != null} />
 
       {/* Wearable connections */}
       <div className="space-y-3">

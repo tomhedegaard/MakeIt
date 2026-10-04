@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getProvider } from "@/lib/hrv/wearables/registry";
+import { DEMO_HRV_SHARE_COOKIE } from "@/lib/data/settings";
 
 /**
  * HRV wearable connect/disconnect server actions.
@@ -220,7 +221,13 @@ export async function setCycleTracking(
 export async function setHrvShareToCoach(
   share: boolean,
 ): Promise<ActionResult> {
-  if (!SUPABASE_ENABLED) return { ok: true };
+  if (!SUPABASE_ENABLED) {
+    // Demo has no database: remember the answer in a cookie so a reload
+    // shows the switch, not the question again.
+    (await cookies()).set(DEMO_HRV_SHARE_COOKIE, share ? "1" : "0", { path: "/", sameSite: "lax" });
+    revalidatePath("/hrv");
+    return { ok: true };
+  }
 
   const memberId = await getCurrentMemberId();
   if (!memberId) return { ok: false, error: "no_session" };

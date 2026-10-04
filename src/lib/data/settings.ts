@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
 export type MemberSettings = {
@@ -82,18 +83,23 @@ export type HrvSettings = {
  * Demo mode (`!SUPABASE_ENABLED`, i.e. no Supabase client) has no
  * connection/settings tables — returns an empty, tracking-off state.
  */
+/** Demo-only memory of the "Del med coach" answer (no database). */
+export const DEMO_HRV_SHARE_COOKIE = "mi_demo_hrv_share";
+
 export async function getMemberHrvSettings(
   memberId: string
 ): Promise<HrvSettings> {
   const supabase = await createClient();
-  if (!supabase)
+  if (!supabase) {
+    const demo = (await cookies()).get(DEMO_HRV_SHARE_COOKIE)?.value;
     return {
       connections: [],
       cycleTrackingEnabled: false,
       sessionSuggestionEnabled: true,
-      shareToCoach: false,
-      shareDecidedAt: null,
+      shareToCoach: demo === "1",
+      shareDecidedAt: demo ? "demo" : null,
     };
+  }
 
   const [{ data: connRows }, { data: settingsRow }] = await Promise.all([
     supabase
