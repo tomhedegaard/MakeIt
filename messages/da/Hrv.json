@@ -306,5 +306,20 @@
     "allDone": "alle milestones gennemført",
     "nextToday": "næste milestone i dag (+{reps} Reps)",
     "nextIn": "næste milestone om {count, plural, one {# dag} other {# dage}} (+{reps} Reps)"
+  },
+  "today": {
+    "nightsTitle": "14 nætter",
+    "recentTitle": "Seneste morgener",
+    "today": "I dag",
+    "belowBand": "under dit bånd",
+    "noteKicker": "HQ's note",
+    "noteTitle": "Sådan læste HQ natten",
+    "belowStreak": "{count, plural, one {Første dag under båndet.} other {# dage i træk under båndet.}}",
+    "noteHuman": "Pause og deload beslutter Munk, ikke HQ.",
+    "weekKicker": "Ugeindsigt · {day}",
+    "weekTitle": "Ugeindsigt",
+    "sourceSynced": "{provider} · synket {time}",
+    "sourceDemo": "Eksempeldata",
+    "demoWeekly": "Søvn under 7 t tre nætter i træk hang sammen med de laveste målinger."
   }
 }

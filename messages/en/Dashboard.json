@@ -3,14 +3,17 @@
     "title": "Today"
   },
   "greeting": {
-    "eyebrow": "Good morning",
+    "eyebrow": "Train · coach Mikael Munk · HQ adaptive engine",
     "streakLabel": "Streak",
-    "streakUnit": "days"
+    "streakUnit": "days",
+    "title": "Your week.",
+    "subtitle": "HQ plans the weights. Munk signs off when it takes a human."
   },
   "formChecks": {
     "answeredBefore": "Mikael Munk has answered",
     "answeredCount": "{count, plural, one {# form check} other {# form checks}}",
-    "readNotes": "Read the notes on your profile"
+    "bandKicker": "A human signs off",
+    "seeAnswer": "See the answer →"
   },
   "todaySession": {
     "ariaLabel": "Today's session",
