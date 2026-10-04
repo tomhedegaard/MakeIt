@@ -33,15 +33,17 @@
     "meetEyebrow": "Næste IRL-møde",
     "meetTitle": "Open House · Amagerbro",
     "meetDescription": "Lørdag 24/05 · København · Træning, kaffe, og en sneak peek af nye produkter.",
-    "meetRsvp": "RSVP",
-    "meetReadMore": "Læs mere",
     "meetEmptyEyebrow": "IRL-møde",
     "meetEmptyTitle": "Ingen planlagt IRL-møde.",
-    "meetEmptyBody": "Når crewet mødes IRL, vises det her. Vi finder ikke på møder."
+    "meetEmptyBody": "Når crewet mødes IRL, vises det her. Vi finder ikke på møder.",
+    "topThree": "Top 3"
   },
   "post": {
     "prBadge": "PR",
-    "reps": "Reps",
+    "hep": "Hep",
+    "cheerers": "{count, plural, one {# hepper} other {# heppere}}",
+    "shareCopied": "Link kopieret",
+    "commentLabel": "Skriv en kommentar",
     "commentsOne": "Kommentar",
     "commentsOther": "Kommentarer",
     "share": "Del",
@@ -67,7 +69,8 @@
     "addVideoSub": "Optag eller upload. AI form-check inkluderet",
     "cancel": "Annullér",
     "sending": "Sender…",
-    "submit": "Del →"
+    "submit": "Del →",
+    "textLabel": "Dit opslag"
   },
   "realtime": {
     "newPostsOne": "{count} nyt opslag · opdatér",

@@ -86,8 +86,15 @@
     "chipFormCheckFallback": "Form-check",
     "chipStale": "{days} days",
     "chipStaleNever": "Never trained",
-    "openItem": "Open case for @{handle}",
-    "backToOverview": "← Overview"
+    "backToOverview": "← Overview",
+    "listLabel": "Cases",
+    "panelLabel": "Selected case",
+    "selectCase": "Pick a case",
+    "openFull": "Open the full case →",
+    "sendAs": "Send as {name}",
+    "panelSafety": "Safety cases are handled on the Safety page, where the full history and contact routes live.",
+    "panelStale": "No sessions for a while. The member page shows the history so you can write personally.",
+    "panelElsewhere": "The details live on the case’s own page."
   },
   "analytics": {
     "metaTitle": "Coach · Analytics",

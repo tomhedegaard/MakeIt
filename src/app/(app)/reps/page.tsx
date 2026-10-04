@@ -2,6 +2,9 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { intlLocaleTag } from "@/i18n/config";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
+import Progress from "@/components/ui/Progress";
+import { ICON } from "@/components/ui/icon";
+import { Plus } from "lucide-react";
 import { getSession } from "@/lib/auth";
 import {
   getRecentRepsTransactions,
@@ -149,12 +152,15 @@ export default async function RepsPage() {
             </div>
             {progress.next ? (
               <>
-                <div className="mt-3 h-1 bg-bg-3 overflow-hidden">
-                  <div
-                    className="h-full bg-signal"
-                    style={{ width: `${progress.pct}%` }}
-                  />
-                </div>
+                <Progress
+                  className="mt-3"
+                  value={progress.pct}
+                  label={t("balance.progressLabel", { tier: progress.next })}
+                  valueText={t("balance.toNext", {
+                    amount: progress.toNext?.toLocaleString(tag) ?? "",
+                    tier: progress.next,
+                  })}
+                />
                 <div className="text-meta text-fg-dim mt-2">
                   {t("balance.toNext", {
                     amount: progress.toNext?.toLocaleString(tag) ?? "",
@@ -171,50 +177,62 @@ export default async function RepsPage() {
         }
       />
 
-      <Container className="py-12 space-y-14">
-        <section>
-          <div className="eyebrow mb-6">{t("tiers.eyebrow")}</div>
-          <div className="grid gap-px bg-line border hairline md:grid-cols-4">
+      <Container className="py-8 md:py-12 space-y-10 md:space-y-14">
+        {/* Nord §6.7: the four tiers as one horizontal scale. Perks sit
+            in a disclosure so the scale stays a glance, not a wall. */}
+        <section aria-labelledby="reps-tiers">
+          <h2 id="reps-tiers" className="eyebrow mb-4">{t("tiers.eyebrow")}</h2>
+          <ol className="grid grid-cols-4 border-t hairline">
             {tiers.map((tier) => {
               const active = tier.name === progress.current;
               return (
-                <div
+                <li
                   key={tier.name}
-                  className="p-6 transition-colors"
-                  style={{
-                    background: active ? "var(--bg-3)" : "var(--bg)",
-                    borderColor: active ? "var(--line-bright)" : undefined,
-                  }}
+                  aria-current={active ? "step" : undefined}
+                  className="relative min-w-0 pt-3 pr-2"
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="font-display text-2xl">{tier.name}</div>
-                    {active ? (
-                      <span className="numeric text-micro border hairline-strong px-2 py-0.5 inline-flex items-center gap-1.5">
-                        <span className="size-1.5 rounded-full bg-fg" />
-                        {t("tiers.you")}
-                      </span>
-                    ) : null}
+                  {active ? (
+                    <span aria-hidden="true" className="absolute -top-px left-0 right-2 h-0.5 bg-signal" />
+                  ) : null}
+                  <div className={active ? "text-sm md:text-base text-fg" : "text-sm md:text-base text-fg-dim"}>
+                    {tier.name}
                   </div>
-                  <div className="numeric text-xs text-fg-dim mb-4">
-                    {t("tiers.range", { range: tier.range })}
+                  <div className="numeric text-micro md:text-xs text-fg-faint mt-0.5">
+                    {tier.range}
                   </div>
-                  <ul className="space-y-2 text-sm text-fg/85">
-                    {tier.perks.map((p) => (
-                      <li key={p} className="flex gap-2">
-                        <span className="text-fg-faint">·</span>
-                        <span>{p}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                  {active ? (
+                    <div className="text-micro text-fg-dim mt-1">{t("tiers.you")}</div>
+                  ) : null}
+                </li>
               );
             })}
-          </div>
+          </ol>
+          <p className="mt-4 text-sm text-fg-dim">{t("tiers.coachSchool")}</p>
+          <details className="mt-4 border-t border-b hairline group">
+            <summary className="flex min-h-11 cursor-pointer items-center justify-between text-sm list-none [&::-webkit-details-marker]:hidden">
+              {t("tiers.perksToggle")}
+              <Plus {...ICON} className="size-4 text-fg-dim transition-transform duration-200 ease-out group-open:rotate-45 motion-reduce:transition-none" />
+            </summary>
+            <dl className="grid gap-x-8 gap-y-5 pb-5 pt-1 sm:grid-cols-2 lg:grid-cols-4">
+              {tiers.map((tier) => (
+                <div key={tier.name}>
+                  <dt className="text-sm text-fg">{tier.name}</dt>
+                  <dd>
+                    <ul className="mt-1 space-y-1 text-sm text-fg-body">
+                      {tier.perks.map((p) => (
+                        <li key={p}>{p}</li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </details>
         </section>
 
         <section>
           <div className="flex items-end justify-between mb-6">
-            <div className="eyebrow">{t("transactions.eyebrow")}</div>
+            <h2 className="eyebrow">{t("transactions.eyebrow")}</h2>
             <span className="text-xs text-fg-dim">
               {t("transactions.count", { count: transactions.length })}
             </span>
@@ -267,22 +285,24 @@ export default async function RepsPage() {
           )}
         </section>
 
-        <section>
-          <div className="eyebrow mb-6">{t("how.eyebrow")}</div>
-          <div className="grid gap-px bg-line border hairline md:grid-cols-3">
+        <section aria-labelledby="reps-how">
+          <h2 id="reps-how" className="eyebrow mb-4">{t("how.eyebrow")}</h2>
+          <ul className="border-t hairline md:grid md:grid-cols-2 md:gap-x-10">
             {how.map((row) => (
-              <div key={row.k} className="bg-bg p-6">
-                <div className="numeric text-3xl text-fg mb-2">{row.v}</div>
-                <div className="text-fg/90 text-sm">{row.k}</div>
-                <div className="text-xs text-fg-faint mt-1">{row.sub}</div>
-              </div>
+              <li key={row.k} className="flex items-baseline gap-4 py-3 border-b hairline">
+                <span className="tabular w-16 shrink-0 text-right text-lg text-fg">{row.v}</span>
+                <span className="min-w-0">
+                  <span className="block text-sm text-fg-body">{row.k}</span>
+                  <span className="block text-xs text-fg-faint mt-0.5">{row.sub}</span>
+                </span>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
 
         <section>
           <div className="flex items-end justify-between mb-6">
-            <div className="eyebrow">{t("shop.eyebrow")}</div>
+            <h2 className="eyebrow">{t("shop.eyebrow")}</h2>
             <span className="numeric text-xs text-fg-dim">
               {t("shop.balance", { balance: balance.toLocaleString(tag) })}
             </span>
@@ -292,9 +312,9 @@ export default async function RepsPage() {
               {t("shop.empty")}
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {rewards.map((r) => (
-                <article key={r.id} className="surface-2 rounded-lg p-6 lift flex flex-col">
+                <article key={r.id} className="surface-2 rounded-lg p-5 md:p-6 lift flex flex-col">
                   <div className="numeric text-3xl mb-1">
                     {r.costReps.toLocaleString(tag)}
                   </div>
@@ -323,7 +343,7 @@ export default async function RepsPage() {
         {redemptions.length > 0 ? (
           <section>
             <div className="flex items-end justify-between mb-3">
-              <div className="eyebrow">{t("redemptions.eyebrow")}</div>
+              <h2 className="eyebrow">{t("redemptions.eyebrow")}</h2>
               <span className="text-micro text-fg-faint">
                 {t("redemptions.total", { count: redemptions.length })}
               </span>

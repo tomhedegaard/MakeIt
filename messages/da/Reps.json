@@ -1,14 +1,15 @@
 {
   "header": {
-    "eyebrow": "Reps Program",
+    "eyebrow": "Reps-program",
     "title": "Du arbejder. Du får.",
-    "subtitle": "Tjen Reps for hvad du allerede gør. Bruge dem på ting du faktisk vil have."
+    "subtitle": "Tjen Reps for hvad du allerede gør. Brug dem på ting du faktisk vil have."
   },
   "balance": {
     "label": "Din balance",
     "tier": "Niveau: {tier}",
     "toNext": "{amount} til {tier}",
-    "topCap": "Topcap nået."
+    "topCap": "Topcap nået.",
+    "progressLabel": "Fremgang mod {tier}"
   },
   "tiers": {
     "eyebrow": "Niveauer",
@@ -31,7 +32,9 @@
         "range": "15.000+",
         "perks": ["Alt fra Beast", "1:1 tid med Mikael Munk", "Begrænset drop med dit navn", "20% rabat livstid"]
       }
-    }
+    },
+    "coachSchool": "Coach School åbner ved Beast.",
+    "perksToggle": "Fordele pr. niveau"
   },
   "how": {
     "eyebrow": "Sådan tjener du",

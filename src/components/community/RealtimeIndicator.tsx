@@ -35,24 +35,28 @@ export default function RealtimeIndicator() {
     };
   }, []);
 
-  if (count === 0) return null;
-
+  // The live region is always mounted so the arrival of the pill is
+  // announced; a region that appears with its content is not.
   return (
-    <button
-      type="button"
-      onClick={() => {
-        setCount(0);
-        router.refresh();
-      }}
-      className="fixed left-1/2 -translate-x-1/2 top-[72px] lg:top-6 z-30 surface-2 px-4 py-2 flex items-center gap-2 lift"
-      style={{ borderColor: "var(--line-bright)" }}
-    >
-      <span className="pulse-dot" aria-hidden />
-      <span className="text-xs text-fg">
-        {count === 1
-          ? t("newPostsOne", { count })
-          : t("newPostsOther", { count })}
-      </span>
-    </button>
+    <div aria-live="polite">
+      {count > 0 ? (
+        <button
+          type="button"
+          onClick={() => {
+            setCount(0);
+            router.refresh();
+          }}
+          className="fixed left-1/2 -translate-x-1/2 top-[72px] lg:top-6 z-30 surface-2 px-4 py-2 flex items-center gap-2 lift"
+          style={{ borderColor: "var(--line-bright)" }}
+        >
+          <span className="pulse-dot" aria-hidden />
+          <span className="text-xs text-fg">
+            {count === 1
+              ? t("newPostsOne", { count })
+              : t("newPostsOther", { count })}
+          </span>
+        </button>
+      ) : null}
+    </div>
   );
 }

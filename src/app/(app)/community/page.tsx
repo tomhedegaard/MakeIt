@@ -10,6 +10,9 @@ import { getFeedPosts, type FeedPost } from "@/lib/data/community";
 import { communityChallengeProgress } from "@/lib/community/challenge-progress";
 import { Star } from "lucide-react";
 import { ICON } from "@/components/ui/icon";
+import Avatar from "@/components/ui/Avatar";
+import Progress from "@/components/ui/Progress";
+import { cn } from "@/lib/utils";
 
 const STORIES = [
   { who: "@Munk",      tier: "Legend",  trained: true },
@@ -86,7 +89,7 @@ export default async function CrewPage() {
               trigger={
                 <button
                   type="button"
-                  className="btn btn-primary btn-sm"
+                  className="btn btn-sm"
                   aria-label={t("shareAria")}
                 >
                   {t("shareButton")}
@@ -102,25 +105,20 @@ export default async function CrewPage() {
       {!useReal ? (
       <section
         aria-label={t("storiesAria")}
-        className="-mx-6 md:mx-0 px-6 md:px-0 overflow-x-auto"
+        className="-mx-5 md:mx-0 px-5 md:px-0 overflow-x-auto"
       >
         <ol className="flex gap-3 md:gap-4 min-w-max md:flex-wrap md:min-w-0">
           {STORIES.map((s) => (
             <li key={s.who} className="shrink-0 text-center">
-              <div className="relative size-14 md:size-16 mx-auto mb-2">
-                <div
-                  className={`absolute inset-0 rounded-full ${s.trained ? "bg-fg/20" : "bg-line"}`}
-                  style={{
-                    padding: 2,
-                    background: s.trained
-                      ? "conic-gradient(from 0deg, var(--fg) 0deg, var(--fg) 280deg, transparent 280deg)"
-                      : undefined,
-                  }}
-                />
-                <div className="absolute inset-[2px] rounded-full bg-bg-2 flex items-center justify-center text-micro">
-                  {s.who.slice(1, 3).toUpperCase()}
-                </div>
-              </div>
+              {/* 1 px ring: ink when they trained today, a line when resting. */}
+              <span
+                className={cn(
+                  "mx-auto mb-2 flex size-14 md:size-16 items-center justify-center rounded-full border",
+                  s.trained ? "border-fg" : "border-line",
+                )}
+              >
+                <Avatar handle={s.who} className="size-12 md:size-14 border-0 bg-bg-2" />
+              </span>
               <div className="text-micro text-fg-dim">{s.who.replace("@", "")}</div>
               <div className="text-micro text-fg-faint">
                 {s.trained ? t("trained") : t("resting")}
@@ -160,28 +158,27 @@ export default async function CrewPage() {
               {t("challengeProgress", { pct: challenge.youPercent })}
             </span>
           </div>
-          <div className="h-1.5 bg-bg-3 overflow-hidden">
-            <div
-              className="h-full bg-fg"
-              style={{ width: `${challenge.barPercent}%` }}
-              data-challenge-bar=""
-            />
-          </div>
+          <Progress
+            value={challenge.barPercent}
+            label={t("challengeTitle")}
+            valueText={challenge.currentLabel}
+          />
         </div>
-        <div className="border-t hairline grid grid-cols-2">
-          <button type="button" className="px-5 py-4 text-left hover:bg-bg-3 border-r hairline">
-            <div className="eyebrow mb-1">{t("challengeRewardLabel")}</div>
-            <div className="text-sm">{t("challengeRewardValue")}</div>
-          </button>
-          <button type="button" className="px-5 py-4 text-left hover:bg-bg-3">
-            <div className="eyebrow mb-1">{t("challengeStatusLabel")}</div>
-            <div className="text-sm">
+        {/* Facts, not controls: nothing to press until enrolment is real. */}
+        <dl className="border-t hairline grid grid-cols-2">
+          <div className="px-5 py-4 border-r hairline">
+            <dt className="eyebrow mb-1">{t("challengeRewardLabel")}</dt>
+            <dd className="text-sm">{t("challengeRewardValue")}</dd>
+          </div>
+          <div className="px-5 py-4">
+            <dt className="eyebrow mb-1">{t("challengeStatusLabel")}</dt>
+            <dd className="text-sm">
               {challenge.enrolled
                 ? t("challengeStatusValue")
                 : t("challengeStatusEmpty")}
-            </div>
-          </button>
-        </div>
+            </dd>
+          </div>
+        </dl>
       </section>
       ) : (
       <section className="surface-2 rounded-2xl overflow-hidden px-5 py-6">
@@ -193,7 +190,7 @@ export default async function CrewPage() {
       {/* Feed */}
       <section>
         <div className="flex items-end justify-between mb-3">
-          <div className="eyebrow">{t("feedEyebrow")}</div>
+          <h2 className="eyebrow">{t("feedEyebrow")}</h2>
           <span className="text-xs text-fg-faint">
             {useReal
               ? t("feedCount", { count: feed.length })
@@ -231,25 +228,25 @@ export default async function CrewPage() {
       {!useReal ? (
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 py-4 border-b hairline flex items-center justify-between">
-          <div>
-            <div className="eyebrow mb-1">{t("leaderboardEyebrow")}</div>
-            <div className="font-display text-2xl">{t("leaderboardTitle")}</div>
-          </div>
+          <SectionHeader
+            className="mb-0"
+            eyebrow={t("leaderboardEyebrow")}
+            title={t("leaderboardTitle")}
+          />
           <span className="eyebrow">{t("leaderboardMonth")}</span>
         </div>
         <ul className="divide-y hairline">
           {LEADERBOARD.map((row, i) => (
             <li key={row.rank} className="px-5 py-3 flex items-center gap-4 text-sm">
               <span className="numeric text-fg-faint w-7">{row.rank}</span>
-              <div className="size-8 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
-                {row.who.slice(1, 3).toUpperCase()}
-              </div>
+              <Avatar handle={row.who} className="size-8" />
               <span className="flex-1 truncate">{row.who}</span>
-              <span className="numeric text-fg/90">{row.score}</span>
+              <span className="tabular text-fg-body">{row.score}</span>
               <span className="text-micro text-fg-faint hidden sm:inline">{row.lift}</span>
               {i < 3 ? (
                 <span className="inline-flex items-center border hairline-strong px-2 py-1">
                   <Star {...ICON} className="size-3" />
+                  <span className="sr-only">{t("topThree")}</span>
                 </span>
               ) : null}
             </li>
@@ -267,22 +264,14 @@ export default async function CrewPage() {
           empty, not 24/05 Open House as a live event. */}
       {!SUPABASE_ENABLED ? (
       <section className="surface-2 rounded-2xl p-5">
-        <div className="eyebrow mb-2">{t("meetEyebrow")}</div>
-        <div className="font-display text-2xl mb-1">{t("meetTitle")}</div>
-        <p className="text-sm text-fg-dim mb-4">
+        <SectionHeader className="mb-1" eyebrow={t("meetEyebrow")} title={t("meetTitle")} />
+        <p className="text-sm text-fg-dim">
           {t("meetDescription")}
         </p>
-        <div className="flex gap-2">
-          <button type="button" className="btn btn-primary btn-sm flex-1">
-            {t("meetRsvp")}
-          </button>
-          <button type="button" className="btn btn-sm">{t("meetReadMore")}</button>
-        </div>
       </section>
       ) : (
       <section className="surface-2 rounded-2xl p-5">
-        <div className="eyebrow mb-2">{t("meetEmptyEyebrow")}</div>
-        <div className="font-display text-2xl mb-1">{t("meetEmptyTitle")}</div>
+        <SectionHeader className="mb-1" eyebrow={t("meetEmptyEyebrow")} title={t("meetEmptyTitle")} />
         <p className="text-sm text-fg-dim">
           {t("meetEmptyBody")}
         </p>

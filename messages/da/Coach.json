@@ -86,8 +86,15 @@
     "chipFormCheckFallback": "Form-check",
     "chipStale": "{days} dage",
     "chipStaleNever": "Aldrig trænet",
-    "openItem": "Åbn sag for @{handle}",
-    "backToOverview": "← Overview"
+    "backToOverview": "← Overview",
+    "listLabel": "Sager",
+    "panelLabel": "Valgt sag",
+    "selectCase": "Vælg en sag",
+    "openFull": "Åbn hele sagen →",
+    "sendAs": "Send som {name}",
+    "panelSafety": "Safety-sager håndteres på Safety-siden, hvor hele forløbet og kontaktvejene står.",
+    "panelStale": "Ingen pas i en periode. Medlemssiden viser historikken, så du kan skrive personligt.",
+    "panelElsewhere": "Detaljerne står på sagens egen side."
   },
   "analytics": {
     "metaTitle": "Coach · Analytics",

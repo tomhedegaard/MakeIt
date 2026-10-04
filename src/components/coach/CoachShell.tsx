@@ -51,7 +51,7 @@ export default function CoachShell({
           </div>
         </div>
 
-        <nav className="flex-1 px-3 py-5">
+        <nav aria-label={t("navAriaLabel")} className="flex-1 px-3 py-5">
           <ul className="space-y-1">
             {nav.map((item) => {
               const active =
@@ -62,6 +62,7 @@ export default function CoachShell({
                 <li key={item.href}>
                   <Link
                     href={item.href}
+                    aria-current={active ? "page" : undefined}
                     className={cn(
                       "group flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors",
                       active
@@ -89,7 +90,7 @@ export default function CoachShell({
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile top bar */}
-        <header className="safe-top md:hidden sticky top-0 z-30 bg-bg/85 backdrop-blur border-b hairline">
+        <header className="safe-top md:hidden sticky top-0 z-30 bg-bg border-b hairline">
           <div className="flex h-14 items-center justify-between px-5">
             <div className="flex items-center gap-2">
               <Logo />
@@ -99,13 +100,13 @@ export default function CoachShell({
             </div>
             <Link
               href="/dashboard"
-              className="text-xs text-fg-dim"
+              className="inline-flex min-h-11 items-center text-xs text-fg-dim"
             >
               {t("memberApp")}
             </Link>
           </div>
           <nav aria-label={t("navAriaLabel")} className="overflow-x-auto">
-            <ul className="flex gap-1 px-3 py-2 min-w-max">
+            <ul className="flex gap-1 px-3 py-1 min-w-max">
               {nav.map((item) => {
                 const active =
                   item.href === "/coach"
@@ -115,8 +116,9 @@ export default function CoachShell({
                   <li key={item.href}>
                     <Link
                       href={item.href}
+                      aria-current={active ? "page" : undefined}
                       className={cn(
-                        "px-3 py-1.5 rounded-md text-xs block",
+                        "flex min-h-11 items-center px-3 text-xs",
                         active ? "bg-bg-3 text-fg" : "text-fg-dim"
                       )}
                     >

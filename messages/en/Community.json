@@ -33,15 +33,17 @@
     "meetEyebrow": "Next IRL meet",
     "meetTitle": "Open House · Amagerbro",
     "meetDescription": "Saturday 24/05 · Copenhagen · Training, coffee, and a sneak peek at new products.",
-    "meetRsvp": "RSVP",
-    "meetReadMore": "Read more",
     "meetEmptyEyebrow": "IRL meet",
     "meetEmptyTitle": "No meetup scheduled.",
-    "meetEmptyBody": "When the crew meets in person, it shows here. We do not invent events."
+    "meetEmptyBody": "When the crew meets in person, it shows here. We do not invent events.",
+    "topThree": "Top 3"
   },
   "post": {
     "prBadge": "PR",
-    "reps": "Reps",
+    "hep": "Cheer",
+    "cheerers": "{count, plural, one {# cheer} other {# cheers}}",
+    "shareCopied": "Link copied",
+    "commentLabel": "Write a comment",
     "commentsOne": "Comment",
     "commentsOther": "Comments",
     "share": "Share",
@@ -67,7 +69,8 @@
     "addVideoSub": "Record or upload. AI form check included",
     "cancel": "Cancel",
     "sending": "Sending…",
-    "submit": "Share →"
+    "submit": "Share →",
+    "textLabel": "Your post"
   },
   "realtime": {
     "newPostsOne": "{count} new post · refresh",
