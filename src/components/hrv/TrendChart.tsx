@@ -30,7 +30,9 @@ import {
  */
 
 /** Fixed SVG coordinate space — the element scales to its container width. */
-const VIEWPORT = { width: 640, height: 240 };
+// 16:9-ish so the plot keeps ~170 px of height on a phone (was 640×240,
+// ~90 px at 375).
+const VIEWPORT = { width: 640, height: 360 };
 
 /** Format an ISO timestamp as a short localized date for the fallback table. */
 function tableDate(iso: string, locale: string): string {
@@ -204,6 +206,22 @@ export default function TrendChart({
         ))}
       </div>
       </div>
+
+      {/* Legend: what the three marks are (spec §6.3 "graf med bånd"). */}
+      <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-micro text-fg-dim" aria-hidden>
+        <li className="inline-flex items-center gap-2">
+          <span className="inline-block w-4 border-t-2 border-domain" />
+          {t("legendMean")}
+        </li>
+        <li className="inline-flex items-center gap-2">
+          <span className="inline-block size-1.5 rounded-full bg-domain" />
+          {t("legendNight")}
+        </li>
+        <li className="inline-flex items-center gap-2">
+          <span className="inline-block h-2.5 w-4 bg-domain/20" />
+          {t("legendBand")}
+        </li>
+      </ul>
 
       {/* Visually-hidden data-table fallback for non-visual users. */}
       <table className="sr-only">

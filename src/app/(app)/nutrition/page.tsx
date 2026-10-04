@@ -149,13 +149,15 @@ export default async function NutritionPage({
 
       <DailyCheckInCard checkin={checkin} />
 
-      <DailyIntakeCard intake={intake} />
-
-      <LogWeightCard
-        latestKg={latestWeight?.kg ?? null}
-        latestLoggedAt={latestWeight?.loggedAt ?? null}
-        deltaKg={weightTrend.deltaKg}
-      />
+      {/* Today's intake and the weigh-in share one card, so the plan starts sooner. */}
+      <div className="surface-2 grid md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] divide-y md:divide-y-0 md:divide-x divide-line">
+        <DailyIntakeCard intake={intake} />
+        <LogWeightCard
+          latestKg={latestWeight?.kg ?? null}
+          latestLoggedAt={latestWeight?.loggedAt ?? null}
+          deltaKg={weightTrend.deltaKg}
+        />
+      </div>
 
       {plan === null ? (
         <EmptyState
@@ -221,10 +223,11 @@ function KcalAdjustBanner({
 
 function FallbackPlanBanner({ t }: { t: T }) {
   return (
-    <div className="surface-2 rounded-xl border border-warn/40 px-5 py-3 text-copy">
-      <span className="eyebrow text-warn mr-2">{t("page.fallbackEyebrow")}</span>
+    // One quiet line, not a card: the plan below is still the point.
+    <p className="max-w-3xl text-meta text-fg-dim">
+      <span className="text-warn">{t("page.fallbackEyebrow")}.</span>{" "}
       {t("page.fallbackBody")}
-    </div>
+    </p>
   );
 }
 

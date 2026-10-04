@@ -81,14 +81,14 @@ export default async function CoachMemberDetailPage({
           <h2 className="font-display text-section">{t("profileTitle")}</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line">
-          <Field label={t("fieldGoal")} value={m.goalFocus ?? "—"} />
-          <Field label={t("fieldLevel")} value={m.experienceLevel ?? "—"} />
-          <Field label={t("fieldFrequency")} value={m.weeklyFrequency ? t("frequencyValue", { count: m.weeklyFrequency }) : "—"} />
-          <Field label={t("fieldEquipment")} value={m.equipmentLevel ?? "—"} />
-          <Field label={t("fieldSquat")} value={m.maxSquatKg != null ? t("kg", { value: m.maxSquatKg }) : "—"} />
-          <Field label={t("fieldBench")} value={m.maxBenchKg != null ? t("kg", { value: m.maxBenchKg }) : "—"} />
-          <Field label={t("fieldDeadlift")} value={m.maxDeadliftKg != null ? t("kg", { value: m.maxDeadliftKg }) : "—"} />
-          <Field label={t("fieldOhp")} value={m.maxOhpKg != null ? t("kg", { value: m.maxOhpKg }) : "—"} />
+          <Field label={t("fieldGoal")} value={m.goalFocus ?? "-"} />
+          <Field label={t("fieldLevel")} value={m.experienceLevel ?? "-"} />
+          <Field label={t("fieldFrequency")} value={m.weeklyFrequency ? t("frequencyValue", { count: m.weeklyFrequency }) : "-"} />
+          <Field label={t("fieldEquipment")} value={m.equipmentLevel ?? "-"} />
+          <Field label={t("fieldSquat")} value={m.maxSquatKg != null ? t("kg", { value: m.maxSquatKg }) : "-"} />
+          <Field label={t("fieldBench")} value={m.maxBenchKg != null ? t("kg", { value: m.maxBenchKg }) : "-"} />
+          <Field label={t("fieldDeadlift")} value={m.maxDeadliftKg != null ? t("kg", { value: m.maxDeadliftKg }) : "-"} />
+          <Field label={t("fieldOhp")} value={m.maxOhpKg != null ? t("kg", { value: m.maxOhpKg }) : "-"} />
         </div>
         {m.notesInjuries ? (
           <div className="px-5 py-4 border-t hairline">
@@ -111,7 +111,7 @@ export default async function CoachMemberDetailPage({
             <div className="text-right">
               <div className="numeric text-title">
                 {String(m.programWeek ?? 0).padStart(2, "0")}{" "}
-                <span className="text-fg-dim text-copy">/ {m.programWeeks ?? "—"}</span>
+                <span className="text-fg-dim text-copy">/ {m.programWeeks ?? "-"}</span>
               </div>
               <div className="eyebrow">{t("weeks")}</div>
             </div>
@@ -134,7 +134,7 @@ export default async function CoachMemberDetailPage({
             m.recentSessions.map((s) => (
               <li key={s.id} className="px-5 py-3 flex items-center gap-4 text-meta">
                 <span className="numeric text-fg-faint w-16 shrink-0 text-micro">
-                  {s.scheduledFor ?? "—"}
+                  {s.scheduledFor ?? "-"}
                 </span>
                 <span className="flex-1 truncate">{s.dayLabel}</span>
                 <span
@@ -192,7 +192,7 @@ export default async function CoachMemberDetailPage({
             <div className="eyebrow mb-1">{t("weightTrendLabel")}</div>
             <div className="font-display text-title numeric">
               {adherence.weightDeltaKg === null
-                ? "—"
+                ? "-"
                 : `${adherence.weightDeltaKg > 0 ? "+" : ""}${adherence.weightDeltaKg.toFixed(1)}`}
             </div>
             <div className="mt-2 text-micro text-fg-faint">

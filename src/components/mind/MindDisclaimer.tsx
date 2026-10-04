@@ -18,8 +18,8 @@ export default async function MindDisclaimer() {
         title={t("title")}
         subtitle={t("intro")}
       />
-      <Container size="narrow" className="py-12 md:py-16">
-        <div className="space-y-12">
+      <Container className="py-12 md:py-16">
+        <div className="max-w-3xl space-y-12">
           <section>
             <h2 className="font-display text-section mb-3">
               {t("important_title")}

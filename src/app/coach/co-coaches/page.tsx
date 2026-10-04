@@ -98,7 +98,7 @@ async function BeastRow({ beast }: { beast: BeastInTraining }) {
               meetsThreshold ? "text-fg" : "text-fg-dim"
             }`}
           >
-            {agreementPct === null ? "—" : `${agreementPct}%`}
+            {agreementPct === null ? "-" : `${agreementPct}%`}
           </span>
           <span className="text-micro text-fg-faint">
             {t("reviewsLabel", { count: beast.sandboxReviewCount })}

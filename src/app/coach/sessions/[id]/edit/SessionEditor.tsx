@@ -10,6 +10,7 @@ import {
   type SetInput,
 } from "./actions";
 import type { EditableSession } from "@/lib/data/coach-program";
+import ConfirmSheet from "@/components/ui/ConfirmSheet";
 
 function tmpId() {
   return `new-${Math.random().toString(36).slice(2, 9)}`;
@@ -90,8 +91,9 @@ export default function SessionEditor({ session }: { session: EditableSession })
     ]);
   }
 
+  const [removeIdx, setRemoveIdx] = useState<number | null>(null);
+
   function removeExercise(idx: number) {
-    if (!confirm(t("removeExerciseConfirm"))) return;
     setExercises((prev) =>
       prev.filter((_, i) => i !== idx).map((e, i) => ({ ...e, position: i + 1 }))
     );
@@ -160,6 +162,17 @@ export default function SessionEditor({ session }: { session: EditableSession })
 
   return (
     <div className="space-y-6">
+      <ConfirmSheet
+        open={removeIdx !== null}
+        onOpenChange={(open) => {
+          if (!open) setRemoveIdx(null);
+        }}
+        title={t("removeExerciseConfirm")}
+        confirmLabel={t("deleteExercise")}
+        onConfirm={() => {
+          if (removeIdx !== null) removeExercise(removeIdx);
+        }}
+      />
       {/* Top metadata */}
       <section className="surface-2 rounded-2xl p-5 lg:p-6">
         <div className="eyebrow mb-4">{t("sessionHeading")}</div>
@@ -239,7 +252,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
             </div>
             <button
               type="button"
-              onClick={() => removeExercise(exIdx)}
+              onClick={() => setRemoveIdx(exIdx)}
               className="btn btn-ghost btn-sm shrink-0"
               aria-label={t("deleteExerciseAria")}
             >

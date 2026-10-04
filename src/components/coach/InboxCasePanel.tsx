@@ -90,7 +90,7 @@ async function CaseBody({
       return (
         <div className="space-y-6">
           <HrvReadingVsBand memberId={item.memberId} />
-          <HrvAlertCard alert={alert} />
+          <HrvAlertCard alert={alert} showHeader={false} />
         </div>
       );
     }

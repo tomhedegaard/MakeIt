@@ -1,5 +1,10 @@
 {
   "saved": "✓ Gemt",
   "saving": "Gemmer…",
-  "cancel": "Annullér"
+  "cancel": "Annullér",
+  "notFound": {
+    "title": "Siden findes ikke.",
+    "body": "Linket er forkert, eller siden er flyttet.",
+    "back": "Til I dag"
+  }
 }

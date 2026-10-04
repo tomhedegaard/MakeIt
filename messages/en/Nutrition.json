@@ -229,7 +229,7 @@
   },
   "checkIn": {
     "skipConfirm": "Mark this meal as skipped?",
-    "skipConfirmCta": "Mark as skipped",
+    "skipConfirmCta": "Skip it",
     "eyebrow": "Daily check-in",
     "slotWindow": "{slot} · {window}",
     "slotNoWindow": "{slot}",
@@ -278,17 +278,17 @@
     "eyebrow": "Generating",
     "title": "Building your plan.",
     "stageProgress": "{label}…",
-    "elapsed": "{elapsed}s elapsed · expected 10-20 sec · max 50 sec",
+    "elapsed": "{elapsed}s elapsed · expected 10–20 sec · max 50 sec",
     "overtime": "Taking a little longer than usual. Falling back to a rule-based plan shortly",
     "stayOnPage": "Stay on the page. No need to refresh"
   },
   "skipDays": {
-    "eyebrow": "Skip days",
+    "eyebrow": "Days off the plan",
     "body": "Mark days where you eat out, travel or fast. The planner skips them on the next generation, and adherence stats won't count them against you.",
-    "removeAria": "Remove skip for {day}",
-    "markAria": "Mark {day} as skip",
-    "skip": "Skip",
-    "regenHint": "Regenerate the weekly plan to remove meals from marked days"
+    "removeAria": "Remove day off {day}",
+    "markAria": "Mark {day} as a day off",
+    "skip": "Off",
+    "regenHint": "Regenerate the weekly plan to remove meals from days off"
   },
   "streak": {
     "dialogLabel": "Streak milestone: {days} days",

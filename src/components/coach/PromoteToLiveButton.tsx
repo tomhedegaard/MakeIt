@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { promoteToLiveAction } from "@/app/(app)/coach-school/actions";
+import ConfirmSheet from "@/components/ui/ConfirmSheet";
 
 /**
  * CC-7 — client-side "Promote to live" trigger on the /coach/co-coaches surface.
@@ -39,10 +40,10 @@ export default function PromoteToLiveButton({
     | { kind: "error"; reason: string }
     | null
   >(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   function promote() {
     if (!liveReady || pending) return;
-    if (!confirm(t("confirmPromote", { handle: beastHandle }))) return;
     setResult(null);
     startTransition(async () => {
       const res = await promoteToLiveAction({ beastMemberId });
@@ -81,7 +82,7 @@ export default function PromoteToLiveButton({
       <button
         type="button"
         className="btn btn-sm btn-primary"
-        onClick={promote}
+        onClick={() => setConfirmOpen(true)}
         disabled={pending}
         aria-busy={pending}
       >
@@ -95,6 +96,13 @@ export default function PromoteToLiveButton({
           {t("promoteError", { reason: result.reason })}
         </span>
       ) : null}
+      <ConfirmSheet
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title={t("confirmPromote", { handle: beastHandle })}
+        confirmLabel={t("promoteButton")}
+        onConfirm={promote}
+      />
     </div>
   );
 }

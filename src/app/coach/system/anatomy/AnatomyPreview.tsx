@@ -332,13 +332,13 @@ export default function AnatomyPreview() {
         <div className="border-t hairline pt-3 text-micro text-fg-faint">
           <div>{t("activeSelection")}</div>
           <div className="mt-2 text-fg-dim text-micro">
-            <code className="text-fg">primary</code>: [{tiered.primary.join(", ") || "—"}]
+            <code className="text-fg">primary</code>: [{tiered.primary.join(", ") || "-"}]
           </div>
           <div className="mt-1 text-fg-dim text-micro">
-            <code className="text-fg">secondary</code>: [{tiered.secondary.join(", ") || "—"}]
+            <code className="text-fg">secondary</code>: [{tiered.secondary.join(", ") || "-"}]
           </div>
           <div className="mt-1 text-fg-dim text-micro">
-            <code className="text-fg">tertiary</code>: [{tiered.tertiary.join(", ") || "—"}]
+            <code className="text-fg">tertiary</code>: [{tiered.tertiary.join(", ") || "-"}]
           </div>
         </div>
       </section>

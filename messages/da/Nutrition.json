@@ -228,8 +228,8 @@
     "empty": "Ingen ingredienser i ugens plan."
   },
   "checkIn": {
-    "skipConfirm": "Markér dette måltid som skippet?",
-    "skipConfirmCta": "Markér som skippet",
+    "skipConfirm": "Markér måltidet som sprunget over?",
+    "skipConfirmCta": "Spring over",
     "eyebrow": "Dagligt check-in",
     "slotWindow": "{slot} · {window}",
     "slotNoWindow": "{slot}",
@@ -244,13 +244,13 @@
     "prep": "{value} min prep",
     "logging": "Logger…",
     "asPlanned": "Som planlagt",
-    "skipped": "Skippet",
+    "skipped": "Sprunget over",
     "fullPlan": "Hele planen →",
-    "skippedNote": "{slot} skippet. Næste check-in venter.",
+    "skippedNote": "{slot} sprunget over. Næste check-in venter.",
     "loggedNote": "{slot} logget. Godt arbejde.",
     "nextNote": "Næste: {slot} {window}",
     "headlineNoMeal": "Intet måltid lige nu.",
-    "headlineSkipped": "Skippet.",
+    "headlineSkipped": "Sprunget over.",
     "headlineLogged": "Logget.",
     "headlineNextMeal": "Næste: {title}",
     "headlineNextSlot": "Næste: {slot}",
@@ -278,17 +278,17 @@
     "eyebrow": "Genererer",
     "title": "Bygger din plan.",
     "stageProgress": "{label}…",
-    "elapsed": "{elapsed} sek · forventet 10-20 sek · højst 50 sek",
+    "elapsed": "{elapsed} sek · forventet 10–20 sek · højst 50 sek",
     "overtime": "Tager lidt længere end normalt. Falder tilbage til regelbaseret plan om lidt",
     "stayOnPage": "Bliv på siden. Ingen grund til at refreshe"
   },
   "skipDays": {
-    "eyebrow": "Skip-dage",
+    "eyebrow": "Fridage fra planen",
     "body": "Markér dage hvor du spiser ud, rejser eller faster. Planneren springer dem over på næste generation, og de tæller ikke imod dig i din statistik.",
-    "removeAria": "Fjern skip for {day}",
-    "markAria": "Markér {day} som skip",
-    "skip": "Skip",
-    "regenHint": "Regenerér ugeplan for at fjerne meals fra markerede dage"
+    "removeAria": "Fjern fridag {day}",
+    "markAria": "Markér {day} som fridag",
+    "skip": "Fri",
+    "regenHint": "Regenerér ugeplan for at fjerne måltider fra fridagene"
   },
   "streak": {
     "dialogLabel": "Streak-milepæl: {days} dage",

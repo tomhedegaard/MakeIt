@@ -257,7 +257,10 @@
     "desc": "Daily HRV (RMSSD) with a 7-day mean line and a 60-day baseline band. {count} readings.",
     "caption": "HRV readings: date and RMSSD",
     "colDate": "Date",
-    "colRmssd": "RMSSD (ms)"
+    "colRmssd": "RMSSD (ms)",
+    "legendMean": "7-day mean",
+    "legendNight": "Night",
+    "legendBand": "Your band"
   },
   "settingsSection": {
     "eyebrow": "HRV",

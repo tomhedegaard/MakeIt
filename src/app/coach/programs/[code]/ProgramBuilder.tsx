@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
+import ConfirmSheet from "@/components/ui/ConfirmSheet";
 import ExercisePicker, { type PickerExercise } from "@/components/coach/ExercisePicker";
 import type { ProgramBuilder as ProgramData } from "@/lib/data/coach-programs";
 import type { AssignableMember } from "@/lib/data/coach-programs";
@@ -441,7 +442,7 @@ export default function ProgramBuilder({
                             type="number"
                             step="0.5"
                             value={s.rpe ?? ""}
-                            placeholder="—"
+                            placeholder="-"
                             onChange={(e) =>
                               patchSet(di, ei, si, {
                                 rpe: e.target.value
@@ -547,17 +548,21 @@ function AssignPanel({
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const selected = members.find((m) => m.id === memberId);
+
   function assign() {
     setResult(null);
     setError(null);
-    const member = members.find((m) => m.id === memberId);
-    if (!member) return;
-    if (
-      member.hasActiveProgram &&
-      !confirm(t("assignConfirm", { handle: member.handle }))
-    ) {
+    if (!selected) return;
+    if (selected.hasActiveProgram) {
+      setConfirmOpen(true);
       return;
     }
+    runAssign(selected);
+  }
+
+  function runAssign(member: AssignableMember) {
     startTransition(async () => {
       const res = await assignProgramAction({ programId, memberId, startWeek });
       if (res.ok) {
@@ -575,6 +580,15 @@ function AssignPanel({
 
   return (
     <section className="surface-2 rounded-xl p-5 md:p-6 space-y-4">
+      <ConfirmSheet
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title={t("assignConfirm", { handle: selected?.handle ?? "" })}
+        confirmLabel={t("assignButton")}
+        onConfirm={() => {
+          if (selected) runAssign(selected);
+        }}
+      />
       <div className="eyebrow">{t("assignHeading")}</div>
       {!canAssign ? (
         <p className="text-meta text-fg-dim">

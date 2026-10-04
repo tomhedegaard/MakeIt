@@ -68,7 +68,7 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["hamstrings", "lower_back"],
     tertiaryMuscles: ["abs", "adductors", "calves_back"],
     cues: [
-      "Bryst op og spændt mave før du drukner under baren.",
+      "Bryst op og spænd, mave fat.",
       "Knæ sporer tæerne. Pres dem aktivt ud.",
       "Sid lavt: hofte under knæ.",
       "Driv gulvet væk og lås ud uden hyperextension.",

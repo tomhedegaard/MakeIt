@@ -63,19 +63,19 @@ export default async function CoachSystemPage() {
         <KPI label={t("kpiServicesConfigured")} value={`${configured}/${total}`} />
         <KPI
           label={t("kpiMembers")}
-          value={status.database.reachable ? status.database.members : "—"}
+          value={status.database.reachable ? status.database.members : "-"}
         />
         <KPI
           label={t("kpiActiveSubscriptions")}
-          value={status.database.reachable ? status.database.activeSubscriptions : "—"}
+          value={status.database.reachable ? status.database.activeSubscriptions : "-"}
         />
         <KPI
           label={t("kpiSessionsPerWeek")}
-          value={status.database.reachable ? status.database.sessionsThisWeek : "—"}
+          value={status.database.reachable ? status.database.sessionsThisWeek : "-"}
         />
         <KPI
           label={t("kpiPendingFormChecks")}
-          value={status.database.reachable ? status.database.pendingFormChecks : "—"}
+          value={status.database.reachable ? status.database.pendingFormChecks : "-"}
           pulse={status.database.pendingFormChecks > 0}
         />
       </section>
@@ -247,7 +247,7 @@ export default async function CoachSystemPage() {
           <Row label={t("rowAppUrl")} value={COMPANY.appUrl} />
           <Row label={t("rowMarketingUrl")} value={COMPANY.marketingUrl} />
           <Row label={t("rowLegalEntity")} value={COMPANY.legal.entity} />
-          <Row label={t("rowCvr")} value={COMPANY.legal.cvr ?? "—"} dim={!COMPANY.legal.cvr} />
+          <Row label={t("rowCvr")} value={COMPANY.legal.cvr ?? "-"} dim={!COMPANY.legal.cvr} />
           <Row label={t("rowAddress")} value={COMPANY.legal.address} />
           <Row label={t("rowFounded")} value={String(COMPANY.legal.foundedYear)} />
           <Row label={t("rowSupportEmail")} value={COMPANY.emails.support} />
@@ -256,7 +256,7 @@ export default async function CoachSystemPage() {
           <Row label={t("rowReplyTo")} value={COMPANY.emails.replyTo} />
           <Row
             label={t("rowInstagram")}
-            value={COMPANY.social.instagramHandle ? `@${COMPANY.social.instagramHandle}` : "—"}
+            value={COMPANY.social.instagramHandle ? `@${COMPANY.social.instagramHandle}` : "-"}
             dim={!COMPANY.social.instagramHandle}
           />
         </dl>

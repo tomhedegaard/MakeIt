@@ -275,7 +275,9 @@ export default async function TodayPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <FirstTimeTour />
 
-      {/* 1. header (spec §6.1): "Din uge." with the brief's kicker and line */}
+      {/* 1. header (spec §6.1): "Din uge." with the brief's kicker and line;
+          the kicker carries Krop's colour via data-domain. */}
+      <div data-domain="body">
       <PageTitle
         className="pt-2"
         kicker={t("greeting.eyebrow")}
@@ -289,6 +291,7 @@ export default async function TodayPage() {
         }
       />
 
+      </div>
       <p className="-mt-2 max-w-prose text-copy text-fg-body">{t("greeting.subtitle")}</p>
 
       <WeekStrip
@@ -310,7 +313,7 @@ export default async function TodayPage() {
         order. The rail spans the flexible middle row, so it starts right
         under the morning signal instead of waiting for the session card.
       */}
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem] lg:grid-rows-[auto_1fr_auto] lg:gap-x-10 items-start">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem] lg:grid-rows-[auto_1fr_auto_auto] lg:gap-x-10 items-start">
       {/* 2. todaySession */}
       <div className="lg:col-start-1 lg:row-start-1 lg:row-span-2">
       {today ? (
@@ -433,19 +436,6 @@ export default async function TodayPage() {
       <TodayProse model={prose} />
       <ConnectDotsStream cards={insightCards} copy={dotsCopy} />
 
-      {/* Fortællebånd (spec §6.1): the human signature sits at the bottom
-          of the day, after HQ's reading. */}
-      {reviewedCount > 0 ? (
-        <NarrativeBand
-          kicker={t("formChecks.bandKicker")}
-          title={`${t("formChecks.answeredBefore")} ${t("formChecks.answeredCount", { count: reviewedCount })}`}
-          action={
-            <Link href="/profile#form-checks" className="btn btn-sm">
-              {t("formChecks.seeAnswer")}
-            </Link>
-          }
-        />
-      ) : null}
       </div>
 
       <div className="space-y-8 lg:col-start-2 lg:row-start-2 lg:row-span-2">
@@ -556,6 +546,23 @@ export default async function TodayPage() {
         )}
       </section>
 
+      </div>
+
+      {/* Last on a phone (spec §6.1 "nederst"), under the main column on lg. */}
+      <div className="lg:col-start-1 lg:row-start-4">
+        {/* Fortællebånd (spec §6.1): the human signature sits at the bottom
+            of the day, after HQ's reading. */}
+        {reviewedCount > 0 ? (
+          <NarrativeBand
+            kicker={t("formChecks.bandKicker")}
+            title={`${t("formChecks.answeredBefore")} ${t("formChecks.answeredCount", { count: reviewedCount })}`}
+            action={
+              <Link href="/profile#form-checks" className="btn btn-sm">
+                {t("formChecks.seeAnswer")}
+              </Link>
+            }
+          />
+        ) : null}
       </div>
       </div>
 

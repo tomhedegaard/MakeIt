@@ -257,7 +257,10 @@
     "desc": "Daglig HRV (RMSSD) med 7-dages gennemsnitslinje og 60-dages baseline-bånd. {count} målinger.",
     "caption": "HRV-målinger: dato og RMSSD",
     "colDate": "Dato",
-    "colRmssd": "RMSSD (ms)"
+    "colRmssd": "RMSSD (ms)",
+    "legendMean": "7-dages snit",
+    "legendNight": "Nat",
+    "legendBand": "Dit bånd"
   },
   "settingsSection": {
     "eyebrow": "HRV",

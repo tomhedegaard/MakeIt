@@ -3,14 +3,15 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { sendWeeklyDigestAction } from "@/app/coach/actions";
+import ConfirmSheet from "@/components/ui/ConfirmSheet";
 
 export default function SendDigestButton() {
   const t = useTranslations("Coach.digest");
   const [pending, startTransition] = useTransition();
   const [result, setResult] = useState<string | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   function send() {
-    if (!confirm(t("confirm"))) return;
     startTransition(async () => {
       const res = await sendWeeklyDigestAction();
       if (res.ok) {
@@ -35,7 +36,7 @@ export default function SendDigestButton() {
       <button
         type="button"
         className="btn btn-sm"
-        onClick={send}
+        onClick={() => setConfirmOpen(true)}
         disabled={pending}
       >
         {pending ? t("sending") : t("send")}
@@ -45,6 +46,13 @@ export default function SendDigestButton() {
           {result}
         </span>
       ) : null}
+      <ConfirmSheet
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title={t("confirm")}
+        confirmLabel={t("send")}
+        onConfirm={send}
+      />
     </div>
   );
 }

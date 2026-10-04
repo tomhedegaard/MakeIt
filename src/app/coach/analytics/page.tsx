@@ -122,7 +122,7 @@ export default async function CoachAnalyticsPage() {
                     </div>
                     <div className="text-right shrink-0">
                       <div className="numeric text-copy">
-                        {m.daysSinceLastSession === null ? "—" : `${m.daysSinceLastSession}d`}
+                        {m.daysSinceLastSession === null ? "-" : `${m.daysSinceLastSession}d`}
                       </div>
                       <div className="text-micro text-fg-faint">
                         {m.daysSinceLastSession === null ? t("neverTrained") : t("since")}

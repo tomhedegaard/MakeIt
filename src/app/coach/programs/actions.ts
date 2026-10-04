@@ -43,7 +43,7 @@ export async function createProgramAction(input: {
     return {
       ok: false,
       error: dup
-        ? `Koden "${code}" findes allerede — vælg en anden.`
+        ? `Koden "${code}" findes allerede. Vælg en anden.`
         : error.message,
     };
   }
