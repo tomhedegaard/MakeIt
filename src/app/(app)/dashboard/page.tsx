@@ -502,8 +502,10 @@ export default async function TodayPage() {
       </section>
 
       {/* 7. stats */}
-      <Card as="section" data-dashboard="stats" className="grid grid-cols-3 gap-4 lg:grid-cols-1 lg:gap-5">
-        <div>
+      <Card as="section" data-dashboard="stats" className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-1 lg:gap-5">
+        {/* Volumen fylder en hel række på telefon: "84.200 kg" i 2xl
+            støder ellers ind i nabotallet ved 375 px. */}
+        <div className="col-span-2 sm:col-span-1">
           <Stat
             label={t("stats.volume")}
             value={formatKg(stats ? stats.volumeKg : connected ? 0 : 84_200, locale)}
