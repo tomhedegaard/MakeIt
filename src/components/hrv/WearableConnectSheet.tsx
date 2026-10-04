@@ -82,7 +82,7 @@ function WearableConnectBody() {
               key={provider.id}
               type="button"
               onClick={() => connect(provider.id)}
-              disabled={pending !== null}
+              aria-disabled={pending !== null}
               aria-busy={pending === provider.id}
               className={cn(
                 "surface-2 rounded-2xl p-5 text-left flex items-center justify-between gap-4 touch-app",

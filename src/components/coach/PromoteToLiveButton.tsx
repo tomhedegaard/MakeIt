@@ -82,8 +82,10 @@ export default function PromoteToLiveButton({
       <button
         type="button"
         className="btn btn-sm btn-primary"
-        onClick={() => setConfirmOpen(true)}
-        disabled={pending}
+        onClick={() => {
+          if (!pending) setConfirmOpen(true);
+        }}
+        aria-disabled={pending}
         aria-busy={pending}
       >
         {pending ? t("promoting") : t("promoteButton")}

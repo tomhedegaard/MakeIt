@@ -245,8 +245,12 @@ export default function AskHq() {
             />
             <button
               type="submit"
-              disabled={pending || full || !draft.trim()}
-              className="btn btn-primary h-11! flex-none px-4! disabled:cursor-default disabled:opacity-40"
+              disabled={full || !draft.trim()}
+              aria-disabled={pending}
+              onClick={(e) => {
+                if (pending) e.preventDefault();
+              }}
+              className="btn btn-primary h-11! flex-none px-4! disabled:cursor-default aria-disabled:cursor-default disabled:opacity-40 aria-disabled:opacity-40"
             >
               {t("send")}
             </button>

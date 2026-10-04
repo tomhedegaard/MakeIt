@@ -22,11 +22,11 @@ import { useTranslations } from "next-intl";
 export default function AudioRecorder({
   onCancel,
   onSubmit,
-  disabled,
+  busy,
 }: {
   onCancel: () => void;
   onSubmit: (blob: Blob, durationSec: number, mime: string) => Promise<void>;
-  disabled?: boolean;
+  busy?: boolean;
 }) {
   const t = useTranslations("Messages.audioRecorder");
   const [state, setState] = useState<"idle" | "recording" | "preview">("idle");
@@ -72,6 +72,7 @@ export default function AudioRecorder({
   }
 
   async function start() {
+    if (busy) return;
     setError(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -122,6 +123,7 @@ export default function AudioRecorder({
   }
 
   function discard() {
+    if (pending) return;
     if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
     previewUrlRef.current = null;
     blobRef.current = null;
@@ -150,7 +152,7 @@ export default function AudioRecorder({
           <button
             type="button"
             onClick={start}
-            disabled={disabled}
+            aria-disabled={busy}
             className="btn btn-sm btn-primary"
           >
             {t("record")}
@@ -184,7 +186,7 @@ export default function AudioRecorder({
           <button
             type="button"
             onClick={discard}
-            disabled={pending}
+            aria-disabled={pending}
             className="btn btn-sm btn-ghost"
           >
             {t("discard")}
@@ -192,7 +194,7 @@ export default function AudioRecorder({
           <button
             type="button"
             onClick={send}
-            disabled={pending}
+            aria-disabled={pending}
             className="btn btn-sm btn-primary"
           >
             {pending ? t("sending") : t("send")}
@@ -201,7 +203,7 @@ export default function AudioRecorder({
       ) : null}
 
       {error ? (
-        <span className="text-micro text-danger ml-2">{error}</span>
+        <span role="alert" className="text-micro text-danger ml-2">{error}</span>
       ) : null}
     </div>
   );

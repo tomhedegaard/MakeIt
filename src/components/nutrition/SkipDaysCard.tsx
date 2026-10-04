@@ -67,13 +67,13 @@ export default function SkipDaysCard({
           <button
             key={d.dateIso}
             type="button"
-            disabled={pending}
+            aria-disabled={pending}
             onClick={() => toggle(d.dateIso, d.skipped)}
             className={`relative min-h-11 p-2 text-center border transition-colors duration-200 ease-out ${
               d.skipped
                 ? "bg-fg border-fg text-bg"
                 : "bg-bg hairline hover:bg-bg-3"
-            } disabled:opacity-50`}
+            } aria-disabled:opacity-50`}
             aria-pressed={d.skipped}
             aria-label={
               d.skipped

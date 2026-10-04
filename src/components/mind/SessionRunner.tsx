@@ -62,6 +62,7 @@ export default function SessionRunner({
   const sections = splitMarkdownIntoSections(bodyMd);
 
   function complete() {
+    if (pending) return;
     startTransition(async () => {
       const fd = new FormData();
       fd.set("session_id", sessionId);
@@ -150,8 +151,8 @@ export default function SessionRunner({
         <button
           type="button"
           onClick={complete}
-          disabled={pending}
-          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-copy font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          aria-disabled={pending}
+          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-copy font-medium hover:opacity-90 transition-opacity aria-disabled:opacity-50"
         >
           {pending ? t("saving") : t("finish")}
         </button>

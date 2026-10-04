@@ -32,6 +32,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
   const [pending, startTransition] = useTransition();
 
   function submit() {
+    if (pending) return;
     if (!decision) return;
     setError(null);
     setHeldReason(null);
@@ -174,7 +175,8 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
         type="button"
         className="btn btn-primary w-full sm:w-auto"
         onClick={submit}
-        disabled={pending || !decision}
+        disabled={!decision}
+        aria-disabled={pending}
       >
         {pending ? t("submitting") : t("live.submitButton")}
       </button>

@@ -76,6 +76,7 @@ export function FormCheckReview({
   }, [formCheck.id, hasDraft]);
 
   function submit() {
+    if (pending) return;
     // Only emit on draft-backed sends so the median edit_ratio stays a
     // clean voice-fidelity signal (spec §8).
     if (hasDraft && draft) {
@@ -188,8 +189,10 @@ export function FormCheckReview({
           <button
             type="button"
             className="btn"
-            onClick={onCancel}
-            disabled={pending}
+            onClick={() => {
+              if (!pending) onCancel();
+            }}
+            aria-disabled={pending}
           >
             {t("cancel")}
           </button>
@@ -198,7 +201,7 @@ export function FormCheckReview({
           type="button"
           className="btn btn-primary"
           onClick={submit}
-          disabled={pending}
+          aria-disabled={pending}
         >
           {pending
             ? t("sending")

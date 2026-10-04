@@ -507,13 +507,11 @@ export default function ProgramBuilder({
         >
           {saving ? t("saving") : t("save")}
         </button>
-        {savedAt ? (
-          <span className="text-micro text-fg-faint">
-            {t("savedAt", { time: savedAt })}
+        <span role="status" aria-live="polite" className="text-micro text-fg-faint">
+            {savedAt ? t("savedAt", { time: savedAt }) : null}
           </span>
-        ) : null}
         {saveError ? (
-          <span className="text-copy" style={{ color: "#C97B3E" }}>
+          <span role="alert" className="text-copy" style={{ color: "#C97B3E" }}>
             {saveError}
           </span>
         ) : null}
@@ -552,6 +550,7 @@ function AssignPanel({
   const selected = members.find((m) => m.id === memberId);
 
   function assign() {
+    if (pending) return;
     setResult(null);
     setError(null);
     if (!selected) return;
@@ -631,7 +630,7 @@ function AssignPanel({
             <button
               type="button"
               onClick={assign}
-              disabled={pending}
+              aria-disabled={pending}
               className="btn btn-primary"
             >
               {pending ? t("generating") : t("assignButton")}
@@ -640,11 +639,11 @@ function AssignPanel({
           <p className="text-meta text-fg-faint">
             {t("assignNote", { start: startWeek, end: weeks })}
           </p>
-          {result ? (
-            <p className="text-copy text-fg">{result}</p>
-          ) : null}
+          <p role="status" aria-live="polite" className="text-copy text-fg">
+            {result}
+          </p>
           {error ? (
-            <p className="text-copy" style={{ color: "#C97B3E" }}>
+            <p role="alert" className="text-copy" style={{ color: "#C97B3E" }}>
               {error}
             </p>
           ) : null}

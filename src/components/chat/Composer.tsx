@@ -233,10 +233,10 @@ export default function Composer({
         <AudioRecorder
           onCancel={() => setRecording(false)}
           onSubmit={handleAudioSubmit}
-          disabled={pending}
+          busy={pending}
         />
         {error ? (
-          <p className="mt-2 text-meta text-danger">{error}</p>
+          <p role="alert" className="mt-2 text-meta text-danger">{error}</p>
         ) : null}
       </div>
     );
@@ -248,10 +248,10 @@ export default function Composer({
         <VideoRecorder
           onCancel={() => setRecordingVideo(false)}
           onSubmit={handleVideoSubmit}
-          disabled={pending}
+          busy={pending}
         />
         {error ? (
-          <p className="mt-2 text-meta text-danger">{error}</p>
+          <p role="alert" className="mt-2 text-meta text-danger">{error}</p>
         ) : null}
       </div>
     );
@@ -274,8 +274,10 @@ export default function Composer({
       <div className="flex flex-col gap-1">
         <button
           type="button"
-          onClick={() => imageInputRef.current?.click()}
-          disabled={pending}
+          onClick={() => {
+            if (!pending) imageInputRef.current?.click();
+          }}
+          aria-disabled={pending}
           className="btn btn-sm btn-ghost"
           aria-label={t("imageAria")}
           title={t("imageTitle")}
@@ -284,8 +286,10 @@ export default function Composer({
         </button>
         <button
           type="button"
-          onClick={() => setRecording(true)}
-          disabled={pending}
+          onClick={() => {
+            if (!pending) setRecording(true);
+          }}
+          aria-disabled={pending}
           className="btn btn-sm btn-ghost"
           aria-label={t("audioAria")}
           title={t("audioTitle")}
@@ -295,8 +299,10 @@ export default function Composer({
         {canSendVideo ? (
           <button
             type="button"
-            onClick={() => setRecordingVideo(true)}
-            disabled={pending}
+            onClick={() => {
+              if (!pending) setRecordingVideo(true);
+            }}
+            aria-disabled={pending}
             className="btn btn-sm btn-ghost"
             aria-label={t("videoAria")}
             title={t("videoTitle")}
@@ -318,20 +324,21 @@ export default function Composer({
         placeholder={t("placeholder")}
         rows={2}
         className="flex-1 min-w-0 resize-none rounded-lg border hairline px-3 py-2 text-copy bg-bg focus:outline-none focus:border-line-bright"
-        disabled={pending}
+        readOnly={pending}
       />
 
       <button
         type="button"
         onClick={handleSendText}
-        disabled={pending || !text.trim()}
+        disabled={!text.trim()}
+        aria-disabled={pending}
         className="btn btn-primary btn-sm self-end"
       >
         {pending ? t("sending") : t("send")}
       </button>
 
       {error ? (
-        <p className="absolute mt-2 text-meta text-danger">{error}</p>
+        <p role="alert" className="absolute mt-2 text-meta text-danger">{error}</p>
       ) : null}
     </div>
   );

@@ -61,6 +61,7 @@ export default function HrvAlertCard({
     lifestyleFlags.high_alcohol;
 
   function sendNote() {
+    if (pending) return;
     startTransition(async () => {
       const res = await sendHrvAlertNoteAction(alert.id, notes);
       if (res.ok) {
@@ -71,12 +72,14 @@ export default function HrvAlertCard({
   }
 
   function markSeen() {
+    if (pending) return;
     startTransition(async () => {
       await markHrvAlertSeenAction(alert.id);
     });
   }
 
   function suggestPause() {
+    if (pending) return;
     startTransition(async () => {
       await pauseSessionFromAlertAction(alert.id);
     });
@@ -148,7 +151,7 @@ export default function HrvAlertCard({
           type="button"
           className="btn btn-sm"
           onClick={markSeen}
-          disabled={pending}
+          aria-disabled={pending}
         >
           {t("markSeen")}
         </button>
@@ -156,7 +159,7 @@ export default function HrvAlertCard({
           type="button"
           className="btn btn-sm"
           onClick={suggestPause}
-          disabled={pending}
+          aria-disabled={pending}
         >
           {t("suggestPause")}
         </button>
@@ -165,8 +168,10 @@ export default function HrvAlertCard({
           <button
             type="button"
             className="btn btn-sm btn-primary"
-            onClick={() => setOpen(true)}
-            disabled={pending}
+            onClick={() => {
+              if (!pending) setOpen(true);
+            }}
+            aria-disabled={pending}
           >
             {t("sendMessage")}
           </button>
@@ -200,8 +205,10 @@ export default function HrvAlertCard({
               <button
                 type="button"
                 className="btn"
-                onClick={() => setOpen(false)}
-                disabled={pending}
+                onClick={() => {
+                  if (!pending) setOpen(false);
+                }}
+                aria-disabled={pending}
               >
                 {t("cancel")}
               </button>
@@ -209,7 +216,8 @@ export default function HrvAlertCard({
                 type="button"
                 className="btn btn-primary"
                 onClick={sendNote}
-                disabled={pending || notes.trim().length < 1}
+                disabled={notes.trim().length < 1}
+                aria-disabled={pending}
               >
                 {pending ? t("sending") : t("send")}
               </button>

@@ -29,6 +29,7 @@ export default function ReactionButtons({ pairId }: { pairId: string }) {
   const [pending, startTransition] = useTransition();
 
   function send(kind: BuddyInteractionKind) {
+    if (pending) return;
     startTransition(async () => {
       await sendBuddyReactionAction({ pairId, kind });
     });
@@ -45,9 +46,9 @@ export default function ReactionButtons({ pairId }: { pairId: string }) {
           key={r.kind}
           type="button"
           onClick={() => send(r.kind)}
-          disabled={pending}
+          aria-disabled={pending}
           aria-label={t(r.labelKey)}
-          className="btn btn-sm flex items-center gap-2 disabled:opacity-50"
+          className="btn btn-sm flex items-center gap-2 aria-disabled:opacity-50"
         >
           <r.Icon {...ICON} className="size-4" />
           <span>{t(r.labelKey)}</span>

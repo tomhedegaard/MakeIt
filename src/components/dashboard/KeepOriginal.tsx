@@ -79,7 +79,7 @@ export default function KeepOriginal({ modifierId, sessionId, accepted }: Props)
       <button
         type="button"
         className="btn btn-sm"
-        disabled={isPending}
+        aria-disabled={isPending}
         onClick={keep}
       >
         {t("keepOriginal")}

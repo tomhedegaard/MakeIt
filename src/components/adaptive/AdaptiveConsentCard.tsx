@@ -42,6 +42,7 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
   if (!eligible || enabledOptimistic) return null;
 
   function enable() {
+    if (pending) return;
     setEnabledOptimistic(true);
     startTransition(async () => {
       const result = await enableAdaptiveEngineAction();
@@ -89,9 +90,9 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
       <div className="flex flex-col sm:flex-row gap-2 pt-1">
         <button
           type="button"
-          disabled={pending}
+          aria-disabled={pending}
           onClick={enable}
-          className="flex-1 rounded-lg border hairline bg-fg text-bg px-4 py-3 text-copy lift touch-app disabled:opacity-60"
+          className="flex-1 rounded-lg border hairline bg-fg text-bg px-4 py-3 text-copy lift touch-app aria-disabled:opacity-60"
         >
           Slå adaptiv tilpasning til
         </button>

@@ -148,7 +148,7 @@ export default function NativePushToggle() {
         <button
           type="button"
           onClick={handleDisable}
-          disabled={pending}
+          aria-disabled={pending}
           className="btn btn-sm"
         >
           {pending ? t("ellipsis") : t("turnOff")}
@@ -157,7 +157,8 @@ export default function NativePushToggle() {
         <button
           type="button"
           onClick={handleEnable}
-          disabled={pending || state === "loading"}
+          disabled={state === "loading"}
+          aria-disabled={pending}
           className="btn btn-primary btn-sm"
         >
           {pending ? t("subscribing") : t("turnOn")}

@@ -129,9 +129,9 @@ export default function HrvSettingsSection({
                 {connections.length > 1 && !connection.isPrimary ? (
                   <button
                     type="button"
-                    className="text-meta text-fg-dim border border-line-strong px-3 py-1.5 touch-app lift disabled:opacity-50"
+                    className="text-meta text-fg-dim border border-line-strong px-3 py-1.5 touch-app lift disabled:opacity-50 aria-disabled:opacity-50"
                     onClick={() => makePrimary(connection.id)}
-                    disabled={primaryPending}
+                    aria-disabled={primaryPending}
                   >
                     {primaryPending ? t("saving") : t("makePrimary")}
                   </button>

@@ -34,6 +34,7 @@ export default function AdaptiveAlertCard({
   const [pending, startTransition] = useTransition();
 
   function review(accepted: boolean) {
+    if (pending) return;
     startTransition(async () => {
       await reviewAdaptiveAlertAction({
         alertId: alert.alertId,
@@ -104,17 +105,17 @@ export default function AdaptiveAlertCard({
         <div className="flex gap-2">
           <button
             type="button"
-            disabled={pending}
+            aria-disabled={pending}
             onClick={() => review(false)}
-            className="rounded-lg border hairline px-3 py-2 text-micro text-fg-dim lift touch-app disabled:opacity-60"
+            className="rounded-lg border hairline px-3 py-2 text-micro text-fg-dim lift touch-app aria-disabled:opacity-60"
           >
             Afvis
           </button>
           <button
             type="button"
-            disabled={pending}
+            aria-disabled={pending}
             onClick={() => review(true)}
-            className="rounded-lg border hairline bg-bg-2 px-3 py-2 text-micro lift touch-app disabled:opacity-60"
+            className="rounded-lg border hairline bg-bg-2 px-3 py-2 text-micro lift touch-app aria-disabled:opacity-60"
           >
             Godkend
           </button>
