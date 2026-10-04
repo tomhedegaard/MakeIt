@@ -105,3 +105,31 @@ systemiske huller (bevægelse, progress-semantik, touch-mål) og drift fra brief
 - Nat er stramt afgrænset til `/session` og `/coach`, uden lyst blink.
 - `TrendChart` og `MorningSignal` har sr-only tekstalternativer. Skyderne er native `range` på 44 px.
 - Tab-baren måler selv sin højde. Safe-area er gennemført i shellen. Mad-copy følger briefen ord for ord.
+
+---
+
+# Efter rettelser · samme dag
+
+Branch `claude/nord-polish-keyscreens`. Efter-billederne ligger i `after/`, og
+`08-coach-inbox-formcheck-d.png` viser split view med en form-check.
+
+| # | Dimension | Før | Efter | Hvad flyttede den |
+|---|---|---|---|---|
+| 1 | Tilgængelighed | 2 | 3 | <ul><li>Sikkerhedslinjen i Mind</li><li>`aria-current` overalt</li><li>Progress-semantik</li><li>Labels</li><li>Fokus på toggles</li><li>Graf-tabeller</li><li>Overskriftsorden</li><li>Modal med fokusfælde</li><li>Timer-annoncering</li></ul> |
+| 2 | Performance | 3 | 3 | <ul><li>`FormCheckSheet` lazy-loades</li><li>Progress bruger `scaleX`</li><li>Demovideo uden autoplay ved reduceret bevægelse</li></ul> |
+| 3 | Responsivt | 2 | 3 | <ul><li>Desktop-shellen er rettet</li><li>Ingen 4 px overflow</li><li>Touch-mål på 44 px</li><li>Safe-area på Start-bjælken</li><li>To kolonner på I dag</li><li>Split view i indbakken</li></ul> |
+| 4 | Theming | 3 | 4 | <ul><li>Ingen glød, blur eller gradient, og en gate holder det sådan</li><li>Hvide kort</li><li>Domæne-blæk på chips</li><li>Modal i `--bg-elev`</li></ul> |
+| 5 | Integritet | 2 | 3 | <ul><li>Tal uden luft</li><li>Ingen opfundne tal</li><li>Én primærknap</li><li>Copy følger briefen</li><li>Delte Progress og Avatar</li><li>Ingen døde knapper</li></ul> |
+| | **Total** | **12** | **16/20 · God** | |
+
+Detektor: kun den kendte falske positiv (aktiv domænemarkør i sidebaren).
+tsc, eslint og vitest er grønne: 4332 tests.
+
+## Kendte rester (ikke i denne runde)
+- **Komponentklasser uden for `@layer`.** `.btn`, `.surface`, `.hairline` og `.hairline-strong` ligger uden for `@layer components`. Derfor slår de Tailwind-utilities: `hidden` og `lg:hidden` virker ikke på en `.btn`, og ringfarven kan ikke overstyres. Det er rettet lokalt i `OffPlanLogButton`. At flytte klasserne ind i et lag er rigtigt, men det ændrer kaskaden i hele appen og skal derfor have sin egen gennemgang.
+- **Grå flader står tilbage.** Sessionskortet, morgensignalet og nøgletallene på I dag er stadig `surface` (`bg-2`), mens indsigtskortene er hvide. Det er bevidst i dag, fordi grå markerer det primære, men det bør afgøres.
+- **Indbakken i demo.** HRV- og HQ-mocks matcher ikke køens id'er, så panelet viser en henvisning. Med live-data vises de rigtige kort.
+- **Tre toggle-implementeringer** er ikke samlet.
+- **Mind-grafen.** Den udglattede kurve skyder lidt over 5 i MentalGraph.
+- **Svensk.** Der er ingen `messages/sv`. Den svenske variant i briefen §6.9 findes ikke i koden endnu.
+- **App-koncepter.** Koncepter i native-kvalitet via imagegen-frontend-mobile kræver et billedgenereringsværktøj, som ikke er tilgængeligt i denne session.
