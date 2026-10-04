@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import Container from "@/components/Container";
@@ -66,10 +65,6 @@ export default async function CoachInboxPage({
           )}
         </section>
       </div>
-
-      <Link href="/coach" className="btn btn-sm">
-        {t("backToOverview")}
-      </Link>
     </Container>
   );
 }

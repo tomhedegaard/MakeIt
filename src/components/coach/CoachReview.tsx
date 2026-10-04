@@ -99,15 +99,10 @@ export function FormCheckReview({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <div className="eyebrow mb-1">@{formCheck.memberHandle} · {formCheck.exerciseName ?? t("formCheckFallback")}</div>
-          <h2 className="font-display text-2xl">{formCheck.aiHeadline ?? t("aiHeadlineFallback")}</h2>
-        </div>
-        <div className="text-right shrink-0">
-          <div className="numeric text-3xl">{formCheck.aiScore ?? "—"}</div>
-          <div className="eyebrow">/ 100</div>
-        </div>
+      {/* No 0–100 score (Nord spec §5): the observations carry the read. */}
+      <div className="mb-4">
+        <div className="eyebrow mb-1">@{formCheck.memberHandle} · {formCheck.exerciseName ?? t("formCheckFallback")}</div>
+        <h2 className="font-display text-2xl">{formCheck.aiHeadline ?? t("aiHeadlineFallback")}</h2>
       </div>
 
       {formCheck.videoUrl ? (

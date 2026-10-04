@@ -2,32 +2,23 @@ import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import Avatar from "@/components/ui/Avatar";
-import type { PriorityInboxItem, PriorityInboxKind } from "@/lib/coach/priority-inbox";
+import type { PriorityInboxItem } from "@/lib/coach/priority-inbox";
 import { cn } from "@/lib/utils";
 
 /**
- * Reason chips (docs/DOMAIN_COLOR_SYSTEM.md §5): domain reasons wear
- * their domain ink, status red is kept for real safety cases, the rest
- * is a neutral outline. No warn tint — nothing here is a validation alert.
+ * Reason chips. The coach console is monochrome (docs/DOMAIN_COLOR_SYSTEM.md
+ * §8.1): every reason is a neutral 1px outline. Status red is kept only for
+ * real safety cases — that is an alert, not a domain.
  */
-const CHIP_DOMAIN: Partial<Record<PriorityInboxKind, "heart" | "body">> = {
-  hrv_alert: "heart",
-  form_check: "body",
-};
-
 export async function InboxReasonChip({ item }: { item: PriorityInboxItem }) {
   const t = await getTranslations("Coach.inbox");
-  const domain = CHIP_DOMAIN[item.kind];
   return (
     <span
-      data-domain={domain}
       className={cn(
         "inline-flex border px-2 py-0.5 text-micro",
         item.kind === "mental_safety"
           ? "border-danger/40 bg-danger/15 text-danger"
-          : domain
-            ? "border-domain-line text-domain"
-            : "hairline-strong text-fg-dim",
+          : "hairline-strong text-fg-dim",
       )}
     >
       {t(item.reasonKey, item.reasonParams)}
@@ -37,7 +28,7 @@ export async function InboxReasonChip({ item }: { item: PriorityInboxItem }) {
 
 export function formatInboxWhen(iso: string, locale: string): string {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime()) || iso.startsWith("1970-")) return "—";
+  if (Number.isNaN(d.getTime()) || iso.startsWith("1970-")) return "-";
   return d.toLocaleString(locale === "en" ? "en-GB" : "da-DK", {
     hour: "2-digit",
     minute: "2-digit",
@@ -89,7 +80,9 @@ export default async function PriorityInboxList({
         <ul className="divide-y hairline">
           {items.map((item) => {
             const selected = item.id === selectedId;
-            const content = (
+            // Phone/tablet rows open the case (arrow); lg+ rows only select
+            // it — the panel's own link opens the full case.
+            const content = (arrow: boolean) => (
               <>
                 <Avatar handle={item.memberHandle} />
                 <span className="flex-1 min-w-0">
@@ -104,16 +97,18 @@ export default async function PriorityInboxList({
                 >
                   {formatInboxWhen(item.occurredAt, locale)}
                 </time>
-                <span className="text-fg-dim" aria-hidden="true">
-                  →
-                </span>
+                {arrow ? (
+                  <span className="text-fg-dim" aria-hidden="true">
+                    →
+                  </span>
+                ) : null}
               </>
             );
             return (
               <li key={item.id}>
                 {/* Phone and tablet: the row opens the case's own page. */}
                 <Link href={item.href} className={cn(ROW, "flex lg:hidden")}>
-                  {content}
+                  {content(true)}
                 </Link>
                 {/* lg+: the row selects the case into the detail panel. */}
                 <Link
@@ -127,7 +122,7 @@ export default async function PriorityInboxList({
                       "bg-bg-3 before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-signal",
                   )}
                 >
-                  {content}
+                  {content(false)}
                 </Link>
               </li>
             );

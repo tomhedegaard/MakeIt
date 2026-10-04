@@ -237,12 +237,7 @@ export default async function CoachMemberDetailPage({
           <ul className="space-y-3">
             {m.formChecks.map((f) => (
               <li key={f.id} className="surface-2 rounded-2xl p-5">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="text-sm">{f.exerciseName ?? t("formCheckFallback")}</div>
-                  <div className="numeric text-sm">
-                    {f.aiScore != null ? `${f.aiScore}/100` : ""}
-                  </div>
-                </div>
+                <div className="mb-2 text-sm">{f.exerciseName ?? t("formCheckFallback")}</div>
                 {f.aiHeadline ? (
                   <p className="text-fg/90 text-sm leading-relaxed">{f.aiHeadline}</p>
                 ) : null}

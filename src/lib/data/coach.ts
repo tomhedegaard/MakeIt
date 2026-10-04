@@ -184,7 +184,7 @@ const MOCK_ADAPTIVE_ALERTS: AdaptiveAlertRow[] = [
     confidence: 0.78,
     reasons: ["hrv_low", "low_feeling"],
     explanationDa:
-      "Nattens HRV ligger under båndet — Motoren letter dagens topsæt.",
+      "Nattens HRV ligger under båndet. HQ letter dagens topsæt.",
     sessionId: "sess-2026-05-05",
   },
   {
@@ -196,7 +196,7 @@ const MOCK_ADAPTIVE_ALERTS: AdaptiveAlertRow[] = [
     action: "escalate_to_coach",
     confidence: 0.71,
     reasons: ["rpe_drift_rising"],
-    explanationDa: "RPE er steget over tre pas — stall-flag til Munk.",
+    explanationDa: "RPE er steget over tre pas. Flag til Munk.",
     sessionId: null,
   },
 ];

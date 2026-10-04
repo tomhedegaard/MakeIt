@@ -12,12 +12,18 @@ import {
   getOpenHrvAlerts,
   getPendingFormChecks,
 } from "@/lib/data/coach";
+import { getHrvReadingSeries } from "@/lib/data/hrv";
+import { getMentalSafetyMetrics } from "@/lib/data/mind";
+import { buildHrvBandView, PERSONAL_WINDOW_MAX } from "@/lib/hrv/band";
+import { buildDemoHrvSeries } from "@/lib/hrv/demo-series";
+import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 
 /**
  * Right-hand panel of the inbox split view (spec §6.8, lg+ only). Reuses
- * the queue's own cards — the panel is a second door to the same
- * actions, never a copy of them. Kinds without an inline card (Safety,
- * stale members) keep their full page and get a link to it.
+ * the queue's own cards, so the panel is a second door to the same
+ * actions, never a copy of them. Every kind renders an inline minimum
+ * (Safety: the member's own summary; stale: days since the last session)
+ * and links to its full page.
  */
 export default async function InboxCasePanel({
   item,
@@ -80,20 +86,78 @@ async function CaseBody({
   }
   if (item.kind === "hrv_alert") {
     const alert = (await getOpenHrvAlerts(50)).find((a) => a.id === rawId);
-    if (alert) return <HrvAlertCard alert={alert} />;
+    if (alert) {
+      return (
+        <div className="space-y-6">
+          <HrvReadingVsBand memberId={item.memberId} />
+          <HrvAlertCard alert={alert} />
+        </div>
+      );
+    }
   }
   if (item.kind === "adaptive") {
     const alert = (await getOpenAdaptiveAlerts(50)).find((a) => a.alertId === rawId);
     if (alert) return <AdaptiveAlertCard alert={alert} />;
   }
+  if (item.kind === "mental_safety") {
+    const safety = await getMentalSafetyMetrics(7);
+    const alert = safety.openAlerts.find((a) => a.id === rawId);
+    return (
+      <div className="max-w-prose space-y-3">
+        {alert ? (
+          <p className="text-fg leading-relaxed whitespace-pre-wrap">{alert.summary}</p>
+        ) : null}
+        <p className="text-sm text-fg-dim">{t("panelSafety")}</p>
+      </div>
+    );
+  }
+  if (item.kind === "stale_session") {
+    const days = item.reasonParams?.days;
+    return (
+      <div className="max-w-prose space-y-3">
+        <p className="text-fg">
+          {typeof days === "number"
+            ? t("panelStaleDays", { days })
+            : t("panelStaleNever")}
+        </p>
+        <p className="text-sm text-fg-dim">{t("panelStale")}</p>
+      </div>
+    );
+  }
 
-  const body =
-    item.kind === "mental_safety"
-      ? t("panelSafety")
-      : item.kind === "stale_session"
-        ? t("panelStale")
-        : t("panelElsewhere");
+  // The case closed between the list and the panel render.
+  return <p className="max-w-prose text-sm text-fg-body">{t("panelMissing")}</p>;
+}
+
+/**
+ * The member's latest night against their personal band, so the coach
+ * reads the HRV case without leaving the inbox. Demo mode has no HRV
+ * tables, so it reads the same deterministic series the member app shows.
+ */
+async function HrvReadingVsBand({ memberId }: { memberId: string }) {
+  const t = await getTranslations("Coach.inbox");
+  const readings = SUPABASE_ENABLED
+    ? await getHrvReadingSeries(memberId, { rangeDays: PERSONAL_WINDOW_MAX })
+    : buildDemoHrvSeries();
+  const view = buildHrvBandView(readings);
+
+  if (view.latestMs == null) {
+    return <p className="text-sm text-fg-dim">{t("panelHrvNone")}</p>;
+  }
   return (
-    <p className="max-w-prose text-sm text-fg-body">{body}</p>
+    <dl className="grid grid-cols-2 gap-6 max-w-sm">
+      <div>
+        <dt className="text-micro text-fg-dim">{t("panelHrvLatest")}</dt>
+        <dd className="numeric text-2xl mt-1">{view.latestMs} ms</dd>
+      </div>
+      <div>
+        <dt className="text-micro text-fg-dim">{t("panelHrvBand")}</dt>
+        <dd className="numeric text-2xl mt-1">
+          {view.bandLowMs != null && view.bandHighMs != null
+            ? `${view.bandLowMs}–${view.bandHighMs} ms`
+            : t("panelHrvBuilding", { count: view.nightsCollected })}
+        </dd>
+      </div>
+    </dl>
   );
 }
