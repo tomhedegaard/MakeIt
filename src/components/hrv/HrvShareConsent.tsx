@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { setHrvShareToCoach } from "@/app/(app)/hrv/connect-actions";
+import Switch from "@/components/ui/Switch";
 
 /**
  * "Del med coach" (spec §6.3) as explicit consent (0068). Until the member
@@ -84,25 +85,7 @@ export default function HrvShareConsent({
           <p className="text-copy text-fg">{t("label")}</p>
           <p className="mt-1 text-meta text-fg-dim">{share ? t("onHint") : t("offHint")}</p>
         </div>
-        <button
-          ref={switchRef}
-          type="button"
-          role="switch"
-          aria-checked={share}
-          aria-label={t("label")}
-          aria-disabled={pending}
-          onClick={() => save(!share)}
-          className={`relative h-7 w-12 shrink-0 border transition-colors duration-200 ease-out ${
-            share ? "bg-fg border-fg" : "bg-bg border-line-strong"
-          }`}
-        >
-          <span
-            aria-hidden
-            className={`absolute left-0 top-0.5 size-6 border transition-transform duration-200 ease-out motion-reduce:transition-none ${
-              share ? "translate-x-5 bg-bg border-bg" : "translate-x-0.5 bg-bg border-line-strong"
-            }`}
-          />
-        </button>
+        <Switch ref={switchRef} checked={share} onCheckedChange={save} label={t("label")} pending={pending} />
       </div>
       {error ? <p role="alert" className="mt-3 text-meta text-danger">{t("error")}</p> : null}
     </section>

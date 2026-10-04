@@ -8,6 +8,7 @@ import ConnectionStatus from "@/components/hrv/ConnectionStatus";
 import WearableConnectSheet from "@/components/hrv/WearableConnectSheet";
 import SectionHeader from "@/components/ui/SectionHeader";
 import HrvShareConsent from "@/components/hrv/HrvShareConsent";
+import Switch from "@/components/ui/Switch";
 import {
   setPrimaryConnection,
   setCycleTracking,
@@ -156,62 +157,14 @@ export default function HrvSettingsSection({
             <div className="text-copy">{t("cycle.title")}</div>
             <div className="text-meta text-fg-dim mt-0.5">{t("cycle.body")}</div>
           </div>
-          <label className="shrink-0 cursor-pointer touch-app">
-            <input
-              type="checkbox"
-              checked={cycleEnabled}
-              onChange={(e) => toggleCycle(e.target.checked)}
-              aria-label={t("cycle.title")}
-              disabled={cyclePending}
-              className="sr-only peer"
-            />
-            <span
-              aria-hidden
-              className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fg peer-focus-visible:outline-solid"
-              style={{ background: cycleEnabled ? "var(--fg)" : "var(--bg-3)" }}
-            >
-              <span
-                className="absolute top-0.5 left-0.5 size-6 transition-transform duration-200 ease-out motion-reduce:transition-none"
-                style={{
-                  background: cycleEnabled ? "var(--bg)" : "var(--fg-dim)",
-                  transform: cycleEnabled
-                    ? "translateX(20px)"
-                    : "translateX(0)",
-                }}
-              />
-            </span>
-          </label>
+          <Switch checked={cycleEnabled} onCheckedChange={toggleCycle} label={t("cycle.title")} pending={cyclePending} />
         </li>
         <li className="py-3 flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
             <div className="text-copy">{t("nudge.title")}</div>
             <div className="text-meta text-fg-dim mt-0.5">{t("nudge.body")}</div>
           </div>
-          <label className="shrink-0 cursor-pointer touch-app">
-            <input
-              type="checkbox"
-              checked={nudgeEnabled}
-              onChange={(e) => toggleNudge(e.target.checked)}
-              aria-label={t("nudge.title")}
-              disabled={nudgePending}
-              className="sr-only peer"
-            />
-            <span
-              aria-hidden
-              className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fg peer-focus-visible:outline-solid"
-              style={{ background: nudgeEnabled ? "var(--fg)" : "var(--bg-3)" }}
-            >
-              <span
-                className="absolute top-0.5 left-0.5 size-6 transition-transform duration-200 ease-out motion-reduce:transition-none"
-                style={{
-                  background: nudgeEnabled ? "var(--bg)" : "var(--fg-dim)",
-                  transform: nudgeEnabled
-                    ? "translateX(20px)"
-                    : "translateX(0)",
-                }}
-              />
-            </span>
-          </label>
+          <Switch checked={nudgeEnabled} onCheckedChange={toggleNudge} label={t("nudge.title")} pending={nudgePending} />
         </li>
       </ul>
       {cycleMsg ? (
