@@ -1,5 +1,6 @@
 "use client";
 
+import Switch from "@/components/ui/Switch";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { setMentalToggleAction } from "@/app/(app)/mind/settings/actions";
@@ -63,24 +64,7 @@ export default function MentalToggleRow({
           <p className="text-fg-dim text-meta italic mt-1">{disabledReason}</p>
         ) : null}
       </div>
-      <button
-        type="button"
-        onClick={toggle}
-        disabled={disabled}
-        aria-disabled={pending || undefined}
-        role="switch"
-        aria-checked={value}
-        aria-label={title}
-        className={`relative w-12 h-7 transition-colors shrink-0 ${
- value ? "bg-fg" : "bg-bg-2 border hairline"
- } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
-      >
-        <span
-          className={`absolute top-0.5 w-6 h-6 bg-bg transition-transform border hairline-strong ${
- value ? "translate-x-5" : "translate-x-0.5"
- }`}
-        />
-      </button>
+      <Switch checked={value} onCheckedChange={() => toggle()} label={title} pending={pending} disabled={disabled} />
     </div>
   );
 }

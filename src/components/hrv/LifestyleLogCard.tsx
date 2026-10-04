@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useTransition, type ReactNode } from "react";
+import { useId, useState, useTransition, type ReactNode } from "react";
+import Switch from "@/components/ui/Switch";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { logLifestyleEvent } from "@/app/(app)/hrv/lifestyle-actions";
@@ -114,34 +115,12 @@ function Toggle({
   busy: boolean;
   onChange: (next: boolean) => void;
 }) {
+  const id = useId();
   return (
-    <label className="flex items-start justify-between gap-4 cursor-pointer touch-app">
-      <span className="flex-1 min-w-0 text-meta text-fg-dim">{label}</span>
-      <span className="shrink-0">
-        <input
-          type="checkbox"
-          checked={checked}
-          aria-disabled={busy}
-          onChange={(e) => {
-            if (!busy) onChange(e.target.checked);
-          }}
-          className="sr-only peer"
-        />
-        <span
-          aria-hidden
-          className="block relative w-12 h-7 border hairline-strong peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fg peer-focus-visible:outline-solid"
-          style={{ background: checked ? "var(--fg)" : "var(--bg-3)" }}
-        >
-          <span
-            className="absolute top-0.5 left-0.5 size-6 transition-transform duration-200 ease-out motion-reduce:transition-none"
-            style={{
-              background: checked ? "var(--bg)" : "var(--fg-dim)",
-              transform: checked ? "translateX(20px)" : "translateX(0)",
-            }}
-          />
-        </span>
-      </span>
-    </label>
+    <div className="flex items-center justify-between gap-4">
+      <span id={id} className="flex-1 min-w-0 text-meta text-fg-dim">{label}</span>
+      <Switch checked={checked} onCheckedChange={onChange} labelledBy={id} pending={busy} />
+    </div>
   );
 }
 

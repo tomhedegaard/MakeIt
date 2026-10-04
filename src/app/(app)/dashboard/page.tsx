@@ -382,7 +382,7 @@ export default async function TodayPage() {
                   <span className="numeric text-fg-faint text-micro w-6">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="flex-1 text-fg/90 text-copy truncate">{ex.name}</span>
+                  <span className="flex-1 min-w-0 text-fg-body text-copy">{ex.name}</span>
                   <span className="numeric text-fg-faint text-micro">{ex.setCount}{t("todaySession.setCountSuffix")}</span>
                 </>
               );
@@ -588,7 +588,7 @@ function CrewRow({
     <li className="surface-2 p-4 flex items-center gap-3">
       <Avatar handle={who} />
       <div className="flex-1 min-w-0">
-        <div className="text-copy truncate">
+        <div className="text-copy break-words">
           <span className="text-fg">{who}</span>{" "}
           <span className="text-fg-dim">{what}</span>
         </div>
