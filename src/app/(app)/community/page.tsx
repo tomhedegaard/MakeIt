@@ -241,7 +241,7 @@ export default async function CrewPage() {
               <span className="numeric text-fg-faint w-7">{row.rank}</span>
               <Avatar handle={row.who} className="size-8" />
               <span className="flex-1 truncate">{row.who}</span>
-              <span className="tabular text-fg-body">{row.score}</span>
+              <span className="numeric text-fg-body">{row.score}</span>
               <span className="text-micro text-fg-faint hidden sm:inline">{row.lift}</span>
               {i < 3 ? (
                 <span className="inline-flex items-center border hairline-strong px-2 py-1">

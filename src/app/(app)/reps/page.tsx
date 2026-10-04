@@ -290,7 +290,7 @@ export default async function RepsPage() {
           <ul className="border-t hairline md:grid md:grid-cols-2 md:gap-x-10">
             {how.map((row) => (
               <li key={row.k} className="flex items-baseline gap-4 py-3 border-b hairline">
-                <span className="tabular w-16 shrink-0 text-right text-lg text-fg">{row.v}</span>
+                <span className="numeric w-16 shrink-0 text-right text-lg text-fg">{row.v}</span>
                 <span className="min-w-0">
                   <span className="block text-sm text-fg-body">{row.k}</span>
                   <span className="block text-xs text-fg-faint mt-0.5">{row.sub}</span>
