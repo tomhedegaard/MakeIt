@@ -36,7 +36,6 @@
   },
   "result": {
     "eyebrow": "AI form check",
-    "outOf": "/ 100",
     "mockNote": "Demo response · real AI activates with ANTHROPIC_API_KEY",
     "realNote": "AI assessment · approved by a head coach within 24h",
     "cardPos": "What you did right",
