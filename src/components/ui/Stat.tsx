@@ -22,7 +22,7 @@ export default function Stat({
   return (
     <div className="flex flex-col gap-1">
       <p className="eyebrow">{label}</p>
-      <p className="tabular-nums text-2xl">
+      <p className="numeric text-2xl">
         {value}
         {unit ? <span className="text-fg-dim text-base ml-1">{unit}</span> : null}
       </p>

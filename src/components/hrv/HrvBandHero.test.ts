@@ -10,7 +10,6 @@ import {
 } from "@/lib/hrv/demo-series";
 
 const COPY: HrvBandCopy = {
-  eyebrow: "Hjerte",
   latest: "HRV i morges",
   unit: "ms",
   avg: "Dit snit",
@@ -23,7 +22,7 @@ const COPY: HrvBandCopy = {
   steadyEyebrow: "Dit normalområde",
   engineBelow: "Motoren letter dagens squat-topsæt.",
   engineAbove: "kroppen er klar",
-  disclaimer: "HRV er et restitutions-signal, ikke en diagnose.",
+  disclaimer: "HRV er et restitutionssignal, ikke en diagnose.",
   legendBand: "Dit bånd",
   legendAvg: "Dit snit",
   rangeLabel: "Personligt normalområde",
@@ -70,5 +69,13 @@ describe("HrvBandHero states", () => {
     expect(html).toContain('data-engine-cue="below"');
     expect(html).toContain("Motoren letter dagens squat-topsæt.");
     expect(html).toContain("ikke en diagnose");
+  });
+
+  it("states the normal range in ms, on screen and in the band's label", () => {
+    const view = buildHrvBandView(demoSteadySeries());
+    const html = render(demoSteadySeries());
+    const range = `${view.bandLowMs}–${view.bandHighMs} ms`;
+    expect(html).toMatch(new RegExp(`data-hrv-normal-range[^>]*>Dit normalområde <span[^>]*>${range}<`));
+    expect(html).toContain(`aria-label="Personligt normalområde: ${range}`);
   });
 });

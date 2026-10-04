@@ -78,7 +78,7 @@ export default function KeepOriginal({ modifierId, sessionId, accepted }: Props)
     <div className="flex flex-col items-start gap-2">
       <button
         type="button"
-        className="btn btn-ghost btn-sm"
+        className="btn btn-sm"
         disabled={isPending}
         onClick={keep}
       >

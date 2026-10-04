@@ -97,6 +97,7 @@ export async function reviewFormCheckAction(
 
   revalidatePath("/coach");
   revalidatePath("/coach/queue");
+  revalidatePath("/coach/inbox");
   // Surface the new note immediately on the member's surfaces.
   revalidatePath("/profile");
   revalidatePath("/dashboard");
@@ -167,6 +168,7 @@ export async function sendHrvAlertNoteAction(
 
   revalidatePath("/coach");
   revalidatePath("/coach/queue");
+  revalidatePath("/coach/inbox");
   return { ok: true };
 }
 
@@ -233,6 +235,8 @@ export async function pauseSessionFromAlertAction(
   if (updErr) return { ok: false };
 
   revalidatePath("/coach/queue");
+
+  revalidatePath("/coach/inbox");
   return { ok: true };
 }
 
@@ -266,6 +270,8 @@ export async function markHrvAlertSeenAction(
   if (error) return { ok: false };
 
   revalidatePath("/coach/queue");
+
+  revalidatePath("/coach/inbox");
   return { ok: true };
 }
 
@@ -363,6 +369,8 @@ export async function reviewAdaptiveAlertAction(input: {
   }
 
   revalidatePath("/coach/queue");
+
+  revalidatePath("/coach/inbox");
   if (input.sessionId) {
     revalidatePath(`/session/${input.sessionId}`);
   }

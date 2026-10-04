@@ -61,6 +61,7 @@ export default function PostComposer({
                 key={tagOption}
                 type="button"
                 data-active={tag === tagOption}
+                aria-pressed={tag === tagOption}
                 className="pill touch-app"
                 onClick={() => setTag(tag === tagOption ? null : tagOption)}
               >
@@ -70,6 +71,7 @@ export default function PostComposer({
           </div>
 
           <textarea
+            aria-label={t("textLabel")}
             className="field min-h-[120px] py-3 resize-none w-full"
             placeholder={
               tag === "PR"
@@ -96,7 +98,7 @@ export default function PostComposer({
                 <div className="text-xs text-fg-dim">{t("addVideoSub")}</div>
               </div>
             </div>
-            <span className="text-fg-faint text-sm">→</span>
+            <span className="text-fg-faint text-sm" aria-hidden="true">→</span>
           </button>
 
           <div className="grid grid-cols-2 gap-3 mt-5">

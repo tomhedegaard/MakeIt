@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
-import { MUSCLE_LABELS, type MuscleGroup } from "@/lib/data/muscle-groups";
-import type { Exercise, ExerciseLibrary, Session } from "@/lib/workout";
+import type { Exercise, Session } from "@/lib/workout";
+import { PrimaryMuscleTags, StatCell, dominantView } from "./session-parts";
 import { startSessionAction } from "./actions";
 import { ChevronLeft } from "lucide-react";
 import { ICON } from "@/components/ui/icon";
@@ -29,13 +29,13 @@ export default async function SessionPreview({ session }: { session: Session }) 
   }
 
   return (
-    <div className="minh-dvh flex flex-col bg-bg">
-      <header className="safe-top sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
+    <div className="min-h-dvh flex flex-col bg-bg">
+      <header className="safe-top sticky top-0 z-30 bg-bg border-b hairline">
         <div className="px-4 lg:px-6 h-14 flex items-center justify-between gap-3">
           <Link
             href="/dashboard"
             aria-label={t("preview.back")}
-            className="size-10 rounded-full surface-2 flex items-center justify-center"
+            className="size-11 surface-2 flex items-center justify-center"
           >
             <ChevronLeft {...ICON} className="size-5" />
           </Link>
@@ -56,12 +56,13 @@ export default async function SessionPreview({ session }: { session: Session }) 
             </div>
           </div>
 
-          <div className="size-10" aria-hidden />
+          <div className="size-11" aria-hidden />
         </div>
       </header>
 
+      <main className="flex-1 flex flex-col">
       <Container size="narrow" className="flex-1 py-6 pb-40 lg:pb-12 space-y-6">
-        <section className="surface-2 rounded-2xl p-5 lg:p-7">
+        <section className="surface-2 p-5 lg:p-7">
           <div className="eyebrow mb-2">{t("preview.eyebrow")}</div>
           <h1 className="font-display text-3xl lg:text-4xl leading-[1] mb-2">
             {session.dayLabel}
@@ -69,13 +70,13 @@ export default async function SessionPreview({ session }: { session: Session }) 
           <p className="text-fg-dim text-sm md:text-base leading-relaxed">
             {session.title}
           </p>
-          <div className="grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden mt-5">
-            <Stat label={t("preview.exercises")} value={session.exercises.length} />
-            <Stat label={t("preview.sets")} value={totalSets} />
-            <Stat
+          <div className="grid grid-cols-3 gap-px bg-line border hairline overflow-hidden mt-5">
+            <StatCell label={t("preview.exercises")} value={session.exercises.length} />
+            <StatCell label={t("preview.sets")} value={totalSets} />
+            <StatCell
               label={t("preview.estTime")}
               value={session.estimatedMinutes}
-              suffix="m"
+              suffix={t("units.minutes")}
             />
           </div>
         </section>
@@ -89,8 +90,12 @@ export default async function SessionPreview({ session }: { session: Session }) 
           />
         ))}
       </Container>
+      </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-30 bg-bg/95 backdrop-blur border-t hairline p-4 lg:static lg:bg-transparent lg:border-t-0 lg:p-0">
+      <div
+        className="fixed bottom-0 left-0 right-0 z-30 bg-bg border-t hairline px-4 pt-3 lg:static lg:bg-transparent lg:border-t-0 lg:p-0"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
+      >
         <Container size="narrow" className="lg:pb-12">
           <form action={start}>
             <button type="submit" className="btn btn-primary btn-xl w-full">
@@ -103,25 +108,6 @@ export default async function SessionPreview({ session }: { session: Session }) 
   );
 }
 
-function Stat({
-  label,
-  value,
-  suffix,
-}: {
-  label: string;
-  value: number | string;
-  suffix?: string;
-}) {
-  return (
-    <div className="bg-bg-2 px-4 py-3 text-center">
-      <div className="eyebrow mb-1">{label}</div>
-      <div className="numeric text-2xl">
-        {value}
-        {suffix ? <span className="text-fg-dim text-sm ml-0.5">{suffix}</span> : null}
-      </div>
-    </div>
-  );
-}
 
 async function PreviewExercise({
   ex,
@@ -138,7 +124,7 @@ async function PreviewExercise({
   const inlineCues = lib?.cues.slice(0, 3) ?? [];
 
   return (
-    <section className="surface-2 rounded-2xl p-5 lg:p-7">
+    <section className="surface-2 p-5 lg:p-7">
       <div className="flex items-start justify-between gap-4 mb-4">
         <div className="min-w-0 flex-1">
           <div className="eyebrow mb-1">
@@ -167,7 +153,7 @@ async function PreviewExercise({
         <div className="flex gap-4 border-t hairline pt-4">
           <Link
             href={`/train/exercises/${lib.slug}`}
-            className="shrink-0 lift rounded-md surface p-1.5"
+            className="shrink-0 lift surface p-1.5"
             aria-label={t("exercise.openDetails")}
           >
             <AnatomyFigure
@@ -211,7 +197,10 @@ async function PreviewExercise({
               {String(i + 1).padStart(2, "0")}
             </span>
             <span className="flex-1 numeric">
-              {formatSetTarget(s.targetReps, s.targetWeight, s.targetRpe)}
+              {formatSetTarget(s.targetReps, s.targetWeight, s.targetRpe, {
+                reps: t("units.reps"),
+                kg: t("units.kg"),
+              })}
             </span>
             {s.restSec && s.restSec > 0 ? (
               <span className="numeric text-fg-faint text-xs shrink-0">
@@ -225,45 +214,17 @@ async function PreviewExercise({
   );
 }
 
-function PrimaryMuscleTags({ muscles }: { muscles: MuscleGroup[] }) {
-  if (muscles.length === 0) return null;
-  return (
-    <div className="flex gap-1 flex-wrap">
-      {muscles.map((m) => (
-        <span
-          key={m}
-          className="px-2 py-0.5 text-micro bg-bg-3 text-fg-dim"
-        >
-          {MUSCLE_LABELS[m]}
-        </span>
-      ))}
-    </div>
-  );
-}
 
 function formatSetTarget(
   reps: number,
   weight: number,
-  rpe: number | undefined
+  rpe: number | undefined,
+  unit: { reps: string; kg: string },
 ): string {
   const parts: string[] = [];
-  if (reps > 0) parts.push(`${reps} reps`);
-  if (weight > 0) parts.push(`${weight} kg`);
+  if (reps > 0) parts.push(`${reps} ${unit.reps}`);
+  if (weight > 0) parts.push(`${weight} ${unit.kg}`);
   if (rpe) parts.push(`RPE ${rpe}`);
   return parts.length > 0 ? parts.join(" · ") : "-";
 }
 
-function dominantView(lib: ExerciseLibrary): "front" | "back" {
-  const FRONT = new Set([
-    "neck", "chest", "front_delts", "biceps", "forearms", "abs",
-    "obliques", "adductors", "quads", "calves_front",
-  ]);
-  const all = [...lib.primaryMuscles, ...lib.secondaryMuscles];
-  let front = 0;
-  let back = 0;
-  for (const m of all) {
-    if (FRONT.has(m)) front++;
-    else back++;
-  }
-  return back >= front ? "back" : "front";
-}

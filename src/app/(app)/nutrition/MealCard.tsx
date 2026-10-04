@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocaleTag } from "@/i18n/config";
+import { formatNumber } from "@/lib/utils";
+import ConfirmSheet from "@/components/ui/ConfirmSheet";
 import type { Meal } from "@/lib/data/nutrition";
 import { swapMealAction } from "./actions";
 import LogMealButton from "./LogMealButton";
@@ -29,6 +32,9 @@ export default function MealCard({
   const t = useTranslations("Nutrition.mealCard");
   const ts = useTranslations("Nutrition.slotLabels");
   const [open, setOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const tag = intlLocaleTag(useLocale());
+  const fmt = (n: number | null) => (n == null ? "-" : formatNumber(n, tag));
   const [pending, startTransition] = useTransition();
   const swapExhausted =
     swapQuotaRemaining !== undefined && swapQuotaRemaining <= 0;
@@ -36,13 +42,26 @@ export default function MealCard({
 
   function handleSwap() {
     if (swapDisabled) return;
-    if (!confirm(t("swapConfirm", { title: meal.title, slot: ts(meal.slot).toLowerCase() }))) return;
+    setConfirmOpen(true);
+  }
+
+  function doSwap() {
     const formData = new FormData();
     formData.set("mealId", meal.id);
     startTransition(() => {
       swapMealAction(formData);
     });
   }
+
+  const confirmSheet = (
+    <ConfirmSheet
+      open={confirmOpen}
+      onOpenChange={setConfirmOpen}
+      title={t("swapConfirm", { title: meal.title, slot: ts(meal.slot).toLowerCase() })}
+      confirmLabel={t("swapShort")}
+      onConfirm={doSwap}
+    />
+  );
 
   if (compact) {
     return (
@@ -60,7 +79,7 @@ export default function MealCard({
         <div className="flex-1 min-w-0">
           <div className="text-sm truncate">{meal.title}</div>
           <div className="text-micro text-fg-faint">
-            {meal.estKcal ?? "-"} kcal · {meal.estProteinG ?? "-"}g P · {meal.prepMinutes ?? "-"}m
+            {fmt(meal.estKcal)} kcal · {t("macroProtein", { value: fmt(meal.estProteinG) })} · {fmt(meal.prepMinutes)} min
           </div>
         </div>
         {meal.swappable ? (
@@ -75,6 +94,7 @@ export default function MealCard({
             {pending ? "…" : t("swapShort")}
           </button>
         ) : null}
+        {confirmSheet}
       </div>
     );
   }
@@ -97,12 +117,17 @@ export default function MealCard({
                 : t("photoVia")
             }
           >
+            {/* Plain img: next.config has no images.remotePatterns for
+                Unsplash, so next/image cannot load it. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={meal.imageUrl}
               alt={meal.title}
               loading="lazy"
-              className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              decoding="async"
+              width={448}
+              height={252}
+              className="absolute inset-0 size-full object-cover transition-transform duration-200 ease-out motion-reduce:transition-none group-hover:scale-[1.02]"
             />
             {meal.imageAttributionName ? (
               <span
@@ -140,20 +165,20 @@ export default function MealCard({
               ) : null}
             </div>
             <div className="text-right shrink-0">
-              <div className="numeric text-2xl">{meal.estKcal ?? "-"}</div>
+              <div className="numeric text-2xl">{fmt(meal.estKcal)}</div>
               <div className="eyebrow">{t("kcal")}</div>
             </div>
           </div>
 
           {/* Macro pills */}
           <div className="px-5 pb-3 flex flex-wrap items-center gap-2 text-micro">
-            <span className="text-fg-dim">{t("macroProtein", { value: meal.estProteinG ?? "-" })}</span>
+            <span className="text-fg-dim">{t("macroProtein", { value: fmt(meal.estProteinG) })}</span>
             <span className="text-fg-faint" aria-hidden>·</span>
-            <span className="text-fg-dim">{t("macroCarbs", { value: meal.estCarbsG ?? "-" })}</span>
+            <span className="text-fg-dim">{t("macroCarbs", { value: fmt(meal.estCarbsG) })}</span>
             <span className="text-fg-faint" aria-hidden>·</span>
-            <span className="text-fg-dim">{t("macroFat", { value: meal.estFatG ?? "-" })}</span>
+            <span className="text-fg-dim">{t("macroFat", { value: fmt(meal.estFatG) })}</span>
             <span className="text-fg-faint" aria-hidden>·</span>
-            <span className="text-fg-dim">{t("macroPrep", { value: meal.prepMinutes ?? "-" })}</span>
+            <span className="text-fg-dim">{t("macroPrep", { value: fmt(meal.prepMinutes) })}</span>
           </div>
         </div>
       </div>
@@ -220,6 +245,7 @@ export default function MealCard({
           />
         ) : null}
       </div>
+      {confirmSheet}
     </article>
   );
 }

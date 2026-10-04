@@ -19,8 +19,8 @@
     "exercises": "Exercises",
     "sets": "Sets",
     "estTime": "Est. time",
-    "minuteUnit": "m",
-    "minutes": "{count}m",
+    "minuteUnit": "min",
+    "minutes": "{count} min",
     "setCountSuffix": "× sets",
     "start": "Start session →",
     "mock": {
@@ -40,7 +40,7 @@
   },
   "stats": {
     "volume": "Volume",
-    "volumeMeta": "kg · 4 weeks",
+    "volumeMeta": "4 weeks",
     "prs": "PRs",
     "prsMeta": "4 weeks",
     "reps": "Reps"
@@ -68,12 +68,12 @@
     "share": "+ Share",
     "prBadge": "PR",
     "mock": {
-      "ninaWhat": "+2.5kg PR · Deadlift 175 kg",
+      "ninaWhat": "+2.5 kg PR · Deadlift 175 kg",
       "ninaWhen": "just now",
       "kasperWhat": "finished week 8 of PR-Block",
-      "kasperWhen": "12m",
+      "kasperWhen": "12 min",
       "mariaWhat": "shared a form check video",
-      "mariaWhen": "32m"
+      "mariaWhen": "32 min"
     }
   },
   "trend": {

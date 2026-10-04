@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { Modal } from "@/components/ui/Modal";
 import { useYouth } from "@/components/youth/YouthContext";
 import { escalateMentalSafetyAction } from "@/app/(app)/mind/journal/escalate-actions";
 
@@ -24,19 +25,42 @@ export default function MentalResourcesModal({
   /** MakeIt Ung: the guardian has been told (spec afsnit 5). */
   guardianNotified?: boolean;
 }) {
-  // Unmount the dialog when closed so the next open starts on
-  // "resources" without a setState-in-effect reset.
-  if (!open) return null;
-  return <MentalResourcesDialog onClose={onClose} guardianNotified={guardianNotified} />;
+  const t = useTranslations("Mind.safety");
+  // Radix Dialog (ui/Modal): focus is trapped, Escape closes, and the
+  // content unmounts when closed, so the next open starts on "resources"
+  // without a setState-in-effect reset.
+  return (
+    <Modal
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) onClose();
+      }}
+      title={t("title")}
+      description={t("body")}
+    >
+      <MentalResourcesDialog
+        onClose={onClose}
+        guardianNotified={guardianNotified}
+      />
+    </Modal>
+  );
 }
 
-function MentalResourcesDialog({ onClose, guardianNotified }: { onClose: () => void; guardianNotified: boolean }) {
+function MentalResourcesDialog({
+  onClose,
+  guardianNotified,
+}: {
+  onClose: () => void;
+  guardianNotified: boolean;
+}) {
   const t = useTranslations("Mind.safety");
   // MakeIt Ung has no coach contact with minors (Toms beslutning 4), so
   // "Skriv til Munk" is not offered; the young member is told plainly
   // when their guardian has been sent a notice.
   const youth = useYouth();
-  const [mode, setMode] = useState<"resources" | "escalate" | "sent">("resources");
+  const [mode, setMode] = useState<"resources" | "escalate" | "sent">(
+    "resources",
+  );
   const [persisted, setPersisted] = useState(false);
   const [summary, setSummary] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -79,115 +103,115 @@ function MentalResourcesDialog({ onClose, guardianNotified }: { onClose: () => v
     });
   }
 
-  if (!open) return null;
-
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="mental-resources-title"
-      className="fixed inset-0 z-50 bg-scrim backdrop-blur-sm flex items-center justify-center p-6"
-    >
-      <div className="max-w-lg w-full rounded-2xl border hairline bg-bg-2 p-8 space-y-6">
-        {mode === "resources" ? (
-          <>
-            <SectionHeader id="mental-resources-title" eyebrow={t("eyebrow")} title={t("title")} />
+    <div className="space-y-6">
+      {mode === "resources" ? (
+        <>
+          <SectionHeader
+            id="mental-resources-title"
+            eyebrow={t("eyebrow")}
+            title={t("title")}
+          />
 
-            <p className="text-fg-dim leading-relaxed">{t("body")}</p>
+          <p className="text-fg-dim leading-relaxed">{t("body")}</p>
 
-            <CrisisLines t={t} />
+          <CrisisLines t={t} />
 
-            {youth && guardianNotified ? (
-              <p className="text-fg leading-relaxed" data-guardian-notified>{t("youthNotified")}</p>
-            ) : null}
-
-            <p className="text-fg-dim text-sm">{youth ? t("youthPrivacy") : t("privacy")}</p>
-
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              {youth ? null : (
-                <button
-                  type="button"
-                  onClick={() => setMode("escalate")}
-                  className="inline-flex items-center justify-center border hairline px-5 py-2.5 text-sm font-medium hover:bg-bg/30 transition-colors"
-                >
-                  {t("tellMunk")}
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={close}
-                className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
-              >
-                {t("close")}
-              </button>
-            </div>
-          </>
-        ) : null}
-
-        {mode === "escalate" ? (
-          <form action={submitEscalation} className="space-y-5">
-            <SectionHeader id="mental-resources-title" eyebrow={t("escalateEyebrow")} title={t("escalateTitle")} />
-            <p className="text-fg-dim text-sm leading-relaxed">{t("escalateBody")}</p>
-            <CrisisLines t={t} />
-            <textarea
-              name="summary"
-              value={summary}
-              onChange={(e) => setSummary(e.target.value.slice(0, 1000))}
-              minLength={4}
-              maxLength={1000}
-              required
-              rows={6}
-              placeholder={t("escalatePlaceholder")}
-              className="w-full rounded-xl bg-bg/60 border hairline px-4 py-3 text-base resize-none focus:outline-none focus:border-fg/40"
-            />
-            <div className="text-fg-dim text-xs text-right tabular-nums">
-              {summary.length} / 1000
-            </div>
-            {error ? (
-              <div className="rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
-                {error}
-              </div>
-            ) : null}
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setMode("resources")}
-                className="text-fg-dim text-sm hover:text-fg"
-              >
-                {t("back")}
-              </button>
-              <button
-                type="submit"
-                disabled={pending || summary.trim().length < 4}
-                className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
-              >
-                {pending ? t("sending") : t("send")}
-              </button>
-            </div>
-          </form>
-        ) : null}
-
-        {mode === "sent" ? (
-          <>
-            <SectionHeader
-              id="mental-resources-title"
-              eyebrow={t("sentEyebrow")}
-              title={persisted ? t("sentTitle") : t("sentDemoTitle")}
-            />
-            <p className="text-fg-dim leading-relaxed">
-              {persisted ? t("sentBody") : t("sentDemoBody")}
+          {youth && guardianNotified ? (
+            <p className="text-fg leading-relaxed" data-guardian-notified>
+              {t("youthNotified")}
             </p>
-            <CrisisLines t={t} />
+          ) : null}
+
+          <p className="text-fg-dim text-sm">
+            {youth ? t("youthPrivacy") : t("privacy")}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            {youth ? null : (
+              <button
+                type="button"
+                onClick={() => setMode("escalate")}
+                className="btn"
+              >
+                {t("tellMunk")}
+              </button>
+            )}
+            <button type="button" onClick={close} className="btn btn-primary">
+              {t("close")}
+            </button>
+          </div>
+        </>
+      ) : null}
+
+      {mode === "escalate" ? (
+        <form action={submitEscalation} className="space-y-5">
+          <SectionHeader
+            id="mental-resources-title"
+            eyebrow={t("escalateEyebrow")}
+            title={t("escalateTitle")}
+          />
+          <p className="text-fg-dim text-sm leading-relaxed">
+            {t("escalateBody")}
+          </p>
+          <CrisisLines t={t} />
+          <textarea
+            name="summary"
+            value={summary}
+            onChange={(e) => setSummary(e.target.value.slice(0, 1000))}
+            minLength={4}
+            maxLength={1000}
+            required
+            rows={6}
+            placeholder={t("escalatePlaceholder")}
+            className="input w-full text-base resize-none"
+          />
+          <div className="text-fg-dim text-xs text-right tabular">
+            {summary.length} / 1000
+          </div>
+          {error ? (
+            <div
+              role="alert"
+              className="border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger"
+            >
+              {error}
+            </div>
+          ) : null}
+          <div className="flex items-center justify-end gap-3 pt-2">
             <button
               type="button"
-              onClick={close}
-              className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
+              onClick={() => setMode("resources")}
+              className="btn btn-ghost"
             >
-              {t("sentClose")}
+              {t("back")}
             </button>
-          </>
-        ) : null}
-      </div>
+            <button
+              type="submit"
+              disabled={pending || summary.trim().length < 4}
+              className="btn btn-primary disabled:opacity-40"
+            >
+              {pending ? t("sending") : t("send")}
+            </button>
+          </div>
+        </form>
+      ) : null}
+
+      {mode === "sent" ? (
+        <>
+          <SectionHeader
+            id="mental-resources-title"
+            eyebrow={t("sentEyebrow")}
+            title={persisted ? t("sentTitle") : t("sentDemoTitle")}
+          />
+          <p className="text-fg-dim leading-relaxed">
+            {persisted ? t("sentBody") : t("sentDemoBody")}
+          </p>
+          <CrisisLines t={t} />
+          <button type="button" onClick={close} className="btn btn-primary">
+            {t("sentClose")}
+          </button>
+        </>
+      ) : null}
     </div>
   );
 }
@@ -199,7 +223,7 @@ function CrisisLines({
 }) {
   const youth = useYouth();
   return (
-    <div className="border-l-2 border-fg/30 pl-5 space-y-1.5">
+    <div className="border-l hairline-strong pl-5 space-y-1.5">
       <h3 className="eyebrow mb-2">{t("ifBurning")}</h3>
       {youth ? (
         <>
@@ -209,7 +233,10 @@ function CrisisLines({
             </a>
           </p>
           <p>
-            <a href="https://headspace.dk" className="underline hover:opacity-80">
+            <a
+              href="https://headspace.dk"
+              className="underline hover:opacity-80"
+            >
               {t("youthHeadspace")}
             </a>
           </p>

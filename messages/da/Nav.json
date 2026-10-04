@@ -16,7 +16,7 @@
     "coachBadge": "Coach",
     "coachConsole": "Konsol",
     "tier": "Niveau",
-    "demoBanner": "Demo · eksempeldata, ikke dit personlige crew",
+    "demoBanner": "Demo · eksempeldata",
     "logout": "Log ud",
     "myProfile": "Min profil",
     "unread": "{count} ulæste",
@@ -59,7 +59,7 @@
       "reps": {
         "eyebrow": "Reps",
         "title": "Du får for det du laver.",
-        "body": "+250 Reps pr. fuldført session. +100 pr. uge i program. Bytt dem til limited drops, custom-broderede straps, og 1:1 tid med Mikael."
+        "body": "+250 Reps pr. fuldført session. +100 pr. uge i program. Byt dem til limited drops, custom-broderede straps, og 1:1 tid med Mikael."
       }
     }
   },

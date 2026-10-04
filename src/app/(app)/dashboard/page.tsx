@@ -30,6 +30,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import PageTitle from "@/components/ui/PageTitle";
 import SectionHeader from "@/components/ui/SectionHeader";
 import Stat from "@/components/ui/Stat";
+import Avatar from "@/components/ui/Avatar";
 import KeepOriginal from "@/components/dashboard/KeepOriginal";
 import MorningSignal from "@/components/dashboard/MorningSignal";
 import AdaptiveReasonStrip from "@/components/adaptive/AdaptiveReasonStrip";
@@ -56,6 +57,15 @@ import {
 import { generatedSessionTitleKey } from "@/lib/i18n/member-bodycopy";
 import YouthToday from "@/components/youth/YouthToday";
 import { youthClaimsFor } from "@/lib/youth/account";
+import {
+  emptyWeekStrip,
+  getWeekStrip,
+  mockWeekStrip,
+  type WeekDay,
+} from "@/lib/data/coaching";
+import { weekStripForSurface } from "@/lib/trust/connected-first-run";
+import { Check } from "lucide-react";
+import { ICON } from "@/components/ui/icon";
 
 type Translator = Awaited<ReturnType<typeof getTranslations<"Dashboard">>>;
 
@@ -159,9 +169,10 @@ export default async function TodayPage() {
 
   const locale = await getLocale();
   const t = await getTranslations("Dashboard");
-  const [stripCopy, dotsCopy] = await Promise.all([
+  const [stripCopy, dotsCopy, tWeek] = await Promise.all([
     loadStripCopy(),
     loadDotsCopy(),
+    getTranslations("Coaching.week"),
   ]);
   const connected = SUPABASE_ENABLED;
   // Everything independent loads in one batch. Demo mode skips the
@@ -178,6 +189,7 @@ export default async function TodayPage() {
     prose,
     intakeRaw,
     demoProfile,
+    weekDb,
   ] = await Promise.all([
     connected ? getTodayCard(member.id) : null,
     connected ? getUpcomingSessions(member.id, 3) : null,
@@ -197,6 +209,8 @@ export default async function TodayPage() {
     // "0 kcal" without a goal. The demo profile's target, resolved the
     // same way the demo meal plan resolves it, fills that in.
     connected ? null : getOrCreateNutritionProfile(member.id),
+    // Same Mon–Sun strip as Træn, same Today pick.
+    connected ? getWeekStrip(member.id) : null,
   ]);
 
   const todayRaw = todayCardForSurface({
@@ -218,6 +232,12 @@ export default async function TodayPage() {
       }))
     : upcomingRaw;
   const feed = feedForSurface({ connected, fromDb: feedDb });
+  const week = weekStripForSurface({
+    connected,
+    fromDb: weekDb,
+    demo: mockWeekStrip(),
+    empty: emptyWeekStrip(),
+  });
   const stats = statsForSurface({ connected, fromDb: statsDb });
 
   const reviewedCount = myChecks.filter(
@@ -242,14 +262,13 @@ export default async function TodayPage() {
 
   const insightCards = connected
     ? buildTodayInsightStream({
-        sessionHref: today ? `/session/${today.id}` : "/coaching",
         hasHrv: hrv != null,
         qualitative: qualitativeFromBucket(hrv?.bucket ?? null),
         outOfBand: isOutOfBand(hrv?.bucket ?? null),
         mindCheckedToday: mindChecked,
         hasSession: today != null,
       })
-    : demoInsightStream(`/session/${today?.id ?? TODAY_SESSION.id}`);
+    : demoInsightStream();
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
@@ -269,7 +288,28 @@ export default async function TodayPage() {
         }
       />
 
+      <WeekStrip
+        week={week}
+        copy={{
+          ariaLabel: tWeek("ariaLabel"),
+          rest: tWeek("rest"),
+          today: tWeek("today"),
+          done: tWeek("done"),
+          days: Object.fromEntries(
+            week.map((d) => [d.dayKey, tWeek(`days.${d.dayKey}`)]),
+          ),
+        }}
+      />
+
+      {/*
+        From lg: main column (session, prose, insights) beside a side rail
+        (morning signal, numbers, upcoming, crew). DOM order is the phone
+        order. The rail spans the flexible middle row, so it starts right
+        under the morning signal instead of waiting for the session card.
+      */}
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem] lg:grid-rows-[auto_1fr_auto] lg:gap-x-10 items-start">
       {/* 2. todaySession */}
+      <div className="lg:col-start-1 lg:row-start-1 lg:row-span-2">
       {today ? (
         <Card
           variant="primary"
@@ -282,7 +322,6 @@ export default async function TodayPage() {
           <div className="px-5 pt-5 pb-4 border-b hairline">
             <span className="domain-stroke mb-3" aria-hidden />
             <div className="flex items-center gap-2 mb-3 flex-wrap">
-              <span className="pulse-dot" />
               <span className="eyebrow eyebrow-domain">{t("todaySession.eyebrow", { programCode: today.programCode, week: today.week })}</span>
               {today.isDeload ? (
                 <span className="ml-auto numeric text-micro border hairline-strong px-2 py-0.5">
@@ -310,7 +349,7 @@ export default async function TodayPage() {
             <div className="bg-bg-2 px-4 py-3">
               <div className="eyebrow mb-1">{t("todaySession.estTime")}</div>
               <div className="numeric text-2xl">
-                {today.estimatedMinutes}
+                {today.estimatedMinutes}{" "}
                 <span className="text-fg-dim text-sm">{t("todaySession.minuteUnit")}</span>
               </div>
             </div>
@@ -371,8 +410,10 @@ export default async function TodayPage() {
           actionLabel={t("todaySession.emptyCta")}
         />
       )}
+      </div>
 
       {/* 3. morningSignal */}
+      <div className="lg:col-start-2 lg:row-start-1">
       <MorningSignal
         input={{
           session: today ? { adapted: adaptation != null && adaptation.acceptedByMember !== false } : null,
@@ -381,13 +422,20 @@ export default async function TodayPage() {
           intake: { consumedKcal: intakeRaw.consumedKcal, targetKcal },
         }}
       />
+      </div>
+
+      <div className="space-y-8 lg:col-start-1 lg:row-start-3">
 
       {/* 4. munkNote */}
       {reviewedCount > 0 ? (
         <Card domain="body" className="p-0 overflow-hidden">
           <Link href="/profile#form-checks" className="block px-5 py-4 lift">
             <div className="flex items-center gap-3">
-              <span className="pulse-dot" />
+              <span
+                className="size-2 rounded-full shrink-0"
+                style={{ background: "var(--domain, var(--fg))" }}
+                aria-hidden
+              />
               <div className="flex-1 min-w-0">
                 <div className="text-sm">
                   {t("formChecks.answeredBefore")}{" "}
@@ -410,6 +458,9 @@ export default async function TodayPage() {
       {/* 5. prose, with the cross-domain insight cards under it */}
       <TodayProse model={prose} />
       <ConnectDotsStream cards={insightCards} copy={dotsCopy} />
+      </div>
+
+      <div className="space-y-8 lg:col-start-2 lg:row-start-2 lg:row-span-2">
 
       {/* 6. upcoming */}
       <section data-dashboard="upcoming">
@@ -419,7 +470,7 @@ export default async function TodayPage() {
           linkLabel={t("upcoming.seeWeek")}
         />
         {upcoming && upcoming.length > 0 ? (
-          <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">
+          <ul className="surface-2 divide-y hairline overflow-hidden">
             {upcoming.map((row) => (
               <li key={row.id}>
                 <Link
@@ -434,7 +485,7 @@ export default async function TodayPage() {
             ))}
           </ul>
         ) : upcoming === null ? (
-          <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">
+          <ul className="surface-2 divide-y hairline overflow-hidden">
             {mockUpcoming(t).map((row) => (
               <li key={row.d} className="px-4 py-3 flex items-center gap-4">
                 <span className="eyebrow w-16 shrink-0">{row.d}</span>
@@ -444,18 +495,21 @@ export default async function TodayPage() {
             ))}
           </ul>
         ) : (
-          <div className="surface-2 rounded-lg p-6 text-sm text-fg-dim">
+          <div className="surface-2 p-6 text-sm text-fg-dim">
             {t("upcoming.empty")}
           </div>
         )}
       </section>
 
       {/* 7. stats */}
-      <Card as="section" data-dashboard="stats" className="grid grid-cols-3 gap-4">
-        <div>
+      <Card as="section" data-dashboard="stats" className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-1 lg:gap-5">
+        {/* Volumen fylder en hel række på telefon: "84.200 kg" i 2xl
+            støder ellers ind i nabotallet ved 375 px. */}
+        <div className="col-span-2 sm:col-span-1">
           <Stat
             label={t("stats.volume")}
-            value={stats ? formatVolume(stats.volumeKg) : connected ? "0" : "84.2K"}
+            value={formatKg(stats ? stats.volumeKg : connected ? 0 : 84_200, locale)}
+            unit="kg"
           />
           <div className="text-micro text-fg-faint mt-1 flex items-center gap-1">
             <span>{t("stats.volumeMeta")}</span>
@@ -467,7 +521,7 @@ export default async function TodayPage() {
         <div>
           <Stat
             label={t("stats.prs")}
-            value={stats ? String(stats.prs4w).padStart(2, "0") : connected ? "00" : "03"}
+            value={stats ? String(stats.prs4w) : connected ? "0" : "3"}
           />
           <div className="text-micro text-fg-faint mt-1 flex items-center gap-1">
             <span>{t("stats.prsMeta")}</span>
@@ -505,14 +559,17 @@ export default async function TodayPage() {
             ))}
           </ul>
         ) : (
-          <div className="surface-2 rounded-lg p-6 text-sm text-fg-dim">
+          <div className="surface-2 p-6 text-sm text-fg-dim">
             {t("crew.empty")}
             <div className="mt-3">
-              <Link href="/community" className="btn btn-sm btn-primary">{t("crew.share")}</Link>
+              <Link href="/community" className="btn btn-sm">{t("crew.share")}</Link>
             </div>
           </div>
         )}
       </section>
+
+      </div>
+      </div>
 
       {/* 9. tierBanner */}
       {promotion ? (
@@ -533,10 +590,8 @@ function CrewRow({
   who, what, when, pr, prLabel,
 }: Pick<CrewItem, "id" | "who" | "what" | "when" | "pr"> & { tier?: string; prLabel: string }) {
   return (
-    <li className="surface-2 rounded-lg p-4 flex items-center gap-3">
-      <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
-        {who.slice(1, 3).toUpperCase()}
-      </div>
+    <li className="surface-2 p-4 flex items-center gap-3">
+      <Avatar handle={who} />
       <div className="flex-1 min-w-0">
         <div className="text-sm truncate">
           <span className="text-fg">{who}</span>{" "}
@@ -553,14 +608,69 @@ function CrewRow({
   );
 }
 
-function formatVolume(kg: number): string {
-  if (kg <= 0) return "0";
-  if (kg < 1000) return `${Math.round(kg)}`;
-  return `${(kg / 1000).toFixed(1).replace(".", ",")}K`;
+/** Whole kilos with the locale's grouping: 84.200 (da), 84,200 (en). */
+function formatKg(kg: number, locale = "da"): string {
+  return new Intl.NumberFormat(intlLocaleTag(locale), { maximumFractionDigits: 0 }).format(Math.max(0, kg));
 }
 
 function formatReps(n: number, locale = "da"): string {
   return new Intl.NumberFormat(intlLocaleTag(locale)).format(n);
+}
+
+/**
+ * Mon–Sun under the header (spec §6.1): "Man 21 Squat". Today carries the
+ * 2 px mos stroke, the same marker the tab bar uses for the active tab.
+ */
+function WeekStrip({
+  week,
+  copy,
+}: {
+  week: WeekDay[];
+  copy: {
+    ariaLabel: string;
+    rest: string;
+    today: string;
+    done: string;
+    days: Record<string, string>;
+  };
+}) {
+  return (
+    <nav aria-label={copy.ariaLabel} data-dashboard="week">
+      <ol className="grid grid-cols-7 border hairline divide-x hairline">
+        {week.map((day) => {
+          const body = (
+            <>
+              <span className="block text-micro text-fg-dim">{copy.days[day.dayKey]}</span>
+              <span className="flex items-center gap-1 numeric text-base text-fg">
+                {day.date}
+                {day.done ? (
+                  <Check {...ICON} aria-label={copy.done} className="size-3.5 text-fg-dim" />
+                ) : null}
+              </span>
+              <span className={`block truncate text-micro ${day.rest ? "text-fg-dim" : "text-fg"}`}>
+                {day.sessionLabel || copy.rest}
+              </span>
+            </>
+          );
+          const cell = `block h-full px-1.5 pt-2 pb-2.5 sm:px-3 border-t-2 ${
+            day.today ? "border-t-signal" : "border-t-transparent"
+          }`;
+          return (
+            <li key={day.iso} aria-current={day.today ? "date" : undefined} className="min-w-0">
+              {day.sessionId ? (
+                <Link href={`/session/${day.sessionId}`} className={`${cell} lift`}>
+                  {body}
+                </Link>
+              ) : (
+                <div className={cell}>{body}</div>
+              )}
+              {day.today ? <span className="sr-only">{copy.today}</span> : null}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
 }
 
 /**

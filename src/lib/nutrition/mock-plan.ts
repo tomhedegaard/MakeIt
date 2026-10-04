@@ -443,7 +443,7 @@ const CATALOG: Template[] = [
     id: "a-oksesteg",
     slot: "aften",
     title: "Stegt oksemørbrad med kartofler og rødkål",
-    description: "Lørdag-aften niveau. 35 minutter, hjemmelavet rødkål.",
+    description: "God nok til en lørdag aften. 35 minutter, hjemmelavet rødkål.",
     ingredients: [
       { name: "oksemørbrad", amount: 180, unit: "g" },
       { name: "kartofler", amount: 250, unit: "g" },

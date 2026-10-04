@@ -26,9 +26,13 @@ export type InsightCardModel = {
   moreHref: string;
 };
 
+/**
+ * Heart→Body cards explain the adaptation. Opening the session is
+ * already the page's one primary ("Start pas"), so the card asks why.
+ */
+const WHY_HREF = "/hrv/learn/adaptive";
+
 export type InsightStreamInput = {
-  /** Today's session route, e.g. /session/sess-2026-05-05 */
-  sessionHref: string;
   hasHrv: boolean;
   qualitative: QualitativeBand | null;
   outOfBand: boolean;
@@ -73,7 +77,7 @@ export function buildTodayInsightStream(
       id: "heart_body_low",
       domains: ["heart", "body"],
       moreAbout: "heart",
-      ctaHref: input.sessionHref,
+      ctaHref: WHY_HREF,
       moreHref: "/hrv/trends#band",
     });
   } else if (hasSession && input.hasHrv && input.qualitative === "ro") {
@@ -81,7 +85,7 @@ export function buildTodayInsightStream(
       id: "heart_body_ro",
       domains: ["heart", "body"],
       moreAbout: "heart",
-      ctaHref: input.sessionHref,
+      ctaHref: WHY_HREF,
       moreHref: "/hrv/trends#band",
     });
   } else if (hasSession && input.hasHrv) {
@@ -89,7 +93,7 @@ export function buildTodayInsightStream(
       id: "heart_body_low",
       domains: ["heart", "body"],
       moreAbout: "body",
-      ctaHref: input.sessionHref,
+      ctaHref: WHY_HREF,
       moreHref: "/hrv/learn/adaptive?q=hjerte-krop",
     });
   }
@@ -126,9 +130,8 @@ export function buildTodayInsightStream(
 }
 
 /** Demo stream — Heart data exists, morning is Lav, mind-check not done. */
-export function demoInsightStream(sessionHref: string): InsightCardModel[] {
+export function demoInsightStream(): InsightCardModel[] {
   return buildTodayInsightStream({
-    sessionHref,
     hasHrv: true,
     qualitative: "lav",
     outOfBand: true,

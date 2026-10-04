@@ -8,8 +8,10 @@ const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 
 /**
  * Per-week skip-day toggler. Renders 7 day-cells (Mon..Sun); cells
- * already flagged as skip show in red/dim, untouched cells are
- * neutral. Click toggles via the server action and revalidates.
+ * already flagged as skip show inked, untouched cells are
+ * neutral.
+ * Selected is the ink state (spec §5 chips), not danger: a skip day is
+ * a choice, not an error. Click toggles via the server action and revalidates.
  *
  * Regeneration is NOT auto-triggered — the user might toggle a few
  * days, then hit "Regenerér ugeplan" once. We surface the hint
@@ -67,10 +69,10 @@ export default function SkipDaysCard({
             type="button"
             disabled={pending}
             onClick={() => toggle(d.dateIso, d.skipped)}
-            className={`relative rounded-lg p-2 text-center transition-colors hairline border ${
+            className={`relative min-h-11 p-2 text-center border transition-colors duration-200 ease-out ${
               d.skipped
-                ? "bg-danger/15 border-danger/40 text-danger"
-                : "bg-bg hover:bg-bg-3"
+                ? "bg-fg border-fg text-bg"
+                : "bg-bg hairline hover:bg-bg-3"
             } disabled:opacity-50`}
             aria-pressed={d.skipped}
             aria-label={
@@ -79,7 +81,7 @@ export default function SkipDaysCard({
                 : t("markAria", { day: d.label })
             }
           >
-            <div className="eyebrow text-micro mb-0.5">{d.label}</div>
+            <div className={`text-micro mb-0.5 ${d.skipped ? "" : "text-fg-dim"}`}>{d.label}</div>
             <div className="numeric text-base">{d.day}</div>
             {d.skipped ? (
               <div className="text-micro mt-1">
@@ -90,7 +92,7 @@ export default function SkipDaysCard({
         ))}
       </div>
       {skipDayIndices.length > 0 ? (
-        <p className="mt-3 text-micro text-fg-faint">
+        <p className="mt-3 text-micro text-fg-dim">
           {t("regenHint")}
         </p>
       ) : null}

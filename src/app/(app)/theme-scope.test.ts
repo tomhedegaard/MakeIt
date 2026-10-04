@@ -12,7 +12,7 @@ describe("app theme scopes (spec §2, §6)", () => {
     // flex-1 (basis 0) in the auto-height body let the wrapper grow to
     // content height, pushing the tab bar below the fold.
     const cls = layout.match(/<ThemeScope theme="nord" className="([^"]+)"/)?.[1] ?? "";
-    expect(cls.split(" ")).toEqual(expect.arrayContaining(["h-dvh", "lg:h-auto", "lg:minh-dvh", "lg:flex-1"]));
+    expect(cls.split(" ")).toEqual(expect.arrayContaining(["h-dvh", "lg:h-auto", "lg:min-h-dvh", "lg:flex-1"]));
     // Desktop keeps growing with content (sticky sidebar, page scroll).
     expect(cls.split(" ")).not.toContain("flex-1");
   });
@@ -42,7 +42,7 @@ describe("app theme scopes (spec §2, §6)", () => {
   // Nat, and the (app) boundary (the first one a dynamic prefetch reaches)
   // turns Nat on /session too. Both share one skeleton.
   it("shows the loading skeleton in Nat on /session", () => {
-    expect(sessionLoading).toContain('<ThemeScope theme="nat" className="minh-dvh">');
+    expect(sessionLoading).toContain('<ThemeScope theme="nat" className="min-h-dvh">');
     expect(sessionLoading).toContain("<AppLoadingSkeleton");
     expect(appLoading).toContain("<AppLoadingSkeleton");
     expect(appLoading).toContain("<LoadingTheme");

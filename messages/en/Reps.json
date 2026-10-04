@@ -1,6 +1,6 @@
 {
   "header": {
-    "eyebrow": "Reps Program",
+    "eyebrow": "Reps program",
     "title": "You put in work. You get paid.",
     "subtitle": "Earn Reps for what you already do. Spend them on stuff you actually want."
   },
@@ -8,7 +8,8 @@
     "label": "Your balance",
     "tier": "Tier: {tier}",
     "toNext": "{amount} to {tier}",
-    "topCap": "Top cap reached."
+    "topCap": "Top cap reached.",
+    "progressLabel": "Progress to {tier}"
   },
   "tiers": {
     "eyebrow": "Tiers",
@@ -31,7 +32,9 @@
         "range": "15,000+",
         "perks": ["Everything from Beast", "1:1 time with Mikael Munk", "Limited drop with your name", "20% discount for life"]
       }
-    }
+    },
+    "coachSchool": "Coach School opens at Beast.",
+    "perksToggle": "Perks per tier"
   },
   "how": {
     "eyebrow": "How you earn",
@@ -110,7 +113,7 @@
       },
       "open-house-vip": {
         "name": "Open House VIP pack",
-        "description": "Training + dinner on Amagerbro 24/05 · 12 spots."
+        "description": "Training + dinner on Amagerbro {date} · 12 spots."
       }
     },
     "balance": "Balance: {balance} Reps",

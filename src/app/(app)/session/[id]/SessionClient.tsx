@@ -1,21 +1,23 @@
 "use client";
 
 import { useCallback, useMemo, useState, useTransition } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocaleTag } from "@/i18n/config";
+import { formatNumber } from "@/lib/utils";
 import type { Exercise, Session } from "@/lib/workout";
 import type { FormCheckQuota } from "@/lib/data/form-check-quota";
 import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
 import SessionExerciseDemo from "@/components/exercise/SessionExerciseDemo";
-import { MUSCLE_LABELS } from "@/lib/data/muscle-groups";
 import { buildCuePhaseMap } from "@/lib/exercise/cue-phase-mapping";
 import { resolveSessionDemoAssetUrl } from "@/lib/data/session-demo-assets";
 import Stepper from "@/components/ui/Stepper";
 import RpeSelect from "@/components/ui/RpeSelect";
 import RestTimer from "@/components/ui/RestTimer";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
-import FormCheckSheet from "@/components/ui/FormCheckSheet";
+import Progress from "@/components/ui/Progress";
 import SectionHeader from "@/components/ui/SectionHeader";
 import FormCheckThread from "@/components/form-check/FormCheckThread";
 import {
@@ -28,9 +30,15 @@ import HrvReadinessNudge from "@/components/hrv/HrvReadinessNudge";
 import AdaptationCard from "@/components/adaptive/AdaptationCard";
 import type { ActiveAdaptation } from "@/lib/adaptive/explanation";
 import { logSetAction, completeSessionAction } from "./actions";
-import { Video, X } from "lucide-react";
+import { Camera, X } from "lucide-react";
 import { ICON } from "@/components/ui/icon";
 import { useYouth } from "@/components/youth/YouthContext";
+import { PrimaryMuscleTags, StatCell, dominantView } from "./session-parts";
+
+// 725 lines of camera + upload UI only matter once the member taps "Optag".
+const FormCheckSheet = dynamic(() => import("@/components/ui/FormCheckSheet"), {
+  ssr: false,
+});
 
 type Logged = Record<
   string,
@@ -89,6 +97,8 @@ export default function SessionClient({
 }) {
   const router = useRouter();
   const t = useTranslations("Session");
+  const tag = intlLocaleTag(useLocale());
+  const fmt = (n: number) => formatNumber(n, tag);
 
   const initialLogged = useMemo(() => buildInitialLogged(session), [session]);
   const initialPoint = useMemo(() => findResumePoint(session), [session]);
@@ -102,7 +112,10 @@ export default function SessionClient({
   const [formCheckOpen, setFormCheckOpen] = useState(false);
   const youth = useYouth();
   const [queued, setQueued] = useState<FormQueueItem[]>([]);
-  const [repsAwarded, setRepsAwarded] = useState<number>(250);
+  // Null until the server answers: no invented number in the done sheet (spec §7.6).
+  const [repsAwarded, setRepsAwarded] = useState<number | null>(null);
+  const [repsFailed, setRepsFailed] = useState(false);
+  const [restAnnounce, setRestAnnounce] = useState("");
   const [, startTransition] = useTransition();
 
   const ex = session.exercises[exIdx];
@@ -123,7 +136,6 @@ export default function SessionClient({
     () => Object.values(logged).filter((v) => v.done).length,
     [logged]
   );
-  const progressPct = (completedSets / totalSets) * 100;
 
   function patch(partial: Partial<Logged[string]>) {
     setLogged((prev) => ({
@@ -158,13 +170,14 @@ export default function SessionClient({
       // Complete the session and award Reps
       startTransition(async () => {
         const res = await completeSessionAction(session.id);
-        if (res.ok) setRepsAwarded(res.repsAwarded || 250);
+        if (res.ok) setRepsAwarded(res.repsAwarded);
+        else setRepsFailed(true);
       });
       setDoneOpen(true);
       return;
     }
 
-    if (set.restSec && set.restSec > 0) setResting({ secs: set.restSec });
+    if (set.restSec && set.restSec > 0) startRest(set.restSec);
 
     if (isLastSetOfEx) {
       setExIdx(exIdx + 1);
@@ -172,6 +185,11 @@ export default function SessionClient({
     } else {
       setSetIdx(setIdx + 1);
     }
+  }
+
+  function startRest(secs: number) {
+    setRestAnnounce("");
+    setResting({ secs });
   }
 
   const sessionVolume = useMemo(
@@ -184,28 +202,29 @@ export default function SessionClient({
   );
 
   return (
-    <div className="minh-dvh flex flex-col bg-bg">
+    <div className="min-h-dvh flex flex-col bg-bg">
       {/* Top bar */}
-      <header className="safe-top sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
+      <header className="safe-top sticky top-0 z-30 bg-bg border-b hairline">
         <div className="px-4 lg:px-6 h-14 flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={() => setExitOpen(true)}
             aria-label={t("topBar.exit")}
-            className="size-11 rounded-full surface-2 flex items-center justify-center"
+            className="size-11 surface-2 flex items-center justify-center"
           >
             <X {...ICON} className="size-5" />
           </button>
 
           <div className="flex-1 min-w-0 text-center">
-            <div className="text-micro text-fg-faint">
+            {/* The session is the page; exercise and HQ cards are h2s under it. */}
+            <h1 className="text-micro text-fg-dim">
               {t("topBar.programLine", {
                 programCode: session.programCode,
                 week: session.week,
                 dayLabel: session.dayLabel,
               })}
-            </div>
-            <div className="numeric text-xs text-fg-dim">
+            </h1>
+            <div className="tabular text-xs text-fg-dim">
               {t("topBar.setsCount", { completed: completedSets, total: totalSets })}
             </div>
           </div>
@@ -213,15 +232,16 @@ export default function SessionClient({
           <div className="size-11" aria-hidden />
         </div>
 
-        <div className="h-1 bg-bg-3 overflow-hidden">
-          <div
-            className="h-full bg-fg transition-all duration-500"
-            style={{ width: `${progressPct}%` }}
-          />
-        </div>
+        <Progress
+          value={completedSets}
+          max={totalSets}
+          label={t("topBar.setsCount", { completed: completedSets, total: totalSets })}
+          className="bg-bg-3"
+        />
       </header>
 
       {/* Main column */}
+      <main className="flex-1 flex flex-col">
       <Container
         size="narrow"
         className={
@@ -251,7 +271,7 @@ export default function SessionClient({
         {session.pausedReplacement ? (
           <section
             aria-labelledby="paused-heading"
-            className="surface-2 rounded-2xl p-6 lg:p-8 space-y-4 border hairline"
+            className="surface-2 p-6 lg:p-8 space-y-4"
           >
             <h2 id="paused-heading" className="text-xl numeric tracking-tight">
               {session.pausedReplacement.title}
@@ -283,26 +303,26 @@ export default function SessionClient({
         />
 
         {/* Targets row */}
-        <section className="grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
+        <section className="grid grid-cols-3 gap-px bg-line border hairline overflow-hidden">
           <div className="bg-bg-2 p-4 text-center">
             <div className="eyebrow mb-1 flex items-center justify-center gap-1.5">
               <span>{t("targets.goal")}</span>
               {set.adapted?.kind === "weight_reduced" ? (
                 <span
-                  className="text-micro px-1.5 py-0.5 rounded-sm bg-bg-3 text-fg-dim"
-                  title={`Reduceret fra ${set.adapted.originalWeight} kg`}
+                  className="text-micro px-1.5 py-0.5 bg-bg-3 text-fg-dim"
+                  title={t("targets.reducedFrom", { weight: fmt(set.adapted.originalWeight) })}
                 >
                   −{set.adapted.percent}%
                 </span>
               ) : null}
             </div>
             <div className="numeric text-xl">
-              {set.targetWeight}
+              {fmt(set.targetWeight)}{" "}
               <span className="text-fg-dim text-sm">kg</span>
             </div>
             {set.adapted?.kind === "weight_reduced" ? (
-              <div className="text-micro text-fg-faint mt-1 numeric">
-                org {set.adapted.originalWeight} kg
+              <div className="text-micro text-fg-dim mt-1 numeric">
+                {t("targets.original", { weight: fmt(set.adapted.originalWeight) })}
               </div>
             ) : null}
           </div>
@@ -312,7 +332,7 @@ export default function SessionClient({
           </div>
           <div className="bg-bg-2 p-4 text-center">
             <div className="eyebrow mb-1">{t("targets.rpe")}</div>
-            <div className="numeric text-xl">{set.targetRpe ? set.targetRpe : "-"}</div>
+            <div className="numeric text-xl">{set.targetRpe ? fmt(set.targetRpe) : "-"}</div>
           </div>
         </section>
 
@@ -347,7 +367,7 @@ export default function SessionClient({
         {/* Sets list for this exercise */}
         <section>
           <div className="eyebrow mb-3">{t("sets.title")}</div>
-          <ol className="surface-2 rounded-lg divide-y hairline overflow-hidden">
+          <ol className="surface-2 divide-y hairline overflow-hidden">
             {ex.sets.map((s, i) => {
               const sk = setKey(ex.id, s.id);
               const lg = logged[sk];
@@ -357,9 +377,7 @@ export default function SessionClient({
                 <li
                   key={s.id}
                   data-current={isCurrent}
-                  className={`px-4 py-3 flex items-center gap-3 text-sm ${
-                    isOptional ? "opacity-55" : ""
-                  }`}
+                  className="px-4 py-3 flex items-center gap-3 text-sm"
                   style={{ background: isCurrent ? "var(--bg-3)" : undefined }}
                 >
                   <span className="numeric text-fg-faint w-6 text-xs">
@@ -367,12 +385,12 @@ export default function SessionClient({
                   </span>
                   <span className="flex-1 numeric">
                     {lg?.done
-                      ? `${lg.weight}kg × ${lg.reps}${lg.rpe ? ` @ ${lg.rpe}` : ""}`
-                      : `${s.targetWeight}kg × ${s.targetReps}${s.targetRpe ? ` @ ${s.targetRpe}` : ""}`}
+                      ? `${fmt(lg.weight)} kg × ${lg.reps}${lg.rpe ? ` @ ${fmt(lg.rpe)}` : ""}`
+                      : `${fmt(s.targetWeight)} kg × ${s.targetReps}${s.targetRpe ? ` @ ${fmt(s.targetRpe)}` : ""}`}
                   </span>
                   {isOptional ? (
-                    <span className="text-micro text-fg-faint">
-                      valgfri
+                    <span className="text-micro text-fg-dim border hairline px-1.5 py-0.5">
+                      {t("sets.optional")}
                     </span>
                   ) : null}
                   {lg?.done ? (
@@ -388,17 +406,18 @@ export default function SessionClient({
           </ol>
         </section>
       </Container>
+      </main>
 
       {/* Sticky CTA */}
       <div
-        className="fixed left-0 right-0 bottom-0 z-40 border-t hairline bg-bg/95 backdrop-blur"
+        className="fixed left-0 right-0 bottom-0 z-40 border-t hairline bg-bg"
         style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
       >
         <div className="mx-auto max-w-3xl px-4 lg:px-6 pt-3 flex items-center gap-3">
           <button
             type="button"
             className="btn btn-sm"
-            onClick={() => setResting({ secs: 90 })}
+            onClick={() => startRest(90)}
           >
             {t("cta.rest")}
           </button>
@@ -421,40 +440,41 @@ export default function SessionClient({
           <div className="mx-auto max-w-3xl">
             <RestTimer
               durationSec={resting.secs}
-              onDone={() => setResting(null)}
+              onDone={() => {
+                setResting(null);
+                setRestAnnounce(t("restTimer.done"));
+              }}
               onSkip={() => setResting(null)}
             />
           </div>
         </div>
       ) : null}
+      <p role="status" className="sr-only">{restAnnounce}</p>
 
       {/* Done sheet */}
       <Sheet open={doneOpen} onOpenChange={setDoneOpen}>
-        <SheetContent>
+        <SheetContent srTitle={t("done.title")}>
           <div className="text-center pb-4">
             <SectionHeader eyebrow={t("done.eyebrow")} title={t("done.title")} className="justify-center" />
             <p className="text-fg-dim text-sm mb-6 px-2">
               {t("done.body", { sets: completedSets })}
             </p>
 
-            <div className="grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden mb-6">
-              <div className="bg-bg-2 p-3 text-center">
-                <div className="eyebrow mb-1">{t("done.sets")}</div>
-                <div className="numeric text-2xl">{completedSets}</div>
-              </div>
-              <div className="bg-bg-2 p-3 text-center">
-                <div className="eyebrow mb-1">{t("done.volume")}</div>
-                <div className="numeric text-2xl">
-                  {sessionVolume}
-                  <span className="text-fg-dim text-sm">kg</span>
-                </div>
-              </div>
-              <div className="bg-bg-2 p-3 text-center">
-                <div className="eyebrow mb-1">{t("done.reps")}</div>
-                <div className="numeric text-2xl">
-                  + {repsAwarded}
-                </div>
-              </div>
+            <div className="grid grid-cols-3 gap-px bg-line border hairline overflow-hidden mb-6">
+              <StatCell label={t("done.sets")} value={completedSets} />
+              <StatCell label={t("done.volume")} value={fmt(sessionVolume)} suffix={t("units.kg")} />
+              <StatCell
+                label={t("done.reps")}
+                value={
+                  repsAwarded != null ? (
+                    `+ ${repsAwarded}`
+                  ) : repsFailed ? (
+                    "–"
+                  ) : (
+                    <span aria-label={t("done.repsPending")}>…</span>
+                  )
+                }
+              />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -585,15 +605,15 @@ function ExerciseSection({
   );
 
   return (
-    <section className="surface-2 rounded-2xl p-5 lg:p-7">
+    <section className="surface-2 p-5 lg:p-7">
       <div className="flex items-start justify-between gap-4 mb-4">
         <div className="min-w-0 flex-1">
-          <div className="eyebrow mb-1">
-            {t("position", { current: exIdx + 1, total: totalExercises })}
-          </div>
-          <h1 className="font-display text-3xl lg:text-4xl leading-[1]">
+          <h2 className="font-display text-3xl lg:text-4xl leading-[1]">
             {ex.name}
-          </h1>
+          </h2>
+          <p className="mt-2 text-micro text-fg-dim tabular">
+            {t("position", { current: exIdx + 1, total: totalExercises })}
+          </p>
         </div>
         <div className="text-right shrink-0">
           <div className="numeric text-3xl lg:text-4xl">
@@ -613,12 +633,13 @@ function ExerciseSection({
               onPhaseChange={handlePhaseChange}
               label={t("demoAria", { lift: ex.name })}
               playLabel={t("demoPlay")}
+              pauseLabel={t("demoPause")}
               eyebrow={t("demo")}
             />
           ) : (
             <Link
               href={`/train/exercises/${lib.slug}`}
-              className="shrink-0 lift rounded-md surface p-1.5"
+              className="shrink-0 lift surface p-1.5"
               aria-label={t("openDetails")}
             >
               <AnatomyFigure
@@ -665,7 +686,7 @@ function ExerciseSection({
               <PrimaryMuscleTags muscles={lib.primaryMuscles} />
               <Link
                 href={`/train/exercises/${lib.slug}`}
-                className="ml-auto text-micro text-fg-dim hover:text-fg transition-colors"
+                className="ml-auto inline-flex min-h-11 items-center text-micro text-fg-dim hover:text-fg transition-colors"
               >
                 {t("seeFull")}
               </Link>
@@ -685,9 +706,9 @@ function ExerciseSection({
         data-form-film-cta=""
         data-form-set={setIdx + 1}
         onClick={onOpenFormCheck}
-        className="mt-4 w-full min-h-11 text-left flex items-start gap-3 rounded-xl px-4 py-3 lift touch-app bg-fg text-bg overflow-x-clip"
+        className="mt-4 w-full min-h-11 text-left flex items-start gap-3 px-4 py-3 touch-app border hairline-strong text-fg hover:bg-bg-3 transition-colors duration-200 ease-out overflow-x-clip"
       >
-        <Video {...ICON} className="size-4 mt-1 shrink-0" />
+        <Camera {...ICON} className="size-5 mt-0.5 shrink-0" />
         <span className="flex-1 min-w-0">
           <span className="flex items-baseline justify-between gap-2">
             <span className="text-sm leading-snug">{t("formCheck", { set: setIdx + 1 })}</span>
@@ -695,12 +716,10 @@ function ExerciseSection({
               {t("duration")}
             </span>
           </span>
-          <span className="block text-micro opacity-70 mt-0.5 leading-snug break-words">
+          <span className="block text-micro text-fg-dim mt-0.5 leading-snug break-words">
             {t("formCheckSub", { lift: ex.name })}
+            {overflowCues > 0 ? t("moreCues", { count: overflowCues }) : null}
           </span>
-          {overflowCues > 0 ? (
-            <span className="block opacity-60 mt-0.5">{t("moreCues", { count: overflowCues })}</span>
-          ) : null}
         </span>
       </button>
       )}
@@ -708,37 +727,4 @@ function ExerciseSection({
       <FormCheckThread items={threads} copy={threadCopy} />
     </section>
   );
-}
-
-function PrimaryMuscleTags({ muscles }: { muscles: import("@/lib/data/muscle-groups").MuscleGroup[] }) {
-  if (muscles.length === 0) return null;
-  return (
-    <div className="flex gap-1 flex-wrap">
-      {muscles.map((m) => (
-        <span
-          key={m}
-          className="px-2 py-0.5 text-micro bg-bg-3 text-fg-dim"
-        >
-          {MUSCLE_LABELS[m]}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function dominantView(
-  lib: NonNullable<Exercise["library"]>,
-): "front" | "back" {
-  const FRONT = new Set([
-    "neck", "chest", "front_delts", "biceps", "forearms", "abs",
-    "obliques", "adductors", "quads", "calves_front",
-  ]);
-  const all = [...lib.primaryMuscles, ...lib.secondaryMuscles];
-  let front = 0;
-  let back = 0;
-  for (const m of all) {
-    if (FRONT.has(m)) front++;
-    else back++;
-  }
-  return back >= front ? "back" : "front";
 }

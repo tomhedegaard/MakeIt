@@ -1,14 +1,15 @@
 {
   "header": {
-    "eyebrow": "Reps Program",
+    "eyebrow": "Reps-program",
     "title": "Du arbejder. Du får.",
-    "subtitle": "Tjen Reps for hvad du allerede gør. Bruge dem på ting du faktisk vil have."
+    "subtitle": "Tjen Reps for hvad du allerede gør. Brug dem på ting du faktisk vil have."
   },
   "balance": {
     "label": "Din balance",
     "tier": "Niveau: {tier}",
     "toNext": "{amount} til {tier}",
-    "topCap": "Topcap nået."
+    "topCap": "Topcap nået.",
+    "progressLabel": "Fremgang mod {tier}"
   },
   "tiers": {
     "eyebrow": "Niveauer",
@@ -31,7 +32,9 @@
         "range": "15.000+",
         "perks": ["Alt fra Beast", "1:1 tid med Mikael Munk", "Begrænset drop med dit navn", "20% rabat livstid"]
       }
-    }
+    },
+    "coachSchool": "Coach School åbner ved Beast.",
+    "perksToggle": "Fordele pr. niveau"
   },
   "how": {
     "eyebrow": "Sådan tjener du",
@@ -41,7 +44,7 @@
       "pr": { "v": "+250", "k": "Pr. PR du logger med video", "sub": "Verificeret af coach" },
       "invite": { "v": "+500", "k": "Pr. ven du inviterer ind", "sub": "Når de aktiverer" },
       "challenge": { "v": "+1.000", "k": "Pr. challenge du vinder", "sub": "Månedlige" },
-      "expiry": { "v": "−", "k": "Reps udløber aldrig", "sub": "De er dine. Punktum." }
+      "expiry": { "v": "−", "k": "Reps udløber aldrig", "sub": "Saldoen bliver stående." }
     }
   },
   "kindLabels": {
@@ -56,7 +59,7 @@
     "empty": "Endnu ingen Reps registreret. Træn, tjek mind-check eller skriv journal."
   },
   "categories": {
-    "mental": "Mental",
+    "mental": "Sind",
     "coaching": "Coaching",
     "training": "Træning"
   },
@@ -110,7 +113,7 @@
       },
       "open-house-vip": {
         "name": "Open House VIP-pakke",
-        "description": "Træning + middag på Amagerbro 24/05 · 12 pladser."
+        "description": "Træning + middag på Amagerbro {date} · 12 pladser."
       }
     },
     "balance": "Saldo: {balance} Reps",
@@ -126,7 +129,7 @@
   "redeem": {
     "errors": {
       "auth": "Du skal være logget ind.",
-      "sold_out": "Den her er udsolgt. Det går stærkt!",
+      "sold_out": "Den her er udsolgt.",
       "insufficient_reps": "Du har ikke nok Reps endnu.",
       "unavailable": "Belønningen er ikke tilgængelig lige nu.",
       "unknown": "Noget gik galt. Prøv igen om lidt."

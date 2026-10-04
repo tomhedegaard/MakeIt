@@ -75,7 +75,7 @@ export default function MentalToggleRow({
  } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
       >
         <span
-          className={`absolute top-0.5 w-6 h-6 rounded-full bg-bg transition-transform shadow ${
+          className={`absolute top-0.5 w-6 h-6 bg-bg transition-transform border hairline-strong ${
  value ? "translate-x-5" : "translate-x-0.5"
  }`}
         />

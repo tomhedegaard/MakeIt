@@ -157,16 +157,17 @@ export default function HrvSettingsSection({
               type="checkbox"
               checked={cycleEnabled}
               onChange={(e) => toggleCycle(e.target.checked)}
+              aria-label={t("cycle.title")}
               disabled={cyclePending}
               className="sr-only peer"
             />
             <span
               aria-hidden
-              className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
+              className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fg peer-focus-visible:outline-solid"
               style={{ background: cycleEnabled ? "var(--fg)" : "var(--bg-3)" }}
             >
               <span
-                className="absolute top-0.5 left-0.5 size-6 rounded-full transition-transform"
+                className="absolute top-0.5 left-0.5 size-6 transition-transform duration-200 ease-out motion-reduce:transition-none"
                 style={{
                   background: cycleEnabled ? "var(--bg)" : "var(--fg-dim)",
                   transform: cycleEnabled
@@ -187,16 +188,17 @@ export default function HrvSettingsSection({
               type="checkbox"
               checked={nudgeEnabled}
               onChange={(e) => toggleNudge(e.target.checked)}
+              aria-label={t("nudge.title")}
               disabled={nudgePending}
               className="sr-only peer"
             />
             <span
               aria-hidden
-              className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg"
+              className="block relative w-12 h-7 border hairline-strong transition-colors peer-checked:bg-fg peer-checked:border-fg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fg peer-focus-visible:outline-solid"
               style={{ background: nudgeEnabled ? "var(--fg)" : "var(--bg-3)" }}
             >
               <span
-                className="absolute top-0.5 left-0.5 size-6 rounded-full transition-transform"
+                className="absolute top-0.5 left-0.5 size-6 transition-transform duration-200 ease-out motion-reduce:transition-none"
                 style={{
                   background: nudgeEnabled ? "var(--bg)" : "var(--fg-dim)",
                   transform: nudgeEnabled

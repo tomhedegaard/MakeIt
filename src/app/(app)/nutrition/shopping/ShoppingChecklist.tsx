@@ -1,8 +1,11 @@
 "use client";
 
-import { useMemo, useSyncExternalStore } from "react";
-import { useTranslations } from "next-intl";
+import { useMemo, useState, useSyncExternalStore } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocaleTag } from "@/i18n/config";
+import { formatNumber } from "@/lib/utils";
 import type { ShoppingGroup } from "@/lib/nutrition/shopping";
+import ConfirmSheet from "@/components/ui/ConfirmSheet";
 
 /**
  * Checked state lives in localStorage keyed by plan.id, so it
@@ -30,6 +33,8 @@ export default function ShoppingChecklist({
 }) {
   const t = useTranslations("Nutrition.shoppingChecklist");
   const storageKey = `${STORAGE_PREFIX}${planId}`;
+  const [resetOpen, setResetOpen] = useState(false);
+  const tag = intlLocaleTag(useLocale());
   const checkedJson = useSyncExternalStore(
     subscribeToStorage,
     () => readSnapshot(storageKey),
@@ -68,12 +73,18 @@ export default function ShoppingChecklist({
   }
 
   function reset() {
-    if (!confirm(t("resetConfirm"))) return;
     persist(storageKey, new Set());
   }
 
   return (
     <div className="space-y-6">
+      <ConfirmSheet
+        open={resetOpen}
+        onOpenChange={setResetOpen}
+        title={t("resetConfirm")}
+        confirmLabel={t("reset")}
+        onConfirm={reset}
+      />
       {/* Progress */}
       <section className="surface-2 rounded-xl px-5 py-4">
         <div className="flex items-baseline justify-between mb-2">
@@ -94,7 +105,7 @@ export default function ShoppingChecklist({
         {totals.done > 0 ? (
           <button
             type="button"
-            onClick={reset}
+            onClick={() => setResetOpen(true)}
             className="text-micro text-fg-faint hover:text-fg-dim mt-3"
           >
             {t("reset")}
@@ -152,7 +163,7 @@ export default function ShoppingChecklist({
                         ) : null}
                       </div>
                       <div className="numeric text-sm shrink-0 text-fg-dim">
-                        {formatAmount(item.amount)} {item.unit}
+                        {formatNumber(Math.round(item.amount * 10) / 10, tag)} {item.unit}
                       </div>
                     </button>
                   </li>
@@ -205,9 +216,4 @@ function persist(key: string, value: Set<string>): void {
   } catch {
     // localStorage full or disabled — drop silently
   }
-}
-
-function formatAmount(n: number): string {
-  if (Number.isInteger(n)) return String(n);
-  return n.toFixed(1).replace(/\.0$/, "");
 }

@@ -1,7 +1,9 @@
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { intlLocaleTag } from "@/i18n/config";
+import { formatNumber } from "@/lib/utils";
 import Container from "@/components/Container";
-import PageTitle from "@/components/ui/PageTitle";
+import PageHeader from "@/components/app/PageHeader";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { getSession } from "@/lib/auth";
 import {
@@ -68,6 +70,8 @@ export default async function NutritionPage({
   }
 
   const t = await getTranslations("Nutrition");
+  const tag = intlLocaleTag(await getLocale());
+  const fmt = (n: number) => formatNumber(n, tag);
 
   const [
     checkin,
@@ -111,34 +115,26 @@ export default async function NutritionPage({
   const todayIndex = todayDayIndex();
 
   return (
-    <Container className="py-6 lg:py-12 space-y-8">
-      <div className="pt-2">
-        <PageTitle
-          kicker={t("page.eyebrow")}
-          title={t("page.title")}
-          action={
-            <div className="flex flex-wrap items-center gap-2">
-              <OffPlanLogButton estimateEnabled={await isMealEstimateEnabled(member)} />
-              <Link
-                href="/nutrition/shopping"
-                className="btn btn-sm"
-              >
-                {t("page.shoppingLink")}
-              </Link>
-              <Link
-                href="/nutrition/preferences"
-                className="btn btn-ghost btn-sm"
-              >
-                {t("page.preferencesLink")}
-              </Link>
-            </div>
-          }
-        />
-        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
-          {t("page.intro")}
-        </p>
-      </div>
-
+    <>
+      <PageHeader
+        eyebrow={t("page.eyebrow")}
+        title={t("page.title")}
+        subtitle={t("page.intro")}
+        right={
+          <div className="flex flex-wrap items-center gap-2">
+            <OffPlanLogButton estimateEnabled={await isMealEstimateEnabled(member)} />
+            <Link href="/nutrition/shopping" className="btn btn-sm">
+              {t("page.shoppingLink")}
+            </Link>
+            <Link href="/nutrition/preferences" className="btn btn-ghost btn-sm">
+              {t("page.preferencesLink")}
+            </Link>
+          </div>
+        }
+      />
+      {/* Bottom room under lg: the floating "+ Spiste noget andet" button
+          must not sit on top of the footer line when scrolled to the end. */}
+      <Container className="py-8 pb-28 lg:py-12 space-y-8">
       {err === "quota_plan" || err === "quota_swap" ? (
         <QuotaBanner
           kind={err === "quota_plan" ? "plan" : "swap"}
@@ -161,8 +157,6 @@ export default async function NutritionPage({
         deltaKg={weightTrend.deltaKg}
       />
 
-      <SkipDaysCard weekStart={weekStart} skipDayIndices={skipDayIndices} />
-
       {plan === null ? (
         <EmptyState
           weekStart={weekStart}
@@ -179,9 +173,15 @@ export default async function NutritionPage({
           planLimit={planLimit}
           swapLimit={swapLimit}
           t={t}
+          fmt={fmt}
         />
       )}
-    </Container>
+
+      {/* Skip days sit after the plan: a planning setting for the next
+          generation, not a second week overview next to the plan's own. */}
+      <SkipDaysCard weekStart={weekStart} skipDayIndices={skipDayIndices} />
+      </Container>
+    </>
   );
 }
 
@@ -305,7 +305,7 @@ function EmptyState({
           {t("page.emptyPreferences")}
         </Link>
       </div>
-      <p className="mt-4 text-micro text-fg-faint">
+      <p className="mt-4 text-micro text-fg-dim">
         {t("page.emptyQuota", {
           dailyUsed: planLimit.daily.used,
           dailyMax: planLimit.daily.max,
@@ -329,6 +329,7 @@ function PlanView({
   planLimit,
   swapLimit,
   t,
+  fmt,
 }: {
   plan: Plan;
   todayIndex: number;
@@ -337,6 +338,7 @@ function PlanView({
   planLimit: RateLimitStatus;
   swapLimit: RateLimitStatus;
   t: T;
+  fmt: (n: number) => string;
 }) {
   const remaining = Math.max(
     0,
@@ -376,27 +378,25 @@ function PlanView({
     <>
       {/* Macro / meta strip */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline rounded-lg overflow-hidden">
-        <Stat label={t("page.statKcal")} value={plan.dailyKcal ?? "-"} />
-        <Stat label={t("page.statProtein")} value={plan.dailyProteinG ?? "-"} />
-        <Stat label={t("page.statCarbs")} value={plan.dailyCarbsG ?? "-"} />
-        <Stat label={t("page.statFat")} value={plan.dailyFatG ?? "-"} />
+        <Stat label={t("page.statKcal")} value={plan.dailyKcal != null ? fmt(plan.dailyKcal) : "-"} />
+        <Stat label={t("page.statProtein")} value={plan.dailyProteinG != null ? fmt(plan.dailyProteinG) : "-"} />
+        <Stat label={t("page.statCarbs")} value={plan.dailyCarbsG != null ? fmt(plan.dailyCarbsG) : "-"} />
+        <Stat label={t("page.statFat")} value={plan.dailyFatG != null ? fmt(plan.dailyFatG) : "-"} />
       </section>
 
       {/* Week strip */}
-      <section
-        aria-label={t("page.weekOverviewLabel")}
-        className="-mx-6 md:mx-0 px-6 md:px-0 overflow-x-auto"
-      >
-        <ol className="flex gap-2 md:grid md:grid-cols-7 min-w-max md:min-w-0">
+      {/* Four columns on a phone: every day cell is whole, nothing cut mid-word. */}
+      <section aria-label={t("page.weekOverviewLabel")}>
+        <ol className="grid grid-cols-4 gap-2 md:grid-cols-7">
           {DAY_KEYS.map((dayKey, i) => {
             const isToday = i === todayIndex;
             const meals = byDay[i] ?? [];
             const dayKcal = meals.reduce((sum, m) => sum + (m.estKcal ?? 0), 0);
             return (
-              <li key={dayKey} className="shrink-0 md:shrink">
+              <li key={dayKey} className="min-w-0">
                 <a
                   href={`#day-${i}`}
-                  className="block surface-2 rounded-xl p-3 md:p-4 w-[78px] md:w-auto text-center lift transition-colors"
+                  className="block surface-2 rounded-xl p-3 md:p-4 text-center lift transition-colors"
                   style={{
                     background: isToday ? "var(--bg-3)" : undefined,
                     borderColor: isToday ? "var(--line-bright)" : undefined,
@@ -404,11 +404,11 @@ function PlanView({
                 >
                   <div className="eyebrow mb-1.5">{t(`dayLabels.${dayKey}`)}</div>
                   <div className="numeric text-xl mb-1">{meals.length}</div>
-                  <div className="text-micro text-fg-faint">
+                  <div className="text-micro text-fg-dim">
                     {t("page.meals")}
                   </div>
                   <div className="numeric text-micro text-fg-dim mt-1.5">
-                    {dayKcal > 0 ? `${dayKcal} kcal` : "-"}
+                    {dayKcal > 0 ? `${fmt(dayKcal)} kcal` : "-"}
                   </div>
                 </a>
               </li>
@@ -429,10 +429,10 @@ function PlanView({
             }
             className="mb-0"
           />
-          <span className="text-xs text-fg-faint shrink-0">
+          <span className="text-xs text-fg-dim shrink-0">
             {t("page.todayMacros", {
-              kcal: today.reduce((s, m) => s + (m.estKcal ?? 0), 0),
-              protein: today.reduce((s, m) => s + (m.estProteinG ?? 0), 0),
+              kcal: fmt(today.reduce((s, m) => s + (m.estKcal ?? 0), 0)),
+              protein: fmt(today.reduce((s, m) => s + (m.estProteinG ?? 0), 0)),
             })}
           </span>
         </div>
@@ -448,6 +448,7 @@ function PlanView({
       {/* Rest of week — collapsed by day */}
       <section className="space-y-3">
         <h2 className="eyebrow">{t("page.restOfWeek")}</h2>
+        <div className="surface-2 divide-y hairline">
         {byDay.map((meals, i) => {
           if (i === todayIndex) return null;
           const dayKcal = meals.reduce((sum, m) => sum + (m.estKcal ?? 0), 0);
@@ -455,7 +456,7 @@ function PlanView({
             <details
               key={i}
               id={`day-${i}`}
-              className="surface-2 rounded-xl overflow-hidden group"
+              className="group"
               open={i === todayIndex + 1}
             >
               <summary className="cursor-pointer flex items-center gap-4 px-5 py-4 list-none">
@@ -466,7 +467,7 @@ function PlanView({
                   </div>
                 </div>
                 <div className="numeric text-xs text-fg-dim shrink-0">
-                  {dayKcal} kcal
+                  {fmt(dayKcal)} kcal
                 </div>
                 <span aria-hidden className="text-fg-faint group-open:rotate-90 transition-transform">→</span>
               </summary>
@@ -485,6 +486,7 @@ function PlanView({
             </details>
           );
         })}
+        </div>
       </section>
 
       {/* Supplements */}
@@ -499,7 +501,7 @@ function PlanView({
               <li key={s.id} className="border hairline rounded-lg p-4">
                 <div className="flex items-baseline justify-between gap-3 mb-1">
                   <div className="text-sm">{s.title}</div>
-                  <span className="text-micro text-fg-faint">
+                  <span className="text-micro text-fg-dim">
                     {s.necessity === "high-value"
                       ? t("page.supplementStrong")
                       : s.necessity === "useful"
@@ -523,7 +525,7 @@ function PlanView({
           quotaResetLabel={resetLabel}
         />
         <LogMealButton dateIso={isoToday()} />
-        <span className="text-micro text-fg-faint ml-auto">
+        <span className="text-micro text-fg-dim ml-auto">
           {plan.generator === "claude"
             ? t("page.generatedByClaude")
             : t("page.generatedLocally")}

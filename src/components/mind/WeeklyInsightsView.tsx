@@ -101,7 +101,7 @@ function MetricCell({
     <div className="bg-bg-2/40 p-5">
       <div className="eyebrow text-xs mb-2">{label}</div>
       <div className="font-display text-3xl tabular-nums">
-        {current === null ? "—" : `${current}/5`}
+        {current === null ? "-" : `${current}/5`}
       </div>
       {delta !== null && delta !== 0 ? (
         <div

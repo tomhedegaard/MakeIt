@@ -29,7 +29,7 @@ export default function RouteOpening({
         {[0, 1, 2].map((i) => (
           <span
             key={i}
-            className="size-2.5 rounded-full bg-fg animate-pulse"
+            className="size-2.5 bg-fg animate-pulse"
             style={{ animationDelay: `${i * 220}ms` }}
           />
         ))}

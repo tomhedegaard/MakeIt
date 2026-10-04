@@ -53,7 +53,7 @@ export default function TierBanner({
         type="button"
         onClick={dismiss}
         aria-label={t("close")}
-        className="size-8 rounded-full surface flex items-center justify-center text-fg-dim hover:text-fg shrink-0"
+        className="size-11 flex items-center justify-center text-fg-dim hover:text-fg shrink-0"
       >
         <X {...ICON} className="size-4" />
       </button>

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { dayMonth, demoCalendar } from "@/lib/dates/demo-calendar";
 
 export type RewardKind = "drop" | "experience" | "digital" | "physical";
 
@@ -62,7 +63,7 @@ const MOCK_REWARDS: Reward[] = [
     id: "demo-vip",
     slug: "open-house-vip",
     name: "Open House VIP-pakke",
-    description: "Træning + middag på Amagerbro 24/05 · 12 pladser.",
+    description: `Træning + middag på Amagerbro ${dayMonth(demoCalendar().meet)} · 12 pladser.`,
     costReps: 8000,
     kind: "experience",
     stock: 5,

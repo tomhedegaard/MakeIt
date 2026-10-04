@@ -89,6 +89,7 @@ export default function MobileTabBar({ youth = null }: { youth?: YouthClaims | n
               key={tab.href}
               href={tab.href}
               className="tab relative"
+              aria-current={active ? "page" : undefined}
               data-active={active || false}
               data-domain={tab.domain}
             >

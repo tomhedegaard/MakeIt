@@ -4,7 +4,7 @@ import ThemeScope from "@/components/ui/ThemeScope";
 /** Session loading stays in Nat, so the dark session never flashes light. */
 export default function SessionLoading() {
   return (
-    <ThemeScope theme="nat" className="minh-dvh">
+    <ThemeScope theme="nat" className="min-h-dvh">
       <AppLoadingSkeleton />
     </ThemeScope>
   );

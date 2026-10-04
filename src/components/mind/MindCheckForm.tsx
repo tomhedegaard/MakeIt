@@ -42,6 +42,12 @@ export default function MindCheckForm({
     ({ energy: setEnergy, stress: setStress, focus: setFocus })[key];
   const value = (key: SliderKey) => ({ energy, stress, focus })[key];
 
+  // Spoken value: "3 af 5", with the anchor word at the ends.
+  function valueText(v: number, low: string, high: string): string {
+    const base = t("valueText", { value: v });
+    return v === 1 ? `${base}, ${low}` : v === 5 ? `${base}, ${high}` : base;
+  }
+
   function handleSubmit(formData: FormData) {
     setError(null);
     startTransition(async () => {
@@ -64,7 +70,7 @@ export default function MindCheckForm({
         <fieldset key={s.key} className="space-y-3">
           <legend className="flex items-baseline justify-between w-full">
             <span className="font-display text-xl md:text-2xl">{s.label}</span>
-            <span className="text-fg-dim text-sm tabular-nums">
+            <span className="text-fg-dim text-sm tabular">
               {value(s.key)} / 5
             </span>
           </legend>
@@ -79,6 +85,7 @@ export default function MindCheckForm({
             className="range w-full"
             style={rangeFill(value(s.key), 1, 5)}
             aria-label={s.label}
+            aria-valuetext={valueText(value(s.key), s.low, s.high)}
           />
           <div className="flex justify-between text-fg-dim text-xs">
             <span>{s.low}</span>
@@ -98,15 +105,15 @@ export default function MindCheckForm({
           maxLength={280}
           rows={3}
           placeholder={t("notePlaceholder")}
-          className="w-full rounded-xl bg-bg-2/60 border hairline px-4 py-3 text-base resize-none focus:outline-none focus:border-fg/40"
+          className="input w-full text-base resize-none"
         />
-        <div className="text-fg-dim text-xs text-right tabular-nums">
+        <div className="text-fg-dim text-xs text-right tabular">
           {note.length} / 280
         </div>
       </fieldset>
 
       {error ? (
-        <div className="rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
+        <div role="alert" className="border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
           {error}
         </div>
       ) : null}
@@ -115,15 +122,10 @@ export default function MindCheckForm({
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3.5 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="btn btn-primary disabled:opacity-50"
         >
           {pending ? t("saving") : saved ? t("update") : t("save")}
         </button>
-        {saved && !pending ? (
-          <span className="text-fg-dim text-sm">
-            {t("savedHint")}
-          </span>
-        ) : null}
       </div>
     </form>
   );

@@ -56,7 +56,7 @@ export default async function MindCheckPage() {
       <MindFirstTimeTour />
       <PageHeader
         eyebrow={t("eyebrow")}
-        title={today ? t("titleUpdate") : t("titleNew")}
+        title={t("pageTitle")}
         subtitle={today ? t("subtitleUpdate") : t("subtitleNew")}
         right={
           <StreakBadge
@@ -70,18 +70,23 @@ export default async function MindCheckPage() {
       <Container size="narrow" className="py-10 md:py-14 space-y-10">
         {celebrationKind ? <MindCelebration kind={celebrationKind} /> : null}
 
-        <MindCheckForm
-          initial={
-            today
-              ? {
-                  energy: today.energy,
-                  stress: today.stress,
-                  focus: today.focus,
-                  note: today.note,
-                }
-              : null
-          }
-        />
+        <section aria-labelledby="mind-check-title" className="space-y-8">
+          <h2 id="mind-check-title" className="font-display text-section">
+            {today ? t("titleUpdate") : t("titleNew")}
+          </h2>
+          <MindCheckForm
+            initial={
+              today
+                ? {
+                    energy: today.energy,
+                    stress: today.stress,
+                    focus: today.focus,
+                    note: today.note,
+                  }
+                : null
+            }
+          />
+        </section>
 
         <div className="mt-6">
           <MentalGraph
@@ -92,11 +97,13 @@ export default async function MindCheckPage() {
               energy: tGraph("energy"),
               calm: tGraph("calm"),
               focus: tGraph("focus"),
-              aria: tGraph("aria"),
+              aria: tGraph("aria", { count: logs.length }),
+              tableCaption: tGraph("tableCaption"),
+              colDate: tGraph("colDate"),
+              scale: tGraph("scale"),
             }}
           />
         </div>
-
       </Container>
     </>
   );

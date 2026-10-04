@@ -26,12 +26,13 @@ describe("MorningSignal", () => {
     expect(html).toContain('aria-label="Morgenens signal"');
   });
 
-  it("uses domain kickers, tabular numbers and a full sentence for screen readers", () => {
+  it("uses domain kickers, numeric values and a full sentence for screen readers", () => {
     expect(html).toContain("eyebrow eyebrow-domain");
-    expect(html).toMatch(/tabular-nums[^"]*"[^>]*>48/);
+    expect(html).toMatch(/numeric[^"]*"[^>]*>48/);
     expect(html).toContain("Under bånd");
     expect(html).toContain("sr-only");
-    expect(html).toContain("2740");
+    expect(html).toContain("/2.740");
+    expect(html).toContain("640 af 2.740 kcal");
   });
 
   it("uses no raw colours or status colours", () => {

@@ -19,7 +19,7 @@ export default async function OnboardingLayout({
   if (member && (await isYouthAccount(member.id))) redirect("/dashboard");
 
   return (
-    <ThemeScope theme="nord" className="relative z-10 minh-dvh">
+    <ThemeScope theme="nord" className="relative z-10 min-h-dvh">
       {children}
     </ThemeScope>
   );

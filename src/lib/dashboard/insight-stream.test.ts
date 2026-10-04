@@ -44,7 +44,6 @@ describe("card grammar", () => {
 describe("buildTodayInsightStream", () => {
   it("leads with Heart→Body when morning HRV is Lav", () => {
     const cards = buildTodayInsightStream({
-      sessionHref: SESSION,
       hasHrv: true,
       qualitative: "lav",
       outOfBand: true,
@@ -52,14 +51,14 @@ describe("buildTodayInsightStream", () => {
     });
     expect(cards[0].id).toBe("heart_body_low");
     expect(cards[0].domains).toEqual(["heart", "body"]);
-    expect(cards[0].ctaHref).toBe(SESSION);
+    // "Start pas" owns opening the session; the card explains why.
+    expect(cards[0].ctaHref).toBe("/hrv/learn/adaptive");
     expect(cards[0].moreHref).toContain("/hrv");
     expect(cards.every(cardGrammarOk)).toBe(true);
   });
 
   it("falls back to Mind→Body when there is no HRV yet", () => {
     const cards = buildTodayInsightStream({
-      sessionHref: SESSION,
       hasHrv: false,
       qualitative: null,
       outOfBand: false,
@@ -73,7 +72,6 @@ describe("buildTodayInsightStream", () => {
 
   it("stays empty on a connected first-run with no session and no HRV", () => {
     const cards = buildTodayInsightStream({
-      sessionHref: "/coaching",
       hasHrv: false,
       qualitative: null,
       outOfBand: false,
@@ -85,7 +83,6 @@ describe("buildTodayInsightStream", () => {
 
   it("does not invent squat-day / pas-venter cards without a session", () => {
     const cards = buildTodayInsightStream({
-      sessionHref: "/coaching",
       hasHrv: false,
       qualitative: null,
       outOfBand: false,
@@ -99,7 +96,7 @@ describe("buildTodayInsightStream", () => {
   });
 
   it("demo stream is Heart-first and routes the more-chip to an existing surface", () => {
-    const cards = demoInsightStream(SESSION);
+    const cards = demoInsightStream();
     expect(cards[0].id).toBe("heart_body_low");
     expect(cards.some((c) => c.moreHref.startsWith("/mind"))).toBe(true);
     expect(cards.some((c) => c.moreHref.startsWith("/nutrition"))).toBe(true);

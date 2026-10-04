@@ -1,20 +1,34 @@
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 
-import type { PriorityInboxItem, PriorityInboxKind } from "@/lib/coach/priority-inbox";
+import Avatar from "@/components/ui/Avatar";
+import type { PriorityInboxItem } from "@/lib/coach/priority-inbox";
 import { cn } from "@/lib/utils";
 
-const CHIP_TONE: Record<PriorityInboxKind, string> = {
-  mental_safety: "border-danger/40 bg-danger/15 text-danger",
-  hrv_alert: "border-warn/40 bg-warn/15 text-warn",
-  adaptive: "border-warn/40 bg-warn/15 text-warn",
-  form_check: "border hairline-strong text-fg-dim",
-  stale_session: "border-warn/40 bg-warn/15 text-warn",
-};
+/**
+ * Reason chips. The coach console is monochrome (docs/DOMAIN_COLOR_SYSTEM.md
+ * §8.1): every reason is a neutral 1px outline. Status red is kept only for
+ * real safety cases — that is an alert, not a domain.
+ */
+export async function InboxReasonChip({ item }: { item: PriorityInboxItem }) {
+  const t = await getTranslations("Coach.inbox");
+  return (
+    <span
+      className={cn(
+        "inline-flex border px-2 py-0.5 text-micro",
+        item.kind === "mental_safety"
+          ? "border-danger/40 bg-danger/15 text-danger"
+          : "hairline-strong text-fg-dim",
+      )}
+    >
+      {t(item.reasonKey, item.reasonParams)}
+    </span>
+  );
+}
 
-function formatWhen(iso: string, locale: string): string {
+export function formatInboxWhen(iso: string, locale: string): string {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime()) || iso.startsWith("1970-")) return "—";
+  if (Number.isNaN(d.getTime()) || iso.startsWith("1970-")) return "-";
   return d.toLocaleString(locale === "en" ? "en-GB" : "da-DK", {
     hour: "2-digit",
     minute: "2-digit",
@@ -23,14 +37,25 @@ function formatWhen(iso: string, locale: string): string {
   });
 }
 
+/** Split-view link for a case: stays on the inbox, swaps the panel. */
+export function inboxCaseHref(id: string): string {
+  return `/coach/inbox?case=${encodeURIComponent(id)}`;
+}
+
+const ROW =
+  "relative px-5 py-3 items-center gap-4 transition-colors duration-200 ease-out hover:bg-bg-3 focus-visible:-outline-offset-2";
+
 export default async function PriorityInboxList({
   items,
   safetyReadable,
   mode,
+  selectedId,
 }: {
   items: PriorityInboxItem[];
   safetyReadable: boolean;
   mode: "demo" | "live";
+  /** The case open in the lg+ detail panel. */
+  selectedId?: string | null;
 }) {
   const t = await getTranslations("Coach.inbox");
   const locale = await getLocale();
@@ -53,41 +78,55 @@ export default async function PriorityInboxList({
         </div>
       ) : (
         <ul className="divide-y hairline">
-          {items.map((item) => (
-            <li key={item.id}>
-              <Link
-                href={item.href}
-                className="px-5 py-3 flex items-center gap-4 hover:bg-bg-3/40 transition-colors"
-                aria-label={t("openItem", { handle: item.memberHandle })}
-              >
-                <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
-                  {item.memberHandle.slice(0, 2).toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm">@{item.memberHandle}</div>
-                  <div className="mt-1">
-                    <span
-                      className={cn(
-                        "inline-flex text-micro px-2 py-0.5 border",
-                        CHIP_TONE[item.kind],
-                      )}
-                    >
-                      {t(item.reasonKey, item.reasonParams)}
-                    </span>
-                  </div>
-                </div>
+          {items.map((item) => {
+            const selected = item.id === selectedId;
+            // Phone/tablet rows open the case (arrow); lg+ rows only select
+            // it — the panel's own link opens the full case.
+            const content = (arrow: boolean) => (
+              <>
+                <Avatar handle={item.memberHandle} />
+                <span className="flex-1 min-w-0">
+                  <span className="block text-sm truncate">@{item.memberHandle}</span>
+                  <span className="mt-1 block">
+                    <InboxReasonChip item={item} />
+                  </span>
+                </span>
                 <time
                   dateTime={item.occurredAt}
                   className="numeric text-xs text-fg-dim shrink-0"
                 >
-                  {formatWhen(item.occurredAt, locale)}
+                  {formatInboxWhen(item.occurredAt, locale)}
                 </time>
-                <span className="text-fg-dim" aria-hidden>
-                  →
-                </span>
-              </Link>
-            </li>
-          ))}
+                {arrow ? (
+                  <span className="text-fg-dim" aria-hidden="true">
+                    →
+                  </span>
+                ) : null}
+              </>
+            );
+            return (
+              <li key={item.id}>
+                {/* Phone and tablet: the row opens the case's own page. */}
+                <Link href={item.href} className={cn(ROW, "flex lg:hidden")}>
+                  {content(true)}
+                </Link>
+                {/* lg+: the row selects the case into the detail panel. */}
+                <Link
+                  href={inboxCaseHref(item.id)}
+                  scroll={false}
+                  aria-current={selected ? "page" : undefined}
+                  className={cn(
+                    ROW,
+                    "hidden lg:flex",
+                    selected &&
+                      "bg-bg-3 before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-signal",
+                  )}
+                >
+                  {content(false)}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

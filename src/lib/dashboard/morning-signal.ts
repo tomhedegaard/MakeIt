@@ -33,9 +33,10 @@ export interface MorningSignalCell {
   href: string;
   labelKey: MorningSignalDomain;
   valueKey: MorningSignalValueKey;
-  value?: string;
+  /** Whole number; the component formats it for the locale (2.740). */
+  value?: number;
   unit?: "ms" | "kcal";
-  of?: string;
+  of?: number;
 }
 
 function bandKey(bucket: ReadinessBucket | null): MorningSignalValueKey {
@@ -67,7 +68,7 @@ export function buildMorningSignal(input: MorningSignalInput): MorningSignalCell
         href: "/hrv",
         labelKey: "heart",
         valueKey: bandKey(input.hrv.bucket),
-        value: String(Math.round(input.hrv.rmssdMs)),
+        value: Math.round(input.hrv.rmssdMs),
         unit: "ms",
       }
     : { domain: "heart", href: "/hrv", labelKey: "heart", valueKey: "noReading" };
@@ -84,10 +85,10 @@ export function buildMorningSignal(input: MorningSignalInput): MorningSignalCell
     href: "/nutrition",
     labelKey: "food",
     valueKey: "eaten",
-    value: String(Math.round(input.intake.consumedKcal)),
+    value: Math.round(input.intake.consumedKcal),
     unit: "kcal",
     ...(input.intake.targetKcal !== null
-      ? { of: String(Math.round(input.intake.targetKcal)) }
+      ? { of: Math.round(input.intake.targetKcal) }
       : {}),
   };
 

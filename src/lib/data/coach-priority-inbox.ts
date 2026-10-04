@@ -4,8 +4,8 @@
  * Spec: docs/superpowers/specs/2026-09-03-coach-priority-inbox.md
  *
  * Merges existing coach fetchers. No new tables, no service-role.
- * Demo HRV + adaptive mocks live here only so Queue/Safety stay
- * honest-empty. Form-checks and at-risk already have demo rows.
+ * In demo every fetcher returns its own mocks, so inbox ids resolve to
+ * the same rows the case panel and the queue render.
  */
 
 import { mergePriorityInbox, type PriorityInboxItem } from "@/lib/coach/priority-inbox";
@@ -24,31 +24,6 @@ export type CoachPriorityInbox = {
   mode: "demo" | "live";
   safetyReadable: boolean;
 };
-
-const DEMO_HRV = [
-  {
-    id: "hrv-demo-1",
-    memberId: "m-nina",
-    memberHandle: "nina_dl",
-    triggeredAt: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
-  },
-  {
-    id: "hrv-demo-2",
-    memberId: "m-tobias",
-    memberHandle: "tobias",
-    triggeredAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
-  },
-];
-
-const DEMO_ADAPTIVE = [
-  {
-    alertId: "ad-demo-1",
-    memberId: "m-kasper",
-    memberHandle: "kasper_s",
-    triggeredAt: new Date(Date.now() - 1000 * 60 * 40).toISOString(),
-    action: "escalate_to_coach",
-  },
-];
 
 export async function getCoachPriorityInbox(): Promise<CoachPriorityInbox> {
   const [safety, hrv, adaptive, formChecks, health] = await Promise.all([
@@ -70,23 +45,19 @@ export async function getCoachPriorityInbox(): Promise<CoachPriorityInbox> {
           createdAt: a.created_at,
         }))
       : [],
-    hrvAlerts: demo
-      ? DEMO_HRV
-      : hrv.map((a) => ({
-          id: a.id,
-          memberId: a.memberId,
-          memberHandle: a.memberHandle,
-          triggeredAt: a.triggeredAt,
-        })),
-    adaptive: demo
-      ? DEMO_ADAPTIVE
-      : adaptive.map((a) => ({
-          alertId: a.alertId,
-          memberId: a.memberId,
-          memberHandle: a.memberHandle,
-          triggeredAt: a.triggeredAt,
-          action: a.action,
-        })),
+    hrvAlerts: hrv.map((a) => ({
+      id: a.id,
+      memberId: a.memberId,
+      memberHandle: a.memberHandle,
+      triggeredAt: a.triggeredAt,
+    })),
+    adaptive: adaptive.map((a) => ({
+      alertId: a.alertId,
+      memberId: a.memberId,
+      memberHandle: a.memberHandle,
+      triggeredAt: a.triggeredAt,
+      action: a.action,
+    })),
     formChecks: formChecks.map((f) => ({
       id: f.id,
       memberId: f.memberId,

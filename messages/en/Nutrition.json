@@ -29,7 +29,7 @@
     "todayEyebrow": "Today · {day}",
     "todayMealsOne": "{count} meal",
     "todayMealsOther": "{count} meals",
-    "todayMacros": "{kcal} kcal · {protein}g P",
+    "todayMacros": "{kcal} kcal · {protein} g protein",
     "restOfWeek": "Rest of the week",
     "supplementsEyebrow": "Supplement nudge",
     "supplementsBody": "We always recommend getting it from food. These are the exceptions where it's hard or expensive to get enough from the plate alone.",
@@ -97,9 +97,9 @@
     "swapShort": "Swap",
     "anchor": "Anchor",
     "kcal": "kcal",
-    "macroProtein": "{value}g protein",
-    "macroCarbs": "{value}g carbs",
-    "macroFat": "{value}g fat",
+    "macroProtein": "{value} g protein",
+    "macroCarbs": "{value} g carbs",
+    "macroFat": "{value} g fat",
     "macroPrep": "{value} min prep",
     "ingredients": "Ingredients",
     "steps": "How to",
@@ -229,6 +229,7 @@
   },
   "checkIn": {
     "skipConfirm": "Mark this meal as skipped?",
+    "skipConfirmCta": "Mark as skipped",
     "eyebrow": "Daily check-in",
     "slotWindow": "{slot} · {window}",
     "slotNoWindow": "{slot}",
@@ -239,7 +240,7 @@
     "milestonePrompt": "Log food for {days} days",
     "milestoneReward": "→ +50 Reps",
     "kcal": "{value} kcal",
-    "protein": "{value}g protein",
+    "protein": "{value} g protein",
     "prep": "{value} min prep",
     "logging": "Logging…",
     "asPlanned": "As planned",
@@ -358,5 +359,13 @@
     "limited": "You've used today's HQ estimates. You can still enter it yourself.",
     "unavailable": "HQ couldn't estimate this right now. Enter it yourself and it still counts.",
     "photoTooBig": "The photo couldn't be read. Try another, or write it."
+  },
+  "intake": {
+    "eyebrow": "Today",
+    "kcal": "Calories",
+    "protein": "Protein",
+    "offPlan": "Of which off-plan:",
+    "offPlanProtein": "{protein} g protein",
+    "progress": "{consumed} of {target} {unit}"
   }
 }

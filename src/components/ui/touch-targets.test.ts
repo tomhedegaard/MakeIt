@@ -18,9 +18,9 @@ describe("button height tokens (globals.css)", () => {
     expect(css).toMatch(/\.btn \{[\s\S]*?height: 2\.75rem;/);
   });
 
-  it("raises .btn-sm to 40px", () => {
-    expect(css).toContain(".btn-sm { height: 2.5rem;");
-    expect(css).not.toContain(".btn-sm { height: 2.25rem;");
+  it("raises .btn-sm to the 44px touch floor", () => {
+    expect(css).toContain(".btn-sm { height: 2.75rem;");
+    expect(css).not.toMatch(/\.btn-sm \{ height: 2\.(25|5)rem;/);
   });
 });
 
@@ -41,9 +41,10 @@ describe("marketing keeps its own button heights", () => {
 describe("dashboard 'Sammenhængene' cards", () => {
   const src = read("../dashboard/ConnectDotsStream.tsx");
 
-  it("gives the card CTA the full 44px .btn", () => {
-    expect(src).toContain('className="btn btn-primary"');
-    expect(src).not.toContain('className="btn btn-sm btn-primary"');
+  it("gives the card CTA the full 44px .btn, as a secondary next to Start pas", () => {
+    expect(src).toContain('className="btn"');
+    expect(src).not.toContain("btn-sm");
+    expect(src).not.toContain("btn-primary");
   });
 
   it("raises the more-about chip and the dismiss/snooze row to 44px", () => {
@@ -88,7 +89,7 @@ describe("live session top bar", () => {
   const src = read("../../app/(app)/session/[id]/SessionClient.tsx");
 
   it("raises the exit button (and its spacer) to 44px inside the h-14 bar", () => {
-    expect(src).toContain('className="size-11 rounded-full surface-2');
+    expect(src).toContain('className="size-11 surface-2');
     expect(src).toContain('<div className="size-11" aria-hidden />');
   });
 });

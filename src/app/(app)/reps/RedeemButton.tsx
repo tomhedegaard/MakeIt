@@ -33,7 +33,6 @@ export default function RedeemButton({
   }
 
   const canAfford = balance >= reward.costReps;
-  const disabled = !reward.isAvailable || !canAfford;
 
   function open_() {
     setStage("confirm");
@@ -60,20 +59,24 @@ export default function RedeemButton({
 
   return (
     <>
-      <button
-        type="button"
-        className={`btn btn-sm mt-5 w-full ${canAfford && reward.isAvailable ? "btn-primary" : ""}`}
-        onClick={open_}
-        disabled={disabled}
-      >
-        {!reward.isAvailable
-          ? t("soldOut")
-          : !canAfford
-            ? t("missingReps", {
+      {/* Only a real action looks like a button; a shortfall is a fact. */}
+      {!reward.isAvailable || !canAfford ? (
+        <p className="mt-5 min-h-9 flex items-center text-sm text-fg-dim">
+          {!reward.isAvailable
+            ? t("soldOut")
+            : t("missingReps", {
                 amount: (reward.costReps - balance).toLocaleString(tag),
-              })
-            : t("redeem")}
-      </button>
+              })}
+        </p>
+      ) : (
+        <button
+          type="button"
+          className="btn btn-primary btn-sm mt-5 w-full"
+          onClick={open_}
+        >
+          {t("redeem")}
+        </button>
+      )}
 
       <Sheet open={open} onOpenChange={(v) => (v ? setOpen(true) : close_())}>
         <SheetContent>

@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocaleTag } from "@/i18n/config";
+import { formatNumber } from "@/lib/utils";
 
 import {
   buildMorningSignal,
@@ -15,6 +17,8 @@ export default function MorningSignal({ input }: { input: MorningSignalInput }) 
   const t = useTranslations("Dashboard.morningSignal");
   const tHrv = useTranslations("Dashboard.hrvChip");
   const cells = buildMorningSignal(input);
+  const tag = intlLocaleTag(useLocale());
+  const fmt = (n: number) => formatNumber(n, tag);
 
   function unitLabel(cell: MorningSignalCell): string {
     return cell.unit === "ms" ? tHrv("unit") : t("kcal");
@@ -25,29 +29,29 @@ export default function MorningSignal({ input }: { input: MorningSignalInput }) 
     const status = t(`values.${cell.valueKey}`);
     if (cell.value === undefined) return t("sr.status", { label, status });
     if (cell.of !== undefined) {
-      return t("sr.valueOf", { label, value: cell.value, of: cell.of, unit: unitLabel(cell), status });
+      return t("sr.valueOf", { label, value: fmt(cell.value), of: fmt(cell.of), unit: unitLabel(cell), status });
     }
-    return t("sr.value", { label, value: cell.value, unit: unitLabel(cell), status });
+    return t("sr.value", { label, value: fmt(cell.value), unit: unitLabel(cell), status });
   }
 
   return (
     <section aria-label={t("label")}>
-      <ul className="grid grid-cols-2 min-[360px]:grid-cols-4 gap-2">
+      <ul className="grid grid-cols-2 min-[360px]:grid-cols-4 lg:grid-cols-2 gap-2">
         {cells.map((cell) => (
           <li key={cell.domain} className="min-w-0">
             <Link
               href={cell.href}
               data-domain={cell.domain}
-              className="relative flex h-full min-w-0 flex-col gap-1 rounded-xl border hairline bg-bg-2 p-3 lift touch-app"
+              className="relative flex h-full min-w-0 flex-col gap-1 border hairline bg-bg-2 p-3 lift touch-app"
             >
               <span className="sr-only">{sentence(cell)}</span>
               <span aria-hidden className="flex min-w-0 flex-col gap-1">
                 <span className="eyebrow eyebrow-domain">{t(`labels.${cell.labelKey}`)}</span>
                 {cell.value !== undefined ? (
                   <span className="min-w-0 break-words">
-                    <span className="tabular-nums text-xl text-fg">{cell.value}</span>
+                    <span className="numeric text-xl text-fg">{fmt(cell.value)}</span>
                     {cell.of !== undefined ? (
-                      <span className="tabular-nums text-xs text-fg-dim">/{cell.of}</span>
+                      <span className="numeric text-xs text-fg-dim">/{fmt(cell.of)}</span>
                     ) : null}
                     <span className="ml-1 text-xs text-fg-dim">{unitLabel(cell)}</span>
                   </span>

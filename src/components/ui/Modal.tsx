@@ -31,11 +31,11 @@ export function Modal({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[60] bg-scrim backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-[60] bg-scrim" />
         <Dialog.Content
           className={cn(
             "fixed left-1/2 top-1/2 z-[61] w-[min(32rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2",
-            "max-h-[92dvh] overflow-y-auto rounded-2xl border hairline bg-bg-2 p-6 md:p-8",
+            "max-h-[92dvh] overflow-y-auto border hairline bg-bg-elev p-6 md:p-8",
             className,
           )}
         >

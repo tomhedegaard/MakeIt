@@ -128,10 +128,6 @@ export default async function CoachQueuePage() {
                     })}
                   </div>
                 </div>
-                <div className="text-right shrink-0">
-                  <div className="numeric text-2xl">{f.aiScore ?? "—"}</div>
-                  <div className="eyebrow">/ 100</div>
-                </div>
               </div>
 
               {f.aiHeadline ? (

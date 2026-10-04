@@ -44,11 +44,13 @@ describe("EmptyState", () => {
 });
 
 describe("Stat", () => {
-  it("shows a tabular value and a monochrome delta with an arrow", () => {
+  it("shows a numeric value and a monochrome delta with an arrow", () => {
     const html = renderToStaticMarkup(<Stat label="Volumen" value="18.420" unit="kg" delta={4} />);
-    // Nord har én skrift; tal skiller sig ud på tabular-nums, ikke på familie.
+    // Nord har én skrift. Fritstående tal er proportionale, fordi skriftens
+    // tabular-nums også giver punktummet cifferbredde ("18 . 420").
     expect(html).not.toContain("font-mono");
-    expect(html).toContain("tabular-nums");
+    expect(html).toContain("numeric");
+    expect(html).not.toContain("tabular-nums");
     expect(html).toMatch(/↑\s*4/);
     expect(html).not.toMatch(/text-(ok|warn|danger)/);
   });

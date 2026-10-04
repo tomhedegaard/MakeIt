@@ -2,6 +2,7 @@
 
 import { useOptimistic, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
+import Avatar from "@/components/ui/Avatar";
 import { cn } from "@/lib/utils";
 import {
   addCommentAction,
@@ -28,6 +29,12 @@ function MentionText({ text }: { text: string }) {
   );
 }
 
+// Feed actions: selected = ink fill like a selected chip, hover = a quiet bg-2.
+// The 44 px height stays literal on each button: touch-targets.test counts it.
+const TOGGLE = "px-2 sm:px-3 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap transition-colors duration-200 ease-out";
+const TOGGLE_ON = "bg-fg text-bg";
+const TOGGLE_OFF = "hover:text-fg hover:bg-bg-2";
+
 export default function PostCard({ post }: { post: FeedPost }) {
   const t = useTranslations("Community.post");
   const [optimistic, setOptimistic] = useOptimistic<
@@ -48,6 +55,29 @@ export default function PostCard({ post }: { post: FeedPost }) {
   // Composer state
   const [draft, setDraft] = useState("");
   const [posting, startPosting] = useTransition();
+
+  const [copied, setCopied] = useState(false);
+
+  // Web Share where the platform has it (the phone's own share sheet);
+  // otherwise the post's link goes on the clipboard.
+  async function share() {
+    const url = `${window.location.origin}/community#post-${post.id}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: post.who, text: post.content, url });
+      } catch {
+        // Dismissed share sheet — nothing to do.
+      }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard blocked — leave the button as it was.
+    }
+  }
 
   function handleToggleReaction() {
     startTransition(async () => {
@@ -106,12 +136,10 @@ export default function PostCard({ post }: { post: FeedPost }) {
   }
 
   return (
-    <article className="surface-2 rounded-2xl p-5 lift">
+    <article id={`post-${post.id}`} className="surface-2 rounded-2xl p-5 lift">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="size-9 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
-            {post.who.slice(1, 3).toUpperCase()}
-          </div>
+          <Avatar handle={post.who} />
           <div className="min-w-0">
             <div className="text-sm truncate">{post.who}</div>
             <div className="eyebrow text-micro">{post.tier}</div>
@@ -132,7 +160,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
         </div>
       </div>
 
-      <p className="text-fg/90 text-sm md:text-base leading-relaxed mb-4 whitespace-pre-wrap">
+      <p className="text-fg-body text-sm md:text-base leading-relaxed mb-4 whitespace-pre-wrap">
         <MentionText text={post.content} />
       </p>
 
@@ -141,25 +169,16 @@ export default function PostCard({ post }: { post: FeedPost }) {
           type="button"
           onClick={handleToggleReaction}
           aria-pressed={optimistic.reacted}
-          className={cn(
-            "min-h-11 px-3 rounded-md flex items-center gap-2 transition-colors",
-            optimistic.reacted
-              ? "bg-bg-3 text-fg"
-              : "hover:text-fg hover:bg-bg-3"
-          )}
+          className={cn("min-h-11", TOGGLE, optimistic.reacted ? TOGGLE_ON : TOGGLE_OFF)}
         >
-          <span>{optimistic.reacted ? "✓" : "+"}</span>
-          <span className="numeric">{optimistic.count}</span>
-          <span>{t("reps")}</span>
+          <span>{t("hep")}</span>
+          <span className="tabular">{t("cheerers", { count: optimistic.count })}</span>
         </button>
         <button
           type="button"
           onClick={expand}
           aria-expanded={expanded}
-          className={cn(
-            "min-h-11 px-3 rounded-md flex items-center gap-2 transition-colors",
-            expanded ? "bg-bg-3 text-fg" : "hover:text-fg hover:bg-bg-3"
-          )}
+          className={cn("min-h-11", TOGGLE, expanded ? TOGGLE_ON : TOGGLE_OFF)}
         >
           <span className="numeric">{commentsCount}</span>
           <span>
@@ -168,9 +187,10 @@ export default function PostCard({ post }: { post: FeedPost }) {
         </button>
         <button
           type="button"
-          className="ml-auto inline-flex min-h-11 items-center px-3 rounded-md hover:text-fg hover:bg-bg-3"
+          onClick={share}
+          className={cn("min-h-11", TOGGLE, TOGGLE_OFF, "ml-auto")}
         >
-          {t("share")}
+          {copied ? t("shareCopied") : t("share")}
         </button>
       </div>
 
@@ -184,9 +204,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
             <ul className="space-y-3">
               {comments.map((c) => (
                 <li key={c.id} className="flex gap-3">
-                  <div className="size-7 rounded-full bg-bg-elev border hairline-strong flex items-center justify-center text-micro shrink-0">
-                    {c.who.slice(1, 3).toUpperCase()}
-                  </div>
+                  <Avatar handle={c.who} className="size-7" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 mb-1">
                       <span className="text-sm">{c.who}</span>
@@ -194,7 +212,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
                         {c.whenLabel}
                       </span>
                     </div>
-                    <p className="text-sm text-fg/90 leading-relaxed whitespace-pre-wrap">
+                    <p className="text-sm text-fg-body leading-relaxed whitespace-pre-wrap">
                       <MentionText text={c.content} />
                     </p>
                   </div>
@@ -209,6 +227,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
 
           <form onSubmit={handleSubmit} className="flex items-end gap-2">
             <textarea
+              aria-label={t("commentLabel")}
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               rows={1}

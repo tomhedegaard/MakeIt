@@ -69,7 +69,7 @@ Status (kun i fyldte alerts med ikon og tekst): ok `#116A35`, advarsel `#8A6A00`
 
 ## 4. Typografi
 - **Én skrift: Schibsted Grotesk** (Google Fonts), vægte 400 og 500. Ingen uppercase-kickers, ingen kondenseret display, ingen monospace. Sentence case overalt, også knapper.
-- Tal: `font-variant-numeric: tabular-nums`. Store tal i 500.
+- Tal: proportionale i `.numeric` (skriftens tabular-nums giver også punktum og komma cifferbredde, "1 . 420"); `.tabular` kun til tal, der skifter på stedet eller står i højrestillede kolonner. Store tal i 500. (Justeret 2026-10-04.)
 
 | Rolle | Størrelse / linjehøjde / tracking | Vægt |
 |---|---|---|

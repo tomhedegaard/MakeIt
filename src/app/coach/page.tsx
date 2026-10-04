@@ -147,12 +147,7 @@ export default async function CoachOverviewPage() {
             <ul className="divide-y hairline">
               {pending.slice(0, 4).map((f) => (
                 <li key={f.id} className="px-5 py-3 text-sm">
-                  <div className="flex items-center justify-between mb-1">
-                    <span>@{f.memberHandle}</span>
-                    <span className="numeric text-fg-faint text-xs">
-                      {f.aiScore != null ? `${f.aiScore}/100` : ""}
-                    </span>
-                  </div>
+                  <div className="mb-1">@{f.memberHandle}</div>
                   <div className="text-fg-dim text-xs truncate">
                     {liftLabel(f)}
                   </div>

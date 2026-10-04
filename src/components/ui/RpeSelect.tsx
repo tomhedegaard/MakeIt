@@ -1,6 +1,8 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocaleTag } from "@/i18n/config";
+import { formatNumber } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
 const RPE_VALUES = [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10] as const;
@@ -15,6 +17,7 @@ export default function RpeSelect({
   className?: string;
 }) {
   const t = useTranslations("Session.rpe");
+  const tag = intlLocaleTag(useLocale());
   return (
     <div className={cn("pillgroup", className)} role="radiogroup" aria-label={t("ariaLabel")}>
       {RPE_VALUES.map((rpe) => (
@@ -27,7 +30,7 @@ export default function RpeSelect({
           className="pill touch-app"
           onClick={() => onChange(rpe)}
         >
-          {rpe % 1 === 0 ? rpe : rpe.toFixed(1)}
+          {formatNumber(rpe, tag)}
         </button>
       ))}
     </div>

@@ -1,8 +1,10 @@
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import Container from "@/components/Container";
+import InboxCasePanel from "@/components/coach/InboxCasePanel";
 import PriorityInboxList from "@/components/coach/PriorityInboxList";
+import PageTitle from "@/components/ui/PageTitle";
+import { getSession } from "@/lib/auth";
 import { getCoachPriorityInbox } from "@/lib/data/coach-priority-inbox";
 
 export async function generateMetadata() {
@@ -10,17 +12,29 @@ export async function generateMetadata() {
   return { title: t("metaTitle") };
 }
 
-export default async function CoachInboxPage() {
+export default async function CoachInboxPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ case?: string }>;
+}) {
   const t = await getTranslations("Coach.inbox");
-  const inbox = await getCoachPriorityInbox();
+  const [inbox, sp, member] = await Promise.all([
+    getCoachPriorityInbox(),
+    searchParams,
+    getSession(),
+  ]);
+
+  // Split view (spec §6.8): ?case= picks the panel's case. Without one —
+  // or once that case is closed — the top of the queue is open, so the
+  // panel is never blank on a wide screen.
+  const selected =
+    inbox.items.find((i) => i.id === sp.case) ?? inbox.items[0] ?? null;
+  const coachName = member?.displayName || member?.handle || "";
 
   return (
-    <Container className="py-6 lg:py-12 space-y-8">
+    <Container size="wide" className="py-6 lg:py-12 space-y-8">
       <header className="pt-2">
-        <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-title md:text-[2.75rem]">
-          {t("title")}
-        </h1>
+        <PageTitle kicker={t("eyebrow")} title={t("title")} />
         <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
           {t("intro")}
         </p>
@@ -31,17 +45,26 @@ export default async function CoachInboxPage() {
         ) : null}
       </header>
 
-      <section className="surface-2 rounded-2xl overflow-hidden">
-        <PriorityInboxList
-          items={inbox.items}
-          safetyReadable={inbox.safetyReadable}
-          mode={inbox.mode}
-        />
-      </section>
-
-      <Link href="/coach" className="btn btn-sm">
-        {t("backToOverview")}
-      </Link>
+      <div className="surface-2 lg:grid lg:grid-cols-[400px_minmax(0,1fr)]">
+        <section aria-label={t("listLabel")} className="lg:border-r hairline">
+          <PriorityInboxList
+            items={inbox.items}
+            safetyReadable={inbox.safetyReadable}
+            mode={inbox.mode}
+            selectedId={selected?.id}
+          />
+        </section>
+        <section
+          aria-label={t("panelLabel")}
+          className="hidden lg:block p-8 min-w-0"
+        >
+          {selected ? (
+            <InboxCasePanel item={selected} coachName={coachName} />
+          ) : (
+            <p className="text-sm text-fg-dim">{t("selectCase")}</p>
+          )}
+        </section>
+      </div>
     </Container>
   );
 }
