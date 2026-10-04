@@ -3,14 +3,17 @@
     "title": "I dag"
   },
   "greeting": {
-    "eyebrow": "God morgen",
+    "eyebrow": "Træn · coach Mikael Munk · HQ Adaptive Engine",
     "streakLabel": "Stribe",
-    "streakUnit": "dage"
+    "streakUnit": "dage",
+    "title": "Din uge.",
+    "subtitle": "HQ planlægger vægtene. Munk skriver under, når det kræver et menneske."
   },
   "formChecks": {
     "answeredBefore": "Mikael Munk har besvaret",
     "answeredCount": "{count, plural, one {# form-check} other {# form-checks}}",
-    "readNotes": "Læs noter på din profil"
+    "bandKicker": "Et menneske skriver under",
+    "seeAnswer": "Se svaret →"
   },
   "todaySession": {
     "ariaLabel": "Dagens session",

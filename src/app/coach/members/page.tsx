@@ -48,7 +48,7 @@ export default async function CoachMembersPage() {
                       {t("last")}
                     </div>
                     <div className="numeric text-copy">
-                      {m.lastSessionDate ?? "—"}
+                      {m.lastSessionDate ?? "-"}
                     </div>
                   </div>
                   <span className="text-fg-dim ml-2" aria-hidden>

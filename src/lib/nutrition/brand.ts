@@ -264,7 +264,7 @@ export function suggestSupplements(opts: {
   if (opts.trainingDaysPerWeek >= 3) {
     out.push({
       id: "creatine",
-      title: "Kreatin monohydrat (3-5 g/dag)",
+      title: "Kreatin monohydrat (3–5 g/dag)",
       why: "Bedst dokumenterede styrke-tilskud der findes. Sikkert, billigt, virker.",
       necessity: "high-value",
     });

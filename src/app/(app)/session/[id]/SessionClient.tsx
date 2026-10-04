@@ -289,7 +289,8 @@ export default function SessionClient({
           exIdx={exIdx}
           setIdx={setIdx}
           totalExercises={session.exercises.length}
-          threads={mergeThreads(ex.name, queued)}
+          threads={threadsForLift(queued, ex.name)}
+          earlierThreads={threadsForLift(demoFormQueueItems(), ex.name)}
           threadCopy={{
             eyebrow: t("exercise.thread.eyebrow"),
             pending: t("exercise.thread.pending"),
@@ -297,6 +298,8 @@ export default function SessionClient({
             voice: t("exercise.thread.voice"),
             youFilmed: t("exercise.thread.youFilmed"),
             munkReply: t("exercise.thread.munkReply"),
+            earlierEyebrow: t("exercise.thread.earlierEyebrow"),
+            youFilmedEarlier: t("exercise.thread.youFilmedEarlier"),
           }}
           onOpenFormCheck={() => setFormCheckOpen(true)}
           youth={Boolean(youth)}
@@ -546,17 +549,6 @@ export default function SessionClient({
  * When library is null (coach typed a free-text exercise), we fall
  * back to the legacy single-cue display so nothing breaks.
  */
-function mergeThreads(exerciseName: string, extra: FormQueueItem[]) {
-  const seeded = threadsForLift(demoFormQueueItems(), exerciseName);
-  const byId = new Map<string, FormQueueItem>();
-  for (const item of [...seeded, ...threadsForLift(extra, exerciseName)]) {
-    byId.set(item.id, item);
-  }
-  return Array.from(byId.values()).sort((a, b) =>
-    b.createdAt.localeCompare(a.createdAt),
-  );
-}
-
 function ExerciseSection({
   ex,
   exIdx,
@@ -564,6 +556,7 @@ function ExerciseSection({
   totalExercises,
   threads,
   threadCopy,
+  earlierThreads,
   onOpenFormCheck,
   youth = false,
 }: {
@@ -579,7 +572,11 @@ function ExerciseSection({
     voice: string;
     youFilmed: string;
     munkReply: string;
+    earlierEyebrow: string;
+    youFilmedEarlier: string;
   };
+  /** Seeded threads were not filmed in this pass, so they say so (demo shows 0 logged sets). */
+  earlierThreads: FormQueueItem[];
   onOpenFormCheck: () => void;
   /** MakeIt Ung: no coach contact, so no filming for Munk (spec afsnit 3). */
   youth?: boolean;
@@ -665,7 +662,7 @@ function ExerciseSection({
                       key={i}
                       data-active={isActive}
                       className={`flex gap-2 text-copy pl-2 -ml-2 border-l-2 transition-colors duration-200 ${
-                        isActive ? "border-l-body text-fg" : "border-l-transparent"
+                        isActive ? "border-l-fg text-fg" : "border-l-transparent"
                       }`}
                     >
                       <span
@@ -724,7 +721,18 @@ function ExerciseSection({
       </button>
       )}
 
-      <FormCheckThread items={threads} copy={threadCopy} />
+      <FormCheckThread
+        items={threads}
+        copy={threadCopy}
+      />
+      <FormCheckThread
+        items={earlierThreads.filter((e) => !threads.some((i) => i.id === e.id))}
+        copy={{
+          ...threadCopy,
+          eyebrow: threadCopy.earlierEyebrow,
+          youFilmed: threadCopy.youFilmedEarlier,
+        }}
+      />
     </section>
   );
 }

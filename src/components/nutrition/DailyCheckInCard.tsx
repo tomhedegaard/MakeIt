@@ -16,7 +16,7 @@ import ConfirmSheet from "@/components/ui/ConfirmSheet";
  * for the active or next slot. Three quick paths:
  *   - "Som planlagt" → quickLog with status=eaten, no photo
  *   - "Med foto"     → opens the existing log sheet (LogMealButton)
- *   - "Skippet"      → quickLog with status=skipped
+ *   - "Sprunget over" → quickLog with status=skipped
  *
  * Returns null when state is "no-plan" so the card is a no-op on
  * pages that include it before the member has generated a plan.

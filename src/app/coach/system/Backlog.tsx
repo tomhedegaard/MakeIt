@@ -61,7 +61,7 @@ export default async function Backlog() {
                 <span className="text-fg-faint">·</span>
                 <span className="text-fg-faint">{group.items.length}</span>
               </div>
-              <ul className="surface-2 rounded-2xl divide-y hairline overflow-hidden">
+              <ul className="surface-2 divide-y hairline overflow-hidden">
                 {group.items.map((item) => (
                   <BacklogRow key={item.id} item={item} t={t} />
                 ))}
@@ -70,7 +70,7 @@ export default async function Backlog() {
           )
         )}
         {items.length === 0 ? (
-          <div className="surface-2 rounded-2xl px-5 py-8 text-meta text-fg-dim">
+          <div className="surface-2 px-5 py-8 text-meta text-fg-dim">
             {t("empty")}
           </div>
         ) : null}
@@ -87,7 +87,7 @@ function QuickAdd({ t }: { t: Translator }) {
   return (
     <form
       action={createBacklogItemAction}
-      className="surface-2 rounded-2xl p-4 grid gap-3 md:grid-cols-[1fr_auto_auto_auto] md:items-end"
+      className="surface-2 p-4 grid gap-3 md:grid-cols-[1fr_auto_auto_auto] md:items-end"
     >
       <label className="block md:col-span-1">
         <span className="eyebrow block mb-1.5">{t("titleLabel")}</span>
@@ -219,7 +219,7 @@ function StatusActions({ item, t }: { item: BacklogItem; t: Translator }) {
         <input type="hidden" name="id" value={item.id} />
         <button
           type="submit"
-          className="text-meta px-2 py-1 rounded text-fg-faint hover:text-red-400 transition-colors"
+          className="text-meta px-2 py-1 text-fg-faint hover:text-danger transition-colors"
           aria-label={t("delete")}
         >
           ×
@@ -231,9 +231,10 @@ function StatusActions({ item, t }: { item: BacklogItem; t: Translator }) {
 
 function StatusDot({ status }: { status: BacklogStatus }) {
   const cls = {
-    open: "bg-yellow-400",
-    in_progress: "bg-blue-400 animate-pulse",
-    done: "bg-green-400/60",
+    // Monochrome console (DOMAIN_COLOR_SYSTEM §8.1): state is fill, not hue.
+    open: "border border-fg",
+    in_progress: "bg-fg",
+    done: "bg-fg-dim",
     wontfix: "bg-fg-faint",
   }[status];
   return <span className={`size-2 rounded-full ${cls}`} aria-hidden />;
@@ -241,13 +242,13 @@ function StatusDot({ status }: { status: BacklogStatus }) {
 
 function KindBadge({ kind }: { kind: "feature" | "change" | "fix" }) {
   const cls = {
-    feature: "bg-blue-400/15 text-blue-400",
-    change: "bg-purple-400/15 text-purple-400",
-    fix: "bg-amber-400/15 text-amber-400",
+    feature: "border hairline-strong text-fg",
+    change: "border hairline-strong text-fg-dim",
+    fix: "border hairline-strong text-fg",
   }[kind];
   return (
     <span
-      className={`px-2 py-0.5 rounded text-micro ${cls}`}
+      className={`px-2 py-0.5 text-micro ${cls}`}
     >
       {KIND_LABEL[kind]}
     </span>
@@ -264,12 +265,12 @@ function PriorityBadge({ priority }: { priority: BacklogPriority }) {
     );
   }
   const cls = {
-    high: "bg-orange-400/15 text-orange-400",
-    critical: "bg-red-400/15 text-red-400",
+    high: "border hairline-strong text-fg",
+    critical: "border border-danger text-danger",
   }[priority];
   return (
     <span
-      className={`px-2 py-0.5 rounded text-micro ${cls}`}
+      className={`px-2 py-0.5 text-micro ${cls}`}
     >
       {PRIORITY_LABEL[priority]}
     </span>

@@ -107,9 +107,9 @@ export async function reviewFormCheckAction(
 /**
  * Coach sends a note on an HRV alert: stamps reviewed_by/at + status
  * = reviewed_actioned and saves the note text. Best-effort emails the
- * member with the coach's note inlined. RLS policy `coach_manages_alerts`
- * on `hrv_alerts` (for all using is_current_user_coach()) authorizes
- * the update; non-coach callers fail silently.
+ * member with the coach's note inlined. RLS `coach_updates_opted_alerts`
+ * (0068: coach AND the member shares HRV) authorizes the update; non-
+ * coach callers and revoked shares match no row and return ok:false.
  *
  * Note text is required for this action — caller passes the textarea
  * value verbatim and we trim/truncate to 1000 chars.
@@ -182,8 +182,10 @@ export async function sendHrvAlertNoteAction(
  * IMPORTANT — RLS note: `hrv_session_modifiers` only exposes member-
  * select and coach-opted-read policies in migration 0031; there is no
  * coach-write policy. So the modifier insert must go through the
- * service-role client. The alert update remains via the session
- * client, which is covered by `coach_manages_alerts for all`.
+ * service-role client. The alert select/update stay on the session
+ * client, covered by coach_reads_opted_alerts / coach_updates_opted_alerts
+ * (0068) — a member who stopped sharing HRV yields no alert row, so we
+ * refuse before the service-role insert.
  */
 export async function pauseSessionFromAlertAction(
   alertId: string
@@ -242,8 +244,9 @@ export async function pauseSessionFromAlertAction(
 
 /**
  * Coach marks an HRV alert as seen with no further action: stamps
- * reviewed_by/at + status = reviewed_noted. RLS `coach_manages_alerts`
- * authorizes the update. Idempotent via `.eq("status", "open")`.
+ * reviewed_by/at + status = reviewed_noted. RLS `coach_updates_opted_alerts`
+ * (0068: member must share HRV) authorizes the update. Idempotent via
+ * `.eq("status", "open")`.
  */
 export async function markHrvAlertSeenAction(
   alertId: string
@@ -282,9 +285,10 @@ export async function markHrvAlertSeenAction(
  *
  * RLS note: `hrv_session_modifiers` has no coach-write policy, so the
  * modifier update goes through the service-role client. The alert
- * update goes through the session client (covered by
- * `coach_manages_alerts for all`). Same split as
- * pauseSessionFromAlertAction.
+ * goes through the session client (coach_reads_opted_alerts /
+ * coach_updates_opted_alerts, 0068). Before the service-role write we
+ * confirm via RLS that the alert is visible (member still shares HRV)
+ * and actually points at this modifier.
  *
  * `accepted` flips the modifier in two ways:
  *   - true → reviewed_by='munk', accepted_by_member unchanged →
@@ -320,6 +324,18 @@ export async function reviewAdaptiveAlertAction(input: {
 
   const now = new Date().toISOString();
 
+  // 0) Consent gate (0068): RLS hides alerts of members who stopped
+  //    sharing HRV. Refuse before touching the modifier via service-role.
+  const { data: alertRow } = await supabase
+    .from("hrv_alerts")
+    .select("session_modifier_id")
+    .eq("id", input.alertId)
+    .eq("status", "open")
+    .maybeSingle();
+  if (!alertRow || alertRow.session_modifier_id !== input.modifierId) {
+    return { ok: false, reason: "alert-not-found" };
+  }
+
   // 1) Modifier update — service-role client (no coach-write RLS).
   //    `reviewed_by: 'munk'` literal matches the CHECK constraint
   //    from migration 0041. Once we expand the team beyond Munk we
@@ -350,7 +366,7 @@ export async function reviewAdaptiveAlertAction(input: {
   }
 
   // 2) Alert close — session-client write (covered by
-  //    coach_manages_alerts). status='reviewed_actioned' regardless
+  //    coach_updates_opted_alerts, 0068). status='reviewed_actioned' regardless
   //    of approve/reject — the alert was actioned (closed); the
   //    modifier state captures the outcome.
   const { error: alertErr } = await supabase

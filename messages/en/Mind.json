@@ -226,7 +226,7 @@
     "metaTitle": "Sessions · Mind · MakeIt",
     "eyebrow": "Mind · Sessions",
     "title": "Library.",
-    "subtitle": "Breathing, focus, recovery, debrief. Pick one. 1-5 minutes per session.",
+    "subtitle": "Breathing, focus, recovery, debrief. Pick one. 1–5 minutes per session.",
     "category": {
       "breathing": {
         "heading": "Breathing",
@@ -254,12 +254,12 @@
     "eyebrow": "Mind · Circles",
     "locked": {
       "title": "Beast tier unlocks circles.",
-      "subtitle": "Circles are small groups (3-6 members) doing weekly check-ins. When you move up to Beast, this opens.",
+      "subtitle": "Circles are small groups (3–6 members) doing weekly check-ins. When you move up to Beast, this opens.",
       "body": "Until then: keep up the mind check and journal every day. That is how Reps are built."
     },
     "empty": {
       "title": "No circle yet.",
-      "subtitle": "Munk creates circles in groups of 3-6. You get a message when you are paired with one."
+      "subtitle": "Munk creates circles in groups of 3–6. You get a message when you are paired with one."
     },
     "subtitle": "{count} members · asynchronous weekly check-in",
     "multi": "You are a member of {count} circles. Multi-circle switching comes in a fast follow-up."

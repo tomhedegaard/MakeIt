@@ -16,6 +16,7 @@
  * wrapper is integration-tested / smoke-tested via the cron.
  */
 
+import { sharingMemberIds } from "@/lib/data/hrv-share";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { ReadinessBucket } from "@/lib/hrv/types";
@@ -252,6 +253,20 @@ function emptyInputs(): MorningReportInputs {
  *  - prsNoted is 0 until a PR/personal-record source is wired into the
  *    yesterday roll-up.
  */
+/**
+ * Roster members who share HRV with coaches. Never empty: PostgREST's
+ * `in.()` with no values is a syntax error, so a nil uuid stands in and
+ * matches nothing.
+ */
+async function sharingRosterIds(
+  supabase: SupabaseClient<Database>,
+  rosterIds: string[],
+): Promise<string[]> {
+  const sharing = await sharingMemberIds(supabase);
+  const ids = rosterIds.filter((id) => sharing.has(id));
+  return ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"];
+}
+
 export async function aggregateMorningReportInputs(
   supabase: SupabaseClient<Database>,
   now: Date = new Date(),
@@ -271,6 +286,9 @@ export async function aggregateMorningReportInputs(
   const rosterIds = roster.map((r) => r.id);
   const handleOf = new Map(roster.map((r) => [r.id, r.handle]));
   const cohortSize = roster.length;
+  // HRV only for members who share it with coaches (0068). The service
+  // client bypasses RLS, so the consent filter lives here.
+  const hrvIds = await sharingRosterIds(supabase, rosterIds);
 
   // --- Date boundaries (UTC). ---
   const todayDate = isoDate(now);
@@ -294,9 +312,9 @@ export async function aggregateMorningReportInputs(
     supabase
       .from("hrv_readings")
       .select("member_id, measured_at, readiness_bucket")
-      .in("member_id", rosterIds)
+      .in("member_id", hrvIds)
       .gte("measured_at", readingsSince),
-    supabase.from("hrv_alerts").select("conditions_met").eq("status", "open"),
+    supabase.from("hrv_alerts").select("conditions_met").eq("status", "open").in("member_id", hrvIds),
     supabase.from("form_checks").select("created_at").is("coach_reviewed_at", null),
     supabase
       .from("sessions")
@@ -313,14 +331,14 @@ export async function aggregateMorningReportInputs(
       .from("hrv_session_modifiers")
       .select("accepted_by_member")
       .eq("reason", "adaptive_v0")
-      .in("member_id", rosterIds)
+      .in("member_id", hrvIds)
       .gte("created_at", yesterdayStart)
       .lt("created_at", todayStart),
     supabase
       .from("hrv_session_modifiers")
       .select("member_id, created_at, accepted_by_member")
       .eq("reason", "adaptive_v0")
-      .in("member_id", rosterIds)
+      .in("member_id", hrvIds)
       .gte("created_at", historySince)
       .order("created_at", { ascending: true }),
     supabase
@@ -466,6 +484,7 @@ export async function aggregateCohortPatternInputs(
   }
   const rosterIds = roster.map((r) => r.id);
   const handleOf = new Map(roster.map((r) => [r.id, r.handle]));
+  const hrvIds = await sharingRosterIds(supabase, rosterIds);
   const sinceIso = `${isoDate(addDays(now, -windowDays))}T00:00:00.000Z`;
 
   // Skip the readings round-trip when caller already has the days.
@@ -474,7 +493,7 @@ export async function aggregateCohortPatternInputs(
     : supabase
         .from("hrv_readings")
         .select("member_id, measured_at, readiness_bucket")
-        .in("member_id", rosterIds)
+        .in("member_id", hrvIds)
         .gte("measured_at", sinceIso)
         .then((res) => ({
           data: (res.data ?? []).map((r) => ({
@@ -490,7 +509,7 @@ export async function aggregateCohortPatternInputs(
       .from("hrv_session_modifiers")
       .select("member_id, created_at, accepted_by_member")
       .eq("reason", "adaptive_v0")
-      .in("member_id", rosterIds)
+      .in("member_id", hrvIds)
       .gte("created_at", sinceIso)
       .order("created_at", { ascending: true }),
     supabase

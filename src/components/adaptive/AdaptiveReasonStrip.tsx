@@ -40,9 +40,6 @@ export default function AdaptiveReasonStrip({
         <div className="flex items-center gap-3">
           <MotorGlyph className="text-fg-dim" />
           <span className="eyebrow flex-1">{copy.role}</span>
-          <span className="text-micro text-fg-faint hidden sm:inline">
-            {copy.attribution}
-          </span>
           <span
             aria-hidden
             className="text-fg-faint text-micro group-open:rotate-180 transition-transform"
@@ -59,7 +56,9 @@ export default function AdaptiveReasonStrip({
       </summary>
 
       <div className="px-5 pb-4 space-y-3">
-        <div className="flex items-center gap-2 text-micro text-fg-faint sm:hidden">
+        {/* Attribution lives in the opened strip only: "HQ" plus the gloss
+            already say who adapted the week. */}
+        <div className="flex items-center gap-2 text-micro text-fg-faint">
           <MotorGlyph className="size-3" />
           <span>{copy.attribution}</span>
         </div>

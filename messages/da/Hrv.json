@@ -71,7 +71,7 @@
         "body": "Der findes mange HRV-tal; vi viser RMSSD, fordi det er det mest robuste for korte, daglige målinger. Vi viser dig din faktiske værdi i millisekunder, ikke et opfundet “score”."
       },
       "noScore": {
-        "heading": "Hvorfor du ikke får et 0-100 score",
+        "heading": "Hvorfor du ikke får et 0–100 score",
         "body": "Et tal fra 0 til 100 lover en præcision, der ikke findes. Vi viser dit rigtige tal og dit eget baseline-bånd, så du ser, hvor du ligger i forhold til din egen normal."
       },
       "noCompare": {
@@ -257,7 +257,10 @@
     "desc": "Daglig HRV (RMSSD) med 7-dages gennemsnitslinje og 60-dages baseline-bånd. {count} målinger.",
     "caption": "HRV-målinger: dato og RMSSD",
     "colDate": "Dato",
-    "colRmssd": "RMSSD (ms)"
+    "colRmssd": "RMSSD (ms)",
+    "legendMean": "7-dages snit",
+    "legendNight": "Nat",
+    "legendBand": "Dit bånd"
   },
   "settingsSection": {
     "eyebrow": "HRV",
@@ -306,5 +309,31 @@
     "allDone": "alle milestones gennemført",
     "nextToday": "næste milestone i dag (+{reps} Reps)",
     "nextIn": "næste milestone om {count, plural, one {# dag} other {# dage}} (+{reps} Reps)"
+  },
+  "today": {
+    "nightsTitle": "14 nætter",
+    "recentTitle": "Seneste morgener",
+    "today": "I dag",
+    "belowBand": "under dit bånd",
+    "noteKicker": "HQ's note",
+    "noteTitle": "Sådan læste HQ natten",
+    "belowStreak": "{count, plural, one {Første dag under båndet.} other {# dage i træk under båndet.}}",
+    "noteHuman": "Pause og deload beslutter Munk, ikke HQ.",
+    "weekKicker": "Ugeindsigt · {day}",
+    "weekTitle": "Ugeindsigt",
+    "sourceSynced": "{provider} · synket {time}",
+    "sourceDemo": "Eksempeldata",
+    "demoWeekly": "Søvn under 7 t tre nætter i træk hang sammen med de laveste målinger."
+  },
+  "share": {
+    "question": "Del din HRV med coach Munk?",
+    "body": "Siger du ja, kan Munk og MakeIts coaches se dine HRV-målinger, din livsstilslog, ugeindsigterne og de alarmer, HQ sender, når din HRV ligger lavt flere dage i træk. Coach School-coaches, der er tilknyttet dig, kan også se dine alarmer.",
+    "revoke": "Du kan slå det fra når som helst. Så kan coaches heller ikke se det, du har delt før.",
+    "yes": "Del med coach",
+    "notNow": "Nej tak",
+    "label": "Del med coach",
+    "onHint": "Munk og dine coaches ser dine HRV-målinger og alarmer.",
+    "offHint": "Din HRV er kun din. Slår du deling til, kan coaches hjælpe, når den ligger lavt.",
+    "error": "Det blev ikke gemt. Prøv igen."
   }
 }

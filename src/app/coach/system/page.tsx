@@ -63,19 +63,19 @@ export default async function CoachSystemPage() {
         <KPI label={t("kpiServicesConfigured")} value={`${configured}/${total}`} />
         <KPI
           label={t("kpiMembers")}
-          value={status.database.reachable ? status.database.members : "—"}
+          value={status.database.reachable ? status.database.members : "-"}
         />
         <KPI
           label={t("kpiActiveSubscriptions")}
-          value={status.database.reachable ? status.database.activeSubscriptions : "—"}
+          value={status.database.reachable ? status.database.activeSubscriptions : "-"}
         />
         <KPI
           label={t("kpiSessionsPerWeek")}
-          value={status.database.reachable ? status.database.sessionsThisWeek : "—"}
+          value={status.database.reachable ? status.database.sessionsThisWeek : "-"}
         />
         <KPI
           label={t("kpiPendingFormChecks")}
-          value={status.database.reachable ? status.database.pendingFormChecks : "—"}
+          value={status.database.reachable ? status.database.pendingFormChecks : "-"}
           pulse={status.database.pendingFormChecks > 0}
         />
       </section>
@@ -108,7 +108,9 @@ export default async function CoachSystemPage() {
           {status.reminders.map((r) => (
             <li key={r.id} className="p-5">
               <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="min-w-0 flex-1">
+                {/* Full row on a phone: flex-1 alone shrank it to 4 px next
+                    to the date column (UI-REVIEW-10). */}
+                <div className="min-w-0 flex-1 basis-full sm:basis-0">
                   <div className="flex items-center gap-2 mb-1">
                     <SeverityBadge severity={r.severity} />
                     <span className="eyebrow text-fg-faint">{r.service}</span>
@@ -184,7 +186,7 @@ export default async function CoachSystemPage() {
               <span
                 className={`size-3 rounded-full shrink-0 mt-1.5 ${
  s.configured
- ? "bg-green-400"
+ ? "bg-fg"
  : "bg-fg-faint/30 border border-fg-faint"
  }`}
                 aria-hidden
@@ -196,7 +198,7 @@ export default async function CoachSystemPage() {
                   </span>
                   <span
                     className={`text-micro ${
- s.configured ? "text-green-400" : "text-fg-faint"
+ s.configured ? "text-fg" : "text-fg-faint"
  }`}
                   >
                     {s.configured ? t("serviceLive") : t("serviceMissing")}
@@ -222,8 +224,8 @@ export default async function CoachSystemPage() {
       </Section>
 
       {status.database.error ? (
-        <section className="surface-2 rounded-2xl p-5 border border-red-400/40">
-          <div className="eyebrow text-red-400 mb-2">{t("databaseError")}</div>
+        <section className="surface-2 p-5 border border-danger">
+          <div className="eyebrow text-danger mb-2">{t("databaseError")}</div>
           <p className="text-meta text-fg-dim break-all">
             {status.database.error}
           </p>
@@ -247,7 +249,7 @@ export default async function CoachSystemPage() {
           <Row label={t("rowAppUrl")} value={COMPANY.appUrl} />
           <Row label={t("rowMarketingUrl")} value={COMPANY.marketingUrl} />
           <Row label={t("rowLegalEntity")} value={COMPANY.legal.entity} />
-          <Row label={t("rowCvr")} value={COMPANY.legal.cvr ?? "—"} dim={!COMPANY.legal.cvr} />
+          <Row label={t("rowCvr")} value={COMPANY.legal.cvr ?? "-"} dim={!COMPANY.legal.cvr} />
           <Row label={t("rowAddress")} value={COMPANY.legal.address} />
           <Row label={t("rowFounded")} value={String(COMPANY.legal.foundedYear)} />
           <Row label={t("rowSupportEmail")} value={COMPANY.emails.support} />
@@ -256,7 +258,7 @@ export default async function CoachSystemPage() {
           <Row label={t("rowReplyTo")} value={COMPANY.emails.replyTo} />
           <Row
             label={t("rowInstagram")}
-            value={COMPANY.social.instagramHandle ? `@${COMPANY.social.instagramHandle}` : "—"}
+            value={COMPANY.social.instagramHandle ? `@${COMPANY.social.instagramHandle}` : "-"}
             dim={!COMPANY.social.instagramHandle}
           />
         </dl>
@@ -410,10 +412,10 @@ function CronHealthCard({
 
 function SeverityBadge({ severity }: { severity: Severity }) {
   const styles = {
-    ok: "bg-green-400/15 text-green-400",
-    info: "bg-fg-faint/15 text-fg-dim",
-    warn: "bg-yellow-400/15 text-yellow-400",
-    critical: "bg-red-400/15 text-red-400",
+    ok: "border hairline-strong text-fg-dim",
+    info: "border hairline text-fg-dim",
+    warn: "border hairline-strong text-fg",
+    critical: "border border-danger text-danger",
   };
   const label = {
     ok: "OK",

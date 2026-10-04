@@ -68,7 +68,7 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["hamstrings", "lower_back"],
     tertiaryMuscles: ["abs", "adductors", "calves_back"],
     cues: [
-      "Bryst op og spændt mave før du drukner under baren.",
+      "Bryst op og spænd, mave fat.",
       "Knæ sporer tæerne. Pres dem aktivt ud.",
       "Sid lavt: hofte under knæ.",
       "Driv gulvet væk og lås ud uden hyperextension.",
@@ -363,7 +363,7 @@ export const MOCK_EXERCISES: Exercise[] = [
     secondaryMuscles: ["forearms"],
     tertiaryMuscles: ["abs", "lats"],
     cues: [
-      "Pause 1-2 sekunder med bar rørende brystet.",
+      "Pause 1–2 sekunder med bar rørende brystet.",
       "Bevar al spænding i pausen. Slap aldrig af.",
       "Eksplosiv koncentrisk lige efter pausen.",
       "Albuer og scapula låst hele vejen.",
@@ -486,7 +486,7 @@ export const MOCK_EXERCISES: Exercise[] = [
     mistakes: [
       {
         title: "For dybt dip",
-        body: "Bliver til en thruster. Dip skal være 5-10 cm. Knæene må aldrig forbi 30°.",
+        body: "Bliver til en thruster. Dip skal være 5–10 cm. Knæene må aldrig forbi 30°.",
       },
       {
         title: "Forward lean",
@@ -675,7 +675,7 @@ export const MOCK_EXERCISES: Exercise[] = [
     whyMatters:
       "Unilateral ben-træning. Fanger hvor venstre/højre er ude af balance og bygger funktionel single-leg styrke.",
     setup:
-      "Bar i back-squat position eller dumbbells i hænderne. Lang gangbane, minimum 8-10 meter.",
+      "Bar i back-squat position eller dumbbells i hænderne. Lang gangbane, minimum 8–10 meter.",
     progression: "Reverse lunge med pause i bunden, eller bulgarian split squat.",
     regression: "Static split squat uden vandring.",
     displayOrder: 110,
@@ -775,7 +775,7 @@ export const MOCK_EXERCISES: Exercise[] = [
       "Hagen ned mod bryst, ingen hovedhyperextension.",
       "Pres knæene let udad gennem hele liften.",
       "Lås hofterne: bækken neutral i toppen, ingen overstrækning.",
-      "1-2 sek pause i toppen før kontrolleret nedad.",
+      "1–2 sek pause i toppen før kontrolleret nedad.",
     ],
     mistakes: [
       {
@@ -1166,7 +1166,7 @@ export const MOCK_EXERCISES: Exercise[] = [
     cues: [
       "Fuld stræk i bunden: strækkes, mærkes.",
       "Hæv på storetåballen, ikke yderkant.",
-      "Pause 1-2 sek i top, squeeze.",
+      "Pause 1–2 sek i top, squeeze.",
       "Lige knæ, ingen bouncing eller bøjning.",
       "Kontrolleret nedad: 2 sek.",
     ],

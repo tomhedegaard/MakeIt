@@ -21,6 +21,7 @@ import {
   aggregateCohortPatternInputs,
   loadRoster,
 } from "./coach-morning-report";
+import { onlySharing, sharingMemberIds } from "./hrv-share";
 
 /** Whitelist of timeframes the page accepts; everything else falls back to 30. */
 export const PATTERN_WINDOWS_DAYS = [7, 30] as const;
@@ -80,6 +81,10 @@ const MOCK_PATTERNS: PatternForDisplay[] = [
  * across all members' hrv_readings / hrv_session_modifiers / form_checks
  * — RLS on those tables doesn't uniformly expose cross-member reads
  * via the session client. The coach layout already gates the route.
+ *
+ * Service-role bypasses RLS, so HRV-derived inputs (readings +
+ * adaptive modifiers) are cut to members who share HRV (0068) before
+ * detection. Form-check histories are not HRV and stay roster-wide.
  */
 export async function getCoachPatternsForPage(
   windowDays: PatternWindowDays = 30,
@@ -90,7 +95,17 @@ export async function getCoachPatternsForPage(
 
   const svc = createServiceClient();
   const roster = await loadRoster(svc);
-  const inputs = await aggregateCohortPatternInputs(svc, { roster, windowDays });
+  const [all, sharing] = await Promise.all([
+    aggregateCohortPatternInputs(svc, { roster, windowDays }),
+    sharingMemberIds(svc),
+  ]);
+  // ponytail: rows are fetched roster-wide and dropped here; push the
+  // filter into aggregateCohortPatternInputs if the roster gets large.
+  const inputs = {
+    ...all,
+    hrvReadinessDays: onlySharing(all.hrvReadinessDays, sharing),
+    memberModifierHistories: onlySharing(all.memberModifierHistories, sharing),
+  };
   const detected = detectCohortPatterns(inputs);
   const handleOf = new Map(roster.map((r) => [r.id, r.handle]));
 

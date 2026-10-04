@@ -107,8 +107,9 @@ async function runSafetyCheck(args: {
  *
  * RLS: coach_reviews_own_insert (migration 0045) accepts the insert
  * when reviewer_id = auth.uid(). Reading hrv_alerts to derive Munk's
- * decision goes through coach_manages_alerts (is_current_user_coach())
- * — sandbox/live coaches must have is_coach=true alongside coach_tier.
+ * decision goes through coach_reads_opted_alerts (0068: coach AND the
+ * member shares HRV) — sandbox/live coaches must have is_coach=true
+ * alongside coach_tier. A revoked share reads as alert-not-found.
  */
 export interface SandboxSubmitResult {
   ok: boolean;
@@ -385,9 +386,10 @@ export async function promoteToLiveAction(input: {
  *   - modify / escalate / reject → 'reviewed_actioned'   (took action)
  *
  * RLS: coach_reviews insert is gated by reviewer_id = auth.uid().
- * hrv_alerts update relies on the existing coach_manages_alerts policy
- * (is_current_user_coach()) — co-coaches must have is_coach=true
- * alongside coach_tier (set by promoteToLiveAction).
+ * hrv_alerts read/update relies on coach_reads_opted_alerts /
+ * coach_updates_opted_alerts (0068: coach AND member shares HRV) —
+ * co-coaches must have is_coach=true alongside coach_tier (set by
+ * promoteToLiveAction).
  */
 export interface SubmitLiveResult {
   ok: boolean;
@@ -430,6 +432,16 @@ export async function submitLiveReviewAction(input: {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, reason: "unauthenticated" };
+
+  // RLS-gated (0068): an alert whose member stopped sharing HRV is
+  // invisible here, so refuse before inserting a review we can't close.
+  const { data: openAlert } = await supabase
+    .from("hrv_alerts")
+    .select("id")
+    .eq("id", input.alertId)
+    .eq("status", "open")
+    .maybeSingle();
+  if (!openAlert) return { ok: false, reason: "alert-not-found" };
 
   const reasoning = (input.reasoning ?? "").slice(0, 1000).trim() || null;
 

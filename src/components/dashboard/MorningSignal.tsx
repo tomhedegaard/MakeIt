@@ -36,7 +36,7 @@ export default function MorningSignal({ input }: { input: MorningSignalInput }) 
 
   return (
     <section aria-label={t("label")}>
-      <ul className="grid grid-cols-2 min-[360px]:grid-cols-4 lg:grid-cols-2 gap-2">
+      <ul className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-2">
         {cells.map((cell) => (
           <li key={cell.domain} className="min-w-0">
             <Link

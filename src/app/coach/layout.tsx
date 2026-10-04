@@ -6,7 +6,7 @@ import { getSession, signOutLeftoverAuthUser } from "@/lib/auth";
 import { COMPANY } from "@/lib/company";
 
 export const metadata = {
-  title: `Coach — ${COMPANY.product}`,
+  title: `Coach · ${COMPANY.product}`,
 };
 
 // Coach console stays dark in v1 (spec §2). Explicit, so it never depends on :root.

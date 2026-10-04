@@ -1225,6 +1225,7 @@ export type Database = {
           member_id: string
           session_suggestion_enabled: boolean | null
           share_to_coach: boolean | null
+          share_to_coach_decided_at: string | null
           updated_at: string | null
         }
         Insert: {
@@ -1234,6 +1235,7 @@ export type Database = {
           member_id: string
           session_suggestion_enabled?: boolean | null
           share_to_coach?: boolean | null
+          share_to_coach_decided_at?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -1243,6 +1245,7 @@ export type Database = {
           member_id?: string
           session_suggestion_enabled?: boolean | null
           share_to_coach?: boolean | null
+          share_to_coach_decided_at?: string | null
           updated_at?: string | null
         }
         Relationships: [

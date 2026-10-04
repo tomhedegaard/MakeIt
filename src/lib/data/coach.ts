@@ -160,7 +160,7 @@ const MOCK_HRV_ALERTS: HrvAlertRow[] = [
     memberHandle: "nina_dl",
     triggeredAt: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
     conditionsMet: {
-      warm_up_active: false,
+      warm_up_active: true,
       sustained_low_readiness: { consecutive_days_low: 3 },
       rhr_spike: null,
       lifestyle_flags: {
@@ -529,8 +529,8 @@ export async function getOpenHrvAlerts(limit = 30): Promise<HrvAlertRow[]> {
  * from this queue regardless of approve/reject choice.
  *
  * Mirrors the shape + auth model of getOpenHrvAlerts; RLS
- * `coach_manages_alerts for all using is_current_user_coach()`
- * authorises the read.
+ * `coach_reads_opted_alerts` (0068: coach AND member shares HRV)
+ * authorises the read, so revoked shares drop out of the queue.
  */
 export async function getOpenAdaptiveAlerts(
   limit = 30

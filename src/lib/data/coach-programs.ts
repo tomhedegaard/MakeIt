@@ -296,6 +296,11 @@ const MOCK_PROGRAM_SUMMARIES: ProgramSummary[] = [
   },
 ];
 
+/** Demo mode: whether /program/[code] has mock content for this code. */
+export function hasDemoProgramDetail(code: string): boolean {
+  return code === MOCK_PROGRAM_BUILDER.code;
+}
+
 const MOCK_PROGRAM_BUILDER: ProgramBuilder = {
   id: "mock-prog-1",
   code: "STR-12",

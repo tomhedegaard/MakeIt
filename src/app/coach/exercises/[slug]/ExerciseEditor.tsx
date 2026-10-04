@@ -474,7 +474,7 @@ function Select({
       onChange={(e) => onChange(e.target.value)}
       className="input w-full"
     >
-      <option value="">—</option>
+      <option value="">-</option>
       {options.map((o) => (
         <option key={o} value={o}>
           {o}

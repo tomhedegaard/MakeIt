@@ -1,3 +1,4 @@
+import NarrativeBand from "@/components/ui/NarrativeBand";
 import { getLocale, getTranslations } from "next-intl/server";
 import { intlLocaleTag } from "@/i18n/config";
 import { dayMonth, demoCalendar } from "@/lib/dates/demo-calendar";
@@ -141,45 +142,43 @@ export default async function RepsPage() {
         eyebrow={t("header.eyebrow")}
         title={t("header.title")}
         subtitle={t("header.subtitle")}
-        right={
-          // Nord §6.7: saldoen er hero-tallet, venstrestillet, med
-          // niveau og afstand til næste niveau under og progress i mos.
-          <div className="min-w-[220px]">
-            <div className="eyebrow mb-2">{t("balance.label")}</div>
-            <div className="numeric text-hero md:text-hero-lg">
-              {balance.toLocaleString(tag)}
-            </div>
-            <div className="text-meta text-fg-dim mt-2">
-              {t("balance.tier", { tier: progress.current })}
-            </div>
-            {progress.next ? (
-              <>
-                <Progress
-                  className="mt-3"
-                  value={progress.pct}
-                  label={t("balance.progressLabel", { tier: progress.next })}
-                  valueText={t("balance.toNext", {
-                    amount: progress.toNext?.toLocaleString(tag) ?? "",
-                    tier: progress.next,
-                  })}
-                />
-                <div className="text-meta text-fg-dim mt-2">
-                  {t("balance.toNext", {
-                    amount: progress.toNext?.toLocaleString(tag) ?? "",
-                    tier: progress.next,
-                  })}
-                </div>
-              </>
-            ) : (
-              <div className="text-micro text-fg-faint mt-3">
-                {t("balance.topCap")}
-              </div>
-            )}
-          </div>
-        }
       />
 
       <Container className="py-8 md:py-12 space-y-10 md:space-y-14">
+        {/* Nord §6.7: saldoen er hero-tallet, venstrestillet under titlen
+            (ikke yderst til højre), med niveau, afstand og progress i mos. */}
+        <section aria-label={t("balance.label")} className="max-w-md">
+          <div className="eyebrow mb-2">{t("balance.label")}</div>
+          <div className="numeric text-hero md:text-hero-lg">
+            {balance.toLocaleString(tag)}
+          </div>
+          <div className="text-meta text-fg-dim mt-2">
+            {t("balance.tier", { tier: progress.current })}
+          </div>
+          {progress.next ? (
+            <>
+              <Progress
+          className="mt-3"
+          value={progress.pct}
+          label={t("balance.progressLabel", { tier: progress.next })}
+          valueText={t("balance.toNext", {
+            amount: progress.toNext?.toLocaleString(tag) ?? "",
+            tier: progress.next,
+          })}
+              />
+              <div className="text-meta text-fg-dim mt-2">
+          {t("balance.toNext", {
+            amount: progress.toNext?.toLocaleString(tag) ?? "",
+            tier: progress.next,
+          })}
+              </div>
+            </>
+          ) : (
+            <div className="text-meta text-fg-faint mt-3">
+              {t("balance.topCap")}
+            </div>
+          )}
+        </section>
         {/* Nord §6.7: the four tiers as one horizontal scale. Perks sit
             in a disclosure so the scale stays a glance, not a wall. */}
         <section aria-labelledby="reps-tiers">
@@ -288,8 +287,9 @@ export default async function RepsPage() {
           )}
         </section>
 
-        <section aria-labelledby="reps-how">
-          <h2 id="reps-how" className="font-display text-section mb-4">{t("how.eyebrow")}</h2>
+        <section aria-label={t("how.title")} className="space-y-4">
+          {/* Fortællebånd (spec §6.7): the rule in one line, the list as detail. */}
+          <NarrativeBand title={t("how.title")}>{t("how.band")}</NarrativeBand>
           <ul className="border-t hairline md:grid md:grid-cols-2 md:gap-x-10">
             {how.map((row) => (
               <li key={row.k} className="flex items-baseline gap-4 py-3 border-b hairline">
@@ -353,14 +353,14 @@ export default async function RepsPage() {
             </div>
             <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">
               {redemptions.map((r) => (
-                <li key={r.id} className="px-5 py-3 flex items-center gap-4 text-copy">
-                  <span className="numeric text-micro text-fg-faint w-20 shrink-0">
+                <li key={r.id} className="px-5 py-3 flex items-center gap-3 sm:gap-4 text-copy">
+                  <span className="numeric text-micro text-fg-faint w-14 sm:w-20 shrink-0">
                     {new Date(r.redeemedAt).toLocaleDateString(tag, {
                       day: "numeric",
                       month: "short",
                     })}
                   </span>
-                  <span className="flex-1 truncate">{localizeRewardName(r.rewardName, t)}</span>
+                  <span className="flex-1 min-w-0 break-words">{localizeRewardName(r.rewardName, t)}</span>
                   <span className="numeric text-fg-dim text-micro shrink-0">
                     − {r.costReps.toLocaleString(tag)}
                   </span>

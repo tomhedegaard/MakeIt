@@ -43,7 +43,8 @@ export default function LogWeightCard({
     : null;
 
   return (
-    <section className="surface-2 rounded-2xl p-5">
+    // Unframed: /nutrition puts it in one card with today's intake.
+    <section className="p-5 lg:p-6">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="eyebrow mb-1">{t("eyebrow")}</div>

@@ -29,6 +29,7 @@ import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import PageTitle from "@/components/ui/PageTitle";
 import SectionHeader from "@/components/ui/SectionHeader";
+import NarrativeBand from "@/components/ui/NarrativeBand";
 import Stat from "@/components/ui/Stat";
 import Avatar from "@/components/ui/Avatar";
 import KeepOriginal from "@/components/dashboard/KeepOriginal";
@@ -274,11 +275,13 @@ export default async function TodayPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <FirstTimeTour />
 
-      {/* 1. greeting */}
+      {/* 1. header (spec §6.1): "Din uge." with the brief's kicker and line;
+          the kicker carries Krop's colour via data-domain. */}
+      <div data-domain="body">
       <PageTitle
         className="pt-2"
         kicker={t("greeting.eyebrow")}
-        title={`@${member.handle}`}
+        title={t("greeting.title")}
         action={
           <div className="text-right">
             <div className="eyebrow mb-1">{t("greeting.streakLabel")}</div>
@@ -287,6 +290,9 @@ export default async function TodayPage() {
           </div>
         }
       />
+
+      </div>
+      <p className="-mt-2 max-w-prose text-copy text-fg-body">{t("greeting.subtitle")}</p>
 
       <WeekStrip
         week={week}
@@ -307,7 +313,7 @@ export default async function TodayPage() {
         order. The rail spans the flexible middle row, so it starts right
         under the morning signal instead of waiting for the session card.
       */}
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem] lg:grid-rows-[auto_1fr_auto] lg:gap-x-10 items-start">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem] lg:grid-rows-[auto_1fr_auto_auto] lg:gap-x-10 items-start">
       {/* 2. todaySession */}
       <div className="lg:col-start-1 lg:row-start-1 lg:row-span-2">
       {today ? (
@@ -376,7 +382,7 @@ export default async function TodayPage() {
                   <span className="numeric text-fg-faint text-micro w-6">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="flex-1 text-fg/90 text-copy truncate">{ex.name}</span>
+                  <span className="flex-1 min-w-0 text-fg-body text-copy">{ex.name}</span>
                   <span className="numeric text-fg-faint text-micro">{ex.setCount}{t("todaySession.setCountSuffix")}</span>
                 </>
               );
@@ -426,38 +432,10 @@ export default async function TodayPage() {
 
       <div className="space-y-8 lg:col-start-1 lg:row-start-3">
 
-      {/* 4. munkNote */}
-      {reviewedCount > 0 ? (
-        <Card domain="body" className="p-0 overflow-hidden">
-          <Link href="/profile#form-checks" className="block px-5 py-4 lift">
-            <div className="flex items-center gap-3">
-              <span
-                className="size-2 rounded-full shrink-0"
-                style={{ background: "var(--domain, var(--fg))" }}
-                aria-hidden
-              />
-              <div className="flex-1 min-w-0">
-                <div className="text-copy">
-                  {t("formChecks.answeredBefore")}{" "}
-                  <span className="text-fg">
-                    {t("formChecks.answeredCount", { count: reviewedCount })}
-                  </span>
-                </div>
-                <div className="text-meta text-fg-faint mt-0.5">
-                  {t("formChecks.readNotes")}
-                </div>
-              </div>
-              <span className="text-fg-dim shrink-0" aria-hidden>
-                →
-              </span>
-            </div>
-          </Link>
-        </Card>
-      ) : null}
-
       {/* 5. prose, with the cross-domain insight cards under it */}
       <TodayProse model={prose} />
       <ConnectDotsStream cards={insightCards} copy={dotsCopy} />
+
       </div>
 
       <div className="space-y-8 lg:col-start-2 lg:row-start-2 lg:row-span-2">
@@ -478,7 +456,7 @@ export default async function TodayPage() {
                   className="px-4 py-3 flex items-center gap-4 lift"
                 >
                   <span className="eyebrow w-16 shrink-0">{fmtUpcomingDate(row.scheduledFor, t, locale)}</span>
-                  <span className="flex-1 text-copy text-fg/90 truncate">{row.title}</span>
+                  <span className="flex-1 min-w-0 text-copy text-fg/90 text-pretty">{row.title}</span>
                   <span className="numeric text-fg-faint text-micro shrink-0">{t("todaySession.minutes", { count: row.estimatedMinutes })}</span>
                 </Link>
               </li>
@@ -489,7 +467,7 @@ export default async function TodayPage() {
             {mockUpcoming(t).map((row) => (
               <li key={row.d} className="px-4 py-3 flex items-center gap-4">
                 <span className="eyebrow w-16 shrink-0">{row.d}</span>
-                <span className="flex-1 text-copy text-fg/90 truncate">{row.t}</span>
+                <span className="flex-1 min-w-0 text-copy text-fg/90 text-pretty">{row.t}</span>
                 <span className="numeric text-fg-faint text-micro shrink-0">{row.m}</span>
               </li>
             ))}
@@ -569,6 +547,23 @@ export default async function TodayPage() {
       </section>
 
       </div>
+
+      {/* Last on a phone (spec §6.1 "nederst"), under the main column on lg. */}
+      <div className="lg:col-start-1 lg:row-start-4">
+        {/* Fortællebånd (spec §6.1): the human signature sits at the bottom
+            of the day, after HQ's reading. */}
+        {reviewedCount > 0 ? (
+          <NarrativeBand
+            kicker={t("formChecks.bandKicker")}
+            title={`${t("formChecks.answeredBefore")} ${t("formChecks.answeredCount", { count: reviewedCount })}`}
+            action={
+              <Link href="/profile#form-checks" className="btn btn-sm">
+                {t("formChecks.seeAnswer")}
+              </Link>
+            }
+          />
+        ) : null}
+      </div>
       </div>
 
       {/* 9. tierBanner */}
@@ -593,7 +588,7 @@ function CrewRow({
     <li className="surface-2 p-4 flex items-center gap-3">
       <Avatar handle={who} />
       <div className="flex-1 min-w-0">
-        <div className="text-copy truncate">
+        <div className="text-copy break-words">
           <span className="text-fg">{who}</span>{" "}
           <span className="text-fg-dim">{what}</span>
         </div>
@@ -615,6 +610,11 @@ function formatKg(kg: number, locale = "da"): string {
 
 function formatReps(n: number, locale = "da"): string {
   return new Intl.NumberFormat(intlLocaleTag(locale)).format(n);
+}
+
+/** "Deadlift" → "Dead\u00ADlift": a break point before common lift suffixes. */
+function softHyphenateLift(label: string): string {
+  return label.replace(/(?<=\p{L}{3})(lift|press|head|squat|row|pull|push)/giu, "\u00AD$1");
 }
 
 /**
@@ -647,12 +647,18 @@ function WeekStrip({
                   <Check {...ICON} aria-label={copy.done} className="size-3.5 text-fg-dim" />
                 ) : null}
               </span>
-              <span className={`block truncate text-micro ${day.rest ? "text-fg-dim" : "text-fg"}`}>
-                {day.sessionLabel || copy.rest}
+              {/* Lift names wrap to two lines at 375 instead of clipping:
+                  a soft hyphen splits compounds ("Dead-lift") even where the
+                  browser has no hyphenation dictionary. */}
+              <span
+                lang={day.rest ? undefined : "en"}
+                className={`block hyphens-auto [overflow-wrap:anywhere] text-micro ${day.rest ? "text-fg-dim" : "text-fg"}`}
+              >
+                {day.sessionLabel ? softHyphenateLift(day.sessionLabel) : copy.rest}
               </span>
             </>
           );
-          const cell = `block h-full px-1.5 pt-2 pb-2.5 sm:px-3 border-t-2 ${
+          const cell = `block h-full px-1 pt-2 pb-2.5 sm:px-3 border-t-2 ${
             day.today ? "border-t-signal" : "border-t-transparent"
           }`;
           return (

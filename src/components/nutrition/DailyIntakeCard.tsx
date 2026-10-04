@@ -27,7 +27,8 @@ export default async function DailyIntakeCard({ intake }: { intake: DailyIntake 
   } = intake;
 
   return (
-    <article className="surface-2 p-5 lg:p-6">
+    // Unframed: /nutrition puts it in one card with the weigh-in.
+    <article className="p-5 lg:p-6">
       <div className="eyebrow mb-4">{t("eyebrow")}</div>
 
       <div className="grid grid-cols-2 gap-5">

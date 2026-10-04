@@ -31,7 +31,7 @@ export default async function CoachSafetyPage() {
         <p className="mt-3 text-fg-dim text-meta md:text-copy max-w-md">
           En styrkecoach er ikke en krisevagt. Livslinien 70 201 201 og 112
           er det rigtige ved akut krise. Her ser du kun det medlemmet selv
-          har valgt at skrive — aldrig journal-tekst.
+          har valgt at skrive, aldrig journal-tekst.
         </p>
       </header>
 
@@ -49,7 +49,7 @@ export default async function CoachSafetyPage() {
           <div className="rounded-2xl border hairline bg-bg-2/30 p-6 space-y-2">
             <div className="font-display text-hero tabular-nums">0</div>
             <p className="text-fg-dim text-meta">
-              Ingen åbne medlems-skrevne summaries. Munk får ikke push — åbn
+              Ingen åbne medlems-skrevne summaries. Munk får ikke push. Åbn
               denne side for at se nye.
             </p>
           </div>
@@ -88,7 +88,7 @@ export default async function CoachSafetyPage() {
         {week.journalCoverage === "demo" ? (
           <div className="space-y-3">
             <p className="text-fg-dim text-meta">
-              Demo-tal — ikke live dækning. I connected mode kan coaches
+              Demo-tal, ikke live dækning. I connected mode kan coaches
               ikke aggregere andres journals (RLS owner-only).
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline rounded-xl overflow-hidden">
@@ -102,7 +102,7 @@ export default async function CoachSafetyPage() {
           <div className="rounded-2xl border hairline bg-bg-2/30 p-6">
             <p className="text-fg-dim text-meta">
               Journal-tal vises ikke. <code className="text-fg">journal_entries</code>{" "}
-              er owner-only — Munk kan ikke se andres poster, og et 0-0-0-0
+              er owner-only: Munk kan ikke se andres poster, og et 0-0-0-0
               her ville være falsk dækning. Claude-nulls tælles i logs som{" "}
               <code className="text-fg">[mind] moderation_claude_null</code>.
             </p>
@@ -115,12 +115,12 @@ export default async function CoachSafetyPage() {
         <ol className="space-y-2 text-fg-dim text-meta list-decimal pl-5">
           <li>
             <strong className="text-fg">Keyword pre-filter:</strong> hurtig regex
-            over entry-body. Conservative — false-positives OK.
+            over entry-body. Konservativ: falske positiver er i orden.
           </li>
           <li>
             <strong className="text-fg">Claude moderation (Haiku):</strong> fanger
             oblique sprog. Hvis Claude er nede eller returnerer null, er
-            verdictet <em>ikke</em> clean — Livslinien-modal vises.
+            verdictet <em>ikke</em> clean, og Livslinien-modalen vises.
           </li>
           <li>
             <strong className="text-fg">Resources-modal:</strong> Livslinien + 112

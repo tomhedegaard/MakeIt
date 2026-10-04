@@ -62,6 +62,8 @@
       "reviewed": "Coach Munk replied",
       "voice": "Voice note",
       "youFilmed": "You filmed this set",
+      "earlierEyebrow": "Form checks from earlier sessions",
+      "youFilmedEarlier": "Filmed in an earlier session",
       "munkReply": "Feedback from coach Munk"
     },
     "demoPause": "Pause the move"

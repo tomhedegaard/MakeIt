@@ -51,7 +51,7 @@ export async function createExerciseAction(input: {
     return {
       ok: false,
       error: dup
-        ? `Slug "${slug}" findes allerede — vælg et andet navn/slug.`
+        ? `Slug "${slug}" findes allerede. Vælg et andet navn eller slug.`
         : error.message,
     };
   }

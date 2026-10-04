@@ -30,10 +30,13 @@ export default function MindSubNav() {
   return (
     <div className="border-b hairline">
       <Container>
-        <nav aria-label={t("aria")} className="-mx-5 px-5 md:mx-0 md:px-0 overflow-x-auto"
+        <nav
+          aria-label={t("aria")}
+          // Right-edge fade on phones says "more to scroll" (a mask, not a gradient fill).
+          className="-mx-5 px-5 md:mx-0 md:px-0 overflow-x-auto [mask-image:linear-gradient(to_right,#000_80%,transparent)] md:[mask-image:none]"
           style={{ scrollbarWidth: "none" }}
         >
-          <ul className="flex items-center gap-5 text-meta whitespace-nowrap">
+          <ul className="flex items-center gap-5 pr-12 md:pr-0 text-meta whitespace-nowrap">
             {LINKS.map((link) => {
               const active =
                 link.href === "/mind"

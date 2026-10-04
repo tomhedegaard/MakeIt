@@ -173,7 +173,7 @@
     "mealsLogged": "{logged}/{planned} måltider logget",
     "weightTrendLabel": "Vægt-trend",
     "weightUnit": "kg / 7 dage",
-    "skipDaysLabel": "Skip-dage",
+    "skipDaysLabel": "Fridage fra planen",
     "skipDaysSub": "meldt på forhånd",
     "coachActionLabel": "Coach-handling",
     "statusLabel": "Status",
@@ -374,5 +374,25 @@
       "engine_reject_streak": "HQ-afvisning",
       "form_check_decline": "Form-fald"
     }
+  },
+  "hrvAlert": {
+    "baselineActive": "Baseline aktiv",
+    "baselineBuilding": "Baseline opbygges",
+    "daysLow": "{count} dage lavt",
+    "lifestyle": "Livsstil",
+    "sick": "syg",
+    "stressed": "stress",
+    "shortSleep": "søvn",
+    "highAlcohol": "alkohol",
+    "markSeen": "Markér som set",
+    "suggestPause": "Foreslå pause",
+    "sendMessage": "Send besked",
+    "sheetTitle": "Send personlig besked",
+    "messageTo": "Besked til @{handle}",
+    "placeholder": "Skriv en personlig besked til @{handle}…",
+    "cancel": "Annullér",
+    "sending": "Sender…",
+    "send": "Send",
+    "sheetFoot": "Markerer alerten som set og sender beskeden til medlemmet."
   }
 }

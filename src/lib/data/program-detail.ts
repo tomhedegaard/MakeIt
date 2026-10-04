@@ -2,6 +2,7 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import type { MuscleGroup } from "@/lib/data/muscle-groups";
 import { isSyntheticProgramCode } from "@/lib/programs/synthetic";
+import { getProgramBuilder } from "@/lib/data/coach-programs";
 
 /**
  * Member-facing program template fetcher. Pulls a *published* program
@@ -99,7 +100,7 @@ export async function getMemberProgramByCode(
   if (isSyntheticProgramCode(code)) return null;
 
   const supabase = await createClient();
-  if (!supabase) return null;
+  if (!supabase) return audience === "adult" ? demoProgramDetail(code) : null;
 
   const { data } = await supabase
     .from("programs")
@@ -178,4 +179,40 @@ function normalizeSets(raw: unknown): ProgramDetailSet[] {
 function unwrapOne<T>(v: T | T[] | null | undefined): T | null {
   if (!v) return null;
   return Array.isArray(v) ? v[0] ?? null : v;
+}
+
+/**
+ * Demo mode (no Supabase): reuse the coach builder's mock blueprint so
+ * /coaching's demo card opens a real detail page. Only codes that mock
+ * covers resolve; the rest stay 404 and /coaching does not link them.
+ */
+async function demoProgramDetail(code: string): Promise<ProgramDetail | null> {
+  const b = await getProgramBuilder(code);
+  if (!b) return null;
+  return {
+    id: b.id,
+    code: b.code,
+    name: b.name,
+    type: b.type,
+    description: b.description,
+    weeks: b.weeks,
+    level: b.level,
+    coachName: null,
+    days: b.days.map((d) => ({
+      id: d.id,
+      position: d.position,
+      dayLabel: d.dayLabel,
+      title: d.title,
+      estimatedMinutes: d.estimatedMinutes,
+      exercises: d.exercises.map((e) => ({
+        id: e.id,
+        exerciseName: e.exerciseName,
+        cue: e.cue,
+        position: e.position,
+        slug: null,
+        primaryMuscles: [],
+        sets: e.sets,
+      })),
+    })),
+  };
 }

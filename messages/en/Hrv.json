@@ -71,7 +71,7 @@
         "body": "There are many HRV numbers; we show RMSSD because it is the most robust for short, daily readings. We show you your actual value in milliseconds, not an invented “score”."
       },
       "noScore": {
-        "heading": "Why you don't get a 0-100 score",
+        "heading": "Why you don't get a 0–100 score",
         "body": "A number from 0 to 100 promises a precision that does not exist. We show your real number and your own baseline band, so you see where you sit relative to your own normal."
       },
       "noCompare": {
@@ -257,7 +257,10 @@
     "desc": "Daily HRV (RMSSD) with a 7-day mean line and a 60-day baseline band. {count} readings.",
     "caption": "HRV readings: date and RMSSD",
     "colDate": "Date",
-    "colRmssd": "RMSSD (ms)"
+    "colRmssd": "RMSSD (ms)",
+    "legendMean": "7-day mean",
+    "legendNight": "Night",
+    "legendBand": "Your band"
   },
   "settingsSection": {
     "eyebrow": "HRV",
@@ -306,5 +309,31 @@
     "allDone": "all milestones complete",
     "nextToday": "next milestone today (+{reps} Reps)",
     "nextIn": "next milestone in {count, plural, one {# day} other {# days}} (+{reps} Reps)"
+  },
+  "today": {
+    "nightsTitle": "14 nights",
+    "recentTitle": "Recent mornings",
+    "today": "Today",
+    "belowBand": "below your band",
+    "noteKicker": "HQ's note",
+    "noteTitle": "How HQ read the night",
+    "belowStreak": "{count, plural, one {First day below the band.} other {# days in a row below the band.}}",
+    "noteHuman": "Rest and deload are Munk's call, not HQ's.",
+    "weekKicker": "Weekly insight · {day}",
+    "weekTitle": "Weekly insight",
+    "sourceSynced": "{provider} · synced {time}",
+    "sourceDemo": "Sample data",
+    "demoWeekly": "Sleep under 7 h three nights running lined up with the lowest readings."
+  },
+  "share": {
+    "question": "Share your HRV with coach Munk?",
+    "body": "If you say yes, Munk and MakeIt's coaches can see your HRV readings, your lifestyle log, the weekly insights and the alerts HQ sends when your HRV stays low for several days. Coach School coaches assigned to you can see your alerts too.",
+    "revoke": "You can turn it off at any time. Coaches then can't see what you shared before either.",
+    "yes": "Share with coach",
+    "notNow": "No thanks",
+    "label": "Share with coach",
+    "onHint": "Munk and your coaches see your HRV readings and alerts.",
+    "offHint": "Your HRV is yours alone. Turn sharing on and coaches can help when it runs low.",
+    "error": "That didn't save. Try again."
   }
 }
