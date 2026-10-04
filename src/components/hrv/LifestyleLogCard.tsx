@@ -65,13 +65,13 @@ function Selector<T extends string | number>({
   label,
   options,
   value,
-  disabled,
+  busy,
   onSelect,
 }: {
   label: string;
   options: { value: T; label: string }[];
   value: T | null;
-  disabled: boolean;
+  busy: boolean;
   onSelect: (v: T) => void;
 }) {
   return (
@@ -83,14 +83,16 @@ function Selector<T extends string | number>({
             key={String(opt.value)}
             type="button"
             aria-pressed={active}
-            disabled={disabled}
-            onClick={() => onSelect(opt.value)}
+            aria-disabled={busy}
+            onClick={() => {
+              if (!busy) onSelect(opt.value);
+            }}
             className={cn(
               SELECTOR_BTN,
               active
                 ? "bg-fg text-bg border-fg"
                 : "border-line-strong text-fg-dim",
-              disabled && !active && "opacity-50",
+              busy && !active && "opacity-50",
             )}
           >
             {opt.label}
@@ -104,12 +106,12 @@ function Selector<T extends string | number>({
 function Toggle({
   label,
   checked,
-  disabled,
+  busy,
   onChange,
 }: {
   label: ReactNode;
   checked: boolean;
-  disabled: boolean;
+  busy: boolean;
   onChange: (next: boolean) => void;
 }) {
   return (
@@ -119,8 +121,10 @@ function Toggle({
         <input
           type="checkbox"
           checked={checked}
-          disabled={disabled}
-          onChange={(e) => onChange(e.target.checked)}
+          aria-disabled={busy}
+          onChange={(e) => {
+            if (!busy) onChange(e.target.checked);
+          }}
           className="sr-only peer"
         />
         <span
@@ -244,7 +248,7 @@ export default function LifestyleLogCard({
   }
 
   function markMenstruation() {
-    if (menstruationLogged) return;
+    if (pending || menstruationLogged) return;
     const date = new Date().toISOString().slice(0, 10);
     setMenstruationLogged(true);
     commit("menstrual_start", { date }, false, setMenstruationLogged);
@@ -258,7 +262,7 @@ export default function LifestyleLogCard({
         <Selector<0 | 1 | 2 | 3>
           label={t("alcohol")}
           value={alcohol}
-          disabled={pending}
+          busy={pending}
           onSelect={selectAlcohol}
           options={[
             { value: 0, label: "0" },
@@ -278,10 +282,9 @@ export default function LifestyleLogCard({
             max={24}
             step={0.5}
             value={sleep ?? ""}
-            disabled={pending}
             onChange={(e) => changeSleep(e.target.value)}
             aria-label={t("sleepAria")}
-            className="input w-24 disabled:opacity-50"
+            className="input w-24"
           />
           <span className="text-micro text-fg-faint">
             {t("hours")}
@@ -293,7 +296,7 @@ export default function LifestyleLogCard({
         <Selector<FeelingState>
           label={t("feeling")}
           value={feeling}
-          disabled={pending}
+          busy={pending}
           onSelect={selectFeeling}
           options={[
             { value: "fresh", label: t("feelings.fresh") },
@@ -309,7 +312,7 @@ export default function LifestyleLogCard({
           <Toggle
             label={t("lateMeal")}
             checked={lateMeal}
-            disabled={pending}
+            busy={pending}
             onChange={toggleLateMeal}
           />
         </li>
@@ -317,7 +320,7 @@ export default function LifestyleLogCard({
           <Toggle
             label={t("sick")}
             checked={sick}
-            disabled={pending}
+            busy={pending}
             onChange={toggleSick}
           />
         </li>
@@ -328,7 +331,8 @@ export default function LifestyleLogCard({
           <button
             type="button"
             onClick={markMenstruation}
-            disabled={pending || menstruationLogged}
+            disabled={menstruationLogged}
+            aria-disabled={pending}
             aria-pressed={menstruationLogged}
             className={cn(
               "w-full text-meta border px-4 py-2.5 touch-app transition-colors",

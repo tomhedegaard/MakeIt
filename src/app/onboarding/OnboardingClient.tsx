@@ -162,7 +162,7 @@ export default function OnboardingClient({
                       onCheck={() => setGoal(id)}
                       title={t(`goals.${id}.title`)}
                       sub={t(`goals.${id}.sub`)}
-                      disabled={pending}
+                      busy={pending}
                     />
                   ))}
                 </Grid>
@@ -179,7 +179,7 @@ export default function OnboardingClient({
                       onCheck={() => setLevel(id)}
                       title={t(`levels.${id}.title`)}
                       sub={t(`levels.${id}.sub`)}
-                      disabled={pending}
+                      busy={pending}
                     />
                   ))}
                 </Grid>
@@ -212,8 +212,10 @@ export default function OnboardingClient({
                         name="frequency"
                         value={f}
                         checked={freq === f}
-                        onChange={() => setFreq(f)}
-                        disabled={pending}
+                        onChange={() => {
+                          if (!pending) setFreq(f);
+                        }}
+                        aria-disabled={pending}
                         className="sr-only"
                       />
                       {t("freqOption", { days: f })}
@@ -233,7 +235,7 @@ export default function OnboardingClient({
                       onCheck={() => setEquip(id)}
                       title={t(`equipment.${id}.title`)}
                       sub={t(`equipment.${id}.sub`)}
-                      disabled={pending}
+                      busy={pending}
                     />
                   ))}
                 </Grid>
@@ -255,28 +257,28 @@ export default function OnboardingClient({
                   placeholder="-"
                   value={maxSquat}
                   onChange={setMaxSquat}
-                  disabled={pending}
+                  busy={pending}
                 />
                 <NumField
                   label={t("step2.bench")}
                   placeholder="-"
                   value={maxBench}
                   onChange={setMaxBench}
-                  disabled={pending}
+                  busy={pending}
                 />
                 <NumField
                   label={t("step2.deadlift")}
                   placeholder="-"
                   value={maxDeadlift}
                   onChange={setMaxDeadlift}
-                  disabled={pending}
+                  busy={pending}
                 />
                 <NumField
                   label={t("step2.ohp")}
                   placeholder="-"
                   value={maxOhp}
                   onChange={setMaxOhp}
-                  disabled={pending}
+                  busy={pending}
                 />
               </div>
 
@@ -299,7 +301,7 @@ export default function OnboardingClient({
                 <textarea
                   name="injuries"
                   rows={4}
-                  disabled={pending}
+                  readOnly={pending}
                   className="field py-3 min-h-[120px] resize-none w-full"
                   placeholder={t("step3.injuriesPlaceholder")}
                 />
@@ -336,8 +338,12 @@ export default function OnboardingClient({
               canNext1={!!canNext1}
               canNext2={canNext2}
               pending={pending}
-              onBack={() => setStep(step - 1)}
-              onNext={() => setStep(step + 1)}
+              onBack={() => {
+                if (!pending) setStep(step - 1);
+              }}
+              onNext={() => {
+                if (!pending) setStep(step + 1);
+              }}
               onDone={() => void runComplete()}
             />
           </Container>
@@ -379,7 +385,7 @@ function OnboardingNav({
           type="button"
           className="btn"
           onClick={onBack}
-          disabled={pending}
+          aria-disabled={pending}
         >
           {t("nav.back")}
         </button>
@@ -390,7 +396,8 @@ function OnboardingNav({
           type="button"
           className="btn btn-primary btn-xl flex-1"
           onClick={onNext}
-          disabled={pending || (step === 1 && !canNext1) || (step === 2 && !canNext2)}
+          disabled={(step === 1 && !canNext1) || (step === 2 && !canNext2)}
+          aria-disabled={pending}
         >
           {t("nav.next")}
         </button>
@@ -399,9 +406,9 @@ function OnboardingNav({
           key="onboarding-done"
           type="button"
           onClick={onDone}
-          disabled={pending}
+          aria-disabled={pending}
           aria-busy={pending}
-          className="btn btn-primary btn-xl flex-1 disabled:opacity-60"
+          className="btn btn-primary btn-xl flex-1 aria-disabled:opacity-60"
         >
           {pending ? (
             <>
@@ -445,7 +452,7 @@ function Grid({ children }: { children: React.ReactNode }) {
 }
 
 function Choice({
-  name, value, checked, onCheck, title, sub, disabled,
+  name, value, checked, onCheck, title, sub, busy,
 }: {
   name: string;
   value: string;
@@ -453,13 +460,13 @@ function Choice({
   onCheck: () => void;
   title: string;
   sub: string;
-  disabled?: boolean;
+  busy?: boolean;
 }) {
   return (
     <label
       className={cn(
         "surface-2 rounded-2xl p-5 cursor-pointer touch-app block lift",
-        disabled && "pointer-events-none opacity-60",
+        busy && "pointer-events-none opacity-60",
       )}
       style={{
         background: checked ? "var(--bg-3)" : undefined,
@@ -471,8 +478,10 @@ function Choice({
         name={name}
         value={value}
         checked={checked}
-        onChange={onCheck}
-        disabled={disabled}
+        onChange={() => {
+          if (!busy) onCheck();
+        }}
+        aria-disabled={busy}
         className="sr-only"
       />
       <div className="flex items-start gap-3">
@@ -493,13 +502,13 @@ function Choice({
 }
 
 function NumField({
-  label, placeholder, value, onChange, disabled,
+  label, placeholder, value, onChange, busy,
 }: {
   label: string;
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
-  disabled?: boolean;
+  busy?: boolean;
 }) {
   return (
     <label className="block">
@@ -511,7 +520,7 @@ function NumField({
           min="0"
           max="600"
           inputMode="decimal"
-          disabled={disabled}
+          readOnly={busy}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className="field text-section numeric pr-10"

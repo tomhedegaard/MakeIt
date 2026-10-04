@@ -171,7 +171,7 @@ describe("StartProgramButton", () => {
       confirmButton().click();
     });
 
-    expect(pendingButton().disabled).toBe(true);
+    expect(pendingButton().getAttribute("aria-disabled")).toBe("true");
     expect(pendingButton().getAttribute("aria-busy")).toBe("true");
     expect(pendingButton().textContent).toBe("starting");
     expect(host.textContent).toContain("status.calling");

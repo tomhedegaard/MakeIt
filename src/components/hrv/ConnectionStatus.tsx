@@ -90,7 +90,7 @@ export default function ConnectionStatus({
         <button
           type="button"
           onClick={handleDisconnect}
-          disabled={isPending}
+          aria-disabled={isPending}
           aria-busy={isPending}
           className={cn(
             "shrink-0 text-meta border border-line-strong px-3 py-1.5 touch-app",

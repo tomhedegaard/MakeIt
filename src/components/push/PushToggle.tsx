@@ -157,7 +157,7 @@ export default function PushToggle({
           <button
             type="button"
             onClick={handleUnsubscribe}
-            disabled={pending}
+            aria-disabled={pending}
             className="btn btn-sm"
           >
             {pending ? t("ellipsis") : t("turnOff")}
@@ -165,7 +165,8 @@ export default function PushToggle({
           <button
             type="button"
             onClick={handleTest}
-            disabled={pending || noKey}
+            disabled={noKey}
+            aria-disabled={pending}
             className="btn btn-sm btn-ghost"
             title={noKey ? t("vapidMissing") : t("sendTestTitle")}
           >
@@ -182,7 +183,8 @@ export default function PushToggle({
           <button
             type="button"
             onClick={handleSubscribe}
-            disabled={pending || noKey || state === "loading"}
+            disabled={noKey || state === "loading"}
+            aria-disabled={pending}
             className="btn btn-primary btn-sm"
             title={noKey ? t("vapidMissingAdmin") : undefined}
           >

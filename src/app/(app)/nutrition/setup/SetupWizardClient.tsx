@@ -162,8 +162,11 @@ function SubmitButton() {
     <>
       <button
         type="submit"
-        disabled={pending}
-        className="btn btn-primary btn-xl flex-1 md:flex-none disabled:opacity-60"
+        aria-disabled={pending}
+        onClick={(e) => {
+          if (pending) e.preventDefault();
+        }}
+        className="btn btn-primary btn-xl flex-1 md:flex-none aria-disabled:opacity-60"
       >
         {pending ? (
           <>

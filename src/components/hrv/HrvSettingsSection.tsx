@@ -128,9 +128,9 @@ export default function HrvSettingsSection({
                 {connections.length > 1 && !connection.isPrimary ? (
                   <button
                     type="button"
-                    className="text-meta text-fg-dim border border-line-strong px-3 py-1.5 touch-app lift disabled:opacity-50"
+                    className="text-meta text-fg-dim border border-line-strong px-3 py-1.5 touch-app lift disabled:opacity-50 aria-disabled:opacity-50"
                     onClick={() => makePrimary(connection.id)}
-                    disabled={primaryPending}
+                    aria-disabled={primaryPending}
                   >
                     {primaryPending ? t("saving") : t("makePrimary")}
                   </button>
@@ -160,9 +160,11 @@ export default function HrvSettingsSection({
             <input
               type="checkbox"
               checked={cycleEnabled}
-              onChange={(e) => toggleCycle(e.target.checked)}
+              onChange={(e) => {
+                if (!cyclePending) toggleCycle(e.target.checked);
+              }}
               aria-label={t("cycle.title")}
-              disabled={cyclePending}
+              aria-disabled={cyclePending}
               className="sr-only peer"
             />
             <span
@@ -191,9 +193,11 @@ export default function HrvSettingsSection({
             <input
               type="checkbox"
               checked={nudgeEnabled}
-              onChange={(e) => toggleNudge(e.target.checked)}
+              onChange={(e) => {
+                if (!nudgePending) toggleNudge(e.target.checked);
+              }}
               aria-label={t("nudge.title")}
-              disabled={nudgePending}
+              aria-disabled={nudgePending}
               className="sr-only peer"
             />
             <span

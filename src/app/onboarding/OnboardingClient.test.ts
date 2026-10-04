@@ -106,10 +106,10 @@ describe("OnboardingClient DONE pending", () => {
     });
 
     const submit = buttonWith("nav.submitting");
-    expect(submit.disabled).toBe(true);
+    expect(submit.getAttribute("aria-disabled")).toBe("true");
     expect(submit.getAttribute("aria-busy")).toBe("true");
     expect(submit.textContent).toContain("nav.submitting");
-    expect(buttonWith("nav.back").disabled).toBe(true);
+    expect(buttonWith("nav.back").getAttribute("aria-disabled")).toBe("true");
     expect(host.querySelector("[role='status']")).not.toBeNull();
     expect(host.querySelector("form")?.getAttribute("aria-busy")).toBe("true");
     expect(locationAssign).not.toHaveBeenCalled();

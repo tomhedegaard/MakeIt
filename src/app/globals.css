@@ -402,6 +402,9 @@ body {
 .btn-ghost { border-color: transparent; color: var(--signal-ink); }
 .btn-ghost:hover { background: transparent; border-color: transparent; text-decoration: underline; }
 .btn-sm { height: 2.75rem; padding: 0 0.875rem; font-size: 0.8125rem; } /* 44 px touch-mål */
+/* Optaget, ikke slukket: en knap med disabled smider fokus til <body>,
+ * så en server-handling i gang markeres med aria-disabled og en guard. */
+.btn[aria-disabled="true"] { cursor: progress; opacity: 0.6; }
 
 /* Form inputs — minimal, hairline-bordered, share the surface palette */
 .input {

@@ -157,9 +157,9 @@ export default function StartProgramButton({
         <button
           type="button"
           onClick={handleStartClick}
-          disabled={pending || !hasDays}
+          disabled={!hasDays}
+          aria-disabled={pending}
           aria-busy={pending}
-          aria-disabled={pending || !hasDays}
           className={className ?? "btn btn-sm w-full"}
         >
           {label}

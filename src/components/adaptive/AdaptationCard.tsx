@@ -76,6 +76,7 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
   const reasoningPanel = buildReasoningPanel(optimisticAdaptation);
 
   function respond(accepted: boolean) {
+    if (isPending) return;
     startTransition(async () => {
       applyOptimistic(accepted);
       await setAdaptationResponseAction({
@@ -146,17 +147,17 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
         <div className="flex flex-wrap gap-2 pt-1">
           <button
             type="button"
-            disabled={isPending}
+            aria-disabled={isPending}
             onClick={() => respond(true)}
-            className="btn btn-primary flex-1 touch-app disabled:opacity-60"
+            className="btn btn-primary flex-1 touch-app aria-disabled:opacity-60"
           >
             OK, kør tilpasset
           </button>
           <button
             type="button"
-            disabled={isPending}
+            aria-disabled={isPending}
             onClick={() => respond(false)}
-            className="btn flex-1 touch-app disabled:opacity-60"
+            className="btn flex-1 touch-app aria-disabled:opacity-60"
           >
             Behold original
           </button>

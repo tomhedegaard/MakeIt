@@ -141,7 +141,8 @@ describe("member start shares blueprint materialization", () => {
     expect(startButtonSrc).toContain("role=\"alert\"");
     expect(startButtonSrc).toContain("setError");
     expect(startButtonSrc).toContain("t(\"starting\")");
-    expect(startButtonSrc).toContain("disabled={pending || !hasDays}");
+    expect(startButtonSrc).toContain("disabled={!hasDays}");
+    expect(startButtonSrc).toContain("aria-disabled={pending}");
     expect(startButtonSrc).toContain("useState(false)");
     expect(startButtonSrc).toContain("setPending(true)");
     expect(startButtonSrc).toContain("setPending(false)");
