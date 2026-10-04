@@ -275,11 +275,11 @@ export default async function TodayPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <FirstTimeTour />
 
-      {/* 1. greeting */}
+      {/* 1. header (spec §6.1): "Din uge." with the brief's kicker and line */}
       <PageTitle
         className="pt-2"
         kicker={t("greeting.eyebrow")}
-        title={`@${member.handle}`}
+        title={t("greeting.title")}
         action={
           <div className="text-right">
             <div className="eyebrow mb-1">{t("greeting.streakLabel")}</div>
@@ -288,6 +288,8 @@ export default async function TodayPage() {
           </div>
         }
       />
+
+      <p className="-mt-2 max-w-prose text-copy text-fg-body">{t("greeting.subtitle")}</p>
 
       <WeekStrip
         week={week}

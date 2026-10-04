@@ -166,13 +166,7 @@ function providerName(provider: string | null, t: PageT): string {
   return t("yourWearable");
 }
 
-export default async function HrvPage({
-  searchParams,
-}: {
-  // ponytail: ?v=split is the layout variant under review (bølge 2); remove once chosen.
-  searchParams: Promise<{ v?: string }>;
-}) {
-  const { v } = await searchParams;
+export default async function HrvPage() {
   const member = await getSession();
   if (!member) redirect("/login");
   const tPage = await getTranslations("Hrv.page");
@@ -312,7 +306,6 @@ export default async function HrvPage({
               engineNote={band.engineCue === "below" ? bandCopy.engineBelow : band.engineCue === "above" ? bandCopy.engineAbove : null}
               source={sourceLabel}
               weekly={weekly}
-              layout={v === "split" ? "split" : "stack"}
             />
           </>
         ) : !state.connected ? (

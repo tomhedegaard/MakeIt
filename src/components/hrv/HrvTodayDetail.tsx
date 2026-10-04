@@ -9,14 +9,13 @@ import { cn } from "@/lib/utils";
  * HRV "I dag" below the hero (spec §6.3): 14 nights with the band, the
  * source, the last mornings, HQ's note as a fortællebånd and the latest
  * weekly insight. Numbers come from the same series as the hero; nothing
- * here is invented. `layout` is the variant under review (bølge 2).
+ * here is invented. Two columns from lg (Tom valgte variant B, 2026-10-04).
  */
 export default async function HrvTodayDetail({
   view,
   engineNote,
   source,
   weekly,
-  layout = "stack",
 }: {
   view: HrvBandView;
   /** HQ's reading of the night (copy.engineBelow/Above), or null. */
@@ -24,7 +23,6 @@ export default async function HrvTodayDetail({
   /** "Oura · synket 05:14", or a demo label. */
   source: string | null;
   weekly: { day: string; text: string } | null;
-  layout?: "stack" | "split";
 }) {
   const t = await getTranslations("Hrv.today");
   const locale = intlLocaleTag(await getLocale());
@@ -91,27 +89,16 @@ export default async function HrvTodayDetail({
     </section>
   ) : null;
 
-  if (layout === "split") {
-    return (
-      <div data-hrv-layout="split" className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-start">
-        <div className="space-y-6">
-          {chart}
-          {note}
-        </div>
-        <div className="space-y-6">
-          {recent}
-          {insight}
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div data-hrv-layout="stack" className="space-y-6 max-w-3xl">
-      {chart}
-      {recent}
-      {note}
-      {insight}
+    <div data-hrv-layout="split" className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-start">
+      <div className="space-y-6">
+        {chart}
+        {note}
+      </div>
+      <div className="space-y-6">
+        {recent}
+        {insight}
+      </div>
     </div>
   );
 }

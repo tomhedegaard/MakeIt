@@ -142,45 +142,43 @@ export default async function RepsPage() {
         eyebrow={t("header.eyebrow")}
         title={t("header.title")}
         subtitle={t("header.subtitle")}
-        right={
-          // Nord §6.7: saldoen er hero-tallet, venstrestillet, med
-          // niveau og afstand til næste niveau under og progress i mos.
-          <div className="min-w-[220px]">
-            <div className="eyebrow mb-2">{t("balance.label")}</div>
-            <div className="numeric text-hero md:text-hero-lg">
-              {balance.toLocaleString(tag)}
-            </div>
-            <div className="text-meta text-fg-dim mt-2">
-              {t("balance.tier", { tier: progress.current })}
-            </div>
-            {progress.next ? (
-              <>
-                <Progress
-                  className="mt-3"
-                  value={progress.pct}
-                  label={t("balance.progressLabel", { tier: progress.next })}
-                  valueText={t("balance.toNext", {
-                    amount: progress.toNext?.toLocaleString(tag) ?? "",
-                    tier: progress.next,
-                  })}
-                />
-                <div className="text-meta text-fg-dim mt-2">
-                  {t("balance.toNext", {
-                    amount: progress.toNext?.toLocaleString(tag) ?? "",
-                    tier: progress.next,
-                  })}
-                </div>
-              </>
-            ) : (
-              <div className="text-micro text-fg-faint mt-3">
-                {t("balance.topCap")}
-              </div>
-            )}
-          </div>
-        }
       />
 
       <Container className="py-8 md:py-12 space-y-10 md:space-y-14">
+        {/* Nord §6.7: saldoen er hero-tallet, venstrestillet under titlen
+            (ikke yderst til højre), med niveau, afstand og progress i mos. */}
+        <section aria-label={t("balance.label")} className="max-w-md">
+          <div className="eyebrow mb-2">{t("balance.label")}</div>
+          <div className="numeric text-hero md:text-hero-lg">
+            {balance.toLocaleString(tag)}
+          </div>
+          <div className="text-meta text-fg-dim mt-2">
+            {t("balance.tier", { tier: progress.current })}
+          </div>
+          {progress.next ? (
+            <>
+              <Progress
+          className="mt-3"
+          value={progress.pct}
+          label={t("balance.progressLabel", { tier: progress.next })}
+          valueText={t("balance.toNext", {
+            amount: progress.toNext?.toLocaleString(tag) ?? "",
+            tier: progress.next,
+          })}
+              />
+              <div className="text-meta text-fg-dim mt-2">
+          {t("balance.toNext", {
+            amount: progress.toNext?.toLocaleString(tag) ?? "",
+            tier: progress.next,
+          })}
+              </div>
+            </>
+          ) : (
+            <div className="text-meta text-fg-faint mt-3">
+              {t("balance.topCap")}
+            </div>
+          )}
+        </section>
         {/* Nord §6.7: the four tiers as one horizontal scale. Perks sit
             in a disclosure so the scale stays a glance, not a wall. */}
         <section aria-labelledby="reps-tiers">
