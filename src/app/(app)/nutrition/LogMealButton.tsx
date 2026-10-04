@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import type { MealSlot } from "@/lib/data/nutrition";
 import { logMealAction } from "./actions";
 import StreakCelebration from "@/components/nutrition/StreakCelebration";
+import { Sheet, SheetContent } from "@/components/ui/Sheet";
 
 export default function LogMealButton({
   mealId,
@@ -63,46 +64,12 @@ export default function LogMealButton({
         {t("trigger")}
       </button>
 
-      {open ? (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={t("dialogLabel")}
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent
+          title={mealTitle ?? t("freeMeal")}
+          description={slot ? t("slotDate", { slot: ts(slot), date: dateIso }) : t("dialogLabel")}
         >
-          <button
-            type="button"
-            aria-label={t("closeLabel")}
-            onClick={() => setOpen(false)}
-            className="absolute inset-0 bg-scrim"
-          />
-          <form
-            ref={formRef}
-            onSubmit={handleSubmit}
-            className="relative w-full sm:max-w-md surface-2 rounded-t-2xl sm:rounded-2xl p-5 lg:p-6 space-y-4 max-h-[90vh] overflow-y-auto"
-          >
-            <header className="flex items-start justify-between gap-3">
-              <div>
-                <div className="eyebrow mb-1">{t("eyebrow")}</div>
-                <h3 className="font-display text-2xl leading-[1.05]">
-                  {mealTitle ?? t("freeMeal")}
-                </h3>
-                {slot ? (
-                  <div className="text-xs text-fg-faint mt-1">
-                    {t("slotDate", { slot: ts(slot), date: dateIso })}
-                  </div>
-                ) : null}
-              </div>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label={t("closeLabel")}
-                className="text-fg-dim hover:text-fg text-2xl leading-none"
-              >
-                ×
-              </button>
-            </header>
-
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
             {/* Hidden routing fields */}
             {mealId ? <input type="hidden" name="mealId" value={mealId} /> : null}
             <input type="hidden" name="loggedForDate" value={dateIso} />
@@ -111,7 +78,7 @@ export default function LogMealButton({
             {/* Photo */}
             <div className="space-y-2">
               <div className="text-sm">{t("photoTitle")}</div>
-              <label className="block surface-2 rounded-lg border-dashed border-2 border-fg-faint/30 px-4 py-6 text-center cursor-pointer hover:border-fg-dim/50">
+              <label className="block border border-dashed hairline-strong bg-bg px-4 py-6 text-center cursor-pointer transition-colors duration-200 ease-out hover:border-fg has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-fg has-[:focus-visible]:outline-solid">
                 <input
                   type="file"
                   name="photo"
@@ -127,12 +94,12 @@ export default function LogMealButton({
                   <img
                     src={photoPreview}
                     alt={t("photoPreviewAlt")}
-                    className="max-h-48 mx-auto rounded-md"
+                    className="max-h-48 mx-auto"
                   />
                 ) : (
                   <>
                     <div className="text-sm">{t("photoPrompt")}</div>
-                    <div className="text-xs text-fg-faint mt-1">
+                    <div className="text-xs text-fg-dim mt-1">
                       {t("photoHint")}
                     </div>
                   </>
@@ -149,7 +116,7 @@ export default function LogMealButton({
                     key={n}
                     type="button"
                     onClick={() => setRating(n)}
-                    className="size-9 rounded-md border hairline flex items-center justify-center text-sm transition-colors"
+                    className="size-11 border hairline flex items-center justify-center text-sm transition-colors duration-200 ease-out"
                     style={{
                       background: n <= rating ? "var(--fg)" : "transparent",
                       color: n <= rating ? "var(--bg)" : "var(--fg-dim)",
@@ -191,8 +158,8 @@ export default function LogMealButton({
               </button>
             </div>
           </form>
-        </div>
-      ) : null}
+        </SheetContent>
+      </Sheet>
 
       <StreakCelebration
         milestone={celebration}

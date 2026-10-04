@@ -97,12 +97,17 @@ export default function MealCard({
                 : t("photoVia")
             }
           >
+            {/* Plain img: next.config has no images.remotePatterns for
+                Unsplash, so next/image cannot load it. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={meal.imageUrl}
               alt={meal.title}
               loading="lazy"
-              className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              decoding="async"
+              width={448}
+              height={252}
+              className="absolute inset-0 size-full object-cover transition-transform duration-200 ease-out motion-reduce:transition-none group-hover:scale-[1.02]"
             />
             {meal.imageAttributionName ? (
               <span

@@ -181,20 +181,25 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
   return (
     <>
       {/* Desktop — inline header button */}
-      <button type="button" onClick={() => setOpen(true)} className="btn btn-ghost btn-sm hidden lg:inline-flex">
-        {t("trigger")}
-      </button>
+      {/* The wrapper hides it: .btn's own display would beat `hidden`. */}
+      <span className="hidden lg:contents">
+        <button type="button" onClick={() => setOpen(true)} className="btn btn-ghost btn-sm">
+          {t("trigger")}
+        </button>
+      </span>
 
       {/* Mobile — floating action button, parked above the tab-bar */}
+      <span className="lg:hidden">
       <button
         type="button"
         onClick={() => setOpen(true)}
         aria-label={t("dialogLabel")}
-        className="lg:hidden fixed right-4 z-40 btn btn-primary"
+        className="fixed right-4 z-40 btn btn-primary"
         style={{ bottom: "calc(var(--tabbar-stack) + 16px)" }}
       >
         {t("triggerMobile")}
       </button>
+      </span>
 
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent title={t("title")} description={estimateEnabled ? t("intro") : t("introManual")}>

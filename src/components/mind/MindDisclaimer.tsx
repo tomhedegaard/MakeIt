@@ -25,17 +25,39 @@ export default async function MindDisclaimer() {
               {t("important_title")}
             </h2>
             <p className="text-fg-dim leading-relaxed text-base md:text-lg">
-              {t("important_body")}
+              {t.rich("important_body", {
+                strong: (chunks) => <strong className="font-medium text-fg">{chunks}</strong>,
+              })}
             </p>
           </section>
 
-          <section className="border-l-2 border-fg/20 pl-5">
+          <section className="border-l hairline-strong pl-5">
             <h3 className="eyebrow mb-3">{t("resources_title")}</h3>
             <ul className="space-y-1.5 text-fg text-base">
-              {youth ? <li>{t("resources_bornetelefonen")}</li> : null}
-              {youth ? <li>{t("resources_headspace")}</li> : null}
-              <li>{t("resources_livslinien")}</li>
-              <li>{t("resources_emergency")}</li>
+              {youth ? (
+                <li>
+                  <a href="tel:116111" className="underline underline-offset-2">
+                    {t("resources_bornetelefonen")}
+                  </a>
+                </li>
+              ) : null}
+              {youth ? (
+                <li>
+                  <a href="https://headspace.dk" className="underline underline-offset-2">
+                    {t("resources_headspace")}
+                  </a>
+                </li>
+              ) : null}
+              <li>
+                <a href="tel:70201201" className="underline underline-offset-2">
+                  {t("resources_livslinien")}
+                </a>
+              </li>
+              <li>
+                <a href="tel:112" className="underline underline-offset-2">
+                  {t("resources_emergency")}
+                </a>
+              </li>
               <li>{t("resources_doctor")}</li>
             </ul>
           </section>
@@ -63,7 +85,7 @@ export default async function MindDisclaimer() {
           <form action={acknowledgeMentalDisclaimerAction}>
             <button
               type="submit"
-              className="inline-flex items-center justify-center bg-fg text-bg px-8 py-4 text-base font-medium hover:opacity-90 transition-opacity"
+              className="btn btn-primary"
             >
               {t("accept")}
             </button>

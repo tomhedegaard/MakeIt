@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
 /**
@@ -28,34 +28,36 @@ export default function StreakCelebration({
   onClose: () => void;
 }) {
   const t = useTranslations("Nutrition.streak");
+  // Reduced motion: a plain fade, no scale or travel (spec §5: 200 ms ease-out).
+  const reduce = useReducedMotion();
+  const ease = { duration: 0.2, ease: "easeOut" } as const;
   return (
     <AnimatePresence>
       {milestone != null ? (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center px-6 bg-bg/90"
-          style={{ backdropFilter: "blur(8px)" }}
+          className="fixed inset-0 z-[100] flex items-center justify-center px-6 bg-bg"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
+          transition={ease}
           onClick={onClose}
           role="dialog"
           aria-label={t("dialogLabel", { days: milestone })}
         >
           <motion.div
             className="w-full max-w-sm text-center"
-            initial={{ scale: 0.86, opacity: 0, y: 12 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.92, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 22 }}
+            initial={reduce ? { opacity: 0 } : { scale: 0.96, opacity: 0, y: 8 }}
+            animate={reduce ? { opacity: 1 } : { scale: 1, opacity: 1, y: 0 }}
+            exit={reduce ? { opacity: 0 } : { scale: 0.98, opacity: 0 }}
+            transition={ease}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="eyebrow text-fg-faint mb-6">
+            <div className="eyebrow text-fg-dim mb-6">
               MakeIt <span className="mx-1">{"//"}</span> {t("brand")}
             </div>
 
             {/* Typographic stamp */}
-            <div className="relative inline-block px-8 py-5 border hairline-strong rounded-lg">
+            <div className="relative inline-block px-8 py-5 border hairline-strong">
               <span className="absolute -top-px -left-px size-2 border-l-2 border-t-2 border-fg" aria-hidden />
               <span className="absolute -top-px -right-px size-2 border-r-2 border-t-2 border-fg" aria-hidden />
               <span className="absolute -bottom-px -left-px size-2 border-l-2 border-b-2 border-fg" aria-hidden />

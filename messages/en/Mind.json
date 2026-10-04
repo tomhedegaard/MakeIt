@@ -5,14 +5,17 @@
     "check": "Mind-check",
     "journal": "Journal",
     "sessions": "Sessions",
-    "settings": "Settings"
+    "settings": "Settings",
+    "aria": "Mind",
+    "weekly": "Your week",
+    "cirkler": "Circles"
   },
   "disclaimer": {
-    "eyebrow": "Mind · Pillar 5",
+    "eyebrow": "Mind · pillar 5",
     "title": "Mental health. Our 5th pillar.",
-    "intro": "Real health is physical AND mental. /mind is your daily mental check-in, your private journal, your sessions library, and a daily reflection written by HQ.",
+    "intro": "Real health is both physical and mental. /mind is your daily mental check-in, your private journal, your sessions library, and a daily reflection written by HQ.",
     "important_title": "Important: read once.",
-    "important_body": "MakeIt's Mind module is NOT clinical treatment. It's training mental habits, comparable to breathwork, journaling, and reflection. NOT a substitute for therapy or medication. If you're in a bad place, or thinking about harming yourself or others, talk to a real human who can help right now.",
+    "important_body": "MakeIt's Mind module is <strong>not</strong> clinical treatment. It's training mental habits, comparable to breathwork, journaling, and reflection. Not a substitute for therapy or medication. If you're in a bad place, or thinking about harming yourself or others, talk to a real human who can help right now.",
     "resources_title": "If it's burning",
     "resources_bornetelefonen": "Børnetelefonen · 116 111 (24/7)",
     "resources_headspace": "headspace · free counselling for young people · headspace.dk",
@@ -45,7 +48,7 @@
     "close": "Thanks, close",
     "escalateEyebrow": "Mind · write to Munk",
     "escalateTitle": "Write yourself what you want to share.",
-    "escalateBody": "Munk sees ONLY what you write here. Never your journal. A strength coach is not a crisis service. Livslinien and 112 are still the right call if it's burning.",
+    "escalateBody": "Munk sees only what you write here. Never your journal. A strength coach is not a crisis service. Livslinien and 112 are still the right call if it's burning.",
     "escalatePlaceholder": "E.g. 'I'm having a hard time right now. Could we talk this week?'",
     "back": "Back",
     "send": "Save for Munk",
@@ -145,7 +148,7 @@
   },
   "check": {
     "metaTitle": "Mind-check · MakeIt",
-    "eyebrow": "Mind · Pillar 5",
+    "eyebrow": "Mind · pillar 5",
     "titleNew": "Mind-check · 60 sec.",
     "titleUpdate": "Mind-check · update.",
     "subtitleNew": "Three sliders. One sentence if you want. Faster than waiting for your next set.",
@@ -164,10 +167,12 @@
     "noteLabel": "One sentence",
     "noteOptional": "(optional)",
     "notePlaceholder": "What is coloring you right now?",
-    "save": "Save mind-check",
+    "save": "Check in",
     "update": "Update",
     "saving": "Saving...",
-    "savedHint": "Checked in today. You can update later."
+    "savedHint": "Checked in today. You can update later.",
+    "pageTitle": "Mental health. Our 5th pillar.",
+    "valueText": "{value} of 5"
   },
   "redirect": {
     "eyebrow": "Mind",
@@ -179,7 +184,10 @@
     "energy": "Energy",
     "calm": "Calm (inverted stress)",
     "focus": "Focus",
-    "aria": "Mental graph: energy, calm, focus over the last 30 days"
+    "aria": "Mental graph for the last 30 days: energy, calm and focus on a 1 to 5 scale. {count, plural, =0 {No days} one {# day} other {# days}} with a mind-check.",
+    "tableCaption": "Mind-check over the last 30 days",
+    "colDate": "Date",
+    "scale": "1 = low, 5 = high"
   },
   "tour": {
     "skip": "Skip",
@@ -364,5 +372,10 @@
     "delta": "{delta} vs last week",
     "unchanged": "unchanged",
     "footer": "Compared with the week before. Mondays at 18:00 we send you a mental week summary as a push. You can turn it off at <link>/mind/settings</link>."
+  },
+  "safetyLine": {
+    "notTreatment": "The app is not treatment.",
+    "livslinien": "Livslinien 70 201 201",
+    "emergency": "emergency 112"
   }
 }

@@ -71,4 +71,12 @@ describe("HrvBandHero states", () => {
     expect(html).toContain("Motoren letter dagens squat-topsæt.");
     expect(html).toContain("ikke en diagnose");
   });
+
+  it("states the normal range in ms, on screen and in the band's label", () => {
+    const view = buildHrvBandView(demoSteadySeries());
+    const html = render(demoSteadySeries());
+    const range = `${view.bandLowMs}–${view.bandHighMs} ms`;
+    expect(html).toMatch(new RegExp(`data-hrv-normal-range[^>]*>Dit normalområde <span[^>]*>${range}<`));
+    expect(html).toContain(`aria-label="Personligt normalområde: ${range}`);
+  });
 });

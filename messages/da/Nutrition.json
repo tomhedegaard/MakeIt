@@ -358,5 +358,13 @@
     "limited": "Du har brugt dagens HQ-estimater. Du kan stadig indtaste selv.",
     "unavailable": "HQ kunne ikke lave et estimat lige nu. Indtast selv, så tæller det stadig med.",
     "photoTooBig": "Billedet kunne ikke læses. Prøv et andet, eller skriv det."
+  },
+  "intake": {
+    "eyebrow": "I dag",
+    "kcal": "Kalorier",
+    "protein": "Protein",
+    "offPlan": "Heraf off-plan:",
+    "offPlanProtein": "{protein} g protein",
+    "progress": "{consumed} af {target} {unit}"
   }
 }

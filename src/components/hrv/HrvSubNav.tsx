@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 /**
  * `HrvSubNav` — compact sub-navigation shared across the four `/hrv` pages.
  *
- * A horizontal row of four links. The active link keeps white text but
+ * A horizontal row of four links. The active link keeps ink text but
  * underlines in the heart domain color (resolved via the /hrv layout's
  * data-domain scope) — see docs/DOMAIN_COLOR_SYSTEM.md.
  */
@@ -27,7 +27,7 @@ export default function HrvSubNav() {
   return (
     <nav
       aria-label={t("aria")}
-      className="flex items-center gap-5 text-micro"
+      className="flex flex-wrap items-center gap-x-5 text-meta"
     >
       {LINKS.map((link) => {
         const active =
@@ -40,10 +40,10 @@ export default function HrvSubNav() {
             href={link.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "transition-colors",
+              "inline-flex min-h-11 items-center transition-colors duration-200 ease-out",
               active
                 ? "text-fg underline underline-offset-4 decoration-2 decoration-domain"
-                : "text-fg-faint hover:text-fg",
+                : "text-fg-dim hover:text-fg",
             )}
           >
             {t(link.key)}

@@ -76,6 +76,19 @@ describe("MentalGraph", () => {
     expect(html).not.toContain("rounded-full");
   });
 
+  it("holds the series apart without colour and keeps labels out of the SVG", () => {
+    const html = render([log(1, 2, 4, 3), log(0, 4, 2, 5)], 8);
+    // Dash patterns + a legend, so colour is not the only cue.
+    expect(html).toContain('stroke-dasharray="6 4"');
+    expect(html).toContain('stroke-dasharray="1 4"');
+    expect(html).toContain("<ul");
+    // Axis labels are HTML (no 3–5 px SVG text at phone width).
+    expect(html).not.toContain("<text");
+    // Data table fallback carries every logged day, stress inverted to calm.
+    expect(html).toContain('<table class="sr-only">');
+    expect(html).toMatch(/<td>4<\/td><td>4<\/td><td>5<\/td>/);
+  });
+
   it("shows a quiet charcoal frame when there are no logs", () => {
     const html = render([], 8);
     expect(html).toContain("data-chart-empty");

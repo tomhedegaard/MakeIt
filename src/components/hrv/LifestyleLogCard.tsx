@@ -125,11 +125,11 @@ function Toggle({
         />
         <span
           aria-hidden
-          className="block relative w-12 h-7 border hairline-strong"
+          className="block relative w-12 h-7 border hairline-strong peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fg peer-focus-visible:outline-solid"
           style={{ background: checked ? "var(--fg)" : "var(--bg-3)" }}
         >
           <span
-            className="absolute top-0.5 left-0.5 size-6 rounded-full transition-transform"
+            className="absolute top-0.5 left-0.5 size-6 transition-transform duration-200 ease-out motion-reduce:transition-none"
             style={{
               background: checked ? "var(--bg)" : "var(--fg-dim)",
               transform: checked ? "translateX(20px)" : "translateX(0)",

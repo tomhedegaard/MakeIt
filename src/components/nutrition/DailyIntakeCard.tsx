@@ -1,13 +1,18 @@
+import { getTranslations } from "next-intl/server";
+import Progress from "@/components/ui/Progress";
 import type { DailyIntake } from "@/lib/data/nutrition-intake";
 
+type T = Awaited<ReturnType<typeof getTranslations<"Nutrition.intake">>>;
+
 /**
- * Today's intake vs. target — calories + protein, each with a thin
- * progress bar. Fed by getDailyIntake(). When no target exists (no
+ * Today's intake vs. target — calories + protein, each with the shared
+ * mos progress bar. Fed by getDailyIntake(). When no target exists (no
  * plan, no profile target) the bar is omitted and only the consumed
  * number shows. The off-plan portion of the total is called out so
  * the member sees how much came from "Spiste noget andet" logs.
  */
-export default function DailyIntakeCard({ intake }: { intake: DailyIntake }) {
+export default async function DailyIntakeCard({ intake }: { intake: DailyIntake }) {
+  const t = await getTranslations("Nutrition.intake");
   const {
     consumedKcal,
     consumedProtein,
@@ -18,20 +23,22 @@ export default function DailyIntakeCard({ intake }: { intake: DailyIntake }) {
   } = intake;
 
   return (
-    <article className="surface-2 rounded-2xl p-5 lg:p-6">
-      <div className="eyebrow mb-4">I dag</div>
+    <article className="surface-2 p-5 lg:p-6">
+      <div className="eyebrow mb-4">{t("eyebrow")}</div>
 
       <div className="grid grid-cols-2 gap-5">
-        <Metric label="Kalorier" unit="kcal" consumed={consumedKcal} target={targetKcal} />
-        <Metric label="Protein" unit="g" consumed={consumedProtein} target={targetProtein} />
+        <Metric t={t} label={t("kcal")} unit="kcal" consumed={consumedKcal} target={targetKcal} />
+        <Metric t={t} label={t("protein")} unit="g" consumed={consumedProtein} target={targetProtein} />
       </div>
 
       {offPlanKcal > 0 ? (
-        <p className="text-xs text-fg-faint mt-4">
-          Heraf off-plan:{" "}
-          <span className="numeric text-fg-dim">{offPlanKcal} kcal</span>
+        <p className="text-xs text-fg-dim mt-4">
+          {t("offPlan")}{" "}
+          <span className="numeric text-fg-body">{offPlanKcal} kcal</span>
           {" · "}
-          <span className="numeric text-fg-dim">{offPlanProtein} g protein</span>
+          <span className="numeric text-fg-body">
+            {t("offPlanProtein", { protein: offPlanProtein })}
+          </span>
         </p>
       ) : null}
     </article>
@@ -39,40 +46,39 @@ export default function DailyIntakeCard({ intake }: { intake: DailyIntake }) {
 }
 
 function Metric({
+  t,
   label,
   unit,
   consumed,
   target,
 }: {
+  t: T;
   label: string;
   unit: string;
   consumed: number;
   target: number | null;
 }) {
-  const pct =
-    target && target > 0
-      ? Math.min(100, Math.round((consumed / target) * 100))
-      : null;
-  const over = target != null && consumed > target;
-
   return (
     <div>
       <div className="text-sm text-fg-dim">{label}</div>
       <div className="font-display text-3xl leading-[1] mt-1 numeric">
         {consumed}
         {target != null ? (
-          <span className="text-fg-faint text-lg"> / {target}</span>
+          <span className="text-fg-dim text-lg"> / {target}</span>
         ) : null}
-        <span className="text-fg-faint text-sm"> {unit}</span>
+        <span className="text-fg-dim text-sm"> {unit}</span>
       </div>
-      <div className="mt-2 h-1.5 bg-fg/10 overflow-hidden">
-        {pct != null ? (
-          <div
-            className="h-full"
-            style={{ width: `${pct}%`, background: over ? "var(--fg-faint)" : "var(--fg)" }}
-          />
-        ) : null}
-      </div>
+      {target != null && target > 0 ? (
+        <Progress
+          className="mt-2"
+          value={Math.min(consumed, target)}
+          max={target}
+          label={label}
+          valueText={t("progress", { consumed, target, unit })}
+        />
+      ) : (
+        <div className="mt-2 h-1 bg-line" aria-hidden />
+      )}
     </div>
   );
 }

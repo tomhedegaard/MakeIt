@@ -358,5 +358,13 @@
     "limited": "You've used today's HQ estimates. You can still enter it yourself.",
     "unavailable": "HQ couldn't estimate this right now. Enter it yourself and it still counts.",
     "photoTooBig": "The photo couldn't be read. Try another, or write it."
+  },
+  "intake": {
+    "eyebrow": "Today",
+    "kcal": "Calories",
+    "protein": "Protein",
+    "offPlan": "Of which off-plan:",
+    "offPlanProtein": "{protein} g protein",
+    "progress": "{consumed} of {target} {unit}"
   }
 }

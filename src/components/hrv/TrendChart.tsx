@@ -20,7 +20,7 @@ import {
  * outside it). See docs/DOMAIN_COLOR_SYSTEM.md.
  *
  * Z-order, back to front: grid → baseline band → mean area → 7-day mean
- * line → daily points → axis ticks. Sick days render as hollow
+ * line → daily points. Axis labels are HTML. Sick days render as hollow
  * (outline-only) ticks.
  *
  * Empty series: a quiet charcoal frame — no invented data, no copy wall.
@@ -65,6 +65,24 @@ export default function TrendChart({
 
   return (
     <div className="text-fg" data-trend-chart="ready">
+      {/* Axis labels are HTML beside and under the SVG, so they stay 12 px
+          at every width instead of scaling down with the viewBox. */}
+      <div className="grid grid-cols-[auto_1fr] gap-x-2">
+      <div className="relative text-micro text-fg-dim tabular whitespace-nowrap" aria-hidden>
+        {/* Invisible widest label sizes the column. */}
+        <span className="invisible block h-0 overflow-hidden">
+          {model.yTicks.reduce((a, b) => (b.label.length > a.length ? b.label : a), "")}
+        </span>
+        {model.yTicks.map((tick, i) => (
+          <span
+            key={i}
+            className="absolute right-0 -translate-y-1/2"
+            style={{ top: `${(tick.y / VIEWPORT.height) * 100}%` }}
+          >
+            {tick.label}
+          </span>
+        ))}
+      </div>
       <svg
         viewBox={`0 0 ${VIEWPORT.width} ${VIEWPORT.height}`}
         width="100%"
@@ -165,34 +183,27 @@ export default function TrendChart({
           />
         ))}
 
-        {/* Y-axis ticks — faint ms-valued labels. */}
-        {model.yTicks.map((tick, i) => (
-          <text
-            key={i}
-            x={4}
-            y={tick.y}
-            fill={CHART_CRAFT.label}
-            fontSize={9}
-            dominantBaseline="middle"
-          >
-            {tick.label}
-          </text>
-        ))}
-
-        {/* X-axis ticks — short date labels near the bottom. */}
-        {model.xTicks.map((tick, i) => (
-          <text
-            key={i}
-            x={tick.x}
-            y={VIEWPORT.height - 6}
-            fill={CHART_CRAFT.label}
-            fontSize={9}
-            textAnchor="middle"
-          >
-            {tick.label}
-          </text>
-        ))}
       </svg>
+      <div aria-hidden />
+      <div className="relative h-5 text-micro text-fg-dim tabular" aria-hidden>
+        {model.xTicks.map((tick, i) => (
+          <span
+            key={i}
+            className={
+              "absolute top-1 whitespace-nowrap " +
+              (i === 0 && model.xTicks.length > 1
+                ? ""
+                : i === model.xTicks.length - 1 && model.xTicks.length > 1
+                  ? "-translate-x-full"
+                  : "-translate-x-1/2")
+            }
+            style={{ left: `${(tick.x / VIEWPORT.width) * 100}%` }}
+          >
+            {tick.label}
+          </span>
+        ))}
+      </div>
+      </div>
 
       {/* Visually-hidden data-table fallback for non-visual users. */}
       <table className="sr-only">
