@@ -29,8 +29,8 @@ export default async function SessionPreview({ session }: { session: Session }) 
   }
 
   return (
-    <div className="minh-dvh flex flex-col bg-bg">
-      <header className="safe-top sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
+    <div className="min-h-dvh flex flex-col bg-bg">
+      <header className="safe-top sticky top-0 z-30 bg-bg border-b hairline">
         <div className="px-4 lg:px-6 h-14 flex items-center justify-between gap-3">
           <Link
             href="/dashboard"
@@ -90,7 +90,7 @@ export default async function SessionPreview({ session }: { session: Session }) 
         ))}
       </Container>
 
-      <div className="fixed bottom-0 left-0 right-0 z-30 bg-bg/95 backdrop-blur border-t hairline p-4 lg:static lg:bg-transparent lg:border-t-0 lg:p-0">
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-bg border-t hairline p-4 lg:static lg:bg-transparent lg:border-t-0 lg:p-0">
         <Container size="narrow" className="lg:pb-12">
           <form action={start}>
             <button type="submit" className="btn btn-primary btn-xl w-full">

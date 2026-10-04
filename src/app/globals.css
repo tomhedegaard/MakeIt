@@ -343,18 +343,20 @@ body {
   background: var(--domain, var(--line-bright));
 }
 
-/* Tal står i samme skrift som resten, men altid med tabular-nums, så
- * en kolonne af kilo og millisekunder ikke danser (spec §4). */
+/* Tal står i samme skrift som resten. Schibsted Groteskes tabular-nums
+ * giver også punktum og komma cifferbredde ("1 . 420"), så fritstående
+ * tal er proportionale. .tabular er til tal, der skifter på stedet
+ * (timere, steppere) eller står i en højrestillet kolonne (spec §4). */
 .numeric {
-  font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
+.tabular { font-variant-numeric: tabular-nums; }
 
 /* ---------------------------------------------------------------- *
  * Surfaces & utilities
  * ---------------------------------------------------------------- */
 .surface         { background: var(--bg-2); border: 1px solid var(--line); }
-.surface-2       { background: var(--bg-3); border: 1px solid var(--line); }
+.surface-2       { background: var(--bg); border: 1px solid var(--line); } /* kort: hvid flade, 1 px linje (spec §2) */
 .hairline        { border-color: var(--line); }
 .hairline-strong { border-color: var(--line-strong); }
 
@@ -389,7 +391,7 @@ body {
 .btn-primary:hover { background: transparent; color: var(--fg); }
 .btn-ghost { border-color: transparent; color: var(--signal-ink); }
 .btn-ghost:hover { background: transparent; border-color: transparent; text-decoration: underline; }
-.btn-sm { height: 2.5rem; padding: 0 0.875rem; font-size: 0.8125rem; }
+.btn-sm { height: 2.75rem; padding: 0 0.875rem; font-size: 0.8125rem; } /* 44 px touch-mål */
 
 /* Form inputs — minimal, hairline-bordered, share the surface palette */
 .input {
@@ -420,9 +422,10 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 
 /* Pulse dot — domain-aware: inherits hue from the nearest
  * [data-domain] scope, stays white everywhere else */
+/* Opacitet, ikke en box-shadow-ring: Nord har ingen glød (spec §7). */
 @keyframes pulseDot {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--domain, var(--fg)) 55%, transparent); }
-  50%      { box-shadow: 0 0 0 6px transparent; }
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
 }
 .pulse-dot {
   width: 8px; height: 8px; border-radius: 999px;
@@ -430,7 +433,8 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   animation: pulseDot 1.8s ease-out infinite;
 }
 @media (prefers-reduced-motion: reduce) {
-  .pulse-dot { animation: none; }
+  .pulse-dot, .animate-pulse { animation: none; }
+  .lift, .lift:hover { transform: none; }
 }
 
 /* Input */
@@ -462,8 +466,8 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 }
 
 /* Card hover lift */
-.lift { transition: transform 380ms cubic-bezier(.2,.7,.2,1), border-color 380ms ease, background 380ms ease; }
-.lift:hover { transform: translateY(-3px); border-color: var(--line-strong); }
+.lift { transition: transform 200ms ease-out, border-color 200ms ease-out, background 200ms ease-out; }
+.lift:hover { transform: translateY(-2px); border-color: var(--line-strong); }
 
 /* ---------------------------------------------------------------- *
  * Mobile / safe-area helpers
@@ -485,8 +489,6 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
  * 0, so this is free there. */
 .safe-top { padding-top: var(--safe-top); }
 
-.h-dvh   { height: 100dvh; }
-.minh-dvh { min-height: 100dvh; }
 /* Last-line air on the AppShell scrollport. The tab bar is in-flow
  * (not a fixed overlay), so this is slack — not a second copy of
  * the bar height. Nested page wrappers do not own this padding. */

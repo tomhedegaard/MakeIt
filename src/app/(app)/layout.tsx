@@ -35,7 +35,7 @@ export default async function AppLayout({
   const youth = SUPABASE_ENABLED ? await youthClaimsFor(member.id) : null;
   if (youth) {
     return (
-      <ThemeScope theme="nord" className="flex flex-col h-dvh lg:h-auto lg:minh-dvh lg:flex-1">
+      <ThemeScope theme="nord" className="flex flex-col h-dvh lg:h-auto lg:min-h-dvh lg:flex-1">
         <AppShell member={member} youth={youth}>
           {children}
         </AppShell>
@@ -54,7 +54,7 @@ export default async function AppLayout({
   const unreadMessages = SUPABASE_ENABLED ? await getUnreadCount(member.id) : 0;
 
   return (
-    <ThemeScope theme="nord" className="flex flex-col h-dvh lg:h-auto lg:minh-dvh lg:flex-1">
+    <ThemeScope theme="nord" className="flex flex-col h-dvh lg:h-auto lg:min-h-dvh lg:flex-1">
       <AppShell
         member={member}
         unreadMessages={unreadMessages}

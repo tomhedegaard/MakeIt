@@ -39,7 +39,7 @@ export default function CoachShell({
   const nav = NAV.filter((item) => !item.adminOnly || member.isAdmin);
 
   return (
-    <div className="relative z-10 flex flex-1 minh-dvh">
+    <div className="relative z-10 flex flex-1 min-h-dvh">
       <aside className="hidden md:flex w-[240px] shrink-0 flex-col border-r hairline bg-bg-2/40 sticky top-0 h-dvh">
         <div className="px-5 py-5 border-b hairline">
           <Logo />

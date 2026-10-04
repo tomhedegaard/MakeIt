@@ -13,7 +13,7 @@ export default function LoadingTheme({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   if (!pathname?.startsWith("/session")) return <>{children}</>;
   return (
-    <ThemeScope theme="nat" className="minh-dvh">
+    <ThemeScope theme="nat" className="min-h-dvh">
       {children}
     </ThemeScope>
   );

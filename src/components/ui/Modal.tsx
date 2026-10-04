@@ -31,7 +31,7 @@ export function Modal({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[60] bg-scrim backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-[60] bg-scrim" />
         <Dialog.Content
           className={cn(
             "fixed left-1/2 top-1/2 z-[61] w-[min(32rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2",

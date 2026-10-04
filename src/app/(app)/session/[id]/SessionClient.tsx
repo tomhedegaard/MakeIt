@@ -184,9 +184,9 @@ export default function SessionClient({
   );
 
   return (
-    <div className="minh-dvh flex flex-col bg-bg">
+    <div className="min-h-dvh flex flex-col bg-bg">
       {/* Top bar */}
-      <header className="safe-top sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
+      <header className="safe-top sticky top-0 z-30 bg-bg border-b hairline">
         <div className="px-4 lg:px-6 h-14 flex items-center justify-between gap-3">
           <button
             type="button"
@@ -391,7 +391,7 @@ export default function SessionClient({
 
       {/* Sticky CTA */}
       <div
-        className="fixed left-0 right-0 bottom-0 z-40 border-t hairline bg-bg/95 backdrop-blur"
+        className="fixed left-0 right-0 bottom-0 z-40 border-t hairline bg-bg"
         style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
       >
         <div className="mx-auto max-w-3xl px-4 lg:px-6 pt-3 flex items-center gap-3">

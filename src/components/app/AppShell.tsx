@@ -90,14 +90,14 @@ export default function AppShell({
   if (immersive) {
     return (
       <YouthProvider value={youth}>
-        <div className="relative z-10 flex-1 minh-dvh">{children}</div>
+        <div className="relative z-10 flex-1 min-h-dvh">{children}</div>
       </YouthProvider>
     );
   }
 
   return (
     <YouthProvider value={youth}>
-    <div className="relative z-10 flex h-dvh flex-1 lg:h-auto lg:minh-dvh">
+    <div className="relative z-10 flex h-dvh flex-1 lg:h-auto lg:min-h-dvh">
       {/* Desktop sidebar (≥ lg) */}
       <aside className="hidden lg:flex w-[260px] shrink-0 flex-col border-r hairline bg-bg-2/40 sticky top-0 h-dvh">
         <div className="px-6 py-6 border-b hairline">
@@ -116,6 +116,7 @@ export default function AppShell({
                 <li key={item.href}>
                   <Link
                     href={item.href}
+                    aria-current={active ? "page" : undefined}
                     data-domain={domain}
                     className={cn(
                       "group flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors border-l-2 border-transparent",
@@ -201,13 +202,17 @@ export default function AppShell({
             <Link
               href="/messages"
               className="relative size-11 flex items-center justify-center text-fg"
-              aria-label={t("links.messages")}
+              aria-label={
+                unreadMessages > 0
+                  ? `${t("links.messages")}, ${t("shell.unread", { count: unreadMessages })}`
+                  : t("links.messages")
+              }
             >
               <MessageSquare {...ICON} className="size-6" />
               {unreadMessages > 0 ? (
                 <span
+                  aria-hidden="true"
                   className="absolute top-1.5 right-1 numeric text-micro tabular-nums px-1 py-0.5 bg-fg text-bg leading-none min-w-[14px] text-center"
-                  aria-label={t("shell.unread", { count: unreadMessages })}
                 >
                   {unreadMessages > 9 ? "9+" : unreadMessages}
                 </span>

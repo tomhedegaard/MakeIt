@@ -227,7 +227,7 @@ export default async function PreferencesPage() {
           </Field>
         </section>
 
-        <div className="flex flex-wrap items-center gap-3 sticky bottom-3 surface-2 rounded-xl p-4 backdrop-blur">
+        <div className="flex flex-wrap items-center gap-3 sticky bottom-3 surface-2 p-4">
           <button type="submit" className="btn btn-primary">
             {t("save")}
           </button>

@@ -26,11 +26,11 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: COMPANY.name },
 };
 
-// AppShell's immersive wrapper is not flex, so minh-dvh (not flex-1)
+// AppShell's immersive wrapper is not flex, so min-h-dvh (not flex-1)
 // keeps Kalk background from showing under short content.
 function Nat({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeScope theme="nat" className="minh-dvh">
+    <ThemeScope theme="nat" className="min-h-dvh">
       {children}
     </ThemeScope>
   );

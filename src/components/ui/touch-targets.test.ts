@@ -18,9 +18,9 @@ describe("button height tokens (globals.css)", () => {
     expect(css).toMatch(/\.btn \{[\s\S]*?height: 2\.75rem;/);
   });
 
-  it("raises .btn-sm to 40px", () => {
-    expect(css).toContain(".btn-sm { height: 2.5rem;");
-    expect(css).not.toContain(".btn-sm { height: 2.25rem;");
+  it("raises .btn-sm to the 44px touch floor", () => {
+    expect(css).toContain(".btn-sm { height: 2.75rem;");
+    expect(css).not.toMatch(/\.btn-sm \{ height: 2\.(25|5)rem;/);
   });
 });
 

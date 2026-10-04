@@ -374,7 +374,7 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
                 </div>
 
                 <div>
-                  <p className="font-display text-title tabular-nums">{kcalLine(shown)}</p>
+                  <p className="font-display text-title numeric">{kcalLine(shown)}</p>
                   <dl className="mt-3 grid grid-cols-3 gap-2">
                     {(
                       [
@@ -385,7 +385,7 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
                     ).map(([k, g]) => (
                       <div key={k} className="border hairline px-3 py-2">
                         <dt className="text-micro text-fg-dim">{t(k)}</dt>
-                        <dd className="text-card tabular-nums">{t("grams", { g: nf.format(g) })}</dd>
+                        <dd className="text-card numeric">{t("grams", { g: nf.format(g) })}</dd>
                       </div>
                     ))}
                   </dl>

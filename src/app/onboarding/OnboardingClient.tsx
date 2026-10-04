@@ -94,9 +94,9 @@ export default function OnboardingClient({
   }
 
   return (
-    <div className="minh-dvh flex flex-col">
+    <div className="min-h-dvh flex flex-col">
       {/* Top bar */}
-      <header className="safe-top sticky top-0 z-30 bg-bg/90 backdrop-blur border-b hairline">
+      <header className="safe-top sticky top-0 z-30 bg-bg border-b hairline">
         <Container className="h-14 flex items-center justify-between gap-3">
           <Logo />
           <div className="flex items-center gap-3">
@@ -326,7 +326,7 @@ export default function OnboardingClient({
             NEXT does not cover GOAL cards. Content has pb-28 on small
             screens to keep the last cards above the bar. */}
         <div
-          className="sticky bottom-0 lg:static z-30 border-t hairline bg-bg/95 backdrop-blur"
+          className="sticky bottom-0 lg:static z-30 border-t hairline bg-bg"
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
         >
           <Container size="narrow" className="pt-3 flex items-center gap-3">

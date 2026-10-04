@@ -96,6 +96,26 @@ describe("sentence case in one font (spec §4, §7.1)", () => {
   });
 });
 
+// Nord er flad (spec §2, §7): ingen glød, ingen frostet glas, ingen
+// farveforløb. Landingen er undtaget, fordi den tegner 1 px-linjer med
+// repeating-linear-gradient. Ren dekoration fanges; maske-teknik ikke.
+const NORD_DEPTH = /backdrop-blur|(?:^|[\s"'`])shadow(?:-(?:sm|md|lg|xl|2xl|inner))?(?=[\s"'`]|$)|bg-gradient-to-|conic-gradient|radial-gradient/m;
+
+describe("flat surfaces: no glow, blur or gradients (spec §2, §7)", () => {
+  const files = surfaceFiles.filter((p) => !p.startsWith("components/marketing/"));
+  it.each(files)("%s", (p) => {
+    expect(readFileSync(join(SRC, p), "utf8")).not.toMatch(NORD_DEPTH);
+  });
+
+  it("catches what it is meant to catch (self-test)", () => {
+    expect('className="bg-bg/90 backdrop-blur"').toMatch(NORD_DEPTH);
+    expect('className="rounded shadow"').toMatch(NORD_DEPTH);
+    expect('background: "conic-gradient(from 0deg)"').toMatch(NORD_DEPTH);
+    expect('className="shadow-none"').not.toMatch(NORD_DEPTH);
+    expect('className="text-shadow-ink"').not.toMatch(NORD_DEPTH);
+  });
+});
+
 // E-mails er inline CSS og kan ikke bruge tokens, så de gates på værdierne:
 // Nord lys, sentence case, radius 0, ingen mono. De nat-farver der ikke
 // findes i Nord lys er afvist via DARK; #111111 er tilladt, da det er blæk.

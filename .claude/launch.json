@@ -9,6 +9,20 @@
         "dev"
       ],
       "port": 3002
+    },
+    {
+      "name": "dev-demo",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "NEXT_PUBLIC_SUPABASE_URL=",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY=",
+        "npx",
+        "next",
+        "dev",
+        "-p",
+        "3003"
+      ],
+      "port": 3003
     }
   ]
 }
