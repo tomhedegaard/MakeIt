@@ -87,3 +87,18 @@ describe("type roles hold (DESIGN.md)", () => {
     expect('className="text-copy leading-relaxed"').toMatch(TOKEN_LEADING);
   });
 });
+
+// Kun tokens: Tailwinds rå paletfarver (bg-amber-700, text-red-400 …) er
+// den gamle mørke æras rester og omgår både Nord og nat (DESIGN.md).
+const RAW_PALETTE = /\b(?:bg|text|border|ring|fill|stroke)-(?:red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)-\d{2,3}\b/;
+
+describe("member and coach surfaces use colour tokens only", () => {
+  it.each(files)("%s", (p) => {
+    expect(readFileSync(join(SRC, p), "utf8").match(RAW_PALETTE)?.[0] ?? null).toBeNull();
+  });
+
+  it("catches what it is meant to catch (self-test)", () => {
+    expect('className="bg-amber-700/30"').toMatch(RAW_PALETTE);
+    expect('className="text-danger border-domain"').not.toMatch(RAW_PALETTE);
+  });
+});

@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { getProvider } from "@/lib/hrv/wearables/registry";
+import { DEMO_HRV_SHARE_COOKIE } from "@/lib/data/settings";
 
 /**
  * HRV wearable connect/disconnect server actions.
@@ -207,6 +208,46 @@ export async function setCycleTracking(
 
   if (error) return { ok: false, error: "update_failed" };
 
+  revalidatePath("/settings");
+  return { ok: true };
+}
+
+/**
+ * Explicit consent to share HRV with coaches (0068, Tom 2026-10-04).
+ * Records the answer time too, so "Ikke nu" is remembered and the HRV
+ * page stops asking. Revoking hides old data as well (RLS + service
+ * paths filter on share_to_coach).
+ */
+export async function setHrvShareToCoach(
+  share: boolean,
+): Promise<ActionResult> {
+  if (!SUPABASE_ENABLED) {
+    // Demo has no database: remember the answer in a cookie so a reload
+    // shows the switch, not the question again.
+    (await cookies()).set(DEMO_HRV_SHARE_COOKIE, share ? "1" : "0", { path: "/", sameSite: "lax" });
+    revalidatePath("/hrv");
+    return { ok: true };
+  }
+
+  const memberId = await getCurrentMemberId();
+  if (!memberId) return { ok: false, error: "no_session" };
+
+  const service = createServiceClient();
+  const { error } = await service
+    .from("hrv_settings")
+    .upsert(
+      {
+        member_id: memberId,
+        share_to_coach: share,
+        share_to_coach_decided_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "member_id" },
+    );
+
+  if (error) return { ok: false, error: "update_failed" };
+
+  revalidatePath("/hrv");
   revalidatePath("/settings");
   return { ok: true };
 }

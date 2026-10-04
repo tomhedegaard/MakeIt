@@ -37,7 +37,7 @@ export default function MentalToggleRow({
   const router = useRouter();
 
   function toggle() {
-    if (disabled) return;
+    if (disabled || pending) return;
     const next = !value;
     setValue(next);
     startTransition(async () => {
@@ -66,7 +66,8 @@ export default function MentalToggleRow({
       <button
         type="button"
         onClick={toggle}
-        disabled={disabled || pending}
+        disabled={disabled}
+        aria-disabled={pending || undefined}
         role="switch"
         aria-checked={value}
         aria-label={title}

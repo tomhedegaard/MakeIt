@@ -324,5 +324,16 @@
     "sourceSynced": "{provider} · synced {time}",
     "sourceDemo": "Sample data",
     "demoWeekly": "Sleep under 7 h three nights running lined up with the lowest readings."
+  },
+  "share": {
+    "question": "Share your HRV with coach Munk?",
+    "body": "If you say yes, Munk and MakeIt's coaches can see your HRV readings, your lifestyle log, the weekly insights and the alerts HQ sends when your HRV stays low for several days. Coach School coaches assigned to you can see your alerts too.",
+    "revoke": "You can turn it off at any time. Coaches then can't see what you shared before either.",
+    "yes": "Share with coach",
+    "notNow": "No thanks",
+    "label": "Share with coach",
+    "onHint": "Munk and your coaches see your HRV readings and alerts.",
+    "offHint": "Your HRV is yours alone. Turn sharing on and coaches can help when it runs low.",
+    "error": "That didn't save. Try again."
   }
 }

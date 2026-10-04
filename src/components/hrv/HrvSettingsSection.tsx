@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import ConnectionStatus from "@/components/hrv/ConnectionStatus";
 import WearableConnectSheet from "@/components/hrv/WearableConnectSheet";
 import SectionHeader from "@/components/ui/SectionHeader";
+import HrvShareConsent from "@/components/hrv/HrvShareConsent";
 import {
   setPrimaryConnection,
   setCycleTracking,
@@ -99,6 +100,9 @@ export default function HrvSettingsSection({
   return (
     <section className="surface-2 rounded-2xl p-5 lg:p-7 space-y-5">
       <SectionHeader eyebrow={t("eyebrow")} title={t("title")} />
+
+      {/* Consent to share HRV with coaches (0068): same control as on /hrv. */}
+      <HrvShareConsent inline initialShare={hrv.shareToCoach} decided={hrv.shareDecidedAt != null} />
 
       {/* Wearable connections */}
       <div className="space-y-3">

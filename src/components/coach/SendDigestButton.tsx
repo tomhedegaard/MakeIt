@@ -36,16 +36,18 @@ export default function SendDigestButton() {
       <button
         type="button"
         className="btn btn-sm"
-        onClick={() => setConfirmOpen(true)}
-        disabled={pending}
+        onClick={() => {
+          if (!pending) setConfirmOpen(true);
+        }}
+        // aria-disabled, not disabled: a disabled button drops focus to
+        // <body> right after the sheet hands it back.
+        aria-disabled={pending}
       >
         {pending ? t("sending") : t("send")}
       </button>
-      {result ? (
-        <span className="text-micro text-fg-faint">
-          {result}
-        </span>
-      ) : null}
+      <span role="status" aria-live="polite" className="text-meta text-fg-faint">
+        {result}
+      </span>
       <ConfirmSheet
         open={confirmOpen}
         onOpenChange={setConfirmOpen}

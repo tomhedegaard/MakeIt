@@ -19,6 +19,7 @@ import "server-only";
 import { getSession } from "@/lib/auth";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { createServiceClient } from "@/lib/supabase/service";
+import { sharingMemberIds } from "./hrv-share";
 import type {
   CoachDecision,
 } from "@/lib/coach-school/agreement";
@@ -113,6 +114,10 @@ export async function getPendingSandboxCases(
 
   const svc = createServiceClient();
 
+  // Service-rollen går uden om RLS: kun medlemmer der deler HRV (0068).
+  const sharing = await sharingMemberIds(svc);
+  if (sharing.size === 0) return [];
+
   // 1) Decided alerts.
   const { data: alertRows, error: alertErr } = await svc
     .from("hrv_alerts")
@@ -120,6 +125,7 @@ export async function getPendingSandboxCases(
       "id, triggered_at, status, conditions_met, member:members!inner(handle)",
     )
     .in("status", ["reviewed_actioned", "reviewed_noted"])
+    .in("member_id", [...sharing])
     .order("triggered_at", { ascending: false })
     .limit(limit * 3); // overshoot so we still have N after filtering
   if (alertErr) throw new Error(`alerts: ${alertErr.message}`);
@@ -214,7 +220,11 @@ export async function getOpenLiveCases(limit: number = 20): Promise<LiveCase[]> 
     .eq("coach_member_id", member.id)
     .is("ended_at", null);
   if (assignErr) throw new Error(`assignments: ${assignErr.message}`);
-  const memberIds = (assignRows ?? []).map((r) => r.assigned_member_id as string);
+  // Service-rollen går uden om RLS: kun medlemmer der deler HRV (0068).
+  const sharing = await sharingMemberIds(svc);
+  const memberIds = (assignRows ?? [])
+    .map((r) => r.assigned_member_id as string)
+    .filter((id) => sharing.has(id));
   if (memberIds.length === 0) return [];
 
   // Open alerts for those members.

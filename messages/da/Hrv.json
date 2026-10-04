@@ -324,5 +324,16 @@
     "sourceSynced": "{provider} · synket {time}",
     "sourceDemo": "Eksempeldata",
     "demoWeekly": "Søvn under 7 t tre nætter i træk hang sammen med de laveste målinger."
+  },
+  "share": {
+    "question": "Del din HRV med coach Munk?",
+    "body": "Siger du ja, kan Munk og MakeIts coaches se dine HRV-målinger, din livsstilslog, ugeindsigterne og de alarmer, HQ sender, når din HRV ligger lavt flere dage i træk. Coach School-coaches, der er tilknyttet dig, kan også se dine alarmer.",
+    "revoke": "Du kan slå det fra når som helst. Så kan coaches heller ikke se det, du har delt før.",
+    "yes": "Del med coach",
+    "notNow": "Nej tak",
+    "label": "Del med coach",
+    "onHint": "Munk og dine coaches ser dine HRV-målinger og alarmer.",
+    "offHint": "Din HRV er kun din. Slår du deling til, kan coaches hjælpe, når den ligger lavt.",
+    "error": "Det blev ikke gemt. Prøv igen."
   }
 }

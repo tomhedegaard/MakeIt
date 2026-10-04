@@ -30,9 +30,9 @@ import {
  */
 
 /** Fixed SVG coordinate space — the element scales to its container width. */
-// 16:9-ish so the plot keeps ~170 px of height on a phone (was 640×240,
-// ~90 px at 375).
-const VIEWPORT = { width: 640, height: 360 };
+// Tall enough that the plot keeps ~170 px on a phone (640×240 gave ~90 px
+// at 375, 640×360 ~141 px).
+const VIEWPORT = { width: 640, height: 440 };
 
 /** Format an ISO timestamp as a short localized date for the fallback table. */
 function tableDate(iso: string, locale: string): string {
@@ -168,9 +168,9 @@ export default function TrendChart({
             key={i}
             cx={p.x}
             cy={p.y}
-            // The viewBox is 640 wide and scales down: 2.2 units is a ~2 px
-            // dot at phone width (1.45 was ~0.7 px) and ~4 px on desktop.
-            r={2.2}
+            // The viewBox is 640 wide and scales down: 2.8 units is a ~2.5 px
+            // dot at phone width (1.45 was ~0.7 px) and ~5 px on desktop.
+            r={2.8}
             fill={p.isSick ? "none" : "var(--domain, currentColor)"}
             stroke="var(--domain, currentColor)"
             strokeWidth={p.isSick ? 1 : 0}

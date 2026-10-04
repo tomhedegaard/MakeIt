@@ -21,6 +21,8 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import ReadinessLadder from "@/components/hrv/ReadinessLadder";
 import HrvBandHero from "@/components/hrv/HrvBandHero";
 import HrvTodayDetail from "@/components/hrv/HrvTodayDetail";
+import HrvShareConsent from "@/components/hrv/HrvShareConsent";
+import { getMemberHrvSettings } from "@/lib/data/settings";
 import LifestyleLogCard from "@/components/hrv/LifestyleLogCard";
 import { buildHrvBandView } from "@/lib/hrv/band";
 import { demoSteadySeries } from "@/lib/hrv/demo-series";
@@ -209,6 +211,7 @@ export default async function HrvPage() {
         })
       : null;
   const insight = SUPABASE_ENABLED ? await getLatestWeeklyInsight(member.id) : null;
+  const hrvSettings = await getMemberHrvSettings(member.id);
   const weekly = insight
     ? {
         day: new Date(insight.generatedAt).toLocaleDateString(localeTag, { weekday: "long" }),
@@ -306,6 +309,7 @@ export default async function HrvPage() {
               engineNote={band.engineCue === "below" ? bandCopy.engineBelow : band.engineCue === "above" ? bandCopy.engineAbove : null}
               source={sourceLabel}
               weekly={weekly}
+              share={<HrvShareConsent initialShare={hrvSettings.shareToCoach} decided={hrvSettings.shareDecidedAt != null} />}
             />
           </>
         ) : !state.connected ? (

@@ -63,7 +63,7 @@ export default function CreateCirkelForm() {
       </label>
 
       {error ? (
-        <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-copy text-red-300">
+        <div className="border border-danger px-4 py-3 text-copy text-danger">
           {error}
         </div>
       ) : null}
