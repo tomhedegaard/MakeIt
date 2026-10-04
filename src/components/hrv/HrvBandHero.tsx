@@ -32,9 +32,12 @@ export type HrvBandCopy = {
 export default function HrvBandHero({
   view,
   copy,
+  showEngineCue = true,
 }: {
   view: HrvBandView;
   copy: HrvBandCopy;
+  /** Off when HQ's note sits in its own fortællebånd below the hero. */
+  showEngineCue?: boolean;
 }) {
   const range = buildBandRangeModel(view);
   const hasRange = view.bandLowMs != null && view.bandHighMs != null;
@@ -135,7 +138,7 @@ export default function HrvBandHero({
             </div>
           )}
 
-          {view.engineCue ? (
+          {showEngineCue && view.engineCue ? (
             <p
               data-engine-cue={view.engineCue}
               className="text-copy text-fg-dim mt-6 max-w-lg"

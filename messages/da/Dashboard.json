@@ -10,7 +10,8 @@
   "formChecks": {
     "answeredBefore": "Mikael Munk har besvaret",
     "answeredCount": "{count, plural, one {# form-check} other {# form-checks}}",
-    "readNotes": "Læs noter på din profil"
+    "bandKicker": "Et menneske skriver under",
+    "seeAnswer": "Se svaret →"
   },
   "todaySession": {
     "ariaLabel": "Dagens session",

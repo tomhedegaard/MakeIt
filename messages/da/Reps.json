@@ -18,34 +18,78 @@
     "list": {
       "Lifter": {
         "range": "0-999",
-        "perks": ["Adgang til crewets feed", "Månedlige challenges", "5% medlemsrabat"]
+        "perks": [
+          "Adgang til crewets feed",
+          "Månedlige challenges",
+          "5% medlemsrabat"
+        ]
       },
       "Athlete": {
         "range": "1.000-4.999",
-        "perks": ["Alt fra Lifter", "Først til drops", "10% rabat", "1 form-check pr. md."]
+        "perks": [
+          "Alt fra Lifter",
+          "Først til drops",
+          "10% rabat",
+          "1 form-check pr. md."
+        ]
       },
       "Beast": {
         "range": "5.000-14.999",
-        "perks": ["Alt fra Athlete", "Valgfri strap-farve (1 stk/år)", "15% rabat", "VIP til træf IRL"]
+        "perks": [
+          "Alt fra Athlete",
+          "Valgfri strap-farve (1 stk/år)",
+          "15% rabat",
+          "VIP til træf IRL"
+        ]
       },
       "Legend": {
         "range": "15.000+",
-        "perks": ["Alt fra Beast", "1:1 tid med Mikael Munk", "Begrænset drop med dit navn", "20% rabat livstid"]
+        "perks": [
+          "Alt fra Beast",
+          "1:1 tid med Mikael Munk",
+          "Begrænset drop med dit navn",
+          "20% rabat livstid"
+        ]
       }
     },
     "coachSchool": "Coach School åbner ved Beast.",
     "perksToggle": "Fordele pr. niveau"
   },
   "how": {
-    "eyebrow": "Sådan tjener du",
     "list": {
-      "buy": { "v": "+50", "k": "Pr. køb i webshoppen", "sub": "Pr. 100 kr brugt" },
-      "week": { "v": "+100", "k": "Pr. fuldført uge i program", "sub": "Maks 4 uger pr. md." },
-      "pr": { "v": "+250", "k": "Pr. PR du logger med video", "sub": "Verificeret af coach" },
-      "invite": { "v": "+500", "k": "Pr. ven du inviterer ind", "sub": "Når de aktiverer" },
-      "challenge": { "v": "+1.000", "k": "Pr. challenge du vinder", "sub": "Månedlige" },
-      "expiry": { "v": "−", "k": "Reps udløber aldrig", "sub": "Saldoen bliver stående." }
-    }
+      "buy": {
+        "v": "+50",
+        "k": "Pr. køb i webshoppen",
+        "sub": "Pr. 100 kr brugt"
+      },
+      "week": {
+        "v": "+100",
+        "k": "Pr. fuldført uge i program",
+        "sub": "Maks 4 uger pr. md."
+      },
+      "pr": {
+        "v": "+250",
+        "k": "Pr. PR du logger med video",
+        "sub": "Verificeret af coach"
+      },
+      "invite": {
+        "v": "+500",
+        "k": "Pr. ven du inviterer ind",
+        "sub": "Når de aktiverer"
+      },
+      "challenge": {
+        "v": "+1.000",
+        "k": "Pr. challenge du vinder",
+        "sub": "Månedlige"
+      },
+      "expiry": {
+        "v": "−",
+        "k": "Reps udløber aldrig",
+        "sub": "Saldoen bliver stående."
+      }
+    },
+    "title": "Sådan optjenes reps",
+    "band": "Pas, form-checks, PR'er og hjælp til andre. Reps udløber aldrig."
   },
   "kindLabels": {
     "drop": "Begrænset drop",

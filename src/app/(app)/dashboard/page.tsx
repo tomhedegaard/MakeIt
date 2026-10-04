@@ -29,6 +29,7 @@ import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import PageTitle from "@/components/ui/PageTitle";
 import SectionHeader from "@/components/ui/SectionHeader";
+import NarrativeBand from "@/components/ui/NarrativeBand";
 import Stat from "@/components/ui/Stat";
 import Avatar from "@/components/ui/Avatar";
 import KeepOriginal from "@/components/dashboard/KeepOriginal";
@@ -426,38 +427,23 @@ export default async function TodayPage() {
 
       <div className="space-y-8 lg:col-start-1 lg:row-start-3">
 
-      {/* 4. munkNote */}
-      {reviewedCount > 0 ? (
-        <Card domain="body" className="p-0 overflow-hidden">
-          <Link href="/profile#form-checks" className="block px-5 py-4 lift">
-            <div className="flex items-center gap-3">
-              <span
-                className="size-2 rounded-full shrink-0"
-                style={{ background: "var(--domain, var(--fg))" }}
-                aria-hidden
-              />
-              <div className="flex-1 min-w-0">
-                <div className="text-copy">
-                  {t("formChecks.answeredBefore")}{" "}
-                  <span className="text-fg">
-                    {t("formChecks.answeredCount", { count: reviewedCount })}
-                  </span>
-                </div>
-                <div className="text-meta text-fg-faint mt-0.5">
-                  {t("formChecks.readNotes")}
-                </div>
-              </div>
-              <span className="text-fg-dim shrink-0" aria-hidden>
-                →
-              </span>
-            </div>
-          </Link>
-        </Card>
-      ) : null}
-
       {/* 5. prose, with the cross-domain insight cards under it */}
       <TodayProse model={prose} />
       <ConnectDotsStream cards={insightCards} copy={dotsCopy} />
+
+      {/* Fortællebånd (spec §6.1): the human signature sits at the bottom
+          of the day, after HQ's reading. */}
+      {reviewedCount > 0 ? (
+        <NarrativeBand
+          kicker={t("formChecks.bandKicker")}
+          title={`${t("formChecks.answeredBefore")} ${t("formChecks.answeredCount", { count: reviewedCount })}`}
+          action={
+            <Link href="/profile#form-checks" className="btn btn-sm">
+              {t("formChecks.seeAnswer")}
+            </Link>
+          }
+        />
+      ) : null}
       </div>
 
       <div className="space-y-8 lg:col-start-2 lg:row-start-2 lg:row-span-2">

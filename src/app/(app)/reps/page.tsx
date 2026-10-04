@@ -1,3 +1,4 @@
+import NarrativeBand from "@/components/ui/NarrativeBand";
 import { getLocale, getTranslations } from "next-intl/server";
 import { intlLocaleTag } from "@/i18n/config";
 import { dayMonth, demoCalendar } from "@/lib/dates/demo-calendar";
@@ -288,8 +289,9 @@ export default async function RepsPage() {
           )}
         </section>
 
-        <section aria-labelledby="reps-how">
-          <h2 id="reps-how" className="font-display text-section mb-4">{t("how.eyebrow")}</h2>
+        <section aria-label={t("how.title")} className="space-y-4">
+          {/* Fortællebånd (spec §6.7): the rule in one line, the list as detail. */}
+          <NarrativeBand title={t("how.title")}>{t("how.band")}</NarrativeBand>
           <ul className="border-t hairline md:grid md:grid-cols-2 md:gap-x-10">
             {how.map((row) => (
               <li key={row.k} className="flex items-baseline gap-4 py-3 border-b hairline">

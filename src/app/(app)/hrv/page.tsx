@@ -1,13 +1,14 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
 import { getSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { mockListReadings } from "@/lib/hrv/mock";
-import { getTodayLifestyleLogs, getHrvSyncProgress, getHrvReadingSeries } from "@/lib/data/hrv";
+import { getTodayLifestyleLogs, getHrvSyncProgress, getHrvReadingSeries, getLatestWeeklyInsight } from "@/lib/data/hrv";
+import { intlLocaleTag } from "@/i18n/config";
 import {
   getAdaptiveConsentEligibility,
   getRecentAdaptations,
@@ -19,6 +20,7 @@ import HrvSubNav from "@/components/hrv/HrvSubNav";
 import SectionHeader from "@/components/ui/SectionHeader";
 import ReadinessLadder from "@/components/hrv/ReadinessLadder";
 import HrvBandHero from "@/components/hrv/HrvBandHero";
+import HrvTodayDetail from "@/components/hrv/HrvTodayDetail";
 import LifestyleLogCard from "@/components/hrv/LifestyleLogCard";
 import { buildHrvBandView } from "@/lib/hrv/band";
 import { demoSteadySeries } from "@/lib/hrv/demo-series";
@@ -164,7 +166,13 @@ function providerName(provider: string | null, t: PageT): string {
   return t("yourWearable");
 }
 
-export default async function HrvPage() {
+export default async function HrvPage({
+  searchParams,
+}: {
+  // ponytail: ?v=split is the layout variant under review (bølge 2); remove once chosen.
+  searchParams: Promise<{ v?: string }>;
+}) {
+  const { v } = await searchParams;
   const member = await getSession();
   if (!member) redirect("/login");
   const tPage = await getTranslations("Hrv.page");
@@ -192,6 +200,30 @@ export default async function HrvPage() {
       } satisfies HrvState);
 
   const provider = providerName(state.provider, tPage);
+
+  // Source chip and weekly insight for the "I dag" detail. Demo mode says
+  // it is sample data rather than naming a wearable it never synced.
+  const tToday = await getTranslations("Hrv.today");
+  const localeTag = intlLocaleTag(await getLocale());
+  const lastReading = band.readings.at(-1);
+  const sourceLabel = !SUPABASE_ENABLED
+    ? tToday("sourceDemo")
+    : state.provider && lastReading
+      ? tToday("sourceSynced", {
+          provider,
+          time: new Date(lastReading.measuredAt).toLocaleTimeString(localeTag, { hour: "2-digit", minute: "2-digit" }),
+        })
+      : null;
+  const insight = SUPABASE_ENABLED ? await getLatestWeeklyInsight(member.id) : null;
+  const weekly = insight
+    ? {
+        day: new Date(insight.generatedAt).toLocaleDateString(localeTag, { weekday: "long" }),
+        text: insight.summaryText,
+      }
+    : SUPABASE_ENABLED
+      ? null
+      : // The weekly insight is written Sunday evening; 2026-10-04 is a Sunday.
+        { day: new Date(Date.UTC(2026, 9, 4)).toLocaleDateString(localeTag, { weekday: "long" }), text: tToday("demoWeekly") };
 
   // Sync-streak progress (V2.5). Demo-safe: returns the zero-state when
   // Supabase is unavailable, in which case the component renders nothing.
@@ -273,7 +305,16 @@ export default async function HrvPage() {
         ) : null}
 
         {!SUPABASE_ENABLED || band.state !== "empty" ? (
-          <HrvBandHero view={band} copy={bandCopy} />
+          <>
+            <HrvBandHero view={band} copy={bandCopy} showEngineCue={false} />
+            <HrvTodayDetail
+              view={band}
+              engineNote={band.engineCue === "below" ? bandCopy.engineBelow : band.engineCue === "above" ? bandCopy.engineAbove : null}
+              source={sourceLabel}
+              weekly={weekly}
+              layout={v === "split" ? "split" : "stack"}
+            />
+          </>
         ) : !state.connected ? (
           <StateNotConnected t={tPage} />
         ) : state.latest && state.latest.warmUpState !== "active" ? (

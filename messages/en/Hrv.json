@@ -306,5 +306,20 @@
     "allDone": "all milestones complete",
     "nextToday": "next milestone today (+{reps} Reps)",
     "nextIn": "next milestone in {count, plural, one {# day} other {# days}} (+{reps} Reps)"
+  },
+  "today": {
+    "nightsTitle": "14 nights",
+    "recentTitle": "Recent mornings",
+    "today": "Today",
+    "belowBand": "below your band",
+    "noteKicker": "HQ's note",
+    "noteTitle": "How HQ read the night",
+    "belowStreak": "{count, plural, one {First day below the band.} other {# days in a row below the band.}}",
+    "noteHuman": "Rest and deload are Munk's call, not HQ's.",
+    "weekKicker": "Weekly insight · {day}",
+    "weekTitle": "Weekly insight",
+    "sourceSynced": "{provider} · synced {time}",
+    "sourceDemo": "Sample data",
+    "demoWeekly": "Sleep under 7 h three nights running lined up with the lowest readings."
   }
 }

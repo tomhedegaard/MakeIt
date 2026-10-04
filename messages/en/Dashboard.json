@@ -10,7 +10,8 @@
   "formChecks": {
     "answeredBefore": "Mikael Munk has answered",
     "answeredCount": "{count, plural, one {# form check} other {# form checks}}",
-    "readNotes": "Read the notes on your profile"
+    "bandKicker": "A human signs off",
+    "seeAnswer": "See the answer →"
   },
   "todaySession": {
     "ariaLabel": "Today's session",
