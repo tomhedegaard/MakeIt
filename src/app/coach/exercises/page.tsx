@@ -18,10 +18,10 @@ export default async function CoachExercisesPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2">
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-title md:text-[2.75rem]">
+        <h1 className="font-display text-title">
           {t("title")}
         </h1>
-        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+        <p className="mt-3 text-fg-dim text-meta md:text-copy max-w-md">
           {t("intro")}
         </p>
       </header>
@@ -35,7 +35,7 @@ export default async function CoachExercisesPage() {
       <NewExerciseForm />
 
       {exercises.length === 0 ? (
-        <p className="text-fg-dim text-sm">{t("empty")}</p>
+        <p className="text-fg-dim text-meta">{t("empty")}</p>
       ) : (
         <ul className="surface-2 rounded-xl divide-y hairline overflow-hidden">
           {exercises.map((ex) => (
@@ -45,7 +45,7 @@ export default async function CoachExercisesPage() {
                 className="flex items-center gap-4 px-5 py-3.5 hover:bg-bg-3/60 transition-colors"
               >
                 <div className="min-w-0 flex-1">
-                  <div className="font-display text-base leading-tight truncate">
+                  <div className="font-display text-card leading-tight truncate">
                     {ex.name}
                   </div>
                   <div className="text-micro text-fg-faint truncate">

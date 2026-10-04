@@ -141,7 +141,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
         <div className="flex items-center gap-3 min-w-0">
           <Avatar handle={post.who} />
           <div className="min-w-0">
-            <div className="text-sm truncate">{post.who}</div>
+            <div className="text-copy truncate">{post.who}</div>
             <div className="eyebrow text-micro">{post.tier}</div>
           </div>
         </div>
@@ -156,15 +156,15 @@ export default function PostCard({ post }: { post: FeedPost }) {
               AI
             </span>
           ) : null}
-          <span className="numeric text-xs text-fg-faint">{post.whenLabel}</span>
+          <span className="numeric text-micro text-fg-faint">{post.whenLabel}</span>
         </div>
       </div>
 
-      <p className="text-fg-body text-sm md:text-base leading-relaxed mb-4 whitespace-pre-wrap">
+      <p className="text-fg-body text-copy leading-relaxed mb-4 whitespace-pre-wrap">
         <MentionText text={post.content} />
       </p>
 
-      <div className="border-t hairline pt-3 flex items-center gap-1 text-xs text-fg-dim">
+      <div className="border-t hairline pt-3 flex items-center gap-1 text-micro text-fg-dim">
         <button
           type="button"
           onClick={handleToggleReaction}
@@ -197,7 +197,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
       {expanded ? (
         <div className="mt-4 border-t hairline pt-4 space-y-4">
           {loadingComments ? (
-            <p className="text-xs text-fg-faint">
+            <p className="text-micro text-fg-faint">
               {t("loadingComments")}
             </p>
           ) : comments && comments.length > 0 ? (
@@ -207,12 +207,12 @@ export default function PostCard({ post }: { post: FeedPost }) {
                   <Avatar handle={c.who} className="size-7" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-sm">{c.who}</span>
+                      <span className="text-copy">{c.who}</span>
                       <span className="numeric text-micro text-fg-faint">
                         {c.whenLabel}
                       </span>
                     </div>
-                    <p className="text-sm text-fg-body leading-relaxed whitespace-pre-wrap">
+                    <p className="text-copy text-fg-body leading-relaxed whitespace-pre-wrap">
                       <MentionText text={c.content} />
                     </p>
                   </div>
@@ -220,7 +220,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
               ))}
             </ul>
           ) : (
-            <p className="text-xs text-fg-faint">
+            <p className="text-micro text-fg-faint">
               {t("noComments")}
             </p>
           )}
@@ -232,7 +232,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
               onChange={(e) => setDraft(e.target.value)}
               rows={1}
               placeholder={t("commentPlaceholder")}
-              className="field py-2 min-h-[40px] resize-none flex-1 text-sm"
+              className="field py-2 min-h-[40px] resize-none flex-1 text-copy"
               disabled={posting}
             />
             <button

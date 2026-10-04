@@ -67,21 +67,21 @@ export default async function AdaptiveLearnPage() {
                 {t("example.meta")}
               </span>
             </div>
-            <p className="text-sm leading-relaxed text-fg-dim">
+            <p className="text-meta leading-relaxed text-fg-dim">
               {EXPLAINER_EXPLANATION_DA}
             </p>
             <div className="flex gap-2 pt-1">
               <button
                 type="button"
                 disabled
-                className="flex-1 rounded-lg border hairline bg-bg-2 px-3 py-2 text-[12px] opacity-60 cursor-not-allowed"
+                className="flex-1 rounded-lg border hairline bg-bg-2 px-3 py-2 text-micro opacity-60 cursor-not-allowed"
               >
                 {t("example.accept")}
               </button>
               <button
                 type="button"
                 disabled
-                className="flex-1 rounded-lg border hairline px-3 py-2 text-[12px] text-fg-dim opacity-60 cursor-not-allowed"
+                className="flex-1 rounded-lg border hairline px-3 py-2 text-micro text-fg-dim opacity-60 cursor-not-allowed"
               >
                 {t("example.keep")}
               </button>
@@ -114,7 +114,7 @@ export default async function AdaptiveLearnPage() {
         <section className="space-y-3">
           <div className="eyebrow">{t("playground.eyebrow")}</div>
           <div className="surface-2 rounded-2xl p-5 lg:p-6 space-y-3">
-            <p className="text-sm text-fg-dim leading-relaxed">
+            <p className="text-meta text-fg-dim leading-relaxed">
               {t("playground.body")}
             </p>
             <CounterfactualSliders
@@ -127,11 +127,11 @@ export default async function AdaptiveLearnPage() {
 
         {/* ---------- 5. Boundaries ---------- */}
         <section className="space-y-4 max-w-2xl">
-          <h2 className="font-display text-2xl">{t("bounds.title")}</h2>
+          <h2 className="font-display text-section">{t("bounds.title")}</h2>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="surface-2 rounded-2xl p-5 space-y-2">
               <h3 className="eyebrow">{t("bounds.engineTitle")}</h3>
-              <ul className="text-sm text-fg-dim leading-relaxed space-y-1 list-disc list-inside marker:text-fg-faint">
+              <ul className="text-meta text-fg-dim leading-relaxed space-y-1 list-disc list-inside marker:text-fg-faint">
                 {(t.raw("bounds.engine") as string[]).map((item) => (
                   <li key={item}>{item}</li>
                 ))}
@@ -139,14 +139,14 @@ export default async function AdaptiveLearnPage() {
             </div>
             <div className="surface-2 rounded-2xl p-5 space-y-2">
               <h3 className="eyebrow">{t("bounds.coachTitle")}</h3>
-              <ul className="text-sm text-fg-dim leading-relaxed space-y-1 list-disc list-inside marker:text-fg-faint">
+              <ul className="text-meta text-fg-dim leading-relaxed space-y-1 list-disc list-inside marker:text-fg-faint">
                 {(t.raw("bounds.coach") as string[]).map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
             </div>
           </div>
-          <p className="text-sm text-fg-dim leading-relaxed">
+          <p className="text-meta text-fg-dim leading-relaxed">
             {t("bounds.footer")}
           </p>
         </section>
@@ -155,7 +155,7 @@ export default async function AdaptiveLearnPage() {
         <section className="pt-4">
           <Link
             href="/hrv"
-            className="inline-block text-[12px] text-fg-dim hover:text-fg lift touch-app"
+            className="inline-block text-micro text-fg-dim hover:text-fg lift touch-app"
           >
             {t.rich("backLink", {
               faint: (chunks) => <span className="text-fg-faint">{chunks}</span>,

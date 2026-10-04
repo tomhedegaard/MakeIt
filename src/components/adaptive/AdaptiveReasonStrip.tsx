@@ -45,7 +45,7 @@ export default function AdaptiveReasonStrip({
           </span>
           <span
             aria-hidden
-            className="text-fg-faint text-xs group-open:rotate-180 transition-transform"
+            className="text-fg-faint text-micro group-open:rotate-180 transition-transform"
           >
             ↓
           </span>
@@ -90,7 +90,7 @@ export default function AdaptiveReasonStrip({
               data-strip-domain={step.domain}
               className="flex items-start gap-3"
             >
-              <span className="numeric text-fg-faint text-xs w-5 pt-0.5 shrink-0">
+              <span className="numeric text-fg-faint text-micro w-5 pt-0.5 shrink-0">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span data-domain={step.domain} className="mt-0.5 shrink-0">

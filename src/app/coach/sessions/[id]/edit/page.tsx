@@ -20,7 +20,7 @@ export default async function CoachSessionEditPage({
     <Container className="py-6 lg:py-12 space-y-6">
       <Link
         href={`/coach/members/${session.memberId}`}
-        className="text-xs text-fg-dim hover:text-fg"
+        className="text-micro text-fg-dim hover:text-fg"
       >
         {t("backToMember", { handle: session.memberHandle })}
       </Link>
@@ -34,10 +34,10 @@ export default async function CoachSessionEditPage({
               })
             : t("customEyebrow")}
         </div>
-        <h1 className="font-display text-title md:text-[2.75rem]">
+        <h1 className="font-display text-title">
           {t("title")}
         </h1>
-        <p className="mt-2 text-fg-dim text-sm">
+        <p className="mt-2 text-fg-dim text-meta">
           {t("intro")}
         </p>
       </header>

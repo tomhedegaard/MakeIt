@@ -21,10 +21,10 @@ export default async function MindDisclaimer() {
       <Container size="narrow" className="py-12 md:py-16">
         <div className="space-y-12">
           <section>
-            <h2 className="font-display text-2xl md:text-3xl mb-3">
+            <h2 className="font-display text-section mb-3">
               {t("important_title")}
             </h2>
-            <p className="text-fg-dim leading-relaxed text-base md:text-lg">
+            <p className="text-fg-dim leading-relaxed text-copy">
               {t.rich("important_body", {
                 strong: (chunks) => <strong className="font-medium text-fg">{chunks}</strong>,
               })}
@@ -33,7 +33,7 @@ export default async function MindDisclaimer() {
 
           <section className="border-l hairline-strong pl-5">
             <h3 className="eyebrow mb-3">{t("resources_title")}</h3>
-            <ul className="space-y-1.5 text-fg text-base">
+            <ul className="space-y-1.5 text-fg text-copy">
               {youth ? (
                 <li>
                   <a href="tel:116111" className="underline underline-offset-2">
@@ -63,10 +63,10 @@ export default async function MindDisclaimer() {
           </section>
 
           <section>
-            <h2 className="font-display text-2xl md:text-3xl mb-4">
+            <h2 className="font-display text-section mb-4">
               {t("privacy_title")}
             </h2>
-            <ul className="space-y-3 text-fg-dim leading-relaxed text-base md:text-lg">
+            <ul className="space-y-3 text-fg-dim leading-relaxed text-copy">
               <li>
                 <span className="text-fg font-medium">{t("privacy_journal_label")}: </span>
                 {t("privacy_journal")}

@@ -82,14 +82,14 @@ export default function MessageBubble({
 
         {(message.kind === "text" && message.body) ||
         (message.kind !== "text" && message.body) ? (
-          <p className="px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap break-words">
+          <p className="px-4 py-3 text-copy leading-relaxed whitespace-pre-wrap break-words">
             {message.body}
           </p>
         ) : null}
 
         {/* Fallback: media kind but no signed URL (storage hiccup) */}
         {message.kind !== "text" && !message.mediaUrl ? (
-          <p className="px-4 py-3 text-xs text-fg-dim">
+          <p className="px-4 py-3 text-micro text-fg-dim">
             {t("mediaError")}
           </p>
         ) : null}

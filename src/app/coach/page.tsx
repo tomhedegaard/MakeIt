@@ -39,10 +39,10 @@ export default async function CoachOverviewPage() {
       <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-title md:text-[2.75rem]">
+          <h1 className="font-display text-title">
             {t("title")}
           </h1>
-          <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+          <p className="mt-3 text-fg-dim text-meta md:text-copy max-w-md">
             {t("intro")}
           </p>
         </div>
@@ -56,7 +56,7 @@ export default async function CoachOverviewPage() {
         <div className="px-5 py-4 border-b hairline flex items-center justify-between gap-4">
           <div>
             <div className="eyebrow mb-1">{tInbox("sectionEyebrow")}</div>
-            <h2 className="font-display text-2xl">{tInbox("sectionTitle")}</h2>
+            <h2 className="font-display text-section">{tInbox("sectionTitle")}</h2>
           </div>
           {inbox.items.length > 0 ? (
             <span className="numeric text-micro border hairline-strong px-2 py-0.5">
@@ -91,13 +91,13 @@ export default async function CoachOverviewPage() {
           <div className="px-5 py-4 border-b hairline flex items-center justify-between">
             <div>
               <div className="eyebrow mb-1">{t("recentEyebrow")}</div>
-              <h2 className="font-display text-2xl">{t("recentTitle")}</h2>
+              <h2 className="font-display text-section">{t("recentTitle")}</h2>
             </div>
             <Link href="/coach/members" className="btn btn-sm">{t("allMembers")}</Link>
           </div>
 
           {recentlyActive.length === 0 ? (
-            <div className="p-6 text-sm text-fg-dim">
+            <div className="p-6 text-meta text-fg-dim">
               {t("recentEmpty")}
             </div>
           ) : (
@@ -108,14 +108,14 @@ export default async function CoachOverviewPage() {
                     {m.handle.slice(0, 2).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm">@{m.handle}</div>
+                    <div className="text-copy">@{m.handle}</div>
                     <div className="text-micro text-fg-faint">
                       {m.programCode
                         ? t("memberWithProgram", { programCode: m.programCode, programWeek: m.programWeek ?? "" })
                         : t("memberNoProgram")}
                     </div>
                   </div>
-                  <span className="numeric text-xs text-fg-dim shrink-0">{m.lastSessionDate}</span>
+                  <span className="numeric text-micro text-fg-dim shrink-0">{m.lastSessionDate}</span>
                   <Link
                     href={`/coach/members/${m.id}`}
                     className="text-fg-dim hover:text-fg"
@@ -133,7 +133,7 @@ export default async function CoachOverviewPage() {
           <div className="px-5 py-4 border-b hairline flex items-center justify-between">
             <div>
               <div className="eyebrow mb-1">{t("queueEyebrow")}</div>
-              <h2 className="font-display text-2xl">{t("queueTitle")}</h2>
+              <h2 className="font-display text-section">{t("queueTitle")}</h2>
             </div>
             {pending.length > 0 ? (
               <span className="numeric text-micro border hairline-strong px-2 py-0.5">
@@ -142,13 +142,13 @@ export default async function CoachOverviewPage() {
             ) : null}
           </div>
           {pending.length === 0 ? (
-            <div className="p-5 text-sm text-fg-dim">{t("queueEmpty")}</div>
+            <div className="p-5 text-meta text-fg-dim">{t("queueEmpty")}</div>
           ) : (
             <ul className="divide-y hairline">
               {pending.slice(0, 4).map((f) => (
-                <li key={f.id} className="px-5 py-3 text-sm">
+                <li key={f.id} className="px-5 py-3 text-copy">
                   <div className="mb-1">@{f.memberHandle}</div>
-                  <div className="text-fg-dim text-xs truncate">
+                  <div className="text-fg-dim text-micro truncate">
                     {liftLabel(f)}
                   </div>
                 </li>
@@ -173,7 +173,7 @@ function KPI({ label, value, pulse }: { label: string; value: number | string; p
         {pulse ? <span className="pulse-dot" /> : null}
         {label}
       </div>
-      <div className="numeric text-3xl lg:text-4xl">{value}</div>
+      <div className="numeric text-title">{value}</div>
     </div>
   );
 }

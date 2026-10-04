@@ -69,11 +69,11 @@ export default function BreathingRing({ pattern }: { pattern: Pattern }) {
             transitionDuration: `${phase.seconds * 1000}ms`,
           }}
         />
-        <div className="absolute inset-0 flex items-center justify-center font-display text-2xl md:text-3xl text-fg">
+        <div className="absolute inset-0 flex items-center justify-center font-display text-section md:text-title text-fg">
           {phase.label}
         </div>
       </div>
-      <div className="text-fg-dim text-xs">
+      <div className="text-fg-dim text-micro">
         {pattern.replace(/_/g, " ")}
       </div>
     </div>

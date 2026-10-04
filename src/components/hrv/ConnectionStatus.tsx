@@ -66,7 +66,7 @@ export default function ConnectionStatus({
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-display text-lg leading-tight">
+            <span className="font-display text-card leading-tight">
               {providerName}
             </span>
             {connection.isPrimary ? (
@@ -112,7 +112,7 @@ export default function ConnectionStatus({
       {error ? (
         <p
           role="alert"
-          className="mt-3 text-sm text-fg border border-line-strong rounded-lg px-3 py-2"
+          className="mt-3 text-copy text-fg border border-line-strong rounded-lg px-3 py-2"
         >
           {error}
         </p>

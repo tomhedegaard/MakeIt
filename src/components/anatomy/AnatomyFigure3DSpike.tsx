@@ -82,7 +82,7 @@ export default function AnatomyFigure3DSpike() {
                 setPresetIdx(i);
                 setView(p.initialView);
               }}
-              className={`px-3 py-1.5 rounded-md text-xs ${
+              className={`px-3 py-1.5 rounded-md text-micro ${
  i === presetIdx ? "bg-bg-3 text-fg" : "surface-2 text-fg-dim"
  }`}
             >

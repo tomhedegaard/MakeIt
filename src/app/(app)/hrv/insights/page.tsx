@@ -57,7 +57,7 @@ type InsightsT = Awaited<ReturnType<typeof getTranslations<"Hrv.insights">>>;
 function StateEmpty({ t }: { t: InsightsT }) {
   return (
     <article className="max-w-prose">
-      <p className="text-fg-dim text-sm md:text-base leading-relaxed">
+      <p className="text-fg-dim text-copy leading-relaxed">
         {t("empty")}
       </p>
     </article>
@@ -93,7 +93,7 @@ function StatePopulated({
   return (
     <div className="space-y-8">
       <article className="max-w-prose">
-        <p className="text-fg-dim text-base md:text-lg leading-relaxed">
+        <p className="text-fg-dim text-copy leading-relaxed">
           {insight.summaryText}
         </p>
       </article>

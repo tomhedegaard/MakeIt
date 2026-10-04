@@ -224,7 +224,7 @@ export default function SessionClient({
                 dayLabel: session.dayLabel,
               })}
             </h1>
-            <div className="tabular text-xs text-fg-dim">
+            <div className="tabular text-micro text-fg-dim">
               {t("topBar.setsCount", { completed: completedSets, total: totalSets })}
             </div>
           </div>
@@ -273,10 +273,10 @@ export default function SessionClient({
             aria-labelledby="paused-heading"
             className="surface-2 p-6 lg:p-8 space-y-4"
           >
-            <h2 id="paused-heading" className="text-xl numeric tracking-tight">
+            <h2 id="paused-heading" className="text-section numeric tracking-tight">
               {session.pausedReplacement.title}
             </h2>
-            <p className="text-sm leading-relaxed text-fg-dim">
+            <p className="text-copy leading-relaxed text-fg-dim">
               {session.pausedReplacement.body}
             </p>
           </section>
@@ -316,9 +316,9 @@ export default function SessionClient({
                 </span>
               ) : null}
             </div>
-            <div className="numeric text-xl">
+            <div className="numeric text-section">
               {fmt(set.targetWeight)}{" "}
-              <span className="text-fg-dim text-sm">kg</span>
+              <span className="text-fg-dim text-meta">kg</span>
             </div>
             {set.adapted?.kind === "weight_reduced" ? (
               <div className="text-micro text-fg-dim mt-1 numeric">
@@ -328,11 +328,11 @@ export default function SessionClient({
           </div>
           <div className="bg-bg-2 p-4 text-center">
             <div className="eyebrow mb-1">{t("targets.reps")}</div>
-            <div className="numeric text-xl">{set.targetReps}</div>
+            <div className="numeric text-section">{set.targetReps}</div>
           </div>
           <div className="bg-bg-2 p-4 text-center">
             <div className="eyebrow mb-1">{t("targets.rpe")}</div>
-            <div className="numeric text-xl">{set.targetRpe ? fmt(set.targetRpe) : "-"}</div>
+            <div className="numeric text-section">{set.targetRpe ? fmt(set.targetRpe) : "-"}</div>
           </div>
         </section>
 
@@ -377,10 +377,10 @@ export default function SessionClient({
                 <li
                   key={s.id}
                   data-current={isCurrent}
-                  className="px-4 py-3 flex items-center gap-3 text-sm"
+                  className="px-4 py-3 flex items-center gap-3 text-copy"
                   style={{ background: isCurrent ? "var(--bg-3)" : undefined }}
                 >
-                  <span className="numeric text-fg-faint w-6 text-xs">
+                  <span className="numeric text-fg-faint w-6 text-micro">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="flex-1 numeric">
@@ -456,7 +456,7 @@ export default function SessionClient({
         <SheetContent srTitle={t("done.title")}>
           <div className="text-center pb-4">
             <SectionHeader eyebrow={t("done.eyebrow")} title={t("done.title")} className="justify-center" />
-            <p className="text-fg-dim text-sm mb-6 px-2">
+            <p className="text-fg-dim text-meta mb-6 px-2">
               {t("done.body", { sets: completedSets })}
             </p>
 
@@ -608,7 +608,7 @@ function ExerciseSection({
     <section className="surface-2 p-5 lg:p-7">
       <div className="flex items-start justify-between gap-4 mb-4">
         <div className="min-w-0 flex-1">
-          <h2 className="font-display text-3xl lg:text-4xl leading-[1]">
+          <h2 className="font-display text-title leading-[1]">
             {ex.name}
           </h2>
           <p className="mt-2 text-micro text-fg-dim tabular">
@@ -616,9 +616,9 @@ function ExerciseSection({
           </p>
         </div>
         <div className="text-right shrink-0">
-          <div className="numeric text-3xl lg:text-4xl">
+          <div className="numeric text-title">
             {setIdx + 1}
-            <span className="text-fg-dim text-base">/{ex.sets.length}</span>
+            <span className="text-fg-dim text-copy">/{ex.sets.length}</span>
           </div>
           <div className="eyebrow">{t("sets")}</div>
         </div>
@@ -664,7 +664,7 @@ function ExerciseSection({
                     <li
                       key={i}
                       data-active={isActive}
-                      className={`flex gap-2 text-sm leading-snug pl-2 -ml-2 border-l-2 transition-colors duration-200 ${
+                      className={`flex gap-2 text-copy leading-snug pl-2 -ml-2 border-l-2 transition-colors duration-200 ${
                         isActive ? "border-l-body text-fg" : "border-l-transparent"
                       }`}
                     >
@@ -695,7 +695,7 @@ function ExerciseSection({
         </div>
       ) : ex.cue ? (
         // Legacy fallback — single cue line for free-text exercises
-        <p className="text-sm text-fg-dim leading-relaxed border-t hairline pt-4">
+        <p className="text-meta text-fg-dim leading-relaxed border-t hairline pt-4">
           {ex.cue}
         </p>
       ) : null}
@@ -711,7 +711,7 @@ function ExerciseSection({
         <Camera {...ICON} className="size-5 mt-0.5 shrink-0" />
         <span className="flex-1 min-w-0">
           <span className="flex items-baseline justify-between gap-2">
-            <span className="text-sm leading-snug">{t("formCheck", { set: setIdx + 1 })}</span>
+            <span className="text-copy leading-snug">{t("formCheck", { set: setIdx + 1 })}</span>
             <span className="text-micro shrink-0">
               {t("duration")}
             </span>

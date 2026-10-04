@@ -30,7 +30,7 @@ export default async function ShoppingPage() {
         <Header t={t} />
         <section className="surface-2 rounded-2xl p-6 lg:p-10">
           <SectionHeader eyebrow={t("noPlanEyebrow")} title={t("noPlanTitle")} />
-          <p className="text-fg-dim text-sm md:text-base max-w-md mb-5">
+          <p className="text-fg-dim text-copy max-w-md mb-5">
             {t("noPlanBody")}
           </p>
           <Link href="/nutrition" className="btn btn-primary">
@@ -57,22 +57,22 @@ export default async function ShoppingPage() {
 
       <section className="surface-2 rounded-xl px-5 py-4 flex flex-wrap items-baseline gap-x-6 gap-y-2">
         <div className="flex items-baseline gap-2">
-          <span className="numeric text-3xl">{headlineCount}</span>
-          <span className="text-xs text-fg-dim">
+          <span className="numeric text-title">{headlineCount}</span>
+          <span className="text-micro text-fg-dim">
             {t("itemsTotal")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
-          <span className="numeric text-2xl">{plan.meals.length}</span>
-          <span className="text-xs text-fg-dim">
+          <span className="numeric text-section">{plan.meals.length}</span>
+          <span className="text-micro text-fg-dim">
             {t("mealsLabel")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
-          <span className="numeric text-2xl">{list.servings}</span>
-          <span className="text-xs text-fg-dim">
+          <span className="numeric text-section">{list.servings}</span>
+          <span className="text-micro text-fg-dim">
             {list.servings === 1 ? t("personOne") : t("personOther")}
           </span>
         </div>
@@ -103,7 +103,7 @@ function Header({
       <div className="flex items-center gap-3 mb-3">
         <Link
           href="/nutrition"
-          className="text-fg-dim hover:text-fg text-sm"
+          className="text-fg-dim hover:text-fg text-meta"
         >
           {t("back")}
         </Link>
@@ -111,7 +111,7 @@ function Header({
         <span className="eyebrow">{t("eyebrow")}</span>
       </div>
       <PageTitle size="compact" title={t("title")} />
-      <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+      <p className="mt-3 text-fg-dim text-copy max-w-md">
         {t("intro")}
       </p>
     </div>

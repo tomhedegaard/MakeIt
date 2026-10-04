@@ -21,26 +21,14 @@ describe("Nord shell gate", () => {
 });
 
 describe("no iOS focus zoom on touch", () => {
-  const read = (p: string) => readFileSync(new URL(p, import.meta.url), "utf8");
-  const tagClass = (src: string, tag: string) =>
-    [...src.matchAll(new RegExp(`<${tag}\\b[\\s\\S]*?className="([^"]*)"`, "g"))].map((m) => m[1]);
+  // Safari zooms to any focused field under 16px. One global rule covers
+  // every native text control on touch/small screens, so a field keeps the
+  // Nord scale (text-copy, 15) on desktop without opting in per component.
+  const css = readFileSync(new URL("../../app/globals.css", import.meta.url), "utf8");
+  const rule = css.match(/@media \(pointer: coarse\), \(max-width: 40rem\) \{([\s\S]*?)\}\s*\}/)?.[1] ?? "";
 
-  it.each([
-    ["chat Composer textarea", "../../components/chat/Composer.tsx", "textarea"],
-    ["CounterfactualSliders select", "../../components/adaptive/CounterfactualSliders.tsx", "select"],
-    ["log-meal Noter textarea", "../../app/(app)/nutrition/LogMealButton.tsx", "textarea"],
-    ["lifestyle sleep input", "../../components/hrv/LifestyleLogCard.tsx", "input"],
-  ])("%s is 16px on small screens", (_name, path, tag) => {
-    const classes = tagClass(read(path), tag);
-    expect(classes.length).toBeGreaterThan(0);
-    for (const c of classes) {
-      const tokens = c.split(/\s+/);
-      // sr-only fields are visually hidden (toggle checkboxes, honeypots),
-      // so Safari never zooms to them.
-      const ok = tokens.includes("input") || tokens.includes("field") ||
-        tokens.includes("sr-only") ||
-        (tokens.includes("text-base") && !tokens.includes("text-sm"));
-      expect(ok, c).toBe(true);
-    }
+  it.each(["textarea", "select", "input:not("])("covers %s at 16px", (sel) => {
+    expect(rule).toContain(sel);
+    expect(rule).toContain("font-size: 16px");
   });
 });

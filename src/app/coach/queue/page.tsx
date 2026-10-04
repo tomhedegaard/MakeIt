@@ -29,10 +29,10 @@ export default async function CoachQueuePage() {
       <header className="pt-2 flex items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-title md:text-[2.75rem]">
+          <h1 className="font-display text-title">
             {t("title")}
           </h1>
-          <p className="mt-2 text-fg-dim text-sm">
+          <p className="mt-2 text-fg-dim text-meta">
             {t("waiting", { formChecks: pending.length, hrvAlerts: hrvAlerts.length })}
           </p>
         </div>
@@ -51,7 +51,7 @@ export default async function CoachQueuePage() {
         <section className="space-y-3">
           <div>
             <div className="eyebrow mb-2">Adaptive engine</div>
-            <h2 className="font-display text-2xl">
+            <h2 className="font-display text-section">
               {adaptiveAlerts.length === 1
                 ? "1 forslag afventer dig"
                 : `${adaptiveAlerts.length} forslag afventer dig`}
@@ -70,13 +70,13 @@ export default async function CoachQueuePage() {
       <section className="space-y-3">
         <div>
           <div className="eyebrow mb-2">{t("hrvSectionEyebrow")}</div>
-          <h2 className="font-display text-2xl">
+          <h2 className="font-display text-section">
             {t("hrvSectionHeading", { count: hrvAlerts.length })}
           </h2>
         </div>
 
         {hrvAlerts.length === 0 ? (
-          <p className="text-fg-faint text-sm">
+          <p className="text-fg-faint text-meta">
             {t("hrvSectionEmpty")}
           </p>
         ) : (
@@ -92,15 +92,15 @@ export default async function CoachQueuePage() {
 
       <div>
         <div className="eyebrow mb-2">{t("formChecksSectionEyebrow")}</div>
-        <h2 className="font-display text-2xl">
+        <h2 className="font-display text-section">
           {t("formChecksSectionHeading", { count: pending.length })}
         </h2>
       </div>
 
       {pending.length === 0 ? (
         <div className="surface-2 rounded-2xl p-8">
-          <div className="font-display text-2xl mb-2">{t("emptyTitle")}</div>
-          <p className="text-fg-dim text-sm">
+          <div className="font-display text-section mb-2">{t("emptyTitle")}</div>
+          <p className="text-fg-dim text-meta">
             {t("emptyBody")}
           </p>
         </div>
@@ -110,7 +110,7 @@ export default async function CoachQueuePage() {
             <li key={f.id} id={`form-${f.id}`} className="surface-2 rounded-2xl p-5">
               <div className="flex items-center justify-between gap-4 mb-3">
                 <div className="min-w-0">
-                  <div className="text-sm">
+                  <div className="text-copy">
                     <Link
                       href={`/coach/members/${f.memberId}`}
                       className="hover:underline"
@@ -131,7 +131,7 @@ export default async function CoachQueuePage() {
               </div>
 
               {f.aiHeadline ? (
-                <p className="text-fg/90 text-sm leading-relaxed mb-3">
+                <p className="text-fg/90 text-copy leading-relaxed mb-3">
                   {f.aiHeadline}
                 </p>
               ) : null}

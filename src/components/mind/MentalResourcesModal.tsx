@@ -123,7 +123,7 @@ function MentalResourcesDialog({
             </p>
           ) : null}
 
-          <p className="text-fg-dim text-sm">
+          <p className="text-fg-dim text-meta">
             {youth ? t("youthPrivacy") : t("privacy")}
           </p>
 
@@ -151,7 +151,7 @@ function MentalResourcesDialog({
             eyebrow={t("escalateEyebrow")}
             title={t("escalateTitle")}
           />
-          <p className="text-fg-dim text-sm leading-relaxed">
+          <p className="text-fg-dim text-copy leading-relaxed">
             {t("escalateBody")}
           </p>
           <CrisisLines t={t} />
@@ -164,15 +164,15 @@ function MentalResourcesDialog({
             required
             rows={6}
             placeholder={t("escalatePlaceholder")}
-            className="input w-full text-base resize-none"
+            className="input w-full text-copy resize-none"
           />
-          <div className="text-fg-dim text-xs text-right tabular">
+          <div className="text-fg-dim text-micro text-right tabular">
             {summary.length} / 1000
           </div>
           {error ? (
             <div
               role="alert"
-              className="border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger"
+              className="border border-danger/30 bg-danger/5 px-4 py-3 text-copy text-danger"
             >
               {error}
             </div>
@@ -246,7 +246,7 @@ function CrisisLines({
         <a href="tel:70201201" className="underline hover:opacity-80">
           {t("livslinien")}
         </a>{" "}
-        <span className="text-fg-dim text-sm">{t("livslinienHours")}</span>
+        <span className="text-fg-dim text-meta">{t("livslinienHours")}</span>
       </p>
       <p>
         <a href="tel:112" className="underline hover:opacity-80">

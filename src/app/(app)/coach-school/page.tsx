@@ -54,12 +54,12 @@ export default async function CoachSchoolTreePage() {
     <Container className="py-6 lg:py-12 space-y-6">
       <div className="pt-2">
         <PageTitle size="compact" kicker={t("tree.eyebrow")} title={t("tree.title")} />
-        <p className="mt-2 text-fg-dim text-sm">{t("tree.subtitle")}</p>
+        <p className="mt-2 text-fg-dim text-copy">{t("tree.subtitle")}</p>
       </div>
 
       {lessons.length === 0 ? (
         <div className="surface-2 rounded-lg p-6">
-          <p className="text-fg-dim text-sm">{t("tree.empty")}</p>
+          <p className="text-fg-dim text-meta">{t("tree.empty")}</p>
         </div>
       ) : (
         TIER_ORDER.map((tier) => {
@@ -121,7 +121,7 @@ function LessonRowInner({
         <ChevronRight {...ICON} className="size-5 shrink-0 text-fg-dim" />
       )}
       <div className="min-w-0 flex-1">
-        <p className="text-sm text-fg/90 leading-snug">{lesson.titleDa}</p>
+        <p className="text-copy text-fg/90 leading-snug">{lesson.titleDa}</p>
         <div className="text-micro text-fg-faint mt-1">
           {fmtDuration(lesson.durationSec)}
           {" · "}

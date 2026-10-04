@@ -147,7 +147,7 @@ function ToggleRow({
           key={o.v}
           type="button"
           onClick={() => onChange(o.v)}
-          className={`flex-1 px-3 py-2 rounded-md text-xs ${
+          className={`flex-1 px-3 py-2 rounded-md text-micro ${
  value === o.v ? "bg-bg-3 text-fg" : "text-fg-dim hover:text-fg"
  }`}
         >

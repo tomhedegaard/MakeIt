@@ -145,7 +145,7 @@ export default function ReasoningDetailPanel({
         <h3 id="reasoning-rule-heading" className="eyebrow mb-2">
           Hvilken regel fyrede
         </h3>
-        <p className="text-sm text-fg-dim leading-relaxed">
+        <p className="text-copy text-fg-dim leading-relaxed">
           {narrateRule({
             action: ruleDecision.action,
             reasons: ruleDecision.reasons,
@@ -164,7 +164,7 @@ export default function ReasoningDetailPanel({
           <h3 id="reasoning-claude-heading" className="eyebrow mb-2">
             Hvad Munks assistent justerede
           </h3>
-          <p className="text-sm text-fg-dim leading-relaxed">
+          <p className="text-copy text-fg-dim leading-relaxed">
             {describeClaudeRefinement(ruleDecision, reasoningOutput)}
           </p>
         </section>
@@ -185,7 +185,7 @@ function SignalRow({
   value: string;
 }) {
   return (
-    <li className="flex items-baseline justify-between gap-3 text-sm">
+    <li className="flex items-baseline justify-between gap-3 text-copy">
       <span className="text-fg-faint text-micro shrink-0">
         {label}
       </span>

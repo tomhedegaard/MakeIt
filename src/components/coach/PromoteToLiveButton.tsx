@@ -57,7 +57,7 @@ export default function PromoteToLiveButton({
   if (result?.kind === "ok") {
     return (
       <span
-        className="text-xs text-fg-dim"
+        className="text-micro text-fg-dim"
         aria-live="polite"
       >
         {t("promotedConfirmation", { assigned: result.assigned })}

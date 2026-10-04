@@ -47,7 +47,7 @@ export default function NewExerciseForm() {
       <div className="eyebrow">{t("heading")}</div>
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">{t("nameLabel")}</span>
+          <span className="text-micro text-fg-dim">{t("nameLabel")}</span>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -57,7 +57,7 @@ export default function NewExerciseForm() {
           />
         </label>
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">
+          <span className="text-micro text-fg-dim">
             {t("slugLabel")}
           </span>
           <input
@@ -71,7 +71,7 @@ export default function NewExerciseForm() {
       </div>
 
       {error ? (
-        <p className="text-sm" style={{ color: "var(--danger)" }}>
+        <p className="text-copy" style={{ color: "var(--danger)" }}>
           {error}
         </p>
       ) : null}

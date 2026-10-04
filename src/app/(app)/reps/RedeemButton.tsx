@@ -61,7 +61,7 @@ export default function RedeemButton({
     <>
       {/* Only a real action looks like a button; a shortfall is a fact. */}
       {!reward.isAvailable || !canAfford ? (
-        <p className="mt-5 min-h-9 flex items-center text-sm text-fg-dim">
+        <p className="mt-5 min-h-9 flex items-center text-meta text-fg-dim">
           {!reward.isAvailable
             ? t("soldOut")
             : t("missingReps", {
@@ -84,33 +84,33 @@ export default function RedeemButton({
             <>
               <SectionHeader eyebrow={t("confirmEyebrow")} title={reward.name} />
               {reward.description ? (
-                <p className="text-fg-dim text-sm mb-5">{reward.description}</p>
+                <p className="text-fg-dim text-meta mb-5">{reward.description}</p>
               ) : null}
 
               <div className="surface-2 rounded-lg p-4 mb-5">
                 <div className="flex items-baseline justify-between mb-3">
-                  <span className="text-fg-dim text-sm">{t("price")}</span>
-                  <span className="numeric text-lg">
+                  <span className="text-fg-dim text-meta">{t("price")}</span>
+                  <span className="numeric text-card">
                     {reward.costReps.toLocaleString(tag)}{" "}
-                    <span className="text-fg-dim text-xs">{tShop("repsLabel")}</span>
+                    <span className="text-fg-dim text-micro">{tShop("repsLabel")}</span>
                   </span>
                 </div>
                 <div className="flex items-baseline justify-between mb-3 border-t hairline pt-3">
-                  <span className="text-fg-dim text-sm">{t("yourBalance")}</span>
-                  <span className="numeric text-lg">
+                  <span className="text-fg-dim text-meta">{t("yourBalance")}</span>
+                  <span className="numeric text-card">
                     {balance.toLocaleString(tag)}
                   </span>
                 </div>
                 <div className="flex items-baseline justify-between border-t hairline-strong pt-3">
-                  <span className="text-fg text-sm">{t("afterRedemption")}</span>
-                  <span className="numeric text-lg">
+                  <span className="text-fg text-copy">{t("afterRedemption")}</span>
+                  <span className="numeric text-card">
                     {(balance - reward.costReps).toLocaleString(tag)}{" "}
-                    <span className="text-fg-dim text-xs">{tShop("repsLabel")}</span>
+                    <span className="text-fg-dim text-micro">{tShop("repsLabel")}</span>
                   </span>
                 </div>
               </div>
 
-              <p className="text-xs text-fg-faint mb-5">
+              <p className="text-micro text-fg-faint mb-5">
                 {reward.kind === "physical" || reward.kind === "drop"
                   ? t("fulfilmentPhysical")
                   : reward.kind === "experience"
@@ -142,13 +142,13 @@ export default function RedeemButton({
           {stage === "success" ? (
             <div className="text-center py-2">
               <SectionHeader eyebrow={t("successEyebrow")} title={t("successTitle")} className="justify-center" />
-              <p className="text-fg-dim text-sm mb-6 px-2">
+              <p className="text-fg-dim text-meta mb-6 px-2">
                 {t("successBody")}
               </p>
 
               <div className="surface-2 rounded-lg p-4 text-left mb-6">
-                <div className="font-display text-lg">{reward.name}</div>
-                <div className="text-xs text-fg-faint mt-1">
+                <div className="font-display text-card">{reward.name}</div>
+                <div className="text-micro text-fg-faint mt-1">
                   {t("successMeta", {
                     amount: reward.costReps.toLocaleString(tag),
                   })}
@@ -168,7 +168,7 @@ export default function RedeemButton({
           {stage === "error" ? (
             <div className="text-center py-2">
               <SectionHeader eyebrow={t("errorEyebrow")} title={errorReason} className="justify-center" />
-              <p className="text-fg-dim text-sm mb-6">
+              <p className="text-fg-dim text-meta mb-6">
                 {t("errorBody")}
               </p>
               <div className="grid grid-cols-2 gap-3">

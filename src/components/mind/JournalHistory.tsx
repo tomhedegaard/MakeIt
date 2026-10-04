@@ -17,11 +17,11 @@ export default function JournalHistory({ entries }: { entries: JournalEntry[] })
       {entries.map((e) => (
         <article key={e.id} className="space-y-2">
           <div className="flex items-baseline gap-3">
-            <time className="font-display text-lg tabular-nums" dateTime={e.logged_date}>
+            <time className="font-display text-card tabular-nums" dateTime={e.logged_date}>
               {formatShortDate(e.logged_date, t)}
             </time>
             {e.prompt ? (
-              <span className="text-fg-dim text-sm italic">{e.prompt}</span>
+              <span className="text-fg-dim text-meta italic">{e.prompt}</span>
             ) : null}
           </div>
           <p className="text-fg-dim leading-relaxed whitespace-pre-wrap">

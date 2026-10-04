@@ -222,7 +222,7 @@ export default function CounterfactualSliders({
               className="range flex-1"
               style={rangeFill(sleep, SLEEP_MIN, SLEEP_MAX)}
             />
-            <span className="numeric text-sm tabular-nums w-14 text-right">
+            <span className="numeric text-copy tabular-nums w-14 text-right">
               {formatSleepHours(sleep)}
             </span>
           </div>
@@ -243,7 +243,7 @@ export default function CounterfactualSliders({
               }
               className="size-4 accent-fg"
             />
-            <span className="text-sm">{alcohol ? "Ja" : "Nej"}</span>
+            <span className="text-copy">{alcohol ? "Ja" : "Nej"}</span>
           </label>
         </ControlRow>
 
@@ -263,7 +263,7 @@ export default function CounterfactualSliders({
               setFeeling(e.currentTarget.value as FeelingState)
             }
             aria-label="Følelse"
-            className="bg-bg-2 border hairline rounded-md px-2 py-1 text-base md:text-sm touch-app"
+            className="bg-bg-2 border hairline rounded-md px-2 py-1 text-copy touch-app"
           >
             {FEELING_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -372,11 +372,11 @@ function ResultBlock({
   return (
     <>
       <div
-        className={`text-sm numeric ${tone === "loud" ? "text-fg" : "text-fg-dim"}`}
+        className={`text-meta numeric ${tone === "loud" ? "text-fg" : "text-fg-dim"}`}
       >
         → {headline}
       </div>
-      <p className="text-xs text-fg-dim leading-relaxed">{detail}</p>
+      <p className="text-micro text-fg-dim leading-relaxed">{detail}</p>
       {previous ? (
         <p className="text-micro text-fg-faint">
           {previous}

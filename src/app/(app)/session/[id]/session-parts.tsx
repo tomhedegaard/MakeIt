@@ -44,9 +44,9 @@ export function StatCell({
   return (
     <div className="bg-bg-2 px-3 py-3 text-center">
       <div className="eyebrow mb-1">{label}</div>
-      <div className="numeric text-2xl">
+      <div className="numeric text-section">
         {value}
-        {suffix ? <span className="text-fg-dim text-sm ml-1">{suffix}</span> : null}
+        {suffix ? <span className="text-fg-dim text-meta ml-1">{suffix}</span> : null}
       </div>
     </div>
   );

@@ -27,10 +27,10 @@ export default async function CoachCirklerPage() {
       <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">Coach · Søjle 5</div>
-          <h1 className="font-display text-title md:text-[2.75rem]">
+          <h1 className="font-display text-title">
             Cirkler.
           </h1>
-          <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+          <p className="mt-3 text-fg-dim text-meta md:text-copy max-w-md">
             Asynkron 3-6 medlemmers grupper. Beast+ medlemmer kan være
             med. Legend leder cirklen. Du opretter + parrer.
           </p>
@@ -43,16 +43,16 @@ export default async function CoachCirklerPage() {
         </div>
 
         <div className="md:col-span-2 space-y-4">
-          <h2 className="font-display text-xl">Aktive cirkler</h2>
+          <h2 className="font-display text-section">Aktive cirkler</h2>
           {cirkler.length === 0 ? (
-            <p className="text-fg-dim text-sm leading-relaxed">
+            <p className="text-fg-dim text-meta leading-relaxed">
               Ingen cirkler endnu. Opret den første til venstre — Beast-tier
               medlemmer kan derefter joines via SQL eller fast-follow UI.
             </p>
           ) : (
             <div className="rounded-2xl border hairline bg-bg-2/30 overflow-hidden">
-              <table className="w-full text-sm">
-                <thead className="bg-bg-2/60 text-fg-dim text-xs">
+              <table className="w-full text-meta">
+                <thead className="bg-bg-2/60 text-fg-dim text-micro">
                   <tr>
                     <th className="text-left px-4 py-3">Navn</th>
                     <th className="text-left px-4 py-3">Leder</th>
@@ -70,7 +70,7 @@ export default async function CoachCirklerPage() {
                       <td className="px-4 py-3 text-right tabular-nums">
                         {c.member_count} / {c.max_members}
                       </td>
-                      <td className="px-4 py-3 text-fg-dim text-xs tabular-nums">
+                      <td className="px-4 py-3 text-fg-dim text-micro tabular-nums">
                         {c.created_at.slice(0, 10)}
                       </td>
                     </tr>
@@ -80,7 +80,7 @@ export default async function CoachCirklerPage() {
             </div>
           )}
 
-          <p className="text-fg-dim text-xs leading-relaxed">
+          <p className="text-fg-dim text-micro leading-relaxed">
             Cirkel-poster + reactions surfacer i medlemmernes
             <code className="px-1 mx-1 rounded bg-bg-2 text-fg">/mind/cirkler</code>.
             Du har ikke direct moderation-værktøjer i v0 — eskaler via

@@ -22,12 +22,12 @@ export default function Stat({
   return (
     <div className="flex flex-col gap-1">
       <p className="eyebrow">{label}</p>
-      <p className="numeric text-2xl">
+      <p className="numeric text-section">
         {value}
-        {unit ? <span className="text-fg-dim text-base ml-1">{unit}</span> : null}
+        {unit ? <span className="text-fg-dim text-copy ml-1">{unit}</span> : null}
       </p>
       {delta === undefined ? null : (
-        <p className="text-xs text-fg-dim">
+        <p className="text-micro text-fg-dim">
           {arrow} {magnitude}
           {deltaLabel ? <span className="sr-only"> {deltaLabel}</span> : null}
         </p>

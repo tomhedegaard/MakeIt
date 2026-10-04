@@ -68,7 +68,7 @@ export default function KeepOriginal({ modifierId, sessionId, accepted }: Props)
 
   if (accepted === false || state === "kept" || optimisticKept) {
     return (
-      <p role="status" className="text-sm text-fg-dim">
+      <p role="status" className="text-meta text-fg-dim">
         {t("keptOriginal")}
       </p>
     );
@@ -85,7 +85,7 @@ export default function KeepOriginal({ modifierId, sessionId, accepted }: Props)
         {t("keepOriginal")}
       </button>
       {state === "error" ? (
-        <p role="alert" className="text-sm text-fg-dim">
+        <p role="alert" className="text-meta text-fg-dim">
           {t("keepOriginalError")}
         </p>
       ) : null}

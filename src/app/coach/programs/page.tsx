@@ -17,10 +17,10 @@ export default async function CoachProgramsPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2">
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-title md:text-[2.75rem]">
+        <h1 className="font-display text-title">
           {t("title")}
         </h1>
-        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+        <p className="mt-3 text-fg-dim text-meta md:text-copy max-w-md">
           {t("intro")}
         </p>
       </header>
@@ -28,7 +28,7 @@ export default async function CoachProgramsPage() {
       <NewProgramForm />
 
       {programs.length === 0 ? (
-        <p className="text-fg-dim text-sm">
+        <p className="text-fg-dim text-meta">
           {t("empty")}
         </p>
       ) : (
@@ -51,7 +51,7 @@ export default async function CoachProgramsPage() {
                     {p.isPublished ? t("published") : t("draft")}
                   </span>
                 </div>
-                <div className="font-display text-xl leading-tight">
+                <div className="font-display text-section leading-tight">
                   {p.name}
                 </div>
                 <div className="eyebrow text-fg-faint mt-1">

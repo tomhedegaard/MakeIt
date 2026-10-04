@@ -81,7 +81,7 @@ export default function SessionRunner({
       <div className="rounded-2xl border hairline bg-bg-2/40 p-6 md:p-8 space-y-4">
         <SectionHeader eyebrow={t("eyebrow")} title={title} />
         {subtitle ? <p className="text-fg-dim">{subtitle}</p> : null}
-        <p className="text-fg-dim text-sm">
+        <p className="text-fg-dim text-meta">
           {t("meta", {
             minutes: Math.round(durationSeconds / 60),
             pattern: visualPattern.replace(/_/g, " "),
@@ -89,14 +89,14 @@ export default function SessionRunner({
         </p>
         <div className="pt-2">
           {completed ? (
-            <span className="inline-flex items-center gap-2 text-sm text-fg-dim">
+            <span className="inline-flex items-center gap-2 text-meta text-fg-dim">
               {t("done")}
             </span>
           ) : (
             <button
               type="button"
               onClick={() => setRunning(true)}
-              className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-copy font-medium hover:opacity-90 transition-opacity"
             >
               {t("start")}
             </button>
@@ -117,7 +117,7 @@ export default function SessionRunner({
         <button
           type="button"
           onClick={() => setRunning(false)}
-          className="text-fg-dim hover:text-fg text-sm"
+          className="text-fg-dim hover:text-fg text-meta"
         >
           {t("close")}
         </button>
@@ -138,7 +138,7 @@ export default function SessionRunner({
               {sec.heading ? (
                 <h3 className="eyebrow mb-2">{sec.heading}</h3>
               ) : null}
-              <p className="text-base md:text-lg leading-relaxed whitespace-pre-wrap">
+              <p className="text-copy leading-relaxed whitespace-pre-wrap">
                 {sec.body}
               </p>
             </section>
@@ -151,7 +151,7 @@ export default function SessionRunner({
           type="button"
           onClick={complete}
           disabled={pending}
-          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-copy font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
         >
           {pending ? t("saving") : t("finish")}
         </button>

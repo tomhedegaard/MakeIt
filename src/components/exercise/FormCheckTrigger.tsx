@@ -44,7 +44,7 @@ export default function FormCheckTrigger({
         <span className="flex items-center gap-3 text-left">
           <Video {...ICON} className="size-5 text-fg-dim shrink-0" />
           <span>
-            <span className="block font-display text-base leading-tight">
+            <span className="block font-display text-copy leading-tight">
               {exhausted ? t("limitReached") : t("test")}
             </span>
             <span className="block text-micro text-fg-faint mt-0.5">

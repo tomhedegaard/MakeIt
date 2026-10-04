@@ -38,14 +38,14 @@ export default async function CoachSchoolSandboxPage() {
     <Container className="py-6 lg:py-12 space-y-6">
       <div className="pt-2">
         <PageTitle size="compact" kicker={t("eyebrow")} title={t("title")} />
-        <p className="mt-2 text-fg-dim text-sm">
+        <p className="mt-2 text-fg-dim text-copy">
           {t("subtitle", { count: cases.length })}
         </p>
       </div>
 
       {cases.length === 0 ? (
         <div className="surface-2 rounded-lg p-6">
-          <p className="text-fg-dim text-sm">{t("empty")}</p>
+          <p className="text-fg-dim text-meta">{t("empty")}</p>
         </div>
       ) : (
         <ul className="space-y-4">
@@ -58,7 +58,7 @@ export default async function CoachSchoolSandboxPage() {
       )}
 
       <footer className="pt-4 border-t hairline">
-        <p className="text-xs text-fg-faint">
+        <p className="text-micro text-fg-faint">
           {t("footnote")}
         </p>
       </footer>

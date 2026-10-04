@@ -26,13 +26,13 @@ export default function CirkelFeed({ posts }: { posts: Post[] }) {
       {posts.map((p) => (
         <article key={p.id} className="space-y-2">
           <div className="flex items-baseline gap-3">
-            <span className="font-display text-lg">{p.author_handle}</span>
-            <time className="text-fg-dim text-xs" dateTime={p.posted_at}>
+            <span className="font-display text-card">{p.author_handle}</span>
+            <time className="text-fg-dim text-micro" dateTime={p.posted_at}>
               {formatRelative(p.posted_at, t)}
             </time>
           </div>
           {p.mind_share ? (
-            <div className="flex flex-wrap gap-2 text-xs text-fg-dim">
+            <div className="flex flex-wrap gap-2 text-micro text-fg-dim">
               {p.mind_share.energy !== undefined ? (
                 <span className="border hairline px-2.5 py-1">
                   {t("energy", { value: p.mind_share.energy })}
@@ -51,7 +51,7 @@ export default function CirkelFeed({ posts }: { posts: Post[] }) {
             </div>
           ) : null}
           <p className="text-fg-dim leading-relaxed whitespace-pre-wrap">{p.body}</p>
-          <div className="flex items-center gap-3 text-xs text-fg-dim pt-1">
+          <div className="flex items-center gap-3 text-micro text-fg-dim pt-1">
             <span className="inline-flex items-center gap-1"><Flame {...ICON} className="size-4" />{p.reactions.fire}</span>
             <span className="inline-flex items-center gap-1"><BicepsFlexed {...ICON} className="size-4" />{p.reactions.flex}</span>
             <span className="inline-flex items-center gap-1"><Heart {...ICON} className="size-4" />{p.reactions.heart}</span>

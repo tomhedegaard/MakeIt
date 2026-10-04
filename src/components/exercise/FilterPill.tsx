@@ -17,7 +17,7 @@ export default function FilterPill({
     <Link
       href={href}
       aria-current={active ? "true" : undefined}
-      className={`inline-flex min-h-11 items-center px-4 text-xs border hairline transition-colors ${
+      className={`inline-flex min-h-11 items-center px-4 text-micro border hairline transition-colors ${
         active ? "bg-fg text-bg border-transparent" : "text-fg-dim hover:text-fg hover:border-fg/30"
       }`}
     >

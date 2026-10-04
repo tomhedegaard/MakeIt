@@ -76,7 +76,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
     <div className="surface-2 rounded-2xl p-5">
       <div className="flex items-center justify-between gap-4 mb-3">
         <div className="min-w-0">
-          <div className="text-sm">
+          <div className="text-copy">
             <Link
               href={`/coach/members/${alert.memberId}`}
               className="hover:underline"
@@ -156,7 +156,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
           <SheetContent>
             <div className="mb-4">
               <div className="eyebrow mb-1">@{alert.memberHandle}</div>
-              <h2 className="font-display text-2xl">Send personlig besked</h2>
+              <h2 className="font-display text-section">Send personlig besked</h2>
             </div>
 
             <div className="mt-2">
@@ -196,7 +196,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
               </button>
             </div>
 
-            <p className="mt-4 text-xs text-fg-faint text-center">
+            <p className="mt-4 text-micro text-fg-faint text-center">
               Markerer alerten som reviewet og sender beskeden til medlemmet.
             </p>
           </SheetContent>

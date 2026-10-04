@@ -61,7 +61,7 @@ export default async function BillingPage({
             </section>
           ) : null}
 
-          <p className="text-xs text-fg-faint">
+          <p className="text-micro text-fg-faint">
             {t("native.note")}
           </p>
         </Container>
@@ -129,7 +129,7 @@ export default async function BillingPage({
                 </button>
               </form>
             )}
-            <p className="text-xs text-fg-faint self-center">
+            <p className="text-micro text-fg-faint self-center">
               {t("crew.secureCheckout")}
             </p>
           </div>
@@ -166,7 +166,7 @@ export default async function BillingPage({
                 </button>
               </form>
             )}
-            <p className="text-xs text-fg-faint self-center">
+            <p className="text-micro text-fg-faint self-center">
               {t("oneOnOne.requiresCrew")}
             </p>
           </div>
@@ -175,7 +175,7 @@ export default async function BillingPage({
         {/* Help */}
         <section className="surface-2 rounded-2xl p-5">
           <div className="eyebrow mb-2">{t("help.eyebrow")}</div>
-          <p className="text-sm text-fg-dim mb-3">
+          <p className="text-meta text-fg-dim mb-3">
             {t.rich("help.body", {
               link: (chunks) => (
                 <a className="underline hover:text-fg" href={BILLING_MAILTO}>
@@ -224,7 +224,7 @@ function Cell({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-bg-2 px-5 py-4">
       <div className="eyebrow mb-1">{label}</div>
-      <div className="text-sm">{value}</div>
+      <div className="text-copy">{value}</div>
     </div>
   );
 }
@@ -240,7 +240,7 @@ function Banner({
     kind === "ok" ? "border-line-bright" : kind === "warn" ? "border-line-strong" : "border-line";
   return (
     <div
-      className={`surface-2 rounded-lg px-4 py-3 text-sm border ${tone}`}
+      className={`surface-2 rounded-lg px-4 py-3 text-copy border ${tone}`}
     >
       {children}
     </div>

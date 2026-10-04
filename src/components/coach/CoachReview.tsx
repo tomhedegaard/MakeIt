@@ -102,7 +102,7 @@ export function FormCheckReview({
       {/* No 0–100 score (Nord spec §5): the observations carry the read. */}
       <div className="mb-4">
         <div className="eyebrow mb-1">@{formCheck.memberHandle} · {formCheck.exerciseName ?? t("formCheckFallback")}</div>
-        <h2 className="font-display text-2xl">{formCheck.aiHeadline ?? t("aiHeadlineFallback")}</h2>
+        <h2 className="font-display text-section">{formCheck.aiHeadline ?? t("aiHeadlineFallback")}</h2>
       </div>
 
       {formCheck.videoUrl ? (
@@ -130,7 +130,7 @@ export function FormCheckReview({
         {formCheck.aiFix ? (
           <div className="surface-2 rounded-lg p-4">
             <div className="eyebrow mb-2">{t("aiTip")}</div>
-            <p className="text-sm text-fg-body leading-relaxed">{formCheck.aiFix}</p>
+            <p className="text-copy text-fg-body leading-relaxed">{formCheck.aiFix}</p>
           </div>
         ) : null}
       </div>
@@ -158,9 +158,9 @@ export function FormCheckReview({
           <div className="eyebrow mb-2">
             {t("voiceLabel", { handle: formCheck.memberHandle })}
           </div>
-          <p className="text-xs text-fg-faint mb-2">{t("voiceHint")}</p>
+          <p className="text-micro text-fg-faint mb-2">{t("voiceHint")}</p>
           {voiceSec != null ? (
-            <p className="text-sm text-fg-dim" data-munk-voice="">
+            <p className="text-meta text-fg-dim" data-munk-voice="">
               {t("voiceReady", { sec: voiceSec })}
             </p>
           ) : recording ? (
@@ -209,7 +209,7 @@ export function FormCheckReview({
         </button>
       </div>
 
-      <p className="mt-4 text-xs text-fg-faint text-center">
+      <p className="mt-4 text-micro text-fg-faint text-center">
         {t("footnote")}
       </p>
     </div>
@@ -220,7 +220,7 @@ function Card({ title, items }: { title: string; items: string[] }) {
   return (
     <div className="surface-2 rounded-lg p-4">
       <div className="eyebrow mb-2">{title}</div>
-      <ul className="space-y-1.5 text-sm text-fg-body">
+      <ul className="space-y-1.5 text-copy text-fg-body">
         {items.map((it) => (
           <li key={it} className="flex gap-2">
             <span className="text-fg-faint shrink-0">·</span>

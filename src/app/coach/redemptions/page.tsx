@@ -11,18 +11,18 @@ export default async function CoachRedemptionsPage() {
     <Container className="py-6 lg:py-12 space-y-6">
       <header className="pt-2">
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-title md:text-[2.75rem]">
+        <h1 className="font-display text-title">
           {t("title")}
         </h1>
-        <p className="mt-2 text-fg-dim text-sm">
+        <p className="mt-2 text-fg-dim text-meta">
           {t("waiting", { count: items.length })}
         </p>
       </header>
 
       {items.length === 0 ? (
         <div className="surface-2 rounded-2xl p-8">
-          <div className="font-display text-2xl mb-2">{t("emptyTitle")}</div>
-          <p className="text-fg-dim text-sm">
+          <div className="font-display text-section mb-2">{t("emptyTitle")}</div>
+          <p className="text-fg-dim text-meta">
             {t("emptyBody")}
           </p>
         </div>

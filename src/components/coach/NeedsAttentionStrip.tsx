@@ -34,7 +34,7 @@ export default function NeedsAttentionStrip({
     >
       <div className="px-5 py-4 border-b hairline">
         <div className="eyebrow mb-1">{copy.eyebrow}</div>
-        <h2 className="font-display text-2xl">{copy.title}</h2>
+        <h2 className="font-display text-section">{copy.title}</h2>
       </div>
 
       <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x hairline">
@@ -48,13 +48,13 @@ export default function NeedsAttentionStrip({
             >
               <div className="flex items-baseline justify-between gap-3">
                 <div className="eyebrow">{copy.buckets[bucket].label}</div>
-                <span className="numeric text-xs text-fg-faint">{rows.length}</span>
+                <span className="numeric text-micro text-fg-faint">{rows.length}</span>
               </div>
 
               {rows.length === 0 ? (
                 <p
                   data-needs-empty={bucket}
-                  className="text-sm text-fg-faint"
+                  className="text-meta text-fg-faint"
                 >
                   {copy.buckets[bucket].empty}
                 </p>
@@ -67,7 +67,7 @@ export default function NeedsAttentionStrip({
                         data-needs-row={row.id}
                         className="block lift touch-app -mx-1 px-1 py-1"
                       >
-                        <div className="text-sm">@{row.memberHandle}</div>
+                        <div className="text-copy">@{row.memberHandle}</div>
                         <div className="text-micro text-fg-faint truncate">
                           {row.lift ? `${row.lift} · ${row.detail}` : row.detail}
                         </div>

@@ -63,13 +63,13 @@ export default async function LoginPage({
             <span className="pulse-dot" /> {t("beta")}
           </div>
 
-          <h1 className="font-display text-title md:text-[2.75rem] mb-4">
+          <h1 className="font-display text-title mb-4">
             {t("headline.line1")}
             <br /> {t("headline.line2")}
           </h1>
 
           {isMemberNext(next) ? (
-            <p className="mb-8 text-sm text-fg-dim leading-relaxed">{t("memberOnlyHint")}</p>
+            <p className="mb-8 text-meta text-fg-dim leading-relaxed">{t("memberOnlyHint")}</p>
           ) : null}
 
           {sent ? (
@@ -81,7 +81,7 @@ export default async function LoginPage({
           )}
 
           {!sent ? (
-            <p className="mt-6 text-sm text-fg-dim">
+            <p className="mt-6 text-meta text-fg-dim">
               {t("waitlistHint")}{" "}
               <Link href="/#waitlist" className="underline hover:text-fg">
                 {t("waitlistLink")}
@@ -89,7 +89,7 @@ export default async function LoginPage({
             </p>
           ) : null}
 
-          <p className="mt-10 text-xs text-fg-faint">
+          <p className="mt-10 text-micro text-fg-faint">
             {SUPABASE_ENABLED ? t("statusConnected") : t("statusDemo")}
           </p>
         </div>
@@ -135,7 +135,7 @@ async function MockForm({ err }: { err?: string }) {
         </button>
       </form>
 
-      <p className="mt-6 text-xs text-fg-faint">
+      <p className="mt-6 text-micro text-fg-faint">
         {t("testCodesLabel")}<span className="text-fg-dim">MUNK-01 · MAKEIT-CREW · STRAPIT-50K</span>
       </p>
     </>
@@ -189,7 +189,7 @@ async function TabBar({ active }: { active: Tab }) {
     { key: "oauth", label: t("oauth") },
   ];
   return (
-    <div className="flex gap-1 mb-6 surface-2 rounded-lg p-1 text-xs">
+    <div className="flex gap-1 mb-6 surface-2 rounded-lg p-1 text-micro">
       {tabs.map((t) => (
         <Link
           key={t.key}
@@ -312,7 +312,7 @@ async function PasswordForm({ mode }: { mode: "signin" | "signup" }) {
         </button>
       </form>
 
-      <p className="mt-4 text-xs text-fg-faint">
+      <p className="mt-4 text-micro text-fg-faint">
         {isSignup ? (
           <>
             {t("hasAccount")}{" "}
@@ -397,7 +397,7 @@ function LoginErrorAlert({
   return (
     <p
       role="alert"
-      className={`flex items-center gap-2 rounded-lg border border-danger/40 bg-danger/15 px-3 py-2 text-sm text-danger ${className}`}
+      className={`flex items-center gap-2 rounded-lg border border-danger/40 bg-danger/15 px-3 py-2 text-copy text-danger ${className}`}
     >
       <DangerGlyph />
       <span>{children}</span>
@@ -457,7 +457,7 @@ async function SentState({ email }: { email?: string }) {
         <span className="text-fg">{email ?? t("fallbackEmail")}</span>
         {t("bodyTail")}
       </p>
-      <p className="text-xs text-fg-faint">
+      <p className="text-micro text-fg-faint">
         {t("expiry")}
       </p>
     </div>

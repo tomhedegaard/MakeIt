@@ -35,12 +35,12 @@ export default async function Backlog() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-1">{t("eyebrow")}</div>
-          <h2 className="font-display text-2xl md:text-3xl">{t("title")}</h2>
-          <p className="mt-1 text-sm text-fg-dim max-w-md">
+          <h2 className="font-display text-section">{t("title")}</h2>
+          <p className="mt-1 text-meta text-fg-dim max-w-md">
             {t("sub")}
           </p>
         </div>
-        <div className="flex gap-3 text-xs text-fg-dim">
+        <div className="flex gap-3 text-micro text-fg-dim">
           <span>{t("open", { count: totals.open })}</span>
           <span>·</span>
           <span>{t("active", { count: totals.in_progress })}</span>
@@ -70,7 +70,7 @@ export default async function Backlog() {
           )
         )}
         {items.length === 0 ? (
-          <div className="surface-2 rounded-2xl px-5 py-8 text-sm text-fg-dim">
+          <div className="surface-2 rounded-2xl px-5 py-8 text-meta text-fg-dim">
             {t("empty")}
           </div>
         ) : null}
@@ -117,7 +117,7 @@ function QuickAdd({ t }: { t: Translator }) {
           <option value="critical">{t("priorityCritical")}</option>
         </select>
       </label>
-      <button type="submit" className="btn btn-primary h-10">
+      <button type="submit" className="btn btn-primary">
         {t("add")}
       </button>
       <label className="block md:col-span-4">
@@ -150,14 +150,14 @@ function BacklogRow({ item, t }: { item: BacklogItem; t: Translator }) {
             ) : null}
           </div>
           <div
-            className={`font-display text-base leading-snug ${
+            className={`font-display text-copy leading-snug ${
               isTerminal ? "text-fg-dim line-through decoration-fg-faint" : ""
             }`}
           >
             {item.title}
           </div>
           {item.description ? (
-            <p className="mt-1 text-sm text-fg-dim whitespace-pre-wrap break-words">
+            <p className="mt-1 text-meta text-fg-dim whitespace-pre-wrap break-words">
               {item.description}
             </p>
           ) : null}

@@ -85,7 +85,7 @@ function FilterChip({
       type="button"
       onClick={onClick}
       data-active={active}
-      className="border px-3.5 py-1.5 text-[13px] transition-colors hairline text-fg-dim hover:text-fg data-[active=true]:text-fg data-[active=true]:border-line-bright"
+      className="border px-3.5 py-1.5 text-meta transition-colors hairline text-fg-dim hover:text-fg data-[active=true]:text-fg data-[active=true]:border-line-bright"
       style={color && active ? { color, borderColor: color } : undefined}
     >
       {children}
@@ -100,7 +100,7 @@ function Card({ item }: { item: ScienceFeedItem }) {
     <li className="flex overflow-hidden rounded-2xl surface">
       <span className="w-[5px] shrink-0" style={{ background: color }} aria-hidden />
       <div className="px-5 py-4 min-w-0">
-        <div className="mb-2 flex flex-wrap items-center gap-2.5 text-xs">
+        <div className="mb-2 flex flex-wrap items-center gap-2.5 text-micro">
           <span
             className="border px-2.5 py-0.5 font-semibold"
             style={{ color, borderColor: color }}
@@ -114,18 +114,18 @@ function Card({ item }: { item: ScienceFeedItem }) {
             </span>
           )}
         </div>
-        <h2 className="mb-2 text-[17px] leading-snug">{item.title}</h2>
+        <h2 className="mb-2 text-card leading-snug">{item.title}</h2>
         <p className="mb-2 leading-relaxed">{item.tldrDa}</p>
         {item.effectDa && (
-          <p className="mb-2 text-[13px] text-fg-dim">
-            {t("effectLabel")}: <code className="numeric rounded surface-2 px-1.5 py-0.5 text-xs">{item.effectDa}</code>
+          <p className="mb-2 text-meta text-fg-dim">
+            {t("effectLabel")}: <code className="numeric rounded surface-2 px-1.5 py-0.5 text-micro">{item.effectDa}</code>
           </p>
         )}
-        {item.caveatDa && <p className="mb-2 text-[13px] text-fg-dim">{t("caveatLabel")}: {item.caveatDa}</p>}
+        {item.caveatDa && <p className="mb-2 text-meta text-fg-dim">{t("caveatLabel")}: {item.caveatDa}</p>}
         {item.sourceConclusion && (
-          <p className="mb-3 border-l-2 hairline-strong pl-3 text-[13px] text-fg-dim">{item.sourceConclusion}</p>
+          <p className="mb-3 border-l-2 hairline-strong pl-3 text-meta text-fg-dim">{item.sourceConclusion}</p>
         )}
-        <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-fg-dim">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-micro text-fg-dim">
           <span>
             {item.journal}
             {item.publishedDate ? ` · ${item.publishedDate}` : ""}

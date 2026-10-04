@@ -41,10 +41,10 @@ export default async function InboxCasePanel({
       <div className="flex items-center gap-4">
         <Avatar handle={item.memberHandle} className="size-11" />
         <div className="min-w-0 flex-1">
-          <h2 className="font-display text-2xl truncate">@{item.memberHandle}</h2>
+          <h2 className="font-display text-section truncate">@{item.memberHandle}</h2>
           <div className="mt-1 flex items-center gap-3">
             <InboxReasonChip item={item} />
-            <time dateTime={item.occurredAt} className="numeric text-xs text-fg-dim">
+            <time dateTime={item.occurredAt} className="numeric text-micro text-fg-dim">
               {formatInboxWhen(item.occurredAt, locale)}
             </time>
           </div>
@@ -107,7 +107,7 @@ async function CaseBody({
         {alert ? (
           <p className="text-fg leading-relaxed whitespace-pre-wrap">{alert.summary}</p>
         ) : null}
-        <p className="text-sm text-fg-dim">{t("panelSafety")}</p>
+        <p className="text-meta text-fg-dim">{t("panelSafety")}</p>
       </div>
     );
   }
@@ -120,13 +120,13 @@ async function CaseBody({
             ? t("panelStaleDays", { days })
             : t("panelStaleNever")}
         </p>
-        <p className="text-sm text-fg-dim">{t("panelStale")}</p>
+        <p className="text-meta text-fg-dim">{t("panelStale")}</p>
       </div>
     );
   }
 
   // The case closed between the list and the panel render.
-  return <p className="max-w-prose text-sm text-fg-body">{t("panelMissing")}</p>;
+  return <p className="max-w-prose text-copy text-fg-body">{t("panelMissing")}</p>;
 }
 
 /**
@@ -142,17 +142,17 @@ async function HrvReadingVsBand({ memberId }: { memberId: string }) {
   const view = buildHrvBandView(readings);
 
   if (view.latestMs == null) {
-    return <p className="text-sm text-fg-dim">{t("panelHrvNone")}</p>;
+    return <p className="text-meta text-fg-dim">{t("panelHrvNone")}</p>;
   }
   return (
     <dl className="grid grid-cols-2 gap-6 max-w-sm">
       <div>
         <dt className="text-micro text-fg-dim">{t("panelHrvLatest")}</dt>
-        <dd className="numeric text-2xl mt-1">{view.latestMs} ms</dd>
+        <dd className="numeric text-section mt-1">{view.latestMs} ms</dd>
       </div>
       <div>
         <dt className="text-micro text-fg-dim">{t("panelHrvBand")}</dt>
-        <dd className="numeric text-2xl mt-1">
+        <dd className="numeric text-section mt-1">
           {view.bandLowMs != null && view.bandHighMs != null
             ? `${view.bandLowMs}–${view.bandHighMs} ms`
             : t("panelHrvBuilding", { count: view.nightsCollected })}

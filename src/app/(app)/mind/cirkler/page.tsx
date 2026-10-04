@@ -77,7 +77,7 @@ export default async function MindCirklerPage() {
         <CirkelFeed posts={feed} />
 
         {cirkler.length > 1 ? (
-          <p className="text-fg-dim text-sm">
+          <p className="text-fg-dim text-meta">
             {t("multi", { count: cirkler.length })}
           </p>
         ) : null}

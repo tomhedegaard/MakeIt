@@ -55,7 +55,7 @@ export default function NewProgramForm() {
 
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">{t("codeLabel")}</span>
+          <span className="text-micro text-fg-dim">{t("codeLabel")}</span>
           <input
             value={code}
             onChange={(e) => setCode(e.target.value)}
@@ -65,7 +65,7 @@ export default function NewProgramForm() {
           />
         </label>
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">{t("nameLabel")}</span>
+          <span className="text-micro text-fg-dim">{t("nameLabel")}</span>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -75,7 +75,7 @@ export default function NewProgramForm() {
           />
         </label>
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">{t("typeLabel")}</span>
+          <span className="text-micro text-fg-dim">{t("typeLabel")}</span>
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
@@ -89,7 +89,7 @@ export default function NewProgramForm() {
           </select>
         </label>
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">{t("levelLabel")}</span>
+          <span className="text-micro text-fg-dim">{t("levelLabel")}</span>
           <select
             value={level}
             onChange={(e) => setLevel(e.target.value)}
@@ -103,7 +103,7 @@ export default function NewProgramForm() {
           </select>
         </label>
         <label className="space-y-1.5">
-          <span className="text-xs text-fg-dim">{t("weeksLabel")}</span>
+          <span className="text-micro text-fg-dim">{t("weeksLabel")}</span>
           <input
             type="number"
             min={1}
@@ -116,7 +116,7 @@ export default function NewProgramForm() {
       </div>
 
       {error ? (
-        <p className="text-sm" style={{ color: "var(--danger)" }}>
+        <p className="text-copy" style={{ color: "var(--danger)" }}>
           {error}
         </p>
       ) : null}

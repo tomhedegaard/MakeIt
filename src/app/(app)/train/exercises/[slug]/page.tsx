@@ -119,7 +119,7 @@ export default async function ExerciseDetailPage({
               </div>
               <PageTitle size="compact" title={`${ex.name}.`} />
               {ex.whyMatters ? (
-                <p className="mt-4 max-w-2xl text-fg-dim text-base md:text-lg">
+                <p className="mt-4 max-w-2xl text-fg-dim text-copy">
                   {ex.whyMatters}
                 </p>
               ) : null}
@@ -166,10 +166,10 @@ export default async function ExerciseDetailPage({
                   key={i}
                   className="surface-2 rounded-xl p-5 border-l-2 border-l-body"
                 >
-                  <div className="font-display text-lg leading-tight mb-2">
+                  <div className="font-display text-card leading-tight mb-2">
                     {m.title}
                   </div>
-                  <p className="text-sm text-fg-dim leading-relaxed">{m.body}</p>
+                  <p className="text-meta text-fg-dim leading-relaxed">{m.body}</p>
                 </article>
               ))}
             </div>
@@ -197,7 +197,7 @@ function InfoBlock({ eyebrow, body }: { eyebrow: string; body: string }) {
   return (
     <div className="space-y-2">
       <h2 className="eyebrow">{eyebrow}</h2>
-      <p className="text-base text-fg-dim leading-relaxed">{body}</p>
+      <p className="text-copy text-fg-dim leading-relaxed">{body}</p>
     </div>
   );
 }

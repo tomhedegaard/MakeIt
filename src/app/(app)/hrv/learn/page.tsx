@@ -31,10 +31,10 @@ export default async function HrvLearnPage() {
         <article className="max-w-prose space-y-12">
           {SECTION_KEYS.map((key) => (
             <section key={key}>
-              <h2 className="font-display text-2xl md:text-3xl leading-tight mb-3">
+              <h2 className="font-display text-section md:text-title leading-tight mb-3">
                 {t(`sections.${key}.heading`)}
               </h2>
-              <p className="text-fg-dim text-sm md:text-base leading-relaxed">
+              <p className="text-fg-dim text-copy leading-relaxed">
                 {t(`sections.${key}.body`)}
               </p>
             </section>

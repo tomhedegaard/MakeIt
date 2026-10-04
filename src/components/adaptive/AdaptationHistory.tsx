@@ -40,7 +40,7 @@ export default function AdaptationHistory({
         <h2 id="adaptation-history-heading" className="eyebrow">
           Tidligere tilpasninger
         </h2>
-        <p className="text-sm text-fg-dim leading-relaxed">
+        <p className="text-copy text-fg-dim leading-relaxed">
           HQ starter når dit HRV-baseline er klart og du har slået
           adaptiv tilpasning til. Når den begynder at justere dine
           sessioner, ser du dem her, så du kan se hvad der virkede.
@@ -114,7 +114,7 @@ function AdaptationHistoryRow({ item }: { item: AdaptationHistoryItem }) {
           <span className="text-micro text-fg-faint w-14 shrink-0 numeric">
             {dateLabel}
           </span>
-          <span className="text-sm text-fg">{actionLabel}</span>
+          <span className="text-copy text-fg">{actionLabel}</span>
         </div>
         <span
           className={`text-micro shrink-0 ${

@@ -77,7 +77,7 @@ export default async function BuddyPage() {
       <Container className="py-6 lg:py-12 space-y-6">
         <div className="pt-2">
           <PageTitle kicker={t("eyebrow")} title={t("titleEmpty")} />
-          <p className="mt-2 text-fg-dim text-sm">{t("emptyBody")}</p>
+          <p className="mt-2 text-fg-dim text-copy">{t("emptyBody")}</p>
         </div>
       </Container>
     );
@@ -90,7 +90,7 @@ export default async function BuddyPage() {
           kicker={t("eyebrow")}
           title={t("titleWithHandle", { handle: buddy.buddyHandle })}
         />
-        <p className="mt-2 text-fg-dim text-sm">
+        <p className="mt-2 text-fg-dim text-copy">
           {t("subtitle", { tier: buddy.buddyTier })}
         </p>
       </div>
@@ -103,7 +103,7 @@ export default async function BuddyPage() {
             </div>
             <div className="flex items-baseline gap-2">
               <ReadinessBar bucket={buddy.buddyReadinessBucket} />
-              <span className="text-sm text-fg-dim">
+              <span className="text-meta text-fg-dim">
                 {buddy.buddyReadinessBucket
                   ? t(`buckets.${buddy.buddyReadinessBucket}`)
                   : t("buckets.unknown")}
@@ -128,7 +128,7 @@ export default async function BuddyPage() {
         <div className="eyebrow">{t("recentHeader")}</div>
         {buddy.recentInteractions.length === 0 ? (
           <div className="surface-2 rounded-lg p-6">
-            <p className="text-fg-dim text-sm">{t("noInteractions")}</p>
+            <p className="text-fg-dim text-meta">{t("noInteractions")}</p>
           </div>
         ) : (
           <ul className="space-y-2">
@@ -144,7 +144,7 @@ export default async function BuddyPage() {
                     return Icon ? <Icon {...ICON} className="size-5 shrink-0 text-fg-dim" /> : null;
                   })()}
                   <div className="min-w-0 flex-1">
-                    <div className="text-xs text-fg-faint mb-0.5">
+                    <div className="text-micro text-fg-faint mb-0.5">
                       {fromYou
                         ? t("interactionFromYou")
                         : t("interactionFromBuddy", { handle: buddy.buddyHandle })}
@@ -152,7 +152,7 @@ export default async function BuddyPage() {
                       {relativeTimeDa(i.createdAt)}
                     </div>
                     {i.body ? (
-                      <p className="text-sm text-fg/90 leading-snug">{i.body}</p>
+                      <p className="text-copy text-fg/90 leading-snug">{i.body}</p>
                     ) : null}
                   </div>
                 </li>

@@ -168,7 +168,7 @@ export default function AudioRecorder({
       {state === "recording" ? (
         <>
           <span className="size-2.5 rounded-full bg-danger animate-pulse" aria-hidden />
-          <span className="text-sm tabular-nums">
+          <span className="text-copy tabular-nums">
             {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}
           </span>
           <span className="text-micro text-fg-faint ml-auto">{t("max")}</span>

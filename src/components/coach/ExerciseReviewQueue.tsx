@@ -92,12 +92,12 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
     return () => window.removeEventListener("keydown", onKey);
   }, [approve, skip]);
 
-  if (count === 0) return <p className="text-fg-dim text-sm">{t("empty")}</p>;
+  if (count === 0) return <p className="text-fg-dim text-meta">{t("empty")}</p>;
 
   if (!current) {
     return (
       <section className="surface-2 rounded-xl border hairline p-6 md:p-8 space-y-4">
-        <h2 className="font-display text-3xl">{t("doneTitle")}</h2>
+        <h2 className="font-display text-title">{t("doneTitle")}</h2>
         <p className="text-fg-dim">{t("doneBody", { approved, skipped })}</p>
         <div className="flex flex-wrap gap-3">
           <Link href="/coach/exercises" className="btn btn-primary">
@@ -117,10 +117,10 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <p className="text-[12px] text-fg-dim">
+        <p className="text-micro text-fg-dim">
           {t("position", { current: state.index + 1, total: count })}
         </p>
-        <p className="text-[12px] text-fg-dim" aria-live="polite">
+        <p className="text-micro text-fg-dim" aria-live="polite">
           {t("tally", { approved, skipped })}
         </p>
       </div>
@@ -145,19 +145,19 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
               <source src={demo.mp4} type="video/mp4" />
             </video>
           ) : (
-            <div className="grid aspect-[1300/720] place-items-center text-fg-dim text-sm">{t("noVideo")}</div>
+            <div className="grid aspect-[1300/720] place-items-center text-fg-dim text-meta">{t("noVideo")}</div>
           )}
         </div>
 
         <div className="space-y-5">
           <div>
             <p className="text-micro text-fg-faint">{current.slug}</p>
-            <h2 id="review-name" className="font-display text-title md:text-[2.75rem]">
+            <h2 id="review-name" className="font-display text-title">
               {current.name}
             </h2>
-            {meta ? <p className="mt-1.5 text-sm text-fg-dim">{meta}</p> : null}
+            {meta ? <p className="mt-1.5 text-meta text-fg-dim">{meta}</p> : null}
             {decision ? (
-              <p className={cn("mt-2 text-sm", decision === "approved" ? "text-fg" : "text-fg-dim")}>
+              <p className={cn("mt-2 text-meta", decision === "approved" ? "text-fg" : "text-fg-dim")}>
                 {t(decision)}
               </p>
             ) : null}
@@ -168,7 +168,7 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
 
           {current.cues.length ? (
             <Block label={t("cues")}>
-              <ul className="list-disc space-y-1 pl-5 text-sm">
+              <ul className="list-disc space-y-1 pl-5 text-copy">
                 {current.cues.map((cue) => (
                   <li key={cue}>{cue}</li>
                 ))}
@@ -177,7 +177,7 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
           ) : null}
           {current.mistakes.length ? (
             <Block label={t("mistakes")}>
-              <ul className="space-y-2 text-sm">
+              <ul className="space-y-2 text-copy">
                 {current.mistakes.map((m) => (
                   <li key={m.title}>
                     <b className="font-medium">{m.title}.</b> <span className="text-fg-dim">{m.body}</span>
@@ -188,12 +188,12 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
           ) : null}
           {current.whyMatters ? (
             <Block label={t("why")}>
-              <p className="text-sm text-fg-dim">{current.whyMatters}</p>
+              <p className="text-copy text-fg-dim">{current.whyMatters}</p>
             </Block>
           ) : null}
           {current.setup ? (
             <Block label={t("setup")}>
-              <p className="text-sm text-fg-dim">{current.setup}</p>
+              <p className="text-copy text-fg-dim">{current.setup}</p>
             </Block>
           ) : null}
         </div>
@@ -221,12 +221,12 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
         ) : null}
         <Link
           href={`/coach/exercises/${encodeURIComponent(current.slug)}`}
-          className="ml-auto text-sm text-fg-dim underline underline-offset-4"
+          className="ml-auto text-meta text-fg-dim underline underline-offset-4"
         >
           {t("edit")}
         </Link>
         {error ? (
-          <p role="alert" className="w-full text-sm text-danger">
+          <p role="alert" className="w-full text-copy text-danger">
             {error}
           </p>
         ) : null}
@@ -245,7 +245,7 @@ function MuscleRow({ label, muscles, strong = false }: { label: string; muscles:
           <span
             key={m}
             className={cn(
-              "border px-2.5 py-1 text-xs",
+              "border px-2.5 py-1 text-micro",
               strong ? "border-fg text-fg" : "hairline text-fg-dim",
             )}
           >

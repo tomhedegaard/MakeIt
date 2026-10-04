@@ -34,18 +34,18 @@ export default function DualStreamBubble({
 
       <div className="max-w-full rounded-2xl border hairline px-4 py-3 bg-bg-2">
         {message.kind === "audio" ? (
-          <div data-munk-voice="" className="flex items-center gap-2 text-sm">
+          <div data-munk-voice="" className="flex items-center gap-2 text-copy">
             <Mic {...ICON} className="size-4" />
             <span>{copy.voice}</span>
             {message.mediaDurationSec ? (
-              <span className="numeric text-fg-faint text-xs">
+              <span className="numeric text-fg-faint text-micro">
                 {message.mediaDurationSec}s
               </span>
             ) : null}
           </div>
         ) : null}
         {message.body ? (
-          <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+          <p className="text-copy leading-relaxed whitespace-pre-wrap break-words">
             {message.body}
           </p>
         ) : null}

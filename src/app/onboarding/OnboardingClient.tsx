@@ -280,7 +280,7 @@ export default function OnboardingClient({
                 />
               </div>
 
-              <p className="text-xs text-fg-faint">
+              <p className="text-micro text-fg-faint">
                 {t("step2.footnote")}
               </p>
             </>
@@ -312,10 +312,10 @@ export default function OnboardingClient({
                 equip={equip}
               />
 
-              <p className="text-xs text-fg-faint">
+              <p className="text-micro text-fg-faint">
                 {t("step3.footnote")}
               </p>
-              <p className="text-xs text-fg-faint">
+              <p className="text-micro text-fg-faint">
                 {t("step3.submitTiming")}
               </p>
             </>
@@ -423,10 +423,10 @@ function Intro({ eyebrow, title, sub }: { eyebrow: string; title: string; sub: s
   return (
     <div>
       <div className="eyebrow mb-3">{eyebrow}</div>
-      <h1 className="font-display text-title md:text-[2.75rem] mb-4">
+      <h1 className="font-display text-title mb-4">
         {title}
       </h1>
-      <p className="text-fg-dim text-base md:text-lg max-w-md leading-relaxed">{sub}</p>
+      <p className="text-fg-dim text-copy max-w-md leading-relaxed">{sub}</p>
     </div>
   );
 }
@@ -484,8 +484,8 @@ function Choice({
           aria-hidden
         />
         <div>
-          <div className="font-display text-xl leading-[1.05] mb-1">{title}</div>
-          <div className="text-sm text-fg-dim">{sub}</div>
+          <div className="font-display text-section leading-[1.05] mb-1">{title}</div>
+          <div className="text-meta text-fg-dim">{sub}</div>
         </div>
       </div>
     </label>
@@ -514,10 +514,10 @@ function NumField({
           disabled={disabled}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="field text-2xl numeric pr-10"
+          className="field text-section numeric pr-10"
           placeholder={placeholder}
         />
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-fg-faint">
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-micro text-fg-faint">
           kg
         </span>
       </div>
@@ -527,7 +527,7 @@ function NumField({
 
 function Banner({ children }: { children: React.ReactNode }) {
   return (
-    <div className="surface-2 rounded-lg px-4 py-3 text-sm">
+    <div className="surface-2 rounded-lg px-4 py-3 text-copy">
       · {children}
     </div>
   );
@@ -551,7 +551,7 @@ function Summary({
   return (
     <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">
       {rows.map((r) => (
-        <li key={r.k} className="px-4 py-3 flex items-center gap-4 text-sm">
+        <li key={r.k} className="px-4 py-3 flex items-center gap-4 text-copy">
           <span className="eyebrow w-24 shrink-0">{r.k}</span>
           <span className="flex-1">{r.v}</span>
         </li>

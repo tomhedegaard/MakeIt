@@ -69,8 +69,8 @@ export default function MindCheckForm({
       {sliders.map((s) => (
         <fieldset key={s.key} className="space-y-3">
           <legend className="flex items-baseline justify-between w-full">
-            <span className="font-display text-xl md:text-2xl">{s.label}</span>
-            <span className="text-fg-dim text-sm tabular">
+            <span className="font-display text-section">{s.label}</span>
+            <span className="text-fg-dim text-meta tabular">
               {value(s.key)} / 5
             </span>
           </legend>
@@ -87,7 +87,7 @@ export default function MindCheckForm({
             aria-label={s.label}
             aria-valuetext={valueText(value(s.key), s.low, s.high)}
           />
-          <div className="flex justify-between text-fg-dim text-xs">
+          <div className="flex justify-between text-fg-dim text-micro">
             <span>{s.low}</span>
             <span>{s.high}</span>
           </div>
@@ -95,8 +95,8 @@ export default function MindCheckForm({
       ))}
 
       <fieldset className="space-y-2">
-        <legend className="font-display text-xl md:text-2xl">
-          {t("noteLabel")} <span className="text-fg-dim text-sm">{t("noteOptional")}</span>
+        <legend className="font-display text-section">
+          {t("noteLabel")} <span className="text-fg-dim text-meta">{t("noteOptional")}</span>
         </legend>
         <textarea
           name="note"
@@ -105,15 +105,15 @@ export default function MindCheckForm({
           maxLength={280}
           rows={3}
           placeholder={t("notePlaceholder")}
-          className="input w-full text-base resize-none"
+          className="input w-full text-copy resize-none"
         />
-        <div className="text-fg-dim text-xs text-right tabular">
+        <div className="text-fg-dim text-micro text-right tabular">
           {note.length} / 280
         </div>
       </fieldset>
 
       {error ? (
-        <div role="alert" className="border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
+        <div role="alert" className="border border-danger/30 bg-danger/5 px-4 py-3 text-copy text-danger">
           {error}
         </div>
       ) : null}

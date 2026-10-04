@@ -18,14 +18,14 @@ export default function WeeklyInsightsView({
     <div className="space-y-10">
       <section className="rounded-2xl border hairline bg-bg-2/30 p-6 md:p-8 space-y-3">
         <div className="eyebrow">{t("eyebrow")}</div>
-        <p className="font-display text-2xl md:text-3xl leading-tight">{headline}</p>
-        <p className="text-fg-dim text-sm">
+        <p className="font-display text-section leading-tight">{headline}</p>
+        <p className="text-fg-dim text-meta">
           {insights.weekStartDate} → {insights.weekEndDate}
         </p>
       </section>
 
       <section>
-        <h2 className="font-display text-xl mb-4">{t("numbers")}</h2>
+        <h2 className="font-display text-section mb-4">{t("numbers")}</h2>
         <div className="grid grid-cols-3 gap-px bg-line border hairline rounded-xl overflow-hidden">
           <MetricCell
             label={t("energy")}
@@ -49,7 +49,7 @@ export default function WeeklyInsightsView({
       </section>
 
       <section>
-        <h2 className="font-display text-xl mb-4">{t("activity")}</h2>
+        <h2 className="font-display text-section mb-4">{t("activity")}</h2>
         <div className="grid grid-cols-3 gap-px bg-line border hairline rounded-xl overflow-hidden">
           <CountCell
             label={t("mindCheck")}
@@ -72,7 +72,7 @@ export default function WeeklyInsightsView({
         </div>
       </section>
 
-      <p className="text-fg-dim text-sm leading-relaxed">
+      <p className="text-fg-dim text-meta leading-relaxed">
         {t.rich("footer", {
           link: (chunks) => (
             <Link href="/mind/settings" className="text-fg">
@@ -99,20 +99,20 @@ function MetricCell({
   const t = useTranslations("Mind.weekly");
   return (
     <div className="bg-bg-2/40 p-5">
-      <div className="eyebrow text-xs mb-2">{label}</div>
-      <div className="font-display text-3xl tabular-nums">
+      <div className="eyebrow mb-2">{label}</div>
+      <div className="font-display text-section tabular-nums">
         {current === null ? "-" : `${current}/5`}
       </div>
       {delta !== null && delta !== 0 ? (
         <div
-          className={`text-xs mt-1 ${
+          className={`text-micro mt-1 ${
             (delta > 0) === higherIsBetter ? "text-ok" : "text-warn"
           }`}
         >
           {t("delta", { delta: delta > 0 ? `+${delta}` : String(delta) })}
         </div>
       ) : (
-        <div className="text-fg-dim text-xs mt-1">{t("unchanged")}</div>
+        <div className="text-fg-dim text-micro mt-1">{t("unchanged")}</div>
       )}
     </div>
   );
@@ -132,21 +132,21 @@ function CountCell({
   const t = useTranslations("Mind.weekly");
   return (
     <div className="bg-bg-2/40 p-5">
-      <div className="eyebrow text-xs mb-2">{label}</div>
-      <div className="font-display text-3xl tabular-nums">
+      <div className="eyebrow mb-2">{label}</div>
+      <div className="font-display text-section tabular-nums">
         {value}
-        {unit ? <span className="text-fg-dim text-base ml-1">{unit}</span> : null}
+        {unit ? <span className="text-fg-dim text-copy ml-1">{unit}</span> : null}
       </div>
       {delta !== 0 ? (
         <div
-          className={`text-xs mt-1 ${
+          className={`text-micro mt-1 ${
             delta > 0 ? "text-ok" : "text-warn"
           }`}
         >
           {t("delta", { delta: delta > 0 ? `+${delta}` : String(delta) })}
         </div>
       ) : (
-        <div className="text-fg-dim text-xs mt-1">{t("unchanged")}</div>
+        <div className="text-fg-dim text-micro mt-1">{t("unchanged")}</div>
       )}
     </div>
   );

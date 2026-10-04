@@ -96,7 +96,7 @@ export default function ReadinessLadder({
           {t("waiting")}
         </p>
       ) : (
-        <p className="font-display text-base leading-tight text-fg">
+        <p className="font-display text-copy leading-tight text-fg">
           {t(`bucket.${bucket}`)}
         </p>
       )}

@@ -49,14 +49,14 @@ export default function MorningSignal({ input }: { input: MorningSignalInput }) 
                 <span className="eyebrow eyebrow-domain">{t(`labels.${cell.labelKey}`)}</span>
                 {cell.value !== undefined ? (
                   <span className="min-w-0 break-words">
-                    <span className="numeric text-xl text-fg">{fmt(cell.value)}</span>
+                    <span className="numeric text-section text-fg">{fmt(cell.value)}</span>
                     {cell.of !== undefined ? (
-                      <span className="numeric text-xs text-fg-dim">/{fmt(cell.of)}</span>
+                      <span className="numeric text-micro text-fg-dim">/{fmt(cell.of)}</span>
                     ) : null}
-                    <span className="ml-1 text-xs text-fg-dim">{unitLabel(cell)}</span>
+                    <span className="ml-1 text-micro text-fg-dim">{unitLabel(cell)}</span>
                   </span>
                 ) : null}
-                <span className="text-xs text-fg-dim break-words">{t(`values.${cell.valueKey}`)}</span>
+                <span className="text-micro text-fg-dim break-words">{t(`values.${cell.valueKey}`)}</span>
               </span>
             </Link>
           </li>

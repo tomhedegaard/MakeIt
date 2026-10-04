@@ -32,8 +32,8 @@ export default async function FormCheckProgressionCard({
         <div>
           <div className="eyebrow mb-2">{t("eyebrow")}</div>
           <div className="flex items-baseline gap-2">
-            <span className="numeric text-4xl">{progression.latestScore}</span>
-            <span className="text-fg-dim text-sm">{t("latest")}</span>
+            <span className="numeric text-section">{progression.latestScore}</span>
+            <span className="text-fg-dim text-meta">{t("latest")}</span>
           </div>
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-micro text-fg-faint">
             <span>

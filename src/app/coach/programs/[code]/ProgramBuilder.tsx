@@ -210,10 +210,10 @@ export default function ProgramBuilder({
           <span aria-hidden>·</span>
           <span className="numeric">{program.code}</span>
         </div>
-        <h1 className="font-display text-title md:text-[2.75rem]">
+        <h1 className="font-display text-title">
           {name || t("untitled")}.
         </h1>
-        <p className="mt-2 text-fg-dim text-sm">
+        <p className="mt-2 text-fg-dim text-meta">
           {days.length === 1
             ? t("summaryDaysOne", { count: days.length })
             : t("summaryDaysOther", { count: days.length })}{" "}
@@ -226,7 +226,7 @@ export default function ProgramBuilder({
         <div className="eyebrow">{t("program")}</div>
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="space-y-1.5">
-            <span className="text-xs text-fg-dim">{t("nameLabel")}</span>
+            <span className="text-micro text-fg-dim">{t("nameLabel")}</span>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -235,7 +235,7 @@ export default function ProgramBuilder({
             />
           </label>
           <label className="space-y-1.5">
-            <span className="text-xs text-fg-dim">{t("typeLabel")}</span>
+            <span className="text-micro text-fg-dim">{t("typeLabel")}</span>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
@@ -247,7 +247,7 @@ export default function ProgramBuilder({
             </select>
           </label>
           <label className="space-y-1.5">
-            <span className="text-xs text-fg-dim">{t("levelLabel")}</span>
+            <span className="text-micro text-fg-dim">{t("levelLabel")}</span>
             <select
               value={level}
               onChange={(e) => setLevel(e.target.value)}
@@ -259,7 +259,7 @@ export default function ProgramBuilder({
             </select>
           </label>
           <label className="space-y-1.5">
-            <span className="text-xs text-fg-dim">{t("weeksLabel")}</span>
+            <span className="text-micro text-fg-dim">{t("weeksLabel")}</span>
             <input
               type="number"
               min={1}
@@ -270,7 +270,7 @@ export default function ProgramBuilder({
             />
           </label>
           <label className="space-y-1.5 sm:col-span-2">
-            <span className="text-xs text-fg-dim">{t("descriptionLabel")}</span>
+            <span className="text-micro text-fg-dim">{t("descriptionLabel")}</span>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -280,7 +280,7 @@ export default function ProgramBuilder({
             />
           </label>
         </div>
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-center gap-2 text-meta">
           <input
             type="checkbox"
             checked={isPublished}
@@ -309,7 +309,7 @@ export default function ProgramBuilder({
         </div>
 
         {days.length === 0 ? (
-          <p className="text-fg-dim text-sm">
+          <p className="text-fg-dim text-meta">
             {t("daysEmpty")}
           </p>
         ) : (
@@ -317,7 +317,7 @@ export default function ProgramBuilder({
             <article key={day.key} className="surface-2 rounded-xl p-5 space-y-4">
               <div className="grid gap-3 sm:grid-cols-[120px_1fr_120px_auto] sm:items-end">
                 <label className="space-y-1.5">
-                  <span className="text-xs text-fg-dim">{t("dayLabelLabel")}</span>
+                  <span className="text-micro text-fg-dim">{t("dayLabelLabel")}</span>
                   <input
                     value={day.dayLabel}
                     onChange={(e) => patchDay(di, { dayLabel: e.target.value })}
@@ -325,7 +325,7 @@ export default function ProgramBuilder({
                   />
                 </label>
                 <label className="space-y-1.5">
-                  <span className="text-xs text-fg-dim">{t("dayTitleLabel")}</span>
+                  <span className="text-micro text-fg-dim">{t("dayTitleLabel")}</span>
                   <input
                     value={day.title}
                     onChange={(e) => patchDay(di, { title: e.target.value })}
@@ -334,7 +334,7 @@ export default function ProgramBuilder({
                   />
                 </label>
                 <label className="space-y-1.5">
-                  <span className="text-xs text-fg-dim">{t("dayEstLabel")}</span>
+                  <span className="text-micro text-fg-dim">{t("dayEstLabel")}</span>
                   <input
                     type="number"
                     min={0}
@@ -364,7 +364,7 @@ export default function ProgramBuilder({
                   <div key={ex.key} className="surface rounded-lg p-4 space-y-3">
                     <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
                       <label className="space-y-1.5">
-                        <span className="text-xs text-fg-dim">{t("exerciseLabel")}</span>
+                        <span className="text-micro text-fg-dim">{t("exerciseLabel")}</span>
                         <ExercisePicker
                           value={ex.exerciseId}
                           library={library}
@@ -379,7 +379,7 @@ export default function ProgramBuilder({
                         />
                       </label>
                       <label className="space-y-1.5">
-                        <span className="text-xs text-fg-dim">{t("cueLabel")}</span>
+                        <span className="text-micro text-fg-dim">{t("cueLabel")}</span>
                         <input
                           value={ex.cue ?? ""}
                           onChange={(e) =>
@@ -414,7 +414,7 @@ export default function ProgramBuilder({
                           key={si}
                           className="grid grid-cols-[1.2rem_1fr_1fr_1fr_1fr_auto] gap-2 items-center"
                         >
-                          <span className="numeric text-xs text-fg-faint">
+                          <span className="numeric text-micro text-fg-faint">
                             {si + 1}
                           </span>
                           <input
@@ -464,7 +464,7 @@ export default function ProgramBuilder({
                           <button
                             type="button"
                             onClick={() => removeSet(di, ei, si)}
-                            className="text-fg-dim hover:text-fg text-lg leading-none px-1"
+                            className="text-fg-dim hover:text-fg text-card leading-none px-1"
                             aria-label={t("removeSetAria")}
                           >
                             ×
@@ -512,7 +512,7 @@ export default function ProgramBuilder({
           </span>
         ) : null}
         {saveError ? (
-          <span className="text-sm" style={{ color: "#C97B3E" }}>
+          <span className="text-copy" style={{ color: "#C97B3E" }}>
             {saveError}
           </span>
         ) : null}
@@ -577,16 +577,16 @@ function AssignPanel({
     <section className="surface-2 rounded-xl p-5 md:p-6 space-y-4">
       <div className="eyebrow">{t("assignHeading")}</div>
       {!canAssign ? (
-        <p className="text-sm text-fg-dim">
+        <p className="text-meta text-fg-dim">
           {t("assignBlocked")}
         </p>
       ) : members.length === 0 ? (
-        <p className="text-sm text-fg-dim">{t("assignNoMembers")}</p>
+        <p className="text-meta text-fg-dim">{t("assignNoMembers")}</p>
       ) : (
         <>
           <div className="grid gap-3 sm:grid-cols-[1fr_140px_auto] sm:items-end">
             <label className="space-y-1.5">
-              <span className="text-xs text-fg-dim">{t("memberLabel")}</span>
+              <span className="text-micro text-fg-dim">{t("memberLabel")}</span>
               <select
                 value={memberId}
                 onChange={(e) => setMemberId(e.target.value)}
@@ -602,7 +602,7 @@ function AssignPanel({
               </select>
             </label>
             <label className="space-y-1.5">
-              <span className="text-xs text-fg-dim">{t("startWeekLabel")}</span>
+              <span className="text-micro text-fg-dim">{t("startWeekLabel")}</span>
               <input
                 type="number"
                 min={1}
@@ -627,10 +627,10 @@ function AssignPanel({
             {t("assignNote", { start: startWeek, end: weeks })}
           </p>
           {result ? (
-            <p className="text-sm text-fg">{result}</p>
+            <p className="text-copy text-fg">{result}</p>
           ) : null}
           {error ? (
-            <p className="text-sm" style={{ color: "#C97B3E" }}>
+            <p className="text-copy" style={{ color: "#C97B3E" }}>
               {error}
             </p>
           ) : null}

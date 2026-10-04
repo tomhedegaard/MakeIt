@@ -73,7 +73,7 @@ export default async function MessagesPage() {
               : t("titleFallback")
           }
         />
-        <p className="mt-2 text-fg-dim text-sm max-w-md">
+        <p className="mt-2 text-fg-dim text-copy max-w-md">
           {t("subtitle")}
         </p>
       </div>

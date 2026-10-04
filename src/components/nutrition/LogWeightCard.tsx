@@ -49,8 +49,8 @@ export default function LogWeightCard({
           <div className="eyebrow mb-1">{t("eyebrow")}</div>
           {latestKg ? (
             <>
-              <div className="font-display text-3xl numeric leading-none">
-                {latestKg.toFixed(1)} <span className="text-base text-fg-faint">kg</span>
+              <div className="font-display text-title numeric leading-none">
+                {latestKg.toFixed(1)} <span className="text-copy text-fg-faint">kg</span>
               </div>
               <div className="mt-2 text-micro text-fg-faint">
                 {ageDays === 0
@@ -80,7 +80,7 @@ export default function LogWeightCard({
               </div>
             </>
           ) : (
-            <p className="text-sm text-fg-dim mt-1">
+            <p className="text-meta text-fg-dim mt-1">
               {t("noWeight")}
             </p>
           )}
@@ -112,10 +112,10 @@ export default function LogWeightCard({
                 inputMode="decimal"
                 autoFocus
                 placeholder="-"
-                className="field text-xl numeric pr-12"
+                className="field text-section numeric pr-12"
                 autoComplete="off"
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-fg-faint">
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-micro text-fg-faint">
                 kg
               </span>
             </div>

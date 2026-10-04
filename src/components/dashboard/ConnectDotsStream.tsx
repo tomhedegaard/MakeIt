@@ -150,7 +150,7 @@ export default function ConnectDotsStream({
                   ))}
                 </div>
 
-                <p className="text-sm md:text-base text-fg-dim leading-relaxed">
+                <p className="text-copy text-fg-dim leading-relaxed">
                   {cardCopy.sentence}
                 </p>
 

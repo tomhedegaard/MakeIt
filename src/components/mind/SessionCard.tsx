@@ -23,18 +23,18 @@ export default function SessionCard({
         <div className="eyebrow eyebrow-domain">
           {t(`category.${session.category}`)}
         </div>
-        <div className="text-fg-dim text-xs tabular-nums">
+        <div className="text-fg-dim text-micro tabular-nums">
           {t("minutes", { minutes })}
         </div>
       </div>
-      <h3 className="font-display text-xl group-hover:translate-x-0.5 transition-transform">
+      <h3 className="font-display text-section group-hover:translate-x-0.5 transition-transform">
         {session.title}
       </h3>
       {session.subtitle ? (
-        <p className="text-fg-dim text-sm">{session.subtitle}</p>
+        <p className="text-fg-dim text-meta">{session.subtitle}</p>
       ) : null}
       {completed ? (
-        <div className="text-xs text-domain/80 pt-1">{t("completed")}</div>
+        <div className="text-micro text-domain/80 pt-1">{t("completed")}</div>
       ) : null}
     </Link>
   );

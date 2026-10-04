@@ -32,7 +32,7 @@ export function HrvSyncStreakLine({ progress }: Props) {
 
   return (
     <p
-      className="text-xs text-fg-dim"
+      className="text-micro text-fg-dim"
       data-testid="hrv-sync-streak-line"
     >
       {t("line", { count: daysSynced, detail })}

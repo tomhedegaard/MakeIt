@@ -64,7 +64,7 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
         title="Din baseline er klar. Vil du have din session tilpasset hver dag?"
       />
 
-      <div className="text-sm text-fg-dim leading-relaxed space-y-3">
+      <div className="text-copy text-fg-dim leading-relaxed space-y-3">
         <p>
           Vi kan nu justere dagens session ud fra din HRV, din søvn, sidste
           sessions RPE og de form-checks Munk har set. Eksempel: lav HRV +
@@ -91,7 +91,7 @@ export default function AdaptiveConsentCard({ eligible }: Props) {
           type="button"
           disabled={pending}
           onClick={enable}
-          className="flex-1 rounded-lg border hairline bg-fg text-bg px-4 py-3 text-[12px] lift touch-app disabled:opacity-60"
+          className="flex-1 rounded-lg border hairline bg-fg text-bg px-4 py-3 text-copy lift touch-app disabled:opacity-60"
         >
           Slå adaptiv tilpasning til
         </button>

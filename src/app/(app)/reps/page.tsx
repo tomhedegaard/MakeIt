@@ -196,10 +196,10 @@ export default async function RepsPage() {
                   {active ? (
                     <span aria-hidden="true" className="absolute -top-px left-0 right-2 h-0.5 bg-signal" />
                   ) : null}
-                  <div className={active ? "text-sm md:text-base text-fg" : "text-sm md:text-base text-fg-dim"}>
+                  <div className={active ? "text-meta md:text-copy text-fg" : "text-meta md:text-copy text-fg-dim"}>
                     {tier.name}
                   </div>
-                  <div className="numeric text-micro md:text-xs text-fg-faint mt-0.5">
+                  <div className="numeric text-micro text-fg-faint mt-0.5">
                     {tier.range}
                   </div>
                   {active ? (
@@ -209,18 +209,18 @@ export default async function RepsPage() {
               );
             })}
           </ol>
-          <p className="mt-4 text-sm text-fg-dim">{t("tiers.coachSchool")}</p>
+          <p className="mt-4 text-meta text-fg-dim">{t("tiers.coachSchool")}</p>
           <details className="mt-4 border-t border-b hairline group">
-            <summary className="flex min-h-11 cursor-pointer items-center justify-between text-sm list-none [&::-webkit-details-marker]:hidden">
+            <summary className="flex min-h-11 cursor-pointer items-center justify-between text-copy list-none [&::-webkit-details-marker]:hidden">
               {t("tiers.perksToggle")}
               <Plus {...ICON} className="size-4 text-fg-dim transition-transform duration-200 ease-out group-open:rotate-45 motion-reduce:transition-none" />
             </summary>
             <dl className="grid gap-x-8 gap-y-5 pb-5 pt-1 sm:grid-cols-2 lg:grid-cols-4">
               {tiers.map((tier) => (
                 <div key={tier.name}>
-                  <dt className="text-sm text-fg">{tier.name}</dt>
+                  <dt className="text-meta text-fg">{tier.name}</dt>
                   <dd>
-                    <ul className="mt-1 space-y-1 text-sm text-fg-body">
+                    <ul className="mt-1 space-y-1 text-copy text-fg-body">
                       {tier.perks.map((p) => (
                         <li key={p}>{p}</li>
                       ))}
@@ -235,12 +235,12 @@ export default async function RepsPage() {
         <section>
           <div className="flex items-end justify-between mb-6">
             <h2 className="eyebrow">{t("transactions.eyebrow")}</h2>
-            <span className="text-xs text-fg-dim">
+            <span className="text-micro text-fg-dim">
               {t("transactions.count", { count: transactions.length })}
             </span>
           </div>
           {transactions.length === 0 ? (
-            <p className="text-fg-dim text-sm">
+            <p className="text-fg-dim text-meta">
               {t("transactions.empty")}
             </p>
           ) : (
@@ -266,15 +266,15 @@ export default async function RepsPage() {
                     {/* Title on its own line, category and time under it:
                         four columns broke titles over three lines at 375 px. */}
                     <span className="flex-1 min-w-0">
-                      <span className="block text-sm">
+                      <span className="block text-copy">
                         {reasonKey ? t(reasonKey) : tx.reason}
                       </span>
-                      <span className="block text-xs text-fg-faint mt-0.5">
+                      <span className="block text-micro text-fg-faint mt-0.5">
                         {t(`categories.${cat}`)} · {t(`relativeTime.${ago.key}`, { count: ago.count })}
                       </span>
                     </span>
                     <span
-                      className={`numeric text-sm tabular-nums shrink-0 w-14 text-right ${
+                      className={`numeric text-copy tabular-nums shrink-0 w-14 text-right ${
                         tx.delta > 0 ? "text-fg" : "text-fg-dim"
                       }`}
                     >
@@ -293,10 +293,10 @@ export default async function RepsPage() {
           <ul className="border-t hairline md:grid md:grid-cols-2 md:gap-x-10">
             {how.map((row) => (
               <li key={row.k} className="flex items-baseline gap-4 py-3 border-b hairline">
-                <span className="numeric w-16 shrink-0 text-right text-lg text-fg">{row.v}</span>
+                <span className="numeric w-16 shrink-0 text-right text-card text-fg">{row.v}</span>
                 <span className="min-w-0">
-                  <span className="block text-sm text-fg-body">{row.k}</span>
-                  <span className="block text-xs text-fg-faint mt-0.5">{row.sub}</span>
+                  <span className="block text-copy text-fg-body">{row.k}</span>
+                  <span className="block text-micro text-fg-faint mt-0.5">{row.sub}</span>
                 </span>
               </li>
             ))}
@@ -306,25 +306,25 @@ export default async function RepsPage() {
         <section>
           <div className="flex items-end justify-between mb-6">
             <h2 className="eyebrow">{t("shop.eyebrow")}</h2>
-            <span className="numeric text-xs text-fg-dim">
+            <span className="numeric text-micro text-fg-dim">
               {t("shop.balance", { balance: balance.toLocaleString(tag) })}
             </span>
           </div>
           {rewards.length === 0 ? (
-            <div className="surface-2 rounded-lg p-6 text-sm text-fg-dim">
+            <div className="surface-2 rounded-lg p-6 text-meta text-fg-dim">
               {t("shop.empty")}
             </div>
           ) : (
             <div className="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {rewards.map((r) => (
                 <article key={r.id} className="surface-2 rounded-lg p-5 md:p-6 lift flex flex-col">
-                  <div className="numeric text-3xl mb-1">
+                  <div className="numeric text-title mb-1">
                     {r.costReps.toLocaleString(tag)}
                   </div>
                   <div className="eyebrow mb-3">{t("shop.repsLabel")}</div>
-                  <div className="font-display text-lg mb-1">{r.name}</div>
+                  <div className="font-display text-card mb-1">{r.name}</div>
                   {r.description ? (
-                    <p className="text-xs text-fg-dim mb-3 flex-1">
+                    <p className="text-micro text-fg-dim mb-3 flex-1">
                       {r.description}
                     </p>
                   ) : <div className="flex-1" />}
@@ -353,15 +353,15 @@ export default async function RepsPage() {
             </div>
             <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">
               {redemptions.map((r) => (
-                <li key={r.id} className="px-5 py-3 flex items-center gap-4 text-sm">
-                  <span className="numeric text-xs text-fg-faint w-20 shrink-0">
+                <li key={r.id} className="px-5 py-3 flex items-center gap-4 text-copy">
+                  <span className="numeric text-micro text-fg-faint w-20 shrink-0">
                     {new Date(r.redeemedAt).toLocaleDateString(tag, {
                       day: "numeric",
                       month: "short",
                     })}
                   </span>
                   <span className="flex-1 truncate">{localizeRewardName(r.rewardName, t)}</span>
-                  <span className="numeric text-fg-dim text-xs shrink-0">
+                  <span className="numeric text-fg-dim text-micro shrink-0">
                     − {r.costReps.toLocaleString(tag)}
                   </span>
                   <span

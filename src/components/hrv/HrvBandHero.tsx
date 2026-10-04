@@ -58,10 +58,10 @@ export default function HrvBandHero({
     >
       {view.state === "empty" ? (
         <div className="px-6 py-8 md:px-8 md:py-10">
-          <h2 className="font-display text-2xl md:text-3xl leading-tight mb-3">
+          <h2 className="font-display text-section leading-tight mb-3">
             {copy.emptyTitle}
           </h2>
-          <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-md">
+          <p className="text-fg-dim text-copy leading-relaxed max-w-md">
             {copy.emptyBody}
           </p>
           <div className="mt-6" aria-hidden>
@@ -74,28 +74,28 @@ export default function HrvBandHero({
           <div className="flex items-end gap-x-8 gap-y-3 flex-wrap">
             <div className="numeric text-hero md:text-hero-lg">
               {view.latestMs ?? "-"}
-              <span className="text-fg-dim text-2xl md:text-3xl ml-2">
+              <span className="text-fg-dim text-section ml-2">
                 {copy.unit}
               </span>
             </div>
             {view.qualitative ? (
               <p
                 data-qualitative={view.qualitative}
-                className="inline-flex items-center gap-3 font-display text-3xl md:text-4xl leading-none"
+                className="inline-flex items-center gap-3 font-display text-title leading-none"
               >
                 {/* Same dot as today's mark on the band below. */}
                 <span aria-hidden className="size-2.5 rounded-full bg-domain" />
                 {copy.qualitative[view.qualitative]}
               </p>
             ) : (
-              <p className="text-sm text-fg-dim max-w-[12rem] leading-relaxed">
+              <p className="text-meta text-fg-dim max-w-[12rem] leading-relaxed">
                 {copy.buildingNights}
               </p>
             )}
           </div>
 
           {view.state === "building" ? (
-            <p className="text-fg-dim text-sm md:text-base mt-5 max-w-md leading-relaxed">
+            <p className="text-fg-dim text-copy mt-5 max-w-md leading-relaxed">
               {copy.buildingBody}
             </p>
           ) : (
@@ -138,7 +138,7 @@ export default function HrvBandHero({
           {view.engineCue ? (
             <p
               data-engine-cue={view.engineCue}
-              className="text-sm md:text-base text-fg-dim leading-relaxed mt-6 max-w-lg"
+              className="text-copy text-fg-dim leading-relaxed mt-6 max-w-lg"
             >
               {view.engineCue === "below" ? copy.engineBelow : copy.engineAbove}
             </p>

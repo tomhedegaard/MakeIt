@@ -33,12 +33,12 @@ export function SheetContent({
       >
         <div className="sheet-grabber" aria-hidden />
         {title ? (
-          <Dialog.Title className="font-display text-2xl mb-1">{title}</Dialog.Title>
+          <Dialog.Title className="font-display text-section mb-1">{title}</Dialog.Title>
         ) : (
           <Dialog.Title className="sr-only">{srTitle ?? t("fallbackTitle")}</Dialog.Title>
         )}
         {description ? (
-          <Dialog.Description className="text-fg-dim text-sm mb-4">
+          <Dialog.Description className="text-fg-dim text-copy mb-4">
             {description}
           </Dialog.Description>
         ) : null}

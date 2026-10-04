@@ -57,7 +57,7 @@ export default function SkipDaysCard({
       <div className="flex items-start justify-between gap-3 mb-3">
         <div>
           <div className="eyebrow mb-1">{t("eyebrow")}</div>
-          <p className="text-sm text-fg-dim max-w-md">
+          <p className="text-meta text-fg-dim max-w-md">
             {t("body")}
           </p>
         </div>
@@ -82,7 +82,7 @@ export default function SkipDaysCard({
             }
           >
             <div className={`text-micro mb-0.5 ${d.skipped ? "" : "text-fg-dim"}`}>{d.label}</div>
-            <div className="numeric text-base">{d.day}</div>
+            <div className="numeric text-copy">{d.day}</div>
             {d.skipped ? (
               <div className="text-micro mt-1">
                 {t("skip")}
