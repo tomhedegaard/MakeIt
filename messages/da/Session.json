@@ -7,7 +7,9 @@
   "targets": {
     "goal": "Mål",
     "reps": "Reps",
-    "rpe": "RPE"
+    "rpe": "RPE",
+    "reducedFrom": "Reduceret fra {weight} kg",
+    "original": "Oprindeligt {weight} kg"
   },
   "steppers": {
     "weight": "Vægt",
@@ -18,7 +20,8 @@
   "sets": {
     "title": "Sæt i dette øvelse",
     "done": "Færdig",
-    "now": "Nu"
+    "now": "Nu",
+    "optional": "valgfri"
   },
   "cta": {
     "rest": "Hvil",
@@ -32,7 +35,8 @@
     "volume": "Volumen",
     "reps": "Reps",
     "share": "Del til crew",
-    "toToday": "Til Today"
+    "toToday": "Til Today",
+    "repsPending": "Reps beregnes"
   },
   "exit": {
     "title": "Afslut session?",
@@ -59,13 +63,15 @@
       "voice": "Lydbesked",
       "youFilmed": "Du filmede dette sæt",
       "munkReply": "Feedback fra coach Munk"
-    }
+    },
+    "demoPause": "Sæt bevægelsen på pause"
   },
   "restTimer": {
     "ariaLabel": "Hvile",
     "title": "Hvile",
     "description": "Næste sæt om {time}. Tag en slurk vand.",
-    "skip": "Spring over"
+    "skip": "Spring over",
+    "done": "Hvilen er slut. Klar til næste sæt."
   },
   "rpe": {
     "label": "RPE: hvor tungt føltes det?",
@@ -79,5 +85,13 @@
     "estTime": "Tid",
     "summary": "{exerciseCount} øvelser · {setCount} sæt",
     "start": "Start sessionen"
+  },
+  "sheet": {
+    "fallbackTitle": "Panel"
+  },
+  "units": {
+    "reps": "reps",
+    "minutes": "min",
+    "kg": "kg"
   }
 }

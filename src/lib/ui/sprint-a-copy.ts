@@ -94,7 +94,6 @@ export async function loadDotsCopy(): Promise<DotsCopy> {
   ) as DotsCopy["cards"];
 
   return {
-    eyebrow: t("eyebrow"),
     title: t("title"),
     gloss: t("gloss"),
     moreAbout: t("moreAbout"),

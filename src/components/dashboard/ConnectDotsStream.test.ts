@@ -5,7 +5,6 @@ import ConnectDotsStream, { type DotsCopy } from "./ConnectDotsStream";
 import { demoInsightStream } from "@/lib/dashboard/insight-stream";
 
 const COPY: DotsCopy = {
-  eyebrow: "I dag",
   title: "Sammenhængene",
   gloss: "Adaptive Engine tilpasser ugen. Munk er din coach",
   moreAbout: "Sig mere om",

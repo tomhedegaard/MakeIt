@@ -18,7 +18,7 @@ import { getActiveAdaptationForSession } from "@/lib/data/adaptive";
 import { applyAdaptationToSession } from "@/lib/adaptive/apply";
 import { getTodaysReadinessNudge } from "@/lib/data/hrv";
 
-// Nat: the live session stays dark inside the Kalk app (spec §2, §6).
+// Nat: the live session stays dark inside the light Nord app (spec §3.2, §7.9).
 export const viewport: Viewport = { themeColor: "#111111", colorScheme: "dark" };
 
 // Overrides the (app) layout's appleWebApp wholesale (shallow merge).
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 };
 
 // AppShell's immersive wrapper is not flex, so min-h-dvh (not flex-1)
-// keeps Kalk background from showing under short content.
+// keeps the light app background from showing under short content.
 function Nat({ children }: { children: React.ReactNode }) {
   return (
     <ThemeScope theme="nat" className="min-h-dvh">

@@ -32,13 +32,13 @@ export default function MorningSignal({ input }: { input: MorningSignalInput }) 
 
   return (
     <section aria-label={t("label")}>
-      <ul className="grid grid-cols-2 min-[360px]:grid-cols-4 gap-2">
+      <ul className="grid grid-cols-2 min-[360px]:grid-cols-4 lg:grid-cols-2 gap-2">
         {cells.map((cell) => (
           <li key={cell.domain} className="min-w-0">
             <Link
               href={cell.href}
               data-domain={cell.domain}
-              className="relative flex h-full min-w-0 flex-col gap-1 rounded-xl border hairline bg-bg-2 p-3 lift touch-app"
+              className="relative flex h-full min-w-0 flex-col gap-1 border hairline bg-bg-2 p-3 lift touch-app"
             >
               <span className="sr-only">{sentence(cell)}</span>
               <span aria-hidden className="flex min-w-0 flex-col gap-1">

@@ -2,21 +2,15 @@ import { getTranslations } from "next-intl/server";
 
 import type { TodayProseKey, TodayProseModel } from "@/lib/dashboard/today-prose";
 
-const TONE_DOT: Record<TodayProseModel["leadTone"], string | null> = {
-  warn: "var(--warn)",
-  ok: "var(--ok)",
-  quiet: null,
-  neutral: null,
-};
-
 /**
  * Short proactive coach line at the top of Today / 01.
  * Body text stays --fg-dim. Domain stroke is direction only.
- * Status via --ok/--warn. No CTA.
+ * A warn/ok lead gets a dot in the lead domain's ink (fg without one):
+ * status colours belong to filled alerts only (spec §3.3). No CTA.
  */
 export default async function TodayProse({ model }: { model: TodayProseModel }) {
   const t = await getTranslations("Dashboard.todayProse");
-  const dot = TONE_DOT[model.leadTone];
+  const dot = model.leadTone === "warn" || model.leadTone === "ok";
 
   return (
     <section
@@ -28,8 +22,9 @@ export default async function TodayProse({ model }: { model: TodayProseModel }) 
       <div className="flex items-center gap-2 mb-2">
         {dot ? (
           <span
+            data-domain={model.leadDomain ?? undefined}
             className="size-2 rounded-full shrink-0"
-            style={{ background: dot }}
+            style={{ background: "var(--domain, var(--fg))" }}
             aria-hidden
           />
         ) : null}

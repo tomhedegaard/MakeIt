@@ -7,7 +7,9 @@
   "targets": {
     "goal": "Target",
     "reps": "Reps",
-    "rpe": "RPE"
+    "rpe": "RPE",
+    "reducedFrom": "Reduced from {weight} kg",
+    "original": "Originally {weight} kg"
   },
   "steppers": {
     "weight": "Weight",
@@ -18,7 +20,8 @@
   "sets": {
     "title": "Sets in this exercise",
     "done": "Done",
-    "now": "Now"
+    "now": "Now",
+    "optional": "optional"
   },
   "cta": {
     "rest": "Rest",
@@ -32,7 +35,8 @@
     "volume": "Volume",
     "reps": "Reps",
     "share": "Share to crew",
-    "toToday": "To Today"
+    "toToday": "To Today",
+    "repsPending": "Calculating Reps"
   },
   "exit": {
     "title": "End session?",
@@ -59,13 +63,15 @@
       "voice": "Voice note",
       "youFilmed": "You filmed this set",
       "munkReply": "Feedback from coach Munk"
-    }
+    },
+    "demoPause": "Pause the move"
   },
   "restTimer": {
     "ariaLabel": "Rest",
     "title": "Rest",
     "description": "Next set in {time}. Grab a sip of water.",
-    "skip": "Skip"
+    "skip": "Skip",
+    "done": "Rest is over. Ready for the next set."
   },
   "rpe": {
     "label": "RPE: how heavy did it feel?",
@@ -79,5 +85,13 @@
     "estTime": "Time",
     "summary": "{exerciseCount} exercises · {setCount} sets",
     "start": "Start the session"
+  },
+  "sheet": {
+    "fallbackTitle": "Panel"
+  },
+  "units": {
+    "reps": "reps",
+    "minutes": "min",
+    "kg": "kg"
   }
 }

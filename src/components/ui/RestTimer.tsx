@@ -20,6 +20,11 @@ export default function RestTimer({
 }) {
   const [left, setLeft] = useState(() => durationSec);
   const ref = useRef<number | null>(null);
+  // Parents pass onDone inline; a ref keeps a re-render from restarting the clock.
+  const onDoneRef = useRef(onDone);
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  });
   const t = useTranslations("Session.restTimer");
 
   useEffect(() => {
@@ -30,20 +35,20 @@ export default function RestTimer({
       setLeft(remaining);
       if (remaining === 0) {
         if (ref.current) clearInterval(ref.current);
-        onDone?.();
+        onDoneRef.current?.();
       }
     }, 250);
     return () => {
       if (ref.current) clearInterval(ref.current);
     };
-  }, [durationSec, onDone]);
+  }, [durationSec]);
 
   const pct = ((durationSec - left) / durationSec) * 100;
 
   return (
     <div
       data-rest-timer=""
-      className="surface-2 rounded-2xl px-3 py-3 sm:px-5 sm:py-4 grid grid-cols-[auto_minmax(0,1fr)_auto] gap-x-2.5 sm:gap-x-4 gap-y-1 items-center"
+      className="surface-2 px-3 py-3 sm:px-5 sm:py-4 grid grid-cols-[auto_minmax(0,1fr)_auto] gap-x-2.5 sm:gap-x-4 gap-y-1 items-center"
       role="timer"
       aria-label={t("ariaLabel")}
     >
@@ -57,7 +62,7 @@ export default function RestTimer({
             strokeLinecap="butt"
           />
         </svg>
-        <div className="absolute inset-0 flex items-center justify-center numeric text-sm">
+        <div className="absolute inset-0 flex items-center justify-center tabular text-sm">
           {fmt(left)}
         </div>
       </div>
@@ -71,7 +76,7 @@ export default function RestTimer({
 
       <button
         type="button"
-        className="shrink-0 min-h-9 px-3 text-micro border hairline touch-app"
+        className="shrink-0 min-h-11 px-3 text-micro border hairline touch-app"
         onClick={onSkip}
       >
         {t("skip")}

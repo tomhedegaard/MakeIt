@@ -12,7 +12,6 @@ import type {
 } from "@/lib/dashboard/insight-stream";
 
 export type DotsCopy = {
-  eyebrow: string;
   title: string;
   gloss: string;
   moreAbout: string;
@@ -117,7 +116,7 @@ export default function ConnectDotsStream({
   return (
     <section data-adapt-dots="" aria-label={copy.title} className="space-y-3">
       <div>
-        <SectionHeader eyebrow={copy.eyebrow} title={copy.title} />
+        <SectionHeader title={copy.title} />
         <p data-engine-gloss="" className="mt-2 text-sm text-fg-dim leading-relaxed max-w-md">
           {copy.gloss}
         </p>
@@ -131,7 +130,7 @@ export default function ConnectDotsStream({
               key={card.id}
               data-insight-card={card.id}
               data-insight-domains={card.domains.join(" ")}
-              className="surface-2 rounded-2xl overflow-hidden"
+              className="surface-2 overflow-hidden"
             >
               <div className="px-5 pt-4 pb-3 space-y-3">
                 <div className="flex items-center gap-2 text-micro text-fg-faint">
@@ -166,7 +165,8 @@ export default function ConnectDotsStream({
                 </p>
 
                 <div className="flex flex-wrap items-center gap-2">
-                  <Link href={card.ctaHref} className="btn btn-primary">
+                  {/* Secondary on purpose: "Start pas" is the page's one primary. */}
+                  <Link href={card.ctaHref} className="btn">
                     {cardCopy.cta}
                   </Link>
                   <Link

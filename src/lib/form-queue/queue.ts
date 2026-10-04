@@ -240,5 +240,12 @@ export function demoFormQueueItems(now = new Date()): FormQueueItem[] {
     new Date(now.getTime() - 1000 * 60 * 60 * 2),
   );
 
-  return [pending, extraPending2, extraPending, reviewed];
+  // Stable ids: createFormQueueItem stamps the clock into the id, which
+  // differs between server render and hydration for the same fixture.
+  return [
+    { ...pending, id: "fc-demo-nina-2" },
+    { ...extraPending2, id: "fc-demo-maria-1" },
+    { ...extraPending, id: "fc-demo-kasper-3" },
+    { ...reviewed, id: "fc-demo-munk-4" },
+  ];
 }
