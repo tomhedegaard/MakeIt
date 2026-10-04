@@ -5,7 +5,7 @@
     "subtitle": "Profile, notifications, data and account deletion. All under your own control."
   },
   "errors": {
-    "handle_invalid": "Handle must start with a letter (a-z) and be 2-31 characters (a-z, 0-9, _, ., -).",
+    "handle_invalid": "Handle must start with a letter (a-z) and be 2–31 characters (a-z, 0-9, _, ., -).",
     "handle_taken": "That handle is already taken. Try another.",
     "auth": "You are not signed in.",
     "unknown": "Something went wrong. Please try again.",

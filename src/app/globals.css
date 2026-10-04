@@ -1,6 +1,6 @@
 @import "tailwindcss";
-/* Rapporter og designdokumenter citerer klassenavne (fx text-[var(…)]),
- * som Tailwind ellers prøver at generere CSS til. Kun kode scannes. */
+/* Rapporter og designdokumenter citerer klassenavne med "…" i, som
+ * Tailwind ellers prøver at generere CSS til. Kun kode scannes. */
 @source not "../../.reviews";
 @source not "../../.impeccable";
 @source not "../../DESIGN.md";

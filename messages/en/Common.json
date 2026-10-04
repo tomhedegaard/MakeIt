@@ -1,5 +1,10 @@
 {
   "saved": "✓ Saved",
   "saving": "Saving…",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "notFound": {
+    "title": "Page not found.",
+    "body": "The link is wrong, or the page has moved.",
+    "back": "Go to Today"
+  }
 }

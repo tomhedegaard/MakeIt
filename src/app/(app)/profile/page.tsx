@@ -1,3 +1,4 @@
+import { formatNumber } from "@/lib/utils";
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
@@ -9,8 +10,6 @@ import { getSession } from "@/lib/auth";
 import { getMyFormChecks, type MyFormCheck } from "@/lib/data/me";
 import { getMyLifts, type LiftPr, type LiftStats } from "@/lib/data/lifts";
 import { COMPANY } from "@/lib/company";
-import { Star } from "lucide-react";
-import { ICON } from "@/components/ui/icon";
 
 export default async function ProfilePage() {
   const m = (await getSession())!;
@@ -29,6 +28,7 @@ export default async function ProfilePage() {
   const t = await getTranslations("Profile");
   const locale = await getLocale();
   const dateLocale = locale === "en" ? "en-GB" : "da-DK";
+  const kg = (n: number) => formatNumber(n, dateLocale);
 
   return (
     <>
@@ -116,27 +116,22 @@ export default async function ProfilePage() {
               {recentPRs.map((pr, i) => (
                 <li
                   key={`${pr.date}-${pr.exerciseName}-${i}`}
-                  className="px-5 py-3 flex items-center gap-4 text-copy"
+                  className="px-5 py-3 grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-0.5 text-copy"
                 >
-                  <span className="numeric text-micro text-fg-faint w-20 shrink-0">
+                  {/* Two lines so the lift name keeps the width at 375 px:
+                      name + e1RM, then date and the set under it. */}
+                  <span className="min-w-0">{pr.exerciseName}</span>
+                  <span className="numeric text-right">
+                    {kg(pr.e1rm)}
+                    <span className="text-fg-dim text-micro ml-1">{t("prs.e1rm")}</span>
+                  </span>
+                  <span className="col-span-2 numeric text-micro text-fg-faint">
                     {new Date(pr.date).toLocaleDateString(dateLocale, {
                       day: "numeric",
                       month: "short",
                     })}
-                  </span>
-                  <span className="flex-1 truncate">{pr.exerciseName}</span>
-                  <span className="numeric text-fg-dim text-micro shrink-0">
-                    {pr.weight} × {pr.reps}
-                  </span>
-                  <span className="numeric shrink-0">
-                    {pr.e1rm}
-                    <span className="text-fg-dim text-micro ml-1">{t("prs.e1rm")}</span>
-                  </span>
-                  <span
-                    className="inline-flex items-center border hairline-strong px-2 py-1 shrink-0"
-                    aria-hidden
-                  >
-                    <Star {...ICON} className="size-3" />
+                    {" · "}
+                    {kg(pr.weight)} × {pr.reps}
                   </span>
                 </li>
               ))}

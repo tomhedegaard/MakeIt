@@ -425,7 +425,7 @@ export async function logMealAction(formData: FormData): Promise<LogResult> {
 /* ---------------------------------------------------------------- *
  * Quick-log — daily check-in actions (no photo, no modal)
  *
- * Used by DailyCheckInCard for the "Som planlagt" / "Skippet"
+ * Used by DailyCheckInCard for the "Som planlagt" / "Sprunget over"
  * buttons. Records a single nutrition_logs row with status=eaten
  * (default) or status=skipped. Idempotent on the (member, date,
  * slot) tuple isn't enforced at the DB level, so the action

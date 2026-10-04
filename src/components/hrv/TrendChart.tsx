@@ -30,7 +30,9 @@ import {
  */
 
 /** Fixed SVG coordinate space — the element scales to its container width. */
-const VIEWPORT = { width: 640, height: 240 };
+// Tall enough that the plot keeps ~170 px on a phone (640×240 gave ~90 px
+// at 375, 640×360 ~141 px).
+const VIEWPORT = { width: 640, height: 440 };
 
 /** Format an ISO timestamp as a short localized date for the fallback table. */
 function tableDate(iso: string, locale: string): string {
@@ -132,15 +134,6 @@ export default function TrendChart({
           />
         ) : null}
 
-        {/* Soft volume under the 7-day mean. */}
-        {model.meanAreaPath ? (
-          <path
-            d={model.meanAreaPath}
-            fill="var(--domain, currentColor)"
-            fillOpacity={CHART_CRAFT.areaFillOpacity}
-            stroke="none"
-          />
-        ) : null}
 
         {/* Dashed personal average — the centre of the band. */}
         {model.personalAvg ? (
@@ -175,7 +168,9 @@ export default function TrendChart({
             key={i}
             cx={p.x}
             cy={p.y}
-            r={CHART_CRAFT.pointR}
+            // The viewBox is 640 wide and scales down: 2.8 units is a ~2.5 px
+            // dot at phone width (1.45 was ~0.7 px) and ~5 px on desktop.
+            r={2.8}
             fill={p.isSick ? "none" : "var(--domain, currentColor)"}
             stroke="var(--domain, currentColor)"
             strokeWidth={p.isSick ? 1 : 0}
@@ -204,6 +199,22 @@ export default function TrendChart({
         ))}
       </div>
       </div>
+
+      {/* Legend: what the three marks are (spec §6.3 "graf med bånd"). */}
+      <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-micro text-fg-dim" aria-hidden>
+        <li className="inline-flex items-center gap-2">
+          <span className="inline-block w-4 border-t-2 border-domain" />
+          {t("legendMean")}
+        </li>
+        <li className="inline-flex items-center gap-2">
+          <span className="inline-block size-1.5 rounded-full bg-domain" />
+          {t("legendNight")}
+        </li>
+        <li className="inline-flex items-center gap-2">
+          <span className="inline-block h-2.5 w-4 bg-domain/20" />
+          {t("legendBand")}
+        </li>
+      </ul>
 
       {/* Visually-hidden data-table fallback for non-visual users. */}
       <table className="sr-only">

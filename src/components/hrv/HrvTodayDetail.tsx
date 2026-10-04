@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import TrendChart from "@/components/hrv/TrendChart";
 import NarrativeBand from "@/components/ui/NarrativeBand";
@@ -16,6 +17,7 @@ export default async function HrvTodayDetail({
   engineNote,
   source,
   weekly,
+  share,
 }: {
   view: HrvBandView;
   /** HQ's reading of the night (copy.engineBelow/Above), or null. */
@@ -23,6 +25,8 @@ export default async function HrvTodayDetail({
   /** "Oura · synket 05:14", or a demo label. */
   source: string | null;
   weekly: { day: string; text: string } | null;
+  /** The "Del med coach" consent (client component), rendered last. */
+  share?: ReactNode;
 }) {
   const t = await getTranslations("Hrv.today");
   const locale = intlLocaleTag(await getLocale());
@@ -98,6 +102,7 @@ export default async function HrvTodayDetail({
       <div className="space-y-6">
         {recent}
         {insight}
+        {share}
       </div>
     </div>
   );

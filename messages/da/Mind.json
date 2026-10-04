@@ -128,7 +128,7 @@
         "description": "Hvis du og din buddy ikke har interageret i 7 dage og I begge har sagt ja til deling."
       }
     },
-    "streak": "Streak: {current} dage · længste: {longest} dage."
+    "streak": "Stribe: {current} dage · længste: {longest} dage."
   },
   "tile": {
     "waitingTitle": "Mind-check venter",
@@ -226,7 +226,7 @@
     "metaTitle": "Sessioner · Mind · MakeIt",
     "eyebrow": "Mind · Sessioner",
     "title": "Bibliotek.",
-    "subtitle": "Vejrtrækning, fokus, recovery, debrief. Vælg én. 1-5 minutter pr. session.",
+    "subtitle": "Vejrtrækning, fokus, recovery, debrief. Vælg én. 1–5 minutter pr. session.",
     "category": {
       "breathing": {
         "heading": "Vejrtrækning",
@@ -254,12 +254,12 @@
     "eyebrow": "Mind · Cirkler",
     "locked": {
       "title": "Beast-tier låser cirkler op.",
-      "subtitle": "Cirkler er små grupper (3-6 medlemmer) der laver ugentlige check-ins. Når du rykker til Beast, åbner det her sig.",
+      "subtitle": "Cirkler er små grupper (3–6 medlemmer) der laver ugentlige check-ins. Når du rykker til Beast, åbner det her sig.",
       "body": "Indtil da: hold fast i mind-check og journal hver dag. Det er sådan Reps bygges op."
     },
     "empty": {
       "title": "Ingen cirkel endnu.",
-      "subtitle": "Munk opretter cirkler i grupper på 3-6. Du får besked når du er paret med en."
+      "subtitle": "Munk opretter cirkler i grupper på 3–6. Du får besked når du er paret med en."
     },
     "subtitle": "{count} medlemmer · asynkron ugentlig check-in",
     "multi": "Du er medlem af {count} cirkler. Multi-cirkel-skifte kommer i en fast follow-up."

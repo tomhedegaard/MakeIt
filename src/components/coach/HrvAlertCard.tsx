@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Sheet, SheetContent } from "@/components/ui/Sheet";
 import {
   markHrvAlertSeenAction,
@@ -29,7 +30,16 @@ import { cn } from "@/lib/utils";
  * Monochrome — no colour accents. Active vs faint chip states are
  * composed with `cn`.
  */
-export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
+export default function HrvAlertCard({
+  alert,
+  showHeader = true,
+}: {
+  alert: HrvAlertRow;
+  /** False inside the inbox panel, which already shows @handle + time. */
+  showHeader?: boolean;
+}) {
+  const t = useTranslations("Coach.hrvAlert");
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [notes, setNotes] = useState("");
   const [pending, startTransition] = useTransition();
@@ -74,34 +84,41 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
 
   return (
     <div className="surface-2 rounded-2xl p-5">
-      <div className="flex items-center justify-between gap-4 mb-3">
-        <div className="min-w-0">
-          <div className="text-copy">
-            <Link
-              href={`/coach/members/${alert.memberId}`}
-              className="hover:underline"
-            >
-              @{alert.memberHandle}
-            </Link>
-          </div>
-          <div className="text-micro text-fg-faint">
-            {new Date(alert.triggeredAt).toLocaleString("da-DK", {
-              hour: "2-digit",
-              minute: "2-digit",
-              day: "numeric",
-              month: "short",
-            })}
+      {showHeader ? (
+        <div className="flex items-center justify-between gap-4 mb-3">
+          <div className="min-w-0">
+            <div className="text-copy">
+              <Link
+                href={`/coach/members/${alert.memberId}`}
+                className="hover:underline"
+              >
+                @{alert.memberHandle}
+              </Link>
+            </div>
+            <div className="text-micro text-fg-faint">
+              {new Date(alert.triggeredAt).toLocaleString(locale, {
+                hour: "2-digit",
+                minute: "2-digit",
+                day: "numeric",
+                month: "short",
+              })}
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
 
       {/* Condition chips — information only (spec §10). */}
       <div className="flex flex-wrap items-center gap-2 mb-2">
-        <Chip active={conditionsMet.warm_up_active}>Aktiv</Chip>
+        {/* Baseline state is a fact either way, so it never renders faint. */}
+        <Chip active>
+          {conditionsMet.warm_up_active
+            ? t("baselineActive")
+            : t("baselineBuilding")}
+        </Chip>
 
         {conditionsMet.sustained_low_readiness !== null ? (
           <Chip active={consecutiveDaysLow >= 3}>
-            {consecutiveDaysLow} dage lavt
+            {t("daysLow", { count: consecutiveDaysLow })}
           </Chip>
         ) : null}
 
@@ -111,19 +128,19 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
           </Chip>
         ) : null}
 
-        <Chip active={lifestyleAny}>Livsstil</Chip>
+        <Chip active={lifestyleAny}>{t("lifestyle")}</Chip>
       </div>
 
       {/* Per-sub-flag truth for lifestyle — render all four, even when
           false, so Munk sees the negative space too. */}
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-micro mb-4">
-        <SubFlag on={lifestyleFlags.sick}>syg</SubFlag>
+        <SubFlag on={lifestyleFlags.sick}>{t("sick")}</SubFlag>
         <span className="text-fg-faint">·</span>
-        <SubFlag on={lifestyleFlags.stressed}>stress</SubFlag>
+        <SubFlag on={lifestyleFlags.stressed}>{t("stressed")}</SubFlag>
         <span className="text-fg-faint">·</span>
-        <SubFlag on={lifestyleFlags.short_sleep}>søvn</SubFlag>
+        <SubFlag on={lifestyleFlags.short_sleep}>{t("shortSleep")}</SubFlag>
         <span className="text-fg-faint">·</span>
-        <SubFlag on={lifestyleFlags.high_alcohol}>alkohol</SubFlag>
+        <SubFlag on={lifestyleFlags.high_alcohol}>{t("highAlcohol")}</SubFlag>
       </div>
 
       <div className="flex flex-wrap items-center justify-end gap-2">
@@ -133,7 +150,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
           onClick={markSeen}
           disabled={pending}
         >
-          Markér som set
+          {t("markSeen")}
         </button>
         <button
           type="button"
@@ -141,7 +158,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
           onClick={suggestPause}
           disabled={pending}
         >
-          Foreslå pause
+          {t("suggestPause")}
         </button>
 
         <Sheet open={open} onOpenChange={setOpen}>
@@ -151,22 +168,24 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
             onClick={() => setOpen(true)}
             disabled={pending}
           >
-            Send besked
+            {t("sendMessage")}
           </button>
           <SheetContent>
             <div className="mb-4">
               <div className="eyebrow mb-1">@{alert.memberHandle}</div>
-              <h2 className="font-display text-section">Send personlig besked</h2>
+              <h2 className="font-display text-section">
+                {t("sheetTitle")}
+              </h2>
             </div>
 
             <div className="mt-2">
               <label className="block">
                 <span className="eyebrow block mb-2">
-                  Besked til @{alert.memberHandle}
+                  {t("messageTo", { handle: alert.memberHandle })}
                 </span>
                 <textarea
                   className="field min-h-[140px] py-3 resize-none w-full"
-                  placeholder={`Skriv en personlig besked til @${alert.memberHandle}...`}
+                  placeholder={t("placeholder", { handle: alert.memberHandle })}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   maxLength={1000}
@@ -184,7 +203,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
                 onClick={() => setOpen(false)}
                 disabled={pending}
               >
-                Annullér
+                {t("cancel")}
               </button>
               <button
                 type="button"
@@ -192,12 +211,12 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
                 onClick={sendNote}
                 disabled={pending || notes.trim().length < 1}
               >
-                {pending ? "Sender…" : "Send"}
+                {pending ? t("sending") : t("send")}
               </button>
             </div>
 
             <p className="mt-4 text-meta text-fg-faint text-center">
-              Markerer alerten som reviewet og sender beskeden til medlemmet.
+              {t("sheetFoot")}
             </p>
           </SheetContent>
         </Sheet>
@@ -217,7 +236,7 @@ function Chip({
     <span
       className={cn(
         "inline-flex items-center border hairline px-2.5 py-1 text-micro",
-        active ? "text-fg font-medium" : "text-fg-faint",
+        active ? "hairline-strong text-fg font-medium" : "text-fg-faint",
       )}
     >
       {children}
@@ -225,13 +244,7 @@ function Chip({
   );
 }
 
-function SubFlag({
-  on,
-  children,
-}: {
-  on: boolean;
-  children: React.ReactNode;
-}) {
+function SubFlag({ on, children }: { on: boolean; children: React.ReactNode }) {
   return (
     <span className={cn(on ? "text-fg" : "text-fg-faint")}>{children}</span>
   );

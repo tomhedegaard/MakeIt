@@ -96,7 +96,7 @@ export default function DemoAssetUploader({
       <div className="eyebrow">Demo-asset</div>
       <p className="text-meta text-fg-dim">
         Upload de tre filer fra motion-designeren. WebM aktiverer demo-loopet
-        på /train/exercises — MP4 er fallback, JPG er poster mens loopet
+        på /train/exercises. MP4 er fallback, JPG er poster mens loopet
         loader.
       </p>
 
@@ -116,7 +116,7 @@ export default function DemoAssetUploader({
             />
             <span className="text-micro text-fg-faint">
               {state[slot.key] === "uploading" && "Uploader…"}
-              {state[slot.key] === "done" && `Uploadet — ${slug}.${slot.ext}`}
+              {state[slot.key] === "done" && `Uploadet: ${slug}.${slot.ext}`}
               {state[slot.key] === "error" && (errors[slot.key] ?? "Fejl")}
             </span>
           </label>
@@ -141,7 +141,7 @@ export default function DemoAssetUploader({
         </div>
       ) : (
         <p className="text-meta text-fg-faint">
-          Intet demo-loop endnu — upload en WebM for at aktivere det.
+          Intet demo-loop endnu. Upload en WebM for at aktivere det.
         </p>
       )}
     </section>

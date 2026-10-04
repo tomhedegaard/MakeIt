@@ -22,10 +22,11 @@ import type { SandboxCase } from "@/lib/data/coach-school";
  * instead of trusting the action's return when demo signals it.
  */
 const PILL_FOR_DECISION: Record<CoachDecision, string> = {
+  // Nord: decisions read as ink weight, not hue. Status red only for reject.
   approve: "bg-bg-3",
-  modify: "bg-amber-700/30",
-  escalate: "bg-amber-800/40",
-  reject: "bg-red-900/40",
+  modify: "border hairline-strong",
+  escalate: "border border-fg",
+  reject: "border border-danger text-danger",
 };
 
 export default function SandboxCaseCard({
@@ -84,7 +85,7 @@ export default function SandboxCaseCard({
       <div className="surface rounded-lg p-5 space-y-3" aria-live="polite">
         <div className="flex items-center justify-between gap-4">
           <div className="eyebrow">@{sandboxCase.memberHandle}</div>
-          <div className="text-micro text-amber-400">
+          <div className="text-meta text-fg-dim">
             {t("held.badge")}
           </div>
         </div>
@@ -204,7 +205,7 @@ export default function SandboxCaseCard({
 
       {error ? (
         <p
-          className="text-meta text-red-400"
+          className="text-meta text-danger"
           role="alert"
           aria-live="polite"
         >

@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
 export type MemberSettings = {
@@ -69,6 +70,10 @@ export type HrvSettings = {
   connections: HrvConnection[];
   cycleTrackingEnabled: boolean;
   sessionSuggestionEnabled: boolean;
+  /** Explicit consent to share HRV with coaches (0068). */
+  shareToCoach: boolean;
+  /** Null until the member has answered the share question. */
+  shareDecidedAt: string | null;
 };
 
 /**
@@ -78,16 +83,23 @@ export type HrvSettings = {
  * Demo mode (`!SUPABASE_ENABLED`, i.e. no Supabase client) has no
  * connection/settings tables — returns an empty, tracking-off state.
  */
+/** Demo-only memory of the "Del med coach" answer (no database). */
+export const DEMO_HRV_SHARE_COOKIE = "mi_demo_hrv_share";
+
 export async function getMemberHrvSettings(
   memberId: string
 ): Promise<HrvSettings> {
   const supabase = await createClient();
-  if (!supabase)
+  if (!supabase) {
+    const demo = (await cookies()).get(DEMO_HRV_SHARE_COOKIE)?.value;
     return {
       connections: [],
       cycleTrackingEnabled: false,
       sessionSuggestionEnabled: true,
+      shareToCoach: demo === "1",
+      shareDecidedAt: demo ? "demo" : null,
     };
+  }
 
   const [{ data: connRows }, { data: settingsRow }] = await Promise.all([
     supabase
@@ -99,7 +111,7 @@ export async function getMemberHrvSettings(
       .order("last_synced_at", { ascending: false }),
     supabase
       .from("hrv_settings")
-      .select("cycle_tracking_enabled, session_suggestion_enabled")
+      .select("cycle_tracking_enabled, session_suggestion_enabled, share_to_coach, share_to_coach_decided_at")
       .eq("member_id", memberId)
       .maybeSingle(),
   ]);
@@ -116,6 +128,8 @@ export async function getMemberHrvSettings(
     connections,
     cycleTrackingEnabled: !!settingsRow?.cycle_tracking_enabled,
     sessionSuggestionEnabled: settingsRow?.session_suggestion_enabled ?? true,
+    shareToCoach: settingsRow?.share_to_coach === true,
+    shareDecidedAt: settingsRow?.share_to_coach_decided_at ?? null,
   };
 }
 

@@ -5,7 +5,7 @@
     "subtitle": "Profil, notifikationer, data og konto-sletning. Alt under dine egne fingre."
   },
   "errors": {
-    "handle_invalid": "Kaldenavn skal starte med et bogstav (a-z) og være 2-31 tegn (a-z, 0-9, _, ., -).",
+    "handle_invalid": "Kaldenavn skal starte med et bogstav (a-z) og være 2–31 tegn (a-z, 0-9, _, ., -).",
     "handle_taken": "Kaldenavn er allerede taget. Prøv et andet.",
     "auth": "Du er ikke logget ind.",
     "unknown": "Noget gik galt. Prøv igen.",

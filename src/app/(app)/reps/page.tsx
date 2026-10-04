@@ -353,14 +353,14 @@ export default async function RepsPage() {
             </div>
             <ul className="surface-2 rounded-lg divide-y hairline overflow-hidden">
               {redemptions.map((r) => (
-                <li key={r.id} className="px-5 py-3 flex items-center gap-4 text-copy">
-                  <span className="numeric text-micro text-fg-faint w-20 shrink-0">
+                <li key={r.id} className="px-5 py-3 flex items-center gap-3 sm:gap-4 text-copy">
+                  <span className="numeric text-micro text-fg-faint w-14 sm:w-20 shrink-0">
                     {new Date(r.redeemedAt).toLocaleDateString(tag, {
                       day: "numeric",
                       month: "short",
                     })}
                   </span>
-                  <span className="flex-1 truncate">{localizeRewardName(r.rewardName, t)}</span>
+                  <span className="flex-1 min-w-0 break-words">{localizeRewardName(r.rewardName, t)}</span>
                   <span className="numeric text-fg-dim text-micro shrink-0">
                     − {r.costReps.toLocaleString(tag)}
                   </span>

@@ -31,8 +31,9 @@ describe("app copy gate (spec §5 taste rules, §8)", () => {
     expect(bad).toEqual([]);
   });
 
-  it("has no em or en dashes", () => {
-    const bad = all.filter(([, s]) => /[–—]/.test(s)).map(([k]) => k);
+  // En-dash is allowed only in numeric ranges ("0–999", "51–57 ms"): owner decision, brief §6.
+  it("has no em or en dashes outside numeric ranges", () => {
+    const bad = all.filter(([, s]) => /[–—]/.test(s.replace(/(?<=\d)–(?=\d)/g, ""))).map(([k]) => k);
     expect(bad).toEqual([]);
   });
 

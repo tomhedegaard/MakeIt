@@ -97,7 +97,7 @@ function Card({ item }: { item: ScienceFeedItem }) {
   const t = useTranslations("Science");
   const color = DOMAIN_COLOR[item.domain];
   return (
-    <li className="flex overflow-hidden rounded-2xl surface">
+    <li className="flex overflow-hidden surface">
       <span className="w-[5px] shrink-0" style={{ background: color }} aria-hidden />
       <div className="px-5 py-4 min-w-0">
         <div className="mb-2 flex flex-wrap items-center gap-2.5 text-micro">
@@ -114,11 +114,11 @@ function Card({ item }: { item: ScienceFeedItem }) {
             </span>
           )}
         </div>
-        <h2 className="mb-2 text-card">{item.title}</h2>
+        <h3 className="mb-2 text-card">{item.title}</h3>
         <p className="mb-2 leading-relaxed">{item.tldrDa}</p>
         {item.effectDa && (
           <p className="mb-2 text-meta text-fg-dim">
-            {t("effectLabel")}: <code className="numeric rounded surface-2 px-1.5 py-0.5 text-micro">{item.effectDa}</code>
+            {t("effectLabel")}: <code className="numeric surface-2 px-1.5 py-0.5 text-micro">{item.effectDa}</code>
           </p>
         )}
         {item.caveatDa && <p className="mb-2 text-meta text-fg-dim">{t("caveatLabel")}: {item.caveatDa}</p>}

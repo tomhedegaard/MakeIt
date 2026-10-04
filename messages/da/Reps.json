@@ -17,7 +17,7 @@
     "range": "{range} Reps",
     "list": {
       "Lifter": {
-        "range": "0-999",
+        "range": "0–999",
         "perks": [
           "Adgang til crewets feed",
           "Månedlige challenges",
@@ -25,7 +25,7 @@
         ]
       },
       "Athlete": {
-        "range": "1.000-4.999",
+        "range": "1.000–4.999",
         "perks": [
           "Alt fra Lifter",
           "Først til drops",
@@ -34,7 +34,7 @@
         ]
       },
       "Beast": {
-        "range": "5.000-14.999",
+        "range": "5.000–14.999",
         "perks": [
           "Alt fra Athlete",
           "Valgfri strap-farve (1 stk/år)",
