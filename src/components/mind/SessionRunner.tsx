@@ -136,7 +136,7 @@ export default function SessionRunner({
           {sections.map((sec, i) => (
             <section key={i}>
               {sec.heading ? (
-                <h3 className="eyebrow mb-2">{sec.heading}</h3>
+                <p className="eyebrow mb-2">{sec.heading}</p>
               ) : null}
               <p className="text-copy leading-relaxed whitespace-pre-wrap">
                 {sec.body}

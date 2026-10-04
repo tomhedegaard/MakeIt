@@ -69,7 +69,7 @@ export default async function ExerciseCard({
         </div>
         <div className="min-w-0 flex-1 space-y-2">
           <div>
-            <div className="font-display text-card sm:text-section leading-tight truncate">
+            <div className="font-display text-card sm:text-section truncate">
               {exercise.name}
             </div>
             <div className="eyebrow eyebrow-domain mt-1 truncate" data-domain="body">

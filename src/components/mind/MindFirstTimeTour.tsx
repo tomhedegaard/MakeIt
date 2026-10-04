@@ -68,7 +68,7 @@ export default function MindFirstTimeTour() {
         </div>
       </div>
 
-      <h2 id="mind-tour-title" className="font-display text-section leading-tight">
+      <h2 id="mind-tour-title" className="font-display text-section">
         {t(`steps.${currentKey}.title`)}
       </h2>
 

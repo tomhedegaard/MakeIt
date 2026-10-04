@@ -406,12 +406,12 @@ function FormCheckBody({
             {/* Ingen 0–100-score (spec §7.5): observationerne er svaret. */}
             <div className="mb-3">
               <div className="eyebrow mb-1">{t("result.eyebrow")}</div>
-              <h2 className="font-display text-section leading-[1]">
+              <h2 className="font-display text-section">
                 {verdict.headline}
               </h2>
             </div>
 
-            <p className="text-micro text-fg-faint mb-5">
+            <p className="text-meta text-fg-faint mb-5">
               {isMockResult
                 ? t("result.mockNote")
                 : t("result.realNote")}
@@ -445,7 +445,7 @@ function FormCheckBody({
               </button>
             </div>
 
-            <p className="mt-4 text-micro text-fg-faint text-center">
+            <p className="mt-4 text-meta text-fg-faint text-center">
               {t("result.coachReviewNote")}
             </p>
           </div>

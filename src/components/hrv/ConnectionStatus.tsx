@@ -79,7 +79,7 @@ export default function ConnectionStatus({
             className={cn(
               "mt-1 text-micro",
               needsAttention
-                ? "text-fg font-semibold"
+                ? "text-fg font-medium"
                 : "text-fg-faint",
             )}
           >

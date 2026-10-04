@@ -89,7 +89,7 @@ export default async function LoginPage({
             </p>
           ) : null}
 
-          <p className="mt-10 text-micro text-fg-faint">
+          <p className="mt-10 text-meta text-fg-faint">
             {SUPABASE_ENABLED ? t("statusConnected") : t("statusDemo")}
           </p>
         </div>
@@ -135,7 +135,7 @@ async function MockForm({ err }: { err?: string }) {
         </button>
       </form>
 
-      <p className="mt-6 text-micro text-fg-faint">
+      <p className="mt-6 text-meta text-fg-faint">
         {t("testCodesLabel")}<span className="text-fg-dim">MUNK-01 · MAKEIT-CREW · STRAPIT-50K</span>
       </p>
     </>
@@ -312,7 +312,7 @@ async function PasswordForm({ mode }: { mode: "signin" | "signup" }) {
         </button>
       </form>
 
-      <p className="mt-4 text-micro text-fg-faint">
+      <p className="mt-4 text-meta text-fg-faint">
         {isSignup ? (
           <>
             {t("hasAccount")}{" "}
@@ -457,7 +457,7 @@ async function SentState({ email }: { email?: string }) {
         <span className="text-fg">{email ?? t("fallbackEmail")}</span>
         {t("bodyTail")}
       </p>
-      <p className="text-micro text-fg-faint">
+      <p className="text-meta text-fg-faint">
         {t("expiry")}
       </p>
     </div>

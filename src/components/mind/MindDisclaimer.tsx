@@ -32,7 +32,7 @@ export default async function MindDisclaimer() {
           </section>
 
           <section className="border-l hairline-strong pl-5">
-            <h3 className="eyebrow mb-3">{t("resources_title")}</h3>
+            <p className="eyebrow mb-3">{t("resources_title")}</p>
             <ul className="space-y-1.5 text-fg text-copy">
               {youth ? (
                 <li>

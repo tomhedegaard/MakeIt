@@ -132,7 +132,7 @@ export default async function CrewPage() {
         </ol>
       </section>
       ) : (
-      <p className="text-micro text-fg-faint">
+      <p className="text-meta text-fg-faint">
         {t("storiesEmpty")}
       </p>
       )}
@@ -150,7 +150,7 @@ export default async function CrewPage() {
               {t("challengeParticipants", { count: challenge.participantCount })}
             </span>
           </div>
-          <h2 className="font-display text-title leading-[1] mb-3">
+          <h2 className="font-display text-section mb-3">
             {t("challengeTitle")}
           </h2>
           <p className="text-fg-dim text-meta">
@@ -196,7 +196,7 @@ export default async function CrewPage() {
       {/* Feed */}
       <section>
         <div className="flex items-end justify-between mb-3">
-          <h2 className="eyebrow">{t("feedEyebrow")}</h2>
+          <h2 className="font-display text-section">{t("feedEyebrow")}</h2>
           <span className="text-micro text-fg-faint">
             {useReal
               ? t("feedCount", { count: feed.length })

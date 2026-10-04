@@ -98,7 +98,7 @@ export default async function CoachSystemPage() {
                   <div className="font-display text-card leading-tight">
                     {t("cronsQuietLabel")}
                   </div>
-                  <p className="mt-2 text-micro text-fg-dim">
+                  <p className="mt-2 text-meta text-fg-dim">
                     {t("cronsQuietRunbook")}
                   </p>
                 </div>
@@ -116,14 +116,14 @@ export default async function CoachSystemPage() {
                   <div className="font-display text-card leading-tight">
                     {r.label}
                   </div>
-                  <p className="mt-2 text-micro text-fg-dim">
+                  <p className="mt-2 text-meta text-fg-dim">
                     {r.runbook}
                   </p>
                 </div>
                 <div className="text-right shrink-0">
                   {r.expiresAt ? (
                     <>
-                      <div className="font-display text-section numeric leading-none">
+                      <div className="font-display text-section numeric">
                         {r.daysUntilExpiry !== null && r.daysUntilExpiry < 0
                           ? t("expired")
                           : `${r.daysUntilExpiry}`}
@@ -203,7 +203,7 @@ export default async function CoachSystemPage() {
                   </span>
                 </div>
                 {s.notes ? (
-                  <p className="text-micro text-fg-dim">{s.notes}</p>
+                  <p className="text-meta text-fg-dim">{s.notes}</p>
                 ) : null}
                 {s.dashboardUrl ? (
                   <a
@@ -224,7 +224,7 @@ export default async function CoachSystemPage() {
       {status.database.error ? (
         <section className="surface-2 rounded-2xl p-5 border border-red-400/40">
           <div className="eyebrow text-red-400 mb-2">{t("databaseError")}</div>
-          <p className="text-micro text-fg-dim break-all">
+          <p className="text-meta text-fg-dim break-all">
             {status.database.error}
           </p>
         </section>
@@ -306,7 +306,7 @@ function KPI({
         {pulse ? <span className="pulse-dot" /> : null}
         {label}
       </div>
-      <div className="font-display text-title numeric leading-none">{value}</div>
+      <div className="font-display text-title numeric">{value}</div>
     </div>
   );
 }

@@ -92,7 +92,7 @@ export default function SkipDaysCard({
         ))}
       </div>
       {skipDayIndices.length > 0 ? (
-        <p className="mt-3 text-micro text-fg-dim">
+        <p className="mt-3 text-meta text-fg-dim">
           {t("regenHint")}
         </p>
       ) : null}

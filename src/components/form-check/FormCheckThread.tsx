@@ -48,11 +48,11 @@ export default function FormCheckThread({
                   {reviewed ? copy.reviewed : copy.pending}
                 </span>
               </div>
-              <p className="text-micro text-fg-dim">{copy.youFilmed}</p>
+              <p className="text-meta text-fg-dim">{copy.youFilmed}</p>
               {reviewed ? (
                 <div data-munk-reply="" className="space-y-2 pt-1">
                   <MunkMark />
-                  <p className="text-micro text-fg-faint">
+                  <p className="text-meta text-fg-faint">
                     {copy.munkReply}
                   </p>
                   {item.coachNotes ? (

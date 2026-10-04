@@ -49,7 +49,7 @@ export default function LogWeightCard({
           <div className="eyebrow mb-1">{t("eyebrow")}</div>
           {latestKg ? (
             <>
-              <div className="font-display text-title numeric leading-none">
+              <div className="font-display text-title numeric">
                 {latestKg.toFixed(1)} <span className="text-copy text-fg-faint">kg</span>
               </div>
               <div className="mt-2 text-micro text-fg-faint">

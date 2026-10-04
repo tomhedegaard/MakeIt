@@ -158,7 +158,7 @@ export function FormCheckReview({
           <div className="eyebrow mb-2">
             {t("voiceLabel", { handle: formCheck.memberHandle })}
           </div>
-          <p className="text-micro text-fg-faint mb-2">{t("voiceHint")}</p>
+          <p className="text-meta text-fg-faint mb-2">{t("voiceHint")}</p>
           {voiceSec != null ? (
             <p className="text-meta text-fg-dim" data-munk-voice="">
               {t("voiceReady", { sec: voiceSec })}
@@ -209,7 +209,7 @@ export function FormCheckReview({
         </button>
       </div>
 
-      <p className="mt-4 text-micro text-fg-faint text-center">
+      <p className="mt-4 text-meta text-fg-faint text-center">
         {t("footnote")}
       </p>
     </div>

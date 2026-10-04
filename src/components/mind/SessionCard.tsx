@@ -27,7 +27,7 @@ export default function SessionCard({
           {t("minutes", { minutes })}
         </div>
       </div>
-      <h3 className="font-display text-section group-hover:translate-x-0.5 transition-transform">
+      <h3 className="font-display text-card group-hover:translate-x-0.5 transition-transform">
         {session.title}
       </h3>
       {session.subtitle ? (

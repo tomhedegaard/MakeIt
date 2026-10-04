@@ -98,7 +98,7 @@ export default async function ProfilePage() {
               </article>
             ))}
           </div>
-          <p className="mt-3 text-micro text-fg-faint">
+          <p className="mt-3 text-meta text-fg-faint">
             {t("lifts.formula")}
           </p>
         </section>
@@ -327,7 +327,7 @@ export default async function ProfilePage() {
             </>
           )}
 
-          <p className="text-micro text-fg-faint mt-5">
+          <p className="text-meta text-fg-faint mt-5">
             {pending.length > 0
               ? t("formChecks.footerPending", {
                   pending: pending.length,

@@ -129,7 +129,7 @@ function WearableConnectBody() {
         </p>
       ) : null}
 
-      <p className="mt-6 text-micro text-fg-faint leading-relaxed">
+      <p className="mt-6 text-meta text-fg-faint leading-relaxed">
         {tPage("connectAppleNote")}
       </p>
     </SheetContent>

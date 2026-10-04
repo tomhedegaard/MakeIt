@@ -87,7 +87,7 @@ export default async function CoachSafetyPage() {
         <h2 className="font-display text-section mb-4">Journal-volumen</h2>
         {week.journalCoverage === "demo" ? (
           <div className="space-y-3">
-            <p className="text-fg-dim text-micro">
+            <p className="text-fg-dim text-meta">
               Demo-tal — ikke live dækning. I connected mode kan coaches
               ikke aggregere andres journals (RLS owner-only).
             </p>

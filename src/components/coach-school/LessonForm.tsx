@@ -105,12 +105,12 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
             ) : null}
           </div>
         ) : lesson.practiceScenario ? (
-          <p className="text-micro text-fg-faint">
+          <p className="text-meta text-fg-faint">
             {t("lesson.evalUnavailable")}
           </p>
         ) : null}
 
-        <p className="text-micro text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("lesson.completedFootnote", { reps: lesson.repsAward })}
         </p>
       </div>
@@ -126,7 +126,7 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
           {lesson.quiz.map((q, qIdx) => (
             <li key={qIdx} className="surface rounded-lg p-4 space-y-3">
               <div className="flex items-start gap-3">
-                <span className="numeric text-section text-fg-faint shrink-0 leading-none">
+                <span className="numeric text-section text-fg-faint shrink-0">
                   {String(qIdx + 1).padStart(2, "0")}
                 </span>
                 <p className="text-copy text-fg/90 leading-relaxed flex-1">
@@ -168,7 +168,7 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
           <div className="eyebrow">{t("lesson.practiceHeader")}</div>
           <div className="surface rounded-lg p-4 space-y-3">
             {lesson.practiceScenario.context ? (
-              <p className="text-micro text-fg-faint">
+              <p className="text-meta text-fg-faint">
                 {lesson.practiceScenario.context}
               </p>
             ) : null}
@@ -188,7 +188,7 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
 
       {error ? (
         <p
-          className="text-micro text-red-400"
+          className="text-meta text-red-400"
           role="alert"
           aria-live="polite"
         >

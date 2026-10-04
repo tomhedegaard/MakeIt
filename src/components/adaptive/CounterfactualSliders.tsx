@@ -376,9 +376,9 @@ function ResultBlock({
       >
         → {headline}
       </div>
-      <p className="text-micro text-fg-dim leading-relaxed">{detail}</p>
+      <p className="text-meta text-fg-dim leading-relaxed">{detail}</p>
       {previous ? (
-        <p className="text-micro text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {previous}
         </p>
       ) : null}

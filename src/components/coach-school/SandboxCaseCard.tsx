@@ -91,7 +91,7 @@ export default function SandboxCaseCard({
         <p className="text-copy text-fg/90 leading-snug">
           {t("held.title")}
         </p>
-        <p className="text-micro text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("held.reasonLine", { reason: heldReason })}
         </p>
       </div>
@@ -136,7 +136,7 @@ export default function SandboxCaseCard({
             <p className="text-copy text-fg/90 leading-snug">{reasoning}</p>
           </div>
         ) : null}
-        <p className="text-micro text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("revealed.footnote")}
         </p>
       </div>
@@ -204,7 +204,7 @@ export default function SandboxCaseCard({
 
       {error ? (
         <p
-          className="text-micro text-red-400"
+          className="text-meta text-red-400"
           role="alert"
           aria-live="polite"
         >

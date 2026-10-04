@@ -157,7 +157,7 @@ export default function MealCard({
                   </>
                 ) : null}
               </div>
-              <h3 className="font-display text-section md:text-title leading-[1] mb-1.5">
+              <h3 className="font-display text-card mb-1.5">
                 {meal.title}
               </h3>
               {meal.description ? (

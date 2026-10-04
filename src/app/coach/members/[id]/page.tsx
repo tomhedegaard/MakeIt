@@ -181,7 +181,7 @@ export default async function CoachMemberDetailPage({
         <div className="surface-2 rounded-2xl p-5 grid gap-4 md:grid-cols-4">
           <div>
             <div className="eyebrow mb-1">{t("adherenceLabel")}</div>
-            <div className="font-display text-title numeric leading-none">
+            <div className="font-display text-title numeric">
               {adherence.adherencePct}%
             </div>
             <div className="mt-2 text-micro text-fg-faint">
@@ -190,7 +190,7 @@ export default async function CoachMemberDetailPage({
           </div>
           <div>
             <div className="eyebrow mb-1">{t("weightTrendLabel")}</div>
-            <div className="font-display text-title numeric leading-none">
+            <div className="font-display text-title numeric">
               {adherence.weightDeltaKg === null
                 ? "—"
                 : `${adherence.weightDeltaKg > 0 ? "+" : ""}${adherence.weightDeltaKg.toFixed(1)}`}
@@ -201,7 +201,7 @@ export default async function CoachMemberDetailPage({
           </div>
           <div>
             <div className="eyebrow mb-1">{t("skipDaysLabel")}</div>
-            <div className="font-display text-title numeric leading-none">
+            <div className="font-display text-title numeric">
               {adherence.skipDaysCount}
             </div>
             <div className="mt-2 text-micro text-fg-faint">

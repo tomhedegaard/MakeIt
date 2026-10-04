@@ -34,7 +34,7 @@ export default async function CoachRedemptionsPage() {
         </ul>
       )}
 
-      <p className="text-micro text-fg-faint">
+      <p className="text-meta text-fg-faint">
         {t("statusFlow")}
       </p>
     </Container>

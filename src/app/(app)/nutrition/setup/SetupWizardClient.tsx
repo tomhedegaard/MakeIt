@@ -133,14 +133,14 @@ export default function SetupWizardClient() {
             </span>
           </div>
         </label>
-        <p className="mt-3 text-micro text-fg-faint">
+        <p className="mt-3 text-meta text-fg-faint">
           {t("weightTiming")}
         </p>
       </Section>
 
       <div className="border-t hairline pt-6 flex flex-wrap items-center gap-4">
         <SubmitButton />
-        <p className="text-micro text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("submitTiming")}
         </p>
       </div>
@@ -198,7 +198,7 @@ function Section({
         <span className="numeric text-micro text-fg-faint">
           {num}
         </span>
-        <h2 className="font-display text-section md:text-title">{title}</h2>
+        <h2 className="font-display text-section">{title}</h2>
       </div>
       <p className="text-meta text-fg-dim mb-5 max-w-lg">{sub}</p>
       {children}
@@ -239,7 +239,7 @@ function Choice({
           aria-hidden
         />
         <div>
-          <div className="font-display text-section leading-[1.05] mb-1">{title}</div>
+          <div className="font-display text-section mb-1">{title}</div>
           <div className="text-meta text-fg-dim">{sub}</div>
         </div>
       </div>

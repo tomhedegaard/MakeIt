@@ -37,7 +37,7 @@ export default function AdaptationHistory({
         aria-labelledby="adaptation-history-heading"
         className="surface-2 rounded-2xl p-5 lg:p-6 space-y-2"
       >
-        <h2 id="adaptation-history-heading" className="eyebrow">
+        <h2 id="adaptation-history-heading" className="font-display text-section">
           Tidligere tilpasninger
         </h2>
         <p className="text-copy text-fg-dim leading-relaxed">
@@ -62,7 +62,7 @@ export default function AdaptationHistory({
       <AdaptationHistoryImpression recentCount={items.length} />
 
       <div className="flex items-baseline justify-between gap-3">
-        <h2 id="adaptation-history-heading" className="eyebrow">
+        <h2 id="adaptation-history-heading" className="font-display text-section">
           Tidligere tilpasninger
         </h2>
         <span className="text-micro text-fg-faint">

@@ -329,7 +329,7 @@ export default async function TodayPage() {
                 </span>
               ) : null}
             </div>
-            <h2 className="font-display text-title leading-[1] mb-2">
+            <h2 className="font-display text-section mb-2">
               {today.dayLabel}
             </h2>
             <p className="text-fg-dim text-meta md:text-copy leading-relaxed">{today.title}</p>

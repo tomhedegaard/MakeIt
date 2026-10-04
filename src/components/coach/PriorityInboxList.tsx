@@ -73,7 +73,7 @@ export default async function PriorityInboxList({
           <div className="font-display text-section">{t("emptyTitle")}</div>
           <p className="text-meta text-fg-dim max-w-md">{t("emptyBody")}</p>
           {mode === "demo" ? (
-            <p className="text-micro text-fg-faint">{t("emptyDemoHint")}</p>
+            <p className="text-meta text-fg-faint">{t("emptyDemoHint")}</p>
           ) : null}
         </div>
       ) : (

@@ -64,7 +64,7 @@ export default async function SessionPreview({ session }: { session: Session }) 
       <Container size="narrow" className="flex-1 py-6 pb-40 lg:pb-12 space-y-6">
         <section className="surface-2 p-5 lg:p-7">
           <div className="eyebrow mb-2">{t("preview.eyebrow")}</div>
-          <h1 className="font-display text-title leading-[1] mb-2">
+          <h1 className="font-display text-title mb-2">
             {session.dayLabel}
           </h1>
           <p className="text-fg-dim text-meta md:text-copy leading-relaxed">
@@ -133,12 +133,12 @@ async function PreviewExercise({
           {lib ? (
             <Link
               href={`/train/exercises/${lib.slug}`}
-              className="font-display text-section lg:text-title leading-[1.05] hover:text-fg-dim transition-colors"
+              className="font-display text-section hover:text-fg-dim transition-colors"
             >
               {ex.name}
             </Link>
           ) : (
-            <h2 className="font-display text-section lg:text-title leading-[1.05]">
+            <h2 className="font-display text-section">
               {ex.name}
             </h2>
           )}

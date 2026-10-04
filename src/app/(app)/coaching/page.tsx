@@ -186,7 +186,7 @@ export default async function TrainPage() {
               })}
             </span>
           </div>
-          <h2 className="font-display text-title leading-[1] mb-2">
+          <h2 className="font-display text-section mb-2">
             {today.dayLabel}
           </h2>
           <p className="text-fg-dim text-meta md:text-copy">{today.title}</p>
@@ -234,7 +234,7 @@ export default async function TrainPage() {
           <div className="flex items-end justify-between mb-3">
             <div>
               <div className="eyebrow mb-1">{t("active.eyebrow")}</div>
-              <div className="font-display text-section md:text-title">{active.name}</div>
+              <div className="font-display text-section">{active.name}</div>
             </div>
             <div className="text-right">
               <div className="numeric text-title">
@@ -295,7 +295,7 @@ export default async function TrainPage() {
                         </span>
                       ) : null}
                     </div>
-                    <h3 className="font-display text-section md:text-title leading-[1] truncate">
+                    <h3 className="font-display text-card truncate">
                       {p.name}
                     </h3>
                   </div>
@@ -369,7 +369,7 @@ export default async function TrainPage() {
       {/* 1:1 — only fully human */}
       <section className="surface-2 rounded-2xl p-6 lg:p-10">
         <div className="eyebrow mb-3">{t("oneOnOne.eyebrow")}</div>
-        <h3 className="font-display text-section md:text-title leading-[1] mb-3">
+        <h3 className="font-display text-card mb-3">
           {t("oneOnOne.title")}
         </h3>
         <p className="text-fg-dim text-copy max-w-xl mb-5">

@@ -81,9 +81,9 @@ export default function ReasoningDetailPanel({
       {/* Subpanel 1: signals the engine saw                            */}
       {/* ------------------------------------------------------------ */}
       <section aria-labelledby="reasoning-signals-heading">
-        <h3 id="reasoning-signals-heading" className="eyebrow mb-3">
+        <p id="reasoning-signals-heading" className="eyebrow mb-3">
           Hvad HQ så
-        </h3>
+        </p>
         <ul className="space-y-1.5">
           <SignalRow
             label="HRV i dag"
@@ -142,16 +142,16 @@ export default function ReasoningDetailPanel({
       {/* Subpanel 2: which rule fired                                  */}
       {/* ------------------------------------------------------------ */}
       <section aria-labelledby="reasoning-rule-heading">
-        <h3 id="reasoning-rule-heading" className="eyebrow mb-2">
+        <p id="reasoning-rule-heading" className="eyebrow mb-2">
           Hvilken regel fyrede
-        </h3>
+        </p>
         <p className="text-copy text-fg-dim leading-relaxed">
           {narrateRule({
             action: ruleDecision.action,
             reasons: ruleDecision.reasons,
           })}
         </p>
-        <p className="text-micro text-fg-faint mt-2">
+        <p className="text-meta text-fg-faint mt-2">
           Regel-confidence {ruleDecision.confidence.toFixed(2)}
         </p>
       </section>
@@ -161,9 +161,9 @@ export default function ReasoningDetailPanel({
       {/* ------------------------------------------------------------ */}
       {reasoningOutput ? (
         <section aria-labelledby="reasoning-claude-heading">
-          <h3 id="reasoning-claude-heading" className="eyebrow mb-2">
+          <p id="reasoning-claude-heading" className="eyebrow mb-2">
             Hvad Munks assistent justerede
-          </h3>
+          </p>
           <p className="text-copy text-fg-dim leading-relaxed">
             {describeClaudeRefinement(ruleDecision, reasoningOutput)}
           </p>

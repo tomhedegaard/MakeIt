@@ -92,7 +92,7 @@ export default function DailyCheckInCard({
               </>
             ) : null}
           </div>
-          <h3 className="font-display text-section leading-[1.05] mb-1">
+          <h3 className="font-display text-card mb-1">
             {headline}
           </h3>
           {variant === "full" && checkin.meal?.description ? (

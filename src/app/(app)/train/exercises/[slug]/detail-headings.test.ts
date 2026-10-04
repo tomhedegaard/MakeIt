@@ -1,7 +1,7 @@
 /**
  * The exercise detail page is content-dense but had exactly one heading
  * (the exercise name), so a screen reader could not jump between its
- * sections. The labels keep the `.eyebrow` look — only the tag changes.
+ * sections. They are section headings, so they carry text-section (DESIGN.md).
  *
  * The page itself is an async server component wired to Supabase, so this
  * asserts on its source. The hero's two labels are covered by a real render
@@ -17,7 +17,7 @@ const src = readFileSync(join(here, "page.tsx"), "utf8");
 
 describe("exercise detail section headings", () => {
   it("renders «Typiske fejl» as a heading", () => {
-    expect(src).toContain('<h2 className="eyebrow">{t("detail.mistakes")}</h2>');
+    expect(src).toContain('<h2 className="font-display text-section">{t("detail.mistakes")}</h2>');
   });
 
   it("renders Setup / Progression / Regression as headings via InfoBlock", () => {
@@ -25,7 +25,7 @@ describe("exercise detail section headings", () => {
       expect(src).toContain(`<InfoBlock eyebrow={t("detail.${key}")}`);
     }
     expect(src).toMatch(
-      /function InfoBlock[\s\S]*?<h2 className="eyebrow">\{eyebrow\}<\/h2>/,
+      /function InfoBlock[\s\S]*?<h2 className="font-display text-section">\{eyebrow\}<\/h2>/,
     );
   });
 

@@ -40,7 +40,7 @@ export default function InsightCard({ card }: { card: CorrelationCard }) {
       card.exposedMeanRmssd !== null &&
       card.baselineMeanRmssd !== null ? (
         <div className="mt-4 flex flex-col gap-3">
-          <div className="font-display text-section leading-tight text-fg">
+          <div className="font-display text-section text-fg">
             <span className="sr-only">{t("deltaSr")} </span>
             {formatDelta(card.deltaPct)}
           </div>

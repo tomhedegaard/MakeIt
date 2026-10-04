@@ -27,7 +27,7 @@ export default function Stat({
         {unit ? <span className="text-fg-dim text-copy ml-1">{unit}</span> : null}
       </p>
       {delta === undefined ? null : (
-        <p className="text-micro text-fg-dim">
+        <p className="text-meta text-fg-dim">
           {arrow} {magnitude}
           {deltaLabel ? <span className="sr-only"> {deltaLabel}</span> : null}
         </p>

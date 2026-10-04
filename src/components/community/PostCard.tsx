@@ -197,7 +197,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
       {expanded ? (
         <div className="mt-4 border-t hairline pt-4 space-y-4">
           {loadingComments ? (
-            <p className="text-micro text-fg-faint">
+            <p className="text-meta text-fg-faint">
               {t("loadingComments")}
             </p>
           ) : comments && comments.length > 0 ? (
@@ -220,7 +220,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
               ))}
             </ul>
           ) : (
-            <p className="text-micro text-fg-faint">
+            <p className="text-meta text-fg-faint">
               {t("noComments")}
             </p>
           )}
@@ -244,7 +244,7 @@ export default function PostCard({ post }: { post: FeedPost }) {
             </button>
           </form>
 
-          <p className="text-micro text-fg-faint">
+          <p className="text-meta text-fg-faint">
             {t("mentionHint")}
           </p>
         </div>

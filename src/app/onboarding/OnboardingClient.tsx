@@ -280,7 +280,7 @@ export default function OnboardingClient({
                 />
               </div>
 
-              <p className="text-micro text-fg-faint">
+              <p className="text-meta text-fg-faint">
                 {t("step2.footnote")}
               </p>
             </>
@@ -312,10 +312,10 @@ export default function OnboardingClient({
                 equip={equip}
               />
 
-              <p className="text-micro text-fg-faint">
+              <p className="text-meta text-fg-faint">
                 {t("step3.footnote")}
               </p>
-              <p className="text-micro text-fg-faint">
+              <p className="text-meta text-fg-faint">
                 {t("step3.submitTiming")}
               </p>
             </>
@@ -484,7 +484,7 @@ function Choice({
           aria-hidden
         />
         <div>
-          <div className="font-display text-section leading-[1.05] mb-1">{title}</div>
+          <div className="font-display text-section mb-1">{title}</div>
           <div className="text-meta text-fg-dim">{sub}</div>
         </div>
       </div>

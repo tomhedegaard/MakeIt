@@ -117,7 +117,7 @@ function StateProvisional({
         <p className="text-fg-dim text-copy leading-relaxed mt-6 max-w-md">
           {copy.buildingBody}
         </p>
-        <p className="text-micro text-fg-faint mt-4">
+        <p className="text-meta text-fg-faint mt-4">
           {copy.disclaimer}
         </p>
       </div>
@@ -155,7 +155,7 @@ function StateActive({
           <span className="eyebrow eyebrow-domain">{copy.steadyEyebrow}</span>
           {latestMs != null ? (
             <div className="flex items-baseline gap-2">
-              <span className="numeric text-title leading-none">
+              <span className="numeric text-title">
                 {latestMs}
                 <span className="text-fg-dim text-meta ml-1">{copy.unit}</span>
               </span>
@@ -184,7 +184,7 @@ function StateActive({
               {band.engineCue === "below" ? copy.engineBelow : copy.engineAbove}
             </p>
           ) : null}
-          <p className="text-micro text-fg-faint mt-4">
+          <p className="text-meta text-fg-faint mt-4">
             {copy.disclaimer}
           </p>
         </div>

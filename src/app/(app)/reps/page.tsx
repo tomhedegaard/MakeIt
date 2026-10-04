@@ -183,7 +183,7 @@ export default async function RepsPage() {
         {/* Nord §6.7: the four tiers as one horizontal scale. Perks sit
             in a disclosure so the scale stays a glance, not a wall. */}
         <section aria-labelledby="reps-tiers">
-          <h2 id="reps-tiers" className="eyebrow mb-4">{t("tiers.eyebrow")}</h2>
+          <h2 id="reps-tiers" className="font-display text-section mb-4">{t("tiers.eyebrow")}</h2>
           <ol className="grid grid-cols-4 border-t hairline">
             {tiers.map((tier) => {
               const active = tier.name === progress.current;
@@ -234,7 +234,7 @@ export default async function RepsPage() {
 
         <section>
           <div className="flex items-end justify-between mb-6">
-            <h2 className="eyebrow">{t("transactions.eyebrow")}</h2>
+            <h2 className="font-display text-section">{t("transactions.eyebrow")}</h2>
             <span className="text-micro text-fg-dim">
               {t("transactions.count", { count: transactions.length })}
             </span>
@@ -289,7 +289,7 @@ export default async function RepsPage() {
         </section>
 
         <section aria-labelledby="reps-how">
-          <h2 id="reps-how" className="eyebrow mb-4">{t("how.eyebrow")}</h2>
+          <h2 id="reps-how" className="font-display text-section mb-4">{t("how.eyebrow")}</h2>
           <ul className="border-t hairline md:grid md:grid-cols-2 md:gap-x-10">
             {how.map((row) => (
               <li key={row.k} className="flex items-baseline gap-4 py-3 border-b hairline">
@@ -305,7 +305,7 @@ export default async function RepsPage() {
 
         <section>
           <div className="flex items-end justify-between mb-6">
-            <h2 className="eyebrow">{t("shop.eyebrow")}</h2>
+            <h2 className="font-display text-section">{t("shop.eyebrow")}</h2>
             <span className="numeric text-micro text-fg-dim">
               {t("shop.balance", { balance: balance.toLocaleString(tag) })}
             </span>
@@ -324,7 +324,7 @@ export default async function RepsPage() {
                   <div className="eyebrow mb-3">{t("shop.repsLabel")}</div>
                   <div className="font-display text-card mb-1">{r.name}</div>
                   {r.description ? (
-                    <p className="text-micro text-fg-dim mb-3 flex-1">
+                    <p className="text-meta text-fg-dim mb-3 flex-1">
                       {r.description}
                     </p>
                   ) : <div className="flex-1" />}
@@ -346,7 +346,7 @@ export default async function RepsPage() {
         {redemptions.length > 0 ? (
           <section>
             <div className="flex items-end justify-between mb-3">
-              <h2 className="eyebrow">{t("redemptions.eyebrow")}</h2>
+              <h2 className="font-display text-section">{t("redemptions.eyebrow")}</h2>
               <span className="text-micro text-fg-faint">
                 {t("redemptions.total", { count: redemptions.length })}
               </span>

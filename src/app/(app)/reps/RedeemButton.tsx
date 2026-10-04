@@ -110,7 +110,7 @@ export default function RedeemButton({
                 </div>
               </div>
 
-              <p className="text-micro text-fg-faint mb-5">
+              <p className="text-meta text-fg-faint mb-5">
                 {reward.kind === "physical" || reward.kind === "drop"
                   ? t("fulfilmentPhysical")
                   : reward.kind === "experience"

@@ -62,7 +62,7 @@ export default async function AdaptiveLearnPage() {
           <div className="eyebrow">{t("example.eyebrow")}</div>
           <article className="surface-2 rounded-2xl p-5 lg:p-6 space-y-3">
             <div className="flex items-baseline justify-between gap-3">
-              <h2 className="eyebrow">{t("example.title")}</h2>
+              <p className="eyebrow">{t("example.title")}</p>
               <span className="text-micro text-fg-dim">
                 {t("example.meta")}
               </span>
@@ -87,7 +87,7 @@ export default async function AdaptiveLearnPage() {
               </button>
             </div>
           </article>
-          <p className="text-micro text-fg-faint">
+          <p className="text-meta text-fg-faint">
             {t("example.note")}
           </p>
         </section>
@@ -130,7 +130,7 @@ export default async function AdaptiveLearnPage() {
           <h2 className="font-display text-section">{t("bounds.title")}</h2>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="surface-2 rounded-2xl p-5 space-y-2">
-              <h3 className="eyebrow">{t("bounds.engineTitle")}</h3>
+              <h3 className="font-display text-card">{t("bounds.engineTitle")}</h3>
               <ul className="text-meta text-fg-dim leading-relaxed space-y-1 list-disc list-inside marker:text-fg-faint">
                 {(t.raw("bounds.engine") as string[]).map((item) => (
                   <li key={item}>{item}</li>
@@ -138,7 +138,7 @@ export default async function AdaptiveLearnPage() {
               </ul>
             </div>
             <div className="surface-2 rounded-2xl p-5 space-y-2">
-              <h3 className="eyebrow">{t("bounds.coachTitle")}</h3>
+              <h3 className="font-display text-card">{t("bounds.coachTitle")}</h3>
               <ul className="text-meta text-fg-dim leading-relaxed space-y-1 list-disc list-inside marker:text-fg-faint">
                 {(t.raw("bounds.coach") as string[]).map((item) => (
                   <li key={item}>{item}</li>
@@ -163,7 +163,7 @@ export default async function AdaptiveLearnPage() {
           </Link>
         </section>
 
-        <p className="text-micro text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("exampleDecision", {
             action: labelForAction(baselineDecision.action),
             confidence: baselineDecision.confidence.toFixed(2),

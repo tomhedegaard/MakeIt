@@ -61,7 +61,7 @@ export default async function MindSessionsPage() {
           return (
             <section key={cat}>
               <div className="mb-5">
-                <h2 className="font-display text-section md:text-title">
+                <h2 className="font-display text-section">
                   {t(`category.${cat}.heading`)}
                 </h2>
                 <p className="text-fg-dim text-meta mt-1">

@@ -67,7 +67,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
         <p className="text-copy text-fg/90 leading-snug">
           {t("held.title")}
         </p>
-        <p className="text-micro text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("held.reasonLine", { reason: heldReason })}
         </p>
       </div>
@@ -162,7 +162,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
 
       {error ? (
         <p
-          className="text-micro text-red-400"
+          className="text-meta text-red-400"
           role="alert"
           aria-live="polite"
         >

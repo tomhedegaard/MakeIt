@@ -89,7 +89,7 @@ export default function MessageBubble({
 
         {/* Fallback: media kind but no signed URL (storage hiccup) */}
         {message.kind !== "text" && !message.mediaUrl ? (
-          <p className="px-4 py-3 text-micro text-fg-dim">
+          <p className="px-4 py-3 text-meta text-fg-dim">
             {t("mediaError")}
           </p>
         ) : null}

@@ -157,7 +157,7 @@ async function DayCard({ day }: { day: ProgramDetailDay }) {
               <div className="eyebrow mb-1">
                 {t("day.position", { position: day.position })}
               </div>
-              <h3 className="font-display text-section md:text-title leading-[1.05]">
+              <h3 className="font-display text-card">
                 {day.dayLabel}
               </h3>
             </div>

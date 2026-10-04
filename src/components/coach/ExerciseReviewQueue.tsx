@@ -97,7 +97,7 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
   if (!current) {
     return (
       <section className="surface-2 rounded-xl border hairline p-6 md:p-8 space-y-4">
-        <h2 className="font-display text-title">{t("doneTitle")}</h2>
+        <h2 className="font-display text-section">{t("doneTitle")}</h2>
         <p className="text-fg-dim">{t("doneBody", { approved, skipped })}</p>
         <div className="flex flex-wrap gap-3">
           <Link href="/coach/exercises" className="btn btn-primary">
@@ -117,10 +117,10 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <p className="text-micro text-fg-dim">
+        <p className="text-meta text-fg-dim">
           {t("position", { current: state.index + 1, total: count })}
         </p>
-        <p className="text-micro text-fg-dim" aria-live="polite">
+        <p className="text-meta text-fg-dim" aria-live="polite">
           {t("tally", { approved, skipped })}
         </p>
       </div>
@@ -151,8 +151,8 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
 
         <div className="space-y-5">
           <div>
-            <p className="text-micro text-fg-faint">{current.slug}</p>
-            <h2 id="review-name" className="font-display text-title">
+            <p className="text-meta text-fg-faint">{current.slug}</p>
+            <h2 id="review-name" className="font-display text-section">
               {current.name}
             </h2>
             {meta ? <p className="mt-1.5 text-meta text-fg-dim">{meta}</p> : null}
@@ -230,7 +230,7 @@ export default function ExerciseReviewQueue({ drafts: initialDrafts }: { drafts:
             {error}
           </p>
         ) : null}
-        <p className="w-full text-micro text-fg-faint">{t("keys")}</p>
+        <p className="w-full text-meta text-fg-faint">{t("keys")}</p>
       </div>
     </div>
   );
@@ -260,7 +260,7 @@ function MuscleRow({ label, muscles, strong = false }: { label: string; muscles:
 function Block({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-1.5 text-micro text-fg-faint">{label}</p>
+      <p className="mb-1.5 text-meta text-fg-faint">{label}</p>
       {children}
     </div>
   );

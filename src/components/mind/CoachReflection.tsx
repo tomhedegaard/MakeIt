@@ -27,7 +27,7 @@ export default async function CoachReflection({ bodyMd }: { bodyMd: string }) {
       {sections.map((sec, i) => (
         <section key={i} className="space-y-2">
           {sec.heading ? (
-            <h3 className="font-display text-section">{sec.heading}</h3>
+            <h3 className="font-display text-card">{sec.heading}</h3>
           ) : null}
           <p className="text-fg-dim leading-relaxed whitespace-pre-wrap text-copy">
             {sec.body}

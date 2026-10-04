@@ -60,7 +60,7 @@ export default function MentalToggleRow({
         <div className="font-display text-card">{title}</div>
         <p className="text-fg-dim text-meta leading-relaxed">{description}</p>
         {disabled && disabledReason ? (
-          <p className="text-fg-dim text-micro italic mt-1">{disabledReason}</p>
+          <p className="text-fg-dim text-meta italic mt-1">{disabledReason}</p>
         ) : null}
       </div>
       <button

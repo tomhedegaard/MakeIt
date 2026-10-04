@@ -1,4 +1,10 @@
 @import "tailwindcss";
+/* Rapporter og designdokumenter citerer klassenavne (fx text-[var(…)]),
+ * som Tailwind ellers prøver at generere CSS til. Kun kode scannes. */
+@source not "../../.reviews";
+@source not "../../.impeccable";
+@source not "../../DESIGN.md";
+@source not "../../docs";
 
 /* ---------------------------------------------------------------- *
  * MakeIt — design tokens, retning Nord
@@ -459,19 +465,6 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 .field:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
 .field::placeholder { color: var(--fg-faint); }
 
-/* iOS zooms on focus below 16px. With this, the root viewport can
- * drop maximumScale and let people pinch-zoom (WCAG 1.4.4).
- * The width query is the belt to (pointer: coarse)'s braces: a phone
- * viewport that does not report a coarse pointer (desktop responsive
- * mode, some in-app webviews) gets the 16px floor too. */
-@media (pointer: coarse), (max-width: 40rem) {
-  .input,
-  .field,
-  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-  textarea,
-  select { font-size: 16px; }
-}
-
 /* Card hover lift */
 .lift { transition: transform 200ms ease-out, border-color 200ms ease-out, background 200ms ease-out; }
 .lift:hover { transform: translateY(-2px); border-color: var(--line-strong); }
@@ -745,6 +738,21 @@ nav.tabbar {
 /* Disable iOS double-tap-zoom for app surfaces */
 .touch-app { touch-action: manipulation; }
 } /* @layer components */
+
+/* Uden for @layer med vilje: reglen skal slå text-copy på selve feltet.
+ * iOS zooms on focus below 16px. With this, the root viewport can
+ * drop maximumScale and let people pinch-zoom (WCAG 1.4.4).
+ * The width query is the belt to (pointer: coarse)'s braces: a phone
+ * viewport that does not report a coarse pointer (desktop responsive
+ * mode, some in-app webviews) gets the 16px floor too. */
+@media (pointer: coarse), (max-width: 40rem) {
+  .input,
+  .field,
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select { font-size: 16px; }
+}
+
 
 /* ---------------------------------------------------------------- *
  * Landing helpers (Nord). Tokens only, scoped to the landing's theme root.

@@ -80,7 +80,7 @@ export default async function CoachCirklerPage() {
             </div>
           )}
 
-          <p className="text-fg-dim text-micro leading-relaxed">
+          <p className="text-fg-dim text-meta leading-relaxed">
             Cirkel-poster + reactions surfacer i medlemmernes
             <code className="px-1 mx-1 rounded bg-bg-2 text-fg">/mind/cirkler</code>.
             Du har ikke direct moderation-værktøjer i v0 — eskaler via

@@ -102,7 +102,7 @@ function Card({ item }: { item: ScienceFeedItem }) {
       <div className="px-5 py-4 min-w-0">
         <div className="mb-2 flex flex-wrap items-center gap-2.5 text-micro">
           <span
-            className="border px-2.5 py-0.5 font-semibold"
+            className="border px-2.5 py-0.5 font-medium"
             style={{ color, borderColor: color }}
           >
             {t(`domains.${item.domain}`)}

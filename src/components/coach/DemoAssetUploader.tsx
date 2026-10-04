@@ -94,7 +94,7 @@ export default function DemoAssetUploader({
   return (
     <section className="surface-2 rounded-xl p-5 md:p-6 space-y-4">
       <div className="eyebrow">Demo-asset</div>
-      <p className="text-micro text-fg-dim">
+      <p className="text-meta text-fg-dim">
         Upload de tre filer fra motion-designeren. WebM aktiverer demo-loopet
         på /train/exercises — MP4 er fallback, JPG er poster mens loopet
         loader.
@@ -140,7 +140,7 @@ export default function DemoAssetUploader({
           </video>
         </div>
       ) : (
-        <p className="text-micro text-fg-faint">
+        <p className="text-meta text-fg-faint">
           Intet demo-loop endnu — upload en WebM for at aktivere det.
         </p>
       )}

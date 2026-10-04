@@ -58,7 +58,7 @@ export default function HrvBandHero({
     >
       {view.state === "empty" ? (
         <div className="px-6 py-8 md:px-8 md:py-10">
-          <h2 className="font-display text-section leading-tight mb-3">
+          <h2 className="font-display text-section mb-3">
             {copy.emptyTitle}
           </h2>
           <p className="text-fg-dim text-copy leading-relaxed max-w-md">
@@ -81,7 +81,7 @@ export default function HrvBandHero({
             {view.qualitative ? (
               <p
                 data-qualitative={view.qualitative}
-                className="inline-flex items-center gap-3 font-display text-title leading-none"
+                className="inline-flex items-center gap-3 font-display text-title"
               >
                 {/* Same dot as today's mark on the band below. */}
                 <span aria-hidden className="size-2.5 rounded-full bg-domain" />
@@ -147,7 +147,7 @@ export default function HrvBandHero({
       )}
 
       <div className="px-6 py-3 md:px-8 border-t hairline">
-        <p className="text-micro text-fg-dim leading-relaxed">
+        <p className="text-meta text-fg-dim leading-relaxed">
           {copy.disclaimer}
         </p>
       </div>

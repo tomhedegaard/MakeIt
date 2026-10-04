@@ -56,7 +56,7 @@ export default async function CoachSchoolLivePage() {
       )}
 
       <footer className="pt-4 border-t hairline">
-        <p className="text-micro text-fg-faint">{t("live.footnote")}</p>
+        <p className="text-meta text-fg-faint">{t("live.footnote")}</p>
       </footer>
     </Container>
   );

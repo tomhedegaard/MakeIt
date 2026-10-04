@@ -305,7 +305,7 @@ function EmptyState({
           {t("page.emptyPreferences")}
         </Link>
       </div>
-      <p className="mt-4 text-micro text-fg-dim">
+      <p className="mt-4 text-meta text-fg-dim">
         {t("page.emptyQuota", {
           dailyUsed: planLimit.daily.used,
           dailyMax: planLimit.daily.max,
@@ -447,7 +447,7 @@ function PlanView({
 
       {/* Rest of week — collapsed by day */}
       <section className="space-y-3">
-        <h2 className="eyebrow">{t("page.restOfWeek")}</h2>
+        <h2 className="font-display text-section">{t("page.restOfWeek")}</h2>
         <div className="surface-2 divide-y hairline">
         {byDay.map((meals, i) => {
           if (i === todayIndex) return null;
@@ -493,7 +493,7 @@ function PlanView({
       {supplements.length > 0 ? (
         <section className="surface-2 rounded-2xl p-5 lg:p-6">
           <div className="eyebrow mb-3">{t("page.supplementsEyebrow")}</div>
-          <p className="text-fg-dim text-micro mb-4 max-w-prose">
+          <p className="text-fg-dim text-meta mb-4 max-w-prose">
             {t("page.supplementsBody")}
           </p>
           <ul className="grid gap-3 md:grid-cols-2">

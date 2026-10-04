@@ -138,7 +138,7 @@ export default function HrvSettingsSection({
         {primaryError ? (
           <p
             role="alert"
-            className="text-micro text-fg-dim"
+            className="text-meta text-fg-dim"
           >
             {primaryError}
           </p>

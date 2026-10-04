@@ -27,6 +27,12 @@ describe("no iOS focus zoom on touch", () => {
   const css = readFileSync(new URL("../../app/globals.css", import.meta.url), "utf8");
   const rule = css.match(/@media \(pointer: coarse\), \(max-width: 40rem\) \{([\s\S]*?)\}\s*\}/)?.[1] ?? "";
 
+  it("sits outside @layer components so it beats text-copy on the field", () => {
+    const layerEnd = css.indexOf("} /* @layer components */");
+    expect(layerEnd).toBeGreaterThan(0);
+    expect(css.indexOf("@media (pointer: coarse), (max-width: 40rem)")).toBeGreaterThan(layerEnd);
+  });
+
   it.each(["textarea", "select", "input:not("])("covers %s at 16px", (sel) => {
     expect(rule).toContain(sel);
     expect(rule).toContain("font-size: 16px");

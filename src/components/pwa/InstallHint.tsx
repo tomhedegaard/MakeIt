@@ -74,7 +74,7 @@ export default function InstallHint() {
     <aside className="surface-2 rounded-xl px-5 py-4">
       <div className="eyebrow mb-1.5">{t("eyebrow")}</div>
       <div className="text-copy mb-1">{t("title")}</div>
-      <p className="text-micro text-fg-dim leading-relaxed">
+      <p className="text-meta text-fg-dim leading-relaxed">
         {mode === "ios" ? t("bodyIos") : t("bodyAndroid")}
       </p>
       <div className="mt-3 flex items-center gap-2">

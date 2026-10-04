@@ -39,7 +39,7 @@ export default async function CoachInboxPage({
           {t("intro")}
         </p>
         {inbox.items.length > 0 ? (
-          <p className="mt-3 numeric text-micro text-fg-faint">
+          <p className="mt-3 numeric text-meta text-fg-faint">
             {t("count", { count: inbox.items.length })}
           </p>
         ) : null}

@@ -68,7 +68,7 @@ export default async function BuddyWhyPage() {
             key={code}
             className="surface rounded-lg p-4 flex items-start gap-3"
           >
-            <span className="numeric text-section text-fg-faint shrink-0 leading-none">
+            <span className="numeric text-section text-fg-faint shrink-0">
               {String(i + 1).padStart(2, "0")}
             </span>
             <div>
@@ -82,7 +82,7 @@ export default async function BuddyWhyPage() {
       </ol>
 
       <footer className="pt-4 border-t hairline">
-        <p className="text-micro text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("whyAlgoLine", {
             version: buddy.pairingReason.algo_version,
             score: buddy.pairingReason.score,

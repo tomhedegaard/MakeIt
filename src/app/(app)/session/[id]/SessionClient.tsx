@@ -216,14 +216,14 @@ export default function SessionClient({
           </button>
 
           <div className="flex-1 min-w-0 text-center">
-            {/* The session is the page; exercise and HQ cards are h2s under it. */}
-            <h1 className="text-micro text-fg-dim">
+            {/* Program line is a label; the current exercise is the page's h1. */}
+            <p className="text-meta text-fg-dim">
               {t("topBar.programLine", {
                 programCode: session.programCode,
                 week: session.week,
                 dayLabel: session.dayLabel,
               })}
-            </h1>
+            </p>
             <div className="tabular text-micro text-fg-dim">
               {t("topBar.setsCount", { completed: completedSets, total: totalSets })}
             </div>
@@ -608,10 +608,10 @@ function ExerciseSection({
     <section className="surface-2 p-5 lg:p-7">
       <div className="flex items-start justify-between gap-4 mb-4">
         <div className="min-w-0 flex-1">
-          <h2 className="font-display text-title leading-[1]">
+          <h1 className="font-display text-title">
             {ex.name}
-          </h2>
-          <p className="mt-2 text-micro text-fg-dim tabular">
+          </h1>
+          <p className="mt-2 text-meta text-fg-dim tabular">
             {t("position", { current: exIdx + 1, total: totalExercises })}
           </p>
         </div>

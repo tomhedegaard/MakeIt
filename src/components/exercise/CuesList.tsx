@@ -61,7 +61,7 @@ export default function CuesList({
               }`}
             >
               <span
-                className={`font-display text-section shrink-0 w-8 leading-none mt-0.5 transition-colors duration-200 ${
+                className={`font-display text-section shrink-0 w-8 mt-0.5 transition-colors duration-200 ${
                   isActive ? "text-fg" : "text-fg-faint"
                 }`}
               >

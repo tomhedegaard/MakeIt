@@ -64,12 +64,12 @@ export default function Field({
         className={cn("field", className)}
       />
       {hint ? (
-        <p id={hintId} className="text-fg-dim text-micro">
+        <p id={hintId} className="text-fg-dim text-meta">
           {hint}
         </p>
       ) : null}
       {error ? (
-        <p id={errorId} role="alert" className="flex items-center gap-1.5 text-danger text-micro">
+        <p id={errorId} role="alert" className="flex items-center gap-1.5 text-danger text-meta">
           <DangerGlyph />
           <span>{error}</span>
         </p>

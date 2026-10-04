@@ -70,7 +70,7 @@ export default async function CoachCoCoachesPage() {
       )}
 
       <footer className="pt-4 border-t hairline">
-        <p className="text-micro text-fg-faint">{t("footnote")}</p>
+        <p className="text-meta text-fg-faint">{t("footnote")}</p>
       </footer>
     </Container>
   );

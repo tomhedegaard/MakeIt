@@ -18,7 +18,7 @@ export default function WeeklyInsightsView({
     <div className="space-y-10">
       <section className="rounded-2xl border hairline bg-bg-2/30 p-6 md:p-8 space-y-3">
         <div className="eyebrow">{t("eyebrow")}</div>
-        <p className="font-display text-section leading-tight">{headline}</p>
+        <p className="font-display text-section">{headline}</p>
         <p className="text-fg-dim text-meta">
           {insights.weekStartDate} → {insights.weekEndDate}
         </p>

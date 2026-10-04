@@ -196,7 +196,7 @@ export default function HrvAlertCard({ alert }: { alert: HrvAlertRow }) {
               </button>
             </div>
 
-            <p className="mt-4 text-micro text-fg-faint text-center">
+            <p className="mt-4 text-meta text-fg-faint text-center">
               Markerer alerten som reviewet og sender beskeden til medlemmet.
             </p>
           </SheetContent>
@@ -217,7 +217,7 @@ function Chip({
     <span
       className={cn(
         "inline-flex items-center border hairline px-2.5 py-1 text-micro",
-        active ? "text-fg font-bold" : "text-fg-faint",
+        active ? "text-fg font-medium" : "text-fg-faint",
       )}
     >
       {children}

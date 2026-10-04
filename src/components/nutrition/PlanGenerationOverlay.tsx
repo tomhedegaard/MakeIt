@@ -97,12 +97,12 @@ function PlanGenerationOverlayActive({
           {t("stageProgress", { label: t(currentStage.labelKey) })}
         </p>
 
-        <p className="text-micro text-fg-faint mb-1">
+        <p className="text-meta text-fg-faint mb-1">
           {t("elapsed", { elapsed })}
         </p>
 
         {overtime ? (
-          <p className="mt-6 text-micro text-warn">
+          <p className="mt-6 text-meta text-warn">
             {t("overtime")}
           </p>
         ) : null}

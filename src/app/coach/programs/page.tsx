@@ -51,7 +51,7 @@ export default async function CoachProgramsPage() {
                     {p.isPublished ? t("published") : t("draft")}
                   </span>
                 </div>
-                <div className="font-display text-section leading-tight">
+                <div className="font-display text-section">
                   {p.name}
                 </div>
                 <div className="eyebrow text-fg-faint mt-1">

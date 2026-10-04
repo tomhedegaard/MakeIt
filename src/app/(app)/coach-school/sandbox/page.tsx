@@ -58,7 +58,7 @@ export default async function CoachSchoolSandboxPage() {
       )}
 
       <footer className="pt-4 border-t hairline">
-        <p className="text-micro text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("footnote")}
         </p>
       </footer>

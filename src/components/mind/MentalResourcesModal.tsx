@@ -224,7 +224,7 @@ function CrisisLines({
   const youth = useYouth();
   return (
     <div className="border-l hairline-strong pl-5 space-y-1.5">
-      <h3 className="eyebrow mb-2">{t("ifBurning")}</h3>
+      <p className="eyebrow mb-2">{t("ifBurning")}</p>
       {youth ? (
         <>
           <p>

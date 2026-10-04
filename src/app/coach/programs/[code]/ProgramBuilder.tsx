@@ -293,7 +293,7 @@ export default function ProgramBuilder({
           <span>{t("publishedToggle")}</span>
         </label>
         {days.length === 0 ? (
-          <p className="text-micro text-fg-dim">
+          <p className="text-meta text-fg-dim">
             {t("publishNeedsDays")}
           </p>
         ) : null}
@@ -623,7 +623,7 @@ function AssignPanel({
               {pending ? t("generating") : t("assignButton")}
             </button>
           </div>
-          <p className="text-micro text-fg-faint">
+          <p className="text-meta text-fg-faint">
             {t("assignNote", { start: startWeek, end: weeks })}
           </p>
           {result ? (

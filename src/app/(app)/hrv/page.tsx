@@ -337,7 +337,7 @@ function StateNotConnected({ t }: { t: PageT }) {
 
       <div className="p-5 md:p-8 space-y-4">
         <ConnectButton label={t("connectCta")} />
-        <p className="text-micro text-fg-faint leading-relaxed">
+        <p className="text-meta text-fg-faint leading-relaxed">
           {t("connectAppleNote")}
         </p>
       </div>
@@ -425,7 +425,7 @@ function StateActive({
           <span className="text-fg-dim text-section md:text-title ml-2">{t("unit")}</span>
         </div>
         {readinessLabel ? (
-          <p className="font-display text-section md:text-title mt-5 leading-tight">
+          <p className="font-display text-section mt-5">
             {readinessLabel}
           </p>
         ) : null}
