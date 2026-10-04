@@ -212,6 +212,40 @@ export async function setCycleTracking(
 }
 
 /**
+ * Explicit consent to share HRV with coaches (0068, Tom 2026-10-04).
+ * Records the answer time too, so "Ikke nu" is remembered and the HRV
+ * page stops asking. Revoking hides old data as well (RLS + service
+ * paths filter on share_to_coach).
+ */
+export async function setHrvShareToCoach(
+  share: boolean,
+): Promise<ActionResult> {
+  if (!SUPABASE_ENABLED) return { ok: true };
+
+  const memberId = await getCurrentMemberId();
+  if (!memberId) return { ok: false, error: "no_session" };
+
+  const service = createServiceClient();
+  const { error } = await service
+    .from("hrv_settings")
+    .upsert(
+      {
+        member_id: memberId,
+        share_to_coach: share,
+        share_to_coach_decided_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "member_id" },
+    );
+
+  if (error) return { ok: false, error: "update_failed" };
+
+  revalidatePath("/hrv");
+  revalidatePath("/settings");
+  return { ok: true };
+}
+
+/**
  * Enables or disables the V2.4 session readiness nudge for the
  * current member, upserting their `hrv_settings` row.
  */

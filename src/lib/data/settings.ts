@@ -69,6 +69,10 @@ export type HrvSettings = {
   connections: HrvConnection[];
   cycleTrackingEnabled: boolean;
   sessionSuggestionEnabled: boolean;
+  /** Explicit consent to share HRV with coaches (0068). */
+  shareToCoach: boolean;
+  /** Null until the member has answered the share question. */
+  shareDecidedAt: string | null;
 };
 
 /**
@@ -87,6 +91,8 @@ export async function getMemberHrvSettings(
       connections: [],
       cycleTrackingEnabled: false,
       sessionSuggestionEnabled: true,
+      shareToCoach: false,
+      shareDecidedAt: null,
     };
 
   const [{ data: connRows }, { data: settingsRow }] = await Promise.all([
@@ -99,7 +105,7 @@ export async function getMemberHrvSettings(
       .order("last_synced_at", { ascending: false }),
     supabase
       .from("hrv_settings")
-      .select("cycle_tracking_enabled, session_suggestion_enabled")
+      .select("cycle_tracking_enabled, session_suggestion_enabled, share_to_coach, share_to_coach_decided_at")
       .eq("member_id", memberId)
       .maybeSingle(),
   ]);
@@ -116,6 +122,8 @@ export async function getMemberHrvSettings(
     connections,
     cycleTrackingEnabled: !!settingsRow?.cycle_tracking_enabled,
     sessionSuggestionEnabled: settingsRow?.session_suggestion_enabled ?? true,
+    shareToCoach: settingsRow?.share_to_coach === true,
+    shareDecidedAt: settingsRow?.share_to_coach_decided_at ?? null,
   };
 }
 
