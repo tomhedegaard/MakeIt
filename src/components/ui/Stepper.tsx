@@ -101,7 +101,7 @@ export default function Stepper({
               event.currentTarget.blur();
             }}
           />
-          <span className="stepper-label-unit ml-1 text-fg-dim text-base">
+          <span className="stepper-label-unit ml-1 text-fg-dim text-copy">
             {unit}
           </span>
         </div>

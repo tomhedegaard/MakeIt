@@ -42,7 +42,7 @@ export const REMINDERS: Reminder[] = [
     label: "Stripe webhook signing secret (prod)",
     service: "Stripe",
     expiresAt: null,
-    suggestedRotation: "Rotate annually or after any team-member departure",
+    suggestedRotation: "Roteres årligt, og når et teammedlem stopper",
     runbook:
       "Stripe Dashboard → Developers → Webhooks → your prod endpoint → Roll signing secret → update STRIPE_WEBHOOK_SECRET in Vercel env",
   },
@@ -51,7 +51,7 @@ export const REMINDERS: Reminder[] = [
     label: "Supabase DB password",
     service: "Supabase",
     expiresAt: null,
-    suggestedRotation: "Rotate annually",
+    suggestedRotation: "Roteres årligt",
     runbook:
       "Supabase Dashboard → Settings → Database → Reset database password → re-link CLI with `supabase link --project-ref <ref>`",
   },
@@ -60,7 +60,7 @@ export const REMINDERS: Reminder[] = [
     label: "Supabase service_role key",
     service: "Supabase",
     expiresAt: null,
-    suggestedRotation: "Rotate annually",
+    suggestedRotation: "Roteres årligt",
     runbook:
       "Supabase Dashboard → Settings → API → Reset service_role key → update SUPABASE_SERVICE_ROLE_KEY in Vercel env",
   },

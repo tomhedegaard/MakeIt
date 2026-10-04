@@ -55,7 +55,7 @@ export default async function MindJournalPage() {
 
         {history.length > 0 ? (
           <div className="mt-16">
-            <h2 className="font-display text-2xl mb-6">{t("history")}</h2>
+            <h2 className="font-display text-section mb-6">{t("history")}</h2>
             <JournalHistory entries={history.filter((e) => e.id !== todayEntry?.id)} />
           </div>
         ) : null}

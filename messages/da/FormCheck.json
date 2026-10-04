@@ -36,7 +36,6 @@
   },
   "result": {
     "eyebrow": "AI form-check",
-    "outOf": "/ 100",
     "mockNote": "Demo-svar · ægte AI aktiveres med ANTHROPIC_API_KEY",
     "realNote": "AI-vurdering · godkendes af head coach inden for 24t",
     "cardPos": "Hvad du gjorde rigtigt",

@@ -93,16 +93,16 @@ function PlanGenerationOverlayActive({
           ))}
         </div>
 
-        <p className="text-base md:text-lg text-fg leading-relaxed mb-3">
+        <p className="text-copy text-fg mb-3">
           {t("stageProgress", { label: t(currentStage.labelKey) })}
         </p>
 
-        <p className="text-xs text-fg-faint mb-1">
+        <p className="text-meta text-fg-faint mb-1">
           {t("elapsed", { elapsed })}
         </p>
 
         {overtime ? (
-          <p className="mt-6 text-xs text-warn">
+          <p className="mt-6 text-meta text-warn">
             {t("overtime")}
           </p>
         ) : null}

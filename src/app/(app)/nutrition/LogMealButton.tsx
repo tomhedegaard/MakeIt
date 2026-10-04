@@ -77,7 +77,7 @@ export default function LogMealButton({
 
             {/* Photo */}
             <div className="space-y-2">
-              <div className="text-sm">{t("photoTitle")}</div>
+              <div className="text-copy">{t("photoTitle")}</div>
               <label className="block border border-dashed hairline-strong bg-bg px-4 py-6 text-center cursor-pointer transition-colors duration-200 ease-out hover:border-fg has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-fg has-[:focus-visible]:outline-solid">
                 <input
                   type="file"
@@ -98,8 +98,8 @@ export default function LogMealButton({
                   />
                 ) : (
                   <>
-                    <div className="text-sm">{t("photoPrompt")}</div>
-                    <div className="text-xs text-fg-dim mt-1">
+                    <div className="text-copy">{t("photoPrompt")}</div>
+                    <div className="text-micro text-fg-dim mt-1">
                       {t("photoHint")}
                     </div>
                   </>
@@ -109,14 +109,14 @@ export default function LogMealButton({
 
             {/* Rating */}
             <div className="space-y-1.5">
-              <div className="text-sm">{t("ratingTitle")}</div>
+              <div className="text-copy">{t("ratingTitle")}</div>
               <div className="flex items-center gap-1">
                 {[1, 2, 3, 4, 5].map((n) => (
                   <button
                     key={n}
                     type="button"
                     onClick={() => setRating(n)}
-                    className="size-11 border hairline flex items-center justify-center text-sm transition-colors duration-200 ease-out"
+                    className="size-11 border hairline flex items-center justify-center text-copy transition-colors duration-200 ease-out"
                     style={{
                       background: n <= rating ? "var(--fg)" : "transparent",
                       color: n <= rating ? "var(--bg)" : "var(--fg-dim)",
@@ -132,7 +132,7 @@ export default function LogMealButton({
 
             {/* Notes */}
             <label className="block space-y-1.5">
-              <span className="text-sm">{t("notesLabel")}</span>
+              <span className="text-copy">{t("notesLabel")}</span>
               <textarea
                 name="notes"
                 rows={2}

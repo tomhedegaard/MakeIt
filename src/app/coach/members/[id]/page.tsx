@@ -53,7 +53,7 @@ export default async function CoachMemberDetailPage({
     <Container className="py-6 lg:py-12 space-y-8">
       <Link
         href="/coach/members"
-        className="text-xs text-fg-dim hover:text-fg"
+        className="text-meta text-fg-dim hover:text-fg"
       >
         {t("backToMembers")}
       </Link>
@@ -61,16 +61,16 @@ export default async function CoachMemberDetailPage({
       <header className="flex items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{m.tier}</div>
-          <h1 className="font-display text-title md:text-[2.75rem]">
+          <h1 className="font-display text-title">
             @{m.handle}
           </h1>
-          <p className="mt-2 text-fg-dim text-sm">
+          <p className="mt-2 text-fg-dim text-meta">
             {t("memberSince", { date: new Date(m.joinedAt).toLocaleDateString("da-DK") })}
           </p>
         </div>
         <div className="text-right shrink-0">
           <div className="eyebrow mb-1">{t("reps")}</div>
-          <div className="numeric text-3xl">{m.repsBalance}</div>
+          <div className="numeric text-title">{m.repsBalance}</div>
         </div>
       </header>
 
@@ -78,7 +78,7 @@ export default async function CoachMemberDetailPage({
       <section className="surface-2 rounded-2xl overflow-hidden">
         <div className="px-5 py-4 border-b hairline">
           <div className="eyebrow mb-1">{t("profileEyebrow")}</div>
-          <h2 className="font-display text-xl">{t("profileTitle")}</h2>
+          <h2 className="font-display text-section">{t("profileTitle")}</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line">
           <Field label={t("fieldGoal")} value={m.goalFocus ?? "—"} />
@@ -93,7 +93,7 @@ export default async function CoachMemberDetailPage({
         {m.notesInjuries ? (
           <div className="px-5 py-4 border-t hairline">
             <div className="eyebrow mb-1">{t("notesEyebrow")}</div>
-            <p className="text-sm text-fg/90">{m.notesInjuries}</p>
+            <p className="text-copy text-fg/90">{m.notesInjuries}</p>
           </div>
         ) : null}
       </section>
@@ -103,15 +103,15 @@ export default async function CoachMemberDetailPage({
         <div className="flex items-end justify-between mb-3">
           <div>
             <div className="eyebrow mb-1">{t("programEyebrow")}</div>
-            <div className="font-display text-2xl md:text-3xl">
+            <div className="font-display text-section">
               {m.programName ?? t("noProgram")}
             </div>
           </div>
           {m.programCode ? (
             <div className="text-right">
-              <div className="numeric text-3xl">
+              <div className="numeric text-title">
                 {String(m.programWeek ?? 0).padStart(2, "0")}{" "}
-                <span className="text-fg-dim text-base">/ {m.programWeeks ?? "—"}</span>
+                <span className="text-fg-dim text-copy">/ {m.programWeeks ?? "—"}</span>
               </div>
               <div className="eyebrow">{t("weeks")}</div>
             </div>
@@ -129,11 +129,11 @@ export default async function CoachMemberDetailPage({
         <div className="eyebrow mb-3">{t("recentSessionsEyebrow")}</div>
         <ul className="surface-2 rounded-2xl divide-y hairline overflow-hidden">
           {m.recentSessions.length === 0 ? (
-            <li className="px-5 py-6 text-sm text-fg-dim">{t("noSessions")}</li>
+            <li className="px-5 py-6 text-meta text-fg-dim">{t("noSessions")}</li>
           ) : (
             m.recentSessions.map((s) => (
-              <li key={s.id} className="px-5 py-3 flex items-center gap-4 text-sm">
-                <span className="numeric text-fg-faint w-16 shrink-0 text-xs">
+              <li key={s.id} className="px-5 py-3 flex items-center gap-4 text-meta">
+                <span className="numeric text-fg-faint w-16 shrink-0 text-micro">
                   {s.scheduledFor ?? "—"}
                 </span>
                 <span className="flex-1 truncate">{s.dayLabel}</span>
@@ -181,7 +181,7 @@ export default async function CoachMemberDetailPage({
         <div className="surface-2 rounded-2xl p-5 grid gap-4 md:grid-cols-4">
           <div>
             <div className="eyebrow mb-1">{t("adherenceLabel")}</div>
-            <div className="font-display text-3xl numeric leading-none">
+            <div className="font-display text-title numeric">
               {adherence.adherencePct}%
             </div>
             <div className="mt-2 text-micro text-fg-faint">
@@ -190,7 +190,7 @@ export default async function CoachMemberDetailPage({
           </div>
           <div>
             <div className="eyebrow mb-1">{t("weightTrendLabel")}</div>
-            <div className="font-display text-3xl numeric leading-none">
+            <div className="font-display text-title numeric">
               {adherence.weightDeltaKg === null
                 ? "—"
                 : `${adherence.weightDeltaKg > 0 ? "+" : ""}${adherence.weightDeltaKg.toFixed(1)}`}
@@ -201,7 +201,7 @@ export default async function CoachMemberDetailPage({
           </div>
           <div>
             <div className="eyebrow mb-1">{t("skipDaysLabel")}</div>
-            <div className="font-display text-3xl numeric leading-none">
+            <div className="font-display text-title numeric">
               {adherence.skipDaysCount}
             </div>
             <div className="mt-2 text-micro text-fg-faint">
@@ -211,14 +211,14 @@ export default async function CoachMemberDetailPage({
           {adherence.suggestedAction ? (
             <div className="md:col-span-1">
               <div className="eyebrow text-yellow-400 mb-1">{t("coachActionLabel")}</div>
-              <p className="text-sm leading-relaxed">
+              <p className="text-copy">
                 {adherence.suggestedAction}
               </p>
             </div>
           ) : (
             <div className="md:col-span-1">
               <div className="eyebrow text-green-400 mb-1">{t("statusLabel")}</div>
-              <p className="text-sm text-fg-dim leading-relaxed">
+              <p className="text-meta text-fg-dim">
                 {t("statusNormal")}
               </p>
             </div>
@@ -230,16 +230,16 @@ export default async function CoachMemberDetailPage({
       <section>
         <div className="eyebrow mb-3">{t("formChecksEyebrow", { count: m.formChecks.length })}</div>
         {m.formChecks.length === 0 ? (
-          <div className="surface-2 rounded-2xl p-5 text-sm text-fg-dim">
+          <div className="surface-2 rounded-2xl p-5 text-meta text-fg-dim">
             {t("noFormChecks")}
           </div>
         ) : (
           <ul className="space-y-3">
             {m.formChecks.map((f) => (
               <li key={f.id} className="surface-2 rounded-2xl p-5">
-                <div className="mb-2 text-sm">{f.exerciseName ?? t("formCheckFallback")}</div>
+                <div className="mb-2 text-copy">{f.exerciseName ?? t("formCheckFallback")}</div>
                 {f.aiHeadline ? (
-                  <p className="text-fg/90 text-sm leading-relaxed">{f.aiHeadline}</p>
+                  <p className="text-fg/90 text-copy">{f.aiHeadline}</p>
                 ) : null}
                 <div className="mt-2 text-micro text-fg-faint">
                   {f.reviewedAt ? t("reviewed") : t("awaitingReview")}
@@ -255,11 +255,11 @@ export default async function CoachMemberDetailPage({
         <div className="eyebrow mb-3">{t("repsHistoryEyebrow")}</div>
         <ul className="surface-2 rounded-2xl divide-y hairline overflow-hidden">
           {m.recentTx.length === 0 ? (
-            <li className="px-5 py-6 text-sm text-fg-dim">{t("noTransactions")}</li>
+            <li className="px-5 py-6 text-meta text-fg-dim">{t("noTransactions")}</li>
           ) : (
             m.recentTx.map((t) => (
-              <li key={t.id} className="px-5 py-3 flex items-center gap-4 text-sm">
-                <span className="numeric text-xs text-fg-faint w-20 shrink-0">
+              <li key={t.id} className="px-5 py-3 flex items-center gap-4 text-meta">
+                <span className="numeric text-micro text-fg-faint w-20 shrink-0">
                   {new Date(t.createdAt).toLocaleDateString("da-DK")}
                 </span>
                 <span className="flex-1 truncate">{t.reason}</span>
@@ -280,7 +280,7 @@ function Field({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-bg-2 px-4 py-3">
       <div className="eyebrow mb-1">{label}</div>
-      <div className="text-sm">{value}</div>
+      <div className="text-copy">{value}</div>
     </div>
   );
 }

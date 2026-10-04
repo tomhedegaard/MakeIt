@@ -21,10 +21,10 @@ export default async function PrivacyPage() {
         </Link>
 
         <div className="eyebrow mb-3">{t("eyebrow")}</div>
-        <h1 className="font-display text-title md:text-[2.75rem] mb-6">
+        <h1 className="font-display text-title md:text-title mb-6">
           {t("title")}
         </h1>
-        <p className="text-fg-dim text-base leading-relaxed mb-10">
+        <p className="text-fg-dim text-copy mb-10">
           {t("introUpdated")}
           {COMPANY.legal.entity ?? COMPANY.name}
           {COMPANY.legal.address ? `, ${COMPANY.legal.address}` : ""} ·{" "}
@@ -102,7 +102,7 @@ export default async function PrivacyPage() {
 
         <Section eyebrow={t("s05.eyebrow")} title={t("s05.title")}>
           <p>
-            {t("s05.bodyBefore")}<code className="numeric text-xs">{t("s05.cookieName")}</code>
+            {t("s05.bodyBefore")}<code className="numeric text-micro">{t("s05.cookieName")}</code>
             {t("s05.bodyMid")}<strong>{t("s05.bodyEmphasis")}</strong>{t("s05.bodyAfter")}
           </p>
         </Section>
@@ -148,7 +148,7 @@ export default async function PrivacyPage() {
           </p>
         </Section>
 
-        <p className="text-xs text-fg-faint mt-16">
+        <p className="text-meta text-fg-faint mt-16">
           {COMPANY.legal.entity ?? COMPANY.name}
           {COMPANY.legal.address ? ` · ${COMPANY.legal.address}` : ""}
         </p>
@@ -172,7 +172,7 @@ function Section({
         <div className="md:col-span-3">
           <SectionHeader eyebrow={eyebrow} title={title} />
         </div>
-        <div className="md:col-span-9 space-y-4 text-fg/90 text-base leading-relaxed">
+        <div className="md:col-span-9 space-y-4 text-fg/90 text-copy">
           {children}
         </div>
       </div>
@@ -184,7 +184,7 @@ function List({ items }: { items: [string, string][] }) {
   return (
     <ul className="grid gap-2">
       {items.map(([k, v]) => (
-        <li key={k} className="grid grid-cols-[140px_1fr] gap-3 text-sm">
+        <li key={k} className="grid grid-cols-[140px_1fr] gap-3 text-copy">
           <span className="eyebrow">{k}</span>
           <span className="text-fg-dim leading-relaxed">{v}</span>
         </li>

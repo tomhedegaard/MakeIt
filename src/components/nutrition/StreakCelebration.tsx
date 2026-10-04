@@ -68,7 +68,7 @@ export default function StreakCelebration({
               <div className="eyebrow text-fg mt-1">{t("stamp")}</div>
             </div>
 
-            <p className="mt-7 text-fg-dim text-base leading-relaxed">
+            <p className="mt-7 text-fg-dim text-copy">
               {COPY_KEYS[milestone]
                 ? t(COPY_KEYS[milestone])
                 : t("copyDefault", { days: milestone })}

@@ -132,7 +132,7 @@ function GuardianshipCard({ g, t, notices }: { g: Guardianship; t: T; notices: R
         <Check name="consentRecovery" label={t("consentRecovery")} defaultChecked={g.guardian_consent_recovery} />
         <Check name="consentMind" label={t("consentMind")} defaultChecked={g.guardian_consent_mind} />
         {active ? (
-          <p className="text-micro text-fg-dim">
+          <p className="text-meta text-fg-dim">
             {t("effective", {
               recovery: effectiveConsent(g.guardian_consent_recovery, g.youth_consent_recovery) ? t("on") : t("off"),
               mind: effectiveConsent(g.guardian_consent_mind, g.youth_consent_mind) ? t("on") : t("off"),
@@ -175,11 +175,11 @@ function NoticeList({ notices, name, tn, locale }: { notices: GuardianNotice[]; 
         <ul className="divide-y divide-line">
           {notices.map((n) => (
             <li key={n.id} data-notice-level={n.level} className="py-3 space-y-1">
-              <p className="text-micro text-fg-dim">
+              <p className="text-meta text-fg-dim">
                 {date.format(new Date(n.created_at))} · {n.level === "acute" ? tn("eyebrowAcute") : tn("eyebrowConcern")}
               </p>
               <p className="text-copy text-fg">{tn(n.signal as NoticeSignal, noticeValues(n.detail as SignalDetail, name))}</p>
-              <p className="text-micro text-fg-dim">{n.youth_seen_at ? tn("seen", { name }) : tn("notSeen", { name })}</p>
+              <p className="text-meta text-fg-dim">{n.youth_seen_at ? tn("seen", { name }) : tn("notSeen", { name })}</p>
             </li>
           ))}
         </ul>

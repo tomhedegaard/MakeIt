@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-04T00:00:00Z",
+  "title": "Design System: MakeIt // HQ",
+  "extensions": {
+    "colorMeta": {
+      "ink": { "role": "primary", "displayName": "Blæk", "canonical": "var(--fg)", "tonalRamp": ["#111111", "#333333", "#5E5E59", "#696964", "#B9B9B4", "#CFCFCA", "#E1E1DE", "#F2F2F0"] },
+      "paper": { "role": "neutral", "displayName": "Papir", "canonical": "var(--bg)", "tonalRamp": ["#111111", "#1A1A19", "#232322", "#696964", "#CFCFCA", "#E9E9E6", "#F2F2F0", "#FFFFFF"] },
+      "mos": { "role": "secondary", "displayName": "Mos", "canonical": "var(--signal)", "tonalRamp": ["#14211A", "#1F3329", "#2E4A3B", "#466652", "#62826D", "#8BA594", "#B9CABE", "#E4ECE6"] },
+      "heart": { "role": "tertiary", "displayName": "Hjerte", "canonical": "var(--heart)" },
+      "food": { "role": "tertiary", "displayName": "Mad", "canonical": "var(--food)" },
+      "body": { "role": "tertiary", "displayName": "Krop", "canonical": "var(--body)" },
+      "mind": { "role": "tertiary", "displayName": "Sind", "canonical": "var(--mind)" },
+      "ok": { "role": "status", "displayName": "OK", "canonical": "var(--ok)" },
+      "warn": { "role": "status", "displayName": "Advarsel", "canonical": "var(--warn)" },
+      "danger": { "role": "status", "displayName": "Fare", "canonical": "var(--danger)" }
+    },
+    "typographyMeta": {
+      "hero-lg": { "displayName": "Hero stor (88)", "purpose": "Hero-tal fra md og op." },
+      "hero": { "displayName": "Hero (64)", "purpose": "Ét hero-tal pr. skærm: 43 ms, 1.420 Reps, 135 kg." },
+      "title": { "displayName": "Titel (34)", "purpose": "Sidetitel via PageTitle/PageHeader. Slutter med punktum." },
+      "section": { "displayName": "Sektion (22)", "purpose": "SectionHeader, sheet-titel, enhed ved hero-tal." },
+      "card": { "displayName": "Kort (17)", "purpose": "Korttitel, øvelsesnavn, mellemstore tal." },
+      "copy": { "displayName": "Brød (15)", "purpose": "Brødtekst og knaptekst; body-default." },
+      "meta": { "displayName": "Meta (13)", "purpose": "Metadata, kicker, sekundære links, .btn-sm." },
+      "micro": { "displayName": "Mikro (12)", "purpose": "Tabelhoveder, tidsstempler, chips, initialer." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "state", "value": "200ms ease-out", "purpose": "Alle tilstandsskift: knapper, .lift, progress." },
+      { "name": "sheet-up", "value": "320ms cubic-bezier(.2,.7,.2,1)", "purpose": "Bundsheet glider ind." },
+      { "name": "sheet-fade", "value": "220ms cubic-bezier(.2,.7,.2,1)", "purpose": "Scrim fader ind." },
+      { "name": "reduced-motion", "value": "prefers-reduced-motion: reduce", "purpose": "Slukker pulsdots, animate-pulse, .lift og landingens streger." }
+    ],
+    "breakpoints": [
+      { "name": "touch-field", "value": "40rem", "purpose": "Felter 16 px under denne bredde eller på grov pointer." },
+      { "name": "md", "value": "48rem" },
+      { "name": "shell-desktop", "value": "1024px", "purpose": "Sidebar i stedet for tab-bar." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primærknap",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Én pr. skærm. Blæk-fyld, inverterer ved hover.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Start pas →</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 3rem; padding: 0 1.25rem; font-size: 0.9375rem; font-weight: 500; border: 1px solid var(--fg); border-radius: 0; background: transparent; color: var(--fg); transition: background 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out; cursor: pointer; white-space: nowrap; } .ds-btn-primary { background: var(--fg); color: var(--bg); } .ds-btn-primary:hover { background: transparent; color: var(--fg); } .ds-btn:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }"
+    },
+    {
+      "name": "Sekundærknap",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "1 px blæk-outline; hover fylder med blæk.",
+      "html": "<button class=\"ds-btn-secondary\">Behold original</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; height: 3rem; padding: 0 1.25rem; font-size: 0.9375rem; font-weight: 500; border: 1px solid var(--fg); border-radius: 0; background: transparent; color: var(--fg); transition: background 200ms ease-out, color 200ms ease-out; cursor: pointer; } .ds-btn-secondary:hover { background: var(--fg); color: var(--bg); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }"
+    },
+    {
+      "name": "Tertiær (mos-link)",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Tekstlink i mos; understreges ved hover.",
+      "html": "<button class=\"ds-btn-ghost\">Se hvorfor</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; height: 3rem; padding: 0 1.25rem; font-size: 0.9375rem; font-weight: 500; border: 1px solid transparent; border-radius: 0; background: transparent; color: var(--signal-ink); cursor: pointer; } .ds-btn-ghost:hover { text-decoration: underline; } .ds-btn-ghost:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }"
+    },
+    {
+      "name": "Kort",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Hvid flade, 1 px linje, kicker over titel.",
+      "html": "<div class=\"ds-card\"><p class=\"ds-eyebrow\">I dag · STR-12 · uge 4</p><h3 class=\"ds-card-title\">Dag A · Squat</h3><p class=\"ds-copy\">Squat · topsæt @ RPE 8, 3×3 backoff</p></div>",
+      "css": ".ds-card { background: var(--bg); border: 1px solid var(--line); padding: 20px; } .ds-eyebrow { font-size: 0.8125rem; font-weight: 500; line-height: 1.35; color: var(--signal-ink); margin: 0 0 8px; } .ds-card-title { font-size: 1.0625rem; font-weight: 500; line-height: 1.25; letter-spacing: -0.01em; margin: 0 0 4px; color: var(--fg); } .ds-copy { font-size: 0.9375rem; line-height: 1.5; color: var(--fg-body); margin: 0; }"
+    },
+    {
+      "name": "Felt",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "48 px felt på --bg-3; blæk-kant ved fokus.",
+      "html": "<input class=\"ds-field\" placeholder=\"Vægt i kg\" />",
+      "css": ".ds-field { width: 100%; height: 3rem; padding: 0 1rem; background: var(--bg-3); border: 1px solid var(--line-strong); border-radius: 0; color: var(--fg); font-size: 0.9375rem; transition: border-color 200ms ease, background 200ms ease; } .ds-field:focus { border-color: var(--fg); background: var(--bg-2); outline: none; } .ds-field:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; } .ds-field::placeholder { color: var(--fg-faint); }"
+    },
+    {
+      "name": "Pill-gruppe",
+      "kind": "chip",
+      "refersTo": "pill",
+      "description": "Segmenteret valg (RPE), 44 px; aktiv inverterer til blæk.",
+      "html": "<div class=\"ds-pills\"><button class=\"ds-pill\">7</button><button class=\"ds-pill\" data-active=\"true\">8</button><button class=\"ds-pill\">9</button></div>",
+      "css": ".ds-pills { display: flex; gap: 6px; } .ds-pill { flex: 1 1 0; min-width: 44px; height: 44px; border: 1px solid var(--line-strong); border-radius: 0; background: transparent; color: var(--fg); font-size: 0.9375rem; transition: background 160ms ease, color 160ms ease; cursor: pointer; } .ds-pill[data-active=\"true\"] { background: var(--fg); color: var(--bg); border-color: var(--fg); } .ds-pill:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }"
+    },
+    {
+      "name": "Tab-bar",
+      "kind": "nav",
+      "refersTo": "tabbar",
+      "description": "Hvid bjælke, 1 px linje over; aktiv tab har blæk-label og 2 px mos-streg.",
+      "html": "<nav class=\"ds-tabbar\"><a class=\"ds-tab\" data-active=\"true\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"square\"><path d=\"M3 10l9-7 9 7v10H3z\"/></svg><span>I dag</span></a><a class=\"ds-tab\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"square\"><path d=\"M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12\"/></svg><span>Træn</span></a></nav>",
+      "css": ".ds-tabbar { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; min-height: 72px; background: var(--bg); border-top: 1px solid var(--line); } .ds-tab { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--fg-dim); font-size: 0.6875rem; font-weight: 500; text-decoration: none; } .ds-tab[data-active=\"true\"] { color: var(--fg); } .ds-tab[data-active=\"true\"]::before { content: \"\"; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 24px; height: 2px; background: var(--signal); }"
+    },
+    {
+      "name": "Progress",
+      "kind": "custom",
+      "refersTo": "progress",
+      "description": "4 px spor, mos-fyld via scaleX.",
+      "html": "<div class=\"ds-progress\" role=\"progressbar\" aria-valuenow=\"68\"><div class=\"ds-progress-fill\" style=\"transform: scaleX(0.684)\"></div></div>",
+      "css": ".ds-progress { height: 4px; width: 100%; background: var(--line); overflow: hidden; } .ds-progress-fill { height: 100%; width: 100%; transform-origin: left; background: var(--signal); transition: transform 200ms ease-out; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Grebet holder",
+    "overview": "Nordisk minimalisme, der læner sig op ad webshoppen: hvid flade, én skrift i sentence case, tynde linjer, data og produkt på hvid. Appen har intet eget udtryk; den genbruger shoppens token-navne og skrift. Det premium-agtige kommer fra præcis copy, ærlige tal og store tal, ikke fra effekter.\n\nMørkt findes præcis to steder: live-passet (/session/[id]) og coach-konsollen (/coach). Alt andet, inklusive login, onboarding og mails, er Nord lys. Farve er retning, ikke dekoration: fire domænefarver fortæller, hvilken verden du er i, og må aldrig betyde \"klik her\".",
+    "keyCharacteristics": [
+      "Radius 0 overalt; kun cirkler (avatar, dots, skyderknop) er runde.",
+      "1 px linjer i stedet for skygger. Ingen glød, blur, gradient eller korn.",
+      "Én skrift (Schibsted Grotesk 400/500), sentence case, titler slutter med punktum.",
+      "Blæk er interaktion, mos er accent, domænefarver er data-blæk.",
+      "Nummereret navigation (01 I dag … 10 Beskeder) er en fast del af udtrykket.",
+      "Ingen 0–100-scores: ms, kg, minutter, dage."
+    ],
+    "rules": [
+      { "name": "The Mos Is Not Paint Rule", "body": "Mos er aldrig knapfyld og aldrig en stor flade. Primærknappen er blæk.", "section": "colors" },
+      { "name": "The Ten Percent Rule", "body": "Domænefarve må dække højst ca. 10 % af en flade og kun som: kicker, data-blæk i grafer, aktiv nav-markør, dots, badge-tint (12 % flade + 32 % kant + farvet tekst) og dashboard-tilens 24 × 2 px streg (.domain-stroke). Aldrig i knapper, brødtekst, overskrifter, kortbaggrunde eller alerts.", "section": "colors" },
+      { "name": "The Monochrome Console Rule", "body": "Coach-konsollen er 100 % monokrom (beslutning, ikke hul). Live-passet er også monokromt: ingen domænefarve i nat. Danger må kun stå ved safety.", "section": "colors" },
+      { "name": "The One Voice Rule", "body": "Én skrift, to vægte, sentence case. Ingen uppercase, ingen font-mono, ingen spærret tracking (tracking-wide*, tracking-[0.x em]).", "section": "typography" },
+      { "name": "The Eight Sizes Rule", "body": "Hvis en størrelse ikke står i tabellen, findes den ikke. Vælg rollen, ikke pixelværdien.", "section": "typography" },
+      { "name": "The Kicker Rule", "body": "Kicker er 13 px 500 i sentence case: mos uden domæne, domænefarve med eyebrow-domain i et data-domain-scope. Højst én pr. blok, og den gentager aldrig titlen eller en kicker over den.", "section": "typography" },
+      { "name": "The Flat Rule", "body": "Ingen shadow*, backdrop-blur, bg-gradient-to-*, conic-gradient eller radial-gradient på medlems- og coachflader. Pulserende dots pulserer med opacitet, ikke en glødring. Den eneste lineære gradient er skyderens hårde fyldstop.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do brug kun de otte størrelser fra skalaen på medlems- og coachflader, og vælg dem efter rolle.",
+      "Do brug hvide kort med 1 px --line som standard; grå flade kun til det ene primære.",
+      "Do brug blæk til interaktion, mos til links/progress/valgt tilstand og domænefarve kun som data-blæk og kicker.",
+      "Do sæt data-domain én gang på layout eller kort, frem for at farve enkeltelementer.",
+      "Do giv alt trykbart mindst 44 px og aktiv navigation aria-current=\"page\".",
+      "Do brug .numeric til fritstående tal og .tabular kun til tal, der skifter på stedet eller står i kolonner.",
+      "Do brug ConfirmSheet, Modal, Sheet, Progress og Avatar frem for håndbyggede varianter.",
+      "Do afslut sidetitler med punktum og skriv tal på dansk (\"1.420\", \"137,5 kg\")."
+    ],
+    "donts": [
+      "Don't brug text-xs, text-sm, text-base, text-lg, text-xl, text-2xl, text-3xl … eller text-[…] uden for landing og marketing.",
+      "Don't brug uppercase, font-mono, spærret tracking eller en anden skrift.",
+      "Don't brug skygger, blur, glød, gradienter eller korn.",
+      "Don't brug radius ud over 0, undtagen rounded-full til cirkler.",
+      "Don't fyld knapper eller store flader med mos eller domænefarve.",
+      "Don't brug domænefarve i coach-konsollen eller i live-passet.",
+      "Don't vis 0–100-scores; vis ms, kg, minutter og dage.",
+      "Don't brug en-dash eller tankestreg i prosa; en-dash er kun til talintervaller.",
+      "Don't gentag en kicker eller lad den gentage titlen.",
+      "Don't brug emoji som UI eller håndtegnede SVG-ikoner.",
+      "Don't sæt ThemeScope theme=\"nat\" andre steder end /session/[id] og /coach."
+    ]
+  }
+}

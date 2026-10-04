@@ -34,7 +34,7 @@ export default async function BuddyWhyPage() {
       <Container className="py-6 lg:py-12 space-y-6">
         <div className="pt-2">
           <PageTitle size="compact" kicker={t("eyebrow")} title={t("whyTitleEmpty")} />
-          <p className="mt-2 text-fg-dim text-sm">
+          <p className="mt-2 text-fg-dim text-copy">
             {t("whyEmptyBody")}
           </p>
         </div>
@@ -59,7 +59,7 @@ export default async function BuddyWhyPage() {
           kicker={t("eyebrow")}
           title={t("whyTitle", { handle: buddy.buddyHandle })}
         />
-        <p className="mt-2 text-fg-dim text-sm">{t("whyIntro")}</p>
+        <p className="mt-2 text-fg-dim text-copy">{t("whyIntro")}</p>
       </div>
 
       <ol className="space-y-3 list-none">
@@ -68,12 +68,12 @@ export default async function BuddyWhyPage() {
             key={code}
             className="surface rounded-lg p-4 flex items-start gap-3"
           >
-            <span className="numeric text-2xl text-fg-faint shrink-0 leading-none">
+            <span className="numeric text-section text-fg-faint shrink-0">
               {String(i + 1).padStart(2, "0")}
             </span>
             <div>
               <div className="eyebrow mb-1">{t(`factors.${code}.title`)}</div>
-              <p className="text-sm text-fg/90 leading-relaxed">
+              <p className="text-copy text-fg/90">
                 {t(`factors.${code}.body`, { handle: buddy.buddyHandle })}
               </p>
             </div>
@@ -82,7 +82,7 @@ export default async function BuddyWhyPage() {
       </ol>
 
       <footer className="pt-4 border-t hairline">
-        <p className="text-xs text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("whyAlgoLine", {
             version: buddy.pairingReason.algo_version,
             score: buddy.pairingReason.score,

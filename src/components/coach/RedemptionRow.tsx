@@ -28,15 +28,15 @@ export default function RedemptionRow({
   }
 
   return (
-    <li className="px-5 py-4 flex flex-wrap items-center gap-3 text-sm">
-      <span className="numeric text-xs text-fg-faint w-16 shrink-0">
+    <li className="px-5 py-4 flex flex-wrap items-center gap-3 text-copy">
+      <span className="numeric text-micro text-fg-faint w-16 shrink-0">
         {new Date(redemption.redeemedAt).toLocaleDateString("da-DK", {
           day: "numeric",
           month: "short",
         })}
       </span>
       <div className="flex-1 min-w-0">
-        <div className="text-sm truncate">@{redemption.memberHandle}</div>
+        <div className="text-copy truncate">@{redemption.memberHandle}</div>
         <div className="text-micro text-fg-faint truncate">
           {redemption.rewardName} ·{" "}
           {t("reps", { cost: redemption.costReps.toLocaleString("da-DK") })}

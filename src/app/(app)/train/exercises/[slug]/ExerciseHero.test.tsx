@@ -28,12 +28,12 @@ describe("ExerciseHero", () => {
   });
 
   // A screen reader navigates this page by heading. The section labels
-  // keep their .eyebrow look but must be real <h2>s under the exercise <h1>.
+  // are section headings (text-section) and must be real <h2>s under the exercise <h1>.
   it("renders the section labels as h2 headings, not styled divs", () => {
     for (const demoAssetUrl of ["/exercise-demos/back-squat.webm", null]) {
       const html = render(<ExerciseHero {...base} demoAssetUrl={demoAssetUrl} />);
-      expect(html).toContain('<h2 class="eyebrow mb-4">Sådan udfører du den</h2>');
-      expect(html).toContain('<h2 class="eyebrow">Muskler involveret</h2>');
+      expect(html).toContain('<h2 class="font-display text-section mb-4">Sådan udfører du den</h2>');
+      expect(html).toContain('<h2 class="font-display text-section">Muskler involveret</h2>');
       expect(html).not.toContain('<div class="eyebrow mb-4">Sådan udfører du den</div>');
       expect(html).not.toContain('<div class="eyebrow">Muskler involveret</div>');
     }

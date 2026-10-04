@@ -134,7 +134,7 @@ export default function StartProgramButton({
     <div className="flex-1 min-w-0 space-y-1">
       {confirming && !pending ? (
         <div className="space-y-2">
-          <p className="text-micro text-fg-dim">{confirmText}</p>
+          <p className="text-meta text-fg-dim">{confirmText}</p>
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -166,14 +166,14 @@ export default function StartProgramButton({
         </button>
       )}
       {trace === "calling" ? (
-        <p className="text-micro text-fg-dim">{t("status.calling")}</p>
+        <p className="text-meta text-fg-dim">{t("status.calling")}</p>
       ) : null}
       {trace === "ok" ? (
-        <p className="text-micro text-ok">{t("status.ok")}</p>
+        <p className="text-meta text-ok">{t("status.ok")}</p>
       ) : null}
       {error ? (
         <p
-          className="rounded-md border border-danger/40 bg-danger/15 px-2 py-1 text-micro text-danger"
+          className="rounded-md border border-danger/40 bg-danger/15 px-2 py-1 text-meta text-danger"
           role="alert"
         >
           <span>{errorLabel(error)}</span>
@@ -182,7 +182,7 @@ export default function StartProgramButton({
           ) : null}
         </p>
       ) : !hasDays ? (
-        <p className="text-micro text-fg-dim">{t("emptyDays")}</p>
+        <p className="text-meta text-fg-dim">{t("emptyDays")}</p>
       ) : null}
     </div>
   );

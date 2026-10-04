@@ -71,7 +71,7 @@ export default async function ProgramDetailPage({
           </div>
           <PageTitle title={`${program.name}.`} />
           {description ? (
-            <p className="mt-4 max-w-2xl text-fg-dim text-base md:text-lg">
+            <p className="mt-4 max-w-2xl text-fg-dim text-copy">
               {description}
             </p>
           ) : null}
@@ -108,13 +108,13 @@ export default async function ProgramDetailPage({
       <Container className="py-10 md:py-14 space-y-10">
         <section>
           <SectionHeader eyebrow={t("template.eyebrow")} title={t("template.title", { weeks: program.weeks })} />
-          <p className="mt-3 text-fg-dim text-sm md:text-base max-w-xl">
+          <p className="mt-3 text-fg-dim text-copy max-w-xl">
             {t("template.body")}
           </p>
         </section>
 
         {program.days.length === 0 ? (
-          <div className="surface-2 rounded-2xl p-8 text-sm text-fg-dim">
+          <div className="surface-2 rounded-2xl p-8 text-meta text-fg-dim">
             {t("emptyDays")}
           </div>
         ) : (
@@ -139,7 +139,7 @@ function Meta({
   return (
     <div className="bg-bg-2 px-4 py-3">
       <div className="eyebrow mb-1">{label}</div>
-      <div className="numeric text-xl md:text-2xl">{value}</div>
+      <div className="numeric text-section">{value}</div>
     </div>
   );
 }
@@ -157,21 +157,21 @@ async function DayCard({ day }: { day: ProgramDetailDay }) {
               <div className="eyebrow mb-1">
                 {t("day.position", { position: day.position })}
               </div>
-              <h3 className="font-display text-2xl md:text-3xl leading-[1.05]">
+              <h3 className="font-display text-card">
                 {day.dayLabel}
               </h3>
             </div>
             <div className="text-right shrink-0">
-              <div className="numeric text-xl">
+              <div className="numeric text-section">
                 {day.estimatedMinutes ?? "-"}
                 {day.estimatedMinutes ? (
-                  <span className="text-fg-dim text-sm ml-0.5">m</span>
+                  <span className="text-fg-dim text-meta ml-0.5">m</span>
                 ) : null}
               </div>
               <div className="eyebrow">{t("day.estTime")}</div>
             </div>
           </div>
-          <p className="text-fg-dim text-sm md:text-base">{day.title}</p>
+          <p className="text-fg-dim text-meta md:text-copy">{day.title}</p>
           <div className="mt-3 flex items-center gap-3 text-micro text-fg-faint">
             <span>{t("day.exercises", { count: day.exercises.length })}</span>
             <span aria-hidden>·</span>
@@ -198,11 +198,11 @@ function ExerciseRow({
 }) {
   const body = (
     <>
-      <span className="numeric text-fg-faint text-xs w-6 shrink-0">
+      <span className="numeric text-fg-faint text-micro w-6 shrink-0">
         {String(index + 1).padStart(2, "0")}
       </span>
       <div className="flex-1 min-w-0">
-        <div className="text-sm md:text-base text-fg/90 truncate">
+        <div className="text-copy text-fg/90 truncate">
           {ex.exerciseName}
         </div>
         <div className="mt-1 flex items-center gap-2 flex-wrap text-micro text-fg-faint">

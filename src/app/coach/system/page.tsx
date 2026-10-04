@@ -37,10 +37,10 @@ export default async function CoachSystemPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2">
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-title md:text-[2.75rem]">
+        <h1 className="font-display text-title">
           {t("title")}
         </h1>
-        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+        <p className="mt-3 text-fg-dim text-meta md:text-copy max-w-md">
           {t("introPrefix")}
           <time
             dateTime={status.collectedAt}
@@ -95,10 +95,10 @@ export default async function CoachSystemPage() {
                     <SeverityBadge severity="warn" />
                     <span className="eyebrow text-fg-faint">cron</span>
                   </div>
-                  <div className="font-display text-lg leading-tight">
+                  <div className="font-display text-card">
                     {t("cronsQuietLabel")}
                   </div>
-                  <p className="mt-2 text-xs text-fg-dim">
+                  <p className="mt-2 text-meta text-fg-dim">
                     {t("cronsQuietRunbook")}
                   </p>
                 </div>
@@ -113,17 +113,17 @@ export default async function CoachSystemPage() {
                     <SeverityBadge severity={r.severity} />
                     <span className="eyebrow text-fg-faint">{r.service}</span>
                   </div>
-                  <div className="font-display text-lg leading-tight">
+                  <div className="font-display text-card">
                     {r.label}
                   </div>
-                  <p className="mt-2 text-xs text-fg-dim">
+                  <p className="mt-2 text-meta text-fg-dim">
                     {r.runbook}
                   </p>
                 </div>
                 <div className="text-right shrink-0">
                   {r.expiresAt ? (
                     <>
-                      <div className="font-display text-2xl numeric leading-none">
+                      <div className="font-display text-section numeric">
                         {r.daysUntilExpiry !== null && r.daysUntilExpiry < 0
                           ? t("expired")
                           : `${r.daysUntilExpiry}`}
@@ -142,7 +142,7 @@ export default async function CoachSystemPage() {
                       </div>
                     </>
                   ) : (
-                    <div className="text-xs text-fg-dim">
+                    <div className="text-meta text-fg-dim">
                       {r.suggestedRotation ?? t("noHardExpiry")}
                     </div>
                   )}
@@ -160,7 +160,7 @@ export default async function CoachSystemPage() {
         sub={t("cronsSub")}
       >
         {cronHealth.mode === "demo" ? (
-          <p className="text-sm text-fg-dim">{t("cronsDemoNote")}</p>
+          <p className="text-meta text-fg-dim">{t("cronsDemoNote")}</p>
         ) : null}
         <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {cronHealth.crons.map((row) => (
@@ -191,7 +191,7 @@ export default async function CoachSystemPage() {
               />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2 mb-1">
-                  <span className="font-display text-lg leading-tight">
+                  <span className="font-display text-card">
                     {s.name}
                   </span>
                   <span
@@ -203,14 +203,14 @@ export default async function CoachSystemPage() {
                   </span>
                 </div>
                 {s.notes ? (
-                  <p className="text-xs text-fg-dim">{s.notes}</p>
+                  <p className="text-meta text-fg-dim">{s.notes}</p>
                 ) : null}
                 {s.dashboardUrl ? (
                   <a
                     href={s.dashboardUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 inline-block text-xs text-fg-dim hover:text-fg underline underline-offset-2"
+                    className="mt-2 inline-block text-meta text-fg-dim hover:text-fg underline underline-offset-2"
                   >
                     {t("openDashboard")}
                   </a>
@@ -224,7 +224,7 @@ export default async function CoachSystemPage() {
       {status.database.error ? (
         <section className="surface-2 rounded-2xl p-5 border border-red-400/40">
           <div className="eyebrow text-red-400 mb-2">{t("databaseError")}</div>
-          <p className="text-xs text-fg-dim break-all">
+          <p className="text-meta text-fg-dim break-all">
             {status.database.error}
           </p>
         </section>
@@ -233,14 +233,14 @@ export default async function CoachSystemPage() {
       <section className="space-y-4">
         <div>
           <div className="eyebrow mb-1">{t("companyConfigEyebrow")}</div>
-          <h2 className="font-display text-2xl md:text-3xl">{t("companyConfigTitle")}</h2>
-          <p className="mt-1 text-sm text-fg-dim max-w-md">
+          <h2 className="font-display text-section">{t("companyConfigTitle")}</h2>
+          <p className="mt-1 text-meta text-fg-dim max-w-md">
             {t("companyConfigSubPrefix")}
-            <code className="text-fg numeric text-xs">src/lib/company.ts</code>
+            <code className="text-fg numeric text-micro">src/lib/company.ts</code>
             {t("companyConfigSubSuffix")}
           </p>
         </div>
-        <dl className="surface-2 rounded-2xl divide-y hairline overflow-hidden text-sm">
+        <dl className="surface-2 rounded-2xl divide-y hairline overflow-hidden text-meta">
           <Row label={t("rowName")} value={COMPANY.name} />
           <Row label={t("rowProduct")} value={COMPANY.product} />
           <Row label={t("rowTagline")} value={COMPANY.tagline} />
@@ -282,9 +282,9 @@ function Row({
     <div className="px-5 py-3 flex items-center gap-4">
       <dt className="eyebrow w-36 shrink-0">{label}</dt>
       <dd
-        className={`flex-1 break-all text-xs ${dim ? "text-fg-faint" : "text-fg"}`}
+        className={`flex-1 break-all text-meta ${dim ? "text-fg-faint" : "text-fg"}`}
       >
-        {value ?? "—"}
+        {value ?? "-"}
       </dd>
     </div>
   );
@@ -306,7 +306,7 @@ function KPI({
         {pulse ? <span className="pulse-dot" /> : null}
         {label}
       </div>
-      <div className="font-display text-3xl numeric leading-none">{value}</div>
+      <div className="font-display text-title numeric">{value}</div>
     </div>
   );
 }
@@ -326,8 +326,8 @@ function Section({
     <section className="space-y-4">
       <div>
         <div className="eyebrow mb-1">{eyebrow}</div>
-        <h2 className="font-display text-2xl md:text-3xl">{title}</h2>
-        <p className="mt-1 text-sm text-fg-dim max-w-md">{sub}</p>
+        <h2 className="font-display text-section">{title}</h2>
+        <p className="mt-1 text-meta text-fg-dim max-w-md">{sub}</p>
       </div>
       {children}
     </section>
@@ -366,7 +366,7 @@ function CronHealthCard({
   return (
     <li className="surface-2 rounded-2xl p-5">
       <div className="flex items-center justify-between gap-2 mb-2">
-        <span className="font-display text-lg leading-tight">
+        <span className="font-display text-card">
           {t(CRON_NAME_KEY[row.cron])}
         </span>
         <SeverityBadge severity={CRON_STATUS_SEVERITY[row.status]} />
@@ -376,7 +376,7 @@ function CronHealthCard({
         {row.emptyStreak > 0 ? ` · ${row.emptyStreak}` : ""}
       </div>
       {last ? (
-        <dl className="mt-3 grid grid-cols-3 gap-2 text-xs">
+        <dl className="mt-3 grid grid-cols-3 gap-2 text-micro">
           <div className="col-span-3">
             <dt className="text-fg-faint">{t("cronsLastRun")}</dt>
             <dd>

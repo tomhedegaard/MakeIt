@@ -74,7 +74,7 @@ export default function DualStreamMessages({
           <div className="flex items-center gap-3">
             <MotorGlyph className="text-fg-dim" />
             <div className="min-w-0">
-              <div className="text-sm leading-tight">{copy.motorTitle}</div>
+              <div className="text-copy">{copy.motorTitle}</div>
               <div className="text-micro text-fg-faint">
                 {copy.motorSub}
               </div>

@@ -114,7 +114,7 @@ export default function AudioPlayer({ src, durationSeconds }: { src: string; dur
         style={rangeFill(currentTime, 0, actualDuration)}
       />
 
-      <span className="text-fg-dim text-xs tabular-nums shrink-0 w-16 text-right">
+      <span className="text-fg-dim text-micro tabular-nums shrink-0 w-16 text-right">
         {formatSeconds(currentTime)} / {formatSeconds(actualDuration)}
       </span>
 

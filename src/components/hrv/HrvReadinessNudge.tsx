@@ -27,13 +27,13 @@ export default function HrvReadinessNudge({ nudge }: Props) {
       aria-labelledby="hrv-nudge-heading"
       className="surface-2 rounded-2xl p-5 lg:p-6 space-y-3"
     >
-      <h2 id="hrv-nudge-heading" className="eyebrow">
+      <p id="hrv-nudge-heading" className="eyebrow">
         {eyebrow}
-      </h2>
-      <p className="text-sm leading-relaxed text-fg-dim">{body}</p>
+      </p>
+      <p className="text-copy text-fg-dim">{body}</p>
       <Link
         href={NUDGE_HREF}
-        className="inline-block text-micro text-fg-dim lift touch-app"
+        className="inline-block text-meta text-fg-dim lift touch-app"
       >
         {t("cta")}
       </Link>

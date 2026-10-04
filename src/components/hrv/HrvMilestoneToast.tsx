@@ -43,7 +43,7 @@ export function HrvMilestoneToast({ unseen }: Props) {
     <div
       role="status"
       aria-live="polite"
-      className="surface-2 rounded-2xl px-4 py-3 text-sm flex items-center gap-3"
+      className="surface-2 rounded-2xl px-4 py-3 text-copy flex items-center gap-3"
       style={{ borderColor: "var(--line-bright)" }}
       data-testid="hrv-milestone-toast"
     >
@@ -53,7 +53,7 @@ export function HrvMilestoneToast({ unseen }: Props) {
       <button
         type="button"
         onClick={() => setVisible(false)}
-        className="text-xs text-fg-dim"
+        className="text-micro text-fg-dim"
         aria-label={t("closeAria")}
       >
         {t("close")}

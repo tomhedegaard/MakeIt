@@ -94,7 +94,7 @@ export default function DemoAssetUploader({
   return (
     <section className="surface-2 rounded-xl p-5 md:p-6 space-y-4">
       <div className="eyebrow">Demo-asset</div>
-      <p className="text-xs text-fg-dim">
+      <p className="text-meta text-fg-dim">
         Upload de tre filer fra motion-designeren. WebM aktiverer demo-loopet
         på /train/exercises — MP4 er fallback, JPG er poster mens loopet
         loader.
@@ -103,7 +103,7 @@ export default function DemoAssetUploader({
       <div className="grid gap-3 sm:grid-cols-3">
         {SLOTS.map((slot) => (
           <label key={slot.key} className="space-y-1.5 block">
-            <span className="text-xs text-fg-dim">{slot.label}</span>
+            <span className="text-micro text-fg-dim">{slot.label}</span>
             <input
               type="file"
               accept={slot.accept}
@@ -112,7 +112,7 @@ export default function DemoAssetUploader({
                 const file = e.target.files?.[0];
                 if (file) handleFile(slot.key, slot.ext, slot.mime, file);
               }}
-              className="block w-full text-xs text-fg-dim file:mr-3 file:rounded-md file:border-0 file:bg-bg-3 file:px-3 file:py-1.5 file:text-fg"
+              className="block w-full text-micro text-fg-dim file:mr-3 file:rounded-md file:border-0 file:bg-bg-3 file:px-3 file:py-1.5 file:text-fg"
             />
             <span className="text-micro text-fg-faint">
               {state[slot.key] === "uploading" && "Uploader…"}
@@ -140,7 +140,7 @@ export default function DemoAssetUploader({
           </video>
         </div>
       ) : (
-        <p className="text-micro text-fg-faint">
+        <p className="text-meta text-fg-faint">
           Intet demo-loop endnu — upload en WebM for at aktivere det.
         </p>
       )}

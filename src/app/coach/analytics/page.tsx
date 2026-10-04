@@ -20,10 +20,10 @@ export default async function CoachAnalyticsPage() {
       <header className="pt-2 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{t("eyebrow")}</div>
-          <h1 className="font-display text-title md:text-[2.75rem]">
+          <h1 className="font-display text-title">
             {t("title")}
           </h1>
-          <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+          <p className="mt-3 text-fg-dim text-meta md:text-copy max-w-md">
             {t("intro")}
           </p>
         </div>
@@ -64,22 +64,22 @@ export default async function CoachAnalyticsPage() {
       {/* Headline strip — one-line story */}
       <section className="surface-2 rounded-xl px-5 py-4 flex flex-wrap items-center gap-x-6 gap-y-2">
         <div className="flex items-baseline gap-2">
-          <span className="numeric text-3xl">{activePct}%</span>
-          <span className="text-xs text-fg-dim">
+          <span className="numeric text-title">{activePct}%</span>
+          <span className="text-meta text-fg-dim">
             {t("trainedLastWeek")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
-          <span className="numeric text-2xl">{noProgramCount}</span>
-          <span className="text-xs text-fg-dim">
+          <span className="numeric text-section">{noProgramCount}</span>
+          <span className="text-micro text-fg-dim">
             {t("noActiveProgram")}
           </span>
         </div>
         <span aria-hidden className="text-fg-faint">·</span>
         <div className="flex items-baseline gap-2">
-          <span className="numeric text-2xl">{onboarding.pct}%</span>
-          <span className="text-xs text-fg-dim">
+          <span className="numeric text-section">{onboarding.pct}%</span>
+          <span className="text-micro text-fg-dim">
             {t("completedOnboarding")}
           </span>
         </div>
@@ -92,14 +92,14 @@ export default async function CoachAnalyticsPage() {
           <div className="px-5 py-4 border-b hairline flex items-center justify-between">
             <div>
               <div className="eyebrow mb-1">{t("atRiskEyebrow")}</div>
-              <h2 className="font-display text-2xl">{t("atRiskTitle")}</h2>
+              <h2 className="font-display text-section">{t("atRiskTitle")}</h2>
             </div>
             <span className="numeric text-micro border hairline-strong px-2 py-0.5">
               {atRisk.length}
             </span>
           </div>
           {atRisk.length === 0 ? (
-            <div className="p-6 text-sm text-fg-dim">
+            <div className="p-6 text-meta text-fg-dim">
               {t("atRiskEmpty")}
             </div>
           ) : (
@@ -115,13 +115,13 @@ export default async function CoachAnalyticsPage() {
                       {m.handle.slice(0, 2).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm">@{m.handle}</div>
+                      <div className="text-copy">@{m.handle}</div>
                       <div className="text-micro text-fg-faint">
                         {m.tier} · {m.programCode ?? t("noProgram")}
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <div className="numeric text-sm">
+                      <div className="numeric text-copy">
                         {m.daysSinceLastSession === null ? "—" : `${m.daysSinceLastSession}d`}
                       </div>
                       <div className="text-micro text-fg-faint">
@@ -140,14 +140,14 @@ export default async function CoachAnalyticsPage() {
         <aside className="surface-2 rounded-2xl p-5 lg:p-6 space-y-4">
           <div>
             <div className="eyebrow mb-1">{t("tiersEyebrow")}</div>
-            <h2 className="font-display text-2xl">{t("tiersTitle")}</h2>
+            <h2 className="font-display text-section">{t("tiersTitle")}</h2>
           </div>
           <ul className="space-y-3">
             {tiers.map((t) => (
               <li key={t.tier}>
                 <div className="flex items-baseline justify-between mb-1.5">
-                  <span className="text-sm">{t.tier}</span>
-                  <span className="numeric text-xs text-fg-dim">
+                  <span className="text-copy">{t.tier}</span>
+                  <span className="numeric text-micro text-fg-dim">
                     {t.count} · {t.pct}%
                   </span>
                 </div>
@@ -165,7 +165,7 @@ export default async function CoachAnalyticsPage() {
             <div className="text-micro text-fg-faint">
               {t("tierThresholdsLabel")}
             </div>
-            <div className="text-micro text-fg-dim mt-1.5 leading-relaxed">
+            <div className="text-meta text-fg-dim mt-1.5">
               {t("tierThresholds")}
             </div>
           </div>
@@ -177,10 +177,10 @@ export default async function CoachAnalyticsPage() {
         <div className="flex items-end justify-between mb-4">
           <div>
             <div className="eyebrow mb-1">{t("signupEyebrow")}</div>
-            <h2 className="font-display text-2xl">{t("signupTitle")}</h2>
+            <h2 className="font-display text-section">{t("signupTitle")}</h2>
           </div>
           <div className="text-right">
-            <div className="numeric text-3xl">
+            <div className="numeric text-title">
               {signups.reduce((sum, s) => sum + s.count, 0)}
             </div>
             <div className="eyebrow">{t("signupTotal")}</div>
@@ -237,7 +237,7 @@ function BucketKPI({
         <BucketDot bucket={tone} />
         {label}
       </div>
-      <div className="numeric text-3xl lg:text-4xl">{value}</div>
+      <div className="numeric text-title">{value}</div>
       <div className="text-micro text-fg-faint mt-1">{pct}%</div>
     </div>
   );

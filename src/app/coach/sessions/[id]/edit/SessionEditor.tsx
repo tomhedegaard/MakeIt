@@ -221,7 +221,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
                 )}
               </div>
               <input
-                className="field font-display text-2xl py-2 h-auto"
+                className="field font-display text-section py-2 h-auto"
                 value={ex.exerciseName}
                 onChange={(e) =>
                   patchExercise(exIdx, { exerciseName: e.target.value })
@@ -249,7 +249,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
 
           {/* Sets table */}
           <div className="overflow-x-auto -mx-2">
-            <table className="w-full text-sm min-w-[520px]">
+            <table className="w-full text-meta min-w-[520px]">
               <thead>
                 <tr className="text-left">
                   <th className="px-2 py-2 eyebrow">{t("setsColIndex")}</th>
@@ -263,7 +263,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
               <tbody>
                 {ex.sets.map((s, setIdx) => (
                   <tr key={s.id ?? `new-${setIdx}`} className="border-t hairline">
-                    <td className="px-2 py-1.5 numeric text-xs text-fg-faint w-10">
+                    <td className="px-2 py-1.5 numeric text-micro text-fg-faint w-10">
                       {String(setIdx + 1).padStart(2, "0")}
                     </td>
                     <td className="px-2 py-1.5">
@@ -330,7 +330,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
                       <button
                         type="button"
                         onClick={() => removeSet(exIdx, setIdx)}
-                        className="text-fg-dim hover:text-fg text-xs"
+                        className="text-fg-dim hover:text-fg text-micro"
                         aria-label={t("deleteSetAria")}
                       >
                         ×

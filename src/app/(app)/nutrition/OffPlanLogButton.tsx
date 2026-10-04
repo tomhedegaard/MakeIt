@@ -180,26 +180,21 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
 
   return (
     <>
-      {/* Desktop — inline header button */}
-      {/* The wrapper hides it: .btn's own display would beat `hidden`. */}
-      <span className="hidden lg:contents">
-        <button type="button" onClick={() => setOpen(true)} className="btn btn-ghost btn-sm">
-          {t("trigger")}
-        </button>
-      </span>
+      {/* Desktop: inline header button */}
+      <button type="button" onClick={() => setOpen(true)} className="hidden lg:inline-flex btn btn-ghost btn-sm">
+        {t("trigger")}
+      </button>
 
-      {/* Mobile — floating action button, parked above the tab-bar */}
-      <span className="lg:hidden">
+      {/* Mobile: floating action button, parked above the tab-bar */}
       <button
         type="button"
         onClick={() => setOpen(true)}
         aria-label={t("dialogLabel")}
-        className="fixed right-4 z-40 btn btn-primary"
+        className="fixed right-4 z-40 btn btn-primary lg:hidden"
         style={{ bottom: "calc(var(--tabbar-stack) + 16px)" }}
       >
         {t("triggerMobile")}
       </button>
-      </span>
 
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent title={t("title")} description={estimateEnabled ? t("intro") : t("introManual")}>
@@ -297,7 +292,7 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
 
             {step === "noFood" ? (
               <div className="space-y-3">
-                <h3 className="font-display text-section">{t("noFoodTitle")}</h3>
+                <h3 className="font-display text-card">{t("noFoodTitle")}</h3>
                 <p className="text-copy text-fg-body">{t("noFoodBody")}</p>
                 <div className="grid gap-2">
                   <button type="button" className="btn btn-primary" onClick={() => photoInput.current?.click()}>
@@ -321,7 +316,7 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
             {step === "questions" ? (
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-display text-section">{t("questionsTitle")}</h3>
+                  <h3 className="font-display text-card">{t("questionsTitle")}</h3>
                   <p className="mt-1 text-meta text-fg-dim">{t("questionsIntro")}</p>
                 </div>
                 {photoUrl ? <MarkedPhoto src={photoUrl} questions={questions} /> : null}
@@ -480,7 +475,7 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
                   save(values, edited);
                 }}
               >
-                <h3 className="font-display text-section">{t("editTitle")}</h3>
+                <h3 className="font-display text-card">{t("editTitle")}</h3>
                 <div className="grid grid-cols-2 gap-3">
                   <NumberField name="kcal" label={t("kcal")} unit={t("kcalUnit")} value={shown.totals.kcal} max={10000} min={1} />
                   <NumberField name="proteinG" label={t("protein")} unit={t("gramUnit")} value={shown.totals.proteinG} max={500} />

@@ -20,16 +20,16 @@ export default async function CoachReflection({ bodyMd }: { bodyMd: string }) {
         <div className="text-micro text-fg-faint mt-1">
           {t("title")}
         </div>
-        <p data-engine-gloss="" className="mt-2 text-sm text-fg-dim leading-relaxed">
+        <p data-engine-gloss="" className="mt-2 text-meta text-fg-dim">
           {t("gloss")}
         </p>
       </header>
       {sections.map((sec, i) => (
         <section key={i} className="space-y-2">
           {sec.heading ? (
-            <h3 className="font-display text-xl md:text-2xl">{sec.heading}</h3>
+            <h3 className="font-display text-card">{sec.heading}</h3>
           ) : null}
-          <p className="text-fg-dim leading-relaxed whitespace-pre-wrap text-base md:text-lg">
+          <p className="text-fg-dim whitespace-pre-wrap text-copy">
             {sec.body}
           </p>
         </section>

@@ -48,7 +48,7 @@ export default async function SessionPreview({ session }: { session: Session }) 
                 dayLabel: session.dayLabel,
               })}
             </div>
-            <div className="numeric text-xs text-fg-dim">
+            <div className="numeric text-micro text-fg-dim">
               {t("preview.summary", {
                 exerciseCount: session.exercises.length,
                 setCount: totalSets,
@@ -64,10 +64,10 @@ export default async function SessionPreview({ session }: { session: Session }) 
       <Container size="narrow" className="flex-1 py-6 pb-40 lg:pb-12 space-y-6">
         <section className="surface-2 p-5 lg:p-7">
           <div className="eyebrow mb-2">{t("preview.eyebrow")}</div>
-          <h1 className="font-display text-3xl lg:text-4xl leading-[1] mb-2">
+          <h1 className="font-display text-title mb-2">
             {session.dayLabel}
           </h1>
-          <p className="text-fg-dim text-sm md:text-base leading-relaxed">
+          <p className="text-fg-dim text-meta md:text-copy">
             {session.title}
           </p>
           <div className="grid grid-cols-3 gap-px bg-line border hairline overflow-hidden mt-5">
@@ -133,18 +133,18 @@ async function PreviewExercise({
           {lib ? (
             <Link
               href={`/train/exercises/${lib.slug}`}
-              className="font-display text-2xl lg:text-3xl leading-[1.05] hover:text-fg-dim transition-colors"
+              className="font-display text-section hover:text-fg-dim transition-colors"
             >
               {ex.name}
             </Link>
           ) : (
-            <h2 className="font-display text-2xl lg:text-3xl leading-[1.05]">
+            <h2 className="font-display text-section">
               {ex.name}
             </h2>
           )}
         </div>
         <div className="text-right shrink-0">
-          <div className="numeric text-2xl lg:text-3xl">{ex.sets.length}</div>
+          <div className="numeric text-section lg:text-title">{ex.sets.length}</div>
           <div className="eyebrow">{t("exercise.sets")}</div>
         </div>
       </div>
@@ -169,7 +169,7 @@ async function PreviewExercise({
             {inlineCues.length > 0 ? (
               <ol className="space-y-1.5">
                 {inlineCues.map((cue, i) => (
-                  <li key={i} className="flex gap-2 text-sm leading-snug">
+                  <li key={i} className="flex gap-2 text-copy">
                     <span className="text-fg-faint shrink-0 text-micro mt-0.5">
                       {String(i + 1).padStart(2, "0")}
                     </span>
@@ -182,7 +182,7 @@ async function PreviewExercise({
           </div>
         </div>
       ) : ex.cue ? (
-        <p className="text-sm text-fg-dim leading-relaxed border-t hairline pt-4">
+        <p className="text-meta text-fg-dim border-t hairline pt-4">
           {ex.cue}
         </p>
       ) : null}
@@ -191,9 +191,9 @@ async function PreviewExercise({
         {ex.sets.map((s, i) => (
           <li
             key={s.id}
-            className="py-2.5 flex items-center gap-4 text-sm"
+            className="py-2.5 flex items-center gap-4 text-copy"
           >
-            <span className="numeric text-fg-faint text-xs w-6">
+            <span className="numeric text-fg-faint text-micro w-6">
               {String(i + 1).padStart(2, "0")}
             </span>
             <span className="flex-1 numeric">
@@ -203,7 +203,7 @@ async function PreviewExercise({
               })}
             </span>
             {s.restSec && s.restSec > 0 ? (
-              <span className="numeric text-fg-faint text-xs shrink-0">
+              <span className="numeric text-fg-faint text-micro shrink-0">
                 {s.restSec}s
               </span>
             ) : null}

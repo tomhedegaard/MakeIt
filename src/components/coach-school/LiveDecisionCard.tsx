@@ -64,10 +64,10 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
             {t("held.badge")}
           </div>
         </div>
-        <p className="text-sm text-fg/90 leading-snug">
+        <p className="text-copy text-fg/90">
           {t("held.title")}
         </p>
-        <p className="text-xs text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("held.reasonLine", { reason: heldReason })}
         </p>
       </div>
@@ -86,7 +86,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
         <div className="flex items-center gap-3">
           <span className="eyebrow">{t("live.yourCall")}</span>
           <div
-            className={`inline-flex items-center px-3 py-1 text-xs ${PILL_FOR_DECISION[sent.decision]}`}
+            className={`inline-flex items-center px-3 py-1 text-micro ${PILL_FOR_DECISION[sent.decision]}`}
           >
             {t(`decisions.${sent.decision}`)}
           </div>
@@ -94,7 +94,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
         {sent.reasoning ? (
           <div>
             <div className="eyebrow mb-1">{t("revealed.yourReasoning")}</div>
-            <p className="text-sm text-fg/90 leading-snug">{sent.reasoning}</p>
+            <p className="text-copy text-fg/90">{sent.reasoning}</p>
           </div>
         ) : null}
       </div>
@@ -112,7 +112,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
 
       <div className="surface-2 rounded-md p-3 space-y-1">
         <div className="eyebrow mb-1">{t("conditionsHeader")}</div>
-        <ul className="text-xs text-fg/90 space-y-0.5">
+        <ul className="text-micro text-fg/90 space-y-0.5">
           {Object.entries(liveCase.conditionsMet).map(([k, v]) => (
             <li key={k}>
               <span className="text-fg-faint">{k}:</span> {String(v)}
@@ -152,7 +152,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
       <label className="block">
         <span className="eyebrow block mb-2">{t("reasoningLabel")}</span>
         <textarea
-          className="field min-h-[72px] py-2 resize-none w-full text-sm"
+          className="field min-h-[72px] py-2 resize-none w-full text-copy"
           placeholder={t("live.reasoningPlaceholder")}
           value={reasoning}
           onChange={(e) => setReasoning(e.target.value)}
@@ -162,7 +162,7 @@ export default function LiveDecisionCard({ liveCase }: { liveCase: LiveCase }) {
 
       {error ? (
         <p
-          className="text-xs text-red-400"
+          className="text-meta text-red-400"
           role="alert"
           aria-live="polite"
         >

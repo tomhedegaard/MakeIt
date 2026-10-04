@@ -36,10 +36,10 @@ export default async function CoachPatternsPage({
     <Container className="py-6 lg:py-12 space-y-6">
       <header className="pt-2">
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-title md:text-[2.75rem]">
+        <h1 className="font-display text-title">
           {t("title")}
         </h1>
-        <p className="mt-2 text-fg-dim text-sm">
+        <p className="mt-2 text-fg-dim text-meta">
           {t("subtitle", { cohortSize, windowDays })}
         </p>
       </header>
@@ -63,7 +63,7 @@ export default async function CoachPatternsPage({
 
       {patterns.length === 0 ? (
         <div className="surface-2 rounded-lg p-6">
-          <p className="text-fg-dim text-sm">{t("empty")}</p>
+          <p className="text-fg-dim text-meta">{t("empty")}</p>
         </div>
       ) : (
         <ul className="space-y-3">

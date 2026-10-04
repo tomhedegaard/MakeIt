@@ -32,10 +32,10 @@ export default async function AnatomyPreviewPage({
     <Container className="py-6 lg:py-12 space-y-8">
       <header>
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-title md:text-[2.75rem]">
+        <h1 className="font-display text-title">
           {isSpike ? "R3F Spike" : t("title")}
         </h1>
-        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+        <p className="mt-3 text-fg-dim text-meta md:text-copy max-w-md">
           {isSpike
             ? "Fase 1: 3D-version af vores 2D-anatomy-figur. Samme muskel-taxonomi og brand-palette, extruderede SVG-paths. Sammenlign med 2D-mode side-om-side; drag for at rotere 3D-figuren."
             : t("intro")}

@@ -119,7 +119,7 @@ export default async function ExerciseDetailPage({
               </div>
               <PageTitle size="compact" title={`${ex.name}.`} />
               {ex.whyMatters ? (
-                <p className="mt-4 max-w-2xl text-fg-dim text-base md:text-lg">
+                <p className="mt-4 max-w-2xl text-fg-dim text-copy">
                   {ex.whyMatters}
                 </p>
               ) : null}
@@ -159,17 +159,17 @@ export default async function ExerciseDetailPage({
         {/* Mistakes */}
         {ex.mistakes.length > 0 ? (
           <section className="space-y-5">
-            <h2 className="eyebrow">{t("detail.mistakes")}</h2>
+            <h2 className="font-display text-section">{t("detail.mistakes")}</h2>
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
               {ex.mistakes.map((m, i) => (
                 <article
                   key={i}
                   className="surface-2 rounded-xl p-5 border-l-2 border-l-body"
                 >
-                  <div className="font-display text-lg leading-tight mb-2">
+                  <div className="font-display text-card mb-2">
                     {m.title}
                   </div>
-                  <p className="text-sm text-fg-dim leading-relaxed">{m.body}</p>
+                  <p className="text-meta text-fg-dim">{m.body}</p>
                 </article>
               ))}
             </div>
@@ -196,8 +196,8 @@ export default async function ExerciseDetailPage({
 function InfoBlock({ eyebrow, body }: { eyebrow: string; body: string }) {
   return (
     <div className="space-y-2">
-      <h2 className="eyebrow">{eyebrow}</h2>
-      <p className="text-base text-fg-dim leading-relaxed">{body}</p>
+      <h2 className="font-display text-section">{eyebrow}</h2>
+      <p className="text-copy text-fg-dim">{body}</p>
     </div>
   );
 }

@@ -66,7 +66,7 @@ export default function ConnectionStatus({
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-display text-lg leading-tight">
+            <span className="font-display text-card">
               {providerName}
             </span>
             {connection.isPrimary ? (
@@ -79,7 +79,7 @@ export default function ConnectionStatus({
             className={cn(
               "mt-1 text-micro",
               needsAttention
-                ? "text-fg font-semibold"
+                ? "text-fg font-medium"
                 : "text-fg-faint",
             )}
           >
@@ -93,7 +93,7 @@ export default function ConnectionStatus({
           disabled={isPending}
           aria-busy={isPending}
           className={cn(
-            "shrink-0 text-micro border border-line-strong px-3 py-1.5 touch-app",
+            "shrink-0 text-meta border border-line-strong px-3 py-1.5 touch-app",
             isPending ? "opacity-50" : "lift text-fg-dim",
           )}
         >
@@ -112,7 +112,7 @@ export default function ConnectionStatus({
       {error ? (
         <p
           role="alert"
-          className="mt-3 text-sm text-fg border border-line-strong rounded-lg px-3 py-2"
+          className="mt-3 text-copy text-fg border border-line-strong rounded-lg px-3 py-2"
         >
           {error}
         </p>

@@ -80,7 +80,7 @@ export default function PhaseAnimator({
 
       {/* Phase label + duration */}
       <div className="flex items-baseline gap-3 text-fg-faint">
-        <span className="font-display text-base text-fg">{phase.name}</span>
+        <span className="font-display text-copy text-fg">{phase.name}</span>
         <span className="text-micro">
           {(phase.duration_ms / 1000).toFixed(1)}s
         </span>

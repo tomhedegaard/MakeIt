@@ -27,13 +27,13 @@ export default function HrvTrendsEmpty({
     >
       <div className="px-6 py-7 md:px-8 md:py-10 border-b hairline">
         <SectionHeader eyebrow={eyebrow} title={title} />
-        <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-md">
+        <p className="text-fg-dim text-copy max-w-md">
           {body}
         </p>
       </div>
       <div className="p-5 md:p-8 space-y-4">
         {cta}
-        <p className="text-micro text-fg-faint leading-relaxed">
+        <p className="text-meta text-fg-faint">
           {disclaimer}
         </p>
       </div>

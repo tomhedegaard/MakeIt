@@ -277,10 +277,10 @@ function FormCheckBody({
         {step === "choose" ? (
           <div>
             <div className="eyebrow mb-2">{t("eyebrow")}</div>
-            <h2 className="font-display text-3xl mb-1">
+            <h2 className="font-display text-section mb-1">
               {quotaBlocked ? t("choose.titleBlocked") : t("choose.title")}
             </h2>
-            <p className="text-fg-dim text-sm mb-4">
+            <p className="text-fg-dim text-copy mb-4">
               {quotaBlocked
                 ? t("choose.descriptionBlocked")
                 : exerciseName
@@ -324,9 +324,9 @@ function FormCheckBody({
                   >
                     <div className="flex items-center gap-3 mb-1">
                       <CameraIcon />
-                      <div className="font-display text-lg">{t("choose.recordNow")}</div>
+                      <div className="font-display text-card">{t("choose.recordNow")}</div>
                     </div>
-                    <div className="text-fg-dim text-sm">{t("choose.recordNowSub")}</div>
+                    <div className="text-fg-dim text-meta">{t("choose.recordNowSub")}</div>
                   </button>
 
                   <button
@@ -341,9 +341,9 @@ function FormCheckBody({
                   >
                     <div className="flex items-center gap-3 mb-1">
                       <UploadIcon />
-                      <div className="font-display text-lg">{t("choose.uploadGallery")}</div>
+                      <div className="font-display text-card">{t("choose.uploadGallery")}</div>
                     </div>
-                    <div className="text-fg-dim text-sm">{t("choose.uploadGallerySub")}</div>
+                    <div className="text-fg-dim text-meta">{t("choose.uploadGallerySub")}</div>
                   </button>
 
                   <button
@@ -353,9 +353,9 @@ function FormCheckBody({
                   >
                     <div className="flex items-center gap-3 mb-1">
                       <SparkIcon />
-                      <div className="font-display text-lg">{t("choose.demo")}</div>
+                      <div className="font-display text-card">{t("choose.demo")}</div>
                     </div>
-                    <div className="text-fg-dim text-sm">
+                    <div className="text-fg-dim text-meta">
                       {t("choose.demoSub")}
                     </div>
                   </button>
@@ -372,12 +372,12 @@ function FormCheckBody({
                 ? t("progress.uploadingEyebrow")
                 : t("progress.analyzingEyebrow")}
             </div>
-            <h2 className="font-display text-3xl mb-1">
+            <h2 className="font-display text-section mb-1">
               {step === "uploading"
                 ? t("progress.uploadingTitle")
                 : t("progress.analyzingTitle")}
             </h2>
-            <p className="text-fg-dim text-sm mb-6">
+            <p className="text-fg-dim text-copy mb-6">
               {step === "uploading"
                 ? t("progress.uploadingSub", {
                     fileName: fileName ?? t("progress.videoFallback"),
@@ -387,7 +387,7 @@ function FormCheckBody({
 
             <ProgressLine value={progress} />
 
-            <ul className="mt-6 space-y-2 text-sm">
+            <ul className="mt-6 space-y-2 text-copy">
               <Step active={step === "uploading"} done={step === "analyzing"}>
                 {t("progress.stepUpload")}
               </Step>
@@ -403,20 +403,15 @@ function FormCheckBody({
 
         {step === "result" && verdict ? (
           <div>
-            <div className="flex items-end justify-between mb-3">
-              <div>
-                <div className="eyebrow mb-1">{t("result.eyebrow")}</div>
-                <h2 className="font-display text-3xl leading-[1]">
-                  {verdict.headline}
-                </h2>
-              </div>
-              <div className="text-right shrink-0">
-                <div className="numeric text-5xl">{verdict.score}</div>
-                <div className="eyebrow">{t("result.outOf")}</div>
-              </div>
+            {/* Ingen 0–100-score (spec §7.5): observationerne er svaret. */}
+            <div className="mb-3">
+              <div className="eyebrow mb-1">{t("result.eyebrow")}</div>
+              <h2 className="font-display text-section">
+                {verdict.headline}
+              </h2>
             </div>
 
-            <p className="text-micro text-fg-faint mb-5">
+            <p className="text-meta text-fg-faint mb-5">
               {isMockResult
                 ? t("result.mockNote")
                 : t("result.realNote")}
@@ -427,7 +422,7 @@ function FormCheckBody({
               <Card title={t("result.cardNeg")} items={verdict.neg} kind="neg" />
               <div className="surface-2 rounded-lg p-4">
                 <div className="eyebrow mb-2">{t("result.coachTip")}</div>
-                <p className="text-sm text-fg/90 leading-relaxed">{verdict.fix}</p>
+                <p className="text-copy text-fg/90">{verdict.fix}</p>
               </div>
             </div>
 
@@ -450,7 +445,7 @@ function FormCheckBody({
               </button>
             </div>
 
-            <p className="mt-4 text-xs text-fg-faint text-center">
+            <p className="mt-4 text-meta text-fg-faint text-center">
               {t("result.coachReviewNote")}
             </p>
           </div>
@@ -475,7 +470,7 @@ function QuotaLine({
   return (
     <div
       className={cn(
-        "mb-6 px-3 py-2 rounded-lg surface text-xs flex items-center justify-between gap-3",
+        "mb-6 px-3 py-2 rounded-lg surface text-micro flex items-center justify-between gap-3",
         blocked ? "text-fg" : "text-fg-dim",
       )}
     >
@@ -502,9 +497,9 @@ function UpgradeCta({
       >
         <div className="flex items-center gap-3 mb-1">
           <SparkIcon />
-          <div className="font-display text-lg">{t("upgrade.title")}</div>
+          <div className="font-display text-card">{t("upgrade.title")}</div>
         </div>
-        <div className="text-fg-dim text-sm">
+        <div className="text-fg-dim text-meta">
           {t("upgrade.body")}
         </div>
       </Link>
@@ -577,7 +572,7 @@ function Card({
           {kind === "pos" ? "+" : "△"}
         </span>
       </div>
-      <ul className="space-y-1.5 text-sm text-fg/90">
+      <ul className="space-y-1.5 text-copy text-fg/90">
         {items.map((it) => (
           <li key={it} className="flex gap-2">
             <span className="text-fg-faint shrink-0">·</span>

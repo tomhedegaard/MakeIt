@@ -22,7 +22,7 @@ export default async function PreferencesPage() {
         <div className="flex items-center gap-3 mb-3">
           <Link
             href="/nutrition"
-            className="text-fg-dim hover:text-fg text-sm"
+            className="text-fg-dim hover:text-fg text-meta"
           >
             {t("back")}
           </Link>
@@ -30,7 +30,7 @@ export default async function PreferencesPage() {
           <span className="eyebrow">{t("eyebrow")}</span>
         </div>
         <PageTitle size="compact" title={t("title")} />
-        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+        <p className="mt-3 text-fg-dim text-copy max-w-md">
           {t("intro")}
         </p>
       </div>
@@ -52,7 +52,7 @@ export default async function PreferencesPage() {
                   defaultChecked={profile.goal === g}
                   className="sr-only"
                 />
-                <div className="text-sm">
+                <div className="text-copy">
                   {g === "cut" ? t("goalCut") : g === "recomp" ? t("goalRecomp") : g === "mass" ? t("goalMass") : t("goalMaintain")}
                 </div>
                 <div className="text-micro opacity-70 mt-0.5">
@@ -79,7 +79,7 @@ export default async function PreferencesPage() {
                   defaultChecked={profile.diet === d}
                   className="sr-only"
                 />
-                <div className="text-sm capitalize">
+                <div className="text-copy capitalize">
                   {d === "omnivore" ? t("dietOmnivore") : d === "pescatarian" ? t("dietPescatarian") : d === "vegetarian" ? t("dietVegetarian") : t("dietVegan")}
                 </div>
               </label>
@@ -129,7 +129,7 @@ export default async function PreferencesPage() {
               {(["basic", "intermediate", "advanced"] as const).map((c) => (
                 <label
                   key={c}
-                  className="flex-1 bg-bg-3 border hairline rounded-lg px-3 py-2 text-center cursor-pointer has-[:checked]:bg-fg has-[:checked]:text-bg has-[:checked]:border-fg transition-colors text-sm"
+                  className="flex-1 bg-bg-3 border hairline rounded-lg px-3 py-2 text-center cursor-pointer has-[:checked]:bg-fg has-[:checked]:text-bg has-[:checked]:border-fg transition-colors text-copy"
                 >
                   <input
                     type="radio"
@@ -149,7 +149,7 @@ export default async function PreferencesPage() {
               {(["lean", "standard", "premium"] as const).map((b) => (
                 <label
                   key={b}
-                  className="flex-1 bg-bg-3 border hairline rounded-lg px-3 py-2 text-center cursor-pointer has-[:checked]:bg-fg has-[:checked]:text-bg has-[:checked]:border-fg transition-colors text-sm"
+                  className="flex-1 bg-bg-3 border hairline rounded-lg px-3 py-2 text-center cursor-pointer has-[:checked]:bg-fg has-[:checked]:text-bg has-[:checked]:border-fg transition-colors text-copy"
                 >
                   <input
                     type="radio"
@@ -176,7 +176,7 @@ export default async function PreferencesPage() {
                 defaultChecked={profile.mealPrepMode}
                 className="size-5 accent-fg"
               />
-              <span className="text-sm">
+              <span className="text-copy">
                 {t("mealPrepCheckbox")}
               </span>
             </label>
@@ -234,7 +234,7 @@ export default async function PreferencesPage() {
           <Link href="/nutrition" className="btn btn-ghost">
             {t("cancel")}
           </Link>
-          <span className="text-xs text-fg-faint ml-auto">
+          <span className="text-micro text-fg-faint ml-auto">
             {t("lastUpdated", { date: new Date(profile.updatedAt).toLocaleDateString("da-DK") })}
           </span>
         </div>
@@ -254,8 +254,8 @@ function Field({
 }) {
   return (
     <label className="block space-y-1.5">
-      <div className="text-sm">{label}</div>
-      {hint ? <div className="text-xs text-fg-faint">{hint}</div> : null}
+      <div className="text-meta">{label}</div>
+      {hint ? <div className="text-micro text-fg-faint">{hint}</div> : null}
       <div>{children}</div>
     </label>
   );

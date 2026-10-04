@@ -61,14 +61,14 @@ export default function CuesList({
               }`}
             >
               <span
-                className={`font-display text-2xl shrink-0 w-8 leading-none mt-0.5 transition-colors duration-200 ${
+                className={`font-display text-section shrink-0 w-8 mt-0.5 transition-colors duration-200 ${
                   isActive ? "text-fg" : "text-fg-faint"
                 }`}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span
-                className={`text-base md:text-lg leading-snug transition-colors duration-200 ${
+                className={`text-copy transition-colors duration-200 ${
                   isActive ? "text-fg" : "text-fg/85"
                 }`}
               >

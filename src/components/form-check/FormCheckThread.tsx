@@ -43,27 +43,27 @@ export default function FormCheckThread({
               className="surface rounded-xl px-4 py-3 space-y-2"
             >
               <div className="flex items-center justify-between gap-3">
-                <span className="text-sm">{liftLabel(item)}</span>
-                <span className="text-micro text-fg-faint">
+                <span className="text-copy">{liftLabel(item)}</span>
+                <span className="text-meta text-fg-faint">
                   {reviewed ? copy.reviewed : copy.pending}
                 </span>
               </div>
-              <p className="text-xs text-fg-dim">{copy.youFilmed}</p>
+              <p className="text-meta text-fg-dim">{copy.youFilmed}</p>
               {reviewed ? (
                 <div data-munk-reply="" className="space-y-2 pt-1">
                   <MunkMark />
-                  <p className="text-micro text-fg-faint">
+                  <p className="text-meta text-fg-faint">
                     {copy.munkReply}
                   </p>
                   {item.coachNotes ? (
-                    <p className="text-sm text-fg-dim leading-relaxed">
+                    <p className="text-copy text-fg-dim">
                       {item.coachNotes}
                     </p>
                   ) : null}
                   {item.voiceNoteUrl ? (
                     <div
                       data-munk-voice=""
-                      className="flex items-center gap-2 text-xs text-fg-dim"
+                      className="flex items-center gap-2 text-micro text-fg-dim"
                     >
                       <Mic {...ICON} className="size-4" />
                       <span>{copy.voice}</span>

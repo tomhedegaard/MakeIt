@@ -264,7 +264,7 @@ export default async function HrvPage() {
           >
             <div className="flex-1">
               <div className="eyebrow mb-1">{tPage("reauth.eyebrow")}</div>
-              <p className="text-sm text-fg-dim">
+              <p className="text-meta text-fg-dim">
                 {tPage("reauth.body", { provider })}
               </p>
             </div>
@@ -310,7 +310,7 @@ function StateNotConnected({ t }: { t: PageT }) {
     <section className="surface-2 rounded-2xl overflow-hidden">
       <div className="px-6 py-7 md:px-8 md:py-10 border-b hairline">
         <SectionHeader eyebrow={t("connectEyebrow")} title={t("connectTitle")} />
-        <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-xl">
+        <p className="text-fg-dim text-copy max-w-xl">
           {t("connectBody")}
         </p>
       </div>
@@ -322,12 +322,12 @@ function StateNotConnected({ t }: { t: PageT }) {
           { n: "03", title: t("connectStep3Title"), d: t("connectStep3Body") },
         ].map((row) => (
           <li key={row.n} className="px-6 py-4 md:px-8 flex items-start gap-4">
-            <span className="numeric text-fg-faint text-xs w-7 pt-0.5 shrink-0">
+            <span className="numeric text-fg-faint text-micro w-7 pt-0.5 shrink-0">
               {row.n}
             </span>
             <div className="min-w-0">
-              <div className="text-fg/90 text-sm md:text-base">{row.title}</div>
-              <div className="text-fg-dim text-xs md:text-sm mt-0.5 leading-relaxed">
+              <div className="text-fg/90 text-copy">{row.title}</div>
+              <div className="text-fg-dim text-micro md:text-meta mt-0.5">
                 {row.d}
               </div>
             </div>
@@ -337,7 +337,7 @@ function StateNotConnected({ t }: { t: PageT }) {
 
       <div className="p-5 md:p-8 space-y-4">
         <ConnectButton label={t("connectCta")} />
-        <p className="text-micro text-fg-faint leading-relaxed">
+        <p className="text-meta text-fg-faint">
           {t("connectAppleNote")}
         </p>
       </div>
@@ -371,9 +371,9 @@ function StateWarmingUp({
         <div className="eyebrow mb-2">{t("warmingUp.latest")}</div>
         <div className="numeric text-hero md:text-hero-lg">
           {Math.round(rmssdMs)}
-          <span className="text-fg-dim text-2xl md:text-3xl ml-2">{t("unit")}</span>
+          <span className="text-fg-dim text-section ml-2">{t("unit")}</span>
         </div>
-        <p className="text-fg-dim text-sm md:text-base mt-5 max-w-md leading-relaxed">
+        <p className="text-fg-dim text-copy mt-5 max-w-md">
           {t.rich("warmingUp.body", {
             count: daysLeft,
             em: (chunks) => <span className="text-fg">{chunks}</span>,
@@ -422,10 +422,10 @@ function StateActive({
         <div className="eyebrow mb-2">{t("active.latest")}</div>
         <div className="numeric text-hero md:text-hero-lg">
           {Math.round(latest.rmssdMs)}
-          <span className="text-fg-dim text-2xl md:text-3xl ml-2">{t("unit")}</span>
+          <span className="text-fg-dim text-section ml-2">{t("unit")}</span>
         </div>
         {readinessLabel ? (
-          <p className="font-display text-2xl md:text-3xl mt-5 leading-tight">
+          <p className="font-display text-section mt-5">
             {readinessLabel}
           </p>
         ) : null}
@@ -438,16 +438,16 @@ function StateActive({
       <div className="grid grid-cols-2 gap-px bg-line border-t hairline">
         <div className="bg-bg-2 px-6 py-4 md:px-8">
           <div className="eyebrow mb-1">{t("active.mean7d")}</div>
-          <div className="numeric text-2xl">
+          <div className="numeric text-section">
             {meanMs != null ? meanMs : "-"}
             {meanMs != null ? (
-              <span className="text-fg-dim text-sm ml-1">{t("unit")}</span>
+              <span className="text-fg-dim text-meta ml-1">{t("unit")}</span>
             ) : null}
           </div>
         </div>
         <div className="bg-bg-2 px-6 py-4 md:px-8">
           <div className="eyebrow mb-1">{t("active.source")}</div>
-          <div className="text-sm text-fg/90 pt-1">{provider}</div>
+          <div className="text-copy text-fg/90 pt-1">{provider}</div>
         </div>
       </div>
 
@@ -471,7 +471,7 @@ function StatePendingFirstSync({ provider, t }: { provider: string; t: PageT }) 
         eyebrow={t("pending.eyebrow")}
         title={t("pending.title", { provider })}
       />
-      <p className="text-fg-dim text-sm md:text-base leading-relaxed max-w-md">
+      <p className="text-fg-dim text-copy max-w-md">
         {t("pending.body", { provider })}
       </p>
     </section>

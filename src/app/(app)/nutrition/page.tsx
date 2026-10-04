@@ -203,7 +203,7 @@ function KcalAdjustBanner({
 }) {
   const sign = delta > 0 ? "+" : "";
   return (
-    <div className="surface-2 rounded-xl border hairline-strong px-5 py-3 text-sm">
+    <div className="surface-2 rounded-xl border hairline-strong px-5 py-3 text-copy">
       <span className="eyebrow mr-2">{t("page.kcalAdjustEyebrow")}</span>
       {t.rich("page.kcalAdjustBody", {
         sign,
@@ -221,7 +221,7 @@ function KcalAdjustBanner({
 
 function FallbackPlanBanner({ t }: { t: T }) {
   return (
-    <div className="surface-2 rounded-xl border border-warn/40 px-5 py-3 text-sm">
+    <div className="surface-2 rounded-xl border border-warn/40 px-5 py-3 text-copy">
       <span className="eyebrow text-warn mr-2">{t("page.fallbackEyebrow")}</span>
       {t("page.fallbackBody")}
     </div>
@@ -240,7 +240,7 @@ function QuotaBanner({
   const reset = describeNextAvailable(limit.nextAvailableAt);
   const label = kind === "plan" ? t("page.quotaLabelPlan") : t("page.quotaLabelSwap");
   return (
-    <div className="surface-2 rounded-xl border border-warn/40 px-5 py-3 text-sm">
+    <div className="surface-2 rounded-xl border border-warn/40 px-5 py-3 text-copy">
       <span className="eyebrow text-warn mr-2">{t("page.quotaEyebrow")}</span>
       {t("page.quotaBody", {
         label,
@@ -290,7 +290,7 @@ function EmptyState({
         eyebrow={t("page.emptyEyebrow", { week: weekStartLabel(weekStart) })}
         title={t("page.emptyTitle")}
       />
-      <p className="text-fg-dim text-sm md:text-base max-w-md mb-5">
+      <p className="text-fg-dim text-copy max-w-md mb-5">
         {t("page.emptyBody")}
       </p>
       <div className="flex flex-wrap items-center gap-2">
@@ -305,7 +305,7 @@ function EmptyState({
           {t("page.emptyPreferences")}
         </Link>
       </div>
-      <p className="mt-4 text-micro text-fg-dim">
+      <p className="mt-4 text-meta text-fg-dim">
         {t("page.emptyQuota", {
           dailyUsed: planLimit.daily.used,
           dailyMax: planLimit.daily.max,
@@ -403,7 +403,7 @@ function PlanView({
                   }}
                 >
                   <div className="eyebrow mb-1.5">{t(`dayLabels.${dayKey}`)}</div>
-                  <div className="numeric text-xl mb-1">{meals.length}</div>
+                  <div className="numeric text-section mb-1">{meals.length}</div>
                   <div className="text-micro text-fg-dim">
                     {t("page.meals")}
                   </div>
@@ -429,7 +429,7 @@ function PlanView({
             }
             className="mb-0"
           />
-          <span className="text-xs text-fg-dim shrink-0">
+          <span className="text-micro text-fg-dim shrink-0">
             {t("page.todayMacros", {
               kcal: fmt(today.reduce((s, m) => s + (m.estKcal ?? 0), 0)),
               protein: fmt(today.reduce((s, m) => s + (m.estProteinG ?? 0), 0)),
@@ -447,7 +447,7 @@ function PlanView({
 
       {/* Rest of week — collapsed by day */}
       <section className="space-y-3">
-        <h2 className="eyebrow">{t("page.restOfWeek")}</h2>
+        <h2 className="font-display text-section">{t("page.restOfWeek")}</h2>
         <div className="surface-2 divide-y hairline">
         {byDay.map((meals, i) => {
           if (i === todayIndex) return null;
@@ -462,11 +462,11 @@ function PlanView({
               <summary className="cursor-pointer flex items-center gap-4 px-5 py-4 list-none">
                 <div className="eyebrow w-12 shrink-0">{t(`dayLabels.${DAY_KEYS[i]}`)}</div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm truncate">
+                  <div className="text-copy truncate">
                     {meals.map((m) => m.title).join(" · ")}
                   </div>
                 </div>
-                <div className="numeric text-xs text-fg-dim shrink-0">
+                <div className="numeric text-micro text-fg-dim shrink-0">
                   {fmt(dayKcal)} kcal
                 </div>
                 <span aria-hidden className="text-fg-faint group-open:rotate-90 transition-transform">→</span>
@@ -493,14 +493,14 @@ function PlanView({
       {supplements.length > 0 ? (
         <section className="surface-2 rounded-2xl p-5 lg:p-6">
           <div className="eyebrow mb-3">{t("page.supplementsEyebrow")}</div>
-          <p className="text-fg-dim text-xs mb-4 max-w-prose">
+          <p className="text-fg-dim text-meta mb-4 max-w-prose">
             {t("page.supplementsBody")}
           </p>
           <ul className="grid gap-3 md:grid-cols-2">
             {supplements.map((s) => (
               <li key={s.id} className="border hairline rounded-lg p-4">
                 <div className="flex items-baseline justify-between gap-3 mb-1">
-                  <div className="text-sm">{s.title}</div>
+                  <div className="text-copy">{s.title}</div>
                   <span className="text-micro text-fg-dim">
                     {s.necessity === "high-value"
                       ? t("page.supplementStrong")
@@ -509,7 +509,7 @@ function PlanView({
                       : t("page.supplementConsider")}
                   </span>
                 </div>
-                <div className="text-xs text-fg-dim leading-relaxed">{s.why}</div>
+                <div className="text-meta text-fg-dim">{s.why}</div>
               </li>
             ))}
           </ul>
@@ -525,7 +525,7 @@ function PlanView({
           quotaResetLabel={resetLabel}
         />
         <LogMealButton dateIso={isoToday()} />
-        <span className="text-micro text-fg-dim ml-auto">
+        <span className="text-meta text-fg-dim ml-auto">
           {plan.generator === "claude"
             ? t("page.generatedByClaude")
             : t("page.generatedLocally")}
@@ -543,7 +543,7 @@ function Stat({ label, value }: { label: string; value: number | string }) {
   return (
     <div className="bg-bg p-5">
       <div className="eyebrow mb-1.5">{label}</div>
-      <div className="numeric text-2xl lg:text-3xl">{value}</div>
+      <div className="numeric text-section lg:text-title">{value}</div>
     </div>
   );
 }

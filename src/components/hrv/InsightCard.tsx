@@ -31,7 +31,7 @@ export default function InsightCard({ card }: { card: CorrelationCard }) {
       <div className="text-micro text-domain">
         {t(`factor.${card.factor}.framing`)}
       </div>
-      <div className="mt-1 font-display text-lg leading-tight text-fg">
+      <div className="mt-1 font-display text-card text-fg">
         {label}
       </div>
 
@@ -40,11 +40,11 @@ export default function InsightCard({ card }: { card: CorrelationCard }) {
       card.exposedMeanRmssd !== null &&
       card.baselineMeanRmssd !== null ? (
         <div className="mt-4 flex flex-col gap-3">
-          <div className="font-display text-2xl leading-tight text-fg">
+          <div className="font-display text-section text-fg">
             <span className="sr-only">{t("deltaSr")} </span>
             {formatDelta(card.deltaPct)}
           </div>
-          <div className="flex flex-col gap-1 text-sm text-fg-dim">
+          <div className="flex flex-col gap-1 text-meta text-fg-dim">
             <span>
               {t.rich("with", {
                 ms: card.exposedMeanRmssd,
@@ -63,8 +63,8 @@ export default function InsightCard({ card }: { card: CorrelationCard }) {
         </div>
       ) : (
         <div className="mt-4 flex flex-col gap-2">
-          <div className="text-sm text-fg-dim">{t("notEnough")}</div>
-          <div className="text-micro text-fg-faint leading-relaxed">
+          <div className="text-meta text-fg-dim">{t("notEnough")}</div>
+          <div className="text-micro text-fg-faint">
             {t("needMore", {
               exposed: card.exposedN,
               baseline: card.baselineN,

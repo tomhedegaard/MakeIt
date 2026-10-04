@@ -88,10 +88,10 @@ export default function SandboxCaseCard({
             {t("held.badge")}
           </div>
         </div>
-        <p className="text-sm text-fg/90 leading-snug">
+        <p className="text-copy text-fg/90">
           {t("held.title")}
         </p>
-        <p className="text-xs text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("held.reasonLine", { reason: heldReason })}
         </p>
       </div>
@@ -104,11 +104,11 @@ export default function SandboxCaseCard({
         <div className="flex items-center justify-between gap-4">
           <div>
             <div className="eyebrow mb-1">@{sandboxCase.memberHandle}</div>
-            <div className="text-xs text-fg-faint">
+            <div className="text-micro text-fg-faint">
               {t("revealed.triggeredAt", { time: sandboxCase.triggeredAt })}
             </div>
           </div>
-          <div className="numeric text-3xl">
+          <div className="numeric text-section">
             {Math.round(revealed.score * 100)}%
           </div>
         </div>
@@ -116,7 +116,7 @@ export default function SandboxCaseCard({
           <div className="surface-2 rounded-md p-3">
             <div className="eyebrow mb-1">{t("revealed.youHeader")}</div>
             <div
-              className={`inline-flex items-center px-3 py-1 text-xs ${PILL_FOR_DECISION[revealed.beast]}`}
+              className={`inline-flex items-center px-3 py-1 text-micro ${PILL_FOR_DECISION[revealed.beast]}`}
             >
               {t(`decisions.${revealed.beast}`)}
             </div>
@@ -124,7 +124,7 @@ export default function SandboxCaseCard({
           <div className="surface-2 rounded-md p-3">
             <div className="eyebrow mb-1">{t("revealed.munkHeader")}</div>
             <div
-              className={`inline-flex items-center px-3 py-1 text-xs ${PILL_FOR_DECISION[revealed.munk]}`}
+              className={`inline-flex items-center px-3 py-1 text-micro ${PILL_FOR_DECISION[revealed.munk]}`}
             >
               {t(`decisions.${revealed.munk}`)}
             </div>
@@ -133,10 +133,10 @@ export default function SandboxCaseCard({
         {reasoning ? (
           <div>
             <div className="eyebrow mb-1">{t("revealed.yourReasoning")}</div>
-            <p className="text-sm text-fg/90 leading-snug">{reasoning}</p>
+            <p className="text-copy text-fg/90">{reasoning}</p>
           </div>
         ) : null}
-        <p className="text-xs text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("revealed.footnote")}
         </p>
       </div>
@@ -154,7 +154,7 @@ export default function SandboxCaseCard({
 
       <div className="surface-2 rounded-md p-3 space-y-1">
         <div className="eyebrow mb-1">{t("conditionsHeader")}</div>
-        <ul className="text-xs text-fg/90 space-y-0.5">
+        <ul className="text-micro text-fg/90 space-y-0.5">
           {Object.entries(sandboxCase.conditionsMet).map(([k, v]) => (
             <li key={k}>
               <span className="text-fg-faint">{k}:</span> {String(v)}
@@ -194,7 +194,7 @@ export default function SandboxCaseCard({
       <label className="block">
         <span className="eyebrow block mb-2">{t("reasoningLabel")}</span>
         <textarea
-          className="field min-h-[72px] py-2 resize-none w-full text-sm"
+          className="field min-h-[72px] py-2 resize-none w-full text-copy"
           placeholder={t("reasoningPlaceholder")}
           value={reasoning}
           onChange={(e) => setReasoning(e.target.value)}
@@ -204,7 +204,7 @@ export default function SandboxCaseCard({
 
       {error ? (
         <p
-          className="text-xs text-red-400"
+          className="text-meta text-red-400"
           role="alert"
           aria-live="polite"
         >

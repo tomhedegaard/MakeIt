@@ -57,13 +57,13 @@ export default function FirstTimeTour() {
       <button
         type="button"
         onClick={dismiss}
-        className="absolute top-3 right-3 text-fg-dim hover:text-fg text-xs"
+        className="absolute top-3 right-3 text-fg-dim hover:text-fg text-meta"
       >
         {t("skip")}
       </button>
 
       <SectionHeader id="tour-title" eyebrow={t(`steps.${currentKey}.eyebrow`)} title={t(`steps.${currentKey}.title`)} />
-      <p className="text-fg-dim text-sm md:text-base leading-relaxed mb-6">{t(`steps.${currentKey}.body`)}</p>
+      <p className="text-fg-dim text-copy mb-6">{t(`steps.${currentKey}.body`)}</p>
 
       {/* Progress dots */}
       <div className="flex gap-1.5 mb-6">

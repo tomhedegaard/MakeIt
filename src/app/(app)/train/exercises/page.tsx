@@ -82,7 +82,7 @@ export default async function ExercisesIndexPage({
           ) : null}
         </div>
 
-        <p className="text-sm text-fg-dim" role="status">
+        <p className="text-meta text-fg-dim" role="status">
           {t("index.count", { count: exercises.length })}
         </p>
 

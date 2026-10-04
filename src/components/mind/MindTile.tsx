@@ -54,12 +54,12 @@ export default async function MindTile({
       <div className="flex items-center gap-3">
         <span className="pulse-dot" />
         <div className="flex-1 min-w-0">
-          <div className="text-sm">{title}</div>
+          <div className="text-copy">{title}</div>
           <div className="text-micro text-fg-faint mt-0.5">
             {sub}
           </div>
         </div>
-        <span className="text-fg-dim shrink-0 text-sm" aria-hidden>
+        <span className="text-fg-dim shrink-0 text-meta" aria-hidden>
           {cta} →
         </span>
       </div>

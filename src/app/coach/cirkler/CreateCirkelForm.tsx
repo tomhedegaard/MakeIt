@@ -33,7 +33,7 @@ export default function CreateCirkelForm() {
       <div className="eyebrow">Opret cirkel</div>
 
       <label className="block space-y-1.5">
-        <span className="text-fg-dim text-xs">Navn</span>
+        <span className="text-fg-dim text-micro">Navn</span>
         <input
           type="text"
           name="name"
@@ -43,12 +43,12 @@ export default function CreateCirkelForm() {
           minLength={2}
           maxLength={80}
           placeholder="fx 'Beast Crew · København'"
-          className="w-full rounded-xl bg-bg/60 border hairline px-4 py-3 text-base focus:outline-none focus:border-fg/40"
+          className="w-full rounded-xl bg-bg/60 border hairline px-4 py-3 text-copy focus:outline-none focus:border-fg/40"
         />
       </label>
 
       <label className="block space-y-1.5">
-        <span className="text-fg-dim text-xs">
+        <span className="text-fg-dim text-micro">
           Max medlemmer (3-10)
         </span>
         <input
@@ -58,12 +58,12 @@ export default function CreateCirkelForm() {
           onChange={(e) => setMaxMembers(Number(e.target.value))}
           min={3}
           max={10}
-          className="w-full rounded-xl bg-bg/60 border hairline px-4 py-3 text-base tabular-nums focus:outline-none focus:border-fg/40"
+          className="w-full rounded-xl bg-bg/60 border hairline px-4 py-3 text-copy tabular-nums focus:outline-none focus:border-fg/40"
         />
       </label>
 
       {error ? (
-        <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-300">
+        <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-copy text-red-300">
           {error}
         </div>
       ) : null}
@@ -71,7 +71,7 @@ export default function CreateCirkelForm() {
       <button
         type="submit"
         disabled={pending || name.trim().length < 2}
-        className="inline-flex items-center justify-center bg-fg text-bg px-6 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
+        className="inline-flex items-center justify-center bg-fg text-bg px-6 py-2.5 text-copy font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
       >
         {pending ? "Opretter..." : "Opret cirkel"}
       </button>

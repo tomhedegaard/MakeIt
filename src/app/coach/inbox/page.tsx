@@ -35,11 +35,11 @@ export default async function CoachInboxPage({
     <Container size="wide" className="py-6 lg:py-12 space-y-8">
       <header className="pt-2">
         <PageTitle kicker={t("eyebrow")} title={t("title")} />
-        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+        <p className="mt-3 text-fg-dim text-meta md:text-copy max-w-md">
           {t("intro")}
         </p>
         {inbox.items.length > 0 ? (
-          <p className="mt-3 numeric text-micro text-fg-faint">
+          <p className="mt-3 numeric text-meta text-fg-faint">
             {t("count", { count: inbox.items.length })}
           </p>
         ) : null}
@@ -61,7 +61,7 @@ export default async function CoachInboxPage({
           {selected ? (
             <InboxCasePanel item={selected} coachName={coachName} />
           ) : (
-            <p className="text-sm text-fg-dim">{t("selectCase")}</p>
+            <p className="text-meta text-fg-dim">{t("selectCase")}</p>
           )}
         </section>
       </div>

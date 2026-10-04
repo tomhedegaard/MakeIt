@@ -125,22 +125,22 @@ export default function SetupWizardClient() {
               step="0.1"
               inputMode="decimal"
               placeholder="-"
-              className="field text-2xl numeric pr-12"
+              className="field text-section numeric pr-12"
               autoComplete="off"
             />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-fg-faint">
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-micro text-fg-faint">
               kg
             </span>
           </div>
         </label>
-        <p className="mt-3 text-xs text-fg-faint">
+        <p className="mt-3 text-meta text-fg-faint">
           {t("weightTiming")}
         </p>
       </Section>
 
       <div className="border-t hairline pt-6 flex flex-wrap items-center gap-4">
         <SubmitButton />
-        <p className="text-xs text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("submitTiming")}
         </p>
       </div>
@@ -195,12 +195,12 @@ function Section({
   return (
     <section>
       <div className="flex items-baseline gap-3 mb-2">
-        <span className="numeric text-xs text-fg-faint">
+        <span className="numeric text-micro text-fg-faint">
           {num}
         </span>
-        <h2 className="font-display text-2xl md:text-3xl">{title}</h2>
+        <h2 className="font-display text-section">{title}</h2>
       </div>
-      <p className="text-sm text-fg-dim mb-5 max-w-lg">{sub}</p>
+      <p className="text-meta text-fg-dim mb-5 max-w-lg">{sub}</p>
       {children}
     </section>
   );
@@ -239,8 +239,8 @@ function Choice({
           aria-hidden
         />
         <div>
-          <div className="font-display text-xl leading-[1.05] mb-1">{title}</div>
-          <div className="text-sm text-fg-dim">{sub}</div>
+          <div className="font-display text-section mb-1">{title}</div>
+          <div className="text-meta text-fg-dim">{sub}</div>
         </div>
       </div>
     </button>

@@ -89,7 +89,7 @@ export default function ShoppingChecklist({
       <section className="surface-2 rounded-xl px-5 py-4">
         <div className="flex items-baseline justify-between mb-2">
           <div className="eyebrow">{t("progress")}</div>
-          <span className="numeric text-sm">
+          <span className="numeric text-copy">
             {totals.done} <span className="text-fg-dim">/ {totals.total}</span>
           </span>
         </div>
@@ -120,7 +120,7 @@ export default function ShoppingChecklist({
         return (
           <section key={g.category} className="surface-2 rounded-2xl overflow-hidden">
             <header className="px-5 py-3 border-b hairline flex items-baseline justify-between">
-              <h2 className="font-display text-xl">{g.label}</h2>
+              <h2 className="font-display text-section">{g.label}</h2>
               <span className="numeric text-micro text-fg-faint">
                 {groupDone}/{groupTotal}
               </span>
@@ -149,7 +149,7 @@ export default function ShoppingChecklist({
                       </span>
                       <div className="flex-1 min-w-0">
                         <div
-                          className="text-sm"
+                          className="text-copy"
                           style={{
                             textDecoration: isChecked ? "line-through" : "none",
                           }}
@@ -162,7 +162,7 @@ export default function ShoppingChecklist({
                           </div>
                         ) : null}
                       </div>
-                      <div className="numeric text-sm shrink-0 text-fg-dim">
+                      <div className="numeric text-meta shrink-0 text-fg-dim">
                         {formatNumber(Math.round(item.amount * 10) / 10, tag)} {item.unit}
                       </div>
                     </button>
@@ -175,7 +175,7 @@ export default function ShoppingChecklist({
       })}
 
       {groups.length === 0 ? (
-        <section className="surface-2 rounded-2xl p-8 text-sm text-fg-dim">
+        <section className="surface-2 rounded-2xl p-8 text-meta text-fg-dim">
           {t("empty")}
         </section>
       ) : null}

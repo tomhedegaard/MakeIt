@@ -114,10 +114,10 @@ function StateProvisional({
       </div>
       <div className="px-6 py-7 md:px-8 md:py-9">
         <TrendChart readings={series} />
-        <p className="text-fg-dim text-sm md:text-base leading-relaxed mt-6 max-w-md">
+        <p className="text-fg-dim text-copy mt-6 max-w-md">
           {copy.buildingBody}
         </p>
-        <p className="text-micro text-fg-faint mt-4">
+        <p className="text-meta text-fg-faint mt-4">
           {copy.disclaimer}
         </p>
       </div>
@@ -155,14 +155,14 @@ function StateActive({
           <span className="eyebrow eyebrow-domain">{copy.steadyEyebrow}</span>
           {latestMs != null ? (
             <div className="flex items-baseline gap-2">
-              <span className="numeric text-3xl md:text-4xl leading-none">
+              <span className="numeric text-title">
                 {latestMs}
-                <span className="text-fg-dim text-sm ml-1">{copy.unit}</span>
+                <span className="text-fg-dim text-meta ml-1">{copy.unit}</span>
               </span>
               {qualitative ? (
                 <span
                   data-qualitative={band.qualitative}
-                  className="font-display text-xl"
+                  className="font-display text-section"
                 >
                   {qualitative}
                 </span>
@@ -179,12 +179,12 @@ function StateActive({
           {band.engineCue ? (
             <p
               data-engine-cue={band.engineCue}
-              className="text-sm md:text-base text-fg-dim leading-relaxed mt-5 max-w-lg"
+              className="text-copy text-fg-dim mt-5 max-w-lg"
             >
               {band.engineCue === "below" ? copy.engineBelow : copy.engineAbove}
             </p>
           ) : null}
-          <p className="text-micro text-fg-faint mt-4">
+          <p className="text-meta text-fg-faint mt-4">
             {copy.disclaimer}
           </p>
         </div>
@@ -200,7 +200,7 @@ function StateActive({
             const pct = Math.round(share * 100);
             return (
               <div key={bucket} className="flex items-center gap-4">
-                <span className="text-xs text-fg-dim w-24 shrink-0">
+                <span className="text-micro text-fg-dim w-24 shrink-0">
                   {t(`distribution.bucket.${bucket}`)}
                 </span>
                 <div className="flex-1 h-2 bg-line overflow-hidden">
@@ -209,13 +209,13 @@ function StateActive({
                     style={{ width: `${Math.max(share * 100, share > 0 ? 2 : 0)}%` }}
                   />
                 </div>
-                <span className="numeric text-xs text-fg-dim w-10 text-right shrink-0">
+                <span className="numeric text-micro text-fg-dim w-10 text-right shrink-0">
                   {pct}%
                 </span>
               </div>
             );
           })}
-          <p className="text-fg-dim text-sm leading-relaxed pt-3">
+          <p className="text-fg-dim text-meta pt-3">
             {dist.total > 0
               ? t("distribution.summary", {
                   days: DISTRIBUTION_DAYS,

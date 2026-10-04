@@ -59,7 +59,7 @@ export default function ExerciseHero({
   const details = (
     <>
       <div>
-        <h2 className="eyebrow mb-4">{t("howTo")}</h2>
+        <h2 className="font-display text-section mb-4">{t("howTo")}</h2>
         <CuesList cues={cues} phases={phases} activePhaseIdx={activePhaseIdx} />
       </div>
       <MuscleChips primary={primary} secondary={secondary} tertiary={tertiary} title={t("musclesInvolved")} />
@@ -147,7 +147,7 @@ function ToggleRow({
           key={o.v}
           type="button"
           onClick={() => onChange(o.v)}
-          className={`flex-1 px-3 py-2 rounded-md text-xs ${
+          className={`flex-1 px-3 py-2 rounded-md text-micro ${
  value === o.v ? "bg-bg-3 text-fg" : "text-fg-dim hover:text-fg"
  }`}
         >
@@ -182,7 +182,7 @@ function MuscleChips({
 
   return (
     <div className="space-y-3">
-      <h2 className="eyebrow">{title}</h2>
+      <h2 className="font-display text-section">{title}</h2>
       <div className="flex flex-wrap gap-1.5">
         {primary.map((m) => (
           <Chip key={m} label={MUSCLE_LABELS[m]} tier="primary" />

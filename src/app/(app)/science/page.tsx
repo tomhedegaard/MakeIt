@@ -31,7 +31,7 @@ export default async function SciencePage() {
 
       <ScienceFeed items={items} />
 
-      <footer className="mt-12 border-t hairline pt-5 text-xs text-fg-dim">
+      <footer className="mt-12 border-t hairline pt-5 text-meta text-fg-dim">
         {t("disclaimer")}
       </footer>
     </div>

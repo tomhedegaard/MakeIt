@@ -94,11 +94,11 @@ export default function PostComposer({
                 <Video {...ICON} className="size-5 text-fg-dim" />
               </div>
               <div>
-                <div className="text-sm">{t("addVideo")}</div>
-                <div className="text-xs text-fg-dim">{t("addVideoSub")}</div>
+                <div className="text-copy">{t("addVideo")}</div>
+                <div className="text-micro text-fg-dim">{t("addVideoSub")}</div>
               </div>
             </div>
-            <span className="text-fg-faint text-sm" aria-hidden="true">→</span>
+            <span className="text-fg-faint text-meta" aria-hidden="true">→</span>
           </button>
 
           <div className="grid grid-cols-2 gap-3 mt-5">

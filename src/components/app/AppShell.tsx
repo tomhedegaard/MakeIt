@@ -119,7 +119,7 @@ export default function AppShell({
                     aria-current={active ? "page" : undefined}
                     data-domain={domain}
                     className={cn(
-                      "group flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors border-l-2 border-transparent",
+                      "group flex items-center gap-3 rounded-md px-3 py-2.5 text-copy transition-colors border-l-2 border-transparent",
                       active
                         ? "bg-bg-3 text-fg"
                         : "text-fg-dim hover:text-fg hover:bg-bg-3/60",
@@ -163,7 +163,7 @@ export default function AppShell({
                   <span className="numeric text-micro border hairline-strong px-2 py-0.5">
                     {t("shell.coachBadge")}
                   </span>
-                  <span className="text-sm">{t("shell.coachConsole")}</span>
+                  <span className="text-copy">{t("shell.coachConsole")}</span>
                 </div>
                 <span className="text-fg-dim group-hover:text-fg" aria-hidden>→</span>
               </div>
@@ -173,9 +173,9 @@ export default function AppShell({
             <div className="flex items-center justify-between">
               <div>
                 <div className="eyebrow mb-1.5">{t("shell.tier")}</div>
-                <div className="font-display text-2xl">{member.tier}</div>
+                <div className="font-display text-section">{member.tier}</div>
               </div>
-              <div className="numeric text-fg-faint text-xs">
+              <div className="numeric text-fg-faint text-micro">
                 @{member.handle}
               </div>
             </div>
@@ -212,7 +212,7 @@ export default function AppShell({
               {unreadMessages > 0 ? (
                 <span
                   aria-hidden="true"
-                  className="absolute top-1.5 right-1 numeric text-micro tabular-nums px-1 py-0.5 bg-fg text-bg leading-none min-w-[14px] text-center"
+                  className="absolute top-1.5 right-1 numeric text-micro tabular-nums px-1 py-0.5 bg-fg text-bg min-w-[14px] text-center"
                 >
                   {unreadMessages > 9 ? "9+" : unreadMessages}
                 </span>
@@ -255,7 +255,7 @@ export default function AppShell({
                           onClick={closeMenu}
                           aria-current={active ? "page" : undefined}
                           className={cn(
-                            "block px-4 py-3 text-sm transition-colors hover:bg-bg-3",
+                            "block px-4 py-3 text-copy transition-colors hover:bg-bg-3",
                             active ? "text-fg" : "text-fg-dim"
                           )}
                         >

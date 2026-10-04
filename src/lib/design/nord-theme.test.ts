@@ -129,7 +129,7 @@ describe("Nord structure (spec §3, §7)", () => {
   });
 
   it("gives inputs 16px on touch so iOS does not zoom (enables removing maximumScale)", () => {
-    expect(css).toMatch(/@media \(pointer: coarse\)[^{]*\{[\s\S]*?\.input,\s*\.field\s*\{[\s\S]*?font-size:\s*16px/);
+    expect(css).toMatch(/@media \(pointer: coarse\)[^{]*\{[\s\S]*?:is\(\.input, \.field, input[\s\S]*?textarea, select\)[\s\S]*?font-size:\s*max\(16px, 100%\)/);
     expect(css).toMatch(/@media \(pointer: coarse\), \(max-width: 40rem\)/);
   });
 

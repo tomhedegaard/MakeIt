@@ -282,7 +282,7 @@ export default async function TodayPage() {
         action={
           <div className="text-right">
             <div className="eyebrow mb-1">{t("greeting.streakLabel")}</div>
-            <div className="numeric text-3xl">{stats?.streakDays ?? (connected ? 0 : 12)}</div>
+            <div className="numeric text-title">{stats?.streakDays ?? (connected ? 0 : 12)}</div>
             <div className="text-micro text-fg-faint">{t("greeting.streakUnit")}</div>
           </div>
         }
@@ -329,10 +329,10 @@ export default async function TodayPage() {
                 </span>
               ) : null}
             </div>
-            <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
+            <h2 className="font-display text-section mb-2">
               {today.dayLabel}
             </h2>
-            <p className="text-fg-dim text-sm md:text-base leading-relaxed">{today.title}</p>
+            <p className="text-fg-dim text-meta md:text-copy">{today.title}</p>
           </div>
 
           <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
@@ -340,17 +340,17 @@ export default async function TodayPage() {
           <div className="grid grid-cols-3 gap-px bg-line border-b hairline">
             <div className="bg-bg-2 px-4 py-3">
               <div className="eyebrow mb-1">{t("todaySession.exercises")}</div>
-              <div className="numeric text-2xl">{today.exerciseCount}</div>
+              <div className="numeric text-section">{today.exerciseCount}</div>
             </div>
             <div className="bg-bg-2 px-4 py-3">
               <div className="eyebrow mb-1">{t("todaySession.sets")}</div>
-              <div className="numeric text-2xl">{today.setCount}</div>
+              <div className="numeric text-section">{today.setCount}</div>
             </div>
             <div className="bg-bg-2 px-4 py-3">
               <div className="eyebrow mb-1">{t("todaySession.estTime")}</div>
-              <div className="numeric text-2xl">
+              <div className="numeric text-section">
                 {today.estimatedMinutes}{" "}
-                <span className="text-fg-dim text-sm">{t("todaySession.minuteUnit")}</span>
+                <span className="text-fg-dim text-meta">{t("todaySession.minuteUnit")}</span>
               </div>
             </div>
           </div>
@@ -373,11 +373,11 @@ export default async function TodayPage() {
             {today.exercises.map((ex, i) => {
               const row = (
                 <>
-                  <span className="numeric text-fg-faint text-xs w-6">
+                  <span className="numeric text-fg-faint text-micro w-6">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="flex-1 text-fg/90 text-sm md:text-base truncate">{ex.name}</span>
-                  <span className="numeric text-fg-faint text-xs">{ex.setCount}{t("todaySession.setCountSuffix")}</span>
+                  <span className="flex-1 text-fg/90 text-copy truncate">{ex.name}</span>
+                  <span className="numeric text-fg-faint text-micro">{ex.setCount}{t("todaySession.setCountSuffix")}</span>
                 </>
               );
               return (
@@ -437,13 +437,13 @@ export default async function TodayPage() {
                 aria-hidden
               />
               <div className="flex-1 min-w-0">
-                <div className="text-sm">
+                <div className="text-copy">
                   {t("formChecks.answeredBefore")}{" "}
                   <span className="text-fg">
                     {t("formChecks.answeredCount", { count: reviewedCount })}
                   </span>
                 </div>
-                <div className="text-micro text-fg-faint mt-0.5">
+                <div className="text-meta text-fg-faint mt-0.5">
                   {t("formChecks.readNotes")}
                 </div>
               </div>
@@ -478,8 +478,8 @@ export default async function TodayPage() {
                   className="px-4 py-3 flex items-center gap-4 lift"
                 >
                   <span className="eyebrow w-16 shrink-0">{fmtUpcomingDate(row.scheduledFor, t, locale)}</span>
-                  <span className="flex-1 text-sm text-fg/90 truncate">{row.title}</span>
-                  <span className="numeric text-fg-faint text-xs shrink-0">{t("todaySession.minutes", { count: row.estimatedMinutes })}</span>
+                  <span className="flex-1 text-copy text-fg/90 truncate">{row.title}</span>
+                  <span className="numeric text-fg-faint text-micro shrink-0">{t("todaySession.minutes", { count: row.estimatedMinutes })}</span>
                 </Link>
               </li>
             ))}
@@ -489,13 +489,13 @@ export default async function TodayPage() {
             {mockUpcoming(t).map((row) => (
               <li key={row.d} className="px-4 py-3 flex items-center gap-4">
                 <span className="eyebrow w-16 shrink-0">{row.d}</span>
-                <span className="flex-1 text-sm text-fg/90 truncate">{row.t}</span>
-                <span className="numeric text-fg-faint text-xs shrink-0">{row.m}</span>
+                <span className="flex-1 text-copy text-fg/90 truncate">{row.t}</span>
+                <span className="numeric text-fg-faint text-micro shrink-0">{row.m}</span>
               </li>
             ))}
           </ul>
         ) : (
-          <div className="surface-2 p-6 text-sm text-fg-dim">
+          <div className="surface-2 p-6 text-meta text-fg-dim">
             {t("upcoming.empty")}
           </div>
         )}
@@ -559,7 +559,7 @@ export default async function TodayPage() {
             ))}
           </ul>
         ) : (
-          <div className="surface-2 p-6 text-sm text-fg-dim">
+          <div className="surface-2 p-6 text-meta text-fg-dim">
             {t("crew.empty")}
             <div className="mt-3">
               <Link href="/community" className="btn btn-sm">{t("crew.share")}</Link>
@@ -593,7 +593,7 @@ function CrewRow({
     <li className="surface-2 p-4 flex items-center gap-3">
       <Avatar handle={who} />
       <div className="flex-1 min-w-0">
-        <div className="text-sm truncate">
+        <div className="text-copy truncate">
           <span className="text-fg">{who}</span>{" "}
           <span className="text-fg-dim">{what}</span>
         </div>
@@ -641,7 +641,7 @@ function WeekStrip({
           const body = (
             <>
               <span className="block text-micro text-fg-dim">{copy.days[day.dayKey]}</span>
-              <span className="flex items-center gap-1 numeric text-base text-fg">
+              <span className="flex items-center gap-1 numeric text-copy text-fg">
                 {day.date}
                 {day.done ? (
                   <Check {...ICON} aria-label={copy.done} className="size-3.5 text-fg-dim" />

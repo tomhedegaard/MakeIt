@@ -77,11 +77,11 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
       <div className="surface rounded-lg p-5 space-y-4">
         <div className="flex items-center justify-between gap-4">
           <div className="eyebrow">{t("lesson.resultHeader")}</div>
-          <div className="numeric text-3xl">
+          <div className="numeric text-section">
             {Math.round(result.quizScore * 100)}%
           </div>
         </div>
-        <p className="text-sm text-fg-dim">
+        <p className="text-meta text-fg-dim">
           {t("lesson.quizResultLine", {
             correct: Math.round(result.quizScore * lesson.quiz.length),
             total: lesson.quiz.length,
@@ -93,24 +93,24 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
             <div className="flex items-center gap-2">
               <span className="eyebrow">{t("lesson.evalHeader")}</span>
               <span
-                className={`inline-flex items-center px-3 py-1 text-xs ${SCORE_PILL[result.practiceEvalScore]}`}
+                className={`inline-flex items-center px-3 py-1 text-micro ${SCORE_PILL[result.practiceEvalScore]}`}
               >
                 {t(`lesson.evalScore.${result.practiceEvalScore}`)}
               </span>
             </div>
             {result.practiceFeedback ? (
-              <p className="text-sm text-fg/90 leading-snug">
+              <p className="text-copy text-fg/90">
                 {result.practiceFeedback}
               </p>
             ) : null}
           </div>
         ) : lesson.practiceScenario ? (
-          <p className="text-xs text-fg-faint">
+          <p className="text-meta text-fg-faint">
             {t("lesson.evalUnavailable")}
           </p>
         ) : null}
 
-        <p className="text-xs text-fg-faint">
+        <p className="text-meta text-fg-faint">
           {t("lesson.completedFootnote", { reps: lesson.repsAward })}
         </p>
       </div>
@@ -126,10 +126,10 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
           {lesson.quiz.map((q, qIdx) => (
             <li key={qIdx} className="surface rounded-lg p-4 space-y-3">
               <div className="flex items-start gap-3">
-                <span className="numeric text-2xl text-fg-faint shrink-0 leading-none">
+                <span className="numeric text-section text-fg-faint shrink-0">
                   {String(qIdx + 1).padStart(2, "0")}
                 </span>
-                <p className="text-sm text-fg/90 leading-relaxed flex-1">
+                <p className="text-copy text-fg/90 flex-1">
                   {q.question}
                 </p>
               </div>
@@ -168,15 +168,15 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
           <div className="eyebrow">{t("lesson.practiceHeader")}</div>
           <div className="surface rounded-lg p-4 space-y-3">
             {lesson.practiceScenario.context ? (
-              <p className="text-xs text-fg-faint">
+              <p className="text-meta text-fg-faint">
                 {lesson.practiceScenario.context}
               </p>
             ) : null}
-            <p className="text-sm text-fg/90 leading-relaxed">
+            <p className="text-copy text-fg/90">
               {lesson.practiceScenario.prompt}
             </p>
             <textarea
-              className="field min-h-[120px] py-3 resize-none w-full text-sm"
+              className="field min-h-[120px] py-3 resize-none w-full text-copy"
               placeholder={t("lesson.practicePlaceholder")}
               value={practiceResponse}
               onChange={(e) => setPracticeResponse(e.target.value)}
@@ -188,7 +188,7 @@ export default function LessonForm({ lesson }: { lesson: LessonDetail }) {
 
       {error ? (
         <p
-          className="text-xs text-red-400"
+          className="text-meta text-red-400"
           role="alert"
           aria-live="polite"
         >

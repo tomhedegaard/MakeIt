@@ -35,7 +35,7 @@ export default function LanguageSelector() {
             onClick={() => select(locale)}
             disabled={pending}
             aria-pressed={isActive}
-            className="px-4 py-1.5 text-sm font-medium transition-colors disabled:opacity-60 touch-app"
+            className="px-4 py-1.5 text-copy font-medium transition-colors disabled:opacity-60 touch-app"
             style={{
               background: isActive ? "var(--fg)" : "transparent",
               color: isActive ? "var(--bg)" : "var(--fg-dim)",

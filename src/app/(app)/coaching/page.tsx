@@ -106,7 +106,7 @@ export default async function TrainPage() {
             {t("header.motorChip")}
           </span>
         </div>
-        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+        <p className="mt-3 text-fg-dim text-copy max-w-md">
           {t("header.subtitle")}
         </p>
       </div>
@@ -128,7 +128,7 @@ export default async function TrainPage() {
                 }}
               >
                 <div className="eyebrow mb-1.5">{t(`week.days.${day.dayKey}`)}</div>
-                <div className="numeric text-2xl mb-1">
+                <div className="numeric text-section mb-1">
                   {String(day.date).padStart(2, "0")}
                 </div>
                 <div
@@ -186,10 +186,10 @@ export default async function TrainPage() {
               })}
             </span>
           </div>
-          <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-2">
+          <h2 className="font-display text-section mb-2">
             {today.dayLabel}
           </h2>
-          <p className="text-fg-dim text-sm md:text-base">{today.title}</p>
+          <p className="text-fg-dim text-meta md:text-copy">{today.title}</p>
         </div>
 
         <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
@@ -217,7 +217,7 @@ export default async function TrainPage() {
       >
         <div className="px-5 pt-5 pb-4">
           <SectionHeader eyebrow={t("today.emptyEyebrow")} title={t("today.emptyTitle")} />
-          <p className="text-fg-dim text-sm md:text-base">{t("today.emptyBody")}</p>
+          <p className="text-fg-dim text-copy">{t("today.emptyBody")}</p>
         </div>
         <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
         <div className="p-4 lg:p-5">
@@ -234,12 +234,12 @@ export default async function TrainPage() {
           <div className="flex items-end justify-between mb-3">
             <div>
               <div className="eyebrow mb-1">{t("active.eyebrow")}</div>
-              <div className="font-display text-2xl md:text-3xl">{active.name}</div>
+              <div className="font-display text-section">{active.name}</div>
             </div>
             <div className="text-right">
-              <div className="numeric text-3xl">
+              <div className="numeric text-title">
                 {String(active.currentWeek).padStart(2, "0")}{" "}
-                <span className="text-fg-dim text-base">/ {active.weeks}</span>
+                <span className="text-fg-dim text-copy">/ {active.weeks}</span>
               </div>
               <div className="eyebrow">{t("active.weeks")}</div>
             </div>
@@ -277,7 +277,7 @@ export default async function TrainPage() {
       <section id="programs">
         <div className="flex items-end justify-between mb-3">
           <div className="eyebrow">{t("library.eyebrow")}</div>
-          <span className="text-xs text-fg-faint">{library.length}</span>
+          <span className="text-micro text-fg-faint">{library.length}</span>
         </div>
 
         <ul className="space-y-3">
@@ -295,18 +295,18 @@ export default async function TrainPage() {
                         </span>
                       ) : null}
                     </div>
-                    <h3 className="font-display text-2xl md:text-3xl leading-[1] truncate">
+                    <h3 className="font-display text-card truncate">
                       {p.name}
                     </h3>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="numeric text-2xl">{p.weeks}</div>
+                    <div className="numeric text-section">{p.weeks}</div>
                     <div className="eyebrow">{t("active.weeks")}</div>
                   </div>
                 </div>
 
                 {p.description ? (
-                  <p className="text-fg-dim text-sm leading-relaxed mb-4">
+                  <p className="text-fg-dim text-meta mb-4">
                     {p.description}
                   </p>
                 ) : null}
@@ -316,13 +316,13 @@ export default async function TrainPage() {
                     <div className="eyebrow mb-0.5">
                       {p.coachName ? t("library.coach") : t("library.engine")}
                     </div>
-                    <div className="text-sm">
+                    <div className="text-copy">
                       {p.coachName ?? t("library.engineName")}
                     </div>
                   </div>
                   <div className="bg-bg-2 px-3 py-2.5">
                     <div className="eyebrow mb-0.5">{t("library.level")}</div>
-                    <div className="text-sm">
+                    <div className="text-copy">
                       {p.level ?? t("library.levelFallback")}
                     </div>
                   </div>
@@ -369,16 +369,16 @@ export default async function TrainPage() {
       {/* 1:1 — only fully human */}
       <section className="surface-2 rounded-2xl p-6 lg:p-10">
         <div className="eyebrow mb-3">{t("oneOnOne.eyebrow")}</div>
-        <h3 className="font-display text-2xl md:text-4xl leading-[1] mb-3">
+        <h3 className="font-display text-card mb-3">
           {t("oneOnOne.title")}
         </h3>
-        <p className="text-fg-dim text-sm md:text-base max-w-xl mb-5">
+        <p className="text-fg-dim text-copy max-w-xl mb-5">
           {t("oneOnOne.body", { count: pricing.oneOnOne.spots })}
         </p>
 
         <div className="flex items-baseline gap-2 mb-5">
-          <span className="numeric text-3xl">{pricing.oneOnOne.amount}</span>
-          <span className="numeric text-fg-dim text-sm">
+          <span className="numeric text-title">{pricing.oneOnOne.amount}</span>
+          <span className="numeric text-fg-dim text-meta">
             {t("oneOnOne.priceSuffix", {
               currency: pricing.oneOnOne.currency,
               period: pricing.oneOnOne.period,
@@ -411,9 +411,9 @@ function Mini({
   return (
     <div className="bg-bg-2 px-4 py-3 text-center">
       <div className="eyebrow mb-1">{label}</div>
-      <div className={`numeric ${small ? "text-xl lg:text-2xl" : "text-2xl"}`}>
+      <div className={`numeric ${small ? "text-section" : "text-section"}`}>
         {value}
-        {suffix ? <span className="text-fg-dim text-sm ml-0.5">{suffix}</span> : null}
+        {suffix ? <span className="text-fg-dim text-meta ml-0.5">{suffix}</span> : null}
       </div>
     </div>
   );
@@ -438,9 +438,9 @@ function MiniWithTrend({
   return (
     <div className="bg-bg-2 px-4 py-3 text-center">
       <div className="eyebrow mb-1">{label}</div>
-      <div className="numeric text-xl lg:text-2xl">
+      <div className="numeric text-section">
         {value}
-        {suffix ? <span className="text-fg-dim text-sm ml-0.5">{suffix}</span> : null}
+        {suffix ? <span className="text-fg-dim text-meta ml-0.5">{suffix}</span> : null}
       </div>
       {trend ? (
         <div

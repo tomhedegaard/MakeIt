@@ -36,7 +36,7 @@ export default async function DailyIntakeCard({ intake }: { intake: DailyIntake 
       </div>
 
       {offPlanKcal > 0 ? (
-        <p className="text-xs text-fg-dim mt-4">
+        <p className="text-meta text-fg-dim mt-4">
           {t("offPlan")}{" "}
           <span className="numeric text-fg-body">{fmt(offPlanKcal)} kcal</span>
           {" · "}
@@ -66,13 +66,13 @@ function Metric({
 }) {
   return (
     <div>
-      <div className="text-sm text-fg-dim">{label}</div>
-      <div className="font-display text-3xl leading-[1] mt-1 numeric">
+      <div className="text-meta text-fg-dim">{label}</div>
+      <div className="font-display text-section mt-1 numeric">
         {fmt(consumed)}
         {target != null ? (
-          <span className="text-fg-dim text-lg"> / {fmt(target)}</span>
+          <span className="text-fg-dim text-copy"> / {fmt(target)}</span>
         ) : null}
-        <span className="text-fg-dim text-sm"> {unit}</span>
+        <span className="text-fg-dim text-meta"> {unit}</span>
       </div>
       {target != null && target > 0 ? (
         <Progress

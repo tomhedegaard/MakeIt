@@ -50,7 +50,7 @@ export default function AdaptiveAlertCard({
     <div className="surface-2 rounded-2xl p-5">
       <div className="flex items-center justify-between gap-4 mb-3">
         <div className="min-w-0">
-          <div className="text-sm">
+          <div className="text-copy">
             <Link
               href={`/coach/members/${alert.memberId}`}
               className="hover:underline"
@@ -69,7 +69,7 @@ export default function AdaptiveAlertCard({
         </div>
         <div className="text-right shrink-0">
           <div className="eyebrow">Engine foreslår</div>
-          <div className="text-sm">{actionLabel}</div>
+          <div className="text-copy">{actionLabel}</div>
         </div>
       </div>
 
@@ -92,7 +92,7 @@ export default function AdaptiveAlertCard({
 
       {/* Member-facing copy — what they'd see if approved. */}
       {alert.explanationDa ? (
-        <p className="text-fg/90 text-sm leading-relaxed mb-3 italic">
+        <p className="text-fg/90 text-copy mb-3 italic">
           “{alert.explanationDa}”
         </p>
       ) : null}
@@ -106,7 +106,7 @@ export default function AdaptiveAlertCard({
             type="button"
             disabled={pending}
             onClick={() => review(false)}
-            className="rounded-lg border hairline px-3 py-2 text-[12px] text-fg-dim lift touch-app disabled:opacity-60"
+            className="rounded-lg border hairline px-3 py-2 text-micro text-fg-dim lift touch-app disabled:opacity-60"
           >
             Afvis
           </button>
@@ -114,7 +114,7 @@ export default function AdaptiveAlertCard({
             type="button"
             disabled={pending}
             onClick={() => review(true)}
-            className="rounded-lg border hairline bg-bg-2 px-3 py-2 text-[12px] lift touch-app disabled:opacity-60"
+            className="rounded-lg border hairline bg-bg-2 px-3 py-2 text-micro lift touch-app disabled:opacity-60"
           >
             Godkend
           </button>

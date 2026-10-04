@@ -114,7 +114,7 @@ function Toggle({
 }) {
   return (
     <label className="flex items-start justify-between gap-4 cursor-pointer touch-app">
-      <span className="flex-1 min-w-0 text-sm text-fg-dim">{label}</span>
+      <span className="flex-1 min-w-0 text-meta text-fg-dim">{label}</span>
       <span className="shrink-0">
         <input
           type="checkbox"
@@ -331,7 +331,7 @@ export default function LifestyleLogCard({
             disabled={pending || menstruationLogged}
             aria-pressed={menstruationLogged}
             className={cn(
-              "w-full text-micro border px-4 py-2.5 touch-app transition-colors",
+              "w-full text-meta border px-4 py-2.5 touch-app transition-colors",
               menstruationLogged
                 ? "bg-fg text-bg border-fg"
                 : "border-line-strong text-fg-dim lift",
@@ -348,7 +348,7 @@ export default function LifestyleLogCard({
       {error ? (
         <p
           role="alert"
-          className="text-sm text-fg border border-line-strong rounded-lg px-3 py-2"
+          className="text-copy text-fg border border-line-strong rounded-lg px-3 py-2"
         >
           {error}
         </p>

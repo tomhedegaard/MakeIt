@@ -77,7 +77,7 @@ export default function MealCard({
           />
         ) : null}
         <div className="flex-1 min-w-0">
-          <div className="text-sm truncate">{meal.title}</div>
+          <div className="text-copy truncate">{meal.title}</div>
           <div className="text-micro text-fg-faint">
             {fmt(meal.estKcal)} kcal · {t("macroProtein", { value: fmt(meal.estProteinG) })} · {fmt(meal.prepMinutes)} min
           </div>
@@ -157,15 +157,15 @@ export default function MealCard({
                   </>
                 ) : null}
               </div>
-              <h3 className="font-display text-2xl md:text-3xl leading-[1] mb-1.5">
+              <h3 className="font-display text-card mb-1.5">
                 {meal.title}
               </h3>
               {meal.description ? (
-                <p className="text-fg-dim text-sm leading-relaxed">{meal.description}</p>
+                <p className="text-fg-dim text-meta">{meal.description}</p>
               ) : null}
             </div>
             <div className="text-right shrink-0">
-              <div className="numeric text-2xl">{fmt(meal.estKcal)}</div>
+              <div className="numeric text-section">{fmt(meal.estKcal)}</div>
               <div className="eyebrow">{t("kcal")}</div>
             </div>
           </div>
@@ -188,7 +188,7 @@ export default function MealCard({
         <div className="border-t hairline px-5 py-4 space-y-4">
           <section>
             <div className="eyebrow mb-2">{t("ingredients")}</div>
-            <ul className="space-y-1 text-sm">
+            <ul className="space-y-1 text-copy">
               {meal.ingredients.map((ing, i) => (
                 <li key={i} className="flex items-baseline gap-3">
                   <span className="numeric text-fg-dim shrink-0 w-20">
@@ -202,7 +202,7 @@ export default function MealCard({
           {meal.steps.length > 0 ? (
             <section>
               <div className="eyebrow mb-2">{t("steps")}</div>
-              <ol className="space-y-2 text-sm">
+              <ol className="space-y-2 text-copy">
                 {meal.steps.map((s, i) => (
                   <li key={i} className="flex gap-3">
                     <span className="numeric text-fg-dim shrink-0 w-6">{String(i + 1).padStart(2, "0")}</span>

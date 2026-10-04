@@ -236,7 +236,7 @@ export default function Composer({
           disabled={pending}
         />
         {error ? (
-          <p className="mt-2 text-micro text-danger">{error}</p>
+          <p className="mt-2 text-meta text-danger">{error}</p>
         ) : null}
       </div>
     );
@@ -251,7 +251,7 @@ export default function Composer({
           disabled={pending}
         />
         {error ? (
-          <p className="mt-2 text-micro text-danger">{error}</p>
+          <p className="mt-2 text-meta text-danger">{error}</p>
         ) : null}
       </div>
     );
@@ -317,7 +317,7 @@ export default function Composer({
         }}
         placeholder={t("placeholder")}
         rows={2}
-        className="flex-1 min-w-0 resize-none rounded-lg border hairline px-3 py-2 text-base md:text-sm bg-bg leading-relaxed focus:outline-none focus:border-line-bright"
+        className="flex-1 min-w-0 resize-none rounded-lg border hairline px-3 py-2 text-copy bg-bg focus:outline-none focus:border-line-bright"
         disabled={pending}
       />
 
@@ -331,7 +331,7 @@ export default function Composer({
       </button>
 
       {error ? (
-        <p className="absolute mt-2 text-micro text-danger">{error}</p>
+        <p className="absolute mt-2 text-meta text-danger">{error}</p>
       ) : null}
     </div>
   );

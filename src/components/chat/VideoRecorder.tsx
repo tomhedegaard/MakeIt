@@ -325,7 +325,7 @@ export default function VideoRecorder({
       ) : null}
 
       {error ? (
-        <p className="text-micro text-danger">{error}</p>
+        <p className="text-meta text-danger">{error}</p>
       ) : null}
     </div>
   );

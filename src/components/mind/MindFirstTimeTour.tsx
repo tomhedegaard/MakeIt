@@ -68,11 +68,11 @@ export default function MindFirstTimeTour() {
         </div>
       </div>
 
-      <h2 id="mind-tour-title" className="font-display text-2xl md:text-3xl leading-tight">
+      <h2 id="mind-tour-title" className="font-display text-section">
         {t(`steps.${currentKey}.title`)}
       </h2>
 
-      <p className="text-fg-dim leading-relaxed text-base md:text-lg">{t(`steps.${currentKey}.body`)}</p>
+      <p className="text-fg-dim text-copy">{t(`steps.${currentKey}.body`)}</p>
 
       <div className="h-1 bg-bg-3 overflow-hidden">
         <div
@@ -82,13 +82,13 @@ export default function MindFirstTimeTour() {
       </div>
 
       <div className="flex items-center justify-end gap-3 pt-2">
-        <button type="button" onClick={dismiss} className="text-fg-dim text-sm hover:text-fg transition-colors">
+        <button type="button" onClick={dismiss} className="text-fg-dim text-meta hover:text-fg transition-colors">
           {t("skip")}
         </button>
         <button
           type="button"
           onClick={next}
-          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity"
+          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-copy font-medium hover:opacity-90 transition-opacity"
         >
           {isLast ? t("begin") : t("next")}
         </button>

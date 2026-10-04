@@ -105,7 +105,7 @@ export default function HrvSettingsSection({
         <div className="eyebrow">{t("connected")}</div>
         {connections.length === 0 ? (
           <div className="rounded-xl border hairline px-4 py-4 space-y-3">
-            <p className="text-sm text-fg-dim leading-relaxed">
+            <p className="text-copy text-fg-dim">
               {t("empty")}
             </p>
             <button
@@ -124,7 +124,7 @@ export default function HrvSettingsSection({
                 {connections.length > 1 && !connection.isPrimary ? (
                   <button
                     type="button"
-                    className="text-micro text-fg-dim border border-line-strong px-3 py-1.5 touch-app lift disabled:opacity-50"
+                    className="text-meta text-fg-dim border border-line-strong px-3 py-1.5 touch-app lift disabled:opacity-50"
                     onClick={() => makePrimary(connection.id)}
                     disabled={primaryPending}
                   >
@@ -138,7 +138,7 @@ export default function HrvSettingsSection({
         {primaryError ? (
           <p
             role="alert"
-            className="text-micro text-fg-dim"
+            className="text-meta text-fg-dim"
           >
             {primaryError}
           </p>
@@ -149,8 +149,8 @@ export default function HrvSettingsSection({
       <ul className="divide-y hairline border-t hairline">
         <li className="py-3 flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <div className="text-sm">{t("cycle.title")}</div>
-            <div className="text-xs text-fg-dim mt-0.5">{t("cycle.body")}</div>
+            <div className="text-copy">{t("cycle.title")}</div>
+            <div className="text-meta text-fg-dim mt-0.5">{t("cycle.body")}</div>
           </div>
           <label className="shrink-0 cursor-pointer touch-app">
             <input
@@ -180,8 +180,8 @@ export default function HrvSettingsSection({
         </li>
         <li className="py-3 flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <div className="text-sm">{t("nudge.title")}</div>
-            <div className="text-xs text-fg-dim mt-0.5">{t("nudge.body")}</div>
+            <div className="text-copy">{t("nudge.title")}</div>
+            <div className="text-meta text-fg-dim mt-0.5">{t("nudge.body")}</div>
           </div>
           <label className="shrink-0 cursor-pointer touch-app">
             <input
@@ -230,7 +230,7 @@ export default function HrvSettingsSection({
       {/* Link to the full module */}
       <Link
         href="/hrv"
-        className="block text-micro text-fg-dim lift"
+        className="block text-meta text-fg-dim lift"
       >
         {t("seeAll")}
       </Link>

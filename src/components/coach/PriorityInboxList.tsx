@@ -63,17 +63,17 @@ export default async function PriorityInboxList({
   return (
     <div>
       {!safetyReadable ? (
-        <p className="px-5 py-3 text-sm text-fg-dim border-b hairline">
+        <p className="px-5 py-3 text-meta text-fg-dim border-b hairline">
           {t("safetyUnreadable")}
         </p>
       ) : null}
 
       {items.length === 0 ? (
         <div className="p-6 space-y-2">
-          <div className="font-display text-2xl">{t("emptyTitle")}</div>
-          <p className="text-sm text-fg-dim max-w-md">{t("emptyBody")}</p>
+          <div className="font-display text-section">{t("emptyTitle")}</div>
+          <p className="text-meta text-fg-dim max-w-md">{t("emptyBody")}</p>
           {mode === "demo" ? (
-            <p className="text-micro text-fg-faint">{t("emptyDemoHint")}</p>
+            <p className="text-meta text-fg-faint">{t("emptyDemoHint")}</p>
           ) : null}
         </div>
       ) : (
@@ -86,14 +86,14 @@ export default async function PriorityInboxList({
               <>
                 <Avatar handle={item.memberHandle} />
                 <span className="flex-1 min-w-0">
-                  <span className="block text-sm truncate">@{item.memberHandle}</span>
+                  <span className="block text-copy truncate">@{item.memberHandle}</span>
                   <span className="mt-1 block">
                     <InboxReasonChip item={item} />
                   </span>
                 </span>
                 <time
                   dateTime={item.occurredAt}
-                  className="numeric text-xs text-fg-dim shrink-0"
+                  className="numeric text-micro text-fg-dim shrink-0"
                 >
                   {formatInboxWhen(item.occurredAt, locale)}
                 </time>

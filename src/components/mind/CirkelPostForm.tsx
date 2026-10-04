@@ -48,9 +48,9 @@ export default function CirkelPostForm({
         rows={4}
         required
         placeholder={t("placeholder")}
-        className="w-full rounded-xl bg-bg/60 border hairline px-4 py-3 text-base resize-none focus:outline-none focus:border-fg/40"
+        className="w-full rounded-xl bg-bg/60 border hairline px-4 py-3 text-copy resize-none focus:outline-none focus:border-fg/40"
       />
-      <div className="flex items-center justify-between text-xs text-fg-dim">
+      <div className="flex items-center justify-between text-micro text-fg-dim">
         <label className="inline-flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
@@ -64,7 +64,7 @@ export default function CirkelPostForm({
       </div>
 
       {error ? (
-        <div className="rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
+        <div className="rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-copy text-danger">
           {error}
         </div>
       ) : null}
@@ -73,7 +73,7 @@ export default function CirkelPostForm({
         <button
           type="submit"
           disabled={pending || body.trim().length === 0}
-          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
+          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-copy font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
         >
           {pending ? t("sending") : saved ? t("sent") : t("submit")}
         </button>

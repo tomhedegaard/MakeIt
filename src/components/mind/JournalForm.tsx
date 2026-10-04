@@ -58,7 +58,7 @@ export default function JournalForm({
 
         <div className="rounded-2xl border hairline bg-bg-2/40 p-5">
           <div className="eyebrow mb-2">{t("promptEyebrow")}</div>
-          <p className="font-display text-xl md:text-2xl">{prompt.text}</p>
+          <p className="font-display text-section">{prompt.text}</p>
         </div>
 
         <textarea
@@ -69,15 +69,15 @@ export default function JournalForm({
           rows={10}
           required
           placeholder={t("placeholder")}
-          className="w-full rounded-2xl bg-bg-2/60 border hairline px-5 py-4 text-base leading-relaxed resize-none focus:outline-none focus:border-fg/40"
+          className="w-full rounded-2xl bg-bg-2/60 border hairline px-5 py-4 text-copy resize-none focus:outline-none focus:border-fg/40"
         />
-        <div className="flex items-center justify-between text-fg-dim text-xs">
+        <div className="flex items-center justify-between text-fg-dim text-micro">
           <span>{t("helper")}</span>
           <span className="tabular-nums">{body.length} / 2000</span>
         </div>
 
         {error ? (
-          <div className="rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
+          <div className="rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-copy text-danger">
             {error}
           </div>
         ) : null}
@@ -86,12 +86,12 @@ export default function JournalForm({
           <button
             type="submit"
             disabled={pending || body.trim().length === 0}
-            className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3.5 text-base font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
+            className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3.5 text-copy font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
           >
             {pending ? t("saving") : saved ? t("update") : t("save")}
           </button>
           {saved && !pending ? (
-            <span className="text-fg-dim text-sm">{t("saved")}</span>
+            <span className="text-fg-dim text-meta">{t("saved")}</span>
           ) : null}
         </div>
       </form>

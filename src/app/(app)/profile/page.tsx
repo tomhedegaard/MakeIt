@@ -80,10 +80,10 @@ export default async function ProfilePage() {
                   ) : null}
                 </div>
                 <div className="flex items-baseline gap-1.5 mb-3">
-                  <span className="numeric text-4xl">
+                  <span className="numeric text-title">
                     {l.currentE1rm != null ? l.currentE1rm : "-"}
                   </span>
-                  <span className="text-fg-dim text-xs">{t("lifts.e1rmUnit")}</span>
+                  <span className="text-fg-dim text-micro">{t("lifts.e1rmUnit")}</span>
                 </div>
                 <div className="text-fg/70">
                   <Sparkline data={l.history.map((h) => h.e1rm)} />
@@ -98,7 +98,7 @@ export default async function ProfilePage() {
               </article>
             ))}
           </div>
-          <p className="mt-3 text-micro text-fg-faint">
+          <p className="mt-3 text-meta text-fg-faint">
             {t("lifts.formula")}
           </p>
         </section>
@@ -116,21 +116,21 @@ export default async function ProfilePage() {
               {recentPRs.map((pr, i) => (
                 <li
                   key={`${pr.date}-${pr.exerciseName}-${i}`}
-                  className="px-5 py-3 flex items-center gap-4 text-sm"
+                  className="px-5 py-3 flex items-center gap-4 text-copy"
                 >
-                  <span className="numeric text-xs text-fg-faint w-20 shrink-0">
+                  <span className="numeric text-micro text-fg-faint w-20 shrink-0">
                     {new Date(pr.date).toLocaleDateString(dateLocale, {
                       day: "numeric",
                       month: "short",
                     })}
                   </span>
                   <span className="flex-1 truncate">{pr.exerciseName}</span>
-                  <span className="numeric text-fg-dim text-xs shrink-0">
+                  <span className="numeric text-fg-dim text-micro shrink-0">
                     {pr.weight} × {pr.reps}
                   </span>
                   <span className="numeric shrink-0">
                     {pr.e1rm}
-                    <span className="text-fg-dim text-xs ml-1">{t("prs.e1rm")}</span>
+                    <span className="text-fg-dim text-micro ml-1">{t("prs.e1rm")}</span>
                   </span>
                   <span
                     className="inline-flex items-center border hairline-strong px-2 py-1 shrink-0"
@@ -148,7 +148,7 @@ export default async function ProfilePage() {
         <div className="grid gap-6 md:grid-cols-2">
           <section className="surface-2 rounded-lg p-8">
             <div className="eyebrow mb-4">{t("settings.eyebrow")}</div>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-3 text-copy">
               <li className="flex items-center justify-between border-b hairline pb-3">
                 <span className="text-fg-dim">{t("settings.email")}</span>
                 <span>{m.email ?? `${m.handle}@${COMPANY.marketingDomain}`}</span>
@@ -172,8 +172,8 @@ export default async function ProfilePage() {
             <div className="flex items-end justify-between gap-4">
               <div>
                 <div className="eyebrow mb-2">{t("billing.eyebrow")}</div>
-                <div className="font-display text-xl">{t("billing.title")}</div>
-                <p className="text-sm text-fg-dim mt-1 max-w-md">
+                <div className="font-display text-section">{t("billing.title")}</div>
+                <p className="text-meta text-fg-dim mt-1 max-w-md">
                   {t("billing.description")}
                 </p>
               </div>
@@ -193,12 +193,12 @@ export default async function ProfilePage() {
           <div className="flex items-end justify-between gap-4 mb-5">
             <div>
               <div className="eyebrow mb-2">{t("formChecks.eyebrow")}</div>
-              <div className="font-display text-xl">
+              <div className="font-display text-section">
                 {formChecks.length === 0
                   ? t("formChecks.titleEmpty")
                   : t("formChecks.titleWithData")}
               </div>
-              <p className="text-sm text-fg-dim mt-1 max-w-md">
+              <p className="text-meta text-fg-dim mt-1 max-w-md">
                 {t("formChecks.description")}
               </p>
             </div>
@@ -213,7 +213,7 @@ export default async function ProfilePage() {
           </div>
 
           {formChecks.length === 0 ? (
-            <p className="text-sm text-fg-dim">
+            <p className="text-meta text-fg-dim">
               {t("formChecks.emptyHint")}
             </p>
           ) : (
@@ -227,7 +227,7 @@ export default async function ProfilePage() {
                       <div className="eyebrow mb-1">
                         {f.exerciseName ?? t("formChecks.exerciseFallback")}
                       </div>
-                      <h3 className="font-display text-lg leading-snug">
+                      <h3 className="font-display text-card">
                         {f.aiHeadline ?? t("formChecks.aiHeadlineFallback")}
                       </h3>
                       <div className="mt-1 text-micro text-fg-faint">
@@ -239,10 +239,6 @@ export default async function ProfilePage() {
                           minute: "2-digit",
                         })}
                       </div>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <div className="numeric text-3xl">{f.aiScore ?? "-"}</div>
-                      <div className="eyebrow">{t("formChecks.outOf")}</div>
                     </div>
                   </header>
 
@@ -263,7 +259,7 @@ export default async function ProfilePage() {
                       {f.aiPos.length > 0 ? (
                         <div>
                           <div className="eyebrow mb-1.5">{t("formChecks.good")}</div>
-                          <ul className="space-y-1 text-sm text-fg/90">
+                          <ul className="space-y-1 text-copy text-fg/90">
                             {f.aiPos.map((p) => (
                               <li key={p} className="flex gap-2">
                                 <span className="text-fg-faint">·</span>
@@ -276,7 +272,7 @@ export default async function ProfilePage() {
                       {f.aiNeg.length > 0 ? (
                         <div>
                           <div className="eyebrow mb-1.5">{t("formChecks.tightenUp")}</div>
-                          <ul className="space-y-1 text-sm text-fg/90">
+                          <ul className="space-y-1 text-copy text-fg/90">
                             {f.aiNeg.map((n) => (
                               <li key={n} className="flex gap-2">
                                 <span className="text-fg-faint">·</span>
@@ -289,7 +285,7 @@ export default async function ProfilePage() {
                       {f.aiFix ? (
                         <div className="sm:col-span-2 rounded-lg surface-2 p-3">
                           <div className="eyebrow mb-1.5">{t("formChecks.coachTip")}</div>
-                          <p className="text-sm text-fg/90">{f.aiFix}</p>
+                          <p className="text-copy text-fg/90">{f.aiFix}</p>
                         </div>
                       ) : null}
                     </div>
@@ -314,13 +310,13 @@ export default async function ProfilePage() {
                           })}
                         </span>
                       </div>
-                      <p className="text-sm text-fg leading-relaxed whitespace-pre-wrap">
+                      <p className="text-copy text-fg whitespace-pre-wrap">
                         {f.coachNotes}
                       </p>
                     </div>
                   ) : (
                     <div className="px-5 py-3 border-t hairline">
-                      <span className="text-micro text-fg-faint">
+                      <span className="text-meta text-fg-faint">
                         {t("formChecks.awaitingReview")}
                       </span>
                     </div>
@@ -331,7 +327,7 @@ export default async function ProfilePage() {
             </>
           )}
 
-          <p className="text-micro text-fg-faint mt-5">
+          <p className="text-meta text-fg-faint mt-5">
             {pending.length > 0
               ? t("formChecks.footerPending", {
                   pending: pending.length,

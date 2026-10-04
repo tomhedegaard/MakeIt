@@ -73,7 +73,7 @@ export default function MuscleTierPicker({
               style={{ background: t ? TIER_DOT[t] : "var(--anatomy-idle)" }}
               aria-hidden
             />
-            <span className="flex-1 text-sm truncate">{MUSCLE_LABELS[m]}</span>
+            <span className="flex-1 text-copy truncate">{MUSCLE_LABELS[m]}</span>
             {(["primary", "secondary", "tertiary"] as MuscleTier[]).map(
               (tier) => {
                 const on = t === tier;

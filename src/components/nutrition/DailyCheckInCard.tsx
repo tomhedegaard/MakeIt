@@ -92,18 +92,18 @@ export default function DailyCheckInCard({
               </>
             ) : null}
           </div>
-          <h3 className="font-display text-2xl md:text-3xl leading-[1.05] mb-1">
+          <h3 className="font-display text-card mb-1">
             {headline}
           </h3>
           {variant === "full" && checkin.meal?.description ? (
-            <p className="text-fg-dim text-sm leading-relaxed">
+            <p className="text-fg-dim text-copy">
               {checkin.meal.description}
             </p>
           ) : null}
         </div>
         {checkin.streakDays > 0 ? (
           <div className="text-right shrink-0">
-            <div className="numeric text-2xl">{checkin.streakDays}</div>
+            <div className="numeric text-section">{checkin.streakDays}</div>
             <div className="eyebrow">{t("streak")}</div>
             {checkin.nextMilestone ? (
               <div className="mt-1 text-micro text-fg-dim whitespace-nowrap">
@@ -115,7 +115,7 @@ export default function DailyCheckInCard({
           </div>
         ) : checkin.nextMilestone ? (
           <div className="text-right shrink-0">
-            <div className="text-micro text-fg-dim leading-tight">
+            <div className="text-micro text-fg-dim">
               {t("milestonePrompt", { days: checkin.nextMilestone.days })}
               <br />
               <span className="text-fg">{t("milestoneReward")}</span>
@@ -175,7 +175,7 @@ export default function DailyCheckInCard({
           </>
         ) : showCelebration ? (
           <>
-            <span className="px-3 py-2 text-xs text-fg-dim">
+            <span className="px-3 py-2 text-micro text-fg-dim">
               {checkin.state === "skipped"
                 ? t("skippedNote", { slot: slotLabel })
                 : t("loggedNote", { slot: slotLabel })}
@@ -186,7 +186,7 @@ export default function DailyCheckInCard({
           </>
         ) : (
           <>
-            <span className="px-3 py-2 text-xs text-fg-dim">
+            <span className="px-3 py-2 text-micro text-fg-dim">
               {t("nextNote", { slot: slotLabel, window: checkin.slotWindow ?? "" })}
             </span>
             <Link href="/nutrition" className="btn btn-ghost btn-sm ml-auto">

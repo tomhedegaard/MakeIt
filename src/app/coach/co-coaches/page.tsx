@@ -43,10 +43,10 @@ export default async function CoachCoCoachesPage() {
     <Container className="py-6 lg:py-12 space-y-6">
       <header className="pt-2">
         <div className="eyebrow mb-2">{t("eyebrow")}</div>
-        <h1 className="font-display text-title md:text-[2.75rem]">
+        <h1 className="font-display text-title">
           {t("title")}
         </h1>
-        <p className="mt-2 text-fg-dim text-sm">
+        <p className="mt-2 text-fg-dim text-meta">
           {t("subtitle", {
             count: beasts.length,
             threshold: Math.round(PROMOTE_THRESHOLD * 100),
@@ -57,7 +57,7 @@ export default async function CoachCoCoachesPage() {
 
       {beasts.length === 0 ? (
         <div className="surface-2 rounded-lg p-6">
-          <p className="text-fg-dim text-sm">{t("empty")}</p>
+          <p className="text-fg-dim text-meta">{t("empty")}</p>
         </div>
       ) : (
         <ul className="space-y-3">
@@ -70,7 +70,7 @@ export default async function CoachCoCoachesPage() {
       )}
 
       <footer className="pt-4 border-t hairline">
-        <p className="text-xs text-fg-faint">{t("footnote")}</p>
+        <p className="text-meta text-fg-faint">{t("footnote")}</p>
       </footer>
     </Container>
   );
@@ -94,17 +94,17 @@ async function BeastRow({ beast }: { beast: BeastInTraining }) {
         <div className="eyebrow">@{beast.handle}</div>
         <div className="mt-1 flex items-baseline gap-3 flex-wrap">
           <span
-            className={`numeric text-2xl ${
+            className={`numeric text-section ${
               meetsThreshold ? "text-fg" : "text-fg-dim"
             }`}
           >
             {agreementPct === null ? "—" : `${agreementPct}%`}
           </span>
-          <span className="text-xs text-fg-faint">
+          <span className="text-micro text-fg-faint">
             {t("reviewsLabel", { count: beast.sandboxReviewCount })}
           </span>
           {beast.lastReviewAt ? (
-            <span className="text-xs text-fg-faint">
+            <span className="text-micro text-fg-faint">
               {t("lastReviewLabel", { iso: beast.lastReviewAt })}
             </span>
           ) : null}

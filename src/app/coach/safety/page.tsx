@@ -25,10 +25,10 @@ export default async function CoachSafetyPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <header className="pt-2">
         <div className="eyebrow mb-2">Coach · Søjle 5</div>
-        <h1 className="font-display text-title md:text-[2.75rem]">
+        <h1 className="font-display text-title">
           Safety.
         </h1>
-        <p className="mt-3 text-fg-dim text-sm md:text-base max-w-md">
+        <p className="mt-3 text-fg-dim text-meta md:text-copy max-w-md">
           En styrkecoach er ikke en krisevagt. Livslinien 70 201 201 og 112
           er det rigtige ved akut krise. Her ser du kun det medlemmet selv
           har valgt at skrive — aldrig journal-tekst.
@@ -36,10 +36,10 @@ export default async function CoachSafetyPage() {
       </header>
 
       <section>
-        <h2 className="font-display text-xl mb-4">Åbne eskaleringer</h2>
+        <h2 className="font-display text-section mb-4">Åbne eskaleringer</h2>
         {!week.alertsReadable ? (
           <div className="rounded-2xl border hairline bg-bg-2/30 p-6 space-y-2">
-            <p className="text-fg-dim text-sm leading-relaxed">
+            <p className="text-fg-dim text-meta">
               <code className="text-fg">mental_safety_alerts</code> kan ikke
               læses. Enten mangler migration 0057, eller RLS blokerede
               læsningen. Det er ikke det samme som &laquo;nul sager&raquo;.
@@ -48,14 +48,14 @@ export default async function CoachSafetyPage() {
         ) : week.openAlerts.length === 0 ? (
           <div className="rounded-2xl border hairline bg-bg-2/30 p-6 space-y-2">
             <div className="font-display text-hero tabular-nums">0</div>
-            <p className="text-fg-dim text-sm">
+            <p className="text-fg-dim text-meta">
               Ingen åbne medlems-skrevne summaries. Munk får ikke push — åbn
               denne side for at se nye.
             </p>
           </div>
         ) : (
           <div className="space-y-3">
-            <p className="text-fg-dim text-sm">
+            <p className="text-fg-dim text-meta">
               <span className="tabular-nums font-medium text-fg">
                 {week.openMentalAlerts}
               </span>{" "}
@@ -68,8 +68,8 @@ export default async function CoachSafetyPage() {
                   className="rounded-2xl border hairline bg-bg-2/30 p-5 space-y-2"
                 >
                   <div className="flex items-baseline justify-between gap-3">
-                    <span className="text-sm">@{alert.member_handle}</span>
-                    <span className="text-fg-dim text-xs tabular-nums">
+                    <span className="text-copy">@{alert.member_handle}</span>
+                    <span className="text-fg-dim text-micro tabular-nums">
                       {alert.created_at.slice(0, 10)}
                     </span>
                   </div>
@@ -84,10 +84,10 @@ export default async function CoachSafetyPage() {
       </section>
 
       <section>
-        <h2 className="font-display text-xl mb-4">Journal-volumen</h2>
+        <h2 className="font-display text-section mb-4">Journal-volumen</h2>
         {week.journalCoverage === "demo" ? (
           <div className="space-y-3">
-            <p className="text-fg-dim text-xs">
+            <p className="text-fg-dim text-meta">
               Demo-tal — ikke live dækning. I connected mode kan coaches
               ikke aggregere andres journals (RLS owner-only).
             </p>
@@ -100,7 +100,7 @@ export default async function CoachSafetyPage() {
           </div>
         ) : (
           <div className="rounded-2xl border hairline bg-bg-2/30 p-6">
-            <p className="text-fg-dim text-sm leading-relaxed">
+            <p className="text-fg-dim text-meta">
               Journal-tal vises ikke. <code className="text-fg">journal_entries</code>{" "}
               er owner-only — Munk kan ikke se andres poster, og et 0-0-0-0
               her ville være falsk dækning. Claude-nulls tælles i logs som{" "}
@@ -111,8 +111,8 @@ export default async function CoachSafetyPage() {
       </section>
 
       <section>
-        <h2 className="font-display text-xl mb-4">Sådan virker pipelinen</h2>
-        <ol className="space-y-2 text-fg-dim text-sm leading-relaxed list-decimal pl-5">
+        <h2 className="font-display text-section mb-4">Sådan virker pipelinen</h2>
+        <ol className="space-y-2 text-fg-dim text-meta list-decimal pl-5">
           <li>
             <strong className="text-fg">Keyword pre-filter:</strong> hurtig regex
             over entry-body. Conservative — false-positives OK.
@@ -142,8 +142,8 @@ export default async function CoachSafetyPage() {
 function KPI({ label, value }: { label: string; value: number }) {
   return (
     <div className="bg-bg-2/40 p-5">
-      <div className="eyebrow text-xs mb-2">{label}</div>
-      <div className="font-display text-3xl tabular-nums text-fg">{value}</div>
+      <div className="eyebrow text-micro mb-2">{label}</div>
+      <div className="font-display text-title tabular-nums text-fg">{value}</div>
     </div>
   );
 }

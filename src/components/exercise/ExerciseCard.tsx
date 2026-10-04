@@ -43,7 +43,7 @@ export default async function ExerciseCard({
           />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="font-display text-sm truncate">{exercise.name}</div>
+          <div className="font-display text-copy truncate">{exercise.name}</div>
           <div className="text-micro text-fg-faint truncate">
             {primaryNames || t("metaEmpty")}
           </div>
@@ -69,7 +69,7 @@ export default async function ExerciseCard({
         </div>
         <div className="min-w-0 flex-1 space-y-2">
           <div>
-            <div className="font-display text-lg sm:text-xl leading-tight truncate">
+            <div className="font-display text-card sm:text-section truncate">
               {exercise.name}
             </div>
             <div className="eyebrow eyebrow-domain mt-1 truncate" data-domain="body">
@@ -78,14 +78,14 @@ export default async function ExerciseCard({
           </div>
 
           {primaryNames ? (
-            <div className="text-xs text-fg-dim truncate">
+            <div className="text-micro text-fg-dim truncate">
               <span className="text-fg-faint">{t("primaryPrefix")}</span>
               {primaryNames}
             </div>
           ) : null}
 
           {exercise.cues[0] ? (
-            <p className="text-sm text-fg-dim line-clamp-2">
+            <p className="text-meta text-fg-dim line-clamp-2">
               {exercise.cues[0]}
             </p>
           ) : null}

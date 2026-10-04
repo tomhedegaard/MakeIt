@@ -64,7 +64,7 @@ export default function CoachShell({
                     href={item.href}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "group flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors",
+                      "group flex items-center gap-3 rounded-md px-3 py-2.5 text-copy transition-colors",
                       active
                         ? "bg-bg-3 text-fg"
                         : "text-fg-dim hover:text-fg hover:bg-bg-3/60"
@@ -100,7 +100,7 @@ export default function CoachShell({
             </div>
             <Link
               href="/dashboard"
-              className="inline-flex min-h-11 items-center text-xs text-fg-dim"
+              className="inline-flex min-h-11 items-center text-meta text-fg-dim"
             >
               {t("memberApp")}
             </Link>
@@ -118,7 +118,7 @@ export default function CoachShell({
                       href={item.href}
                       aria-current={active ? "page" : undefined}
                       className={cn(
-                        "flex min-h-11 items-center px-3 text-xs",
+                        "flex min-h-11 items-center px-3 text-meta",
                         active ? "bg-bg-3 text-fg" : "text-fg-dim"
                       )}
                     >

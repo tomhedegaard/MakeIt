@@ -56,7 +56,7 @@ export default async function MindSessionRunnerPage({
       <Container size="narrow" className="py-10 md:py-14 space-y-6">
         <Link
           href="/mind/sessions"
-          className="inline-block text-fg-dim text-sm hover:text-fg"
+          className="inline-block text-fg-dim text-meta hover:text-fg"
         >
           {t("backToLibrary")}
         </Link>

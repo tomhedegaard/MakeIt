@@ -47,8 +47,8 @@ export default async function MindSettingsPage() {
       />
       <Container size="narrow" className="py-10 md:py-14 space-y-12">
         <section>
-          <h2 className="font-display text-xl mb-2">{t("crew.title")}</h2>
-          <p className="text-fg-dim text-sm mb-4">{t("crew.body")}</p>
+          <h2 className="font-display text-section mb-2">{t("crew.title")}</h2>
+          <p className="text-fg-dim text-meta mb-4">{t("crew.body")}</p>
           <div className="space-y-0">
             <MentalToggleRow
               field="buddy_share_enabled"
@@ -88,7 +88,7 @@ export default async function MindSettingsPage() {
         </section>
 
         <section>
-          <h2 className="font-display text-xl mb-2">{t("aiCoach.title")}</h2>
+          <h2 className="font-display text-section mb-2">{t("aiCoach.title")}</h2>
           <div className="space-y-0">
             <MentalToggleRow
               field="ai_coach_enabled"
@@ -100,7 +100,7 @@ export default async function MindSettingsPage() {
         </section>
 
         <section>
-          <h2 className="font-display text-xl mb-2">{t("notifications.title")}</h2>
+          <h2 className="font-display text-section mb-2">{t("notifications.title")}</h2>
           <div className="space-y-0">
             <MentalToggleRow
               field="notif_mind_check_evening"
@@ -123,7 +123,7 @@ export default async function MindSettingsPage() {
           </div>
         </section>
 
-        <div className="text-xs text-fg-dim pt-4">
+        <div className="text-micro text-fg-dim pt-4">
           {t("streak", {
             current: settings.current_streak_days,
             longest: settings.longest_streak_days,

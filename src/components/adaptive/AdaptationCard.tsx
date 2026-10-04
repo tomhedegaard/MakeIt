@@ -113,9 +113,9 @@ export default function AdaptationCard({ adaptation, sessionId }: Props) {
       aria-busy={isPending}
     >
       <div className="flex items-baseline justify-between gap-3">
-        <h2 id="adaptation-heading" className="eyebrow">
+        <p id="adaptation-heading" className="eyebrow">
           {display.eyebrow}
-        </h2>
+        </p>
         <span
           className={`text-micro ${
  display.pendingCoach ? "text-warn" : "text-fg-dim"

@@ -1,4 +1,10 @@
 @import "tailwindcss";
+/* Rapporter og designdokumenter citerer klassenavne (fx text-[var(…)]),
+ * som Tailwind ellers prøver at generere CSS til. Kun kode scannes. */
+@source not "../../.reviews";
+@source not "../../.impeccable";
+@source not "../../DESIGN.md";
+@source not "../../docs";
 
 /* ---------------------------------------------------------------- *
  * MakeIt — design tokens, retning Nord
@@ -308,6 +314,10 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--line); }
 ::-webkit-scrollbar-thumb:hover { background: var(--fg-faint); }
 
+/* Komponentklasserne ligger i @layer components, så Tailwind-utilities
+ * (lg:hidden, hover:border-fg, h-9 …) vinder over dem som forventet.
+ * Uden lag slog .btn fx lg:hidden, og hover-tilstande forsvandt. */
+@layer components {
 /* ---------------------------------------------------------------- *
  * Type system — strength editorial
  * ---------------------------------------------------------------- */
@@ -403,7 +413,7 @@ body {
   border-radius: 0;
   padding: 0.625rem 0.875rem;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--text-copy);
   transition: border-color 180ms ease, background 180ms ease;
 }
 .input:focus {
@@ -454,16 +464,6 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
 .field:focus  { border-color: var(--fg); background: var(--bg-2); outline: none; }
 .field:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
 .field::placeholder { color: var(--fg-faint); }
-
-/* iOS zooms on focus below 16px. With this, the root viewport can
- * drop maximumScale and let people pinch-zoom (WCAG 1.4.4).
- * The width query is the belt to (pointer: coarse)'s braces: a phone
- * viewport that does not report a coarse pointer (desktop responsive
- * mode, some in-app webviews) gets the 16px floor too. */
-@media (pointer: coarse), (max-width: 40rem) {
-  .input,
-  .field { font-size: 16px; }
-}
 
 /* Card hover lift */
 .lift { transition: transform 200ms ease-out, border-color 200ms ease-out, background 200ms ease-out; }
@@ -545,7 +545,6 @@ textarea.input { min-height: 4.5rem; resize: vertical; }
   display: flex;
   align-items: baseline;
   justify-content: center;
-  font-variant-numeric: tabular-nums;
   font-weight: 500;
   font-size: 2rem;
   letter-spacing: -0.03em;
@@ -738,6 +737,24 @@ nav.tabbar {
 
 /* Disable iOS double-tap-zoom for app surfaces */
 .touch-app { touch-action: manipulation; }
+} /* @layer components */
+
+/* Uden for @layer med vilje: reglen skal slå text-copy på selve feltet.
+ * iOS zooms on focus below 16px. With this, the root viewport can
+ * drop maximumScale and let people pinch-zoom (WCAG 1.4.4).
+ * The width query is the belt to (pointer: coarse)'s braces: a phone
+ * viewport that does not report a coarse pointer (desktop responsive
+ * mode, some in-app webviews) gets the 16px floor too. */
+@media (pointer: coarse), (max-width: 40rem) {
+  /* max(): mindst 16 px, men et felt der arver mere (stepperens 32 px
+   * tal) beholder det. 100 % er forælderens størrelse (1em foldes af
+   * CSS-minifieren til 16px). Felter med en skala-størrelse over 16 px
+   * (vægtfeltet i text-section) er undtaget, så de ikke skrumper. */
+  :is(.input, .field, input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select):not(
+    [class*="text-card"], [class*="text-section"], [class*="text-title"], [class*="text-hero"]
+  ) { font-size: max(16px, 100%); }
+}
+
 
 /* ---------------------------------------------------------------- *
  * Landing helpers (Nord). Tokens only, scoped to the landing's theme root.

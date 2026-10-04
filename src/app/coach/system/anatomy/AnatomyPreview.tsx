@@ -181,7 +181,7 @@ export default function AnatomyPreview() {
                 <button
                   type="button"
                   onClick={() => pickExercise(ex)}
-                  className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                  className={`w-full text-left px-3 py-2 rounded-md text-copy transition-colors ${
                     selected?.name === ex.name
                       ? "bg-bg-3 text-fg"
                       : "text-fg-dim hover:bg-bg-3/60 hover:text-fg"
@@ -205,7 +205,7 @@ export default function AnatomyPreview() {
                 key={g}
                 type="button"
                 onClick={() => setGender(g)}
-                className={`flex-1 px-3 py-2 rounded-md text-xs ${
+                className={`flex-1 px-3 py-2 rounded-md text-micro ${
  gender === g ? "bg-bg-3 text-fg" : "text-fg-dim hover:text-fg"
  }`}
               >
@@ -223,7 +223,7 @@ export default function AnatomyPreview() {
                 key={v}
                 type="button"
                 onClick={() => setView(v)}
-                className={`flex-1 px-3 py-2 rounded-md text-xs ${
+                className={`flex-1 px-3 py-2 rounded-md text-micro ${
  view === v ? "bg-bg-3 text-fg" : "text-fg-dim hover:text-fg"
  }`}
               >
@@ -285,7 +285,7 @@ export default function AnatomyPreview() {
               return (
                 <li
                   key={m}
-                  className="flex items-center gap-2 text-sm py-1"
+                  className="flex items-center gap-2 text-copy py-1"
                 >
                   <span
                     className="size-3 rounded-full shrink-0"
@@ -331,13 +331,13 @@ export default function AnatomyPreview() {
 
         <div className="border-t hairline pt-3 text-micro text-fg-faint">
           <div>{t("activeSelection")}</div>
-          <div className="mt-2 text-fg-dim text-xs">
+          <div className="mt-2 text-fg-dim text-micro">
             <code className="text-fg">primary</code>: [{tiered.primary.join(", ") || "—"}]
           </div>
-          <div className="mt-1 text-fg-dim text-xs">
+          <div className="mt-1 text-fg-dim text-micro">
             <code className="text-fg">secondary</code>: [{tiered.secondary.join(", ") || "—"}]
           </div>
-          <div className="mt-1 text-fg-dim text-xs">
+          <div className="mt-1 text-fg-dim text-micro">
             <code className="text-fg">tertiary</code>: [{tiered.tertiary.join(", ") || "—"}]
           </div>
         </div>

@@ -27,7 +27,7 @@ export default function Logo({
         <path d="M8 22 V10 L13 18 L18 10 V22" stroke="currentColor" strokeWidth="2.2" fill="none" strokeLinejoin="miter" />
         <rect x="21" y="14" width="3" height="8" fill="currentColor" />
       </svg>
-      <span className="font-display text-[0.9375rem] tracking-[-0.02em] leading-none">
+      <span className="font-display text-copy tracking-[-0.02em]">
         MakeIt
         <span className="mx-1.5 text-fg-faint" aria-hidden>{"//"}</span>
         HQ

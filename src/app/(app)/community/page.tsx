@@ -132,7 +132,7 @@ export default async function CrewPage() {
         </ol>
       </section>
       ) : (
-      <p className="text-xs text-fg-faint">
+      <p className="text-meta text-fg-faint">
         {t("storiesEmpty")}
       </p>
       )}
@@ -146,21 +146,21 @@ export default async function CrewPage() {
             <div className="eyebrow">
               {t("challengeEyebrow", { month: capitalize(month), days: cal.daysLeft })}
             </div>
-            <span className="numeric text-xs text-fg-dim">
+            <span className="numeric text-micro text-fg-dim">
               {t("challengeParticipants", { count: challenge.participantCount })}
             </span>
           </div>
-          <h2 className="font-display text-3xl md:text-4xl leading-[1] mb-3">
+          <h2 className="font-display text-section mb-3">
             {t("challengeTitle")}
           </h2>
-          <p className="text-fg-dim text-sm">
+          <p className="text-fg-dim text-meta">
             {t("challengeDescription", { month })}
           </p>
         </div>
         <div className="px-5 pb-3">
           <div className="flex items-baseline justify-between mb-2">
-            <span className="numeric text-2xl">{challengeLabel}</span>
-            <span className="text-xs text-fg-dim">
+            <span className="numeric text-section">{challengeLabel}</span>
+            <span className="text-micro text-fg-dim">
               {t("challengeProgress", { pct: challenge.youPercent })}
             </span>
           </div>
@@ -174,11 +174,11 @@ export default async function CrewPage() {
         <dl className="border-t hairline grid grid-cols-2">
           <div className="px-5 py-4 border-r hairline">
             <dt className="eyebrow mb-1">{t("challengeRewardLabel")}</dt>
-            <dd className="text-sm">{t("challengeRewardValue")}</dd>
+            <dd className="text-copy">{t("challengeRewardValue")}</dd>
           </div>
           <div className="px-5 py-4">
             <dt className="eyebrow mb-1">{t("challengeStatusLabel")}</dt>
-            <dd className="text-sm">
+            <dd className="text-copy">
               {challenge.enrolled
                 ? t("challengeStatusValue")
                 : t("challengeStatusEmpty")}
@@ -189,15 +189,15 @@ export default async function CrewPage() {
       ) : (
       <section className="surface-2 rounded-2xl overflow-hidden px-5 py-6">
         <SectionHeader eyebrow={t("challengeEmptyEyebrow")} title={t("challengeEmptyTitle")} />
-        <p className="text-fg-dim text-sm max-w-md">{t("challengeEmptyBody")}</p>
+        <p className="text-fg-dim text-meta max-w-md">{t("challengeEmptyBody")}</p>
       </section>
       )}
 
       {/* Feed */}
       <section>
         <div className="flex items-end justify-between mb-3">
-          <h2 className="eyebrow">{t("feedEyebrow")}</h2>
-          <span className="text-xs text-fg-faint">
+          <h2 className="font-display text-section">{t("feedEyebrow")}</h2>
+          <span className="text-micro text-fg-faint">
             {useReal
               ? t("feedCount", { count: feed.length })
               : t("feedUpdated")}
@@ -206,8 +206,8 @@ export default async function CrewPage() {
 
         {isEmpty ? (
           <div className="surface-2 rounded-2xl p-8">
-            <div className="font-display text-2xl mb-2">{t("emptyTitle")}</div>
-            <p className="text-fg-dim text-sm mb-4 max-w-sm">
+            <div className="font-display text-section mb-2">{t("emptyTitle")}</div>
+            <p className="text-fg-dim text-meta mb-4 max-w-sm">
               {t("emptyBody")}
             </p>
             <PostComposer
@@ -245,7 +245,7 @@ export default async function CrewPage() {
         </div>
         <ul className="divide-y hairline">
           {LEADERBOARD.map((row) => (
-            <li key={row.rank} className="px-5 py-3 flex items-center gap-4 text-sm">
+            <li key={row.rank} className="px-5 py-3 flex items-center gap-4 text-copy">
               <span className="numeric text-fg-faint w-7">{row.rank}</span>
               <Avatar handle={row.who} className="size-8" />
               <span className="flex-1 truncate">{row.who}</span>
@@ -258,7 +258,7 @@ export default async function CrewPage() {
       ) : (
       <section className="surface-2 rounded-2xl overflow-hidden px-5 py-5">
         <div className="eyebrow mb-1">{t("leaderboardEyebrow")}</div>
-        <p className="text-sm text-fg-dim">{t("leaderboardEmpty")}</p>
+        <p className="text-meta text-fg-dim">{t("leaderboardEmpty")}</p>
       </section>
       )}
 
@@ -267,14 +267,14 @@ export default async function CrewPage() {
       {!SUPABASE_ENABLED ? (
       <section className="surface-2 rounded-2xl p-5">
         <SectionHeader className="mb-1" eyebrow={t("meetEyebrow")} title={t("meetTitle")} />
-        <p className="text-sm text-fg-dim">
+        <p className="text-meta text-fg-dim">
           {t("meetDescription", { date: meetLabel(cal.meet, tag) })}
         </p>
       </section>
       ) : (
       <section className="surface-2 rounded-2xl p-5">
         <SectionHeader className="mb-1" eyebrow={t("meetEmptyEyebrow")} title={t("meetEmptyTitle")} />
-        <p className="text-sm text-fg-dim">
+        <p className="text-meta text-fg-dim">
           {t("meetEmptyBody")}
         </p>
       </section>

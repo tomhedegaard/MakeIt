@@ -82,7 +82,7 @@ export default function AnatomyFigure3DSpike() {
                 setPresetIdx(i);
                 setView(p.initialView);
               }}
-              className={`px-3 py-1.5 rounded-md text-xs ${
+              className={`px-3 py-1.5 rounded-md text-micro ${
  i === presetIdx ? "bg-bg-3 text-fg" : "surface-2 text-fg-dim"
  }`}
             >
@@ -166,7 +166,7 @@ export default function AnatomyFigure3DSpike() {
         </Panel>
       </div>
 
-      <p className="text-micro text-fg-faint max-w-xl">
+      <p className="text-meta text-fg-faint max-w-xl">
         Spike: 3D-figuren extruder de eksisterende 2D SVG-paths via THREE.ExtrudeGeometry.
         Front + back er to separate slabs ryg-mod-ryg, så når du orbiterer bagom ser
         du faktisk back-view&apos;ens musklayout, ikke bagsiden af front-extruderingen.

@@ -15,10 +15,10 @@ export default function StreakBadge({
 }) {
   return (
     <div className="inline-flex items-baseline gap-3 border hairline bg-bg-2/40 px-4 py-2">
-      <span className="font-display text-2xl tabular-nums text-domain">{current}</span>
-      <span className="text-fg-dim text-sm">{currentLabel}</span>
+      <span className="font-display text-section tabular-nums text-domain">{current}</span>
+      <span className="text-fg-dim text-meta">{currentLabel}</span>
       {longest > current ? (
-        <span className="text-fg-dim text-xs">
+        <span className="text-fg-dim text-micro">
           · {longestLabel}
         </span>
       ) : null}

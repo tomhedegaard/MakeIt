@@ -29,10 +29,10 @@ export default function AppError({
     <Container className="py-16 md:py-24">
       <div className="max-w-md">
         <div className="eyebrow mb-3">{t("eyebrow")}</div>
-        <h1 className="font-display text-3xl md:text-4xl mb-4 leading-[0.95]">
+        <h1 className="font-display text-title mb-4">
           {t("title")}
         </h1>
-        <p className="text-fg-dim text-base leading-relaxed mb-8">
+        <p className="text-fg-dim text-copy mb-8">
           {t("descriptionBefore")}{" "}
           <a className="underline hover:text-fg" href={SUPPORT_MAILTO}>
             {COMPANY.emails.support}
@@ -40,7 +40,7 @@ export default function AppError({
           .
         </p>
         {error.digest && (
-          <p className="text-xs text-fg-faint mb-8">
+          <p className="text-meta text-fg-faint mb-8">
             {t("ref", { digest: error.digest })}
           </p>
         )}

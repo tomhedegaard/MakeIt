@@ -126,7 +126,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           <span aria-hidden>·</span>
           <span className="numeric">{exercise.slug}</span>
         </div>
-        <h1 className="font-display text-title md:text-[2.75rem]">
+        <h1 className="font-display text-title">
           {name || t("untitled")}.
         </h1>
       </header>
@@ -170,7 +170,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
             />
           </Field>
         </div>
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-center gap-2 text-meta">
           <input
             type="checkbox"
             checked={isPublished}
@@ -207,7 +207,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
                   key={v}
                   type="button"
                   onClick={() => setView(v)}
-                  className={`px-3 py-1.5 rounded-md text-xs ${
+                  className={`px-3 py-1.5 rounded-md text-micro ${
  view === v ? "bg-bg-3 text-fg" : "text-fg-dim"
  }`}
                 >
@@ -224,7 +224,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
         <div className="eyebrow">{t("cues")}</div>
         {cues.map((c, i) => (
           <div key={i} className="flex gap-2 items-center">
-            <span className="numeric text-xs text-fg-faint w-6">
+            <span className="numeric text-micro text-fg-faint w-6">
               {String(i + 1).padStart(2, "0")}
             </span>
             <input
@@ -347,7 +347,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           </button>
         </div>
         {phases.length === 0 ? (
-          <p className="text-fg-dim text-sm">
+          <p className="text-fg-dim text-meta">
             {t("phasesEmpty")}
           </p>
         ) : (
@@ -425,7 +425,7 @@ export default function ExerciseEditor({ exercise }: { exercise: Exercise }) {
           </span>
         ) : null}
         {error ? (
-          <span className="text-sm" style={{ color: "#C97B3E" }}>
+          <span className="text-copy" style={{ color: "#C97B3E" }}>
             {error}
           </span>
         ) : null}
@@ -453,7 +453,7 @@ function Field({
 }) {
   return (
     <label className="space-y-1.5 block">
-      <span className="text-xs text-fg-dim">{label}</span>
+      <span className="text-micro text-fg-dim">{label}</span>
       {children}
     </label>
   );
@@ -490,7 +490,7 @@ function RemoveBtn({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="text-fg-dim hover:text-fg text-lg leading-none px-1.5 shrink-0"
+      className="text-fg-dim hover:text-fg text-card px-1.5 shrink-0"
       aria-label={t("removeAria")}
     >
       ×
