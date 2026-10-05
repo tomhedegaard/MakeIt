@@ -18,7 +18,7 @@ import {
 const INTRO_MS = 700;
 
 /**
- * Motor-demoen i hero (spec 2026-09-18 §3). Tre skydere, ét kald til
+ * Motor-demoen i motorhistorien (#engine; var i hero til 2026-10-05). Tre skydere, ét kald til
  * appens rigtige regelfunktion, ét resultat. Ingen netværk: tallene
  * forlader aldrig browseren.
  *
@@ -129,10 +129,6 @@ export default function EngineDemo() {
   return (
     <div className="flex w-full flex-col gap-5 lg:flex-row lg:items-start lg:gap-6 xl:gap-10">
       <div className="order-2 flex w-full flex-col gap-5 lg:order-1 lg:max-w-[320px]">
-        {/* Ikke klassen "eyebrow": LandingHero.test.tsx kræver, at heroen ikke har en. */}
-        <p className="text-micro text-fg-dim lg:hidden">
-          {t("tryIt")}
-        </p>
         <Slider
           id="demo-sleep"
           label={t("sleepLabel")}

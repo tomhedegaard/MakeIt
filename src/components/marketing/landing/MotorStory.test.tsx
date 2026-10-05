@@ -8,6 +8,12 @@ const html = render(<MotorStory />);
 const aria = da.Marketing.landing.screens;
 
 describe("MotorStory", () => {
+  it("carries the slider demo after the report", () => {
+    expect((html.match(/<input[^>]+type="range"/g) ?? []).length).toBe(3);
+    expect(html.indexOf('type="range"')).toBeGreaterThan(html.indexOf('data-step="decision"'));
+    expect(html).toMatch(/<h3[^>]*>Prøv selv: flyt en skyder\.<\/h3>/);
+  });
+
   it("is the engine section", () => {
     expect(html).toMatch(/<section[^>]*id="engine"/);
   });

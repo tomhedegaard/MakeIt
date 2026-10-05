@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import MotorStoryRig from "./MotorStoryRig";
 import NightCurve from "./NightCurve";
 import Rule from "./Rule";
+import EngineDemo from "./EngineDemo";
 
 const PHONE_WIDTH = 288;
 
@@ -115,11 +116,29 @@ export default function MotorStory() {
           </MotorStoryRig>
         </div>
 
+        <TryIt />
+
         <p className="mt-10 max-w-[52ch] text-micro text-fg-dim lg:mt-24">
           {t("keepOriginalNote")} {t("disclaimer")}
         </p>
       </div>
     </section>
+  );
+}
+
+/**
+ * The motor's last word: the visitor's own night. The slider demo moved
+ * here from the hero, after the four report lines, so the reasoning comes
+ * before the controls. Same component, same real rule function.
+ */
+function TryIt() {
+  const t = useTranslations("Marketing.landing.demo");
+
+  return (
+    <div className="mt-16 grid gap-8 border-t border-line-strong pt-10 lg:mt-24 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16 lg:pt-16">
+      <h3 className="font-display max-w-[12ch] text-[clamp(32px,3.6vw,56px)]">{t("tryIt")}</h3>
+      <EngineDemo />
+    </div>
   );
 }
 

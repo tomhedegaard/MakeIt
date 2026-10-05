@@ -1,19 +1,14 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
-import EngineDemo from "@/components/marketing/landing/EngineDemo";
+import HeroScale from "@/components/marketing/landing/HeroScale";
 
 /**
- * Kalk hero (reference B `.hero`, `.stage`): H1, one sentence, one CTA,
- * and the motor demo itself. No eyebrow, no stats band.
- *
- * The right column used to be a still life of the plate numbers the
- * engine had already changed. It is now the engine: three sliders and
- * the real rule function, so the first thing on the page is the thing
- * the page is selling. The column frame is unchanged on `lg`; below it
- * the rhythm is tightened and the demo puts its answer first, so the
- * H1, the sentence and the rewritten top set all sit above the fold on
- * a 390x844 phone.
+ * Nord hero: H1, one sentence, one CTA, and one picture of what HQ does.
+ * The right column is this morning's top set, rewritten (`HeroScale`):
+ * 150 struck, 135 at full size, the marker on the page's kg ruler. The
+ * slider demo that used to sit here now lives in the motor story
+ * (#engine), where the visitor has the reasoning before they try it.
  */
 export default function LandingHero() {
   const t = useTranslations("Marketing.landing.hero");
@@ -24,7 +19,7 @@ export default function LandingHero() {
         <div className="flex flex-col justify-center pb-6 pt-8 lg:pb-14 lg:pt-12">
           <h1
             id="hero-heading"
-            className="font-display max-w-[9.5em] text-[clamp(56px,7.4vw,118px)] leading-[0.86]!"
+            className="font-display max-w-[9.5em] text-[clamp(52px,6.6vw,104px)] leading-[0.88]!"
           >
             {t("heading")}
           </h1>
@@ -42,8 +37,8 @@ export default function LandingHero() {
           </div>
         </div>
 
-        <div className="relative flex flex-col items-center justify-center border-t border-line pb-9 pt-6 lg:border-l lg:border-t-0 lg:py-7 lg:pl-10">
-          <EngineDemo />
+        <div className="relative flex flex-col justify-center border-t border-line pb-12 pt-8 lg:border-l lg:border-t-0 lg:py-14 lg:pl-12">
+          <HeroScale />
         </div>
       </div>
     </section>
