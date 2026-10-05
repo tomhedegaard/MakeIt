@@ -745,7 +745,8 @@
           "dip": "Dips",
           "push-press": "Push press",
           "plank": "Planke"
-        }
+        },
+        "hint": "Hold musen over en øvelse, eller tryk, og se den i bevægelse."
       },
       "food": {
         "heading": "En uge på tallerkenen.",
@@ -773,7 +774,8 @@
           "Flere kulhydrater på pasdage, færre på hviledage.",
           "Indkøbslisten samles fra ugens retter."
         ],
-        "credit": "Eksempel på en uge. Fotos fra Unsplash:"
+        "credit": "Eksempel på en uge. Fotos fra Unsplash:",
+        "grams": "{g} g"
       },
       "heart": {
         "heading": "Fra dit ur til dit pas.",
@@ -786,9 +788,16 @@
           "Apple Watch"
         ],
         "appleNote": "Apple Watch via iPhone-appen.",
-        "synced": "Synket fra WHOOP kl. 05:14",
         "band": "Dit bånd: 54 til 68 ms",
-        "link": "Se hvad HQ gør med det"
+        "link": "Se hvad HQ gør med det",
+        "chartLabel": "HRV de sidste 14 nætter mod dit bånd på 54 til 68 ms. Brug piletasterne til at vælge en nat.",
+        "night": "Nat {n} af 14",
+        "tonight": "I nat",
+        "inBand": "I dit bånd",
+        "below": "Under dit bånd",
+        "above": "Over dit bånd",
+        "syncedFrom": "Synket fra {device} kl. 05:14",
+        "hint": "Vælg et ur, og før musen hen over nætterne."
       },
       "mind": {
         "heading": "Hovedet træner med.",
@@ -810,7 +819,17 @@
             "t": "Ugen",
             "d": "Ugens energi, stress og fokus samlet ét sted."
           }
-        ]
+        ],
+        "start": "Prøv ét åndedræt",
+        "again": "Én gang til",
+        "stop": "Stop",
+        "phases": {
+          "in": "Ind",
+          "hold": "Hold",
+          "out": "Ud"
+        },
+        "done": "Godt. Sådan starter et mind-check.",
+        "hint": "19 sekunder: ind i 4, hold i 7, ud i 8."
       },
       "alone": {
         "heading": "Nogen spotter dig altid.",
@@ -834,7 +853,10 @@
             "d": "En rangliste, hvor hjælp til andre tæller med."
           }
         ],
-        "you": "Dig"
+        "you": "Dig",
+        "cheer": "Hep",
+        "cheered": "Hepper",
+        "cheerLabel": "Hep på {name}"
       }
     }
   }

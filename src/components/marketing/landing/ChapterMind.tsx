@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import MindScreen from "@/components/marketing/phone/screens/MindScreen";
 import BreathScreen from "@/components/marketing/phone/screens/BreathScreen";
+import BreathDemo from "./BreathDemo";
 
 /**
  * Sind: a quiet field in the mind tint (the full blue was too loud for
@@ -19,7 +20,19 @@ export default function ChapterMind() {
             {t("heading")}
           </h2>
           <p className="mt-6 max-w-[46ch] text-[clamp(17px,1.35vw,20px)] text-fg-body">{t("sub")}</p>
-          <ul className="mt-12 grid gap-x-10 sm:grid-cols-2">
+          <div className="mt-10 border-y border-mind-line py-6">
+            <BreathDemo
+              labels={{
+                start: t("start"),
+                again: t("again"),
+                stop: t("stop"),
+                phases: { in: t("phases.in"), hold: t("phases.hold"), out: t("phases.out") },
+                done: t("done"),
+                hint: t("hint"),
+              }}
+            />
+          </div>
+          <ul className="mt-6 grid gap-x-10 sm:grid-cols-2">
             {items.map((item) => (
               <li key={item.t} className="border-t border-mind-line py-5">
                 <p className="font-display text-[clamp(22px,2.2vw,30px)] leading-none">{item.t}</p>

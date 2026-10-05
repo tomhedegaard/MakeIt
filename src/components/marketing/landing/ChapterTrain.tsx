@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import DemoLoop from "@/components/marketing/DemoLoop";
-import { resolveDemoAssets } from "@/lib/data/demo-assets";
+import ExerciseTile from "./ExerciseTile";
 
 /** The wall: one big moving demo, then stills from the real library. */
 const LEAD = "deadlift";
@@ -28,7 +28,8 @@ export default function ChapterTrain() {
           <p className="max-w-[44ch] text-[clamp(17px,1.35vw,20px)] text-fg-body">{t("sub")}</p>
         </div>
 
-        <ul className="mt-12 grid grid-cols-2 gap-2 md:grid-cols-4 lg:mt-16 lg:gap-3">
+        <p className="mt-12 text-[13px] text-fg-dim lg:mt-16">{t("hint")}</p>
+        <ul className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-4 lg:gap-3">
           <li className="col-span-2 row-span-2 flex flex-col bg-bg text-fg">
             <DemoLoop
               src={`/exercise-demos/${LEAD}.webm`}
@@ -40,17 +41,8 @@ export default function ChapterTrain() {
             <p className="font-display mt-auto px-4 pb-4 pt-2 text-[22px]">{t(`names.${LEAD}`)}</p>
           </li>
           {WALL.map((slug) => (
-            <li key={slug} className="flex flex-col bg-bg text-fg">
-              {/* eslint-disable-next-line @next/next/no-img-element -- static poster from /public */}
-              <img
-                src={resolveDemoAssets(`/exercise-demos/${slug}.webm`).poster}
-                alt=""
-                loading="lazy"
-                width={720}
-                height={398}
-                className="aspect-[720/398] w-full object-cover"
-              />
-              <p className="mt-auto px-3 pb-3 pt-1 text-[14px]">{t(`names.${slug}`)}</p>
+            <li key={slug}>
+              <ExerciseTile slug={slug} name={t(`names.${slug}`)} playLabel={s("play")} />
             </li>
           ))}
         </ul>

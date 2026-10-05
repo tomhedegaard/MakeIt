@@ -863,3 +863,22 @@ nav.tabbar {
     animation: none;
   }
 }
+
+/* CheerButton: the count pops when it changes (keyed remount). */
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme="nord"] .spot-count { animation: spot-count-pop 0.35s cubic-bezier(0.2, 0, 0.1, 1); }
+}
+@keyframes spot-count-pop {
+  from { transform: translateY(-40%); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+
+/* Hero doors (TiltDoor): the phone lifts and tilts toward the mouse. */
+[data-theme="nord"] .door-phone {
+  transition: transform 0.45s cubic-bezier(0.2, 0, 0.1, 1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme="nord"] a:hover > div > .door-phone {
+    transform: translateY(-10px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  }
+}
