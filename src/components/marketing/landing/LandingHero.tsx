@@ -11,21 +11,22 @@ import { cn } from "@/lib/utils";
 const DOOR_PHONE = 200;
 
 /**
- * The four systems as four doors, each in its domain colour with the
+ * The four systems as four doors, each on its domain tint with the
  * real app screen rising out of it. Written out so Tailwind sees every
  * class. Each door links to its chapter further down.
  */
-const DOORS: { key: "train" | "food" | "heart" | "mind"; href: string; field: string; screen: ReactNode }[] = [
-  { key: "train", href: "#train", field: "bg-body", screen: <SessionScreen width={DOOR_PHONE} /> },
-  { key: "food", href: "#food", field: "bg-food", screen: <FoodScreen width={DOOR_PHONE} /> },
-  { key: "heart", href: "#hrv", field: "bg-heart", screen: <HrvScreen width={DOOR_PHONE} /> },
-  { key: "mind", href: "#mind", field: "bg-mind", screen: <MindScreen width={DOOR_PHONE} /> },
+const DOORS: { key: "train" | "food" | "heart" | "mind"; href: string; field: string; ink: string; screen: ReactNode }[] = [
+  { key: "train", href: "#train", field: "bg-body-tint", ink: "text-body", screen: <SessionScreen width={DOOR_PHONE} /> },
+  { key: "food", href: "#food", field: "bg-food-tint", ink: "text-food", screen: <FoodScreen width={DOOR_PHONE} /> },
+  { key: "heart", href: "#hrv", field: "bg-heart-tint", ink: "text-heart", screen: <HrvScreen width={DOOR_PHONE} /> },
+  { key: "mind", href: "#mind", field: "bg-mind-tint", ink: "text-mind", screen: <MindScreen width={DOOR_PHONE} /> },
 ];
 
 /**
  * Hero: H1, one sentence, one CTA, and the whole app at a glance. The
- * landing page is the one place the domain colours may fill a surface
- * (owner decision 2026-10-05); the app keeps the ten percent rule.
+ * landing page may put the domain colours on whole surfaces as tints,
+ * with the full colour in type (owner decision 2026-10-05); the app keeps
+ * the ten percent rule.
  */
 export default function LandingHero() {
   const t = useTranslations("Marketing.landing.hero");
@@ -65,20 +66,17 @@ export default function LandingHero() {
             <li key={door.key} className="w-[74vw] max-w-[320px] shrink-0 snap-start lg:w-auto lg:max-w-none">
               <a
                 href={door.href}
-                className={cn(
-                  "group relative block h-[300px] text-bg no-underline lg:h-[330px]",
-                  door.field,
-                )}
+                className={cn("group relative block h-[300px] text-fg no-underline lg:h-[330px]", door.field)}
               >
                 <div className="absolute bottom-[86px] left-1/2 -translate-x-1/2 transition-transform duration-300 ease-out group-hover:-translate-y-2 motion-reduce:transition-none">
                   {door.screen}
                 </div>
                 <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3">
                   <span>
-                    <span className="font-display block text-[28px] leading-none">{d(`${door.key}.name`)}</span>
-                    <span className="mt-1.5 block text-[13px] opacity-85">{d(`${door.key}.line`)}</span>
+                    <span className={cn("font-display block text-[28px] leading-none", door.ink)}>{d(`${door.key}.name`)}</span>
+                    <span className="mt-1.5 block text-[13px] text-fg-dim">{d(`${door.key}.line`)}</span>
                   </span>
-                  <span aria-hidden="true" className="text-[22px] leading-none">
+                  <span aria-hidden="true" className={cn("text-[22px] leading-none", door.ink)}>
                     ↓
                   </span>
                 </div>

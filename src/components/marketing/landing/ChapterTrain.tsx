@@ -7,8 +7,8 @@ const LEAD = "deadlift";
 const WALL = ["back-squat", "bench", "pull-up", "hip-thrust", "ohp", "row", "rdl", "front-squat"] as const;
 
 /**
- * Krop: the exercise library as a wall of the real 3D demos on the body
- * colour. Server component; only the lead loop is a client island (it
+ * Krop: the exercise library as a wall of the real 3D demos on a quiet
+ * body-tint field, body-coloured heading. Server component; only the lead loop is a client island (it
  * plays in view, never with reduced motion).
  */
 export default function ChapterTrain() {
@@ -17,13 +17,13 @@ export default function ChapterTrain() {
   const facts = t.raw("facts") as string[];
 
   return (
-    <section id="train" aria-labelledby="train-heading" className="scroll-mt-[68px] bg-body text-bg">
+    <section id="train" aria-labelledby="train-heading" className="scroll-mt-[68px] bg-body-tint text-fg">
       <div className="mx-auto max-w-[1360px] px-4 py-[clamp(72px,9vw,140px)] md:px-8">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
-          <h2 id="train-heading" className="font-display max-w-[9em] text-[clamp(48px,7vw,112px)] leading-[0.9]!">
+          <h2 id="train-heading" className="font-display max-w-[9em] text-[clamp(48px,7vw,112px)] leading-[0.9]! text-body">
             {t("heading")}
           </h2>
-          <p className="max-w-[44ch] text-[clamp(17px,1.35vw,20px)] opacity-90">{t("sub")}</p>
+          <p className="max-w-[44ch] text-[clamp(17px,1.35vw,20px)] text-fg-body">{t("sub")}</p>
         </div>
 
         <ul className="mt-12 grid grid-cols-2 gap-2 md:grid-cols-4 lg:mt-16 lg:gap-3">
@@ -55,7 +55,7 @@ export default function ChapterTrain() {
 
         <ul className="mt-12 grid gap-x-8 gap-y-5 md:grid-cols-3 lg:mt-16">
           {facts.map((fact) => (
-            <li key={fact} className="border-t border-bg/40 pt-4 text-[clamp(16px,1.3vw,19px)]">
+            <li key={fact} className="border-t border-body-line pt-4 text-[clamp(16px,1.3vw,19px)]">
               {fact}
             </li>
           ))}
