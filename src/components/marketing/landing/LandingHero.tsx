@@ -16,7 +16,7 @@ const DOOR_PHONE = 200;
  * class. Each door links to its chapter further down.
  */
 const DOORS: { key: "train" | "food" | "heart" | "mind"; href: string; field: string; ink: string; screen: ReactNode }[] = [
-  { key: "train", href: "#train", field: "bg-body-tint", ink: "text-body", screen: <SessionScreen width={DOOR_PHONE} /> },
+  { key: "train", href: "#train", field: "bg-bg-3", ink: "text-fg", screen: <SessionScreen width={DOOR_PHONE} /> },
   { key: "food", href: "#food", field: "bg-food-tint", ink: "text-food", screen: <FoodScreen width={DOOR_PHONE} /> },
   { key: "heart", href: "#hrv", field: "bg-heart-tint", ink: "text-heart", screen: <HrvScreen width={DOOR_PHONE} /> },
   { key: "mind", href: "#mind", field: "bg-mind-tint", ink: "text-mind", screen: <MindScreen width={DOOR_PHONE} /> },

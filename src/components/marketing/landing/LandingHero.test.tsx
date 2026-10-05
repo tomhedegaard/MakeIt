@@ -23,8 +23,8 @@ describe("LandingHero", () => {
     expect((html.match(/<h1/g) ?? []).length).toBe(1);
   });
 
-  it("opens four doors to the chapters, each on its domain tint", () => {
-    for (const [href, field] of [["#train", "bg-body-tint"], ["#food", "bg-food-tint"], ["#hrv", "bg-heart-tint"], ["#mind", "bg-mind-tint"]]) {
+  it("opens four doors to the chapters, each on its own field", () => {
+    for (const [href, field] of [["#train", "bg-bg-3"], ["#food", "bg-food-tint"], ["#hrv", "bg-heart-tint"], ["#mind", "bg-mind-tint"]]) {
       expect(html).toMatch(new RegExp(`<a href="${href}"[^>]*${field}`));
     }
     expect(html).not.toMatch(/type="range"/);
