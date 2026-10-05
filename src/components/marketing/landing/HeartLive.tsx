@@ -118,7 +118,7 @@ export default function HeartLive({ labels }: { labels: HeartLiveLabels }) {
           onPointerMove={pick}
           onPointerDown={pick}
           onKeyDown={onKey}
-          className="mt-8 w-full max-w-[640px] cursor-crosshair touch-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-fg"
+          className="mt-8 w-full max-w-[640px] cursor-crosshair touch-pan-y focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-fg"
         >
           <rect x={0} y={y(BAND.hi)} width={W} height={y(BAND.lo) - y(BAND.hi)} className="fill-domain-tint" />
           <line x1={0} x2={W} y1={y(BAND.lo)} y2={y(BAND.lo)} className="stroke-domain-line" strokeDasharray="4 4" />
