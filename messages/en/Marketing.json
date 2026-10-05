@@ -708,7 +708,7 @@
       "doors": {
         "train": {
           "name": "Training",
-          "line": "200+ exercises in 3D"
+          "line": "577 exercises in 3D"
         },
         "food": {
           "name": "Food",
@@ -724,7 +724,7 @@
         }
       },
       "train": {
-        "heading": "200+ exercises. All in 3D.",
+        "heading": "577 exercises. All in 3D.",
         "sub": "See the movement from every side, with the working muscles and Munk's cues. The programme runs in four-week blocks and moves with you.",
         "facts": [
           "Four-week blocks, built by Munk.",

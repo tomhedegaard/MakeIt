@@ -708,7 +708,7 @@
       "doors": {
         "train": {
           "name": "Træning",
-          "line": "200+ øvelser i 3D"
+          "line": "577 øvelser i 3D"
         },
         "food": {
           "name": "Mad",
@@ -724,7 +724,7 @@
         }
       },
       "train": {
-        "heading": "200+ øvelser. Alle i 3D.",
+        "heading": "577 øvelser. Alle i 3D.",
         "sub": "Se bevægelsen fra alle sider, med musklerne der arbejder og Munks cues. Programmet kører i blokke på fire uger og flytter sig med dig.",
         "facts": [
           "Blokke på fire uger, bygget af Munk.",
