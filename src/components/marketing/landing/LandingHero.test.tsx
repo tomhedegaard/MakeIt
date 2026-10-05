@@ -23,7 +23,9 @@ describe("LandingHero", () => {
     expect((html.match(/<h1/g) ?? []).length).toBe(1);
   });
 
-  it("har erstattet skive-tallene med demoen", () => {
-    expect((html.match(/<input[^>]+type="range"/g) ?? []).length).toBe(3);
+  it("viser topsættet skrevet om på kg-linealen, uden skydere", () => {
+    expect(html).toContain("hero-scale");
+    expect(html).toContain("Back squat, topsæt: 150 kg skrevet om til 135 kg.");
+    expect(html).not.toMatch(/type="range"/);
   });
 });

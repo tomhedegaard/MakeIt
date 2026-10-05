@@ -95,7 +95,8 @@
       "link": "Se hvordan HQ virker",
       "plateOld": "150",
       "plateNew": "135",
-      "plateUnit": "kg"
+      "plateUnit": "kg",
+      "scaleLabel": "{lift}, topsæt: {from} skrevet om til {to}."
     },
     "demo": {
       "todayLabel": "I dag",
