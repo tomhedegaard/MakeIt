@@ -809,7 +809,7 @@
         ]
       },
       "alone": {
-        "heading": "Du er ikke alene.",
+        "heading": "Nogen spotter dig altid.",
         "sub": "Crewet ser dine PR'er, hepper på dine pas og svarer, når du er i tvivl. Og du gør det samme for dem.",
         "feedLabel": "I crewet i dag",
         "features": [
@@ -829,7 +829,8 @@
             "t": "Ugens reps",
             "d": "En rangliste, hvor hjælp til andre tæller med."
           }
-        ]
+        ],
+        "you": "Dig"
       }
     }
   }

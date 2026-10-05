@@ -809,7 +809,7 @@
         ]
       },
       "alone": {
-        "heading": "You are not alone.",
+        "heading": "Someone always spots you.",
         "sub": "The crew sees your PRs, cheers your sessions and answers when you are unsure. And you do the same for them.",
         "feedLabel": "In the crew today",
         "features": [
@@ -829,7 +829,8 @@
             "t": "Weekly reps",
             "d": "A leaderboard where helping others counts too."
           }
-        ]
+        ],
+        "you": "You"
       }
     }
   }
