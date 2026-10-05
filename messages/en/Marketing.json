@@ -267,10 +267,10 @@
       "here": "You are here",
       "coachSchool": "Coach School opens",
       "tiers": {
-        "lifter": "You are in. Every session counts.",
+        "lifter": "You are in. The crew cheers your first sessions.",
         "athlete": "Form checks and PRs earn the most reps.",
         "beast": "Coach School opens. You learn to answer others.",
-        "legend": "The top of the crew."
+        "legend": "The top of the crew. 1:1 time with Munk."
       },
       "meterLabel": "Athlete · 1,240 of 5,000 reps",
       "meterNote": "Example",
@@ -289,6 +289,10 @@
         "ctaStart": "Start as {tier}",
         "ctaToward": "Start towards {tier}",
         "ctaNote": "Everyone starts as Lifter. Reps count from your first session and never expire."
+      },
+      "turn": {
+        "label": "The turning point",
+        "text": "At Beast, Coach School opens. You learn to answer other members' form checks, and every time you help, it earns reps. Now you are the one spotting."
       }
     },
     "voices": {

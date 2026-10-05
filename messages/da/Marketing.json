@@ -267,10 +267,10 @@
       "here": "Du er her",
       "coachSchool": "Coach School åbner",
       "tiers": {
-        "lifter": "Du er med. Hvert pas tæller.",
+        "lifter": "Du er med. Crewet hepper på dine første pas.",
         "athlete": "Form-checks og PR'er giver flest reps.",
         "beast": "Coach School åbner. Du lærer at svare andre.",
-        "legend": "Toppen af crewet."
+        "legend": "Toppen af crewet. 1:1 tid med Munk."
       },
       "meterLabel": "Athlete · 1.240 af 5.000 reps",
       "meterNote": "Eksempel",
@@ -289,6 +289,10 @@
         "ctaStart": "Start som {tier}",
         "ctaToward": "Start mod {tier}",
         "ctaNote": "Alle starter som Lifter. Reps tæller fra dit første pas og udløber aldrig."
+      },
+      "turn": {
+        "label": "Vendepunktet",
+        "text": "Ved Beast åbner Coach School. Du lærer at svare på andres form-checks, og hver gang du hjælper, giver det reps. Nu er det dig, der spotter."
       }
     },
     "voices": {

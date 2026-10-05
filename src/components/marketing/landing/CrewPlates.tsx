@@ -76,7 +76,17 @@ export default function CrewPlates() {
           ctaNote={l("ctaNote")}
         />
 
-        <div className="mt-3.5 grid gap-3.5 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+        {/* The turning point: from being spotted to spotting others. Ties the
+            ladder back to "Nogen spotter dig altid." above. */}
+        <div
+          data-turn
+          className="mt-[clamp(48px,6vw,80px)] grid gap-4 border-t-2 border-signal pt-6 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-[clamp(40px,6vw,96px)]"
+        >
+          <p className="text-[13px] font-medium text-signal">{t("turn.label")}</p>
+          <p className="font-display max-w-[30ch] text-[clamp(28px,3.4vw,52px)] leading-[1.05]">{t("turn.text")}</p>
+        </div>
+
+        <div className="mt-[clamp(48px,6vw,80px)] grid gap-3.5 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
           <div className="border border-line bg-bg-2 p-[clamp(20px,2.6vw,32px)]">
             <p className="flex justify-between gap-3 text-[12px] text-fg-dim">
               <span>{current.name}</span>
