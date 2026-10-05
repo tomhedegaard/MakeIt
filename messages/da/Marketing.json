@@ -86,17 +86,20 @@
       "munk": "Munk",
       "crew": "Crew",
       "login": "Log ind",
-      "cta": "Få adgang"
+      "cta": "Få adgang",
+      "train": "Træning",
+      "food": "Mad",
+      "hrv": "HRV",
+      "mind": "Sind"
     },
     "hero": {
       "heading": "Bygget til dem der løfter.",
-      "sub": "HQ, appens hjerne, læser din nat og skriver dagens pas om, før du står under stangen.",
+      "sub": "HQ, appens hjerne, læser din nat og skriver dagens pas om, før du står under stangen. Træning, mad, HRV og hovedet i én app.",
       "cta": "Få adgang",
       "link": "Se hvordan HQ virker",
       "plateOld": "150",
       "plateNew": "135",
-      "plateUnit": "kg",
-      "scaleLabel": "{lift}, topsæt: {from} skrevet om til {to}."
+      "plateUnit": "kg"
     },
     "demo": {
       "todayLabel": "I dag",
@@ -259,15 +262,15 @@
     },
     "crew": {
       "eyebrow": "Crewet",
-      "heading": "Læs på, en skive ad gangen.",
+      "heading": "Fra første pas til coach.",
       "sub": "Reps optjenes ved at træne, sende form-checks, sætte PR'er og hjælpe andre.",
       "here": "Du er her",
       "coachSchool": "Coach School åbner",
       "tiers": {
-        "lifter": "Du er med. Hvert pas tæller.",
+        "lifter": "Du er med. Crewet hepper på dine første pas.",
         "athlete": "Form-checks og PR'er giver flest reps.",
         "beast": "Coach School åbner. Du lærer at svare andre.",
-        "legend": "Toppen af crewet."
+        "legend": "Toppen af crewet. 1:1 tid med Munk."
       },
       "meterLabel": "Athlete · 1.240 af 5.000 reps",
       "meterNote": "Eksempel",
@@ -286,6 +289,10 @@
         "ctaStart": "Start som {tier}",
         "ctaToward": "Start mod {tier}",
         "ctaNote": "Alle starter som Lifter. Reps tæller fra dit første pas og udløber aldrig."
+      },
+      "turn": {
+        "label": "Vendepunktet",
+        "text": "Ved Beast åbner Coach School. Du lærer at svare på andres form-checks, og hver gang du hjælper, giver det reps. Nu er det dig, der spotter."
       }
     },
     "voices": {
@@ -696,6 +703,139 @@
       "full": "Samtalen er lang nu. Start forfra for at spørge om mere.",
       "restart": "Start forfra",
       "privacyLink": "Privatliv"
+    },
+    "chapters": {
+      "doors": {
+        "train": {
+          "name": "Træning",
+          "line": "577 øvelser i 3D"
+        },
+        "food": {
+          "name": "Mad",
+          "line": "Madplan og indkøbsliste"
+        },
+        "heart": {
+          "name": "HRV",
+          "line": "Fra dit ur hver morgen"
+        },
+        "mind": {
+          "name": "Sind",
+          "line": "Mind-check og åndedræt"
+        }
+      },
+      "train": {
+        "heading": "577 øvelser. Alle i 3D.",
+        "sub": "Se bevægelsen fra alle sider, med musklerne der arbejder og Munks cues. Programmet kører i blokke på fire uger og flytter sig med dig.",
+        "facts": [
+          "Blokke på fire uger, bygget af Munk.",
+          "Topsæt, backoff og hvil sat af HQ hver morgen.",
+          "Form-check: optag sættet, og Munk svarer inden for 24 timer."
+        ],
+        "names": {
+          "back-squat": "Back squat",
+          "deadlift": "Dødløft",
+          "bench": "Bænkpres",
+          "pull-up": "Pull-up",
+          "hip-thrust": "Hip thrust",
+          "ohp": "Skulderpres",
+          "row": "Roning",
+          "rdl": "Rumænsk dødløft",
+          "front-squat": "Front squat",
+          "lunge": "Udfald",
+          "dip": "Dips",
+          "push-press": "Push press",
+          "plank": "Planke"
+        }
+      },
+      "food": {
+        "heading": "En uge på tallerkenen.",
+        "sub": "Rigtig mad, ikke pulver. HQ lægger madplanen efter dagens træning, og indkøbslisten samler sig selv.",
+        "days": [
+          "Man",
+          "Tir",
+          "Ons",
+          "Tor",
+          "Fre",
+          "Lør",
+          "Søn"
+        ],
+        "meals": [
+          "Skyr-bowl med hindbær og nødder",
+          "Kyllingebowl med grønt",
+          "Bagt laks med asparges og citron",
+          "Rugbrød med sild, rødløg og dild",
+          "Oksemørbrad med ovnkartofler",
+          "Havregrød med blåbær og mandler",
+          "Kikærte-gryde med søde kartofler"
+        ],
+        "macro": "{kcal} kcal · {protein} g protein",
+        "points": [
+          "Flere kulhydrater på pasdage, færre på hviledage.",
+          "Indkøbslisten samles fra ugens retter."
+        ],
+        "credit": "Eksempel på en uge. Fotos fra Unsplash:"
+      },
+      "heart": {
+        "heading": "Fra dit ur til dit pas.",
+        "sub": "HQ henter nattens HRV, søvn og hvilepuls og måler dem mod dit eget bånd. Ikke mod et gennemsnit.",
+        "devicesLabel": "Virker med",
+        "devices": [
+          "WHOOP",
+          "Oura",
+          "Polar",
+          "Apple Watch"
+        ],
+        "appleNote": "Apple Watch via iPhone-appen.",
+        "synced": "Synket fra WHOOP kl. 05:14",
+        "band": "Dit bånd: 54 til 68 ms",
+        "link": "Se hvad HQ gør med det"
+      },
+      "mind": {
+        "heading": "Hovedet træner med.",
+        "sub": "Et mind-check på 60 sekunder om morgenen. Åndedræt før de tunge sæt. Når stress er højt, tæller det med i dagens pas.",
+        "items": [
+          {
+            "t": "Mind-check",
+            "d": "Energi, stress og fokus på 60 sekunder."
+          },
+          {
+            "t": "Åndedræt",
+            "d": "Rolig vejrtrækning før tunge sæt og efter passet."
+          },
+          {
+            "t": "Journal",
+            "d": "Et par linjer om dagen. Kun du kan læse dem."
+          },
+          {
+            "t": "Ugen",
+            "d": "Ugens energi, stress og fokus samlet ét sted."
+          }
+        ]
+      },
+      "alone": {
+        "heading": "Nogen spotter dig altid.",
+        "sub": "Crewet ser dine PR'er, hepper på dine pas og svarer, når du er i tvivl. Og du gør det samme for dem.",
+        "feedLabel": "I crewet i dag",
+        "features": [
+          {
+            "t": "Buddy",
+            "d": "En træningsmakker på dit niveau, der kan se, om du er frisk i dag."
+          },
+          {
+            "t": "Cirkler",
+            "d": "Små hold med deres egen coach."
+          },
+          {
+            "t": "Hep",
+            "d": "Ét tryk, og de ved, at du så deres pas."
+          },
+          {
+            "t": "Ugens reps",
+            "d": "En rangliste, hvor hjælp til andre tæller med."
+          }
+        ],
+        "you": "Dig"
+      }
     }
   }
 }

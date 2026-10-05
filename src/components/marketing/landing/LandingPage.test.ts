@@ -9,10 +9,11 @@ describe("LandingPage shell", () => {
     expect(src).toContain('<ThemeScope theme="nord"');
   });
 
-  it("renders the eight sections in spec order", () => {
+  it("renders the sections in order", () => {
     const order = [
-      "<LandingHero", "<MotorStory", "<SystemsBento", "<LandingMunk",
-      "<CrewPlates", "<Voices", "<AccessPanel", "<LandingFaq",
+      "<LandingHero", "<ChapterTrain", "<ChapterFood", "<ChapterHeart", "<MotorStory",
+      "<ChapterMind", "<AppRack", "<CrewAlone", "<CrewPlates", "<LandingMunk",
+      "<Voices", "<AccessPanel", "<LandingFaq",
     ];
     const at = order.map((tag) => src.indexOf(tag));
     at.forEach((i, n) => expect(i, order[n]).toBeGreaterThan(-1));

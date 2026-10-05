@@ -13,7 +13,8 @@ type FlowStep = { t: string; label: string };
  * wordmark, how an answer is made, and one signed form-check. The AI
  * draft is struck through in signal orange; the answer carries Munk's
  * signature. The exercise visual is the MoveKit loop, labelled as a
- * reference. The portrait only appears once an approved image exists.
+ * reference. Munk's face sits in the circle beside the wordmark; until a
+ * portrait exists the circle shows his initials.
  */
 export default function LandingMunk() {
   const t = useTranslations("Marketing.landing.munk");
@@ -27,29 +28,31 @@ export default function LandingMunk() {
       className="scroll-mt-[68px] overflow-hidden pb-[clamp(72px,8vw,128px)] pt-[clamp(60px,7vw,110px)]"
     >
       <div className="mx-auto max-w-[1360px] px-4 md:px-8">
-        <div
-          aria-hidden="true"
-          className="font-display flex items-center justify-between gap-4 whitespace-nowrap text-[clamp(112px,29vw,430px)] leading-[0.78]! tracking-[-0.03em]!"
-        >
-          {MUNK_HANDLE}
-          <span className="grid aspect-square w-[clamp(76px,18vw,260px)] flex-none place-items-center rounded-full border border-line-strong bg-bg-2">
-            <b className="grid aspect-square w-[42%] place-items-center rounded-full bg-fg text-[clamp(18px,3vw,44px)] leading-none text-bg">
-              {s("munkInitials")}
-            </b>
-          </span>
+        <div className="font-display flex items-center justify-between gap-4 whitespace-nowrap text-[clamp(84px,25vw,430px)] leading-[0.78]! tracking-[-0.03em]!">
+          <span aria-hidden="true">{MUNK_HANDLE}</span>
+          {MUNK_PORTRAIT_SRC !== null ? (
+            <Image
+              src={MUNK_PORTRAIT_SRC}
+              alt={t("portraitAlt")}
+              width={407}
+              height={509}
+              sizes="(min-width: 1440px) 260px, 18vw"
+              className="aspect-square w-[clamp(84px,18vw,260px)] flex-none rounded-full border border-line-strong object-cover object-[50%_22%]"
+            />
+          ) : (
+            <span
+              aria-hidden="true"
+              className="grid aspect-square w-[clamp(76px,18vw,260px)] flex-none place-items-center rounded-full border border-line-strong bg-bg-2"
+            >
+              <b className="grid aspect-square w-[42%] place-items-center rounded-full bg-fg text-[clamp(18px,3vw,44px)] leading-none text-bg">
+                {s("munkInitials")}
+              </b>
+            </span>
+          )}
         </div>
 
         <div className="mt-[clamp(40px,5vw,72px)] grid items-start gap-[clamp(40px,6vw,96px)] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
           <div>
-            {MUNK_PORTRAIT_SRC !== null ? (
-              <Image
-                src={MUNK_PORTRAIT_SRC}
-                alt={t("portraitAlt")}
-                width={480}
-                height={600}
-                className="mb-10 h-auto w-full max-w-[320px] object-cover"
-              />
-            ) : null}
             <h2 id="munk-heading" className="font-display text-[clamp(40px,4.6vw,68px)]">
               {t("heading")}
             </h2>
