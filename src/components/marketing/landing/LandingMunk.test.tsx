@@ -39,9 +39,9 @@ describe("LandingMunk", () => {
     expect(html).toMatch(/<span[^>]*>Reference<\/span>/);
   });
 
-  it("shows no portrait while none is approved", () => {
-    expect(MUNK_PORTRAIT_SRC).toBeNull();
-    expect(html).not.toContain("<img");
+  it("shows the approved portrait in the circle, named for screen readers", () => {
+    expect(MUNK_PORTRAIT_SRC).toBe("/landing/munk-portrait.jpg");
+    expect(html).toMatch(/<img[^>]*alt="Mikael Munk, hovedcoach"[^>]*rounded-full/);
   });
 
   it("has no eyebrow and no hardcoded colours", () => {

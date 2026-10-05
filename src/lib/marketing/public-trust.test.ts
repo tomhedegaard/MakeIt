@@ -100,7 +100,8 @@ describe("public trust — Munk presence", () => {
     const invented = /år i branchen|world champion|olympi|certificeret|phd|tidligere landshold/i;
     expect(collectStrings(daKalk.munk).join(" ")).not.toMatch(invented);
     expect(collectStrings(enKalk.munk).join(" ")).not.toMatch(invented);
-    expect(MUNK_PORTRAIT_SRC).toBeNull();
+    // Approved by the owner 2026-10-05; a local file, never a remote one.
+    expect(MUNK_PORTRAIT_SRC).toMatch(/^\/landing\//);
   });
 });
 
