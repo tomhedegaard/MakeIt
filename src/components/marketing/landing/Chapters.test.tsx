@@ -28,9 +28,18 @@ describe("landing chapters", () => {
     expect(html.match(/href="https:\/\/unsplash\.com\/@/g)).toHaveLength(7);
   });
 
-  it("HRV names the four devices and is a dark block", () => {
+  it("HRV names the four devices as choices, charts 14 nights as a slider, and is a dark block", () => {
     const html = render(<ChapterHeart />);
     expect(html).toMatch(/<section id="hrv"[^>]*data-theme="nat"/);
-    for (const d of ["WHOOP", "Oura", "Polar", "Apple Watch"]) expect(html).toContain(`>${d}</li>`);
+    for (const d of ["WHOOP", "Oura", "Polar", "Apple Watch"]) expect(html).toMatch(new RegExp(`<button[^>]*aria-pressed="(true|false)"[^>]*>${d}</button>`));
+    expect(html).toMatch(/role="slider"[^>]*aria-valuemax="14"[^>]*aria-valuenow="14"/);
+    expect(html).toContain("Synket fra WHOOP kl. 05:14");
+  });
+
+  it("training tiles play on demand, food shows macros, mind offers a breath, crew can cheer", () => {
+    expect(render(<ChapterTrain />).match(/<button[^>]*aria-label="Afspil: [^"]+"/g)).toHaveLength(8);
+    expect(render(<ChapterFood />)).toContain("Kulhydrat");
+    expect(render(<ChapterMind />)).toContain("Prøv ét åndedræt");
+    expect(render(<CrewAlone />).match(/aria-label="Hep på [^"]+"/g)).toHaveLength(5);
   });
 });

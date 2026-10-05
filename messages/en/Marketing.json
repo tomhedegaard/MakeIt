@@ -745,7 +745,8 @@
           "dip": "Dips",
           "push-press": "Push press",
           "plank": "Plank"
-        }
+        },
+        "hint": "Hover an exercise, or tap it, to see it move."
       },
       "food": {
         "heading": "A week on the plate.",
@@ -773,7 +774,8 @@
           "More carbs on training days, fewer on rest days.",
           "The shopping list is gathered from the week's meals."
         ],
-        "credit": "An example week. Photos from Unsplash:"
+        "credit": "An example week. Photos from Unsplash:",
+        "grams": "{g} g"
       },
       "heart": {
         "heading": "From your watch to your session.",
@@ -786,9 +788,16 @@
           "Apple Watch"
         ],
         "appleNote": "Apple Watch through the iPhone app.",
-        "synced": "Synced from WHOOP at 05:14",
         "band": "Your band: 54 to 68 ms",
-        "link": "See what HQ does with it"
+        "link": "See what HQ does with it",
+        "chartLabel": "HRV over the last 14 nights against your band of 54 to 68 ms. Use the arrow keys to pick a night.",
+        "night": "Night {n} of 14",
+        "tonight": "Last night",
+        "inBand": "In your band",
+        "below": "Below your band",
+        "above": "Above your band",
+        "syncedFrom": "Synced from {device} at 05:14",
+        "hint": "Pick a watch, and move across the nights."
       },
       "mind": {
         "heading": "Your head trains too.",
@@ -810,7 +819,17 @@
             "t": "The week",
             "d": "The week's energy, stress and focus in one place."
           }
-        ]
+        ],
+        "start": "Try one breath",
+        "again": "Once more",
+        "stop": "Stop",
+        "phases": {
+          "in": "In",
+          "hold": "Hold",
+          "out": "Out"
+        },
+        "done": "Good. That is how a mind check starts.",
+        "hint": "19 seconds: in for 4, hold for 7, out for 8."
       },
       "alone": {
         "heading": "Someone always spots you.",
@@ -834,7 +853,10 @@
             "d": "A leaderboard where helping others counts too."
           }
         ],
-        "you": "You"
+        "you": "You",
+        "cheer": "Cheer",
+        "cheered": "Cheering",
+        "cheerLabel": "Cheer {name}"
       }
     }
   }

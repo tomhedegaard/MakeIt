@@ -7,6 +7,7 @@ import FoodScreen from "@/components/marketing/phone/screens/FoodScreen";
 import HrvScreen from "@/components/marketing/phone/screens/HrvScreen";
 import MindScreen from "@/components/marketing/phone/screens/MindScreen";
 import { cn } from "@/lib/utils";
+import TiltDoor from "./TiltDoor";
 
 const DOOR_PHONE = 200;
 
@@ -64,12 +65,12 @@ export default function LandingHero() {
         >
           {DOORS.map((door) => (
             <li key={door.key} className="w-[74vw] max-w-[320px] shrink-0 snap-start lg:w-auto lg:max-w-none">
-              <a
+              <TiltDoor
                 href={door.href}
                 className={cn("group relative block h-[300px] text-fg no-underline lg:h-[330px]", door.field)}
               >
-                <div className="absolute bottom-[86px] left-1/2 -translate-x-1/2 transition-transform duration-300 ease-out group-hover:-translate-y-2 motion-reduce:transition-none">
-                  {door.screen}
+                <div className="absolute bottom-[86px] left-1/2 -translate-x-1/2 [perspective:900px]">
+                  <div className="door-phone">{door.screen}</div>
                 </div>
                 <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3">
                   <span>
@@ -80,7 +81,7 @@ export default function LandingHero() {
                     ↓
                   </span>
                 </div>
-              </a>
+              </TiltDoor>
             </li>
           ))}
         </ul>

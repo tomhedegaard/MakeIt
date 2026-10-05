@@ -11,6 +11,7 @@ import { formatNumber } from "@/lib/utils";
  */
 export default function ChapterFood() {
   const t = useTranslations("Marketing.landing.chapters.food");
+  const m = useTranslations("Marketing.landing.systems.food");
   const days = t.raw("days") as string[];
   const meals = t.raw("meals") as string[];
   const points = t.raw("points") as string[];
@@ -31,8 +32,8 @@ export default function ChapterFood() {
 
         <ol className="-mx-4 mt-12 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:-mx-8 md:scroll-px-8 md:px-8 lg:mx-0 lg:mt-16 lg:grid lg:grid-cols-7 lg:overflow-visible lg:px-0">
           {MEAL_WEEK.map((meal, i) => (
-            <li key={days[i]} className="w-[62vw] max-w-[260px] shrink-0 snap-start lg:w-auto lg:max-w-none">
-              <div className="aspect-[4/5] overflow-hidden bg-food-tint">
+            <li key={days[i]} className="group w-[62vw] max-w-[260px] shrink-0 snap-start lg:w-auto lg:max-w-none">
+              <div className="relative aspect-[4/5] overflow-hidden bg-food-tint">
                 {meal.photo ? (
                   // eslint-disable-next-line @next/next/no-img-element -- Unsplash CDN sizes the image itself
                   <img
@@ -43,9 +44,17 @@ export default function ChapterFood() {
                     loading="lazy"
                     width={400}
                     height={500}
-                    className="size-full object-cover"
+                    className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                   />
                 ) : null}
+                <MacroOverlay
+                  rows={[
+                    { label: m("p"), g: meal.protein, kcal: meal.protein * 4 },
+                    { label: m("c"), g: meal.carbs, kcal: meal.carbs * 4 },
+                    { label: m("f"), g: meal.fat, kcal: meal.fat * 9 },
+                  ]}
+                  grams={(g) => t("grams", { g })}
+                />
               </div>
               <p className="mt-3 text-[13px] font-medium text-food">{days[i]}</p>
               <p className="mt-1 text-[15px] leading-snug">{meals[i]}</p>
@@ -87,5 +96,35 @@ export default function ChapterFood() {
         ) : null}
       </div>
     </section>
+  );
+}
+
+/**
+ * Hover detail: the plate's energy split as three bars, sliding up over
+ * the photo. Decorative for assistive tech: kcal and protein are already
+ * in the card's text. On touch the photo stays clean.
+ */
+function MacroOverlay({ rows, grams }: { rows: { label: string; g: number; kcal: number }[]; grams: (g: number) => string }) {
+  const total = rows.reduce((n, r) => n + r.kcal, 0);
+  return (
+    <div
+      aria-hidden="true"
+      className="absolute inset-x-0 bottom-0 translate-y-full bg-bg/95 p-3 transition-transform duration-300 ease-out group-hover:translate-y-0 motion-reduce:transition-none"
+    >
+      {rows.map((r, i) => (
+        <div key={r.label} className="mt-1.5 first:mt-0">
+          <div className="flex justify-between text-[11px] text-fg-dim">
+            <span>{r.label}</span>
+            <span className="numeric text-fg">{grams(r.g)}</span>
+          </div>
+          <div className="mt-1 h-1 bg-line">
+            <i
+              className="block h-full origin-left scale-x-0 bg-food transition-transform duration-500 ease-out group-hover:scale-x-100 motion-reduce:transition-none"
+              style={{ width: `${Math.round((r.kcal / total) * 100)}%`, transitionDelay: `${150 + i * 80}ms`, opacity: 1 - i * 0.28 }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }

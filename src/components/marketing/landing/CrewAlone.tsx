@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import CheerButton from "./CheerButton";
 
 /**
  * The wall: the crew as faces. Initials only, decorative; a few are
@@ -19,11 +20,11 @@ const YOU = 35;
  * under it. Feed copy is the crew screen's sample day.
  */
 const CARDS = [
-  { p: "p1", at: "md:left-[6%] md:top-[10%]" },
-  { p: "p4", at: "md:left-[52%] md:top-[4%]" },
-  { p: "p2", at: "md:left-[28%] md:top-[40%]" },
-  { p: "p3", at: "md:left-[62%] md:top-[56%]" },
-  { p: "p5", at: "md:left-[4%] md:top-[72%]" },
+  { p: "p1", cheers: 14, at: "md:left-[6%] md:top-[10%]" },
+  { p: "p4", cheers: 33, at: "md:left-[52%] md:top-[4%]" },
+  { p: "p2", cheers: 6, at: "md:left-[28%] md:top-[40%]" },
+  { p: "p3", cheers: 21, at: "md:left-[62%] md:top-[56%]" },
+  { p: "p5", cheers: 9, at: "md:left-[4%] md:top-[72%]" },
 ] as const;
 
 /**
@@ -72,12 +73,12 @@ export default function CrewAlone() {
           </ul>
 
           <ul className="relative z-10 -mt-10 grid gap-2 px-3 md:absolute md:inset-0 md:mt-0 md:block md:px-0">
-            {CARDS.map(({ p, at }, i) => (
+            {CARDS.map(({ p, cheers, at }, i) => (
               <li
                 key={p}
                 style={{ ["--i" as string]: i }}
                 className={cn(
-                  "spot-card flex items-center gap-3 border border-line-strong bg-bg py-3 pl-3 pr-4 md:absolute md:max-w-[360px]",
+                  "spot-card flex items-center gap-3 border border-line-strong bg-bg py-3 pl-3 pr-3 md:absolute md:max-w-[420px]",
                   at,
                 )}
               >
@@ -87,12 +88,19 @@ export default function CrewAlone() {
                 >
                   {c(`${p}i`)}
                 </span>
-                <span className="min-w-0">
+                <span className="min-w-0 flex-1">
                   <span className="block text-[15px] leading-snug">
                     <span className="font-medium">{c(p)}</span> {c(`${p}t`)}
                   </span>
-                  <span className="mt-0.5 block text-[13px] text-fg-dim">{c(`${p}m`)}</span>
+                  {/* Time only: the cheer count lives on the button. */}
+                  <span className="mt-0.5 block text-[13px] text-fg-dim">{c(`${p}m`).split(" · ")[0]}</span>
                 </span>
+                <CheerButton
+                  count={cheers}
+                  label={t("cheerLabel", { name: c(p) })}
+                  cheer={t("cheer")}
+                  cheered={t("cheered")}
+                />
               </li>
             ))}
           </ul>
