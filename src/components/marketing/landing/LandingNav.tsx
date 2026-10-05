@@ -5,16 +5,18 @@ import { Menu, X } from "lucide-react";
 import { ICON } from "@/components/ui/icon";
 
 const SECTIONS = [
-  { href: "#engine", key: "engine" },
-  { href: "#systems", key: "systems" },
+  { href: "#train", key: "train" },
+  { href: "#food", key: "food" },
+  { href: "#hrv", key: "hrv" },
+  { href: "#mind", key: "mind" },
+  { href: "#crew-alone", key: "crew" },
   { href: "#munk", key: "munk" },
-  { href: "#crew", key: "crew" },
 ] as const;
 
 const LINK = "text-xs text-fg-dim no-underline transition-colors hover:text-fg";
 
 /**
- * Kalk header (reference B `.hdr`). Four section links, login and one
+ * Kalk header (reference B `.hdr`). Six section links, login and one
  * access pill. From 1024 px everything sits on one line; below that the
  * section links live in a native `<details>` menu, so it works without JS.
  */

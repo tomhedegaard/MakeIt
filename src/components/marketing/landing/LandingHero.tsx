@@ -1,45 +1,91 @@
+import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
-import HeroScale from "@/components/marketing/landing/HeroScale";
+import SessionScreen from "@/components/marketing/phone/screens/SessionScreen";
+import FoodScreen from "@/components/marketing/phone/screens/FoodScreen";
+import HrvScreen from "@/components/marketing/phone/screens/HrvScreen";
+import MindScreen from "@/components/marketing/phone/screens/MindScreen";
+import { cn } from "@/lib/utils";
+
+const DOOR_PHONE = 200;
 
 /**
- * Nord hero: H1, one sentence, one CTA, and one picture of what HQ does.
- * The right column is this morning's top set, rewritten (`HeroScale`):
- * 150 struck, 135 at full size, the marker on the page's kg ruler. The
- * slider demo that used to sit here now lives in the motor story
- * (#engine), where the visitor has the reasoning before they try it.
+ * The four systems as four doors, each in its domain colour with the
+ * real app screen rising out of it. Written out so Tailwind sees every
+ * class. Each door links to its chapter further down.
+ */
+const DOORS: { key: "train" | "food" | "heart" | "mind"; href: string; field: string; screen: ReactNode }[] = [
+  { key: "train", href: "#train", field: "bg-body", screen: <SessionScreen width={DOOR_PHONE} /> },
+  { key: "food", href: "#food", field: "bg-food", screen: <FoodScreen width={DOOR_PHONE} /> },
+  { key: "heart", href: "#hrv", field: "bg-heart", screen: <HrvScreen width={DOOR_PHONE} /> },
+  { key: "mind", href: "#mind", field: "bg-mind", screen: <MindScreen width={DOOR_PHONE} /> },
+];
+
+/**
+ * Hero: H1, one sentence, one CTA, and the whole app at a glance. The
+ * landing page is the one place the domain colours may fill a surface
+ * (owner decision 2026-10-05); the app keeps the ten percent rule.
  */
 export default function LandingHero() {
   const t = useTranslations("Marketing.landing.hero");
+  const d = useTranslations("Marketing.landing.chapters.doors");
 
   return (
-    <section aria-labelledby="hero-heading" className="relative">
-      <div className="mx-auto grid max-w-[1360px] grid-cols-1 px-4 md:px-8 lg:min-h-[calc(100svh-68px)] xl:max-h-[900px] lg:grid-cols-2 lg:gap-10">
-        <div className="flex flex-col justify-center pb-6 pt-8 lg:pb-14 lg:pt-12">
+    <section aria-labelledby="hero-heading" className="relative overflow-x-clip">
+      <div className="mx-auto max-w-[1360px] px-4 md:px-8">
+        <div className="grid gap-6 pb-2 pt-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-end lg:gap-16 lg:pt-16">
           <h1
             id="hero-heading"
-            className="font-display max-w-[9.5em] text-[clamp(52px,6.6vw,104px)] leading-[0.88]!"
+            className="font-display max-w-[9.5em] text-[clamp(52px,7.2vw,112px)] leading-[0.88]!"
           >
             {t("heading")}
           </h1>
-          <p className="mt-4 max-w-[30ch] text-[clamp(17px,1.45vw,21px)] text-fg-dim lg:mt-7">{t("sub")}</p>
-          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4 lg:mt-9">
-            <Link href={PUBLIC_WAITLIST_HREF} className="btn btn-primary h-12! px-6!">
-              {t("cta")}
-            </Link>
-            <a
-              href="#engine"
-              className="border-b border-line-bright pb-0.5 text-[13px] no-underline hover:border-fg"
-            >
-              {t("link")} <span aria-hidden="true">→</span>
-            </a>
+          <div className="lg:pb-3">
+            <p className="max-w-[34ch] text-[clamp(17px,1.45vw,21px)] text-fg-dim">{t("sub")}</p>
+            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <Link href={PUBLIC_WAITLIST_HREF} className="btn btn-primary h-12! px-6!">
+                {t("cta")}
+              </Link>
+              <a
+                href="#engine"
+                className="border-b border-line-bright pb-0.5 text-[13px] no-underline hover:border-fg"
+              >
+                {t("link")} <span aria-hidden="true">→</span>
+              </a>
+            </div>
           </div>
         </div>
 
-        <div className="relative flex flex-col justify-center border-t border-line pb-12 pt-8 lg:border-l lg:border-t-0 lg:py-14 lg:pl-12">
-          <HeroScale />
-        </div>
+        <ul
+          data-doors
+          className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-10 pt-[240px] [scrollbar-width:none] md:-mx-8 md:scroll-px-8 md:px-8 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0 lg:pb-16 lg:pt-[220px]"
+        >
+          {DOORS.map((door) => (
+            <li key={door.key} className="w-[74vw] max-w-[320px] shrink-0 snap-start lg:w-auto lg:max-w-none">
+              <a
+                href={door.href}
+                className={cn(
+                  "group relative block h-[300px] text-bg no-underline lg:h-[330px]",
+                  door.field,
+                )}
+              >
+                <div className="absolute bottom-[86px] left-1/2 -translate-x-1/2 transition-transform duration-300 ease-out group-hover:-translate-y-2 motion-reduce:transition-none">
+                  {door.screen}
+                </div>
+                <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3">
+                  <span>
+                    <span className="font-display block text-[28px] leading-none">{d(`${door.key}.name`)}</span>
+                    <span className="mt-1.5 block text-[13px] opacity-85">{d(`${door.key}.line`)}</span>
+                  </span>
+                  <span aria-hidden="true" className="text-[22px] leading-none">
+                    ↓
+                  </span>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

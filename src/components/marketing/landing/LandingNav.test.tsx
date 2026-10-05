@@ -3,10 +3,10 @@ import { render } from "../test-render";
 import LandingNav from "./LandingNav";
 
 const html = render(<LandingNav />);
-const SECTIONS = ["#engine", "#systems", "#munk", "#crew"];
+const SECTIONS = ["#train", "#food", "#hrv", "#mind", "#crew-alone", "#munk"];
 
 describe("LandingNav", () => {
-  it("links to at most the four sections, in every menu", () => {
+  it("links to the six sections, in every menu", () => {
     const hrefs = [...html.matchAll(/href="(#[^"]*)"/g)].map((m) => m[1]);
     expect(new Set(hrefs)).toEqual(new Set(SECTIONS));
     const desktop = html.match(/<ul[^>]*data-nav="desktop"[^>]*>([\s\S]*?)<\/ul>/)?.[1] ?? "";

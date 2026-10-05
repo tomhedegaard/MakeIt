@@ -812,47 +812,6 @@ nav.tabbar {
   color: var(--fg-dim);
 }
 
-/* Hero bar scale (HeroScale): the same ruler at 10 kg ticks, the old load
- * as a ghost tick, the new load as the ink marker, and the 15 kg HQ took
- * off as a mos segment. The page's one authored motion: the marker slides
- * from --from to --to while the strike draws over 150. */
-[data-theme="nord"] .hero-scale__track {
-  height: 28px;
-  border-top: 1px solid var(--line-bright);
-  border-right: 1px solid var(--line-bright);
-  background: linear-gradient(90deg, var(--line-bright) 0 1px, transparent 1px) 0 0 / calc(100% / 16) 9px repeat-x;
-}
-[data-theme="nord"] .hero-scale__track > i { position: absolute; top: -1px; display: block; }
-[data-theme="nord"] .hero-scale__gap {
-  left: var(--to);
-  right: calc(100% - var(--from));
-  height: 4px;
-  background: var(--signal);
-  transform-origin: right center;
-  animation: hero-scale-gap 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.5s both;
-}
-[data-theme="nord"] .hero-scale__ghost {
-  left: var(--from);
-  width: 1px;
-  height: 18px;
-  background: var(--fg-dim);
-}
-[data-theme="nord"] .hero-scale__marker {
-  left: var(--to);
-  width: 3px;
-  height: 28px;
-  margin-left: -1px;
-  background: var(--fg);
-  animation: hero-scale-marker 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.5s both;
-}
-@keyframes hero-scale-marker { from { left: var(--from); } to { left: var(--to); } }
-@keyframes hero-scale-gap { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-@media (prefers-reduced-motion: reduce) {
-  [data-theme="nord"] .hero-scale__marker,
-  [data-theme="nord"] .hero-scale__gap,
-  [data-theme="nord"] .hero-scale .strike-signal::after { animation: none; }
-}
-
 /* Sticky motor rig: scale the phone down on short viewports. */
 [data-theme="nord"] [data-motor-story] { --rig-s: 1; }
 @media (max-height: 760px) {

@@ -23,9 +23,10 @@ describe("LandingHero", () => {
     expect((html.match(/<h1/g) ?? []).length).toBe(1);
   });
 
-  it("viser topsættet skrevet om på kg-linealen, uden skydere", () => {
-    expect(html).toContain("hero-scale");
-    expect(html).toContain("Back squat, topsæt: 150 kg skrevet om til 135 kg.");
+  it("opens four doors to the chapters, each in its domain colour", () => {
+    for (const [href, field] of [["#train", "bg-body"], ["#food", "bg-food"], ["#hrv", "bg-heart"], ["#mind", "bg-mind"]]) {
+      expect(html).toMatch(new RegExp(`<a href="${href}"[^>]*${field}`));
+    }
     expect(html).not.toMatch(/type="range"/);
   });
 });
