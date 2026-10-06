@@ -1,12 +1,13 @@
 "use client";
 
-import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useId, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { TierKey } from "@/lib/marketing/tiers";
 import { Check } from "lucide-react";
 import { ICON } from "@/components/ui/icon";
 import Magnetic from "./Magnetic";
+import InViewOnce from "./InViewOnce";
 
 export type LadderTier = {
   key: TierKey;
@@ -114,11 +115,14 @@ export default function TierLadder({
           <span id="tiers" className="block scroll-mt-[88px]" />
           {/* A barbell sleeve seen from the side: a 4 px bar, the four
               plates loaded along it, the weight under each. Decorative for
-              assistive tech — the tabs below carry the same choice. */}
-          <div aria-hidden="true" className="relative grid grid-cols-4 pt-4">
+              assistive tech — the tabs below carry the same choice. On
+              arrival the plates slide onto the sleeve one after another,
+              like loading a bar (InViewOnce, globals.css `.tier-bar`). */}
+          <div data-once aria-hidden="true" className="tier-bar relative grid grid-cols-4 pt-4">
+            <InViewOnce threshold={0.5} />
             <span className="absolute inset-x-0 top-[calc(1rem+clamp(90px,12vw,150px))] h-2.5 -translate-y-1/2 bg-fg" />
             {tiers.map((t, i) => (
-              <Plate key={t.key} tier={t} loaded={i <= here} selected={i === selected} onSelect={() => setSelected(i)} />
+              <Plate key={t.key} index={i} tier={t} loaded={i <= here} selected={i === selected} onSelect={() => setSelected(i)} />
             ))}
           </div>
           <p className="mt-1 text-micro text-fg-dim">{hint}</p>
@@ -229,11 +233,13 @@ export default function TierLadder({
 }
 
 function Plate({
+  index,
   tier,
   loaded,
   selected,
   onSelect,
 }: {
+  index: number;
   tier: LadderTier;
   loaded: boolean;
   selected: boolean;
@@ -247,6 +253,7 @@ function Plate({
       data-loaded={loaded ? "true" : undefined}
       data-selected={selected ? "true" : undefined}
       onClick={onSelect}
+      style={{ "--i": index } as CSSProperties}
       className="group relative z-[1] flex cursor-pointer flex-col items-center"
     >
       {/* Mouse and touch only: the tabs below carry the same choice for the keyboard. */}

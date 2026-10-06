@@ -8,6 +8,8 @@ import DecisionScreen from "@/components/marketing/phone/screens/DecisionScreen"
 import { cn } from "@/lib/utils";
 import MotorStoryRig from "./MotorStoryRig";
 import NightCurve from "./NightCurve";
+import ScrollSequence from "./ScrollSequence";
+import { A1_SEQUENCE } from "@/lib/marketing/landing/a1";
 import Rule from "./Rule";
 import EngineDemo from "./EngineDemo";
 
@@ -94,6 +96,16 @@ export default function MotorStory() {
         </div>
 
         <EngineBounds />
+
+        {A1_SEQUENCE ? (
+          <ScrollSequence
+            base={A1_SEQUENCE.base}
+            frameCount={A1_SEQUENCE.frameCount}
+            poster={{ ...A1_SEQUENCE.poster, alt: "" }}
+            range={{ start: 0.25, end: 0.75 }}
+            className="mx-auto mt-16 aspect-[4/5] w-full max-w-[560px]"
+          />
+        ) : null}
 
         <div
           data-motor-story

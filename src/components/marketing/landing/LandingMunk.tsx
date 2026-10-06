@@ -18,6 +18,8 @@ type FlowStep = { t: string; label: string };
  * reference. Munk's face sits in the circle beside the wordmark; until a
  * portrait exists the circle shows his initials.
  *
+ * As the wordmark scrolls in it slides home and the portrait rolls in
+ * beside it like a plate (view timeline, globals.css `.munk-mark`).
  * On arrival (InViewOnce, once) the flow lights up step by step, the
  * final answer settles in and the signature writes itself last.
  */
@@ -30,11 +32,11 @@ export default function LandingMunk() {
     <section
       id="munk"
       aria-labelledby="munk-heading"
-      className="scroll-mt-[68px] overflow-hidden pb-[clamp(72px,8vw,128px)] pt-[clamp(60px,7vw,110px)]"
+      className="scroll-mt-[68px] overflow-clip pb-[clamp(72px,8vw,128px)] pt-[clamp(60px,7vw,110px)]"
     >
       <div className="mx-auto max-w-[1360px] px-4 md:px-8">
         <div className="font-display flex items-center justify-between gap-4 whitespace-nowrap text-[clamp(84px,25vw,430px)] leading-[0.78]! tracking-[-0.03em]!">
-          <span aria-hidden="true">{MUNK_HANDLE}</span>
+          <span aria-hidden="true" className="munk-mark">{MUNK_HANDLE}</span>
           {MUNK_PORTRAIT_SRC !== null ? (
             <Image
               src={MUNK_PORTRAIT_SRC}
@@ -42,7 +44,7 @@ export default function LandingMunk() {
               width={407}
               height={509}
               sizes="(min-width: 1440px) 260px, 18vw"
-              className="aspect-square w-[clamp(84px,18vw,260px)] flex-none rounded-full border border-line-strong object-cover object-[50%_22%]"
+              className="munk-disc aspect-square w-[clamp(84px,18vw,260px)] flex-none rounded-full border border-line-strong object-cover object-[50%_22%]"
             />
           ) : (
             <span

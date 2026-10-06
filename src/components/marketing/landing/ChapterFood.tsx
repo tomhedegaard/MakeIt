@@ -103,7 +103,8 @@ export default function ChapterFood() {
               </li>
             ))}
           </ul>
-          <div className="flex justify-center gap-4 sm:gap-6">
+          <div data-once className="food-shop flex justify-center gap-4 sm:gap-6">
+            <InViewOnce threshold={0.3} />
             <FoodScreen width={240} />
             <div className="hidden pt-16 sm:block">
               <ShoppingScreen width={240} />
