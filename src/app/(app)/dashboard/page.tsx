@@ -6,7 +6,6 @@ import InstallHint from "@/components/pwa/InstallHint";
 import { getSession } from "@/lib/auth";
 import { TODAY_SESSION, totalSets } from "@/lib/workout";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
-import { createClient } from "@/lib/supabase/server";
 import type { ReadinessBucket } from "@/lib/hrv/types";
 import {
   getTodayCard,
@@ -20,11 +19,13 @@ import { getMyFormChecks } from "@/lib/data/me";
 import { getLatestUnseenPromotion } from "@/lib/data/tier-events";
 import TierBanner from "@/components/app/TierBanner";
 import FirstTimeTour from "@/components/app/FirstTimeTour";
-import { hasMindCheckToday } from "@/lib/data/mind";
+import { getTodayMindCheck } from "@/lib/data/mind";
 import { getDailyIntake } from "@/lib/data/nutrition-intake";
 import { getOrCreateNutritionProfile } from "@/lib/data/nutrition";
 import { resolveDailyTargets } from "@/lib/nutrition/plan-macros";
 import { getTodayAdaptation } from "@/lib/data/today-adaptation";
+import { getHrvReadingSeries } from "@/lib/data/hrv";
+import { isMealEstimateEnabled } from "@/app/(app)/nutrition/actions";
 import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
 import PageTitle from "@/components/ui/PageTitle";
@@ -46,7 +47,7 @@ import {
   demoInsightStream,
 } from "@/lib/dashboard/insight-stream";
 import { getTodayProse } from "@/lib/data/today-prose";
-import { buildHrvBandView, isOutOfBand, qualitativeFromBucket } from "@/lib/hrv/band";
+import { buildHrvBandView, isOutOfBand, qualitativeFromBucket, rmssdMsFromLn } from "@/lib/hrv/band";
 import { demoSteadySeries } from "@/lib/hrv/demo-series";
 import { loadDotsCopy, loadStripCopy } from "@/lib/ui/sprint-a-copy";
 import {
@@ -124,38 +125,31 @@ function fmtUpcomingDate(iso: string | null, t: Translator, locale: string): str
 }
 
 type HrvChipData = {
-  rmssdMs: number;
+  latestMs: number;
   bucket: ReadinessBucket | null;
+  band: { lowMs: number; highMs: number } | null;
+  nightsMs: number[];
 };
 
 /**
- * Latest HRV reading for the morning signal. Demo mode uses the
- * steady fixture so Heart is visible without a wearable.
+ * The Heart card: latest night, the personal band once it is steady, and
+ * recent nights for the sparkline (same band view as /hrv). Demo mode
+ * uses the steady fixture so Heart is visible without a wearable.
  */
 async function getHrvChipData(memberId: string): Promise<HrvChipData | null> {
-  if (!SUPABASE_ENABLED) {
-    const view = buildHrvBandView(demoSteadySeries());
-    return {
-      rmssdMs: view.latestMs ?? 0,
-      bucket: view.qualitative === "lav" ? "low" : view.qualitative === "ro" ? "high" : "normal",
-    };
-  }
-  const supabase = await createClient();
-  if (!supabase) return null;
-
-  const { data } = await supabase
-    .from("hrv_readings")
-    .select("rmssd_ms, readiness_bucket")
-    .eq("member_id", memberId)
-    .order("measured_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (!data) return null;
-
+  const series = SUPABASE_ENABLED
+    ? await getHrvReadingSeries(memberId, { rangeDays: 60 })
+    : demoSteadySeries();
+  const view = buildHrvBandView(series);
+  if (view.latestMs === null) return null;
   return {
-    rmssdMs: data.rmssd_ms as number,
-    bucket: (data.readiness_bucket as ReadinessBucket | null) ?? null,
+    latestMs: view.latestMs,
+    bucket: series[series.length - 1].readinessBucket,
+    band:
+      view.state === "steady" && view.bandLowMs !== null && view.bandHighMs !== null
+        ? { lowMs: view.bandLowMs, highMs: view.bandHighMs }
+        : null,
+    nightsMs: series.map((r) => rmssdMsFromLn(r.lnRmssd)),
   };
 }
 
@@ -186,11 +180,12 @@ export default async function TodayPage() {
     myChecks,
     promotion,
     hrv,
-    mindChecked,
+    mindToday,
     prose,
     intakeRaw,
     demoProfile,
     weekDb,
+    estimateEnabled,
   ] = await Promise.all([
     connected ? getTodayCard(member.id) : null,
     connected ? getUpcomingSessions(member.id, 3) : null,
@@ -203,7 +198,7 @@ export default async function TodayPage() {
     getLatestUnseenPromotion(member.id),
     // Morning signal inputs (C5).
     getHrvChipData(member.id),
-    hasMindCheckToday(member.id),
+    getTodayMindCheck(member.id),
     getTodayProse(member.id),
     getDailyIntake(member.id),
     // Demo has no intake rows and no plan, so the food cell would show
@@ -212,7 +207,9 @@ export default async function TodayPage() {
     connected ? null : getOrCreateNutritionProfile(member.id),
     // Same Mon–Sun strip as Træn, same Today pick.
     connected ? getWeekStrip(member.id) : null,
+    isMealEstimateEnabled(member),
   ]);
+  const mindChecked = mindToday != null;
 
   const todayRaw = todayCardForSurface({
     connected,
@@ -245,10 +242,9 @@ export default async function TodayPage() {
     (c) => c.reviewedAt && c.coachNotes
   ).length;
 
-  const targetKcal =
-    intakeRaw.targetKcal == null && demoProfile
-      ? resolveDailyTargets(demoProfile).kcal
-      : intakeRaw.targetKcal;
+  const demoTargets = intakeRaw.targetKcal == null && demoProfile ? resolveDailyTargets(demoProfile) : null;
+  const targetKcal = demoTargets ? demoTargets.kcal : intakeRaw.targetKcal;
+  const targetProtein = demoTargets ? demoTargets.proteinG : intakeRaw.targetProtein;
 
   // Today's adaptation (C1) needs today's session id.
   const adaptation = await getTodayAdaptation(member.id, today?.id ?? null);
@@ -421,11 +417,17 @@ export default async function TodayPage() {
       {/* 3. morningSignal */}
       <div className="lg:col-start-2 lg:row-start-1">
       <MorningSignal
+        estimateEnabled={estimateEnabled}
         input={{
-          session: today ? { adapted: adaptation != null && adaptation.acceptedByMember !== false } : null,
           hrv,
-          mindCheckedToday: mindChecked,
-          intake: { consumedKcal: intakeRaw.consumedKcal, targetKcal },
+          mind: mindToday ? { energy: mindToday.energy, stress: mindToday.stress, focus: mindToday.focus } : null,
+          intake: {
+            consumedKcal: intakeRaw.consumedKcal,
+            targetKcal,
+            consumedProtein: intakeRaw.consumedProtein,
+            targetProtein,
+          },
+          trainingDay: today != null,
         }}
       />
       </div>

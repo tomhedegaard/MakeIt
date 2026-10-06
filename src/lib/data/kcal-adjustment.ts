@@ -20,15 +20,15 @@
  * If actual delta is in the right direction but slow, no change.
  * If wrong direction OR much faster than target, adjust.
  *
- * Bounds: ±100 kcal per adjustment, never below a goal-floor (1400
- * for cut, 1800 for maintain/recomp, 2200 for mass) — these are
- * sanity caps so the engine can't starve members.
+ * Bounds: ±100 kcal per adjustment, never below the calorie floor
+ * (spec §S, `calorieFloor`) and never below 2200 for mass.
  */
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
 import { getWeightTrend } from "@/lib/data/weight";
 import type { NutritionGoal } from "@/lib/data/nutrition";
+import { calorieFloor } from "@/lib/nutrition/calorie-floor";
 
 export type AdjustmentResult = {
   /** The kcal-target value AFTER any adjustment (or current if unchanged). */
@@ -48,12 +48,7 @@ const TARGET_DELTAS_KG_PER_WEEK: Record<NutritionGoal, number> = {
   mass: 0.25,
 };
 
-const FLOORS: Record<NutritionGoal, number> = {
-  cut: 1400,
-  recomp: 1800,
-  maintain: 1800,
-  mass: 2200,
-};
+const MASS_FLOOR = 2200;
 
 const CEILING = 5000; // sanity ceiling, no mass-goal should exceed
 const STEP = 100; // single-step adjustment magnitude
@@ -139,7 +134,8 @@ export async function maybeApplyKcalAdjustment(
   }
 
   const proposed = currentTarget + delta;
-  const clamped = Math.max(FLOORS[goal], Math.min(CEILING, proposed));
+  const floor = Math.max(calorieFloor(), goal === "mass" ? MASS_FLOOR : 0);
+  const clamped = Math.max(floor, Math.min(CEILING, proposed));
   const realDelta = clamped - currentTarget;
 
   if (realDelta === 0) {

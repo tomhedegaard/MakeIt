@@ -117,30 +117,40 @@
   },
   "morningSignal": {
     "label": "Morgenens signal",
-    "kcal": "kcal",
     "labels": {
-      "body": "Krop",
       "heart": "Hjerte",
-      "mind": "Sind",
-      "food": "Mad"
+      "food": "Mad",
+      "mind": "Sind"
     },
     "values": {
-      "adapted": "Tilpasset",
-      "planned": "Klar",
-      "measured": "Målt",
-      "noSession": "Intet pas",
       "belowBand": "Under bånd",
       "inBand": "I bånd",
       "aboveBand": "Over bånd",
-      "noReading": "Ingen måling",
+      "measured": "Målt",
+      "connect": "Forbind wearable",
       "checkIn": "Tjek ind",
-      "checkedIn": "Tjekket ind",
-      "eaten": "Spist i dag"
+      "energy": "Energi"
+    },
+    "unit": {
+      "ms": "ms",
+      "kcal": "kcal spist",
+      "kcalOf": "af {of} kcal",
+      "scale": "af 5"
+    },
+    "why": {
+      "band": "Dit normalområde {low} til {high} ms",
+      "bandBuilding": "Dit normalområde bygges",
+      "connectWhy": "Så ser du dit normalområde",
+      "checkInWhy": "60 sekunder",
+      "stress": "Stress {value}",
+      "focus": "Fokus {value}",
+      "trainingDay": "Træningsdag",
+      "restDay": "Hviledag",
+      "protein": "{value} g protein",
+      "proteinOf": "{value} af {of} g protein"
     },
     "sr": {
-      "status": "{label}. {status}.",
-      "value": "{label}. {status}. {value} {unit}.",
-      "valueOf": "{label}. {status}. {value} af {of} {unit}."
+      "card": "{label}. {main}. {why}."
     }
   }
 }

@@ -117,30 +117,40 @@
   },
   "morningSignal": {
     "label": "Morning signal",
-    "kcal": "kcal",
     "labels": {
-      "body": "Body",
       "heart": "Heart",
-      "mind": "Mind",
-      "food": "Food"
+      "food": "Food",
+      "mind": "Mind"
     },
     "values": {
-      "adapted": "Adapted",
-      "planned": "Ready",
-      "measured": "Measured",
-      "noSession": "No session",
       "belowBand": "Below band",
       "inBand": "In band",
       "aboveBand": "Above band",
-      "noReading": "No reading",
+      "measured": "Measured",
+      "connect": "Connect a wearable",
       "checkIn": "Check in",
-      "checkedIn": "Checked in",
-      "eaten": "Eaten today"
+      "energy": "Energy"
+    },
+    "unit": {
+      "ms": "ms",
+      "kcal": "kcal eaten",
+      "kcalOf": "of {of} kcal",
+      "scale": "of 5"
+    },
+    "why": {
+      "band": "Your normal range {low} to {high} ms",
+      "bandBuilding": "Your normal range is building",
+      "connectWhy": "Then you see your normal range",
+      "checkInWhy": "60 seconds",
+      "stress": "Stress {value}",
+      "focus": "Focus {value}",
+      "trainingDay": "Training day",
+      "restDay": "Rest day",
+      "protein": "{value} g protein",
+      "proteinOf": "{value} of {of} g protein"
     },
     "sr": {
-      "status": "{label}. {status}.",
-      "value": "{label}. {status}. {value} {unit}.",
-      "valueOf": "{label}. {status}. {value} of {of} {unit}."
+      "card": "{label}. {main}. {why}."
     }
   }
 }
