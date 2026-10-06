@@ -37,7 +37,14 @@ import { cn } from "@/lib/utils";
 type Step = "choose" | "photo" | "text" | "working" | "questions" | "noFood" | "review" | "edit" | "manual";
 type Notice = "limited" | "unavailable" | "photoTooBig" | null;
 
-export default function OffPlanLogButton({ estimateEnabled = false }: { estimateEnabled?: boolean }) {
+export default function OffPlanLogButton({
+  estimateEnabled = false,
+  variant = "page",
+}: {
+  estimateEnabled?: boolean;
+  /** "card": one inline button on the I dag food card, no floating button. */
+  variant?: "page" | "card";
+}) {
   const t = useTranslations("Nutrition.offPlan");
   const locale = useLocale();
   const nf = useMemo(() => new Intl.NumberFormat(locale === "da" ? "da-DK" : "en-GB"), [locale]);
@@ -180,21 +187,29 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
 
   return (
     <>
-      {/* Desktop: inline header button */}
-      <button type="button" onClick={() => setOpen(true)} className="hidden lg:inline-flex btn btn-ghost btn-sm">
-        {t("trigger")}
-      </button>
+      {variant === "card" ? (
+        <button type="button" onClick={() => setOpen(true)} className="btn btn-ghost btn-sm w-full justify-start whitespace-normal text-left">
+          {t("triggerMobile")}
+        </button>
+      ) : (
+        <>
+          {/* Desktop: inline header button */}
+          <button type="button" onClick={() => setOpen(true)} className="hidden lg:inline-flex btn btn-ghost btn-sm">
+            {t("trigger")}
+          </button>
 
-      {/* Mobile: floating action button, parked above the tab-bar */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label={t("dialogLabel")}
-        className="fixed right-4 z-40 btn btn-primary lg:hidden"
-        style={{ bottom: "calc(var(--tabbar-stack) + 16px)" }}
-      >
-        {t("triggerMobile")}
-      </button>
+          {/* Mobile: floating action button, parked above the tab-bar */}
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label={t("dialogLabel")}
+            className="fixed right-4 z-40 btn btn-primary lg:hidden"
+            style={{ bottom: "calc(var(--tabbar-stack) + 16px)" }}
+          >
+            {t("triggerMobile")}
+          </button>
+        </>
+      )}
 
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent title={t("title")} description={estimateEnabled ? t("intro") : t("introManual")}>

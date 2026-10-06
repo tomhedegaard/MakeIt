@@ -11,6 +11,7 @@ import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
+import { calorieFloor } from "@/lib/nutrition/calorie-floor";
 import {
   BRAND_VOICE,
   flagDisallowed,
@@ -242,6 +243,13 @@ export async function generatePlanWithClaude(
     const parsed = response.parsed_output;
     if (!parsed) return null;
 
+    // Spec §S: never a target under the calorie floor. The mock
+    // generator takes over, and it plans from the floored profile.
+    if (parsed.targets.kcal < calorieFloor()) {
+      console.warn(`[nutrition-planner-claude] Plan rejected — ${parsed.targets.kcal} kcal is under the floor`);
+      return null;
+    }
+
     // Post-validate ingredients against the disallowlist. If any
     // ingredient slips through, log it and reject the plan. The
     // action layer will fall back to the mock generator.
@@ -316,6 +324,7 @@ function buildUserMessage(opts: GeneratePlanOpts): string {
     "  Skip-dag:    udlad alle slots for dagen. Generér 0 meals for skip-day-indekset.",
     "",
     `Dagligt mål (HARD): ${profile.dailyKcalTarget ?? "auto"} kcal / ${profile.dailyProteinGTarget ?? "auto"}g protein. Hver dags meal-sum SKAL ramme det, så skalér portioner.`,
+    `Kaloriegulv (HARD): targets.kcal må aldrig være under ${calorieFloor()} kcal.`,
     "",
     "Generér ugeplanen og returnér via submit_plan.",
   ];

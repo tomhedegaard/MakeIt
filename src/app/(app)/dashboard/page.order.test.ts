@@ -24,7 +24,7 @@ describe("dashboard renders today first", () => {
     const awaits = page.match(/await Promise\.all\(/g) ?? [];
     expect(page).not.toMatch(/await getMyFormChecks\(/);
     expect(page).not.toMatch(/await getLatestUnseenPromotion\(/);
-    expect(page).toMatch(/Promise\.all\(\[[\s\S]*getTodayCard[\s\S]*getMyFormChecks[\s\S]*getLatestUnseenPromotion[\s\S]*getHrvChipData[\s\S]*hasMindCheckToday[\s\S]*getTodayProse[\s\S]*getDailyIntake[\s\S]*\]\)/);
+    expect(page).toMatch(/Promise\.all\(\[[\s\S]*getTodayCard[\s\S]*getMyFormChecks[\s\S]*getLatestUnseenPromotion[\s\S]*getHrvChipData[\s\S]*getTodayMindCheck[\s\S]*getTodayProse[\s\S]*getDailyIntake[\s\S]*\]\)/);
     expect(awaits.length).toBeLessThanOrEqual(2);
     expect(page.match(/todayCardFromMock\(t\)/g)).toHaveLength(1);
   });

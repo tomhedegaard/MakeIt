@@ -9,6 +9,7 @@
  */
 
 import type { Ingredient, Meal, MealKind, MealSlot, NutritionGoal } from "@/lib/data/nutrition";
+import { calorieFloor } from "./calorie-floor";
 
 /** Inclusive band around the daily target. Documented in the PR. */
 export const PLAN_MACRO_TOLERANCE = {
@@ -61,7 +62,8 @@ export function defaultProteinGForKcal(kcal: number): number {
 }
 
 export function resolveDailyTargets(profile: TargetProfile): DailyMacroTargets {
-  const kcal = profile.dailyKcalTarget ?? defaultKcalForGoal(profile.goal);
+  // Spec §S: a stored target under the floor (from before the floor) never plans a day.
+  const kcal = Math.max(calorieFloor(), profile.dailyKcalTarget ?? defaultKcalForGoal(profile.goal));
   const proteinG = profile.dailyProteinGTarget ?? defaultProteinGForKcal(kcal);
   const carbsG = Math.round((kcal * 0.4) / 4);
   const fatG = Math.round((kcal * 0.3) / 9);
