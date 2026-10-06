@@ -158,7 +158,7 @@
       "proteinOf": "{value} of {of} g protein",
       "logWeightWhy": "A 7-day average, never a single weigh-in",
       "average": "7-day average",
-      "pejlemaerke": "Direction weight {kg} kg"
+      "pejlemaerke": "Direction weight set"
     },
     "sr": {
       "card": "{label}. {main}. {why}."

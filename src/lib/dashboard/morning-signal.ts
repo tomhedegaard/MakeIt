@@ -193,7 +193,8 @@ function weightCard(weight: { averages: number[]; pejlemaerkeKg: number | null }
     ...(direction ? { valueKey: direction } : {}),
     why: [
       { key: "average" },
-      ...(weight.pejlemaerkeKg !== null ? [{ key: "pejlemaerke" as const, values: { kg: weight.pejlemaerkeKg } }] : []),
+      // Only that a pejlemærke is set: two kg numbers side by side invite counting down.
+      ...(weight.pejlemaerkeKg !== null ? [{ key: "pejlemaerke" as const }] : []),
     ],
     ink: weight.averages.length >= 2 ? { kind: "spark", data: weight.averages } : null,
   };

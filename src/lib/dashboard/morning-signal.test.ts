@@ -64,7 +64,8 @@ describe("buildMorningSignal", () => {
     const cards = buildMorningSignal({ ...base, weight: { averages: [96.4, 96.1, 95.8], pejlemaerkeKg: 91 } });
     const weight = cards[3];
     expect(weight).toMatchObject({ domain: "body", value: 95.8, unit: "kg", valueKey: "down" });
-    expect(weight.why).toEqual([{ key: "average" }, { key: "pejlemaerke", values: { kg: 91 } }]);
+    expect(weight.why).toEqual([{ key: "average" }, { key: "pejlemaerke" }]);
+    expect(JSON.stringify(weight)).not.toContain("91");
     expect(JSON.stringify(weight)).not.toMatch(/4\.8|toGo|remaining|distance/);
     const empty = buildMorningSignal({ ...base, weight: { averages: [], pejlemaerkeKg: null } })[3];
     expect(empty).toMatchObject({ valueKey: "logWeight", ink: null });

@@ -158,7 +158,7 @@
       "proteinOf": "{value} af {of} g protein",
       "logWeightWhy": "Et snit over 7 dage, aldrig én vejning",
       "average": "Snit over 7 dage",
-      "pejlemaerke": "Pejlemærke {kg} kg"
+      "pejlemaerke": "Pejlemærke sat"
     },
     "sr": {
       "card": "{label}. {main}. {why}."
