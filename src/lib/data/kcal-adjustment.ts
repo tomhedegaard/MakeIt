@@ -28,7 +28,8 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { getWeightTrend } from "@/lib/data/weight";
 import type { NutritionGoal } from "@/lib/data/nutrition";
-import { calorieFloor } from "@/lib/nutrition/calorie-floor";
+import { getMemberCalorieFloor } from "@/lib/data/body";
+import { capWeeklyChangeKg } from "@/lib/health/body-rules";
 
 export type AdjustmentResult = {
   /** The kcal-target value AFTER any adjustment (or current if unchanged). */
@@ -87,7 +88,8 @@ export async function maybeApplyKcalAdjustment(
     };
   }
 
-  const target = TARGET_DELTAS_KG_PER_WEEK[goal];
+  // Spec §S: never a pace over 0,5 % of body weight per week.
+  const target = capWeeklyChangeKg(TARGET_DELTAS_KG_PER_WEEK[goal], trend.recent);
   const actual = trend.deltaKg;
   const tolerance = 0.3; // ±300g/wk = noise band
 
@@ -134,7 +136,7 @@ export async function maybeApplyKcalAdjustment(
   }
 
   const proposed = currentTarget + delta;
-  const floor = Math.max(calorieFloor(), goal === "mass" ? MASS_FLOOR : 0);
+  const floor = Math.max(await getMemberCalorieFloor(memberId), goal === "mass" ? MASS_FLOOR : 0);
   const clamped = Math.max(floor, Math.min(CEILING, proposed));
   const realDelta = clamped - currentTarget;
 

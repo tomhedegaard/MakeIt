@@ -120,7 +120,8 @@
     "labels": {
       "heart": "Heart",
       "food": "Food",
-      "mind": "Mind"
+      "mind": "Mind",
+      "body": "Body weight"
     },
     "values": {
       "belowBand": "Below band",
@@ -129,13 +130,20 @@
       "measured": "Measured",
       "connect": "Connect a wearable",
       "checkIn": "Check in",
-      "energy": "Energy"
+      "energy": "Energy",
+      "logWeight": "Log your weight",
+      "down": "Heading down",
+      "up": "Heading up",
+      "stable": "Stable"
     },
     "unit": {
       "ms": "ms",
       "kcal": "kcal eaten",
       "kcalOf": "of {of} kcal",
-      "scale": "of 5"
+      "scale": "of 5",
+      "kg": "kg",
+      "protein": "g protein",
+      "proteinOf": "of {of} g protein"
     },
     "why": {
       "band": "Your normal range {low} to {high} ms",
@@ -147,7 +155,10 @@
       "trainingDay": "Training day",
       "restDay": "Rest day",
       "protein": "{value} g protein",
-      "proteinOf": "{value} of {of} g protein"
+      "proteinOf": "{value} of {of} g protein",
+      "logWeightWhy": "A 7-day average, never a single weigh-in",
+      "average": "7-day average",
+      "pejlemaerke": "Direction weight {kg} kg"
     },
     "sr": {
       "card": "{label}. {main}. {why}."

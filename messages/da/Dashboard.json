@@ -120,7 +120,8 @@
     "labels": {
       "heart": "Hjerte",
       "food": "Mad",
-      "mind": "Sind"
+      "mind": "Sind",
+      "body": "Kropsvægt"
     },
     "values": {
       "belowBand": "Under bånd",
@@ -129,13 +130,20 @@
       "measured": "Målt",
       "connect": "Forbind wearable",
       "checkIn": "Tjek ind",
-      "energy": "Energi"
+      "energy": "Energi",
+      "logWeight": "Log din vægt",
+      "down": "Retning ned",
+      "up": "Retning op",
+      "stable": "Stabil"
     },
     "unit": {
       "ms": "ms",
       "kcal": "kcal spist",
       "kcalOf": "af {of} kcal",
-      "scale": "af 5"
+      "scale": "af 5",
+      "kg": "kg",
+      "protein": "g protein",
+      "proteinOf": "af {of} g protein"
     },
     "why": {
       "band": "Dit normalområde {low} til {high} ms",
@@ -147,7 +155,10 @@
       "trainingDay": "Træningsdag",
       "restDay": "Hviledag",
       "protein": "{value} g protein",
-      "proteinOf": "{value} af {of} g protein"
+      "proteinOf": "{value} af {of} g protein",
+      "logWeightWhy": "Et snit over 7 dage, aldrig én vejning",
+      "average": "Snit over 7 dage",
+      "pejlemaerke": "Pejlemærke {kg} kg"
     },
     "sr": {
       "card": "{label}. {main}. {why}."

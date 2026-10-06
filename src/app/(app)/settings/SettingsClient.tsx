@@ -23,10 +23,13 @@ export default function SettingsClient({
   settings,
   hrv,
   vapidPublicKey,
+  body,
 }: {
   settings: MemberSettings;
   hrv: HrvSettings;
   vapidPublicKey: string;
+  /** Krop (spec §S), rendered by the server page; null for MakeIt Ung. */
+  body?: React.ReactNode;
 }) {
   const router = useRouter();
   const locale = useLocale();
@@ -222,6 +225,9 @@ export default function SettingsClient({
 
       {/* HRV */}
       <HrvSettingsSection hrv={hrv} />
+
+      {/* Krop */}
+      {body}
 
       {/* Account info — read-only */}
       <section className="surface-2 rounded-2xl p-5 lg:p-7">

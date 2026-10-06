@@ -62,5 +62,36 @@
     "confirmPlaceholder": "{phrase}",
     "cancel": "Cancel",
     "confirm": "Delete the account permanently"
+  },
+  "body": {
+    "title": "Body",
+    "intro": "You decide which numbers you see. HQ still plans from them in the background.",
+    "hideNumbersLabel": "Hide calories and weight",
+    "hideNumbersSub": "Food shows meals and protein without calories, and body weight disappears from the app.",
+    "showWeightCardLabel": "Show body weight on Today",
+    "showWeightCardSub": "A 7-day average and the direction. Never a single weigh-in.",
+    "pejlemaerkeTitle": "Direction weight",
+    "pejlemaerkeSub": "A body weight you set yourself as a direction. HQ never counts down to it or shows the distance.",
+    "pejlemaerkeLabel": "Direction weight (kg)",
+    "heightLabel": "Height (cm)",
+    "birthYearLabel": "Year of birth",
+    "sexLabel": "Sex",
+    "sex": {
+      "none": "Choose",
+      "f": "Female",
+      "m": "Male",
+      "unspecified": "Prefer not to say"
+    },
+    "why": "HQ uses height, year of birth and sex only to set limits: a direction weight below a healthy weight for your height, and a daily target below what your body uses at rest.",
+    "adultLabel": "I am 18 or older",
+    "save": "Save",
+    "errors": {
+      "auth": "Sign in again to save.",
+      "adult": "A direction weight and body weight require that you are 18 or older.",
+      "invalid": "One of the numbers looks wrong. Check height, year of birth and direction weight.",
+      "needsHeight": "Add your height so HQ can set the limit for the direction weight.",
+      "belowHealthy": "That direction weight is below a healthy weight for your height, so HQ will not set it. Write to Munk if you want to talk about your direction.",
+      "unknown": "It could not be saved. Try again."
+    }
   }
 }

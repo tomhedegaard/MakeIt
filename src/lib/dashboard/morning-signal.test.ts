@@ -54,4 +54,31 @@ describe("buildMorningSignal", () => {
     expect(food).toMatchObject({ value: 0, unit: "kcal", ink: null });
     expect(food.why[1]).toEqual({ key: "protein", values: { value: 0 } });
   });
+
+  it("has no weight card unless the member turned it on", () => {
+    expect(buildMorningSignal(base).map((c) => c.domain)).toEqual(["heart", "food", "mind"]);
+    expect(buildMorningSignal({ ...base, weight: null })).toHaveLength(3);
+  });
+
+  it("shows a 7-day average and a direction, never a distance to the pejlemærke", () => {
+    const cards = buildMorningSignal({ ...base, weight: { averages: [96.4, 96.1, 95.8], pejlemaerkeKg: 91 } });
+    const weight = cards[3];
+    expect(weight).toMatchObject({ domain: "body", value: 95.8, unit: "kg", valueKey: "down" });
+    expect(weight.why).toEqual([{ key: "average" }, { key: "pejlemaerke", values: { kg: 91 } }]);
+    expect(JSON.stringify(weight)).not.toMatch(/4\.8|toGo|remaining|distance/);
+    const empty = buildMorningSignal({ ...base, weight: { averages: [], pejlemaerkeKg: null } })[3];
+    expect(empty).toMatchObject({ valueKey: "logWeight", ink: null });
+  });
+
+  it("hides calories and the weight card when numbers are off, and keeps protein", () => {
+    const cards = buildMorningSignal({
+      ...base,
+      hideNumbers: true,
+      weight: { averages: [96, 95.8], pejlemaerkeKg: 91 },
+    });
+    expect(cards.map((c) => c.domain)).toEqual(["heart", "food", "mind"]);
+    const food = cards[1];
+    expect(food).toMatchObject({ value: 96, unit: "proteinOf", of: 182, ink: { kind: "bar" } });
+    expect(JSON.stringify(food)).not.toMatch(/kcal|1312|2740/);
+  });
 });

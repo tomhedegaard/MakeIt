@@ -32,6 +32,7 @@ import SkipDaysCard from "@/components/nutrition/SkipDaysCard";
 import DailyCheckInCard from "@/components/nutrition/DailyCheckInCard";
 import DailyIntakeCard from "@/components/nutrition/DailyIntakeCard";
 import OffPlanLogButton from "./OffPlanLogButton";
+import { getMemberBody } from "@/lib/data/body";
 import { isMealEstimateEnabled } from "./actions";
 import { getDailyCheckIn } from "@/lib/data/nutrition-checkin";
 import { getDailyIntake } from "@/lib/data/nutrition-intake";
@@ -81,6 +82,7 @@ export default async function NutritionPage({
     swapLimit,
     skipDayIndices,
     kcalAdjustGate,
+    body,
   ] = await Promise.all([
     getDailyCheckIn(member.id),
     getDailyIntake(member.id),
@@ -89,7 +91,10 @@ export default async function NutritionPage({
     checkLimit(member.id, "meal_swap"),
     getSkipDayIndices(member.id, weekStart),
     checkLimit(member.id, "kcal_adjustment"),
+    getMemberBody(member.id),
   ]);
+  // "Vis ikke kalorier og vægt" (spec §S): HQ still plans from the numbers.
+  const hide = body.hideNumbers;
 
   // Adaptive kcal adjustment — lazy evaluation on first /nutrition
   // visit of the new ISO week. The kcalAdjustGate check above
@@ -122,7 +127,7 @@ export default async function NutritionPage({
         subtitle={t("page.intro")}
         right={
           <div className="flex flex-wrap items-center gap-2">
-            <OffPlanLogButton estimateEnabled={await isMealEstimateEnabled(member)} />
+            <OffPlanLogButton estimateEnabled={await isMealEstimateEnabled(member)} hideNumbers={hide} />
             <Link href="/nutrition/shopping" className="btn btn-sm">
               {t("page.shoppingLink")}
             </Link>
@@ -143,20 +148,22 @@ export default async function NutritionPage({
         />
       ) : null}
 
-      {kcalAdjust ? <KcalAdjustBanner delta={kcalAdjust.delta} reason={kcalAdjust.reason} t={t} /> : null}
+      {kcalAdjust && !hide ? <KcalAdjustBanner delta={kcalAdjust.delta} reason={kcalAdjust.reason} t={t} /> : null}
 
       {plan?.generator === "mock" ? <FallbackPlanBanner t={t} /> : null}
 
-      <DailyCheckInCard checkin={checkin} />
+      <DailyCheckInCard checkin={checkin} hideNumbers={hide} />
 
       {/* Today's intake and the weigh-in share one card, so the plan starts sooner. */}
-      <div className="surface-2 grid md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] divide-y md:divide-y-0 md:divide-x divide-line">
-        <DailyIntakeCard intake={intake} />
-        <LogWeightCard
-          latestKg={latestWeight?.kg ?? null}
-          latestLoggedAt={latestWeight?.loggedAt ?? null}
-          deltaKg={weightTrend.deltaKg}
-        />
+      <div className={hide ? "surface-2" : "surface-2 grid md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] divide-y md:divide-y-0 md:divide-x divide-line"}>
+        <DailyIntakeCard intake={intake} hideNumbers={hide} />
+        {hide ? null : (
+          <LogWeightCard
+            latestKg={latestWeight?.kg ?? null}
+            latestLoggedAt={latestWeight?.loggedAt ?? null}
+            deltaKg={weightTrend.deltaKg}
+          />
+        )}
       </div>
 
       {plan === null ? (
@@ -176,6 +183,7 @@ export default async function NutritionPage({
           swapLimit={swapLimit}
           t={t}
           fmt={fmt}
+          hideNumbers={hide}
         />
       )}
 
@@ -333,6 +341,7 @@ function PlanView({
   swapLimit,
   t,
   fmt,
+  hideNumbers,
 }: {
   plan: Plan;
   todayIndex: number;
@@ -342,6 +351,7 @@ function PlanView({
   swapLimit: RateLimitStatus;
   t: T;
   fmt: (n: number) => string;
+  hideNumbers: boolean;
 }) {
   const remaining = Math.max(
     0,
@@ -380,8 +390,10 @@ function PlanView({
   return (
     <>
       {/* Macro / meta strip */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-px bg-line border hairline rounded-lg overflow-hidden">
-        <Stat label={t("page.statKcal")} value={plan.dailyKcal != null ? fmt(plan.dailyKcal) : "-"} />
+      <section className={`grid ${hideNumbers ? "grid-cols-3" : "grid-cols-2 md:grid-cols-4"} gap-px bg-line border hairline rounded-lg overflow-hidden`}>
+        {hideNumbers ? null : (
+          <Stat label={t("page.statKcal")} value={plan.dailyKcal != null ? fmt(plan.dailyKcal) : "-"} />
+        )}
         <Stat label={t("page.statProtein")} value={plan.dailyProteinG != null ? fmt(plan.dailyProteinG) : "-"} />
         <Stat label={t("page.statCarbs")} value={plan.dailyCarbsG != null ? fmt(plan.dailyCarbsG) : "-"} />
         <Stat label={t("page.statFat")} value={plan.dailyFatG != null ? fmt(plan.dailyFatG) : "-"} />
@@ -410,9 +422,11 @@ function PlanView({
                   <div className="text-micro text-fg-dim">
                     {t("page.meals")}
                   </div>
-                  <div className="numeric text-micro text-fg-dim mt-1.5">
-                    {dayKcal > 0 ? `${fmt(dayKcal)} kcal` : "-"}
-                  </div>
+                  {hideNumbers ? null : (
+                    <div className="numeric text-micro text-fg-dim mt-1.5">
+                      {dayKcal > 0 ? `${fmt(dayKcal)} kcal` : "-"}
+                    </div>
+                  )}
                 </a>
               </li>
             );
@@ -433,16 +447,18 @@ function PlanView({
             className="mb-0"
           />
           <span className="text-micro text-fg-dim shrink-0">
-            {t("page.todayMacros", {
-              kcal: fmt(today.reduce((s, m) => s + (m.estKcal ?? 0), 0)),
-              protein: fmt(today.reduce((s, m) => s + (m.estProteinG ?? 0), 0)),
-            })}
+            {hideNumbers
+              ? t("page.todayProtein", { protein: fmt(today.reduce((s, m) => s + (m.estProteinG ?? 0), 0)) })
+              : t("page.todayMacros", {
+                  kcal: fmt(today.reduce((s, m) => s + (m.estKcal ?? 0), 0)),
+                  protein: fmt(today.reduce((s, m) => s + (m.estProteinG ?? 0), 0)),
+                })}
           </span>
         </div>
         <ul className="space-y-3">
           {today.map((m) => (
             <li key={m.id}>
-              <MealCard meal={m} loggable swapQuotaRemaining={swapRemaining} />
+              <MealCard meal={m} loggable swapQuotaRemaining={swapRemaining} hideNumbers={hideNumbers} />
             </li>
           ))}
         </ul>
@@ -465,9 +481,11 @@ function PlanView({
               <summary className="cursor-pointer block px-5 py-4 list-none">
                 <div className="flex items-center gap-4">
                   <div className="eyebrow flex-1">{t(`dayLabels.${DAY_KEYS[i]}`)}</div>
-                  <div className="numeric text-micro text-fg-dim shrink-0">
-                    {fmt(dayKcal)} kcal
-                  </div>
+                  {hideNumbers ? null : (
+                    <div className="numeric text-micro text-fg-dim shrink-0">
+                      {fmt(dayKcal)} kcal
+                    </div>
+                  )}
                   <span aria-hidden className="text-fg-faint group-open:rotate-90 transition-transform">→</span>
                 </div>
                 <div className="mt-1 text-copy text-pretty">
@@ -482,6 +500,7 @@ function PlanView({
                       loggable={false}
                       compact
                       swapQuotaRemaining={swapRemaining}
+                      hideNumbers={hideNumbers}
                     />
                   </li>
                 ))}

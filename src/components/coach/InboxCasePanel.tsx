@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import AdaptiveAlertCard from "@/components/coach/AdaptiveAlertCard";
 import { FormCheckReview } from "@/components/coach/CoachReview";
 import HrvAlertCard from "@/components/coach/HrvAlertCard";
+import FoodSignalSeenButton from "@/components/coach/FoodSignalSeenButton";
 import { InboxReasonChip, formatInboxWhen } from "@/components/coach/PriorityInboxList";
 import Avatar from "@/components/ui/Avatar";
 import type { PriorityInboxItem } from "@/lib/coach/priority-inbox";
@@ -108,6 +109,20 @@ async function CaseBody({
           <p className="text-fg leading-relaxed whitespace-pre-wrap">{alert.summary}</p>
         ) : null}
         <p className="text-meta text-fg-dim">{t("panelSafety")}</p>
+      </div>
+    );
+  }
+  if (item.kind === "food_relationship") {
+    const signals = String(item.reasonParams?.signals ?? "").split(",").filter(Boolean);
+    return (
+      <div className="max-w-prose space-y-4">
+        <ul className="space-y-1 text-fg">
+          {signals.map((s) => (
+            <li key={s}>{t(`foodSignals.${s}`)}</li>
+          ))}
+        </ul>
+        <p className="text-meta text-fg-dim">{t("panelFood")}</p>
+        <FoodSignalSeenButton memberId={item.memberId} />
       </div>
     );
   }

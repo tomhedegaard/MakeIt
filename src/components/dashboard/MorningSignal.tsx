@@ -47,7 +47,7 @@ export default function MorningSignal({
 
   return (
     <section aria-label={t("label")}>
-      <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2">
+      <ul className={`grid grid-cols-2 ${cards.length === 4 ? "sm:grid-cols-2" : "sm:grid-cols-3"} lg:grid-cols-1 gap-2`}>
         {cards.map((card) => (
           <li
             key={card.domain}
@@ -72,7 +72,7 @@ export default function MorningSignal({
             </Link>
             {card.domain === "food" ? (
               <div className="px-2 pb-3 sm:px-3 -mt-2">
-                <OffPlanLogButton estimateEnabled={estimateEnabled} variant="card" />
+                <OffPlanLogButton estimateEnabled={estimateEnabled} variant="card" hideNumbers={input.hideNumbers} />
               </div>
             ) : null}
           </li>

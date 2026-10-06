@@ -25,6 +25,10 @@ import { getOrCreateNutritionProfile } from "@/lib/data/nutrition";
 import { resolveDailyTargets } from "@/lib/nutrition/plan-macros";
 import { getTodayAdaptation } from "@/lib/data/today-adaptation";
 import { getHrvReadingSeries } from "@/lib/data/hrv";
+import { getMemberBody } from "@/lib/data/body";
+import { getRecentWeights } from "@/lib/data/weight";
+import { copenhagenIsoDate } from "@/lib/data/nutrition-checkin";
+import { sevenDayAverages } from "@/lib/health/body-rules";
 import { isMealEstimateEnabled } from "@/app/(app)/nutrition/actions";
 import Card from "@/components/ui/Card";
 import EmptyState from "@/components/ui/EmptyState";
@@ -186,6 +190,7 @@ export default async function TodayPage() {
     demoProfile,
     weekDb,
     estimateEnabled,
+    body,
   ] = await Promise.all([
     connected ? getTodayCard(member.id) : null,
     connected ? getUpcomingSessions(member.id, 3) : null,
@@ -208,8 +213,20 @@ export default async function TodayPage() {
     // Same Mon–Sun strip as Træn, same Today pick.
     connected ? getWeekStrip(member.id) : null,
     isMealEstimateEnabled(member),
+    getMemberBody(member.id),
   ]);
   const mindChecked = mindToday != null;
+  // The weight card is opt-in and gone when numbers are hidden (spec §S).
+  const weightCard =
+    body.showWeightCard && !body.hideNumbers
+      ? {
+          averages: sevenDayAverages(
+            (await getRecentWeights(member.id, 21)).map((w) => ({ kg: Number(w.kg), date: w.loggedAt.slice(0, 10) })),
+            copenhagenIsoDate(),
+          ),
+          pejlemaerkeKg: body.pejlemaerkeKg,
+        }
+      : null;
 
   const todayRaw = todayCardForSurface({
     connected,
@@ -428,6 +445,8 @@ export default async function TodayPage() {
             targetProtein,
           },
           trainingDay: today != null,
+          hideNumbers: body.hideNumbers,
+          weight: weightCard,
         }}
       />
       </div>

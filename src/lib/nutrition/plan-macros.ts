@@ -61,9 +61,10 @@ export function defaultProteinGForKcal(kcal: number): number {
   return Math.round((kcal * 0.3) / 4);
 }
 
-export function resolveDailyTargets(profile: TargetProfile): DailyMacroTargets {
+/** `floor` is the member's calorie floor (`getMemberCalorieFloor`); 1.800 when unknown. */
+export function resolveDailyTargets(profile: TargetProfile, floor: number = calorieFloor()): DailyMacroTargets {
   // Spec §S: a stored target under the floor (from before the floor) never plans a day.
-  const kcal = Math.max(calorieFloor(), profile.dailyKcalTarget ?? defaultKcalForGoal(profile.goal));
+  const kcal = Math.max(floor, profile.dailyKcalTarget ?? defaultKcalForGoal(profile.goal));
   const proteinG = profile.dailyProteinGTarget ?? defaultProteinGForKcal(kcal);
   const carbsG = Math.round((kcal * 0.4) / 4);
   const fatG = Math.round((kcal * 0.3) / 9);

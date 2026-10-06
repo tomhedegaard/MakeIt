@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getMemberCalorieFloor } from "@/lib/data/body";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -178,9 +179,10 @@ export async function generatePlanAction(): Promise<void> {
 
   // Pull training-day flags + skip-day flags in parallel so the
   // planner has both contexts. Meal-prep mode arrives in commit 3.
-  const [trainingDays, skipDayIndices] = await Promise.all([
+  const [trainingDays, skipDayIndices, kcalFloor] = await Promise.all([
     getTrainingDaysForWeek(member.id, weekStart),
     getSkipDayIndices(member.id, weekStart),
+    getMemberCalorieFloor(member.id),
   ]);
 
   // Try Claude first; fall back to mock generator inside generatePlan
@@ -191,6 +193,7 @@ export async function generatePlanAction(): Promise<void> {
     trainingDays,
     skipDayIndices,
     mealPrepMode: profile.mealPrepMode,
+    kcalFloor,
   });
 
   // Persist with containment — if BOTH Claude rejection + mock fallback
@@ -206,7 +209,7 @@ export async function generatePlanAction(): Promise<void> {
       // ~60% under the member's targets (same failure mode as the
       // unscaled mock catalog). Re-assert profile targets and scale
       // portions before persist.
-      const targets = resolveDailyTargets(profile);
+      const targets = resolveDailyTargets(profile, kcalFloor);
       await persistAiPlan(member.id, weekStart, {
         ...aiShape,
         targets,
