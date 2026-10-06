@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { joinWaitlistAction } from "@/app/waitlist-actions";
+import Magnetic from "./Magnetic";
 
 /**
  * Access-panel waitlist form (reference B `.form`): `joinWaitlistAction`
@@ -47,9 +48,11 @@ export default function WaitlistForm() {
         {/* Honeypot — hidden from humans, filled by bots. */}
         <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
         <input type="hidden" name="locale" value={locale} />
-        <button type="submit" disabled={pending || done} className="btn btn-primary min-h-[52px]">
-          {pending ? t("pending") : t("cta")}
-        </button>
+        <Magnetic>
+          <button type="submit" disabled={pending || done} className="btn btn-primary min-h-[52px]">
+            {pending ? t("pending") : t("cta")}
+          </button>
+        </Magnetic>
       </div>
       <p id="access-status" aria-live="polite" className="mt-3 min-h-[1.5em] text-xs text-fg-dim">
         {state === "done" ? t("done") : state === "error" ? t("error") : ""}
