@@ -13,7 +13,14 @@ type T = Awaited<ReturnType<typeof getTranslations<"Nutrition.intake">>>;
  * number shows. The off-plan portion of the total is called out so
  * the member sees how much came from "Spiste noget andet" logs.
  */
-export default async function DailyIntakeCard({ intake }: { intake: DailyIntake }) {
+export default async function DailyIntakeCard({
+  intake,
+  hideNumbers = false,
+}: {
+  intake: DailyIntake;
+  /** "Vis ikke kalorier og vægt" (spec §S): protein only. */
+  hideNumbers?: boolean;
+}) {
   const t = await getTranslations("Nutrition.intake");
   const tag = intlLocaleTag(await getLocale());
   const fmt = (n: number) => formatNumber(n, tag);
@@ -31,12 +38,14 @@ export default async function DailyIntakeCard({ intake }: { intake: DailyIntake 
     <article className="p-5 lg:p-6">
       <div className="eyebrow mb-4">{t("eyebrow")}</div>
 
-      <div className="grid grid-cols-2 gap-5">
-        <Metric t={t} fmt={fmt} label={t("kcal")} unit="kcal" consumed={consumedKcal} target={targetKcal} />
+      <div className={hideNumbers ? "grid gap-5" : "grid grid-cols-2 gap-5"}>
+        {hideNumbers ? null : (
+          <Metric t={t} fmt={fmt} label={t("kcal")} unit="kcal" consumed={consumedKcal} target={targetKcal} />
+        )}
         <Metric t={t} fmt={fmt} label={t("protein")} unit="g" consumed={consumedProtein} target={targetProtein} />
       </div>
 
-      {offPlanKcal > 0 ? (
+      {offPlanKcal > 0 && !hideNumbers ? (
         <p className="text-meta text-fg-dim mt-4">
           {t("offPlan")}{" "}
           <span className="numeric text-fg-body">{fmt(offPlanKcal)} kcal</span>

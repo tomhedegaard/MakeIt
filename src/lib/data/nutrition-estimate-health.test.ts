@@ -9,8 +9,7 @@ import { describe, expect, it } from "vitest";
 import da from "../../../messages/da/Nutrition.json";
 import en from "../../../messages/en/Nutrition.json";
 
-const FORBIDDEN_DA = /\b(snyd|synd|cheat|fortjent|brænd\w* (det|den) af|usund|dårlig mad|god mad|tilbage i dag|kcal tilbage|slank|tab dig|forbudt)\b/i;
-const FORBIDDEN_EN = /\b(cheat|sinful|guilt|earn(ed)? it|burn it off|junk|bad food|good food|remaining|calories left|slim|lose weight|forbidden)\b/i;
+import { FORBIDDEN_DA, FORBIDDEN_EN } from "@/lib/health/forbidden-words";
 
 const sheet = readFileSync(new URL("../../app/(app)/nutrition/OffPlanLogButton.tsx", import.meta.url), "utf8");
 const wrapper = readFileSync(new URL("./nutrition-estimate-claude.ts", import.meta.url), "utf8");

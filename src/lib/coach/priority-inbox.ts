@@ -10,6 +10,7 @@
 
 export type PriorityInboxKind =
   | "mental_safety"
+  | "food_relationship"
   | "hrv_alert"
   | "adaptive"
   | "form_check"
@@ -17,6 +18,7 @@ export type PriorityInboxKind =
 
 export type PriorityInboxReasonKey =
   | "chipMentalSafety"
+  | "chipFoodRelationship"
   | "chipHrv"
   | "chipAdaptive"
   | "chipFormCheck"
@@ -40,6 +42,13 @@ export type MentalSafetyInput = {
   memberId: string;
   memberHandle: string;
   createdAt: string;
+};
+
+/** Tidlige tegn (spec §S): computed at read, so there is no row id or time. */
+export type FoodRelationshipInput = {
+  memberId: string;
+  memberHandle: string;
+  signals: string[];
 };
 
 export type HrvAlertInput = {
@@ -77,6 +86,7 @@ export type StaleMemberInput = {
 
 export type PriorityInboxInputs = {
   mentalSafety: MentalSafetyInput[];
+  foodRelationship?: FoodRelationshipInput[];
   hrvAlerts: HrvAlertInput[];
   adaptive: AdaptiveInput[];
   formChecks: FormCheckInput[];
@@ -87,10 +97,11 @@ export type PriorityInboxInputs = {
 
 export const KIND_RANK: Record<PriorityInboxKind, number> = {
   mental_safety: 0,
-  hrv_alert: 1,
-  adaptive: 2,
-  form_check: 3,
-  stale_session: 4,
+  food_relationship: 1,
+  hrv_alert: 2,
+  adaptive: 3,
+  form_check: 4,
+  stale_session: 5,
 };
 
 const NEWEST_FIRST = new Set<PriorityInboxKind>([
@@ -111,6 +122,7 @@ export function hrefForInboxKind(
     case "form_check":
       return "/coach/queue";
     case "stale_session":
+    case "food_relationship":
       return `/coach/members/${memberId}`;
   }
 }
@@ -130,6 +142,19 @@ function mapMentalSafety(rows: MentalSafetyInput[]): PriorityInboxItem[] {
     occurredAt: r.createdAt,
     href: hrefForInboxKind("mental_safety", r.memberId),
     reasonKey: "chipMentalSafety",
+  }));
+}
+
+function mapFoodRelationship(rows: FoodRelationshipInput[], now: Date): PriorityInboxItem[] {
+  return rows.map((r) => ({
+    id: `food_relationship:${r.memberId}`,
+    kind: "food_relationship",
+    memberId: r.memberId,
+    memberHandle: r.memberHandle,
+    occurredAt: now.toISOString(),
+    href: hrefForInboxKind("food_relationship", r.memberId),
+    reasonKey: "chipFoodRelationship",
+    reasonParams: { signals: r.signals.join(",") },
   }));
 }
 
@@ -214,6 +239,7 @@ export function mergePriorityInbox(
   const now = inputs.now ?? new Date();
   const items: PriorityInboxItem[] = [
     ...mapMentalSafety(inputs.mentalSafety),
+    ...mapFoodRelationship(inputs.foodRelationship ?? [], now),
     ...mapHrv(inputs.hrvAlerts),
     ...mapAdaptive(inputs.adaptive),
     ...mapFormChecks(inputs.formChecks),

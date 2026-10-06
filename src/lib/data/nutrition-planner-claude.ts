@@ -192,6 +192,8 @@ export type GeneratePlanOpts = {
   /** Day indices [0..6] flagged as "skip" (eat-out / travelling /
    *  fasting). Generator omits meals for these days entirely. */
   skipDayIndices?: number[];
+  /** The member's calorie floor (spec §S). Defaults to 1.800. */
+  kcalFloor?: number;
 };
 
 export async function generatePlanWithClaude(
@@ -245,7 +247,7 @@ export async function generatePlanWithClaude(
 
     // Spec §S: never a target under the calorie floor. The mock
     // generator takes over, and it plans from the floored profile.
-    if (parsed.targets.kcal < calorieFloor()) {
+    if (parsed.targets.kcal < (opts.kcalFloor ?? calorieFloor())) {
       console.warn(`[nutrition-planner-claude] Plan rejected — ${parsed.targets.kcal} kcal is under the floor`);
       return null;
     }
@@ -324,7 +326,7 @@ function buildUserMessage(opts: GeneratePlanOpts): string {
     "  Skip-dag:    udlad alle slots for dagen. Generér 0 meals for skip-day-indekset.",
     "",
     `Dagligt mål (HARD): ${profile.dailyKcalTarget ?? "auto"} kcal / ${profile.dailyProteinGTarget ?? "auto"}g protein. Hver dags meal-sum SKAL ramme det, så skalér portioner.`,
-    `Kaloriegulv (HARD): targets.kcal må aldrig være under ${calorieFloor()} kcal.`,
+    `Kaloriegulv (HARD): targets.kcal må aldrig være under ${opts.kcalFloor ?? calorieFloor()} kcal.`,
     "",
     "Generér ugeplanen og returnér via submit_plan.",
   ];

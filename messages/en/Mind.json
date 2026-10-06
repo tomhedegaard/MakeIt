@@ -376,5 +376,13 @@
     "notTreatment": "The app is not treatment.",
     "livslinien": "Livslinien 70 201 201",
     "emergency": "emergency 112"
+  },
+  "foodQuestion": {
+    "title": "How do food and training feel for you right now?",
+    "body": "If food, weight or training take up more space than you want, you are not alone, and help is there.",
+    "lms": "LMS, the Danish association against eating disorders and self-harm",
+    "livslinien": "Livslinien 70 201 201",
+    "munk": "You can also write to Munk.",
+    "notTreatment": "The app is not treatment. Emergency: 112."
   }
 }

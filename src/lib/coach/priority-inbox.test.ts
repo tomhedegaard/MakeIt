@@ -112,7 +112,24 @@ describe("mergePriorityInbox — rank", () => {
       "stale_session",
     ]);
     expect(KIND_RANK.mental_safety).toBe(0);
-    expect(KIND_RANK.stale_session).toBe(4);
+    expect(KIND_RANK.food_relationship).toBe(1);
+    expect(KIND_RANK.stale_session).toBe(5);
+  });
+
+  it("ranks early food signals right under Safety and keeps the signal keys", () => {
+    const items = mergePriorityInbox(
+      inputs({
+        foodRelationship: [{ memberId: "m-f", memberHandle: "frida", signals: ["underFloor", "frequentWeighing"] }],
+        mentalSafety: [{ id: "ms-1", memberId: "m-ms", memberHandle: "signe", createdAt: "2026-09-03T07:00:00.000Z" }],
+      }),
+    );
+    expect(items.map((i) => i.kind).slice(0, 2)).toEqual(["mental_safety", "food_relationship"]);
+    expect(items[1]).toMatchObject({
+      id: "food_relationship:m-f",
+      href: "/coach/members/m-f",
+      reasonKey: "chipFoodRelationship",
+      reasonParams: { signals: "underFloor,frequentWeighing" },
+    });
   });
 
   it("keeps two rows for the same member when the actions differ", () => {

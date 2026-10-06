@@ -99,7 +99,16 @@
     "panelHrvBand": "Personal band",
     "panelHrvBuilding": "Building ({count} nights)",
     "panelHrvNone": "No HRV reading yet.",
-    "panelMissing": "This case couldn't be loaded here. Open the full case."
+    "panelMissing": "This case couldn't be loaded here. Open the full case.",
+    "chipFoodRelationship": "Food and body",
+    "panelFood": "Early signs, not a diagnosis. The member sees no warning; at the next mind check they get a gentle question and a pointer to Livslinien and LMS. Raise it in a calm conversation if it makes sense.",
+    "foodSeen": "Mark as seen for 14 days",
+    "foodSignals": {
+      "underFloor": "Ate under the calorie floor three logged days in a row",
+      "pejlemaerkeLowered": "Lowered their direction weight three times in 30 days",
+      "estimatesCutDown": "Edited three HQ estimates below the interval in 14 days",
+      "frequentWeighing": "Weighed in three times or more on one day"
+    }
   },
   "analytics": {
     "metaTitle": "Coach · Analytics",
