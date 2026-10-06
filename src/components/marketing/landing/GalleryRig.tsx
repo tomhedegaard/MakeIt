@@ -26,7 +26,6 @@ export default function GalleryRig() {
     const tall = window.matchMedia("(min-height: 760px)");
     const motion = window.matchMedia("(prefers-reduced-motion: no-preference)");
     const viewTimelines = typeof CSS !== "undefined" && CSS.supports?.("animation-timeline: view()") === true;
-    let raf = 0;
 
     // Back to the plain wall. The marker stays (empty) so the block can
     // still be found and switched on again, e.g. when a tablet rotates.
@@ -36,7 +35,6 @@ export default function GalleryRig() {
     };
 
     const apply = () => {
-      cancelAnimationFrame(raf);
       const enabled = galleryEnabled({
         wide: wide.matches,
         tall: tall.matches,
@@ -44,13 +42,13 @@ export default function GalleryRig() {
         viewTimelines,
       });
       if (!enabled) return off();
-      // Lay the track out as a row first, then measure it.
+      // Lay the track out as a row, then measure it in the same task:
+      // reading scrollWidth forces that layout, and unlike a frame
+      // callback it also runs in a background tab.
       root.dataset.gallery = "on";
-      raf = requestAnimationFrame(() => {
-        const travel = galleryTravel(track.scrollWidth, stage.clientWidth);
-        if (travel === 0) return off();
-        root.style.setProperty("--gallery-len", `${travel}px`);
-      });
+      const travel = galleryTravel(track.scrollWidth, stage.clientWidth);
+      if (travel === 0) return off();
+      root.style.setProperty("--gallery-len", `${travel}px`);
     };
 
     apply();
@@ -59,7 +57,6 @@ export default function GalleryRig() {
     for (const mq of [wide, tall, motion]) mq.addEventListener("change", apply);
 
     return () => {
-      cancelAnimationFrame(raf);
       ro?.disconnect();
       for (const mq of [wide, tall, motion]) mq.removeEventListener("change", apply);
       off();
