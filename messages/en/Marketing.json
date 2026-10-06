@@ -222,7 +222,9 @@
         "sample": "Sample data",
         "prev": "Previous screen",
         "next": "Next screen",
-        "listLabel": "Fifteen app screens"
+        "listLabel": "Fifteen app screens",
+        "pinSub": "Scroll, and the phone walks through the day.",
+        "parts": ["The morning", "The session", "The programme", "The food", "Head and crew"]
       }
     },
     "munk": {
@@ -775,7 +777,8 @@
           "The shopping list is gathered from the week's meals."
         ],
         "credit": "An example week. Photos from Unsplash:",
-        "grams": "{g} g"
+        "grams": "{g} g",
+        "weekTotal": "The week's seven plates in total"
       },
       "heart": {
         "heading": "From your watch to your session.",

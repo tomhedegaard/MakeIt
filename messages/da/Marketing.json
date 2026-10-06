@@ -222,7 +222,9 @@
         "sample": "Eksempeldata",
         "prev": "Forrige skærm",
         "next": "Næste skærm",
-        "listLabel": "Femten app-skærme"
+        "listLabel": "Femten app-skærme",
+        "pinSub": "Scroll, og telefonen går dagen igennem.",
+        "parts": ["Morgenen", "Passet", "Programmet", "Maden", "Hovedet og crewet"]
       }
     },
     "munk": {
@@ -775,7 +777,8 @@
           "Indkøbslisten samles fra ugens retter."
         ],
         "credit": "Eksempel på en uge. Fotos fra Unsplash:",
-        "grams": "{g} g"
+        "grams": "{g} g",
+        "weekTotal": "Ugens syv retter i alt"
       },
       "heart": {
         "heading": "Fra dit ur til dit pas.",

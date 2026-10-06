@@ -1055,3 +1055,124 @@ nav.tabbar {
     transform: translateY(-10px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   }
 }
+
+/* One-shot entrances (InViewOnce sets data-motion="armed" on [data-once]
+ * when JS runs and motion is allowed, then "run" the first time the block
+ * is in view). Without the attribute everything stands at rest, so no-JS
+ * and reduced motion need no extra rules. */
+
+/* Mad: the plates set themselves down Monday to Sunday, then the week's
+ * totals arrive (CountUp counts the digits). */
+[data-theme="nord"] .food-week > ol > li,
+[data-theme="nord"] .food-week__total {
+  transition: opacity 0.6s cubic-bezier(0.2, 0, 0.1, 1), transform 0.6s cubic-bezier(0.2, 0, 0.1, 1);
+}
+[data-theme="nord"] .food-week > ol > li { transition-delay: calc(var(--i, 0) * 90ms); }
+[data-theme="nord"] .food-week__total { transition-delay: 0.7s; }
+[data-theme="nord"] .food-week[data-motion="armed"] > ol > li {
+  opacity: 0;
+  transform: translateY(28px);
+}
+[data-theme="nord"] .food-week[data-motion="armed"] .food-week__total { opacity: 0; }
+
+/* Munk: each step of the flow lights up in turn, the signed answer
+ * settles, and the signature writes itself last (paths use pathLength=1). */
+[data-theme="nord"] .munk-flow ol > li {
+  transition: opacity 0.45s ease-out calc(0.2s + var(--i, 0) * 0.45s);
+}
+[data-theme="nord"] .munk-flow[data-motion="armed"] ol > li { opacity: 0.28; }
+[data-theme="nord"] .munk-flow .munk-final {
+  transition: opacity 0.6s ease-out 2s, transform 0.6s cubic-bezier(0.2, 0, 0.1, 1) 2s;
+}
+[data-theme="nord"] .munk-flow[data-motion="armed"] .munk-final {
+  opacity: 0;
+  transform: translateY(10px);
+}
+[data-theme="nord"] .munk-sig path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.7s cubic-bezier(0.6, 0, 0.3, 1) 2.5s;
+}
+[data-theme="nord"] .munk-sig path:nth-child(2) { transition-delay: 3.15s; transition-duration: 0.5s; }
+[data-theme="nord"] .munk-sig path:nth-child(3) { transition-delay: 3.6s; transition-duration: 0.35s; }
+[data-theme="nord"] .munk-flow[data-motion="armed"] .munk-sig path { stroke-dashoffset: 1; }
+
+/* App rack, pinned (AppRack): on wide, tall screens with view timelines
+ * and motion allowed, the swipe rack gives way to a still phone whose
+ * fifteen screens change with scroll. A named view timeline on the block
+ * drives each screen's opacity over its 1/n slice of the pin, and the
+ * day's parts light up over their runs. Everywhere else the swipe rack
+ * stands and the pinned block is not rendered. */
+[data-theme="nord"] [data-rack-pin] { display: none; }
+@supports (animation-timeline: view()) {
+  @media (min-width: 1024px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+    [data-theme="nord"] [data-rack-swipe] { display: none; }
+    [data-theme="nord"] [data-rack-pin] {
+      display: block;
+      height: calc(100svh + var(--n) * 24svh);
+      view-timeline-name: --rack;
+    }
+    [data-theme="nord"] .rack-pin__stage {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+    }
+    [data-theme="nord"] .rack-pin__screen,
+    [data-theme="nord"] .rack-pin__part {
+      animation: rack-slice linear both;
+      animation-timeline: --rack;
+      animation-range: contain calc(var(--i) / var(--n) * 100%) contain calc((var(--i) + 1) / var(--n) * 100%);
+    }
+    [data-theme="nord"] .rack-pin__part {
+      animation-name: rack-part;
+      animation-range: contain calc(var(--a) / var(--n) * 100%) contain calc(var(--b) / var(--n) * 100%);
+    }
+    [data-theme="nord"] .rack-pin__screen:first-child { animation-name: rack-slice-first; }
+    [data-theme="nord"] .rack-pin__screen:last-child { animation-name: rack-slice-last; }
+    [data-theme="nord"] .rack-pin__part:first-child { animation-name: rack-part-first; }
+    [data-theme="nord"] .rack-pin__part:last-child { animation-name: rack-part-last; }
+    /* A control inside a hidden screen (the form-check loop's pause)
+     * shows its screen while it has keyboard focus. */
+    [data-theme="nord"] .rack-pin__screen:focus-within {
+      animation: none;
+      opacity: 1;
+      z-index: 1;
+    }
+    [data-theme="nord"] .rack-pin__bar {
+      transform-origin: left center;
+      animation: rack-bar linear both;
+      animation-timeline: --rack;
+      animation-range: contain 0% contain 100%;
+    }
+  }
+}
+@keyframes rack-slice {
+  0% { opacity: 0; }
+  10%, 90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes rack-slice-first {
+  0%, 90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes rack-slice-last {
+  0% { opacity: 0; }
+  10%, 100% { opacity: 1; }
+}
+@keyframes rack-part {
+  0% { opacity: 0.3; }
+  5%, 95% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+@keyframes rack-part-first {
+  0%, 95% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+@keyframes rack-part-last {
+  0% { opacity: 0.3; }
+  5%, 100% { opacity: 1; }
+}
+@keyframes rack-bar {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
