@@ -898,9 +898,6 @@ nav.tabbar {
   width: clamp(260px, 24vw, 340px);
   flex: none;
 }
-[data-theme="nord"] [data-gallery="on"] [data-gallery-track] > [data-gallery-lead] {
-  width: clamp(440px, 42vw, 600px);
-}
 @keyframes train-gallery-x {
   from { transform: none; }
   to   { transform: translateX(calc(-1 * var(--gallery-len, 0px))); }
