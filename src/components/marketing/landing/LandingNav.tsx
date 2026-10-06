@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PUBLIC_LOGIN_HREF, PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
 import { Menu, X } from "lucide-react";
 import { ICON } from "@/components/ui/icon";
+import NavSpy from "./NavSpy";
 
 const SECTIONS = [
   { href: "#train", key: "train" },
@@ -13,12 +14,14 @@ const SECTIONS = [
   { href: "#munk", key: "munk" },
 ] as const;
 
-const LINK = "text-xs text-fg-dim no-underline transition-colors hover:text-fg";
+const LINK = "text-xs text-fg-dim no-underline transition-colors hover:text-fg aria-[current=location]:text-fg";
 
 /**
  * Kalk header (reference B `.hdr`). Six section links, login and one
  * access pill. From 1024 px everything sits on one line; below that the
  * section links live in a native `<details>` menu, so it works without JS.
+ * NavSpy marks the chapter being read; on the desktop row the mark is a
+ * 2 px ink line under the link.
  */
 export default function LandingNav() {
   const t = useTranslations("Marketing.landing.nav");
@@ -35,10 +38,11 @@ export default function LandingNav() {
         </Link>
 
         <nav className="flex items-center gap-4 lg:gap-7">
+          <NavSpy />
           <ul data-nav="desktop" className="hidden items-center gap-7 whitespace-nowrap lg:flex">
             {SECTIONS.map((s) => (
               <li key={s.href}>
-                <a href={s.href} className={LINK}>
+                <a href={s.href} className={`${LINK} relative after:absolute after:inset-x-0 after:-bottom-1.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-fg after:transition-transform after:duration-300 aria-[current=location]:after:scale-x-100 motion-reduce:after:transition-none`}>
                   {t(s.key)}
                 </a>
               </li>

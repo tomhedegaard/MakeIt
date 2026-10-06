@@ -898,9 +898,6 @@ nav.tabbar {
   width: clamp(260px, 24vw, 340px);
   flex: none;
 }
-[data-theme="nord"] [data-gallery="on"] [data-gallery-track] > [data-gallery-lead] {
-  width: clamp(440px, 42vw, 600px);
-}
 @keyframes train-gallery-x {
   from { transform: none; }
   to   { transform: translateX(calc(-1 * var(--gallery-len, 0px))); }
@@ -1175,4 +1172,80 @@ nav.tabbar {
 @keyframes rack-bar {
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
+}
+
+/* Tier plates (TierLadder): on arrival the plates slide onto the sleeve
+ * one after another, like loading a bar (InViewOnce). */
+[data-theme="nord"] .tier-bar [data-plate] {
+  transition: opacity 0.5s ease-out, transform 0.7s cubic-bezier(0.2, 0, 0.1, 1);
+  transition-delay: calc(0.1s + var(--i, 0) * 0.16s);
+}
+[data-theme="nord"] .tier-bar[data-motion="armed"] [data-plate] {
+  opacity: 0;
+  transform: translateX(64px);
+}
+
+/* Mad, the shopping list (ChapterFood): after the plates, the list
+ * gathers itself row by row and the basket bar fills (InViewOnce). */
+[data-theme="nord"] .food-shop [data-shop-row] {
+  transition: opacity 0.4s ease-out, transform 0.5s cubic-bezier(0.2, 0, 0.1, 1);
+  transition-delay: calc(0.3s + var(--i, 0) * 0.07s);
+}
+[data-theme="nord"] .food-shop [data-shop-bar] {
+  transition: transform 0.8s cubic-bezier(0.2, 0, 0.1, 1) 0.6s;
+}
+[data-theme="nord"] .food-shop[data-motion="armed"] [data-shop-row] {
+  opacity: 0;
+  transform: translateX(-14px);
+}
+[data-theme="nord"] .food-shop[data-motion="armed"] [data-shop-bar] { transform: scaleX(0); }
+
+/* Scroll-linked accents: Munk's wordmark slides home and his portrait
+ * rolls in beside it like a plate; every kg ruler draws itself across;
+ * the access heading rises out of its line. Resting state elsewhere. */
+[data-theme="nord"] .landing-rule { position: relative; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-theme="nord"] .munk-mark {
+      animation: munk-mark-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+    }
+    [data-theme="nord"] .munk-disc {
+      animation: munk-disc-roll linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+    }
+    [data-theme="nord"] .landing-rule::after {
+      content: "";
+      position: absolute;
+      inset: -1px 0 0;
+      background: var(--bg);
+      transform-origin: right center;
+      animation: rule-wipe linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 40%;
+    }
+    [data-theme="nord"] .access-rise {
+      animation: access-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 30% cover 40%;
+    }
+  }
+}
+@keyframes munk-mark-in {
+  from { transform: translateX(-8%); }
+  to   { transform: none; }
+}
+@keyframes munk-disc-roll {
+  from { transform: translateX(60%) rotate(160deg); }
+  to   { transform: none; }
+}
+@keyframes rule-wipe {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+@keyframes access-rise {
+  from { transform: translateY(100%); }
+  to   { transform: none; }
 }

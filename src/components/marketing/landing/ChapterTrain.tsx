@@ -3,7 +3,12 @@ import DemoLoop from "@/components/marketing/DemoLoop";
 import ExerciseTile from "./ExerciseTile";
 import GalleryRig from "./GalleryRig";
 
-/** The wall: one big moving demo, then stills from the real library. */
+/**
+ * The wall: one moving demo, then stills from the real library. The lead
+ * is only bigger in the static grid (a 2 × 2 cell); in the swipe row and
+ * the pinned gallery every tile has the same size and the lead is simply
+ * the one already playing (its dot is lit, like a tile under the mouse).
+ */
 const LEAD = "deadlift";
 const WALL = ["back-squat", "bench", "pull-up", "hip-thrust", "ohp", "row", "rdl", "front-squat"] as const;
 
@@ -43,8 +48,7 @@ export default function ChapterTrain() {
               className="-mx-4 mt-3 flex snap-x snap-mandatory scroll-px-4 gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:-mx-8 md:scroll-px-8 md:px-8 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-3 lg:overflow-visible lg:px-0"
             >
               <li
-                data-gallery-lead
-                className="flex w-[86vw] max-w-[520px] shrink-0 snap-start flex-col bg-bg text-fg lg:col-span-2 lg:row-span-2 lg:w-auto lg:max-w-none"
+                className="flex w-[64vw] max-w-[300px] shrink-0 snap-start flex-col bg-bg text-fg lg:col-span-2 lg:row-span-2 lg:w-auto lg:max-w-none"
               >
                 <DemoLoop
                   src={`/exercise-demos/${LEAD}.webm`}
@@ -52,8 +56,12 @@ export default function ChapterTrain() {
                   pauseLabel={s("pause")}
                   playLabel={s("play")}
                   className="aspect-[720/398] w-full"
+                  compact
                 />
-                <p className="font-display mt-auto px-4 pb-4 pt-2 text-[22px]">{t(`names.${LEAD}`)}</p>
+                <p className="mt-auto flex items-center justify-between gap-2 px-3 pb-3 pt-1 text-[14px]">
+                  {t(`names.${LEAD}`)}
+                  <span aria-hidden="true" className="size-2 rounded-full bg-signal" />
+                </p>
               </li>
               {WALL.map((slug) => (
                 <li key={slug} className="w-[64vw] max-w-[300px] shrink-0 snap-start lg:w-auto lg:max-w-none">

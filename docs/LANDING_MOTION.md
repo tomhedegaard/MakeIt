@@ -37,6 +37,11 @@ next one without pulling in an animation library. Companion to
 | Chart draws night by night | `HeartLive` | Same arm-then-play observers; the path draws via `pathLength=1` and the marker and big reading step with it. Any pointer or key hands control to the visitor |
 | Still phone, changing screens | `AppRack` (`[data-rack-pin]`) | CSS only: a named view timeline `--rack` on a tall block, each screen's opacity animated over its `1/n` slice with `animation-range: contain`. Shown only at 1024 px wide, 760 px tall, with view timelines and motion allowed; the swipe rack is the resting state everywhere else |
 | Signature writes itself | `LandingMunk` (`.munk-sig`) | Paths with `pathLength=1`, `stroke-dashoffset` 1 to 0 under `InViewOnce`, after the flow steps have lit up |
+| Plates load onto the bar | `TierLadder` (`.tier-bar`) | `InViewOnce`; plates slide in from the sleeve end with a `--i` stagger. The crew section clips x, so the armed plates never widen the page |
+| Shopping list gathers | `ChapterFood` (`.food-shop`) + `ShoppingScreen` (`data-shop-row`, `data-shop-bar`) | `InViewOnce`; rows slide in by running index, the basket bar fills. The attributes do nothing outside the food chapter |
+| Wordmark slides home, portrait rolls in | `LandingMunk` (`.munk-mark`, `.munk-disc`) | `animation-timeline: view()`. The section uses `overflow-clip`, not `overflow-hidden`: hidden makes a scroll container and the view timeline binds to it and never runs |
+| Chapter mark in the nav | `LandingNav` + `NavSpy` | IntersectionObserver on a centre line over `main section[id]` sets `aria-current="location"`; a 2 px ink line scales in under the link |
+| Rulers draw, access heading rises | every `.landing-rule`, `AccessPanel` (`.access-rise`) | View timeline: a `--bg` overlay on the ruler scales away, the heading translates up out of an `overflow-clip` line |
 
 ## Nat til morgen
 
@@ -51,7 +56,10 @@ report line (sleep) should still be in the dark, the decision in daylight.
 
 ## Scroll-scrubbed image sequence (asset A1)
 
-`ScrollSequence` is ready but not mounted until the frames exist.
+`ScrollSequence` is mounted in `MotorStory` behind `A1_SEQUENCE`
+(`src/lib/marketing/landing/a1.ts`), which is `null` until the frames
+exist. Setting it is the only code change; `a1.test.ts` fails if any
+frame or the poster is missing.
 
 1. Export 120 frames from the A1 take as WebP, 1600 px wide for desktop
    and 800 px for mobile, named `a1-squat-frame-001.webp` to
