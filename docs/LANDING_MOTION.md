@@ -42,7 +42,7 @@ next one without pulling in an animation library. Companion to
 | Wordmark slides home, portrait rolls in | `LandingMunk` (`.munk-mark`, `.munk-disc`) | `animation-timeline: view()`. The section uses `overflow-clip`, not `overflow-hidden`: hidden makes a scroll container and the view timeline binds to it and never runs |
 | Chapter mark in the nav | `LandingNav` + `NavSpy` | IntersectionObserver on a centre line over `main section[id]` sets `aria-current="location"`; a 2 px ink line scales in under the link |
 | Rulers draw, access heading rises | every `.landing-rule`, `AccessPanel` (`.access-rise`) | View timeline: a `--bg` overlay on the ruler scales away, the heading translates up out of an `overflow-clip` line |
-| Chosen watch beside the phone | `ChapterHeart` + `DeviceStage` + `HrvScreen sources` | `HeartLive` mirrors the device onto the section's `data-device`; CSS shows the matching slot and source name, slides the slot in and runs a sync dot to the phone. Photos sit behind `DEVICE_PHOTOS` (`src/lib/marketing/landing/devices.ts`), null per maker until written permission; a null slot shows the name |
+| Chosen watch's sync card | `ChapterHeart` + `DeviceStage` + `HrvScreen sources` | `HeartLive` mirrors the device onto the section's `data-device`; CSS shows the matching card and phone source, slides the card in and runs a sync dot to the phone. No product photos (makers' press images are editorial only). Devices not readable yet are flagged in `DEVICE_SOON` and say "coming" instead of a sync time |
 
 ## Nat til morgen
 

@@ -2,12 +2,13 @@ import { useTranslations } from "next-intl";
 import HrvScreen from "@/components/marketing/phone/screens/HrvScreen";
 import HeartLive from "./HeartLive";
 import DeviceStage from "./DeviceStage";
+import { DEVICE_SOON } from "@/lib/marketing/landing/devices";
 
 /**
  * Hjerte: from the watch to the session. A plain `data-theme="nat"`
  * block (dark on the light page, like the access band), the four
  * devices and fourteen nights as one interactive island (`HeartLive`),
- * and the app's HRV screen beside the chosen watch (`DeviceStage`). The
+ * and the app's HRV screen beside the chosen watch's sync card (`DeviceStage`). The
  * section's `data-device` (server default WHOOP, then HeartLive) decides
  * which device the stage and the phone's source field show. The numbers
  * are the same night the motor story reads.
@@ -33,6 +34,7 @@ export default function ChapterHeart() {
                 devices,
                 appleNote: t("appleNote"),
                 syncedFrom: t.raw("syncedFrom") as string,
+                soon: DEVICE_SOON,
                 unit: hrv("unit"),
                 chartLabel: t("chartLabel"),
                 night: t.raw("night") as string,
@@ -57,8 +59,8 @@ export default function ChapterHeart() {
           </div>
         </div>
         <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-end sm:justify-center lg:sticky lg:top-28">
-          <DeviceStage devices={devices} />
-          <HrvScreen width={280} sources={devices} />
+          <DeviceStage devices={devices} reads={t("reads")} syncedAt={t("syncedAt")} soon={t("soon")} />
+          <HrvScreen width={280} sources={devices.map((d, i) => (DEVICE_SOON[i] ? t("soonShort") : d))} />
         </div>
       </div>
     </section>
