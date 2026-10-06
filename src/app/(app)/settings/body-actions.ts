@@ -59,12 +59,6 @@ export async function saveBodyAction(input: BodyInput): Promise<{ ok: true } | {
     if (!check.ok) return { ok: false, error: check.reason };
   }
 
-  const { data: before } = await supabase
-    .from("member_body")
-    .select("pejlemaerke_kg")
-    .eq("member_id", user.id)
-    .maybeSingle();
-
   const { error } = await supabase.from("member_body").upsert({
     member_id: user.id,
     height_cm: input.heightCm,
@@ -77,11 +71,7 @@ export async function saveBodyAction(input: BodyInput): Promise<{ ok: true } | {
   });
   if (error) return { ok: false, error: "unknown" };
 
-  const previous = before?.pejlemaerke_kg == null ? null : Number(before.pejlemaerke_kg);
-  if (pejlemaerkeKg !== null && pejlemaerkeKg !== previous) {
-    await supabase.from("pejlemaerke_changes").insert({ member_id: user.id, kg: pejlemaerkeKg });
-  }
-
+  // pejlemaerke_changes is written by a trigger (0070), so it cannot be skipped.
   revalidatePath("/settings");
   revalidatePath("/dashboard");
   revalidatePath("/nutrition");

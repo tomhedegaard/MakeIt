@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   capWeeklyChangeKg,
+  copenhagenDate,
   checkPejlemaerke,
   minPejlemaerkeKg,
   restingKcal,
@@ -56,5 +57,24 @@ describe("weight card", () => {
     expect(weightDirection([96, 96.2])).toBe("stable");
     expect(weightDirection([96, 96.4])).toBe("up");
     expect(weightDirection([96])).toBeNull();
+  });
+});
+
+describe("dates and same-day weigh-ins", () => {
+  it("dates a weigh-in in Copenhagen time, not UTC", () => {
+    expect(copenhagenDate("2026-10-05T22:30:00Z")).toBe("2026-10-06");
+    expect(copenhagenDate("2026-10-06T10:00:00Z")).toBe("2026-10-06");
+  });
+
+  it("uses the latest weigh-in of a day (input newest first)", () => {
+    const avg = sevenDayAverages(
+      [
+        { date: "2026-10-06", kg: 95 },
+        { date: "2026-10-06", kg: 97 },
+      ],
+      "2026-10-06",
+      1,
+    );
+    expect(avg).toEqual([95]);
   });
 });

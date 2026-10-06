@@ -525,7 +525,11 @@ export default function OffPlanLogButton({
             {step === "manual" ? (
               <form onSubmit={saveManual} className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
-                  <NumberField name="kcal" label={t("kcal")} unit={t("kcalUnit")} max={10000} min={1} placeholder="650" />
+                  {hideNumbers ? (
+                    <input type="hidden" name="kcalHidden" value="1" />
+                  ) : (
+                    <NumberField name="kcal" label={t("kcal")} unit={t("kcalUnit")} max={10000} min={1} placeholder="650" />
+                  )}
                   <NumberField name="proteinG" label={t("protein")} unit={t("gramUnit")} max={500} placeholder="35" />
                 </div>
                 <label className="block space-y-1.5">

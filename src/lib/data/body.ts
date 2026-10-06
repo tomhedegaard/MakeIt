@@ -9,7 +9,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import { copenhagenIsoDate } from "@/lib/data/nutrition-checkin";
 import { calorieFloor } from "@/lib/nutrition/calorie-floor";
-import { restingKcal, type Sex } from "@/lib/health/body-rules";
+import { copenhagenDate, restingKcal, type Sex } from "@/lib/health/body-rules";
 import { foodSignals, type FoodSignalInput, type FoodSignalKey } from "@/lib/health/food-signals";
 
 export type MemberBody = {
@@ -88,6 +88,28 @@ export async function getMemberCalorieFloor(memberId: string): Promise<number> {
  * Early signs                                                       *
  * ---------------------------------------------------------------- */
 
+type LogRow = {
+  member_id: string;
+  logged_for_date: string;
+  off_plan: boolean;
+  meal_id: string | null;
+  kcal: number | null;
+  estimate_edited: boolean | null;
+  estimate_kcal_low: number | null;
+  nutrition_meals: { est_kcal: number | null } | { est_kcal: number | null }[] | null;
+};
+
+/** PostgREST caps a response at 1.000 rows; read every page. */
+async function allRows<T>(page: (from: number, to: number) => PromiseLike<{ data: unknown }>): Promise<T[]> {
+  const out: T[] = [];
+  for (let from = 0; ; from += 1000) {
+    const { data } = await page(from, from + 999);
+    const rows = (data as T[] | null) ?? [];
+    out.push(...rows);
+    if (rows.length < 1000) return out;
+  }
+}
+
 function isoDaysAgo(today: string, n: number): string {
   return new Date(Date.parse(`${today}T00:00:00Z`) - n * 86_400_000).toISOString().slice(0, 10);
 }
@@ -95,8 +117,8 @@ function isoDaysAgo(today: string, n: number): string {
 /**
  * Signals for one member (their own mind page) or every member a coach
  * can read (the inbox). RLS decides which rows come back.
- * ponytail: reads every member's last 16 days in one pass; page per
- * member if the member count grows past a few thousand.
+ * ponytail: reads every member's last 16 days, paged; move the day sums
+ * into SQL if the member count grows past a few thousand.
  */
 export async function loadFoodSignals(memberId?: string): Promise<Map<string, FoodSignalKey[]>> {
   const out = new Map<string, FoodSignalKey[]>();
@@ -105,32 +127,45 @@ export async function loadFoodSignals(memberId?: string): Promise<Map<string, Fo
   if (!supabase) return out;
 
   const today = copenhagenIsoDate();
-  let logsQ = supabase
-    .from("nutrition_logs")
-    .select("member_id, logged_for_date, off_plan, kcal, estimate_edited, estimate_kcal_low, nutrition_meals(est_kcal)")
-    .eq("status", "eaten")
-    .gte("logged_for_date", isoDaysAgo(today, 16));
-  let pejleQ = supabase
-    .from("pejlemaerke_changes")
-    .select("member_id, kg, created_at")
-    .gte("created_at", isoDaysAgo(today, 60))
-    .order("created_at", { ascending: true });
-  let actionsQ = supabase
-    .from("member_action_logs")
-    .select("member_id, created_at")
-    .eq("action", "weight_log")
-    .gte("created_at", isoDaysAgo(today, 8));
-  let bodiesQ = supabase.from("member_body").select("member_id, sex");
-  if (memberId) {
-    logsQ = logsQ.eq("member_id", memberId);
-    pejleQ = pejleQ.eq("member_id", memberId);
-    actionsQ = actionsQ.eq("member_id", memberId);
-    bodiesQ = bodiesQ.eq("member_id", memberId);
-  }
-  const [logs, pejle, actions, bodies] = await Promise.all([logsQ, pejleQ, actionsQ, bodiesQ]);
+  // One member (their own mind page) or every member RLS lets a coach read.
+  const scope = memberId ? `member_id.eq.${memberId}` : "member_id.not.is.null";
+  const [logs, pejle, actions, bodies] = await Promise.all([
+    allRows<LogRow>((from, to) =>
+      supabase
+        .from("nutrition_logs")
+        .select("member_id, logged_for_date, off_plan, meal_id, kcal, estimate_edited, estimate_kcal_low, nutrition_meals(est_kcal)")
+        .eq("status", "eaten")
+        .gte("logged_for_date", isoDaysAgo(today, 16))
+        .or(scope)
+        .order("id")
+        .range(from, to),
+    ),
+    allRows<{ member_id: string; kg: number | string; created_at: string }>((from, to) =>
+      supabase
+        .from("pejlemaerke_changes")
+        .select("member_id, kg, created_at")
+        .gte("created_at", isoDaysAgo(today, 60))
+        .or(scope)
+        .order("created_at", { ascending: true })
+        .range(from, to),
+    ),
+    allRows<{ member_id: string; created_at: string }>((from, to) =>
+      supabase
+        .from("member_action_logs")
+        .select("member_id, created_at")
+        .eq("action", "weight_log")
+        .gte("created_at", isoDaysAgo(today, 8))
+        .or(scope)
+        .order("created_at")
+        .range(from, to),
+    ),
+    allRows<{ member_id: string; sex: Sex | null }>((from, to) =>
+      supabase.from("member_body").select("member_id, sex").or(scope).order("member_id").range(from, to),
+    ),
+  ]);
 
   const inputs = new Map<string, FoodSignalInput>();
-  const sexOf = new Map((bodies.data ?? []).map((b) => [b.member_id as string, b.sex as Sex | null]));
+  const sexOf = new Map(bodies.map((b) => [b.member_id, b.sex]));
   const input = (id: string): FoodSignalInput => {
     let i = inputs.get(id);
     if (!i) {
@@ -149,34 +184,33 @@ export async function loadFoodSignals(memberId?: string): Promise<Map<string, Fo
   };
 
   const dayTotals = new Map<string, { kcal: number; logs: number }>();
-  for (const row of logs.data ?? []) {
-    const id = row.member_id as string;
-    const date = row.logged_for_date as string;
-    const meal = row.nutrition_meals as { est_kcal: number | null } | { est_kcal: number | null }[] | null;
-    const planned = Array.isArray(meal) ? meal[0]?.est_kcal : meal?.est_kcal;
-    const kcal = row.off_plan ? ((row.kcal as number | null) ?? 0) : (planned ?? 0);
+  // A day with a meal whose kcal is unknown (hidden-numbers manual log, or a
+  // logged row without its meal) cannot be judged against the floor.
+  const unknownDays = new Set<string>();
+  for (const row of logs) {
+    const id = row.member_id;
+    const date = row.logged_for_date;
+    const meal = Array.isArray(row.nutrition_meals) ? row.nutrition_meals[0] : row.nutrition_meals;
+    const kcal = row.off_plan ? row.kcal : row.meal_id ? (meal?.est_kcal ?? null) : null;
     const key = `${id}|${date}`;
+    if (kcal === null) unknownDays.add(key);
     const t = dayTotals.get(key) ?? { kcal: 0, logs: 0 };
-    dayTotals.set(key, { kcal: t.kcal + kcal, logs: t.logs + 1 });
-    if (row.off_plan && row.estimate_kcal_low !== null) {
-      input(id).estimates.push({
-        date,
-        kcal: (row.kcal as number | null) ?? 0,
-        low: row.estimate_kcal_low as number,
-        edited: !!row.estimate_edited,
-      });
+    dayTotals.set(key, { kcal: t.kcal + (kcal ?? 0), logs: t.logs + 1 });
+    if (row.off_plan && row.kcal !== null && row.estimate_kcal_low !== null) {
+      input(id).estimates.push({ date, kcal: row.kcal, low: row.estimate_kcal_low, edited: !!row.estimate_edited });
     }
   }
   for (const [key, t] of dayTotals) {
+    if (unknownDays.has(key)) continue;
     const [id, date] = key.split("|");
     input(id).days.push({ date, ...t });
   }
-  for (const row of pejle.data ?? []) {
-    input(row.member_id as string).pejlemaerke.push({ kg: Number(row.kg), at: row.created_at as string });
+  for (const row of pejle) {
+    input(row.member_id).pejlemaerke.push({ kg: Number(row.kg), at: row.created_at });
   }
   const weighIns = new Map<string, number>();
-  for (const row of actions.data ?? []) {
-    const key = `${row.member_id}|${(row.created_at as string).slice(0, 10)}`;
+  for (const row of actions) {
+    const key = `${row.member_id}|${copenhagenDate(row.created_at)}`;
     weighIns.set(key, (weighIns.get(key) ?? 0) + 1);
   }
   for (const [key, count] of weighIns) {

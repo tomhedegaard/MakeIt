@@ -48,6 +48,11 @@ export function capWeeklyChangeKg(targetKgPerWeek: number, weightKg: number | nu
 
 export type WeightDirection = "down" | "up" | "stable";
 
+/** The Copenhagen calendar date (YYYY-MM-DD) of a timestamp. */
+export function copenhagenDate(iso: string): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Copenhagen" }).format(new Date(iso));
+}
+
 /**
  * 7-day averages for the last `days` days, oldest first. A day without a
  * weigh-in carries the average of the readings in its window; days before
@@ -59,8 +64,9 @@ export function sevenDayAverages(
   today: string,
   days = 14,
 ): number[] {
+  // Newest first (as getRecentWeights returns): the first reading of a day is its latest.
   const byDate = new Map<string, number>();
-  for (const w of weights) byDate.set(w.date, w.kg);
+  for (const w of weights) if (!byDate.has(w.date)) byDate.set(w.date, w.kg);
   const out: number[] = [];
   const end = Date.parse(`${today}T00:00:00Z`);
   for (let d = days - 1; d >= 0; d--) {

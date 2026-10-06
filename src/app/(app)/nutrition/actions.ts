@@ -216,7 +216,9 @@ export async function generatePlanAction(): Promise<void> {
         meals: scaleMealsToDailyTargets(aiShape.meals, targets),
       });
     } else {
-      await generatePlan(member.id, weekStart, profile, {
+      // The mock plans from the profile target; lift it to the member's own floor first.
+      const floored = { ...profile, dailyKcalTarget: resolveDailyTargets(profile, kcalFloor).kcal };
+      await generatePlan(member.id, weekStart, floored, {
         fallbackFromClaude: true,
       });
     }
@@ -504,9 +506,12 @@ export async function logOffPlanAction(formData: FormData): Promise<LogResult> {
   const kcal = Number.parseInt(String(formData.get("kcal") ?? ""), 10);
   const proteinG = Number.parseInt(String(formData.get("proteinG") ?? ""), 10);
   const label = String(formData.get("label") ?? "").trim().slice(0, 200) || null;
+  // "Vis ikke kalorier og vægt" (spec §S): the member logs without a kcal
+  // number; the meal is stored with kcal unknown (null).
+  const kcalHidden = formData.get("kcalHidden") === "1";
 
   // Sanity ranges mirror the migration 0033 CHECK constraints.
-  const kcalOk = Number.isFinite(kcal) && kcal > 0 && kcal <= 10000;
+  const kcalOk = kcalHidden || (Number.isFinite(kcal) && kcal > 0 && kcal <= 10000);
   const proteinOk = Number.isFinite(proteinG) && proteinG >= 0 && proteinG <= 500;
   if (!kcalOk || !proteinOk) return { streakMilestone: null };
 
@@ -526,7 +531,7 @@ export async function logOffPlanAction(formData: FormData): Promise<LogResult> {
     loggedForSlot: null,
     status: "eaten",
     offPlan: true,
-    kcal,
+    kcal: kcalHidden ? null : kcal,
     proteinG,
     photoPath: null,
     rating: null,
