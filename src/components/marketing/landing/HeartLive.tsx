@@ -57,6 +57,13 @@ export default function HeartLive({ labels }: { labels: HeartLiveLabels }) {
   const timer = useRef(0);
   const taken = useRef(false);
 
+  // Mirror the chosen device onto the section, so the server-rendered
+  // device stage and the phone's source field follow it in CSS.
+  useEffect(() => {
+    const section = svgRef.current?.closest<HTMLElement>("[data-device]");
+    if (section) section.dataset.device = String(device);
+  }, [device]);
+
   useEffect(() => {
     const svg = svgRef.current;
     if (!svg || typeof IntersectionObserver === "undefined" || typeof window.matchMedia !== "function") return;

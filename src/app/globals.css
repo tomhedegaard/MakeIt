@@ -1249,3 +1249,64 @@ nav.tabbar {
   from { transform: translateY(100%); }
   to   { transform: none; }
 }
+
+/* HRV devices (DeviceStage, HrvScreen sources): only the device matching
+ * the section's data-device is shown. The stage slides it in and a sync
+ * dot runs across to the phone once per choice. */
+[data-theme="nord"] [data-device] .device-only { display: none; }
+[data-theme="nord"] [data-device="0"] .device-only[data-device-i="0"],
+[data-theme="nord"] [data-device="1"] .device-only[data-device-i="1"],
+[data-theme="nord"] [data-device="2"] .device-only[data-device-i="2"],
+[data-theme="nord"] [data-device="3"] .device-only[data-device-i="3"] { display: revert; }
+[data-theme="nord"] .device-stage .device-slot.device-only { display: grid; visibility: hidden; opacity: 0; }
+[data-theme="nord"] [data-device="0"] .device-slot[data-device-i="0"],
+[data-theme="nord"] [data-device="1"] .device-slot[data-device-i="1"],
+[data-theme="nord"] [data-device="2"] .device-slot[data-device-i="2"],
+[data-theme="nord"] [data-device="3"] .device-slot[data-device-i="3"] { visibility: visible; opacity: 1; }
+[data-theme="nord"] .device-sync { display: none; }
+@media (min-width: 640px) {
+  [data-theme="nord"] .device-sync {
+    display: block;
+    position: absolute;
+    left: 100%;
+    bottom: 22%;
+    width: 2rem; /* the gap to the phone */
+    height: 1px;
+    background: var(--line-bright);
+  }
+  [data-theme="nord"] .device-sync::after {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: 0;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--domain);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme="nord"] [data-device="0"] .device-slot[data-device-i="0"],
+  [data-theme="nord"] [data-device="1"] .device-slot[data-device-i="1"],
+  [data-theme="nord"] [data-device="2"] .device-slot[data-device-i="2"],
+  [data-theme="nord"] [data-device="3"] .device-slot[data-device-i="3"] {
+    animation: device-in 0.5s cubic-bezier(0.2, 0, 0.1, 1) both;
+  }
+  [data-theme="nord"] [data-device="0"] .device-slot[data-device-i="0"] .device-sync::after,
+  [data-theme="nord"] [data-device="1"] .device-slot[data-device-i="1"] .device-sync::after,
+  [data-theme="nord"] [data-device="2"] .device-slot[data-device-i="2"] .device-sync::after,
+  [data-theme="nord"] [data-device="3"] .device-slot[data-device-i="3"] .device-sync::after {
+    animation: device-sync 0.9s ease-in-out 0.35s both;
+  }
+}
+@keyframes device-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes device-sync {
+  0%   { opacity: 0; transform: translateX(0); }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(calc(2rem - 7px)); }
+}

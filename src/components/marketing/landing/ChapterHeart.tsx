@@ -1,12 +1,16 @@
 import { useTranslations } from "next-intl";
 import HrvScreen from "@/components/marketing/phone/screens/HrvScreen";
 import HeartLive from "./HeartLive";
+import DeviceStage from "./DeviceStage";
 
 /**
  * Hjerte: from the watch to the session. A plain `data-theme="nat"`
  * block (dark on the light page, like the access band), the four
  * devices and fourteen nights as one interactive island (`HeartLive`),
- * and the app's HRV screen. The numbers are the same night the motor story reads.
+ * and the app's HRV screen beside the chosen watch (`DeviceStage`). The
+ * section's `data-device` (server default WHOOP, then HeartLive) decides
+ * which device the stage and the phone's source field show. The numbers
+ * are the same night the motor story reads.
  */
 export default function ChapterHeart() {
   const t = useTranslations("Marketing.landing.chapters.heart");
@@ -14,7 +18,7 @@ export default function ChapterHeart() {
   const devices = t.raw("devices") as string[];
 
   return (
-    <section id="hrv" aria-labelledby="hrv-heading" data-theme="nat" data-domain="heart" className="scroll-mt-[68px] bg-bg text-fg">
+    <section id="hrv" aria-labelledby="hrv-heading" data-theme="nat" data-domain="heart" data-device="0" className="scroll-mt-[68px] bg-bg text-fg">
       <div className="mx-auto grid max-w-[1360px] gap-14 px-4 py-[clamp(72px,9vw,140px)] md:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-24">
         <div>
           <h2 id="hrv-heading" className="font-display max-w-[9em] text-[clamp(48px,7vw,112px)] leading-[0.9]!">
@@ -52,8 +56,9 @@ export default function ChapterHeart() {
             </a>
           </div>
         </div>
-        <div className="flex justify-center lg:sticky lg:top-28">
-          <HrvScreen width={280} />
+        <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-end sm:justify-center lg:sticky lg:top-28">
+          <DeviceStage devices={devices} />
+          <HrvScreen width={280} sources={devices} />
         </div>
       </div>
     </section>
