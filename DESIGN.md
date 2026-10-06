@@ -167,7 +167,7 @@ Kilde: den shippede kode (`src/app/globals.css`, `src/components/ui/*`, `src/com
 
 Nordisk minimalisme, der læner sig op ad webshoppen: hvid flade, én skrift i sentence case, tynde linjer, data og produkt på hvid. Appen har intet eget udtryk; den genbruger shoppens token-navne og skrift. Det premium-agtige kommer fra præcis copy, ærlige tal og store tal, ikke fra effekter.
 
-Mørkt findes præcis to steder: live-passet (`/session/[id]`) og coach-konsollen (`/coach`). Alt andet, inklusive login, onboarding og mails, er Nord lys. Farve er retning, ikke dekoration: fire domænefarver fortæller, hvilken verden du er i, og må aldrig betyde "klik her".
+Mørkt findes præcis to steder: live-passet (`/session/[id]`) og coach-konsollen (`/coach`). Alt andet, inklusive login, onboarding og mails, er Nord lys. Den offentlige landingsside har en tilladt undtagelse for afgrænsede mørke blokke (se Temaer). Farve er retning, ikke dekoration: fire domænefarver fortæller, hvilken verden du er i, og må aldrig betyde "klik her".
 
 **Key Characteristics:**
 - Radius 0 overalt; kun cirkler (avatar, dots, skyderknop) er runde.
@@ -208,6 +208,10 @@ En monokrom blæk-og-papir-base med én brand-accent (mos) og fire domænefarver
 ### Temaer
 - **Nord lys** ligger på `:root` og er standard.
 - **Nord nat** (`nat-*`-nøglerne) aktiveres kun med `<ThemeScope theme="nat">` på layout-niveau i `/session/[id]` og `/coach`. Nat-blokken løftes til `<html>` via `:has()`, så portalerede sheets og cookie-bar følger med. En nat-scope midt på en lys side gør hele siden mørk; brug den aldrig der.
+- **Tilladt undtagelse: mørke blokke på landingssiden** (beslutning 2026-10-06). Den offentlige landing (`components/marketing/landing/`) må have afgrænsede mørke sektioner, når mørket fortæller noget om indholdet. Tre er godkendt:
+    - **Adgangspanelet** (`AccessPanel`) og **HRV-kapitlet** (`ChapterHeart`) som lokale `data-theme="nat"`-blokke, aldrig `ThemeScope` og aldrig `.theme-root`.
+    - **Nat til morgen** i motor-sektionen (`MotorStory`, `data-dawn`): sektionen åbner i nat og bliver Nord lys før beslutningen, drevet af en CSS view-timeline der blander tokens fra nat til lys. Uden view-timelines eller med `prefers-reduced-motion: reduce` står den lys.
+    - Nye mørke blokke på landingen kræver samme begrundelse og en linje her. Undtagelsen gælder ikke medlems-, coach-, login- eller onboardingflader.
 
 ### Named Rules
 **The Mos Is Not Paint Rule.** Mos er aldrig knapfyld og aldrig en stor flade. Primærknappen er blæk.
@@ -331,6 +335,7 @@ Komponentklasserne i `globals.css` (`.btn*`, `.surface*`, `.hairline*`, `.eyebro
 ### Bevægelse
 - 200 ms ease-out på tilstandsskift (knapper, `.lift`, progress). Sheets glider ind på 320 ms og scrim fader på 220 ms.
 - `prefers-reduced-motion: reduce` slukker pulsdots, `animate-pulse`, `.lift` og landingens tegnede streger. Nye animationer skal have en reduceret variant.
+- Landingen må bruge scroll-drevet bevægelse (hero-sekvens, pinned øvelsesgalleri, stablede kort, nat til morgen, magnetiske knapper). Byggeklodser og regler står i `docs/LANDING_MOTION.md`: hvilestanden læses uden JS, kun `transform`, `opacity` og farvetokens animeres, og ingen animationsbiblioteker.
 - Ingen konfetti.
 
 ## Do's and Don'ts
@@ -356,7 +361,7 @@ Komponentklasserne i `globals.css` (`.btn*`, `.surface*`, `.hairline*`, `.eyebro
 - **Don't** brug en-dash eller tankestreg i prosa; en-dash er kun til talintervaller.
 - **Don't** gentag en kicker eller lad den gentage titlen.
 - **Don't** brug emoji som UI eller håndtegnede SVG-ikoner.
-- **Don't** sæt `ThemeScope theme="nat"` andre steder end `/session/[id]` og `/coach`.
+- **Don't** sæt `ThemeScope theme="nat"` andre steder end `/session/[id]` og `/coach`. Landingens mørke blokke er lokale (`data-theme="nat"` eller `data-dawn`), se den tilladte undtagelse under Temaer.
 
 ## Gates
 
