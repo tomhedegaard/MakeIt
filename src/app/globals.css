@@ -829,6 +829,58 @@ nav.tabbar {
   to   { opacity: 1; transform: none; }
 }
 
+/* Nat til morgen (MotorStory): the engine section opens in the dark the
+ * night is read in and brightens to Nord as the visitor scrolls down to
+ * the decision. A view timeline drives one registered number, --dawn,
+ * and every token the section's children use is mixed from it, so the
+ * phones, lines and copy all follow without a class of their own. No JS
+ * and no scroll listener. Only where view timelines exist and motion is
+ * allowed; otherwise the section stays light (the default, --dawn: 1).
+ * The literals are the Nord and Nord nat token values above. */
+@property --dawn {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+@keyframes landing-dawn {
+  from { --dawn: 0; }
+  to   { --dawn: 1; }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-theme="nord"] [data-dawn] {
+      animation: landing-dawn linear both;
+      animation-timeline: view();
+      animation-range: cover 50% cover 55%;
+      --dawn-mix: calc(var(--dawn) * 100%);
+      /* Ink flips in the middle of the ground's change, so text never
+       * rests as grey on grey. */
+      --dawn-ink: calc(clamp(0, (var(--dawn) - 0.42) * 6.25, 1) * 100%);
+      color-scheme: light;
+      --bg:          color-mix(in oklab, #FFFFFF var(--dawn-mix), #111111);
+      --bg-2:        color-mix(in oklab, #F2F2F0 var(--dawn-mix), #1A1A19);
+      --bg-3:        color-mix(in oklab, #E9E9E6 var(--dawn-mix), #232322);
+      --bg-elev:     color-mix(in oklab, #FFFFFF var(--dawn-mix), #1A1A19);
+      --fg:          color-mix(in oklab, #111111 var(--dawn-ink), #FFFFFF);
+      --fg-body:     color-mix(in oklab, #333333 var(--dawn-ink), #E6E6E2);
+      --fg-dim:      color-mix(in oklab, #5E5E59 var(--dawn-ink), #B9B9B4);
+      --fg-faint:    color-mix(in oklab, #696964 var(--dawn-ink), #8F8F8A);
+      --line:        color-mix(in oklab, #E1E1DE var(--dawn-mix), rgba(255, 255, 255, 0.12));
+      --line-strong: color-mix(in oklab, #CFCFCA var(--dawn-mix), rgba(255, 255, 255, 0.24));
+      --line-bright: color-mix(in oklab, #B9B9B4 var(--dawn-mix), rgba(255, 255, 255, 0.40));
+      --steel:       color-mix(in oklab, #F2F2F0 var(--dawn-mix), #232322);
+      --signal:      color-mix(in oklab, #2E4A3B var(--dawn-ink), #FFFFFF);
+      --signal-ink:  color-mix(in oklab, #2E4A3B var(--dawn-ink), #FFFFFF);
+      --heart:       color-mix(in oklab, #BE123C var(--dawn-ink), #F2545B);
+      --food:        color-mix(in oklab, #116A35 var(--dawn-ink), #45C487);
+      --body:        color-mix(in oklab, #A8380B var(--dawn-ink), #FF9C41);
+      --mind:        color-mix(in oklab, #1D4ED8 var(--dawn-ink), #5B9DF5);
+      background: var(--bg);
+      color: var(--fg);
+    }
+  }
+}
+
 /* Sticky motor rig: scale the phone down on short viewports. */
 [data-theme="nord"] [data-motor-story] { --rig-s: 1; }
 @media (max-height: 760px) {
