@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import type { TierKey } from "@/lib/marketing/tiers";
 import { Check } from "lucide-react";
 import { ICON } from "@/components/ui/icon";
+import Magnetic from "./Magnetic";
 
 export type LadderTier = {
   key: TierKey;
@@ -65,6 +66,7 @@ export default function TierLadder({
   perksHeading,
   ctaHref,
   ctaNote,
+  after,
 }: {
   /** The section heading, left of the plates on wide screens. */
   head: ReactNode;
@@ -74,6 +76,13 @@ export default function TierLadder({
   perksHeading: string;
   ctaHref: string;
   ctaNote: string;
+  /**
+   * Cards that follow the panel in the same stack (globals.css
+   * `[data-stack]`): on wide screens the panel holds under the nav and
+   * these slide up over it. Each carries `data-stack-card` and its place
+   * as `data-stack-i`; the panel is 0.
+   */
+  after?: ReactNode;
 }) {
   const id = useId();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -162,51 +171,58 @@ export default function TierLadder({
         </div>
       </div>
 
-      <div
-        role="tabpanel"
-        id={`${id}-panel`}
-        aria-labelledby={`${id}-tab-${tier.key}`}
-        data-tier-panel={tier.key}
-        className={cn(
-          "mt-[clamp(48px,6vw,80px)] grid gap-6 border p-[clamp(20px,2.6vw,32px)] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
-          legendPanel ? "border-fg bg-fg text-bg" : "border-line bg-bg-2",
-        )}
-      >
-        <div className="flex flex-col">
-          <p className="text-[12px] opacity-70">{tier.floor}</p>
-          <p className="font-display mt-2 text-[clamp(44px,5vw,72px)] leading-[0.85]!">{tier.name}</p>
-          <div className="mt-auto pt-6">
-            <Link
-              href={ctaHref}
-              className={cn(
-                "btn h-12! px-6!",
-                legendPanel
-                  ? "border-bg! bg-bg! text-fg! hover:bg-transparent! hover:text-bg!"
-                  : "btn-primary",
-              )}
-            >
-              {tier.cta} <span aria-hidden="true">→</span>
-            </Link>
-            <p className="mt-3 max-w-[34ch] text-[13px] opacity-70">{ctaNote}</p>
+      <div data-stack className="mt-[clamp(48px,6vw,80px)] grid gap-[clamp(48px,6vw,80px)]">
+        <div
+          role="tabpanel"
+          id={`${id}-panel`}
+          aria-labelledby={`${id}-tab-${tier.key}`}
+          data-tier-panel={tier.key}
+          data-stack-card
+          data-stack-i="0"
+          className={cn(
+            "grid gap-6 border p-[clamp(20px,2.6vw,32px)] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
+            legendPanel ? "border-fg bg-fg text-bg" : "border-line bg-bg-2",
+          )}
+        >
+          <div className="flex flex-col">
+            <p className="text-[12px] opacity-70">{tier.floor}</p>
+            <p className="font-display mt-2 text-[clamp(44px,5vw,72px)] leading-[0.85]!">{tier.name}</p>
+            <div className="mt-auto pt-6">
+              <Magnetic>
+                <Link
+                  href={ctaHref}
+                  className={cn(
+                    "btn h-12! px-6!",
+                    legendPanel
+                      ? "border-bg! bg-bg! text-fg! hover:bg-transparent! hover:text-bg!"
+                      : "btn-primary",
+                  )}
+                >
+                  {tier.cta} <span aria-hidden="true">→</span>
+                </Link>
+              </Magnetic>
+              <p className="mt-3 max-w-[34ch] text-[13px] opacity-70">{ctaNote}</p>
+            </div>
+          </div>
+          <div>
+            <p className="text-[12px] opacity-70">{perksHeading}</p>
+            <ul className="mt-2.5 list-none p-0">
+              {tier.perks.map((perk) => (
+                <li
+                  key={perk}
+                  className={cn(
+                    "flex items-center gap-3 border-b py-[11px] text-base last:border-b-0",
+                    legendPanel ? "border-bg/15" : "border-line",
+                  )}
+                >
+                  <Check {...ICON} className={cn("size-3 flex-none", legendPanel ? "text-bg" : "text-signal")} />
+                  {perk}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-        <div>
-          <p className="text-[12px] opacity-70">{perksHeading}</p>
-          <ul className="mt-2.5 list-none p-0">
-            {tier.perks.map((perk) => (
-              <li
-                key={perk}
-                className={cn(
-                  "flex items-center gap-3 border-b py-[11px] text-base last:border-b-0",
-                  legendPanel ? "border-bg/15" : "border-line",
-                )}
-              >
-                <Check {...ICON} className={cn("size-3 flex-none", legendPanel ? "text-bg" : "text-signal")} />
-                {perk}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {after}
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
@@ -8,8 +8,12 @@ import HrvScreen from "@/components/marketing/phone/screens/HrvScreen";
 import MindScreen from "@/components/marketing/phone/screens/MindScreen";
 import { cn } from "@/lib/utils";
 import TiltDoor from "./TiltDoor";
+import Magnetic from "./Magnetic";
 
 const DOOR_PHONE = 200;
+
+/** Position in the load sequence (globals.css `[data-hero-rise]`): 0 rises first. */
+const rise = (i: number) => ({ "--rise": i }) as CSSProperties;
 
 /**
  * The four systems as four doors, each on its domain tint with the
@@ -28,6 +32,11 @@ const DOORS: { key: "train" | "food" | "heart" | "mind"; href: string; field: st
  * landing page may put the domain colours on whole surfaces as tints,
  * with the full colour in type (owner decision 2026-10-05); the app keeps
  * the ten percent rule.
+ *
+ * On load the hero rises in order: heading, sentence, call to action,
+ * then the doors one by one. Pure CSS (`[data-hero-rise]` in
+ * globals.css) from a resting state that already reads, so there is
+ * nothing to wait for without JS and nothing at all with reduced motion.
  */
 export default function LandingHero() {
   const t = useTranslations("Marketing.landing.hero");
@@ -39,16 +48,22 @@ export default function LandingHero() {
         <div className="grid gap-6 pb-2 pt-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-end lg:gap-16 lg:pt-16">
           <h1
             id="hero-heading"
+            data-hero-rise="mask"
+            style={rise(0)}
             className="font-display max-w-[9.5em] text-[clamp(52px,7.2vw,112px)] leading-[0.88]!"
           >
             {t("heading")}
           </h1>
           <div className="lg:pb-3">
-            <p className="max-w-[34ch] text-[clamp(17px,1.45vw,21px)] text-fg-dim">{t("sub")}</p>
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
-              <Link href={PUBLIC_WAITLIST_HREF} className="btn btn-primary h-12! px-6!">
-                {t("cta")}
-              </Link>
+            <p data-hero-rise style={rise(2)} className="max-w-[34ch] text-[clamp(17px,1.45vw,21px)] text-fg-dim">
+              {t("sub")}
+            </p>
+            <div data-hero-rise style={rise(3)} className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <Magnetic>
+                <Link href={PUBLIC_WAITLIST_HREF} className="btn btn-primary h-12! px-6!">
+                  {t("cta")}
+                </Link>
+              </Magnetic>
               <a
                 href="#engine"
                 className="border-b border-line-bright pb-0.5 text-[13px] no-underline hover:border-fg"
@@ -63,8 +78,13 @@ export default function LandingHero() {
           data-doors
           className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-10 pt-[240px] [scrollbar-width:none] md:-mx-8 md:scroll-px-8 md:px-8 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0 lg:pb-16 lg:pt-[220px]"
         >
-          {DOORS.map((door) => (
-            <li key={door.key} className="w-[74vw] max-w-[320px] shrink-0 snap-start lg:w-auto lg:max-w-none">
+          {DOORS.map((door, i) => (
+            <li
+              key={door.key}
+              data-hero-rise
+              style={rise(4 + i)}
+              className="w-[74vw] max-w-[320px] shrink-0 snap-start lg:w-auto lg:max-w-none"
+            >
               <TiltDoor
                 href={door.href}
                 className={cn("group relative block h-[300px] text-fg no-underline lg:h-[330px]", door.field)}

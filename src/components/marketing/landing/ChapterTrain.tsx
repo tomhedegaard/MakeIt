@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import DemoLoop from "@/components/marketing/DemoLoop";
 import ExerciseTile from "./ExerciseTile";
+import GalleryRig from "./GalleryRig";
 
 /** The wall: one big moving demo, then stills from the real library. */
 const LEAD = "deadlift";
@@ -12,6 +13,12 @@ const WALL = ["back-squat", "bench", "pull-up", "hip-thrust", "ohp", "row", "rdl
  * decision 2026-10-05): the live session is already ink, and the body
  * orange sat too close to the heart red. Server component; only the lead loop is a client island (it
  * plays in view, never with reduced motion).
+ *
+ * Below 1024 px the wall is a row to swipe. On wide screens GalleryRig
+ * turns it into a pinned gallery: the stage (heading and wall) holds
+ * still while the visitor's scroll slides the tiles sideways
+ * (globals.css `[data-gallery="on"]`). Without JS it is the grid it
+ * always was.
  */
 export default function ChapterTrain() {
   const t = useTranslations("Marketing.landing.chapters.train");
@@ -19,33 +26,44 @@ export default function ChapterTrain() {
   const facts = t.raw("facts") as string[];
 
   return (
-    <section id="train" aria-labelledby="train-heading" className="scroll-mt-[68px] bg-bg-2 text-fg">
+    <section id="train" aria-labelledby="train-heading" className="scroll-mt-[68px] overflow-x-clip bg-bg-2 text-fg">
       <div className="mx-auto max-w-[1360px] px-4 py-[clamp(72px,9vw,140px)] md:px-8">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
-          <h2 id="train-heading" className="font-display max-w-[9em] text-[clamp(48px,7vw,112px)] leading-[0.9]!">
-            {t("heading")}
-          </h2>
-          <p className="max-w-[44ch] text-[clamp(17px,1.35vw,20px)] text-fg-body">{t("sub")}</p>
-        </div>
+        <div data-gallery="">
+          <div data-gallery-stage>
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
+              <h2 id="train-heading" className="font-display max-w-[9em] text-[clamp(48px,7vw,112px)] leading-[0.9]!">
+                {t("heading")}
+              </h2>
+              <p className="max-w-[44ch] text-[clamp(17px,1.35vw,20px)] text-fg-body">{t("sub")}</p>
+            </div>
 
-        <p className="mt-12 text-[13px] text-fg-dim lg:mt-16">{t("hint")}</p>
-        <ul className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-4 lg:gap-3">
-          <li className="col-span-2 row-span-2 flex flex-col bg-bg text-fg">
-            <DemoLoop
-              src={`/exercise-demos/${LEAD}.webm`}
-              label={t(`names.${LEAD}`)}
-              pauseLabel={s("pause")}
-              playLabel={s("play")}
-              className="aspect-[720/398] w-full"
-            />
-            <p className="font-display mt-auto px-4 pb-4 pt-2 text-[22px]">{t(`names.${LEAD}`)}</p>
-          </li>
-          {WALL.map((slug) => (
-            <li key={slug}>
-              <ExerciseTile slug={slug} name={t(`names.${slug}`)} playLabel={s("play")} />
-            </li>
-          ))}
-        </ul>
+            <p className="mt-12 text-[13px] text-fg-dim lg:mt-16">{t("hint")}</p>
+            <ul
+              data-gallery-track
+              className="-mx-4 mt-3 flex snap-x snap-mandatory scroll-px-4 gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:-mx-8 md:scroll-px-8 md:px-8 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-3 lg:overflow-visible lg:px-0"
+            >
+              <li
+                data-gallery-lead
+                className="flex w-[86vw] max-w-[520px] shrink-0 snap-start flex-col bg-bg text-fg lg:col-span-2 lg:row-span-2 lg:w-auto lg:max-w-none"
+              >
+                <DemoLoop
+                  src={`/exercise-demos/${LEAD}.webm`}
+                  label={t(`names.${LEAD}`)}
+                  pauseLabel={s("pause")}
+                  playLabel={s("play")}
+                  className="aspect-[720/398] w-full"
+                />
+                <p className="font-display mt-auto px-4 pb-4 pt-2 text-[22px]">{t(`names.${LEAD}`)}</p>
+              </li>
+              {WALL.map((slug) => (
+                <li key={slug} className="w-[64vw] max-w-[300px] shrink-0 snap-start lg:w-auto lg:max-w-none">
+                  <ExerciseTile slug={slug} name={t(`names.${slug}`)} playLabel={s("play")} />
+                </li>
+              ))}
+            </ul>
+          </div>
+          <GalleryRig />
+        </div>
 
         <ul className="mt-12 grid gap-x-8 gap-y-5 md:grid-cols-3 lg:mt-16">
           {facts.map((fact) => (

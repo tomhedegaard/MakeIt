@@ -74,55 +74,60 @@ export default function CrewPlates() {
           perksHeading={l("perksHeading")}
           ctaHref={PUBLIC_WAITLIST_HREF}
           ctaNote={l("ctaNote")}
-        />
+          after={
+            <>
+              {/* The turning point: from being spotted to spotting others. Ties the
+                  ladder back to "Nogen spotter dig altid." above. */}
+              <div
+                data-turn
+                data-stack-card
+                data-stack-i="1"
+                className="grid content-start gap-4 border-t-2 border-signal bg-bg pt-6 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-[clamp(40px,6vw,96px)]"
+              >
+                <p className="text-[13px] font-medium text-signal">{t("turn.label")}</p>
+                <p className="font-display max-w-[30ch] text-[clamp(28px,3.4vw,52px)] leading-[1.05]">{t("turn.text")}</p>
+              </div>
 
-        {/* The turning point: from being spotted to spotting others. Ties the
-            ladder back to "Nogen spotter dig altid." above. */}
-        <div
-          data-turn
-          className="mt-[clamp(48px,6vw,80px)] grid gap-4 border-t-2 border-signal pt-6 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-[clamp(40px,6vw,96px)]"
-        >
-          <p className="text-[13px] font-medium text-signal">{t("turn.label")}</p>
-          <p className="font-display max-w-[30ch] text-[clamp(28px,3.4vw,52px)] leading-[1.05]">{t("turn.text")}</p>
-        </div>
-
-        <div className="mt-[clamp(48px,6vw,80px)] grid gap-3.5 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-          <div className="border border-line bg-bg-2 p-[clamp(20px,2.6vw,32px)]">
-            <p className="flex justify-between gap-3 text-[12px] text-fg-dim">
-              <span>{current.name}</span>
-              <span>{t("meterNote")}</span>
-            </p>
-            {progress && next ? (
-              <>
-                <p className="font-display mt-3 text-[clamp(54px,6vw,88px)] leading-[0.85]!">
-                  {format.number(EXAMPLE_REPS)} <span className="text-fg-dim">/ {format.number(progress.at)}</span>
-                </p>
-                <div
-                  role="img"
-                  aria-label={t("meterLabel")}
-                  className="relative mt-[18px] h-3 overflow-hidden rounded-md bg-bg bg-[repeating-linear-gradient(90deg,transparent_0_calc(10%_-_1px),var(--line-bright)_calc(10%_-_1px)_10%)]"
-                >
-                  <i style={{ width: `${progress.ratio * 100}%` }} className="block h-full rounded-md bg-fg" />
+              <div data-stack-card data-stack-i="2" className="grid gap-3.5 bg-bg md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+                <div className="border border-line bg-bg-2 p-[clamp(20px,2.6vw,32px)]">
+                  <p className="flex justify-between gap-3 text-[12px] text-fg-dim">
+                    <span>{current.name}</span>
+                    <span>{t("meterNote")}</span>
+                  </p>
+                  {progress && next ? (
+                    <>
+                      <p className="font-display mt-3 text-[clamp(54px,6vw,88px)] leading-[0.85]!">
+                        {format.number(EXAMPLE_REPS)} <span className="text-fg-dim">/ {format.number(progress.at)}</span>
+                      </p>
+                      <div
+                        role="img"
+                        aria-label={t("meterLabel")}
+                        className="relative mt-[18px] h-3 overflow-hidden rounded-md bg-bg bg-[repeating-linear-gradient(90deg,transparent_0_calc(10%_-_1px),var(--line-bright)_calc(10%_-_1px)_10%)]"
+                      >
+                        <i style={{ width: `${progress.ratio * 100}%` }} className="block h-full rounded-md bg-fg" />
+                      </div>
+                      <p className="mt-2.5 flex justify-between text-[12px] text-fg-dim">
+                        <span>{current.name}</span>
+                        <span>{next.name}</span>
+                      </p>
+                    </>
+                  ) : null}
                 </div>
-                <p className="mt-2.5 flex justify-between text-[12px] text-fg-dim">
-                  <span>{current.name}</span>
-                  <span>{next.name}</span>
-                </p>
-              </>
-            ) : null}
-          </div>
 
-          <div className="border border-line bg-bg-2 p-[clamp(20px,2.6vw,32px)]">
-            <p className="text-[12px] text-fg-dim">{t("earnHeading")}</p>
-            <ul className="mt-2.5 list-none p-0">
-              {(["sessions", "formChecks", "prs", "help"] as const).map((key) => (
-                <li key={key} className="border-b border-line py-[11px] text-base last:border-b-0">
-                  {t(`earn.${key}`)}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+                <div className="border border-line bg-bg-2 p-[clamp(20px,2.6vw,32px)]">
+                  <p className="text-[12px] text-fg-dim">{t("earnHeading")}</p>
+                  <ul className="mt-2.5 list-none p-0">
+                    {(["sessions", "formChecks", "prs", "help"] as const).map((key) => (
+                      <li key={key} className="border-b border-line py-[11px] text-base last:border-b-0">
+                        {t(`earn.${key}`)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </>
+          }
+        />
       </div>
     </section>
   );

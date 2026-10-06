@@ -62,13 +62,21 @@ const SCREENS: Record<MotorStepKey, ReactNode> = {
 /**
  * Morning report (spec §4 A1, C2, C3): the night as a chart, four
  * report lines, and the phone that follows them. Server component; only
- * the rig is a client island.
+ * the rig is a client island. `data-dawn` lets globals.css open the
+ * section in the dark and brighten it toward the decision as the
+ * visitor scrolls (nat til morgen); without view timelines or with
+ * reduced motion it simply stays light.
  */
 export default function MotorStory() {
   const t = useTranslations("Marketing.landing.engine");
 
   return (
-    <section id="engine" aria-labelledby="engine-heading" className="scroll-mt-[68px] py-[clamp(72px,8vw,128px)]">
+    <section
+      id="engine"
+      aria-labelledby="engine-heading"
+      data-dawn
+      className="scroll-mt-[68px] py-[clamp(72px,8vw,128px)]"
+    >
       <div className="mx-auto max-w-[1360px] px-4 md:px-8">
         <Rule />
 
