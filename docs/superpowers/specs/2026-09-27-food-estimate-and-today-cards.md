@@ -275,3 +275,62 @@ og aldrig vises som advarsel til medlemmet.
    tests.
 
 A kommer først, fordi Mad-kortet i B bruger A's handling og kulhydrat/fedt-tallene.
+
+---
+
+## F. Byggeplan for del B (06.10.2026)
+
+Del A er i produktion (#124, model skiftet til `claude-sonnet-5-5` i #149, flaget venter på
+evalueringen). Planen her afstemmer B med koden efter Nord-redesignet og 18-årsgrænsen (#126).
+
+### F.1 Hvad koden ændrer ved specen
+
+- Voksne har hverken højde, køn eller alder. BMI-grænse og hvilestofskifte kræver dem.
+- `kcal-adjustment.ts` har et gulv på 1.400 kcal ved cut. Det bryder afsnit S og rettes i B1.
+- `logWeightAction` overskriver dagens vejning og tillader én pr. døgn, så "mange vejninger
+  om dagen" måles som afviste forsøg.
+- Der er ingen opfølgning efter mind-check; den bygges. `MindSafetyLine` genbruges.
+- Der er ikke et særskilt mål for træningsdage. "Træningsdag" / "Hviledag" er kun en mærkat.
+
+### F.2 Beslutninger (Tom, 06.10.2026)
+
+4. **Kropsdata:** højde, fødselsår og køn spørges, når medlemmet sætter pejlemærke eller slår
+   vægtkortet til. Ukendt køn giver gulvet 1.800 kcal.
+5. **"Vis ikke kalorier og vægt"** gælder overalt: I dag, `/nutrition`, estimat-sheetet og
+   vægtloggen.
+6. **To PR'er:** B1 og B2, merget tæt efter hinanden.
+
+### F.3 B1 — I dag som kort + kaloriegulv
+
+- `SignalCard` (`src/components/dashboard/`) på `MorningSignal`-cellens markup: `bg-bg-2`,
+  hårlinje, `p-5`, kicker `eyebrow-domain`, tal `text-title`, hvorfor `text-fg-dim`,
+  data-blæk, link over hele kortet med én sr-sætning. Mad-kortets *+ Spiste noget andet*
+  ligger over linket og åbner `OffPlanLogButton`.
+- Ren logik bliver i `src/lib/dashboard/morning-signal.ts`, udvidet med `ink`
+  (`bar` · `spark` · `ticks`). `MorningSignal` erstattes af `TodaySignals`.
+- Data: `getHrvChipData` udvides med normalområde, 14 målinger, kilde og tidspunkt;
+  `getDailyIntake` med kulhydrat og fedt; Sind bruger `getTodayMindCheck`;
+  `hasMindCheckToday` skifter fra UTC til dansk dato.
+- Placering: pas i fuld bredde, derunder kortene 2 × 2 på telefon, 4 på række fra `lg`.
+  `page.order.test.ts` opdateres. `YouthToday` er uændret.
+- `calorieFloor({ sex, bmr })` = max(BMR, 1.500 kvinde, 1.800 mand/ukendt), BMR via den
+  eksisterende `estimateDailyKcal`. Håndhæves i `kcal-adjustment`, planner-skemaet og
+  `resolveDailyTargets`.
+
+### F.4 B2 — afsnit S
+
+- Migration 0069 (tilføjende): på `members` `show_weight_card` (false), `hide_numbers`
+  (false), `pejlemaerke_kg`, `height_cm`, `birth_year`, `sex`; tabellerne
+  `pejlemaerke_changes` og `food_signal_seen`.
+- Indstillinger → Krop: pejlemærke med 18+-bekræftelse (ældre konti uden
+  `adult_confirmed_at` bekræfter her), kropsdata, BMI-/tempo-grænser med henvisning til Munk.
+- Kropsvægt-kortet: 7-dages snit, 14 dages sparkline, retning uden afstand; skjult som standard.
+- "Vis ikke kalorier og vægt": switch i Indstillinger; Mad viser måltider og protein.
+- Tidlige tegn beregnes, når coach-indbakken læses: under gulvet 3 loggede dage i træk ·
+  pejlemærke sænket 3 gange på 30 dage · 3 estimater på 14 dage rettet under intervallet ·
+  3 afviste vejninger på 7 dage. Ny inbox-type `food_relationship` under `mental_safety`,
+  kan markeres set i 14 dage. Medlemmet får ét blødt spørgsmål ved næste mind-check med
+  `MindSafetyLine` og LMS, aldrig en advarsel.
+- Copy-gate: `FORBIDDEN_DA/EN` flyttes til en delt gate over Dashboard, Settings og
+  Nutrition, udvidet med "målvægt", "ideal", "fedtprocent", "kg tilbage"; kort-kildekoden
+  skannes for `text-danger`/`bg-ok`.
