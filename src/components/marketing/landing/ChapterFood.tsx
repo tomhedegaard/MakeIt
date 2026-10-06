@@ -7,6 +7,7 @@ import { formatNumber } from "@/lib/utils";
 import { weekTotal } from "@/lib/marketing/landing/count-up";
 import CountUp from "./CountUp";
 import InViewOnce from "./InViewOnce";
+import PlateToggle from "./PlateToggle";
 
 /**
  * Mad: an example week as seven plates with photos, then the two app
@@ -61,6 +62,7 @@ export default function ChapterFood() {
                     className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                   />
                 ) : null}
+                <PlateToggle label={t("showMacros", { meal: meals[i] })} />
                 <MacroOverlay
                   rows={[
                     { label: m("p"), g: meal.protein, kcal: meal.protein * 4 },
@@ -103,10 +105,14 @@ export default function ChapterFood() {
               </li>
             ))}
           </ul>
-          <div data-once className="food-shop flex justify-center gap-4 sm:gap-6">
+          {/* Below 640 px the two screens are a swipe row, the shopping list
+              first, so its gather-in is what the visitor sees. */}
+          <div data-once className="food-shop -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:justify-center sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0">
             <InViewOnce threshold={0.3} />
-            <FoodScreen width={240} />
-            <div className="hidden pt-16 sm:block">
+            <div className="flex-none snap-start sm:order-1">
+              <FoodScreen width={240} />
+            </div>
+            <div className="order-first flex-none snap-start sm:order-2 sm:pt-16">
               <ShoppingScreen width={240} />
             </div>
           </div>
@@ -133,14 +139,14 @@ export default function ChapterFood() {
 /**
  * Hover detail: the plate's energy split as three bars, sliding up over
  * the photo. Decorative for assistive tech: kcal and protein are already
- * in the card's text. On touch the photo stays clean.
+ * in the card's text. On touch a tap opens it (PlateToggle).
  */
 function MacroOverlay({ rows, grams }: { rows: { label: string; g: number; kcal: number }[]; grams: (g: number) => string }) {
   const total = rows.reduce((n, r) => n + r.kcal, 0);
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-x-0 bottom-0 translate-y-full bg-bg/95 p-3 transition-transform duration-300 ease-out group-hover:translate-y-0 motion-reduce:transition-none"
+      className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] translate-y-full bg-bg/95 p-3 transition-transform duration-300 ease-out group-hover:translate-y-0 group-data-[open=true]:translate-y-0 motion-reduce:transition-none"
     >
       {rows.map((r, i) => (
         <div key={r.label} className="mt-1.5 first:mt-0">
@@ -150,7 +156,7 @@ function MacroOverlay({ rows, grams }: { rows: { label: string; g: number; kcal:
           </div>
           <div className="mt-1 h-1 bg-line">
             <i
-              className="block h-full origin-left scale-x-0 bg-food transition-transform duration-500 ease-out group-hover:scale-x-100 motion-reduce:transition-none"
+              className="block h-full origin-left scale-x-0 bg-food transition-transform duration-500 ease-out group-hover:scale-x-100 group-data-[open=true]:scale-x-100 motion-reduce:transition-none"
               style={{ width: `${Math.round((r.kcal / total) * 100)}%`, transitionDelay: `${150 + i * 80}ms`, opacity: 1 - i * 0.28 }}
             />
           </div>

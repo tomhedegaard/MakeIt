@@ -748,7 +748,8 @@
           "push-press": "Push press",
           "plank": "Planke"
         },
-        "hint": "Hold musen over en øvelse, eller tryk, og se den i bevægelse."
+        "hint": "Hold musen over en øvelse, eller tryk, og se den i bevægelse.",
+        "hintTouch": "Swipe, og se øvelsen i midten i bevægelse."
       },
       "food": {
         "heading": "En uge på tallerkenen.",
@@ -778,7 +779,8 @@
         ],
         "credit": "Eksempel på en uge. Fotos fra Unsplash:",
         "grams": "{g} g",
-        "weekTotal": "Ugens syv retter i alt"
+        "weekTotal": "Ugens syv retter i alt",
+        "showMacros": "Vis makrofordeling: {meal}"
       },
       "heart": {
         "heading": "Fra dit ur til dit pas.",
@@ -804,7 +806,8 @@
         "below": "Under dit bånd",
         "above": "Over dit bånd",
         "syncedFrom": "Synket fra {device} kl. 05:14",
-        "hint": "Vælg et ur, og før musen hen over nætterne."
+        "hint": "Vælg et ur, og før musen hen over nætterne.",
+        "hintTouch": "Vælg et ur, og træk fingeren hen over nætterne."
       },
       "mind": {
         "heading": "Hovedet træner med.",

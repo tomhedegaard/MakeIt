@@ -12,8 +12,9 @@ import { MOTOR_STEPS, activeStepFrom, hiddenStates, type MotorStepKey } from "@/
  * `[data-motor-story]` block; the line nearest the viewport centre wins
  * (`activeStepFrom`). No scroll listeners. Without JS the rig stays on
  * the decision. The active key is mirrored onto the block so the lines
- * can dim themselves with CSS. Below 1024 px the rig is `display:
- * contents`, so its states stack between the lines. `--rig-s`
+ * can dim themselves with CSS. Below 1024 px the rig is a swipe row of
+ * the four phones after the report lines (four full phones stacked
+ * between the lines made the section seven screens tall). `--rig-s`
  * (globals.css) shrinks the rig on short viewports.
  */
 export default function MotorStoryRig({ children }: { children: ReactNode }) {
@@ -80,7 +81,7 @@ export default function MotorStoryRig({ children }: { children: ReactNode }) {
     <div
       ref={ref}
       data-active={active}
-      className="group/rig contents lg:sticky lg:top-[max(1rem,calc(50svh_-_312px*var(--rig-s)))] lg:mt-[max(0px,calc(26vh_-_312px*var(--rig-s)))] lg:block lg:aspect-[9/19.5] lg:w-[calc(288px*var(--rig-s))] lg:self-start lg:before:absolute lg:before:inset-0 lg:before:rounded-[16%/7.38%] lg:before:bg-fg"
+      className="group/rig order-last -mx-4 mt-2 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:-mx-8 md:scroll-px-8 md:px-8 lg:order-none lg:mx-0 lg:mt-0 lg:snap-none lg:gap-0 lg:overflow-visible lg:px-0 lg:pb-0 lg:sticky lg:top-[max(1rem,calc(50svh_-_312px*var(--rig-s)))] lg:mt-[max(0px,calc(26vh_-_312px*var(--rig-s)))] lg:block lg:aspect-[9/19.5] lg:w-[calc(288px*var(--rig-s))] lg:self-start lg:before:absolute lg:before:inset-0 lg:before:rounded-[16%/7.38%] lg:before:bg-fg"
     >
       {children}
       <div aria-hidden="true" className="absolute inset-x-0 top-[calc(100%+46px)] hidden justify-center gap-1.5 lg:flex">

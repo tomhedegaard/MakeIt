@@ -34,6 +34,8 @@ export type HeartLiveLabels = {
   below: string;
   above: string;
   hint: string;
+  /** The hint on touch screens (no mouse to move). */
+  hintTouch: string;
 };
 
 const fill = (s: string, vars: Record<string, string | number>) =>
@@ -224,7 +226,10 @@ export default function HeartLive({ labels }: { labels: HeartLiveLabels }) {
           ))}
           <line x1={x(night)} x2={x(night)} y1={0} y2={H} className="stroke-fg-dim" strokeWidth={1} />
         </svg>
-        <p className="mt-2 text-micro text-fg-dim">{labels.hint}</p>
+        <p className="mt-2 text-micro text-fg-dim">
+          <span className="pointer-coarse:hidden">{labels.hint}</span>
+          <span className="hidden pointer-coarse:inline">{labels.hintTouch}</span>
+        </p>
       </div>
     </div>
   );
