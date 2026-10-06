@@ -782,7 +782,7 @@
       },
       "heart": {
         "heading": "Fra dit ur til dit pas.",
-        "sub": "HQ henter nattens HRV, søvn og hvilepuls og måler dem mod dit eget bånd. Ikke mod et gennemsnit.",
+        "sub": "HQ henter nattens HRV og hvilepuls og måler dem mod dit eget bånd. Ikke mod et gennemsnit.",
         "devicesLabel": "Virker med",
         "devices": [
           "WHOOP",

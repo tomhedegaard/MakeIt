@@ -782,7 +782,7 @@
       },
       "heart": {
         "heading": "From your watch to your session.",
-        "sub": "HQ pulls last night's HRV, sleep and resting heart rate and measures them against your own band. Not against an average.",
+        "sub": "HQ pulls last night's HRV and resting heart rate and measures them against your own band. Not against an average.",
         "devicesLabel": "Works with",
         "devices": [
           "WHOOP",
