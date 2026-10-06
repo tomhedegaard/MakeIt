@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -10,6 +10,9 @@ import { cn } from "@/lib/utils";
 const NIGHTS = [61, 58, 63, 66, 60, 57, 64, 62, 59, 65, 61, 56, 52, 48] as const;
 const BAND = { lo: 54, hi: 68 } as const;
 const Y = { min: 40, max: 74 } as const;
+
+/** Playback speed on arrival: one night per step. */
+const NIGHT_MS = 110;
 
 const W = 560;
 const H = 180;
@@ -39,17 +42,81 @@ const fill = (s: string, vars: Record<string, string | number>) =>
  * across the nights (pointer, touch or arrow keys) and the big reading,
  * its place against your band and the chart marker follow. The chart is
  * a slider for assistive tech. Sample data, as on the rest of the page.
+ *
+ * On arrival (once, motion allowed) the line draws itself night by night
+ * and the marker and the big reading ride along with it, landing on
+ * tonight. Any touch or key stops the playback and hands over control.
+ * Server and no-JS render the finished chart on tonight.
  */
 export default function HeartLive({ labels }: { labels: HeartLiveLabels }) {
   const [device, setDevice] = useState(0);
   const [night, setNight] = useState(NIGHTS.length - 1);
+  // "rest": finished chart. "armed": waiting off screen. "play": drawing.
+  const [phase, setPhase] = useState<"rest" | "armed" | "play">("rest");
   const svgRef = useRef<SVGSVGElement>(null);
+  const timer = useRef(0);
+  const taken = useRef(false);
+
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg || typeof IntersectionObserver === "undefined" || typeof window.matchMedia !== "function") return;
+    if (!window.matchMedia("(prefers-reduced-motion: no-preference)").matches) return;
+
+    // Arm just before the chart scrolls into view (so the finished line
+    // never flashes away in sight), play once most of it is visible.
+    const arm = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        arm.disconnect();
+        if (taken.current) return;
+        setPhase("armed");
+        setNight(0);
+      },
+      { rootMargin: "0px 0px 30% 0px" },
+    );
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        io.disconnect();
+        if (taken.current) return;
+        setPhase("play");
+        let n = 0;
+        timer.current = window.setInterval(() => {
+          n += 1;
+          setNight(n);
+          if (n >= NIGHTS.length - 1) {
+            window.clearInterval(timer.current);
+            setPhase("rest");
+          }
+        }, NIGHT_MS);
+      },
+      { threshold: 0.6 },
+    );
+    arm.observe(svg);
+    io.observe(svg);
+
+    return () => {
+      arm.disconnect();
+      io.disconnect();
+      window.clearInterval(timer.current);
+    };
+  }, []);
+
+  /** The visitor takes over: stop the playback, show the whole line. */
+  function takeOver() {
+    taken.current = true;
+    if (phase === "rest") return;
+    window.clearInterval(timer.current);
+    setPhase("rest");
+  }
+
   const ms = NIGHTS[night];
   const status = ms < BAND.lo ? labels.below : ms > BAND.hi ? labels.above : labels.inBand;
   const last = night === NIGHTS.length - 1;
   const nightLabel = last ? labels.tonight : fill(labels.night, { n: night + 1 });
 
   function pick(e: PointerEvent<SVGSVGElement>) {
+    takeOver();
     const box = svgRef.current?.getBoundingClientRect();
     if (!box) return;
     const ratio = Math.min(1, Math.max(0, (e.clientX - box.left) / box.width));
@@ -62,6 +129,7 @@ export default function HeartLive({ labels }: { labels: HeartLiveLabels }) {
     else if (e.key === "End") setNight(NIGHTS.length - 1);
     else if (step) setNight((n) => Math.min(NIGHTS.length - 1, Math.max(0, n + step)));
     else return;
+    takeOver();
     e.preventDefault();
   }
 
@@ -115,7 +183,7 @@ export default function HeartLive({ labels }: { labels: HeartLiveLabels }) {
           aria-valuemax={NIGHTS.length}
           aria-valuenow={night + 1}
           aria-valuetext={`${nightLabel}, ${ms} ${labels.unit}, ${status}`}
-          onPointerMove={pick}
+          onPointerMove={(e) => (phase !== "play" || e.pointerType !== "mouse") && pick(e)}
           onPointerDown={pick}
           onKeyDown={onKey}
           className="mt-8 w-full max-w-[640px] cursor-crosshair touch-pan-y focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-fg"
@@ -123,9 +191,27 @@ export default function HeartLive({ labels }: { labels: HeartLiveLabels }) {
           <rect x={0} y={y(BAND.hi)} width={W} height={y(BAND.lo) - y(BAND.hi)} className="fill-domain-tint" />
           <line x1={0} x2={W} y1={y(BAND.lo)} y2={y(BAND.lo)} className="stroke-domain-line" strokeDasharray="4 4" />
           <line x1={0} x2={W} y1={y(BAND.hi)} y2={y(BAND.hi)} className="stroke-domain-line" strokeDasharray="4 4" />
-          <path d={path} fill="none" className="stroke-domain" strokeWidth={2.5} strokeLinejoin="round" />
+          <path
+            d={path}
+            fill="none"
+            pathLength={1}
+            className="stroke-domain"
+            style={{
+              strokeDasharray: 1,
+              strokeDashoffset: phase === "armed" ? 1 : 0,
+              transition: phase === "play" ? `stroke-dashoffset ${NIGHT_MS * (NIGHTS.length - 1)}ms linear` : undefined,
+            }}
+            strokeWidth={2.5}
+            strokeLinejoin="round"
+          />
           {NIGHTS.map((v, i) => (
-            <circle key={i} cx={x(i)} cy={y(v)} r={i === night ? 7 : 3} className={i === night ? "fill-domain" : "fill-fg-dim"} />
+            <circle
+              key={i}
+              cx={x(i)}
+              cy={y(v)}
+              r={i === night ? 7 : 3}
+              className={cn(i === night ? "fill-domain" : "fill-fg-dim", phase !== "rest" && i > night && "opacity-0")}
+            />
           ))}
           <line x1={x(night)} x2={x(night)} y1={0} y2={H} className="stroke-fg-dim" strokeWidth={1} />
         </svg>

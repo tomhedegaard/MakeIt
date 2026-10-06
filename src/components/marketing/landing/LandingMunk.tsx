@@ -2,6 +2,8 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import DemoLoop from "@/components/marketing/DemoLoop";
 import { MUNK_HANDLE, MUNK_PORTRAIT_SRC } from "@/lib/marketing/munk";
+import type { CSSProperties } from "react";
+import InViewOnce from "./InViewOnce";
 
 /** Munk's card plays the back squat; the rack's form-check screen plays the bench. */
 const MUNK_DEMO_SRC = "/exercise-demos/back-squat.webm";
@@ -15,6 +17,9 @@ type FlowStep = { t: string; label: string };
  * signature. The exercise visual is the MoveKit loop, labelled as a
  * reference. Munk's face sits in the circle beside the wordmark; until a
  * portrait exists the circle shows his initials.
+ *
+ * On arrival (InViewOnce, once) the flow lights up step by step, the
+ * final answer settles in and the signature writes itself last.
  */
 export default function LandingMunk() {
   const t = useTranslations("Marketing.landing.munk");
@@ -51,16 +56,17 @@ export default function LandingMunk() {
           )}
         </div>
 
-        <div className="mt-[clamp(40px,5vw,72px)] grid items-start gap-[clamp(40px,6vw,96px)] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+        <div data-once className="munk-flow mt-[clamp(40px,5vw,72px)] grid items-start gap-[clamp(40px,6vw,96px)] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
           <div>
             <h2 id="munk-heading" className="font-display text-[clamp(40px,4.6vw,68px)]">
               {t("heading")}
             </h2>
             <p className="mt-[22px] max-w-[46ch] text-[clamp(17px,1.35vw,20px)] text-fg-dim">{t("sub")}</p>
             <ol className="mt-[30px] grid list-none p-0">
-              {flow.map((step) => (
+              {flow.map((step, i) => (
                 <li
                   key={step.t}
+                  style={{ "--i": i } as CSSProperties}
                   className="grid grid-cols-[78px_minmax(0,1fr)] items-baseline gap-3.5 border-t border-line py-3.5 last:border-b"
                 >
                   <span className="text-[12px] font-medium leading-none text-fg-dim">
@@ -73,6 +79,7 @@ export default function LandingMunk() {
           </div>
 
           <FormCheckCard />
+          <InViewOnce threshold={0.3} />
         </div>
       </div>
     </section>
@@ -107,7 +114,7 @@ function FormCheckCard() {
           <em className="mb-1.5 block text-micro not-italic">{c("draftLabel")}</em>
           <s className="decoration-signal decoration-2">{c("draft")}</s>
         </p>
-        <p className="font-display mb-8 mt-[18px] text-[clamp(28px,2.6vw,38px)] leading-[0.98]!">{c("final")}</p>
+        <p className="munk-final font-display mb-8 mt-[18px] text-[clamp(28px,2.6vw,38px)] leading-[0.98]!">{c("final")}</p>
 
         <div className="mt-auto flex flex-wrap-reverse items-end justify-between gap-x-3 gap-y-2 border-t border-line pt-4">
           <p className="whitespace-nowrap text-micro text-fg-dim">
@@ -132,11 +139,11 @@ function Signature({ label }: { label: string }) {
       strokeWidth="1.6"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-auto w-[150px] flex-none text-fg"
+      className="munk-sig h-auto w-[150px] flex-none text-fg"
     >
-      <path d="M4 34C10 20 14 8 18 8S16 34 20 34 30 6 34 8 30 34 36 32 44 18 50 20 48 32 56 30 64 14 70 16 66 32 74 30 84 12 90 14 86 34 96 30" />
-      <path d="M100 30C106 22 110 12 114 14S110 32 118 30 130 16 134 20 132 32 140 28 156 18 166 20" />
-      <path d="M40 40C70 37 110 38 150 36" />
+      <path pathLength={1} d="M4 34C10 20 14 8 18 8S16 34 20 34 30 6 34 8 30 34 36 32 44 18 50 20 48 32 56 30 64 14 70 16 66 32 74 30 84 12 90 14 86 34 96 30" />
+      <path pathLength={1} d="M100 30C106 22 110 12 114 14S110 32 118 30 130 16 134 20 132 32 140 28 156 18 166 20" />
+      <path pathLength={1} d="M40 40C70 37 110 38 150 36" />
     </svg>
   );
 }

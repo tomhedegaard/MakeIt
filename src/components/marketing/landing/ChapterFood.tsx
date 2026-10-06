@@ -1,13 +1,19 @@
+import type { CSSProperties } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import FoodScreen from "@/components/marketing/phone/screens/FoodScreen";
 import ShoppingScreen from "@/components/marketing/phone/screens/ShoppingScreen";
 import { MEAL_WEEK, mealPhotoSrc } from "@/lib/marketing/landing/meal-week";
 import { formatNumber } from "@/lib/utils";
+import { weekTotal } from "@/lib/marketing/landing/count-up";
+import CountUp from "./CountUp";
+import InViewOnce from "./InViewOnce";
 
 /**
  * Mad: an example week as seven plates with photos, then the two app
  * screens that turn it into today's meals and a shopping list. White
- * page, food-green type: the photos carry the colour.
+ * page, food-green type: the photos carry the colour. On arrival the
+ * plates set themselves down Monday to Sunday and the week's totals
+ * count up beneath them (InViewOnce and CountUp, once).
  */
 export default function ChapterFood() {
   const t = useTranslations("Marketing.landing.chapters.food");
@@ -16,6 +22,12 @@ export default function ChapterFood() {
   const meals = t.raw("meals") as string[];
   const points = t.raw("points") as string[];
   const numberLocale = useLocale() === "en" ? "en-GB" : "da-DK";
+  const totals = [
+    { label: "kcal", value: weekTotal(MEAL_WEEK, (d) => d.kcal), unit: "" },
+    { label: m("p"), value: weekTotal(MEAL_WEEK, (d) => d.protein), unit: "g" },
+    { label: m("c"), value: weekTotal(MEAL_WEEK, (d) => d.carbs), unit: "g" },
+    { label: m("f"), value: weekTotal(MEAL_WEEK, (d) => d.fat), unit: "g" },
+  ];
   const credits = [
     ...new Map(MEAL_WEEK.flatMap((m) => (m.photo ? [[m.photo.author, m.photo.authorUrl] as const] : []))).entries(),
   ];
@@ -30,9 +42,11 @@ export default function ChapterFood() {
           <p className="max-w-[44ch] text-[clamp(17px,1.35vw,20px)] text-fg-dim">{t("sub")}</p>
         </div>
 
+        <div data-once className="food-week">
+        <InViewOnce threshold={0.2} />
         <ol className="-mx-4 mt-12 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:-mx-8 md:scroll-px-8 md:px-8 lg:mx-0 lg:mt-16 lg:grid lg:grid-cols-7 lg:overflow-visible lg:px-0">
           {MEAL_WEEK.map((meal, i) => (
-            <li key={days[i]} className="group w-[62vw] max-w-[260px] shrink-0 snap-start lg:w-auto lg:max-w-none">
+            <li key={days[i]} style={{ "--i": i } as CSSProperties} className="group w-[62vw] max-w-[260px] shrink-0 snap-start lg:w-auto lg:max-w-none">
               <div className="relative aspect-[4/5] overflow-hidden bg-food-tint">
                 {meal.photo ? (
                   // eslint-disable-next-line @next/next/no-img-element -- Unsplash CDN sizes the image itself
@@ -64,6 +78,22 @@ export default function ChapterFood() {
             </li>
           ))}
         </ol>
+
+        <div className="food-week__total mt-8 border-t border-food-line pt-5 lg:mt-10">
+          <p className="text-[13px] text-fg-dim">{t("weekTotal")}</p>
+          <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4">
+            {totals.map((row) => (
+              <li key={row.label}>
+                <p className="font-display text-[clamp(32px,3.6vw,56px)] leading-none text-food">
+                  <CountUp to={row.value} locale={numberLocale} delay={700} />
+                  {row.unit ? <span className="ml-1.5 text-[0.45em]">{row.unit}</span> : null}
+                </p>
+                <p className="mt-1.5 text-[13px] text-fg-dim">{row.label}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+        </div>
 
         <div className="mt-16 grid gap-12 lg:mt-24 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-20">
           <ul className="grid gap-5">

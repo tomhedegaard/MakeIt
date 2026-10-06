@@ -32,6 +32,11 @@ next one without pulling in an animation library. Companion to
 | Magnetic buttons | `Magnetic` around the hero, tier and waitlist CTAs | `pointermove` writes `--mx` and `--my`, CSS moves the span only for a fine pointer with motion allowed |
 | Tilt toward the pointer | `TiltDoor` | `pointermove` writes `--rx` and `--ry` |
 | Count down on arrival | `EngineDemo` | IntersectionObserver plus `requestAnimationFrame` |
+| Play once in view | `InViewOnce` on `[data-once]` (`ChapterFood`, `LandingMunk`) | Sets `data-motion="armed"` on mount (motion allowed), `"run"` on first intersection; CSS holds pieces back only under `armed` and transitions them in with staggered delays |
+| Count up on arrival | `CountUp` (food week totals) | Server renders the final number; a second observer with a bottom `rootMargin` drops it to 0 just before it is visible, then `countUpAt` eases it up. Screen readers get the final value only |
+| Chart draws night by night | `HeartLive` | Same arm-then-play observers; the path draws via `pathLength=1` and the marker and big reading step with it. Any pointer or key hands control to the visitor |
+| Still phone, changing screens | `AppRack` (`[data-rack-pin]`) | CSS only: a named view timeline `--rack` on a tall block, each screen's opacity animated over its `1/n` slice with `animation-range: contain`. Shown only at 1024 px wide, 760 px tall, with view timelines and motion allowed; the swipe rack is the resting state everywhere else |
+| Signature writes itself | `LandingMunk` (`.munk-sig`) | Paths with `pathLength=1`, `stroke-dashoffset` 1 to 0 under `InViewOnce`, after the flow steps have lit up |
 
 ## Nat til morgen
 
