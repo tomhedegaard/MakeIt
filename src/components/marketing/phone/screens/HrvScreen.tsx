@@ -6,7 +6,21 @@ const HRV_LINE =
   "M0 32 L18.5 21.3 L36.9 26.7 L55.4 16 L73.8 29.3 L92.3 24 L110.8 18.7 L129.2 34.7 L147.7 26.7 L166.2 21.3 L184.6 40 L203.1 48 L221.5 53.3 L236 58.7";
 
 /** Hjerte: HRV against the member's own band (reference B "HRV"). */
-export default function HrvScreen({ width, scroll = false }: { width?: number; scroll?: boolean }) {
+/**
+ * `sources`: on the landing's HRV chapter the source field names every
+ * device, one span each with `data-device-i`, and globals.css shows the
+ * one matching the section's `data-device` (set by HeartLive). Elsewhere
+ * the field shows the motor story's source.
+ */
+export default function HrvScreen({
+  width,
+  scroll = false,
+  sources,
+}: {
+  width?: number;
+  scroll?: boolean;
+  sources?: readonly string[];
+}) {
   const t = useTranslations("Marketing.landing");
   const s = useTranslations("Marketing.landing.screens");
   const h = useTranslations("Hrv.band");
@@ -73,7 +87,16 @@ export default function HrvScreen({ width, scroll = false }: { width?: number; s
         items={[
           { label: t("engine.steps.sleep.label"), value: s("hrv.sleepValue") },
           { label: s("hrv.rhrLabel"), value: s("hrv.rhrValue") },
-          { label: s("hrv.sourceLabel"), value: t("engine.steps.hrv.source") },
+          {
+            label: s("hrv.sourceLabel"),
+            value: sources
+              ? sources.map((name, i) => (
+                  <span key={name} data-device-i={i} className="device-only">
+                    {name}
+                  </span>
+                ))
+              : t("engine.steps.hrv.source"),
+          },
         ]}
       />
 

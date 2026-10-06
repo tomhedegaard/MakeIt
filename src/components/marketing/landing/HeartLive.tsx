@@ -24,6 +24,8 @@ export type HeartLiveLabels = {
   devices: string[];
   appleNote: string;
   syncedFrom: string;
+  /** Per device: not readable yet, so the sync line says it is coming (appleNote). */
+  soon: readonly boolean[];
   unit: string;
   chartLabel: string;
   night: string;
@@ -56,6 +58,13 @@ export default function HeartLive({ labels }: { labels: HeartLiveLabels }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const timer = useRef(0);
   const taken = useRef(false);
+
+  // Mirror the chosen device onto the section, so the server-rendered
+  // device stage and the phone's source field follow it in CSS.
+  useEffect(() => {
+    const section = svgRef.current?.closest<HTMLElement>("[data-device]");
+    if (section) section.dataset.device = String(device);
+  }, [device]);
 
   useEffect(() => {
     const svg = svgRef.current;
@@ -161,7 +170,7 @@ export default function HeartLive({ labels }: { labels: HeartLiveLabels }) {
 
       <div className="mt-10">
         <p aria-live="polite" className="text-[13px] text-fg-dim">
-          {fill(labels.syncedFrom, { device: labels.devices[device] })}
+          {labels.soon[device] ? labels.appleNote : fill(labels.syncedFrom, { device: labels.devices[device] })}
         </p>
         <p className="font-display mt-2 flex items-baseline gap-3 leading-[0.85] text-domain">
           <span className="numeric text-[clamp(96px,13vw,200px)] tracking-[-0.04em]">{ms}</span>
