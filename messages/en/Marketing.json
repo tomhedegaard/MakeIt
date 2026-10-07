@@ -748,7 +748,8 @@
           "push-press": "Push press",
           "plank": "Plank"
         },
-        "hint": "Hover an exercise, or tap it, to see it move."
+        "hint": "Hover an exercise, or tap it, to see it move.",
+        "hintTouch": "Swipe, and the exercise in the middle starts to move."
       },
       "food": {
         "heading": "A week on the plate.",
@@ -778,11 +779,12 @@
         ],
         "credit": "An example week. Photos from Unsplash:",
         "grams": "{g} g",
-        "weekTotal": "The week's seven plates in total"
+        "weekTotal": "The week's seven plates in total",
+        "showMacros": "Show the macro split: {meal}"
       },
       "heart": {
         "heading": "From your watch to your session.",
-        "sub": "HQ pulls last night's HRV, sleep and resting heart rate and measures them against your own band. Not against an average.",
+        "sub": "HQ pulls last night's HRV and resting heart rate and measures them against your own band. Not against an average.",
         "devicesLabel": "Works with",
         "devices": [
           "WHOOP",
@@ -804,7 +806,8 @@
         "below": "Below your band",
         "above": "Above your band",
         "syncedFrom": "Synced from {device} at 05:14",
-        "hint": "Pick a watch, and move across the nights."
+        "hint": "Pick a watch, and move across the nights.",
+        "hintTouch": "Pick a watch, and drag across the nights."
       },
       "mind": {
         "heading": "Your head trains too.",

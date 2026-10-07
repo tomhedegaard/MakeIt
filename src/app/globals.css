@@ -960,6 +960,7 @@ nav.tabbar {
   inherits: true;
   initial-value: 1;
 }
+[data-theme="nord"] [data-dawn] article[data-step="decision"] { view-timeline-name: --dawn-at; }
 @keyframes landing-dawn {
   from { --dawn: 0; }
   to   { --dawn: 1; }
@@ -967,9 +968,14 @@ nav.tabbar {
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     [data-theme="nord"] [data-dawn] {
+      /* Anchored to the decision line, over a fixed 160 px as it enters
+       * from below: morning has broken before the decision is read, at
+       * every screen size. (A share of the section put the mid-grey
+       * crossing right on the decision on a phone.) */
+      timeline-scope: --dawn-at;
       animation: landing-dawn linear both;
-      animation-timeline: view();
-      animation-range: cover 50% cover 55%;
+      animation-timeline: --dawn-at;
+      animation-range: cover 0% cover 160px;
       --dawn-mix: calc(var(--dawn) * 100%);
       /* Ink flips in the middle of the ground's change, so text never
        * rests as grey on grey. */
@@ -1263,27 +1269,40 @@ nav.tabbar {
 [data-theme="nord"] [data-device="1"] .device-slot[data-device-i="1"],
 [data-theme="nord"] [data-device="2"] .device-slot[data-device-i="2"],
 [data-theme="nord"] [data-device="3"] .device-slot[data-device-i="3"] { visibility: visible; opacity: 1; }
-[data-theme="nord"] .device-sync { display: none; }
+/* The sync line runs down to the phone below the card on a phone, and
+ * across to it beside the card from 640 px. */
+[data-theme="nord"] .device-sync {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 1px;
+  height: 2rem; /* the gap to the phone */
+  background: var(--line-bright);
+}
+[data-theme="nord"] .device-sync::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--domain);
+  opacity: 0;
+  --sync-to: translateY(calc(2rem - 7px));
+}
 @media (min-width: 640px) {
   [data-theme="nord"] .device-sync {
-    display: block;
-    position: absolute;
+    top: auto;
     left: 100%;
     bottom: 22%;
-    width: 2rem; /* the gap to the phone */
+    width: 2rem;
     height: 1px;
-    background: var(--line-bright);
   }
   [data-theme="nord"] .device-sync::after {
-    content: "";
-    position: absolute;
     top: -3px;
     left: 0;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--domain);
-    opacity: 0;
+    --sync-to: translateX(calc(2rem - 7px));
   }
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -1305,8 +1324,8 @@ nav.tabbar {
   to   { opacity: 1; transform: none; }
 }
 @keyframes device-sync {
-  0%   { opacity: 0; transform: translateX(0); }
+  0%   { opacity: 0; transform: none; }
   15%  { opacity: 1; }
   85%  { opacity: 1; }
-  100% { opacity: 0; transform: translateX(calc(2rem - 7px)); }
+  100% { opacity: 0; transform: var(--sync-to); }
 }

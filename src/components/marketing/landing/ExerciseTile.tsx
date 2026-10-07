@@ -11,15 +11,34 @@ import { cn } from "@/lib/utils";
  * keyboard and touch get the same thing the mouse does. A visitor who
  * presses it gets the loop even with reduced motion: an explicit gesture
  * outranks the preference (as in DemoLoop).
+ *
+ * Touch screens have no hover, so there the tile that stands in the
+ * middle of the screen plays on its own as the visitor swipes the row
+ * (an IntersectionObserver on a centre band), and stops when it leaves.
  */
 export default function ExerciseTile({ slug, name, playLabel }: { slug: string; name: string; playLabel: string }) {
   const { webm, mp4, poster } = resolveDemoAssets(`/exercise-demos/${slug}.webm`);
   const [live, setLive] = useState(false);
   const [pinned, setPinned] = useState(false);
   const reduced = useRef(false);
+  const ref = useRef<HTMLButtonElement>(null);
+  // Mirrors `pinned` for the observer callback; written where pinned changes.
+  const pinnedRef = useRef(false);
 
   useEffect(() => {
     reduced.current = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    const el = ref.current;
+    if (!el || reduced.current || typeof IntersectionObserver === "undefined") return;
+    if (!window.matchMedia("(hover: none)").matches) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (pinnedRef.current) return;
+        setLive(entry.isIntersecting);
+      },
+      { rootMargin: "-20% -42% -20% -42%" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   const on = () => !reduced.current && setLive(true);
@@ -27,6 +46,7 @@ export default function ExerciseTile({ slug, name, playLabel }: { slug: string; 
 
   return (
     <button
+      ref={ref}
       type="button"
       aria-label={`${playLabel}: ${name}`}
       aria-pressed={live}
@@ -34,12 +54,14 @@ export default function ExerciseTile({ slug, name, playLabel }: { slug: string; 
       onPointerLeave={(e) => e.pointerType === "mouse" && off()}
       onFocus={on}
       onBlur={() => {
+        pinnedRef.current = false;
         setPinned(false);
         setLive(false);
       }}
       onClick={() => {
         // Tap or Enter pins the loop on; a second press stops it.
         const stop = live && pinned;
+        pinnedRef.current = !stop;
         setPinned(!stop);
         setLive(!stop);
       }}

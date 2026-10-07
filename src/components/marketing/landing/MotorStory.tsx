@@ -16,8 +16,8 @@ import EngineDemo from "./EngineDemo";
 const PHONE_WIDTH = 288;
 
 /**
- * Per step: where it sits in the stacked mobile flow (line, then its
- * phone) and the classes that light it up when the rig picks it.
+ * Per step: its place in the mobile flow (the lines in order; the phones
+ * follow as one swipe row) and the classes that light it up when the rig picks it.
  * Written out in full so Tailwind can see every class.
  */
 const STEP_STYLE: Record<
@@ -123,7 +123,7 @@ export default function MotorStory() {
                 key={step.key}
                 data-state={step.key}
                 className={cn(
-                  "mx-auto mb-16 w-fit lg:pointer-events-none lg:absolute lg:inset-0 lg:order-none lg:m-0 lg:opacity-0",
+                  "w-fit flex-none snap-start lg:pointer-events-none lg:absolute lg:inset-0 lg:order-none lg:m-0 lg:opacity-0",
                   "lg:origin-top-left lg:[transform:scale(var(--rig-s))]",
                   "transition-opacity duration-500 motion-reduce:transition-none",
                   STEP_STYLE[step.key].stateOrder,

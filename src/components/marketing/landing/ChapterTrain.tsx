@@ -42,7 +42,10 @@ export default function ChapterTrain() {
               <p className="max-w-[44ch] text-[clamp(17px,1.35vw,20px)] text-fg-body">{t("sub")}</p>
             </div>
 
-            <p className="mt-12 text-[13px] text-fg-dim lg:mt-16">{t("hint")}</p>
+            <p className="mt-12 text-[13px] text-fg-dim lg:mt-16">
+              <span className="pointer-coarse:hidden">{t("hint")}</span>
+              <span className="hidden pointer-coarse:inline">{t("hintTouch")}</span>
+            </p>
             <ul
               data-gallery-track
               className="-mx-4 mt-3 flex snap-x snap-mandatory scroll-px-4 gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:-mx-8 md:scroll-px-8 md:px-8 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-3 lg:overflow-visible lg:px-0"

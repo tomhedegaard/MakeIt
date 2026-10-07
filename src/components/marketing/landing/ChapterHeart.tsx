@@ -43,6 +43,7 @@ export default function ChapterHeart() {
                 below: t("below"),
                 above: t("above"),
                 hint: t("hint"),
+                hintTouch: t("hintTouch"),
               }}
             />
           </div>

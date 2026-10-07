@@ -24,7 +24,7 @@ next one without pulling in an animation library. Companion to
 | Reveal in view | `CrewAlone` (`.spot-card`) | `animation-timeline: view()` with a staggered `--i` |
 | Draw once in view | `NightCurve` + `NightCurveReveal` | IntersectionObserver sets `data-in-view`, CSS animates `stroke-dashoffset` |
 | Sticky device with steps | `MotorStory` + `MotorStoryRig` | IntersectionObserver picks the step nearest the viewport centre, `data-active` drives Tailwind `group-data` variants |
-| Nat til morgen | `MotorStory` (`data-dawn`) | View timeline animates the registered number `--dawn`, every token in the section is `color-mix`ed from it |
+| Nat til morgen | `MotorStory` (`data-dawn`) | The decision line's view timeline animates the registered number `--dawn`, every token in the section is `color-mix`ed from it |
 | Scroll-scrubbed image sequence | `ScrollSequence` | Poster `<img>` at rest, canvas draws the frame that matches scroll progress once frames load |
 | Hero load sequence | `LandingHero` (`data-hero-rise`) | CSS keyframes with a `--rise` delay per element; the H1 is unmasked as one line because its test requires a single text node |
 | Pinned horizontal gallery | `ChapterTrain` + `GalleryRig` | The island sets `data-gallery="on"` and `--gallery-len`; a named view timeline on the block slides the track while its stage is sticky. Swipe row below 1024 px |
@@ -47,8 +47,11 @@ next one without pulling in an animation library. Companion to
 ## Nat til morgen
 
 `[data-dawn]` on the engine section. `globals.css` registers `--dawn`
-with `@property` (initial 1, light) and animates it 0 to 1 over
-`animation-range: cover 50% cover 55%`. The section's tokens (`--bg`,
+with `@property` (initial 1, light) and animates it 0 to 1 on the
+decision line's own view timeline (`--dawn-at`, shared up through
+`timeline-scope`), over the first 160 px of it entering from below. A
+range in percent of the section put the mid-grey crossing on the
+decision itself on a phone. The section's tokens (`--bg`,
 `--fg`, lines, signal, domain colours) are mixed between the Nord nat and
 Nord values, so phones, rules and copy follow without classes.
 
