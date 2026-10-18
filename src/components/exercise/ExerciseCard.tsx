@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import AnatomyFigure from "@/components/anatomy/AnatomyFigure";
+import AnatomyThumb from "@/components/anatomy/AnatomyThumb";
 import { MUSCLE_LABELS } from "@/lib/data/muscle-groups";
 import { dominantView, type Exercise } from "@/lib/data/exercises";
 import { exerciseMetaLabels } from "@/lib/data/exercise-meta";
@@ -11,6 +11,9 @@ import { exerciseMetaLabels } from "@/lib/data/exercise-meta";
  *
  * Compact variant is used inline in workouts and program sheets —
  * just figure + name + primary muscles, no cue line.
+ *
+ * Figuren er AnatomyThumb: siden skal have <AnatomySprite /> én gang,
+ * ellers er figuren tom. En indlejret figur pr. kort vejede 35 kB.
  */
 export default async function ExerciseCard({
   exercise,
@@ -22,6 +25,9 @@ export default async function ExerciseCard({
   const t = await getTranslations("Train.card");
   const tTrain = await getTranslations("Train");
   const view = dominantView(exercise);
+  const figureLabel = tTrain(view === "front" ? "anatomy.figureFront" : "anatomy.figureBack", {
+    gender: tTrain("anatomy.genderMale"),
+  });
   const href = `/train/exercises/${exercise.slug}`;
   const primaryNames = exercise.primaryMuscles
     .map((m) => MUSCLE_LABELS[m])
@@ -34,8 +40,9 @@ export default async function ExerciseCard({
         className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-bg-3/60 transition-colors"
       >
         <div className="shrink-0 surface-2 rounded-md p-1">
-          <AnatomyFigure
+          <AnatomyThumb
             view={view}
+            label={figureLabel}
             primary={exercise.primaryMuscles}
             secondary={exercise.secondaryMuscles}
             tertiary={exercise.tertiaryMuscles}
@@ -59,8 +66,9 @@ export default async function ExerciseCard({
     >
       <div className="flex gap-4 p-4 sm:p-5">
         <div className="shrink-0 surface-2 rounded-lg p-2">
-          <AnatomyFigure
+          <AnatomyThumb
             view={view}
+            label={figureLabel}
             primary={exercise.primaryMuscles}
             secondary={exercise.secondaryMuscles}
             tertiary={exercise.tertiaryMuscles}

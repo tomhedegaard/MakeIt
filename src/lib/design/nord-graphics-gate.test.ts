@@ -26,6 +26,8 @@ const GRAPHICS: Record<string, string> = {
   "components/Logo.tsx": "the MakeIt // HQ wordmark",
   "components/adaptive/MotorGlyph.tsx": "the HQ mark: the wordmark's double slash",
   "components/anatomy/AnatomyFigure.tsx": "the muscle figure",
+  "components/anatomy/AnatomySprite.tsx": "the muscle figure, defined once for a list",
+  "components/anatomy/AnatomyThumb.tsx": "the muscle figure in a list",
   "components/hrv/HrvBandRange.tsx": "chart",
   "components/hrv/TrendChart.tsx": "chart",
   "components/mind/MentalGraph.tsx": "chart",
