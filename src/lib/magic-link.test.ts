@@ -74,6 +74,20 @@ describe("finishMagicLinkCallback", () => {
     expect(signOut).not.toHaveBeenCalled();
   });
 
+  it("new OAuth user + admitted probe down + no invite → reject, sign out", async () => {
+    const { args, consumeInvite, signOut } = deps({
+      alreadyAdmitted: null,
+      invite: null,
+      user: { id: USER_ID, created_at: NEW_CREATED },
+    });
+
+    await expect(
+      finishMagicLinkCallback({ ...args, returningMagicLink: false }),
+    ).resolves.toEqual({ ok: false, err: "invite" });
+    expect(consumeInvite).not.toHaveBeenCalled();
+    expect(signOut).toHaveBeenCalledTimes(1);
+  });
+
   it("un-admitted leftover + no invite → reject and sign out", async () => {
     const { args, consumeInvite, signOut } = deps({
       alreadyAdmitted: false,

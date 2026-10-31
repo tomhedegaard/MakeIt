@@ -16,7 +16,8 @@
     "provider": "Unknown provider",
     "callback": "Login link expired or invalid",
     "disabled": "Backend not connected",
-    "fallback": "Something went wrong. Try again"
+    "fallback": "Something went wrong. Try again",
+    "same_password": "The new password must be different from the old one"
   },
   "beta": "Closed Beta · Invite only",
   "headline": {
@@ -61,23 +62,37 @@
     "hasAccount": "Already have an account?",
     "signinLink": "Sign in",
     "newHere": "New here?",
-    "signupLink": "Create account"
+    "signupLink": "Create account",
+    "forgotLink": "Forgot password?",
+    "introReset": "Enter your email and we'll send you a link to choose a new password.",
+    "submitReset": "Send link",
+    "backToSignin": "Back to sign in"
   },
   "oauth": {
-    "intro": "Sign in or create an account with Google or Apple. Invite code required whether you're new or existing.",
-    "inviteCodeLabel": "Invite code",
+    "intro": "Sign in with Google or Apple. New accounts also need an invite code.",
+    "inviteCodeLabel": "Invite code (new only)",
     "continueGoogle": "Continue with Google",
-    "continueApple": "Continue with Apple"
+    "continueApple": "Continue with Apple",
+    "invitePlaceholder": "Optional if you're already a member"
   },
   "sent": {
     "eyebrow": "Email sent",
     "body": "We've sent a login link to ",
     "fallbackEmail": "your email",
     "bodyTail": ". Open the link on the same device and you're in.",
-    "expiry": "The link works for 1 hour."
+    "expiry": "The link works for 1 hour.",
+    "bodyReset": "If there is an account for ",
+    "bodyResetTail": ", we've sent a link to choose a new password. Open it on the same device."
   },
   "adult": {
     "label": "I am 18 or older",
     "labelNew": "I am 18 or older (required for new accounts)"
+  },
+  "newPassword": {
+    "eyebrow": "New password",
+    "intro": "Choose a new password for your account.",
+    "passwordLabel": "New password",
+    "passwordPlaceholder": "At least 8 characters",
+    "submit": "Save password"
   }
 }

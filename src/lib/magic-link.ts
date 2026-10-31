@@ -41,6 +41,9 @@ export async function finishMagicLinkCallback(args: {
   invite: string | null;
   nowMs: number;
   alreadyAdmitted: boolean | null;
+  /** Override for the probe-down fallback. The route passes false for
+   *  OAuth so a new Google/Apple user without an invite never lands. */
+  returningMagicLink?: boolean;
   consumeInvite: (code: string, userId: string) => Promise<InviteRpcResult>;
   signOut: () => Promise<unknown>;
 }): Promise<MagicLinkCallbackFinish> {
@@ -55,7 +58,8 @@ export async function finishMagicLinkCallback(args: {
     userCreatedAt: user.created_at,
     nowMs: args.nowMs,
     alreadyAdmitted: args.alreadyAdmitted,
-    returningMagicLink: isReturningMagicLinkInvite(args.invite),
+    returningMagicLink:
+      args.returningMagicLink ?? isReturningMagicLinkInvite(args.invite),
   });
 
   if (decision.action === "reject") {

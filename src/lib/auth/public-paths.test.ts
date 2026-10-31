@@ -16,6 +16,8 @@ const APP_DIR = fileURLToPath(new URL("../../app", import.meta.url));
 const PUBLIC_PAGE_PATHS = new Set([
   "/",
   "/login",
+  // Reset-mail landing; the page itself redirects without a session.
+  "/login/new-password",
   "/privacy",
   "/terms",
   "/waitlist",

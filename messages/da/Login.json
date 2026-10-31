@@ -16,7 +16,8 @@
     "provider": "Ukendt provider",
     "callback": "Login-link udløbet eller ugyldigt",
     "disabled": "Backend ikke tilkoblet",
-    "fallback": "Noget gik galt. Prøv igen"
+    "fallback": "Noget gik galt. Prøv igen",
+    "same_password": "Det nye password skal være forskelligt fra det gamle"
   },
   "beta": "Closed Beta · Invite only",
   "headline": {
@@ -61,23 +62,37 @@
     "hasAccount": "Har du allerede en konto?",
     "signinLink": "Log ind",
     "newHere": "Ny her?",
-    "signupLink": "Opret konto"
+    "signupLink": "Opret konto",
+    "forgotLink": "Glemt password?",
+    "introReset": "Indtast din email, så sender vi et link, hvor du kan vælge et nyt password.",
+    "submitReset": "Send link",
+    "backToSignin": "Tilbage til log ind"
   },
   "oauth": {
-    "intro": "Log ind eller opret konto med Google eller Apple. Invite-kode kræves uanset om du er ny eller eksisterende.",
-    "inviteCodeLabel": "Invite-kode",
+    "intro": "Log ind med Google eller Apple. Er du ny, skal du også have en invite-kode.",
+    "inviteCodeLabel": "Invite-kode (kun nye)",
     "continueGoogle": "Fortsæt med Google",
-    "continueApple": "Fortsæt med Apple"
+    "continueApple": "Fortsæt med Apple",
+    "invitePlaceholder": "Valgfri hvis du allerede er medlem"
   },
   "sent": {
     "eyebrow": "Mail sendt",
     "body": "Vi har sendt et login-link til ",
     "fallbackEmail": "din mail",
     "bodyTail": ". Åbn linket på samme enhed, så er du inde.",
-    "expiry": "Linket virker i 1 time."
+    "expiry": "Linket virker i 1 time.",
+    "bodyReset": "Findes der en konto med ",
+    "bodyResetTail": ", har vi sendt et link til at vælge et nyt password. Åbn det på samme enhed."
   },
   "adult": {
     "label": "Jeg er fyldt 18 år",
     "labelNew": "Jeg er fyldt 18 år (kræves for nye konti)"
+  },
+  "newPassword": {
+    "eyebrow": "Nyt password",
+    "intro": "Vælg et nyt password til din konto.",
+    "passwordLabel": "Nyt password",
+    "passwordPlaceholder": "Mindst 8 tegn",
+    "submit": "Gem password"
   }
 }
