@@ -1,36 +1,19 @@
 /**
- * Pricing & positioning copy — placeholder values.
- * Swap when final numbers are locked.
+ * Displayed prices. Stripe charges what STRIPE_PRICE_CREW and
+ * STRIPE_PRICE_ONE_ON_ONE point at, so change both together.
  */
 export const pricing = {
-  // Top-line monthly price for crew membership / coaching access
+  // Crew membership, monthly only at launch (January 2027)
   member: {
-    amount: "[XX]",
+    amount: "399",
     currency: "kr",
     period: "md",
-  },
-  // Approximate market average to compare against
-  market: {
-    amount: "[YY]",
-    currency: "kr",
-    period: "md",
-    label: "markedssnit for personlig coaching",
   },
   // 1:1 add-on (the only human-only product)
   oneOnOne: {
-    amount: "[ZZ]",
+    amount: "1.499",
     currency: "kr",
     period: "md",
     spots: 8,
   },
-} as const;
-
-export const positioning = {
-  eyebrow: "Sådan holder vi coaching tilgængelig",
-  headline: "AI gør det generiske. Mennesker gør det vigtige.",
-  sub:
-    "Vi automatiserer det der kan automatiseres — programopbygning, form-tjek, " +
-    "progression — og bruger mennesker dér hvor det faktisk batter: 1:1, " +
-    "milepæle og fællesskab. Closed beta er invite-only. Prisen er ikke " +
-    "offentlig endnu.",
 } as const;
