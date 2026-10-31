@@ -15,7 +15,7 @@
     "title": "Access to the whole platform",
     "price": "Price",
     "nextBilling": "Next billing",
-    "manage": "Manage subscription",
+    "manage": "Payment, receipts and cancellation",
     "activate": "Activate Crew membership →",
     "secureCheckout": "Secure checkout via Stripe · no cards stored with us"
   },
@@ -26,7 +26,7 @@
     "spots": "Spots",
     "spotsValue": "{count} at a time",
     "manage": "Manage 1:1",
-    "apply": "Apply for a spot →",
+    "apply": "Upgrade with 1:1 →",
     "requiresCrew": "Requires an active Crew membership"
   },
   "help": {
