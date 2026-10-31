@@ -10,6 +10,7 @@ import {
   mockLoginAction,
   magicLinkAction,
   passwordAction,
+  resetPasswordAction,
   oauthAction,
 } from "./actions";
 import { CircleAlert } from "lucide-react";
@@ -27,6 +28,7 @@ export const viewport: Viewport = {
 };
 
 type Tab = "magic" | "password" | "oauth";
+type PasswordMode = "signin" | "signup" | "reset";
 
 /** Safe display gate: only show the members-only hint for in-app paths. */
 function isMemberNext(next: string | undefined): boolean {
@@ -73,9 +75,9 @@ export default async function LoginPage({
           ) : null}
 
           {sent ? (
-            <SentState email={email} />
+            <SentState email={email} reset={sent === "reset"} />
           ) : SUPABASE_ENABLED ? (
-            <SupabaseForm err={err} tab={tab} mode={mode as "signin" | "signup"} />
+            <SupabaseForm err={err} tab={tab} mode={mode as PasswordMode} />
           ) : (
             <MockForm err={err} />
           )}
@@ -153,7 +155,7 @@ async function SupabaseForm({
 }: {
   err?: string;
   tab: Tab;
-  mode: "signin" | "signup";
+  mode: PasswordMode;
 }) {
   const t = await getTranslations("Login.errors");
   const errLabel = err
@@ -170,8 +172,10 @@ async function SupabaseForm({
         <LoginErrorAlert className="mb-4">{errLabel}</LoginErrorAlert>
       ) : null}
 
-      {tab === "password" ? (
-        <PasswordForm mode={mode} />
+      {tab === "password" && mode === "reset" ? (
+        <ResetForm />
+      ) : tab === "password" ? (
+        <PasswordForm mode={mode === "signup" ? "signup" : "signin"} />
       ) : tab === "oauth" ? (
         <OAuthForm />
       ) : (
@@ -312,6 +316,18 @@ async function PasswordForm({ mode }: { mode: "signin" | "signup" }) {
         </button>
       </form>
 
+      {isSignup ? null : (
+        <p className="mt-4 text-meta">
+          <Link
+            href="/login?tab=password&mode=reset"
+            className="underline text-fg-dim hover:text-fg"
+            scroll={false}
+          >
+            {t("forgotLink")}
+          </Link>
+        </p>
+      )}
+
       <p className="mt-4 text-meta text-fg-faint">
         {isSignup ? (
           <>
@@ -341,6 +357,44 @@ async function PasswordForm({ mode }: { mode: "signin" | "signup" }) {
   );
 }
 
+async function ResetForm() {
+  const t = await getTranslations("Login.password");
+  return (
+    <>
+      <p className="text-fg-dim mb-6 leading-relaxed">{t("introReset")}</p>
+
+      <form action={resetPasswordAction} className="space-y-4">
+        <label className="block">
+          <span className="eyebrow block mb-2">{t("emailLabel")}</span>
+          <input
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            spellCheck={false}
+            placeholder={t("emailPlaceholder")}
+            className="field"
+          />
+        </label>
+
+        <button type="submit" className="btn btn-primary w-full mt-2">
+          {t("submitReset")}
+        </button>
+      </form>
+
+      <p className="mt-4 text-meta text-fg-faint">
+        <Link
+          href="/login?tab=password&mode=signin"
+          className="underline hover:text-fg"
+          scroll={false}
+        >
+          {t("backToSignin")}
+        </Link>
+      </p>
+    </>
+  );
+}
+
 async function OAuthForm() {
   const t = await getTranslations("Login.oauth");
   return (
@@ -354,15 +408,16 @@ async function OAuthForm() {
           <span className="eyebrow block mb-2">{t("inviteCodeLabel")}</span>
           <input
             name="code"
-            required
             autoComplete="off"
             spellCheck={false}
-            placeholder="MUNK-01"
+            placeholder={t("invitePlaceholder")}
             className="field"
           />
         </label>
 
-        <AdultCheckbox required />
+        {/* Members sign in with no code; oauthAction enforces the box
+            only when a code is given (a new account). */}
+        <AdultCheckbox required={false} />
 
         <div className="grid grid-cols-1 gap-3 mt-2">
           <button
@@ -443,19 +498,19 @@ function AppleGlyph() {
 }
 
 /* ---------------------------------------------------------------- *
- * Sent confirmation — magic-link only. Password signup never
+ * Sent confirmation — magic link and password reset. Password signup never
  * lands here (`finishInvitePasswordSignup` → /dashboard or err).
  * ---------------------------------------------------------------- */
 
-async function SentState({ email }: { email?: string }) {
+async function SentState({ email, reset }: { email?: string; reset: boolean }) {
   const t = await getTranslations("Login.sent");
   return (
     <div className="surface-2 rounded-2xl p-6">
       <div className="eyebrow mb-3">{t("eyebrow")}</div>
       <p className="text-fg-dim leading-relaxed mb-4">
-        {t("body")}
+        {reset ? t("bodyReset") : t("body")}
         <span className="text-fg">{email ?? t("fallbackEmail")}</span>
-        {t("bodyTail")}
+        {reset ? t("bodyResetTail") : t("bodyTail")}
       </p>
       <p className="text-meta text-fg-faint">
         {t("expiry")}

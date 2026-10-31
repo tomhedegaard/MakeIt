@@ -22,10 +22,13 @@ export default function MealCard({
   loggable,
   compact = false,
   swapQuotaRemaining,
+  hideNumbers = false,
 }: {
   meal: Meal;
   loggable: boolean;
   compact?: boolean;
+  /** "Vis ikke kalorier og vægt" (spec §S): protein stays, kcal goes. */
+  hideNumbers?: boolean;
   /** Number of meal swaps left this period. Undefined = unlimited / unknown. */
   swapQuotaRemaining?: number;
 }) {
@@ -79,7 +82,8 @@ export default function MealCard({
         <div className="flex-1 min-w-0">
           <div className="text-copy text-pretty">{meal.title}</div>
           <div className="text-micro text-fg-faint">
-            {fmt(meal.estKcal)} kcal · {t("macroProtein", { value: fmt(meal.estProteinG) })} · {fmt(meal.prepMinutes)} min
+            {hideNumbers ? null : `${fmt(meal.estKcal)} kcal · `}
+            {t("macroProtein", { value: fmt(meal.estProteinG) })} · {fmt(meal.prepMinutes)} min
           </div>
         </div>
         {meal.swappable ? (
@@ -164,10 +168,12 @@ export default function MealCard({
                 <p className="text-fg-dim text-meta">{meal.description}</p>
               ) : null}
             </div>
-            <div className="text-right shrink-0">
-              <div className="numeric text-section">{fmt(meal.estKcal)}</div>
-              <div className="eyebrow">{t("kcal")}</div>
-            </div>
+            {hideNumbers ? null : (
+              <div className="text-right shrink-0">
+                <div className="numeric text-section">{fmt(meal.estKcal)}</div>
+                <div className="eyebrow">{t("kcal")}</div>
+              </div>
+            )}
           </div>
 
           {/* Macro pills */}

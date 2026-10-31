@@ -69,6 +69,47 @@ export default async function BillingPage({
     );
   }
 
+  // 1:1 add-on. A Crew member without 1:1 sees it first: the upgrade
+  // is the main action, payment and cancellation sit in the portal.
+  const upsell = Boolean(crew && crew.status !== "canceled" && (!oneOnOne || oneOnOne.status === "canceled"));
+  const oneOnOneSection = (
+    <section className="surface-2 rounded-2xl overflow-hidden">
+      <div className="px-5 py-5 border-b hairline flex items-center justify-between gap-4">
+        <SectionHeader eyebrow={t("oneOnOne.eyebrow")} title={t("oneOnOne.title")} className="mb-0" />
+        <StatusPill sub={oneOnOne} t={t} />
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-px bg-line">
+        <Cell
+          label={t("oneOnOne.price")}
+          value={`${pricing.oneOnOne.amount} ${pricing.oneOnOne.currency} / ${pricing.oneOnOne.period}`}
+        />
+        <Cell
+          label={t("oneOnOne.spots")}
+          value={t("oneOnOne.spotsValue", { count: pricing.oneOnOne.spots })}
+        />
+      </div>
+
+      <div className="p-5 flex flex-wrap gap-3">
+        {oneOnOne && oneOnOne.status !== "canceled" ? (
+          <form action={openPortalAction}>
+            <button type="submit" className="btn">{t("oneOnOne.manage")}</button>
+          </form>
+        ) : (
+          <form action={startCheckoutAction}>
+            <input type="hidden" name="kind" value="one_on_one" />
+            <button type="submit" className="btn btn-primary">
+              {t("oneOnOne.apply")}
+            </button>
+          </form>
+        )}
+        <p className="text-meta text-fg-faint self-center">
+          {t("oneOnOne.requiresCrew")}
+        </p>
+      </div>
+    </section>
+  );
+
   return (
     <>
       <PageHeader
@@ -97,6 +138,8 @@ export default async function BillingPage({
           </Banner>
         ) : null}
 
+        {upsell ? oneOnOneSection : null}
+
         {/* Crew membership */}
         <section className="surface-2 rounded-2xl overflow-hidden">
           <div className="px-5 py-5 border-b hairline flex items-center justify-between gap-4">
@@ -119,7 +162,7 @@ export default async function BillingPage({
           <div className="p-5 flex flex-wrap gap-3">
             {crew && crew.status !== "canceled" ? (
               <form action={openPortalAction}>
-                <button type="submit" className="btn">{t("crew.manage")}</button>
+                <button type="submit" className="text-meta underline hover:text-fg">{t("crew.manage")}</button>
               </form>
             ) : (
               <form action={startCheckoutAction}>
@@ -135,42 +178,7 @@ export default async function BillingPage({
           </div>
         </section>
 
-        {/* 1:1 add-on */}
-        <section className="surface-2 rounded-2xl overflow-hidden">
-          <div className="px-5 py-5 border-b hairline flex items-center justify-between gap-4">
-            <SectionHeader eyebrow={t("oneOnOne.eyebrow")} title={t("oneOnOne.title")} className="mb-0" />
-            <StatusPill sub={oneOnOne} t={t} />
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-px bg-line">
-            <Cell
-              label={t("oneOnOne.price")}
-              value={`${pricing.oneOnOne.amount} ${pricing.oneOnOne.currency} / ${pricing.oneOnOne.period}`}
-            />
-            <Cell
-              label={t("oneOnOne.spots")}
-              value={t("oneOnOne.spotsValue", { count: pricing.oneOnOne.spots })}
-            />
-          </div>
-
-          <div className="p-5 flex flex-wrap gap-3">
-            {oneOnOne && oneOnOne.status !== "canceled" ? (
-              <form action={openPortalAction}>
-                <button type="submit" className="btn">{t("oneOnOne.manage")}</button>
-              </form>
-            ) : (
-              <form action={startCheckoutAction}>
-                <input type="hidden" name="kind" value="one_on_one" />
-                <button type="submit" className="btn btn-primary">
-                  {t("oneOnOne.apply")}
-                </button>
-              </form>
-            )}
-            <p className="text-meta text-fg-faint self-center">
-              {t("oneOnOne.requiresCrew")}
-            </p>
-          </div>
-        </section>
+        {upsell ? null : oneOnOneSection}
 
         {/* Help */}
         <section className="surface-2 rounded-2xl p-5">

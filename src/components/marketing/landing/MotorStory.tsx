@@ -8,13 +8,16 @@ import DecisionScreen from "@/components/marketing/phone/screens/DecisionScreen"
 import { cn } from "@/lib/utils";
 import MotorStoryRig from "./MotorStoryRig";
 import NightCurve from "./NightCurve";
+import ScrollSequence from "./ScrollSequence";
+import { A1_SEQUENCE } from "@/lib/marketing/landing/a1";
 import Rule from "./Rule";
+import EngineDemo from "./EngineDemo";
 
 const PHONE_WIDTH = 288;
 
 /**
- * Per step: where it sits in the stacked mobile flow (line, then its
- * phone) and the classes that light it up when the rig picks it.
+ * Per step: its place in the mobile flow (the lines in order; the phones
+ * follow as one swipe row) and the classes that light it up when the rig picks it.
  * Written out in full so Tailwind can see every class.
  */
 const STEP_STYLE: Record<
@@ -61,13 +64,21 @@ const SCREENS: Record<MotorStepKey, ReactNode> = {
 /**
  * Morning report (spec §4 A1, C2, C3): the night as a chart, four
  * report lines, and the phone that follows them. Server component; only
- * the rig is a client island.
+ * the rig is a client island. `data-dawn` lets globals.css open the
+ * section in the dark and brighten it toward the decision as the
+ * visitor scrolls (nat til morgen); without view timelines or with
+ * reduced motion it simply stays light.
  */
 export default function MotorStory() {
   const t = useTranslations("Marketing.landing.engine");
 
   return (
-    <section id="engine" aria-labelledby="engine-heading" className="scroll-mt-[68px] py-[clamp(72px,8vw,128px)]">
+    <section
+      id="engine"
+      aria-labelledby="engine-heading"
+      data-dawn
+      className="scroll-mt-[68px] py-[clamp(72px,8vw,128px)]"
+    >
       <div className="mx-auto max-w-[1360px] px-4 md:px-8">
         <Rule />
 
@@ -86,6 +97,16 @@ export default function MotorStory() {
 
         <EngineBounds />
 
+        {A1_SEQUENCE ? (
+          <ScrollSequence
+            base={A1_SEQUENCE.base}
+            frameCount={A1_SEQUENCE.frameCount}
+            poster={{ ...A1_SEQUENCE.poster, alt: "" }}
+            range={{ start: 0.25, end: 0.75 }}
+            className="mx-auto mt-16 aspect-[4/5] w-full max-w-[560px]"
+          />
+        ) : null}
+
         <div
           data-motor-story
           className="group/rr mt-16 flex flex-col lg:mt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-[clamp(40px,7vw,120px)]"
@@ -102,7 +123,7 @@ export default function MotorStory() {
                 key={step.key}
                 data-state={step.key}
                 className={cn(
-                  "mx-auto mb-16 w-fit lg:pointer-events-none lg:absolute lg:inset-0 lg:order-none lg:m-0 lg:opacity-0",
+                  "w-fit flex-none snap-start lg:pointer-events-none lg:absolute lg:inset-0 lg:order-none lg:m-0 lg:opacity-0",
                   "lg:origin-top-left lg:[transform:scale(var(--rig-s))]",
                   "transition-opacity duration-500 motion-reduce:transition-none",
                   STEP_STYLE[step.key].stateOrder,
@@ -115,11 +136,29 @@ export default function MotorStory() {
           </MotorStoryRig>
         </div>
 
+        <TryIt />
+
         <p className="mt-10 max-w-[52ch] text-micro text-fg-dim lg:mt-24">
           {t("keepOriginalNote")} {t("disclaimer")}
         </p>
       </div>
     </section>
+  );
+}
+
+/**
+ * The motor's last word: the visitor's own night. The slider demo moved
+ * here from the hero, after the four report lines, so the reasoning comes
+ * before the controls. Same component, same real rule function.
+ */
+function TryIt() {
+  const t = useTranslations("Marketing.landing.demo");
+
+  return (
+    <div className="mt-16 grid gap-8 border-t border-line-strong pt-10 lg:mt-24 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16 lg:pt-16">
+      <h3 className="font-display max-w-[12ch] text-[clamp(32px,3.6vw,56px)]">{t("tryIt")}</h3>
+      <EngineDemo />
+    </div>
   );
 }
 

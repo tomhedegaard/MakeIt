@@ -13,7 +13,7 @@
     "weeksOne": "{count} uge data",
     "weeksOther": "{count} uger data",
     "noData": "Log et sæt for at starte",
-    "formula": "e1RM beregnet med Epley · weight × (1 + reps / 30) · top reps ≤ 10"
+    "formula": "e1RM beregnet med Epley: vægt × (1 + reps / 30), højst 10 reps"
   },
   "prs": {
     "ariaLabel": "Seneste PRs",

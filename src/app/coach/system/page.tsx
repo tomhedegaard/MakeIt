@@ -108,7 +108,9 @@ export default async function CoachSystemPage() {
           {status.reminders.map((r) => (
             <li key={r.id} className="p-5">
               <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="min-w-0 flex-1">
+                {/* Full row on a phone: flex-1 alone shrank it to 4 px next
+                    to the date column (UI-REVIEW-10). */}
+                <div className="min-w-0 flex-1 basis-full sm:basis-0">
                   <div className="flex items-center gap-2 mb-1">
                     <SeverityBadge severity={r.severity} />
                     <span className="eyebrow text-fg-faint">{r.service}</span>

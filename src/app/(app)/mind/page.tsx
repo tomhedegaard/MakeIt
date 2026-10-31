@@ -14,6 +14,8 @@ import StreakBadge from "@/components/mind/StreakBadge";
 import MindFirstTimeTour from "@/components/mind/MindFirstTimeTour";
 import MindCelebration from "@/components/mind/MindCelebration";
 import MindDisclaimer from "@/components/mind/MindDisclaimer";
+import FoodSoftQuestion from "@/components/mind/FoodSoftQuestion";
+import { takeSoftFoodQuestion } from "@/lib/data/body";
 import { currentStreak, longestStreak } from "@/lib/mind/streak";
 
 export async function generateMetadata() {
@@ -39,9 +41,10 @@ export default async function MindCheckPage() {
 
   const t = await getTranslations("Mind.check");
   const tGraph = await getTranslations("Mind.graph");
-  const [logs, today] = await Promise.all([
+  const [logs, today, askAboutFood] = await Promise.all([
     getRecentMindCheckLogs(member.id, 30),
     getTodayMindCheck(member.id),
+    takeSoftFoodQuestion(member.id),
   ]);
 
   const current = currentStreak(logs);
@@ -69,6 +72,8 @@ export default async function MindCheckPage() {
       />
       <Container size="narrow" className="py-10 md:py-14 space-y-10">
         {celebrationKind ? <MindCelebration kind={celebrationKind} /> : null}
+
+        {askAboutFood ? <FoodSoftQuestion /> : null}
 
         <section aria-labelledby="mind-check-title" className="space-y-8">
           <h2 id="mind-check-title" className="font-display text-section">

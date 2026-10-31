@@ -22,9 +22,9 @@ describe("18-year confirmation on signup", () => {
     expect(pw).toContain("data: { invite: code, ...adultMetadata() }");
   });
 
-  it("OAuth: required, carried across the round-trip and recorded once in the callback", () => {
+  it("OAuth: required with a code, carried across the round-trip and recorded once in the callback", () => {
     const oauth = section("export async function oauthAction", "export async function authMode");
-    expect(oauth).toContain('if (!confirmsAdult(formData)) redirect("/login?err=age")');
+    expect(oauth).toMatch(/if \(code\) \{\s*\/\/[^\n]*\n\s*if \(!confirmsAdult\(formData\)\) redirect\("\/login\?err=age"\);/);
     expect(oauth).toContain("PENDING_ADULT_COOKIE");
     expect(CALLBACK).toContain("hasAdultConfirmation(user.user_metadata)");
     expect(CALLBACK).toContain("cookieStore.delete(PENDING_ADULT_COOKIE)");

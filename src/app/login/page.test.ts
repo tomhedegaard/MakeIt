@@ -39,7 +39,8 @@ describe("login magic-link invite field", () => {
     // Optional on magic link (existing members), enforced server-side for a new email.
     expect(magic).toContain("<AdultCheckbox required={false} />");
     expect(password).toContain("{isSignup ? <AdultCheckbox required /> : null}");
-    expect(oauth).toContain("<AdultCheckbox required />");
+    // Optional on OAuth too: members sign in without a code; enforced when one is given.
+    expect(oauth).toContain("<AdultCheckbox required={false} />");
     expect(login).toMatch(/type="checkbox" name="adult"/);
   });
 

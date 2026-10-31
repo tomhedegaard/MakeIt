@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
+import AnatomySprite from "@/components/anatomy/AnatomySprite";
 import ExerciseCard from "@/components/exercise/ExerciseCard";
 import FilterPill from "@/components/exercise/FilterPill";
 import LibraryFilterForm from "@/components/exercise/LibraryFilterForm";
@@ -98,13 +99,17 @@ export default async function ExercisesIndexPage({
             <p className="text-fg-dim">{t("index.empty")}</p>
           )
         ) : (
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {exercises.map((ex) => (
-              <li key={ex.slug} className="min-w-0">
-                <ExerciseCard exercise={ex} />
-              </li>
-            ))}
-          </ul>
+          <>
+            {/* Kortenes figurer henter silhuet og muskler herfra med <use>. */}
+            <AnatomySprite />
+            <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {exercises.map((ex) => (
+                <li key={ex.slug} className="min-w-0">
+                  <ExerciseCard exercise={ex} />
+                </li>
+              ))}
+            </ul>
+          </>
         )}
       </Container>
     </>

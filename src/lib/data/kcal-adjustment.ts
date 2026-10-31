@@ -20,15 +20,16 @@
  * If actual delta is in the right direction but slow, no change.
  * If wrong direction OR much faster than target, adjust.
  *
- * Bounds: ±100 kcal per adjustment, never below a goal-floor (1400
- * for cut, 1800 for maintain/recomp, 2200 for mass) — these are
- * sanity caps so the engine can't starve members.
+ * Bounds: ±100 kcal per adjustment, never below the calorie floor
+ * (spec §S, `calorieFloor`) and never below 2200 for mass.
  */
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
 import { getWeightTrend } from "@/lib/data/weight";
 import type { NutritionGoal } from "@/lib/data/nutrition";
+import { getMemberCalorieFloor } from "@/lib/data/body";
+import { capWeeklyChangeKg, MAX_WEEKLY_CHANGE_RATIO } from "@/lib/health/body-rules";
 
 export type AdjustmentResult = {
   /** The kcal-target value AFTER any adjustment (or current if unchanged). */
@@ -48,12 +49,7 @@ const TARGET_DELTAS_KG_PER_WEEK: Record<NutritionGoal, number> = {
   mass: 0.25,
 };
 
-const FLOORS: Record<NutritionGoal, number> = {
-  cut: 1400,
-  recomp: 1800,
-  maintain: 1800,
-  mass: 2200,
-};
+const MASS_FLOOR = 2200;
 
 const CEILING = 5000; // sanity ceiling, no mass-goal should exceed
 const STEP = 100; // single-step adjustment magnitude
@@ -92,7 +88,10 @@ export async function maybeApplyKcalAdjustment(
     };
   }
 
-  const target = TARGET_DELTAS_KG_PER_WEEK[goal];
+  // Spec §S: never a pace over 0,5 % of body weight per week, neither as
+  // the goal nor as what actually happens.
+  const target = capWeeklyChangeKg(TARGET_DELTAS_KG_PER_WEEK[goal], trend.recent);
+  const maxPace = trend.recent ? trend.recent * MAX_WEEKLY_CHANGE_RATIO : null;
   const actual = trend.deltaKg;
   const tolerance = 0.3; // ±300g/wk = noise band
 
@@ -103,7 +102,10 @@ export async function maybeApplyKcalAdjustment(
   // tolerance, reduce kcal. If it dropped too fast (more than
   // 1.5x target), increase kcal (preserve muscle).
   if (goal === "cut" || goal === "recomp") {
-    if (actual > target + tolerance) {
+    if (maxPace !== null && actual < -maxPace) {
+      delta = +STEP;
+      reason = `Faldt hurtigere end 0,5 % af kropsvægten om ugen (${actual} kg/uge): øger ${STEP} kcal`;
+    } else if (actual > target + tolerance) {
       // Wrong direction or too slow — cut deeper
       delta = -STEP;
       reason = `Vægt-trend ${actual > 0 ? "+" : ""}${actual} kg/uge: sænker ${STEP} kcal`;
@@ -125,7 +127,10 @@ export async function maybeApplyKcalAdjustment(
   // Mass: want weight UP. If flat or down, add kcal. If shooting up
   // too fast (>2x target = likely fat gain), trim.
   if (goal === "mass") {
-    if (actual < target - tolerance) {
+    if (maxPace !== null && actual > maxPace) {
+      delta = -STEP;
+      reason = `Steg hurtigere end 0,5 % af kropsvægten om ugen (+${actual} kg/uge): sænker ${STEP} kcal`;
+    } else if (actual < target - tolerance) {
       delta = +STEP;
       reason = `Vægt-trend ${actual > 0 ? "+" : ""}${actual} kg/uge: øger ${STEP} kcal`;
     } else if (actual > target * 2 + tolerance) {
@@ -139,7 +144,8 @@ export async function maybeApplyKcalAdjustment(
   }
 
   const proposed = currentTarget + delta;
-  const clamped = Math.max(FLOORS[goal], Math.min(CEILING, proposed));
+  const floor = Math.max(await getMemberCalorieFloor(memberId), goal === "mass" ? MASS_FLOOR : 0);
+  const clamped = Math.max(floor, Math.min(CEILING, proposed));
   const realDelta = clamped - currentTarget;
 
   if (realDelta === 0) {

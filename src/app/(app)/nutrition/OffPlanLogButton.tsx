@@ -37,7 +37,20 @@ import { cn } from "@/lib/utils";
 type Step = "choose" | "photo" | "text" | "working" | "questions" | "noFood" | "review" | "edit" | "manual";
 type Notice = "limited" | "unavailable" | "photoTooBig" | null;
 
-export default function OffPlanLogButton({ estimateEnabled = false }: { estimateEnabled?: boolean }) {
+export default function OffPlanLogButton({
+  estimateEnabled = false,
+  variant = "page",
+  hideNumbers = false,
+}: {
+  estimateEnabled?: boolean;
+  /** "card": one inline button on the I dag food card, no floating button. */
+  variant?: "page" | "card";
+  /**
+   * "Vis ikke kalorier og vægt" (spec §S): HQ's kcal stays in the log but is
+   * never shown. The manual kcal field stays, since the member types it.
+   */
+  hideNumbers?: boolean;
+}) {
   const t = useTranslations("Nutrition.offPlan");
   const locale = useLocale();
   const nf = useMemo(() => new Intl.NumberFormat(locale === "da" ? "da-DK" : "en-GB"), [locale]);
@@ -181,21 +194,29 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
 
   return (
     <>
-      {/* Desktop: inline header button */}
-      <button type="button" onClick={() => setOpen(true)} className="hidden lg:inline-flex btn btn-ghost btn-sm">
-        {t("trigger")}
-      </button>
+      {variant === "card" ? (
+        <button type="button" onClick={() => setOpen(true)} className="btn btn-ghost btn-sm w-full justify-start whitespace-normal text-left">
+          {t("triggerMobile")}
+        </button>
+      ) : (
+        <>
+          {/* Desktop: inline header button */}
+          <button type="button" onClick={() => setOpen(true)} className="hidden lg:inline-flex btn btn-ghost btn-sm">
+            {t("trigger")}
+          </button>
 
-      {/* Mobile: floating action button, parked above the tab-bar */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label={t("dialogLabel")}
-        className="fixed right-4 z-40 btn btn-primary lg:hidden"
-        style={{ bottom: "calc(var(--tabbar-stack) + 16px)" }}
-      >
-        {t("triggerMobile")}
-      </button>
+          {/* Mobile: floating action button, parked above the tab-bar */}
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label={t("dialogLabel")}
+            className="fixed right-4 z-40 btn btn-primary lg:hidden"
+            style={{ bottom: "calc(var(--tabbar-stack) + 16px)" }}
+          >
+            {t("triggerMobile")}
+          </button>
+        </>
+      )}
 
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent title={t("title")} description={estimateEnabled ? t("intro") : t("introManual")}>
@@ -375,7 +396,7 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
                 </div>
 
                 <div>
-                  <p className="font-display text-title numeric">{kcalLine(shown)}</p>
+                  {hideNumbers ? null : <p className="font-display text-title numeric">{kcalLine(shown)}</p>}
                   <dl className="mt-3 grid grid-cols-3 gap-2">
                     {(
                       [
@@ -426,9 +447,11 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
                         <span className="min-w-0">
                           {i.name} <span className="text-fg-dim">{t("grams", { g: nf.format(i.grams) })}</span>
                         </span>
-                        <span className="shrink-0 tabular-nums text-fg-dim">
-                          {nf.format(i.kcal)} {t("kcalUnit")}
-                        </span>
+                        {hideNumbers ? null : (
+                          <span className="shrink-0 tabular-nums text-fg-dim">
+                            {nf.format(i.kcal)} {t("kcalUnit")}
+                          </span>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -441,11 +464,13 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
                     className="btn btn-primary w-full whitespace-normal"
                     onClick={() => save(shown.totals, false)}
                   >
-                    {t("approve", {
-                      kcal: nf.format(roundKcal(shown.totals.kcal)),
-                      low: nf.format(roundKcal(shown.kcalRange.low)),
-                      high: nf.format(roundKcal(shown.kcalRange.high)),
-                    })}
+                    {hideNumbers
+                      ? t("approvePlain")
+                      : t("approve", {
+                          kcal: nf.format(roundKcal(shown.totals.kcal)),
+                          low: nf.format(roundKcal(shown.kcalRange.low)),
+                          high: nf.format(roundKcal(shown.kcalRange.high)),
+                        })}
                   </button>
                   <div className="grid grid-cols-2 gap-2">
                     <button type="button" className="btn" onClick={() => setStep("edit")}>
@@ -478,7 +503,11 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
               >
                 <h3 className="font-display text-card">{t("editTitle")}</h3>
                 <div className="grid grid-cols-2 gap-3">
-                  <NumberField name="kcal" label={t("kcal")} unit={t("kcalUnit")} value={shown.totals.kcal} max={10000} min={1} />
+                  {hideNumbers ? (
+                    <input type="hidden" name="kcal" value={shown.totals.kcal} />
+                  ) : (
+                    <NumberField name="kcal" label={t("kcal")} unit={t("kcalUnit")} value={shown.totals.kcal} max={10000} min={1} />
+                  )}
                   <NumberField name="proteinG" label={t("protein")} unit={t("gramUnit")} value={shown.totals.proteinG} max={500} />
                   <NumberField name="carbsG" label={t("carbs")} unit={t("gramUnit")} value={shown.totals.carbsG} max={1000} />
                   <NumberField name="fatG" label={t("fat")} unit={t("gramUnit")} value={shown.totals.fatG} max={500} />
@@ -497,7 +526,11 @@ export default function OffPlanLogButton({ estimateEnabled = false }: { estimate
             {step === "manual" ? (
               <form onSubmit={saveManual} className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
-                  <NumberField name="kcal" label={t("kcal")} unit={t("kcalUnit")} max={10000} min={1} placeholder="650" />
+                  {hideNumbers ? (
+                    <input type="hidden" name="kcalHidden" value="1" />
+                  ) : (
+                    <NumberField name="kcal" label={t("kcal")} unit={t("kcalUnit")} max={10000} min={1} placeholder="650" />
+                  )}
                   <NumberField name="proteinG" label={t("protein")} unit={t("gramUnit")} max={500} placeholder="35" />
                 </div>
                 <label className="block space-y-1.5">

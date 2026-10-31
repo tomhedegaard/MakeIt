@@ -2,6 +2,8 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import DemoLoop from "@/components/marketing/DemoLoop";
 import { MUNK_HANDLE, MUNK_PORTRAIT_SRC } from "@/lib/marketing/munk";
+import type { CSSProperties } from "react";
+import InViewOnce from "./InViewOnce";
 
 /** Munk's card plays the back squat; the rack's form-check screen plays the bench. */
 const MUNK_DEMO_SRC = "/exercise-demos/back-squat.webm";
@@ -13,7 +15,13 @@ type FlowStep = { t: string; label: string };
  * wordmark, how an answer is made, and one signed form-check. The AI
  * draft is struck through in signal orange; the answer carries Munk's
  * signature. The exercise visual is the MoveKit loop, labelled as a
- * reference. The portrait only appears once an approved image exists.
+ * reference. Munk's face sits in the circle beside the wordmark; until a
+ * portrait exists the circle shows his initials.
+ *
+ * As the wordmark scrolls in it slides home and the portrait rolls in
+ * beside it like a plate (view timeline, globals.css `.munk-mark`).
+ * On arrival (InViewOnce, once) the flow lights up step by step, the
+ * final answer settles in and the signature writes itself last.
  */
 export default function LandingMunk() {
   const t = useTranslations("Marketing.landing.munk");
@@ -24,40 +32,43 @@ export default function LandingMunk() {
     <section
       id="munk"
       aria-labelledby="munk-heading"
-      className="scroll-mt-[68px] overflow-hidden pb-[clamp(72px,8vw,128px)] pt-[clamp(60px,7vw,110px)]"
+      className="scroll-mt-[68px] overflow-clip pb-[clamp(72px,8vw,128px)] pt-[clamp(60px,7vw,110px)]"
     >
       <div className="mx-auto max-w-[1360px] px-4 md:px-8">
-        <div
-          aria-hidden="true"
-          className="font-display flex items-center justify-between gap-4 whitespace-nowrap text-[clamp(112px,29vw,430px)] leading-[0.78]! tracking-[-0.03em]!"
-        >
-          {MUNK_HANDLE}
-          <span className="grid aspect-square w-[clamp(76px,18vw,260px)] flex-none place-items-center rounded-full border border-line-strong bg-bg-2">
-            <b className="grid aspect-square w-[42%] place-items-center rounded-full bg-fg text-[clamp(18px,3vw,44px)] leading-none text-bg">
-              {s("munkInitials")}
-            </b>
-          </span>
+        <div className="font-display flex items-center justify-between gap-4 whitespace-nowrap text-[clamp(84px,25vw,430px)] leading-[0.78]! tracking-[-0.03em]!">
+          <span aria-hidden="true" className="munk-mark">{MUNK_HANDLE}</span>
+          {MUNK_PORTRAIT_SRC !== null ? (
+            <Image
+              src={MUNK_PORTRAIT_SRC}
+              alt={t("portraitAlt")}
+              width={407}
+              height={509}
+              sizes="(min-width: 1440px) 260px, 18vw"
+              className="munk-disc aspect-square w-[clamp(84px,18vw,260px)] flex-none rounded-full border border-line-strong object-cover object-[50%_22%]"
+            />
+          ) : (
+            <span
+              aria-hidden="true"
+              className="grid aspect-square w-[clamp(76px,18vw,260px)] flex-none place-items-center rounded-full border border-line-strong bg-bg-2"
+            >
+              <b className="grid aspect-square w-[42%] place-items-center rounded-full bg-fg text-[clamp(18px,3vw,44px)] leading-none text-bg">
+                {s("munkInitials")}
+              </b>
+            </span>
+          )}
         </div>
 
-        <div className="mt-[clamp(40px,5vw,72px)] grid items-start gap-[clamp(40px,6vw,96px)] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+        <div data-once className="munk-flow mt-[clamp(40px,5vw,72px)] grid items-start gap-[clamp(40px,6vw,96px)] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
           <div>
-            {MUNK_PORTRAIT_SRC !== null ? (
-              <Image
-                src={MUNK_PORTRAIT_SRC}
-                alt={t("portraitAlt")}
-                width={480}
-                height={600}
-                className="mb-10 h-auto w-full max-w-[320px] object-cover"
-              />
-            ) : null}
             <h2 id="munk-heading" className="font-display text-[clamp(40px,4.6vw,68px)]">
               {t("heading")}
             </h2>
             <p className="mt-[22px] max-w-[46ch] text-[clamp(17px,1.35vw,20px)] text-fg-dim">{t("sub")}</p>
             <ol className="mt-[30px] grid list-none p-0">
-              {flow.map((step) => (
+              {flow.map((step, i) => (
                 <li
                   key={step.t}
+                  style={{ "--i": i } as CSSProperties}
                   className="grid grid-cols-[78px_minmax(0,1fr)] items-baseline gap-3.5 border-t border-line py-3.5 last:border-b"
                 >
                   <span className="text-[12px] font-medium leading-none text-fg-dim">
@@ -70,6 +81,7 @@ export default function LandingMunk() {
           </div>
 
           <FormCheckCard />
+          <InViewOnce threshold={0.3} />
         </div>
       </div>
     </section>
@@ -104,7 +116,7 @@ function FormCheckCard() {
           <em className="mb-1.5 block text-micro not-italic">{c("draftLabel")}</em>
           <s className="decoration-signal decoration-2">{c("draft")}</s>
         </p>
-        <p className="font-display mb-8 mt-[18px] text-[clamp(28px,2.6vw,38px)] leading-[0.98]!">{c("final")}</p>
+        <p className="munk-final font-display mb-8 mt-[18px] text-[clamp(28px,2.6vw,38px)] leading-[0.98]!">{c("final")}</p>
 
         <div className="mt-auto flex flex-wrap-reverse items-end justify-between gap-x-3 gap-y-2 border-t border-line pt-4">
           <p className="whitespace-nowrap text-micro text-fg-dim">
@@ -129,11 +141,11 @@ function Signature({ label }: { label: string }) {
       strokeWidth="1.6"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-auto w-[150px] flex-none text-fg"
+      className="munk-sig h-auto w-[150px] flex-none text-fg"
     >
-      <path d="M4 34C10 20 14 8 18 8S16 34 20 34 30 6 34 8 30 34 36 32 44 18 50 20 48 32 56 30 64 14 70 16 66 32 74 30 84 12 90 14 86 34 96 30" />
-      <path d="M100 30C106 22 110 12 114 14S110 32 118 30 130 16 134 20 132 32 140 28 156 18 166 20" />
-      <path d="M40 40C70 37 110 38 150 36" />
+      <path pathLength={1} d="M4 34C10 20 14 8 18 8S16 34 20 34 30 6 34 8 30 34 36 32 44 18 50 20 48 32 56 30 64 14 70 16 66 32 74 30 84 12 90 14 86 34 96 30" />
+      <path pathLength={1} d="M100 30C106 22 110 12 114 14S110 32 118 30 130 16 134 20 132 32 140 28 156 18 166 20" />
+      <path pathLength={1} d="M40 40C70 37 110 38 150 36" />
     </svg>
   );
 }

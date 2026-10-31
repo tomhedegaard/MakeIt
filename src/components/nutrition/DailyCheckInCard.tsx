@@ -24,8 +24,11 @@ import ConfirmSheet from "@/components/ui/ConfirmSheet";
 export default function DailyCheckInCard({
   checkin,
   variant = "full",
+  hideNumbers = false,
 }: {
   checkin: DailyCheckIn;
+  /** "Vis ikke kalorier og vægt" (spec §S). */
+  hideNumbers?: boolean;
   /** "compact" drops the meal description for tighter dashboard placement */
   variant?: "full" | "compact";
 }) {
@@ -127,10 +130,14 @@ export default function DailyCheckInCard({
       {/* Macro pill — only when there's a meal to show */}
       {variant === "full" && checkin.meal ? (
         <div className="px-5 pb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-micro">
-          <span className="text-fg-dim">
-            {t("kcal", { value: fmt(checkin.meal.estKcal) })}
-          </span>
-          <span className="text-fg-faint" aria-hidden>·</span>
+          {hideNumbers ? null : (
+            <>
+              <span className="text-fg-dim">
+                {t("kcal", { value: fmt(checkin.meal.estKcal) })}
+              </span>
+              <span className="text-fg-faint" aria-hidden>·</span>
+            </>
+          )}
           <span className="text-fg-dim">
             {t("protein", { value: fmt(checkin.meal.estProteinG) })}
           </span>

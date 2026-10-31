@@ -86,11 +86,15 @@
       "munk": "Munk",
       "crew": "Crew",
       "login": "Log in",
-      "cta": "Get access"
+      "cta": "Get access",
+      "train": "Training",
+      "food": "Food",
+      "hrv": "HRV",
+      "mind": "Mind"
     },
     "hero": {
       "heading": "Built for those who lift.",
-      "sub": "HQ, the app's brain, reads your night and rewrites today's session before you get under the bar.",
+      "sub": "HQ, the app's brain, reads your night and rewrites today's session before you get under the bar. Training, food, HRV and your head in one app.",
       "cta": "Get access",
       "link": "See how HQ works",
       "plateOld": "150",
@@ -218,7 +222,9 @@
         "sample": "Sample data",
         "prev": "Previous screen",
         "next": "Next screen",
-        "listLabel": "Fifteen app screens"
+        "listLabel": "Fifteen app screens",
+        "pinSub": "Scroll, and the phone walks through the day.",
+        "parts": ["The morning", "The session", "The programme", "The food", "Head and crew"]
       }
     },
     "munk": {
@@ -258,15 +264,15 @@
     },
     "crew": {
       "eyebrow": "The crew",
-      "heading": "Load the bar, one plate at a time.",
+      "heading": "From first session to coach.",
       "sub": "Reps are earned by training, sending form checks, setting PRs and helping others.",
       "here": "You are here",
       "coachSchool": "Coach School opens",
       "tiers": {
-        "lifter": "You are in. Every session counts.",
+        "lifter": "You are in. The crew cheers your first sessions.",
         "athlete": "Form checks and PRs earn the most reps.",
         "beast": "Coach School opens. You learn to answer others.",
-        "legend": "The top of the crew."
+        "legend": "The top of the crew. 1:1 time with Munk."
       },
       "meterLabel": "Athlete · 1,240 of 5,000 reps",
       "meterNote": "Example",
@@ -285,6 +291,10 @@
         "ctaStart": "Start as {tier}",
         "ctaToward": "Start towards {tier}",
         "ctaNote": "Everyone starts as Lifter. Reps count from your first session and never expire."
+      },
+      "turn": {
+        "label": "The turning point",
+        "text": "At Beast, Coach School opens. You learn to answer other members' form checks, and every time you help, it earns reps. Now you are the one spotting."
       }
     },
     "voices": {
@@ -295,7 +305,7 @@
       "eyebrow": "Access",
       "heading": "Join the list.",
       "sub": "Invite only. Spots open in small groups.",
-      "worksWith": "Works with WHOOP, Oura, Polar and Apple Watch through the iPhone app.",
+      "worksWith": "Works with WHOOP, Oura and Polar. Apple Watch is coming with the iPhone app.",
       "emailLabel": "Your email",
       "emailPlaceholder": "name@domain.com",
       "cta": "Sign me up",
@@ -695,6 +705,169 @@
       "full": "The conversation is long now. Start over to ask more.",
       "restart": "Start over",
       "privacyLink": "Privacy"
+    },
+    "chapters": {
+      "doors": {
+        "train": {
+          "name": "Training",
+          "line": "577 exercises in 3D"
+        },
+        "food": {
+          "name": "Food",
+          "line": "Meal plan and shopping list"
+        },
+        "heart": {
+          "name": "HRV",
+          "line": "From your watch every morning"
+        },
+        "mind": {
+          "name": "Mind",
+          "line": "Mind check and breathing"
+        }
+      },
+      "train": {
+        "heading": "577 exercises. All in 3D.",
+        "sub": "See the movement from every side, with the working muscles and Munk's cues. The programme runs in four-week blocks and moves with you.",
+        "facts": [
+          "Four-week blocks, built by Munk.",
+          "Top set, backoff and rest set by HQ every morning.",
+          "Form check: record the set, and Munk answers within 24 hours."
+        ],
+        "names": {
+          "back-squat": "Back squat",
+          "deadlift": "Deadlift",
+          "bench": "Bench press",
+          "pull-up": "Pull-up",
+          "hip-thrust": "Hip thrust",
+          "ohp": "Overhead press",
+          "row": "Row",
+          "rdl": "Romanian deadlift",
+          "front-squat": "Front squat",
+          "lunge": "Lunge",
+          "dip": "Dips",
+          "push-press": "Push press",
+          "plank": "Plank"
+        },
+        "hint": "Hover an exercise, or tap it, to see it move.",
+        "hintTouch": "Swipe, and the exercise in the middle starts to move."
+      },
+      "food": {
+        "heading": "A week on the plate.",
+        "sub": "Real food, not powder. HQ plans your meals around today's training, and the shopping list builds itself.",
+        "days": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat",
+          "Sun"
+        ],
+        "meals": [
+          "Skyr bowl with raspberries and nuts",
+          "Chicken bowl with greens",
+          "Baked salmon with asparagus and lemon",
+          "Rye bread with herring, red onion and dill",
+          "Beef tenderloin with roast potatoes",
+          "Porridge with blueberries and almonds",
+          "Chickpea stew with sweet potato"
+        ],
+        "macro": "{kcal} kcal · {protein} g protein",
+        "points": [
+          "More carbs on training days, fewer on rest days.",
+          "The shopping list is gathered from the week's meals."
+        ],
+        "credit": "An example week. Photos from Unsplash:",
+        "grams": "{g} g",
+        "weekTotal": "The week's seven plates in total",
+        "showMacros": "Show the macro split: {meal}"
+      },
+      "heart": {
+        "heading": "From your watch to your session.",
+        "sub": "HQ pulls last night's HRV and resting heart rate and measures them against your own band. Not against an average.",
+        "devicesLabel": "Works with",
+        "devices": [
+          "WHOOP",
+          "Oura",
+          "Polar",
+          "Apple Watch"
+        ],
+        "appleNote": "Apple Watch is coming with the iPhone app.",
+        "reads": "Reads HRV and resting heart rate",
+        "syncedAt": "Synced at 05:14",
+        "soon": "Coming with the iPhone app",
+        "soonShort": "Soon",
+        "band": "Your band: 54 to 68 ms",
+        "link": "See what HQ does with it",
+        "chartLabel": "HRV over the last 14 nights against your band of 54 to 68 ms. Use the arrow keys to pick a night.",
+        "night": "Night {n} of 14",
+        "tonight": "Last night",
+        "inBand": "In your band",
+        "below": "Below your band",
+        "above": "Above your band",
+        "syncedFrom": "Synced from {device} at 05:14",
+        "hint": "Pick a watch, and move across the nights.",
+        "hintTouch": "Pick a watch, and drag across the nights."
+      },
+      "mind": {
+        "heading": "Your head trains too.",
+        "sub": "A 60-second mind check in the morning. Breathing before the heavy sets. When stress is high, it counts in today's session.",
+        "items": [
+          {
+            "t": "Mind check",
+            "d": "Energy, stress and focus in 60 seconds."
+          },
+          {
+            "t": "Breathing",
+            "d": "Calm breathing before heavy sets and after the session."
+          },
+          {
+            "t": "Journal",
+            "d": "A few lines a day. Only you can read them."
+          },
+          {
+            "t": "The week",
+            "d": "The week's energy, stress and focus in one place."
+          }
+        ],
+        "start": "Try one breath",
+        "again": "Once more",
+        "stop": "Stop",
+        "phases": {
+          "in": "In",
+          "hold": "Hold",
+          "out": "Out"
+        },
+        "done": "Good. That is how a mind check starts.",
+        "hint": "19 seconds: in for 4, hold for 7, out for 8."
+      },
+      "alone": {
+        "heading": "Someone always spots you.",
+        "sub": "The crew sees your PRs, cheers your sessions and answers when you are unsure. And you do the same for them.",
+        "feedLabel": "In the crew today",
+        "features": [
+          {
+            "t": "Buddy",
+            "d": "A training partner at your level who can see whether you are fresh today."
+          },
+          {
+            "t": "Circles",
+            "d": "Small groups with their own coach."
+          },
+          {
+            "t": "Cheer",
+            "d": "One tap, and they know you saw their session."
+          },
+          {
+            "t": "Weekly reps",
+            "d": "A leaderboard where helping others counts too."
+          }
+        ],
+        "you": "You",
+        "cheer": "Cheer",
+        "cheered": "Cheering",
+        "cheerLabel": "Cheer {name}"
+      }
     }
   }
 }

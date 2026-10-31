@@ -15,7 +15,7 @@
     "title": "Adgang til hele platformen",
     "price": "Pris",
     "nextBilling": "Næste fakturering",
-    "manage": "Manage abonnement",
+    "manage": "Betaling, kvitteringer og opsigelse",
     "activate": "Aktivér Crew-medlemskab →",
     "secureCheckout": "Sikker checkout via Stripe · ingen kort gemmes hos os"
   },
@@ -25,8 +25,8 @@
     "price": "Pris",
     "spots": "Pladser",
     "spotsValue": "{count} ad gangen",
-    "manage": "Manage 1:1",
-    "apply": "Søg om plads →",
+    "manage": "Administrér 1:1",
+    "apply": "Opgradér med 1:1 →",
     "requiresCrew": "Kræver aktivt Crew-medlemskab"
   },
   "help": {

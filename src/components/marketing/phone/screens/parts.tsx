@@ -103,7 +103,7 @@ export function Fields({
   items,
   className,
 }: {
-  items: readonly { label: string; value: string }[];
+  items: readonly { label: string; value: ReactNode }[];
   className?: string;
 }) {
   return (

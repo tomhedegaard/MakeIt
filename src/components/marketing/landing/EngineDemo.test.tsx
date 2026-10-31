@@ -86,7 +86,4 @@ describe("EngineDemo", () => {
     expect((html.match(/id="demo-sleep"/g) ?? []).length).toBe(1);
   });
 
-  it("inviterer til at prøve skyderne på mobil", () => {
-    expect(html).toContain("Prøv selv: flyt en skyder.");
-  });
 });

@@ -99,7 +99,16 @@
     "panelHrvBand": "Personligt bånd",
     "panelHrvBuilding": "Bygges ({count} nætter)",
     "panelHrvNone": "Ingen HRV-måling endnu.",
-    "panelMissing": "Sagen kunne ikke hentes her. Åbn hele sagen."
+    "panelMissing": "Sagen kunne ikke hentes her. Åbn hele sagen.",
+    "chipFoodRelationship": "Mad og krop",
+    "panelFood": "Tidlige tegn, ikke en diagnose. Medlemmet ser ingen advarsel; ved næste mind-check får de et blødt spørgsmål og henvisning til Livslinien og LMS. Tag det op i en rolig samtale, hvis det giver mening.",
+    "foodSeen": "Markér som set i 14 dage",
+    "foodSignals": {
+      "underFloor": "Har spist under kaloriegulvet tre loggede dage i træk",
+      "pejlemaerkeLowered": "Har sænket sit pejlemærke tre gange på 30 dage",
+      "estimatesCutDown": "Har rettet tre HQ-estimater ned under intervallet på 14 dage",
+      "frequentWeighing": "Har vejet sig tre gange eller mere samme dag"
+    }
   },
   "analytics": {
     "metaTitle": "Coach · Analyse",

@@ -40,7 +40,11 @@ export async function GET(req: NextRequest) {
   const url = req.nextUrl;
   const code = url.searchParams.get("code");
   const inviteFromUrl = url.searchParams.get("invite");
-  const next = url.searchParams.get("next") ?? "/dashboard";
+  // In-app paths only: `new URL("//evil.com", url)` would leave the site.
+  const rawNext = url.searchParams.get("next") ?? "";
+  const next = rawNext.startsWith("/") && !rawNext.startsWith("//") && !rawNext.startsWith("/\\")
+    ? rawNext
+    : "/dashboard";
 
   if (!code) {
     return NextResponse.redirect(new URL("/login?err=callback", url));
@@ -84,6 +88,8 @@ export async function GET(req: NextRequest) {
     invite,
     nowMs: Date.now(),
     alreadyAdmitted,
+    // Only an email OTP is a "returning magic link"; OAuth can create users.
+    returningMagicLink: !invite && user.app_metadata?.provider === "email",
     consumeInvite: consumeInviteForUser,
     signOut: () => supabase.auth.signOut(),
   });

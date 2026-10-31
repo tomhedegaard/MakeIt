@@ -62,5 +62,36 @@
     "confirmPlaceholder": "{phrase}",
     "cancel": "Annullér",
     "confirm": "Slet kontoen permanent"
+  },
+  "body": {
+    "title": "Krop",
+    "intro": "Du bestemmer, hvilke tal du ser. HQ planlægger stadig ud fra dem i baggrunden.",
+    "hideNumbersLabel": "Vis ikke kalorier og vægt",
+    "hideNumbersSub": "Mad viser måltider og protein uden kalorier, og kropsvægten forsvinder fra appen.",
+    "showWeightCardLabel": "Vis kropsvægt på I dag",
+    "showWeightCardSub": "Et snit over 7 dage og retningen. Aldrig én enkelt vejning.",
+    "pejlemaerkeTitle": "Pejlemærke",
+    "pejlemaerkeSub": "En kropsvægt, du selv sætter som retning. HQ tæller aldrig ned til den og viser ikke afstanden.",
+    "pejlemaerkeLabel": "Pejlemærke (kg)",
+    "heightLabel": "Højde (cm)",
+    "birthYearLabel": "Fødselsår",
+    "sexLabel": "Køn",
+    "sex": {
+      "none": "Vælg",
+      "f": "Kvinde",
+      "m": "Mand",
+      "unspecified": "Vil ikke oplyse"
+    },
+    "why": "Højde, fødselsår og køn bruger HQ kun til at sætte grænser: et pejlemærke under en sund vægt for din højde, og et dagligt mål under det, din krop bruger i hvile.",
+    "adultLabel": "Jeg er fyldt 18 år",
+    "save": "Gem",
+    "errors": {
+      "auth": "Log ind igen for at gemme.",
+      "adult": "Pejlemærke og kropsvægt kræver, at du er fyldt 18 år.",
+      "invalid": "Et af tallene ser forkert ud. Tjek højde, fødselsår og pejlemærke.",
+      "needsHeight": "Skriv din højde, så HQ kan sætte grænsen for pejlemærket.",
+      "belowHealthy": "Det pejlemærke ligger under en sund vægt for din højde, så HQ sætter det ikke. Skriv til Munk, hvis du vil tale om din retning.",
+      "unknown": "Det kunne ikke gemmes. Prøv igen."
+    }
   }
 }

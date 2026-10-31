@@ -18,6 +18,7 @@ import {
   getPendingFormChecks,
 } from "./coach";
 import { getMentalSafetyMetrics } from "./mind";
+import { getFoodSignalInboxRows } from "./body";
 
 export type CoachPriorityInbox = {
   items: PriorityInboxItem[];
@@ -26,12 +27,13 @@ export type CoachPriorityInbox = {
 };
 
 export async function getCoachPriorityInbox(): Promise<CoachPriorityInbox> {
-  const [safety, hrv, adaptive, formChecks, health] = await Promise.all([
+  const [safety, hrv, adaptive, formChecks, health, food] = await Promise.all([
     getMentalSafetyMetrics(7),
     getOpenHrvAlerts(50),
     getOpenAdaptiveAlerts(50),
     getPendingFormChecks(50),
     getMemberHealth(),
+    getFoodSignalInboxRows(),
   ]);
 
   const demo = !SUPABASE_ENABLED;
@@ -45,6 +47,7 @@ export async function getCoachPriorityInbox(): Promise<CoachPriorityInbox> {
           createdAt: a.created_at,
         }))
       : [],
+    foodRelationship: food,
     hrvAlerts: hrv.map((a) => ({
       id: a.id,
       memberId: a.memberId,

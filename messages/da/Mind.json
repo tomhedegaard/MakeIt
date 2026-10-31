@@ -376,5 +376,13 @@
     "notTreatment": "Appen er ikke behandling.",
     "livslinien": "Livslinien 70 201 201",
     "emergency": "akut 112"
+  },
+  "foodQuestion": {
+    "title": "Hvordan har du det med mad og træning lige nu?",
+    "body": "Hvis mad, vægt eller træning fylder mere, end du har lyst til, er du ikke alene, og der er hjælp at få.",
+    "lms": "LMS, Landsforeningen mod spiseforstyrrelser og selvskade",
+    "livslinien": "Livslinien 70 201 201",
+    "munk": "Du kan også skrive til Munk.",
+    "notTreatment": "Appen er ikke behandling. Akut: 112."
   }
 }

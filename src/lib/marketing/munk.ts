@@ -9,11 +9,10 @@
  *   - Reachable at COMPANY.emails.headCoach and @Munk in the feed
  *   - Company city: København (COMPANY.legal.address)
  *
- * Missing approved asset: a portrait of Mikael Munk. Do not invent
- * a photo, biography, years of experience, or achievements.
- * When an approved image exists, set MUNK_PORTRAIT_SRC to its
- * public path; LandingMunk renders it.
+ * Portrait: supplied and approved by the owner 2026-10-05
+ * (`public/landing/munk-portrait.jpg`, 407 × 509). Still do not invent
+ * a biography, years of experience, or achievements.
  */
-export const MUNK_PORTRAIT_SRC: string | null = null;
+export const MUNK_PORTRAIT_SRC: string | null = "/landing/munk-portrait.jpg";
 
 export const MUNK_HANDLE = "Munk";

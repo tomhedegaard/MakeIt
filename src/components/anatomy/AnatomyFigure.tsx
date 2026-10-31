@@ -31,15 +31,7 @@ import {
   type AnatomyView,
   type RnbhBodyPart,
 } from "@/lib/data/anatomy/paths";
-
-const COLORS = {
-  body: "var(--anatomy-body)", // flat silhouette
-  body_outline: "var(--anatomy-edge)", // 1 px edge
-  inactive: "var(--anatomy-idle)", // muscles not targeted
-  tertiary: "var(--muscle-tertiary)",
-  secondary: "var(--muscle-secondary)",
-  primary: "var(--muscle-primary)",
-} as const;
+import { ANATOMY_COLORS as COLORS } from "@/lib/data/anatomy/sprite";
 
 export default function AnatomyFigure({
   view = "front",

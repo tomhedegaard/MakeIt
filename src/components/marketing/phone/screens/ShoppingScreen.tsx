@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import PhoneFrame from "../PhoneFrame";
@@ -11,8 +12,14 @@ const GROUPS = [
   { key: "g4", items: ["i10", "i11", "i12", "i13", "i14"] },
 ] as const;
 const IN_BASKET = new Set<string>(["i1", "i2", "i3", "i4"]);
+/** Running row number across the aisles, for the landing's gather-in stagger. */
+const ROW = new Map<string, number>(GROUPS.flatMap((g) => g.items).map((item, i) => [item, i]));
 
-/** Mad: indkøbslisten til ugens plan. */
+/**
+ * Mad: indkøbslisten til ugens plan. Rows carry `data-shop-row` and their
+ * running number, so the food chapter can gather them in (globals.css
+ * `.food-shop`); elsewhere the attributes do nothing.
+ */
 export default function ShoppingScreen({ width, scroll }: { width?: number; scroll?: boolean }) {
   const t = useTranslations("Marketing.landing");
   const s = useTranslations("Marketing.landing.screens");
@@ -29,7 +36,7 @@ export default function ShoppingScreen({ width, scroll }: { width?: number; scro
       </div>
 
       <div data-domain="food" className="flex h-1.5 overflow-hidden bg-line">
-        <i className="block h-full w-[29%] bg-domain" />
+        <i data-shop-bar className="block h-full w-[29%] origin-left bg-domain" />
       </div>
       <Label>{sh("done")}</Label>
 
@@ -41,6 +48,8 @@ export default function ShoppingScreen({ width, scroll }: { width?: number; scro
             return (
               <div
                 key={item}
+                data-shop-row
+                style={{ "--i": ROW.get(item) } as CSSProperties}
                 className={cn(
                   "grid grid-cols-[14px_1fr_auto] items-center gap-2 border-t border-line py-[6px]",
                   i === group.items.length - 1 && "border-b",

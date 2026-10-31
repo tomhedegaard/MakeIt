@@ -82,10 +82,9 @@ describe("CDO DA/EN bodycopy — Today / Train / Reps", () => {
     expect(prose).toContain('tSession("dayLabel")');
     expect(page).toContain('t("todaySession.minuteUnit")');
     expect(page).toContain('t("todaySession.minutes"');
-    // The HRV value moved from the dashboard chip into Morgenens signal (F3).
+    // The HRV value moved from the dashboard chip into the Heart card (F3, B1).
     const signal = read("src/components/dashboard/MorningSignal.tsx");
-    expect(signal).toContain('useTranslations("Dashboard.hrvChip")');
-    expect(signal).toContain('tHrv("unit")');
+    expect(signal).toContain("t(`unit.${card.unit}`");
     expect(page).not.toMatch(/<span className="text-fg-dim text-sm">m<\/span>/);
     expect(page).not.toMatch(/estimatedMinutes\}m/);
     expect(page).not.toMatch(/ml-1">ms<\/span>/);

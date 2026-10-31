@@ -21,7 +21,7 @@ import {
 } from "./nutrition-estimate";
 
 /** Vision model for the estimate (spec D.3). Must pass the 30-meal evaluation. */
-export const ESTIMATE_MODEL = "claude-sonnet-5";
+export const ESTIMATE_MODEL = "claude-sonnet-5-5";
 
 export type MealInput = {
   photo?: { base64: string; mediaType: "image/jpeg" | "image/png" | "image/webp" } | null;
