@@ -256,6 +256,56 @@ export async function passwordAction(formData: FormData) {
 }
 
 /* ---------------------------------------------------------------- *
+ * Forgotten password
+ *
+ * The reset mail links through /auth/callback (same PKCE exchange as
+ * magic link) and lands on /login/new-password with a session. Always
+ * show the "sent" state so the form does not reveal which emails exist.
+ * ---------------------------------------------------------------- */
+
+export async function resetPasswordAction(formData: FormData) {
+  const supabase = await createClient();
+  if (!supabase) redirect("/login?err=1");
+
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (!email) redirect("/login?tab=password&mode=reset&err=missing");
+
+  const base = await baseUrl();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${base}/auth/callback?next=/login/new-password`,
+  });
+  if (error) {
+    console.warn("[password-reset] resetPasswordForEmail returned error:", {
+      code: error.code ?? "",
+      status: error.status ?? 0,
+      message: error.message ?? "",
+    });
+  }
+
+  redirect(`/login?sent=reset&email=${encodeURIComponent(email)}`);
+}
+
+export async function newPasswordAction(formData: FormData) {
+  const supabase = await createClient();
+  if (!supabase) redirect("/login?err=1");
+
+  const password = String(formData.get("password") ?? "");
+  if (password.length < 8) redirect("/login/new-password?err=pw_short");
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) {
+    // No session (link expired / opened elsewhere) → start over.
+    if (error.status === 401 || /session/i.test(error.message)) {
+      redirect("/login?tab=password&mode=reset&err=callback");
+    }
+    if (error.code === "same_password") redirect("/login/new-password?err=same_password");
+    redirect("/login/new-password?err=signin");
+  }
+
+  redirect("/dashboard");
+}
+
+/* ---------------------------------------------------------------- *
  * OAuth — Google + Apple
  *
  * Flow:
@@ -267,9 +317,11 @@ export async function passwordAction(formData: FormData) {
  * Sign-in vs sign-up: OAuth doesn't distinguish. If the user already
  * exists, they sign in. If not, `handle_new_user` creates an
  * un-admitted members row; /auth/callback consumes the invite.
- * A currently valid invite is required for BOTH paths
- * (`is_invite_valid`). Consume only for users not yet admitted
- * so returning logins do not burn multi-use codes.
+ * Same rule as magic link: a blank invite is a returning login
+ * (members need no code), a filled one is validated and needs the
+ * 18-year box. A new user with no invite is signed out in the
+ * callback (`alreadyAdmitted: false` → reject). Consume only for
+ * users not yet admitted so returning logins do not burn codes.
  * ---------------------------------------------------------------- */
 
 export async function oauthAction(formData: FormData) {
@@ -282,19 +334,27 @@ export async function oauthAction(formData: FormData) {
   if (provider !== "google" && provider !== "apple") {
     redirect("/login?err=provider");
   }
-  // OAuth may create the account, so the 18-year box is required here too.
-  if (!confirmsAdult(formData)) redirect("/login?err=age");
-  await requireValidConnectedInvite(code);
 
-  // Stash the invite and the confirmation for /auth/callback to read
-  // after the round-trip (GoTrue takes no metadata on OAuth).
-  await setPendingInvite(code);
-  (await cookies()).set(PENDING_ADULT_COOKIE, adultMetadata().adult_confirmed_at, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 10,
-  });
+  const jar = await cookies();
+  if (code) {
+    // A code means a new account, so the 18-year box is required.
+    if (!confirmsAdult(formData)) redirect("/login?err=age");
+    await requireValidConnectedInvite(code);
+
+    // Stash the invite and the confirmation for /auth/callback to read
+    // after the round-trip (GoTrue takes no metadata on OAuth).
+    await setPendingInvite(code);
+    jar.set(PENDING_ADULT_COOKIE, adultMetadata().adult_confirmed_at, {
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 10,
+    });
+  } else {
+    // Stale stash must not ride along on a returning login.
+    jar.delete(PENDING_INVITE_COOKIE);
+    jar.delete(PENDING_ADULT_COOKIE);
+  }
 
   const base = await baseUrl();
   const { data, error } = await supabase.auth.signInWithOAuth({
