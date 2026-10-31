@@ -30,11 +30,11 @@ import { useTranslations } from "next-intl";
 export default function VideoRecorder({
   onCancel,
   onSubmit,
-  disabled,
+  busy,
 }: {
   onCancel: () => void;
   onSubmit: (blob: Blob, durationSec: number, mime: string) => Promise<void>;
-  disabled?: boolean;
+  busy?: boolean;
 }) {
   const t = useTranslations("Messages.videoRecorder");
   const [state, setState] = useState<"idle" | "recording" | "preview">("idle");
@@ -95,6 +95,7 @@ export default function VideoRecorder({
   }
 
   async function start() {
+    if (busy) return;
     setError(null);
     try {
       // Two-step constraint resolution: prefer a 720p user-facing
@@ -204,6 +205,7 @@ export default function VideoRecorder({
   }
 
   function discard() {
+    if (pending) return;
     if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
     previewUrlRef.current = null;
     blobRef.current = null;
@@ -235,7 +237,7 @@ export default function VideoRecorder({
           <button
             type="button"
             onClick={start}
-            disabled={disabled}
+            aria-disabled={busy}
             className="btn btn-sm btn-primary"
           >
             {t("record")}
@@ -301,7 +303,7 @@ export default function VideoRecorder({
             <button
               type="button"
               onClick={discard}
-              disabled={pending}
+              aria-disabled={pending}
               className="btn btn-sm btn-ghost"
             >
               {t("discard")}
@@ -315,7 +317,7 @@ export default function VideoRecorder({
             <button
               type="button"
               onClick={send}
-              disabled={pending}
+              aria-disabled={pending}
               className="btn btn-sm btn-primary ml-auto"
             >
               {pending ? t("sending") : t("send")}
@@ -325,7 +327,7 @@ export default function VideoRecorder({
       ) : null}
 
       {error ? (
-        <p className="text-meta text-danger">{error}</p>
+        <p role="alert" className="text-meta text-danger">{error}</p>
       ) : null}
     </div>
   );

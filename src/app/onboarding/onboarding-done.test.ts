@@ -64,7 +64,7 @@ describe("onboarding DONE pending UI wiring", () => {
     expect(clientSrc).toContain("pending={pending}");
     expect(clientSrc).toContain('namespace="Onboarding.programOverlay"');
     expect(clientSrc).toContain("t(\"nav.submitting\")");
-    expect(clientSrc).toContain("disabled={pending}");
+    expect(clientSrc).toContain("aria-disabled={pending}");
     expect(clientSrc).toContain("window.location.assign(path)");
     expect(clientSrc).toContain('await finish("/dashboard")');
     expect(clientSrc).toContain("nextRedirectPath");

@@ -148,6 +148,7 @@ export default function OffPlanLogButton({
   const shown = estimate ? scaleEstimate(estimate, portion) : null;
 
   function save(values: { kcal: number; proteinG: number; carbsG: number; fatG: number }, edited: boolean) {
+    if (pending) return;
     if (!shown) return;
     const fd = new FormData();
     fd.set(
@@ -459,7 +460,7 @@ export default function OffPlanLogButton({
                 <div className="grid gap-2">
                   <button
                     type="button"
-                    disabled={pending}
+                    aria-disabled={pending}
                     className="btn btn-primary w-full whitespace-normal"
                     onClick={() => save(shown.totals, false)}
                   >
@@ -512,7 +513,7 @@ export default function OffPlanLogButton({
                   <NumberField name="fatG" label={t("fat")} unit={t("gramUnit")} value={shown.totals.fatG} max={500} />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <button type="submit" disabled={pending} className="btn btn-primary">
+                  <button type="submit" aria-disabled={pending} onClick={(e) => pending && e.preventDefault()} className="btn btn-primary">
                     {pending ? t("saving") : t("save")}
                   </button>
                   <button type="button" className="btn btn-ghost" onClick={() => setStep("review")}>
@@ -546,7 +547,7 @@ export default function OffPlanLogButton({
                   />
                 </label>
                 <div className="grid grid-cols-2 gap-2">
-                  <button type="submit" disabled={pending} className="btn btn-primary">
+                  <button type="submit" aria-disabled={pending} onClick={(e) => pending && e.preventDefault()} className="btn btn-primary">
                     {pending ? t("saving") : t("logManual")}
                   </button>
                   <button type="button" className="btn btn-ghost" onClick={() => onOpenChange(false)}>

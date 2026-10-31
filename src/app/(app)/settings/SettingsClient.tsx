@@ -66,6 +66,7 @@ export default function SettingsClient({
   const [typed, setTyped] = useState("");
 
   function saveProfile() {
+    if (profilePending) return;
     setProfileMsg(null);
     startProfile(async () => {
       const res = await updateProfileAction({ handle, displayName, bio });
@@ -80,6 +81,7 @@ export default function SettingsClient({
   }
 
   function savePrefs() {
+    if (prefsPending) return;
     setPrefsMsg(null);
     startPrefs(async () => {
       const res = await updateNotifPrefsAction(prefs);
@@ -98,6 +100,7 @@ export default function SettingsClient({
   // friction, but focus-trapped, themed and closable with Escape like
   // the session's end dialog (UX review 2026-09-19).
   function confirmDelete() {
+    if (deletePending) return;
     if (typed.trim() !== deletePhrase) return;
     setDeleteMsg(null);
     setDeleteOpen(false);
@@ -159,7 +162,7 @@ export default function SettingsClient({
             type="button"
             className="btn btn-primary btn-sm"
             onClick={saveProfile}
-            disabled={profilePending}
+            aria-disabled={profilePending}
           >
             {profilePending ? tc("saving") : t("profile.save")}
           </button>
@@ -215,7 +218,7 @@ export default function SettingsClient({
             type="button"
             className="btn btn-primary btn-sm"
             onClick={savePrefs}
-            disabled={prefsPending}
+            aria-disabled={prefsPending}
           >
             {prefsPending ? tc("saving") : t("notifications.save")}
           </button>
@@ -274,18 +277,17 @@ export default function SettingsClient({
             type="button"
             className="btn btn-sm"
             onClick={() => {
+              if (deletePending) return;
               setTyped("");
               setDeleteOpen(true);
             }}
-            disabled={deletePending}
+            aria-disabled={deletePending}
           >
             {deletePending ? t("danger.deleting") : t("danger.delete")}
           </button>
-          {deleteMsg ? (
-            <span className="text-meta text-fg-dim">
-              {deleteMsg}
-            </span>
-          ) : null}
+          <span role="status" aria-live="polite" className="text-meta text-fg-dim">
+            {deleteMsg}
+          </span>
         </div>
       </section>
 
@@ -316,8 +318,9 @@ export default function SettingsClient({
           </button>
           <button
             type="button"
-            className="btn btn-sm btn-primary disabled:opacity-40"
-            disabled={typed.trim() !== deletePhrase || deletePending}
+            className="btn btn-sm btn-primary disabled:opacity-40 aria-disabled:opacity-40"
+            disabled={typed.trim() !== deletePhrase}
+            aria-disabled={deletePending}
             onClick={confirmDelete}
           >
             {t("danger.confirm")}
@@ -329,13 +332,14 @@ export default function SettingsClient({
 }
 
 function StatusLabel({ status }: { status: Status }) {
-  if (!status) return null;
   return (
     <span
+      role="status"
+      aria-live="polite"
       className="text-micro"
-      style={{ color: status.ok ? "var(--fg)" : "var(--fg-dim)" }}
+      style={{ color: status?.ok ? "var(--fg)" : "var(--fg-dim)" }}
     >
-      {status.text}
+      {status?.text}
     </span>
   );
 }

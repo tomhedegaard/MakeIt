@@ -144,7 +144,10 @@ export default function LogMealButton({
             <div className="flex items-center gap-2 pt-2">
               <button
                 type="submit"
-                disabled={pending}
+                aria-disabled={pending}
+                onClick={(e) => {
+                  if (pending) e.preventDefault();
+                }}
                 className="btn btn-primary flex-1"
               >
                 {pending ? t("logging") : t("submit")}

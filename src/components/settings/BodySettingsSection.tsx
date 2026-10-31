@@ -42,6 +42,7 @@ export default function BodySettingsSection({
   };
 
   function save() {
+    if (pending) return;
     setMsg(null);
     start(async () => {
       const res = await saveBodyAction({
@@ -121,14 +122,12 @@ export default function BodySettingsSection({
       ) : null}
 
       <div className="flex items-center gap-3">
-        <button type="button" className="btn btn-primary btn-sm" onClick={save} disabled={pending}>
+        <button type="button" className="btn btn-primary btn-sm" onClick={save} aria-disabled={pending}>
           {pending ? tc("saving") : t("save")}
         </button>
-        {msg ? (
-          <span role="status" className={msg.ok ? "text-micro text-fg" : "text-micro text-fg-dim"}>
-            {msg.text}
-          </span>
-        ) : null}
+        <span role="status" aria-live="polite" className={msg?.ok ? "text-micro text-fg" : "text-micro text-fg-dim"}>
+          {msg?.text}
+        </span>
       </div>
     </section>
   );

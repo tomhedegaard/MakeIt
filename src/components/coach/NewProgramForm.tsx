@@ -26,6 +26,7 @@ export default function NewProgramForm() {
   const [level, setLevel] = useState(LEVELS[1]);
 
   function submit() {
+    if (pending) return;
     setError(null);
     startTransition(async () => {
       const res = await createProgramAction({ code, name, type, weeks, level });
@@ -116,7 +117,7 @@ export default function NewProgramForm() {
       </div>
 
       {error ? (
-        <p className="text-copy" style={{ color: "var(--danger)" }}>
+        <p role="alert" className="text-copy" style={{ color: "var(--danger)" }}>
           {error}
         </p>
       ) : null}
@@ -125,7 +126,8 @@ export default function NewProgramForm() {
         <button
           type="button"
           onClick={submit}
-          disabled={pending || !code.trim() || !name.trim()}
+          disabled={!code.trim() || !name.trim()}
+          aria-disabled={pending}
           className="btn btn-primary"
         >
           {pending ? t("creating") : t("submit")}

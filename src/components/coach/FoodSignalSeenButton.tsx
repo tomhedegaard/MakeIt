@@ -13,12 +13,13 @@ export default function FoodSignalSeenButton({ memberId }: { memberId: string })
     <button
       type="button"
       className="btn btn-sm"
-      disabled={pending}
-      onClick={() =>
+      aria-disabled={pending}
+      onClick={() => {
+        if (pending) return;
         start(async () => {
           if ((await markFoodSignalSeenAction(memberId)).ok) router.refresh();
-        })
-      }
+        });
+      }}
     >
       {t("foodSeen")}
     </button>

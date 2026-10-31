@@ -41,11 +41,13 @@ export default function RedeemButton({
   }
 
   function close_() {
+    if (pending) return;
     setOpen(false);
     if (stage === "success") router.refresh();
   }
 
   function confirm() {
+    if (pending) return;
     startTransition(async () => {
       const res = await redeemRewardAction(reward.id);
       if (res.ok) {
@@ -123,7 +125,7 @@ export default function RedeemButton({
                   type="button"
                   className="btn"
                   onClick={close_}
-                  disabled={pending}
+                  aria-disabled={pending}
                 >
                   {t("cancel")}
                 </button>
@@ -131,7 +133,7 @@ export default function RedeemButton({
                   type="button"
                   className="btn btn-primary"
                   onClick={confirm}
-                  disabled={pending}
+                  aria-disabled={pending}
                 >
                   {pending ? t("redeeming") : t("confirm")}
                 </button>

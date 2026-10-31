@@ -22,6 +22,7 @@ export default function RedemptionRow({
   const [pending, startTransition] = useTransition();
 
   function go(status: "approved" | "shipped" | "fulfilled" | "cancelled") {
+    if (pending) return;
     startTransition(async () => {
       await setRedemptionStatusAction(redemption.id, status);
     });
@@ -58,7 +59,7 @@ export default function RedemptionRow({
               type="button"
               className="btn btn-sm"
               onClick={() => go("approved")}
-              disabled={pending}
+              aria-disabled={pending}
             >
               {t("approve")}
             </button>
@@ -66,7 +67,7 @@ export default function RedemptionRow({
               type="button"
               className="btn btn-sm btn-ghost"
               onClick={() => go("cancelled")}
-              disabled={pending}
+              aria-disabled={pending}
             >
               {t("reject")}
             </button>
@@ -76,7 +77,7 @@ export default function RedemptionRow({
             type="button"
             className="btn btn-sm btn-primary"
             onClick={() => go("shipped")}
-            disabled={pending}
+            aria-disabled={pending}
           >
             {t("markShipped")}
           </button>

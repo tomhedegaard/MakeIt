@@ -123,15 +123,20 @@ export default function LogWeightCard({
           </label>
           <button
             type="submit"
-            disabled={pending}
+            aria-disabled={pending}
+            onClick={(e) => {
+              if (pending) e.preventDefault();
+            }}
             className="btn btn-primary"
           >
             {pending ? "…" : t("save")}
           </button>
           <button
             type="button"
-            disabled={pending}
-            onClick={() => setOpen(false)}
+            aria-disabled={pending}
+            onClick={() => {
+              if (!pending) setOpen(false);
+            }}
             className="btn btn-ghost"
           >
             {t("cancel")}

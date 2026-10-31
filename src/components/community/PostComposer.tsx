@@ -35,6 +35,7 @@ export default function PostComposer({
   }
 
   function submit() {
+    if (isPending) return;
     const fd = new FormData();
     fd.set("content", text);
     if (tag) fd.set("tag", tag);
@@ -105,15 +106,18 @@ export default function PostComposer({
             <button
               type="button"
               className="btn"
-              onClick={() => setOpen(false)}
-              disabled={isPending}
+              onClick={() => {
+                if (!isPending) setOpen(false);
+              }}
+              aria-disabled={isPending}
             >
               {t("cancel")}
             </button>
             <button
               type="button"
               className="btn btn-primary"
-              disabled={!text.trim() || isPending}
+              disabled={!text.trim()}
+              aria-disabled={isPending}
               onClick={submit}
             >
               {isPending ? t("sending") : t("submit")}

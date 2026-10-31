@@ -49,7 +49,13 @@ export default function WaitlistForm() {
         <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
         <input type="hidden" name="locale" value={locale} />
         <Magnetic>
-          <button type="submit" disabled={pending || done} className="btn btn-primary min-h-[52px]">
+          <button
+            type="submit"
+            disabled={done}
+            aria-disabled={pending}
+            onClick={(e) => pending && e.preventDefault()}
+            className="btn btn-primary min-h-[52px]"
+          >
             {pending ? t("pending") : t("cta")}
           </button>
         </Magnetic>

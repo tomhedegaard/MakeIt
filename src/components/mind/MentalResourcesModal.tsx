@@ -187,8 +187,12 @@ function MentalResourcesDialog({
             </button>
             <button
               type="submit"
-              disabled={pending || summary.trim().length < 4}
-              className="btn btn-primary disabled:opacity-40"
+              disabled={summary.trim().length < 4}
+              aria-disabled={pending}
+              onClick={(e) => {
+                if (pending) e.preventDefault();
+              }}
+              className="btn btn-primary disabled:opacity-40 aria-disabled:opacity-40"
             >
               {pending ? t("sending") : t("send")}
             </button>

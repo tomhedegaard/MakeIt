@@ -138,6 +138,7 @@ export default function SessionEditor({ session }: { session: EditableSession })
   }
 
   function save() {
+    if (pending) return;
     setSaved(false);
     startTransition(async () => {
       const res = await updateSessionAction({
@@ -383,15 +384,13 @@ export default function SessionEditor({ session }: { session: EditableSession })
           >
             {t("back")}
           </Link>
-          {saved ? (
-            <span className="text-micro text-fg-dim">
-              {t("saved")}
+          <span role="status" aria-live="polite" className="text-micro text-fg-dim">
+              {saved ? t("saved") : null}
             </span>
-          ) : null}
           <button
             type="button"
             onClick={save}
-            disabled={pending}
+            aria-disabled={pending}
             className="btn btn-primary ml-auto"
           >
             {pending ? t("saving") : t("save")}

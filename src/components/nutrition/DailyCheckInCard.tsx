@@ -155,7 +155,7 @@ export default function DailyCheckInCard({
             <button
               type="button"
               onClick={() => handleQuickLog("eaten")}
-              disabled={pending}
+              aria-disabled={pending}
               className="btn btn-primary btn-sm"
             >
               {pending ? t("logging") : t("asPlanned")}
@@ -170,8 +170,10 @@ export default function DailyCheckInCard({
             ) : null}
             <button
               type="button"
-              onClick={() => setSkipOpen(true)}
-              disabled={pending}
+              onClick={() => {
+                if (!pending) setSkipOpen(true);
+              }}
+              aria-disabled={pending}
               className="btn btn-ghost btn-sm"
             >
               {t("skipped")}

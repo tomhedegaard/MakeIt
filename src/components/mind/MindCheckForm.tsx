@@ -121,8 +121,11 @@ export default function MindCheckForm({
       <div className="flex items-center gap-4">
         <button
           type="submit"
-          disabled={pending}
-          className="btn btn-primary disabled:opacity-50"
+          aria-disabled={pending}
+          onClick={(e) => {
+            if (pending) e.preventDefault();
+          }}
+          className="btn btn-primary aria-disabled:opacity-50"
         >
           {pending ? t("saving") : saved ? t("update") : t("save")}
         </button>

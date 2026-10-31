@@ -64,7 +64,7 @@ export default function CirkelPostForm({
       </div>
 
       {error ? (
-        <div className="rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-copy text-danger">
+        <div role="alert" className="rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-copy text-danger">
           {error}
         </div>
       ) : null}
@@ -72,8 +72,12 @@ export default function CirkelPostForm({
       <div className="flex items-center gap-3">
         <button
           type="submit"
-          disabled={pending || body.trim().length === 0}
-          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-copy font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
+          disabled={body.trim().length === 0}
+          aria-disabled={pending}
+          onClick={(e) => {
+            if (pending) e.preventDefault();
+          }}
+          className="inline-flex items-center justify-center bg-fg text-bg px-7 py-3 text-copy font-medium hover:opacity-90 transition-opacity disabled:opacity-40 aria-disabled:opacity-40"
         >
           {pending ? t("sending") : saved ? t("sent") : t("submit")}
         </button>

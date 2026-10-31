@@ -19,6 +19,7 @@ export default function NewExerciseForm() {
   const [slug, setSlug] = useState("");
 
   function submit() {
+    if (pending) return;
     setError(null);
     startTransition(async () => {
       const res = await createExerciseAction({ name, slug: slug || undefined });
@@ -71,7 +72,7 @@ export default function NewExerciseForm() {
       </div>
 
       {error ? (
-        <p className="text-copy" style={{ color: "var(--danger)" }}>
+        <p role="alert" className="text-copy" style={{ color: "var(--danger)" }}>
           {error}
         </p>
       ) : null}
@@ -80,7 +81,8 @@ export default function NewExerciseForm() {
         <button
           type="button"
           onClick={submit}
-          disabled={pending || !name.trim()}
+          disabled={!name.trim()}
+          aria-disabled={pending}
           className="btn btn-primary"
         >
           {pending ? t("creating") : t("submit")}

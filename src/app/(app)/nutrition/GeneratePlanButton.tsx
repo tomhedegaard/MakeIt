@@ -35,7 +35,8 @@ export default function GeneratePlanButton({
       <button
         type="button"
         onClick={handleClick}
-        disabled={pending || exhausted}
+        disabled={exhausted}
+        aria-disabled={pending}
         title={
           exhausted
             ? t("exhaustedTitle", {

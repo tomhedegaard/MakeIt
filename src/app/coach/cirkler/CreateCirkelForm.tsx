@@ -63,15 +63,19 @@ export default function CreateCirkelForm() {
       </label>
 
       {error ? (
-        <div className="border border-danger px-4 py-3 text-copy text-danger">
+        <div role="alert" className="border border-danger px-4 py-3 text-copy text-danger">
           {error}
         </div>
       ) : null}
 
       <button
         type="submit"
-        disabled={pending || name.trim().length < 2}
-        className="inline-flex items-center justify-center bg-fg text-bg px-6 py-2.5 text-copy font-medium hover:opacity-90 transition-opacity disabled:opacity-40"
+        disabled={name.trim().length < 2}
+        aria-disabled={pending}
+        onClick={(e) => {
+          if (pending) e.preventDefault();
+        }}
+        className="inline-flex items-center justify-center bg-fg text-bg px-6 py-2.5 text-copy font-medium hover:opacity-90 transition-opacity disabled:opacity-40 aria-disabled:opacity-40"
       >
         {pending ? "Opretter..." : "Opret cirkel"}
       </button>
