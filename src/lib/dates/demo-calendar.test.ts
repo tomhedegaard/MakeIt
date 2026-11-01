@@ -6,7 +6,8 @@ describe("demoCalendar", () => {
     const now = new Date(2026, 9, 4); // Sun 4 Oct 2026
     const cal = demoCalendar(now);
     expect(monthName(cal.month, "da-DK")).toBe("oktober");
-    expect(cal.daysLeft).toBe(27);
+    expect(cal.daysLeft).toBe(28);
+    expect(demoCalendar(new Date(2026, 9, 31)).daysLeft).toBe(1);
     expect(cal.meet.getDay()).toBe(6);
     expect(cal.meet.getTime() - now.getTime()).toBeGreaterThanOrEqual(21 * 86_400_000);
     expect(meetLabel(cal.meet, "da-DK")).toBe("Lørdag 31/10");

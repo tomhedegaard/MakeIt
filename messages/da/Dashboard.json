@@ -47,12 +47,9 @@
     "today": "I dag",
     "tomorrow": "I morgen",
     "mock": {
-      "tomorrowLabel": "I morgen",
-      "tomorrowTitle": "Pause-bench, ringe-row, push-press",
-      "thuLabel": "Tor",
-      "thuTitle": "Deadlift · opbygning til 90% af 1RM",
-      "friLabel": "Fre",
-      "friTitle": "Hypertrofi: kvadriceps + skulder"
+      "pushTitle": "Pause-bench, ringe-row, push-press",
+      "deadliftTitle": "Deadlift · opbygning til 90% af 1RM",
+      "hyperTitle": "Hypertrofi: kvadriceps + skulder"
     }
   },
   "crew": {

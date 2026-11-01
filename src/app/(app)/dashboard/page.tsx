@@ -28,6 +28,7 @@ import { getHrvReadingSeries } from "@/lib/data/hrv";
 import { getMemberBody } from "@/lib/data/body";
 import { getRecentWeights } from "@/lib/data/weight";
 import { copenhagenIsoDate } from "@/lib/data/nutrition-checkin";
+import { copenhagenTodayIso, isoPlusDays } from "@/lib/dates/copenhagen";
 import { copenhagenDate, sevenDayAverages } from "@/lib/health/body-rules";
 import { hasAdultConfirmation } from "@/lib/auth/age";
 import { createClient } from "@/lib/supabase/server";
@@ -72,12 +73,14 @@ function localizeGeneratedTitle(title: string, t: Translator): string {
   return key ? t(`todaySession.${key}`) : title;
 }
 
-function mockUpcoming(t: Translator) {
+/** The next three demo sessions, on the days the demo week strip gives them (Push, Deadlift, Hyper). */
+function mockUpcoming(t: Translator, locale: string) {
+  const today = copenhagenTodayIso();
   return [
-    { d: t("upcoming.mock.tomorrowLabel"), t: t("upcoming.mock.tomorrowTitle"), m: t("todaySession.minutes", { count: 55 }) },
-    { d: t("upcoming.mock.thuLabel"),      t: t("upcoming.mock.thuTitle"),      m: t("todaySession.minutes", { count: 70 }) },
-    { d: t("upcoming.mock.friLabel"),      t: t("upcoming.mock.friTitle"),      m: t("todaySession.minutes", { count: 45 }) },
-  ];
+    { offset: 1, t: t("upcoming.mock.pushTitle"),     m: t("todaySession.minutes", { count: 55 }) },
+    { offset: 3, t: t("upcoming.mock.deadliftTitle"), m: t("todaySession.minutes", { count: 70 }) },
+    { offset: 4, t: t("upcoming.mock.hyperTitle"),    m: t("todaySession.minutes", { count: 45 }) },
+  ].map((row) => ({ ...row, d: fmtUpcomingDate(isoPlusDays(today, row.offset), t, locale) }));
 }
 
 function mockFeed(t: Translator) {
@@ -455,7 +458,7 @@ export default async function TodayPage() {
           </ul>
         ) : upcoming === null ? (
           <ul className="surface-2 divide-y hairline overflow-hidden">
-            {mockUpcoming(t).map((row) => (
+            {mockUpcoming(t, locale).map((row) => (
               <li key={row.d} className="px-4 py-3 flex items-center gap-4">
                 <span className="eyebrow w-16 shrink-0">{row.d}</span>
                 <span className="flex-1 min-w-0 text-copy text-fg/90 text-pretty">{row.t}</span>

@@ -9,7 +9,8 @@ export function demoCalendar(now: Date = new Date()) {
   // The meet: first Saturday at least three weeks out.
   const meet = new Date(y, m, now.getDate() + 21);
   meet.setDate(meet.getDate() + ((6 - meet.getDay() + 7) % 7));
-  return { month: new Date(y, m, 1), daysLeft: lastDay - now.getDate(), meet };
+  // Today counts: the last day of the month is "1 dag tilbage", not 0.
+  return { month: new Date(y, m, 1), daysLeft: lastDay - now.getDate() + 1, meet };
 }
 
 /** "oktober" / "October" for the given locale tag. */
