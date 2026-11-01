@@ -9,6 +9,8 @@
  * All weights are kg, rounded to 2.5 kg increments.
  */
 
+import { trainingDayOffset, trainingDaysPerWeek } from "@/lib/programs/training-days";
+
 export type GoalFocus =
   | "strength"
   | "hypertrophy"
@@ -505,13 +507,15 @@ export function progressWeek(
   prev: PrevSession[],
   isDeload: boolean,
   policy: ProgressionPolicy = ADULT_PROGRESSION,
+  /** Member's training days a week; defaults to the week's session count. */
+  weeklyFrequency?: number | null,
 ): GeneratedSession[] {
-  const offsets = [0, 1, 3, 4];
+  const perWeek = trainingDaysPerWeek(weeklyFrequency, prev.length);
   return prev.map((s, idx) => ({
     dayLabel: s.day_label ?? `Dag ${idx + 1}`,
     title: isDeload ? `${s.title} · DELOAD` : s.title,
     estimatedMinutes: s.estimated_minutes ?? 60,
-    scheduledOffsetDays: offsets[idx] ?? idx,
+    scheduledOffsetDays: trainingDayOffset(idx, perWeek),
     exercises: s.exercises
       .slice()
       .sort((a, b) => a.position - b.position)

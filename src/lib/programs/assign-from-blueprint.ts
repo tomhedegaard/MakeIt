@@ -33,6 +33,7 @@
 
 import { copenhagenTodayIso } from "@/lib/dates/copenhagen";
 import { scaleBlueprintDays, type OneRmInput } from "@/lib/programs/one-rm";
+import { trainingDayOffset, trainingDaysPerWeek } from "@/lib/programs/training-days";
 
 export const EMPTY_PROGRAM_DAYS_ERROR =
   "Programmet har ingen dage at generere fra";
@@ -43,12 +44,13 @@ const OPEN_SESSION_STATUSES = ["scheduled", "active"] as const;
 type LeftoverSession = { id: string; status: string };
 
 /**
- * Consecutive Europe/Copenhagen calendar dates starting at `fromDate`.
+ * Europe/Copenhagen calendar dates starting at `fromDate`.
  *
  * Rule (member week-1 and coach full-wave): session i is scheduled on
- * `fromDate + i` days, in blueprint insertion order (week-major, then
- * day position). Later weeks continue the sequence — they do not jump
- * to the next Monday. Deterministic, DST-safe (date-only UTC math).
+ * `fromDate + trainingDayOffset(i, perWeek)`, in blueprint insertion
+ * order (week-major, then day position), so a 3-day member trains
+ * day 0, 2, 4 and rests between. `perWeek` 7 (the default) is
+ * consecutive days. Deterministic, DST-safe (date-only UTC math).
  *
  * `fromDate` is YYYY-MM-DD in the Europe/Copenhagen calendar (typically
  * `copenhagenTodayIso()`). Used so `/coaching` week-strip and the
@@ -57,13 +59,14 @@ type LeftoverSession = { id: string; status: string };
 export function scheduleBlueprintDates(
   dayCount: number,
   fromDate: string,
+  perWeek = 7,
 ): string[] {
   const count = Math.max(0, Math.floor(dayCount));
   if (count === 0) return [];
   const start = Date.parse(`${fromDate}T00:00:00Z`);
   if (!Number.isFinite(start)) return [];
   return Array.from({ length: count }, (_, i) =>
-    new Date(start + i * MS_PER_DAY).toISOString().slice(0, 10),
+    new Date(start + trainingDayOffset(i, perWeek) * MS_PER_DAY).toISOString().slice(0, 10),
   );
 }
 
@@ -212,6 +215,8 @@ export function prepareAssignFromBlueprint(input: {
   days: BlueprintDay[] | null | undefined;
   throughWeek?: number;
   fromDate?: string;
+  /** Member's training days a week; defaults to the blueprint's day count. */
+  weeklyFrequency?: number | null;
 }): { ok: false; error: string } | { ok: true; plan: AssignPlan } {
   const days = normalizeBlueprintDays(input.days);
   if (days.length === 0) {
@@ -228,6 +233,7 @@ export function prepareAssignFromBlueprint(input: {
   const dates = scheduleBlueprintDates(
     sessionCount,
     input.fromDate ?? copenhagenTodayIso(),
+    trainingDaysPerWeek(input.weeklyFrequency, days.length),
   );
   if (dates.length !== sessionCount) {
     return { ok: false, error: "Kunne ikke datere sessioner" };
@@ -484,6 +490,13 @@ export async function assignProgramFromBlueprint(
   if (!program) return { ok: false, error: "Program ikke fundet" };
 
   const bp = program as ProgramBlueprint;
+  // Rest days follow the member's onboarding frequency. A missing row
+  // or column falls back to the blueprint's day count.
+  const { data: memberRow } = await supabase
+    .from("members")
+    .select("weekly_frequency")
+    .eq("id", input.memberId)
+    .maybeSingle();
   const prepared = prepareAssignFromBlueprint({
     memberId: input.memberId,
     programId: input.programId,
@@ -492,6 +505,7 @@ export async function assignProgramFromBlueprint(
     days: input.oneRm && bp.days ? scaleBlueprintDays(bp.days, input.oneRm) : bp.days,
     throughWeek: input.throughWeek,
     fromDate: input.fromDate,
+    weeklyFrequency: memberRow?.weekly_frequency ?? null,
   });
   if (!prepared.ok) return prepared;
 

@@ -121,7 +121,8 @@ describe("prepareAssignFromBlueprint", () => {
     expect(dates.every((d) => typeof d === "string" && d.length === 10)).toBe(
       true,
     );
-    expect(dates).toEqual(scheduleBlueprintDates(16, copenhagenTodayIso()));
+    // Two blueprint days, no member frequency → 2 a week: day 0 and 3.
+    expect(dates).toEqual(scheduleBlueprintDates(16, copenhagenTodayIso(), 2));
   });
 
   it("dates every session from fromDate in insertion order", () => {
@@ -136,8 +137,26 @@ describe("prepareAssignFromBlueprint", () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     const dates = result.plan.sessionRows.map((s) => s.scheduled_for);
-    expect(dates).toEqual(["2026-09-05", "2026-09-06", "2026-09-07", "2026-09-08"]);
+    expect(dates).toEqual(["2026-09-05", "2026-09-08", "2026-09-12", "2026-09-15"]);
     expect(new Set(dates).size).toBe(dates.length);
+  });
+
+  it("spaces sessions by the member's training days a week", () => {
+    const result = prepareAssignFromBlueprint({
+      memberId: "m1",
+      programId: "p1",
+      startWeek: 1,
+      weeks: 1,
+      fromDate: "2026-11-02",
+      days: [...TWO_DAYS, ...TWO_DAYS.map((d) => ({ ...d, position: d.position + 2 }))],
+      weeklyFrequency: 3,
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    // 4 sessions at 3 days a week: Mon, Wed, Fri, then next Mon.
+    expect(result.plan.sessionRows.map((s) => s.scheduled_for)).toEqual([
+      "2026-11-02", "2026-11-04", "2026-11-06", "2026-11-09",
+    ]);
     expect(result.plan.sessionRows.every((s) => s.scheduled_for != null)).toBe(
       true,
     );
@@ -292,6 +311,7 @@ function createFakeAssignClient(opts: {
   previousActive?: { id: string; program_id?: string };
   previousSessions?: Row[];
   failAt?: FailAt;
+  weeklyFrequency?: number;
 }): {
   client: AssignClient;
   inserted: Record<string, Row[]>;
@@ -341,6 +361,9 @@ function createFakeAssignClient(opts: {
               }
               if (table === "program_assignments") {
                 return { data: previousActive ?? null, error: null };
+              }
+              if (table === "members" && opts.weeklyFrequency != null) {
+                return { data: { weekly_frequency: opts.weeklyFrequency }, error: null };
               }
               return { data: null, error: null };
             },
@@ -516,7 +539,7 @@ describe("assignProgramFromBlueprint", () => {
       ),
     ).toBe(true);
     expect(inserted.sessions.map((s) => s.scheduled_for)).toEqual(
-      scheduleBlueprintDates(16, copenhagenTodayIso()),
+      scheduleBlueprintDates(16, copenhagenTodayIso(), 2),
     );
     // 3 exercises × 8 weeks
     expect(inserted.session_exercises).toHaveLength(24);
@@ -549,8 +572,23 @@ describe("assignProgramFromBlueprint", () => {
     expect(inserted.sessions).toHaveLength(2);
     expect(inserted.sessions.every((s) => s.week === 1)).toBe(true);
     expect(inserted.sessions.map((s) => s.scheduled_for)).toEqual(
-      scheduleBlueprintDates(2, copenhagenTodayIso()),
+      scheduleBlueprintDates(2, copenhagenTodayIso(), 2),
     );
+  });
+
+  it("reads the member's weekly_frequency for the rest days", async () => {
+    const { client, inserted } = createFakeAssignClient({
+      program: { id: "p", weeks: 1, days: TWO_DAYS },
+      weeklyFrequency: 7,
+    });
+    await assignProgramFromBlueprint(client, {
+      memberId: "m1",
+      programId: "p",
+      startWeek: 1,
+      supersedeStatus: "paused",
+      fromDate: "2026-11-02",
+    });
+    expect(inserted.sessions.map((s) => s.scheduled_for)).toEqual(["2026-11-02", "2026-11-03"]);
   });
 
   it("skips leftover scheduled/active sessions from the previous program", async () => {
