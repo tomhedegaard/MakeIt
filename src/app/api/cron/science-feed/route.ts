@@ -5,7 +5,8 @@ import { runScienceFeed } from "@/lib/science/run";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+// 60 s timed out every day before anything was written (30/10–1/11).
+export const maxDuration = 300;
 
 /**
  * Science feed — daily pipeline cron.
@@ -18,8 +19,8 @@ export const maxDuration = 60;
  * studies into `science_items` (audit/open-brain). Idempotent on source_id, so
  * re-runs on the same day are safe.
  *
- * The realistic daily volume (3 fast fetches + a handful of Haiku summaries for
- * the 2-5 studies that pass the gate) fits comfortably inside maxDuration. For
+ * Summaries run in parallel with a 20 s per-call timeout, and up to 10 studies
+ * a run get a Danish title/conclusion, all inside maxDuration. For
  * heavier source expansion, move to the GitHub Action runner that drives the
  * same scripts/science-feed.ts (see brief §5, Mønster A).
  *
