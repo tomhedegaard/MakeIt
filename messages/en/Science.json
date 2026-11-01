@@ -23,5 +23,10 @@
   "caveatLabel": "Caveat",
   "openAccess": "Open Access",
   "readSource": "Read the source →",
-  "disclaimer": "Research summaries, not individual health or nutrition advice."
+  "disclaimer": "Research summaries, not individual health or nutrition advice.",
+  "conclusionLabel": "The study's conclusion",
+  "effectHelp": {
+    "md": "MD: mean difference between groups, in the unit shown.",
+    "smd": "SMD: standardised effect size. Around 0.2 is small, 0.5 medium and 0.8 large."
+  }
 }

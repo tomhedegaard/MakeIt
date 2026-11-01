@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { intlLocaleTag } from "@/i18n/config";
 import Container from "@/components/Container";
 import PageTitle from "@/components/ui/PageTitle";
 import { pricing } from "@/lib/pricing";
@@ -41,6 +42,7 @@ export default async function TrainPage() {
   const member = await getSession();
   const memberId = member?.id ?? null;
   const t = await getTranslations("Coaching");
+  const locale = await getLocale();
   const connected = Boolean(SUPABASE_ENABLED && memberId);
 
   const [todayCardDb, weekDb, activeDb, libraryDb, statsDb, streakDb] =
@@ -131,8 +133,8 @@ export default async function TrainPage() {
           <div className="mt-4 grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
             <MiniWithTrend
               label={t("active.volume")}
-              value={formatVolume(volumeKg)}
-              suffix={volumeKg >= 1000 ? "" : t("active.kgUnit")}
+              value={formatVolume(volumeKg, locale)}
+              suffix={volumeKg >= 1000 ? t("active.tonUnit") : t("active.kgUnit")}
               current={volumeKg}
               previous={volumeKgPrev}
               newLabel={t("trend.new")}
@@ -422,14 +424,13 @@ function MiniWithTrend({
  * Volume formatting: 84_200 → "84.2K", 950 → "950"
  * ---------------------------------------------------------------- */
 
-function formatVolume(kg: number): string {
+/** 84.231 kg → "84,2" (tons, da) / "84.2" (en); under a ton → whole kg. */
+function formatVolume(kg: number, locale: string): string {
+  const tag = intlLocaleTag(locale);
   if (kg >= 1000) {
-    const thousands = kg / 1000;
-    // 84.231 → "84.2"; 100.0 → "100"; locale uses dot for the K-form
-    const fixed = thousands >= 100 ? thousands.toFixed(0) : thousands.toFixed(1);
-    return `${fixed}K`;
+    return new Intl.NumberFormat(tag, { maximumFractionDigits: kg >= 100_000 ? 0 : 1 }).format(kg / 1000);
   }
-  return Math.round(kg).toString();
+  return new Intl.NumberFormat(tag, { maximumFractionDigits: 0 }).format(kg);
 }
 
 /* ---------------------------------------------------------------- *

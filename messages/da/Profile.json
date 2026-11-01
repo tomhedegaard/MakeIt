@@ -8,7 +8,7 @@
   "lifts": {
     "ariaLabel": "Løft",
     "title": "Dine løft",
-    "delta": "{sign}{value} kg / 4u",
+    "delta": "{sign}{value, number} kg på 4 uger",
     "e1rmUnit": "kg e1RM",
     "weeksOne": "{count} uge data",
     "weeksOther": "{count} uger data",
@@ -60,8 +60,8 @@
     "latest": "/ 100 seneste",
     "formCheckOne": "{count} form-check",
     "formCheckOther": "{count} form-checks",
-    "average": "Snit {value}",
-    "sinceFirst": "{sign}{value} siden første",
+    "average": "Gennemsnit {value, number}",
+    "sinceFirst": "{sign}{value, number} point siden første",
     "sparklineAria": "Score-udvikling over tid"
   }
 }

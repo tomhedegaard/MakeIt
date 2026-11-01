@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { intlLocaleTag } from "@/i18n/config";
 import { DOMAIN_COLOR, DOMAIN_ORDER } from "@/lib/science/domains";
 import type { DomainKey } from "@/lib/science/config";
 import type { ScienceFeedItem } from "@/lib/data/science";
@@ -93,9 +94,33 @@ function FilterChip({
   );
 }
 
+/**
+ * Display only: the stored text keeps the abstract's numbers verbatim
+ * (verifyNumbers checks them), so "0.37" becomes "0,37" here, not in
+ * the pipeline.
+ */
+function localDecimals(text: string, locale: string): string {
+  return locale === "da" ? text.replace(/(\d)\.(\d)/g, "$1,$2") : text;
+}
+
+function formatDate(iso: string, locale: string): string {
+  const d = new Date(`${iso}T00:00:00Z`);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString(intlLocaleTag(locale), { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+}
+
+/** SMD before MD: "SMD" contains "MD". */
+function effectMeasure(effect: string): "smd" | "md" | null {
+  if (/\bSMD\b/.test(effect)) return "smd";
+  if (/\bMD\b/.test(effect)) return "md";
+  return null;
+}
+
 function Card({ item }: { item: ScienceFeedItem }) {
   const t = useTranslations("Science");
+  const locale = useLocale();
   const color = DOMAIN_COLOR[item.domain];
+  const measure = item.effectDa ? effectMeasure(item.effectDa) : null;
   return (
     <li className="flex overflow-hidden surface">
       <span className="w-[5px] shrink-0" style={{ background: color }} aria-hidden />
@@ -114,21 +139,26 @@ function Card({ item }: { item: ScienceFeedItem }) {
             </span>
           )}
         </div>
-        <h3 className="mb-2 text-card">{item.title}</h3>
-        <p className="mb-2 leading-relaxed">{item.tldrDa}</p>
+        {/* The paper's own title: English, left as published. */}
+        <h3 lang="en" className="mb-2 text-card">{item.title}</h3>
+        <p className="mb-2 leading-relaxed">{localDecimals(item.tldrDa, locale)}</p>
         {item.effectDa && (
           <p className="mb-2 text-meta text-fg-dim">
-            {t("effectLabel")}: <code className="numeric surface-2 px-1.5 py-0.5 text-micro">{item.effectDa}</code>
+            {t("effectLabel")}: <span className="numeric text-fg">{localDecimals(item.effectDa, locale)}</span>
+            {measure ? <span className="block text-micro mt-0.5">{t(`effectHelp.${measure}`)}</span> : null}
           </p>
         )}
         {item.caveatDa && <p className="mb-2 text-meta text-fg-dim">{t("caveatLabel")}: {item.caveatDa}</p>}
         {item.sourceConclusion && (
-          <p className="mb-3 border-l-2 hairline-strong pl-3 text-meta text-fg-dim">{item.sourceConclusion}</p>
+          <figure className="mb-3 border-l-2 hairline-strong pl-3 text-meta text-fg-dim">
+            <figcaption className="eyebrow mb-1">{t("conclusionLabel")}</figcaption>
+            <blockquote lang="en">{item.sourceConclusion}</blockquote>
+          </figure>
         )}
         <div className="flex flex-wrap items-center justify-between gap-3 text-micro text-fg-dim">
           <span>
             {item.journal}
-            {item.publishedDate ? ` · ${item.publishedDate}` : ""}
+            {item.publishedDate ? ` · ${formatDate(item.publishedDate, locale)}` : ""}
             {item.openAccess ? ` · ${t("openAccess")}` : ""}
           </span>
           {item.sourceUrl && (

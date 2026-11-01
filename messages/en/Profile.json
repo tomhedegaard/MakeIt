@@ -8,7 +8,7 @@
   "lifts": {
     "ariaLabel": "Lifts",
     "title": "Lifts on record",
-    "delta": "{sign}{value} kg / 4w",
+    "delta": "{sign}{value, number} kg in 4 weeks",
     "e1rmUnit": "kg e1RM",
     "weeksOne": "{count} week of data",
     "weeksOther": "{count} weeks of data",
@@ -60,8 +60,8 @@
     "latest": "/ 100 latest",
     "formCheckOne": "{count} form check",
     "formCheckOther": "{count} form checks",
-    "average": "Avg {value}",
-    "sinceFirst": "{sign}{value} since first",
+    "average": "Average {value, number}",
+    "sinceFirst": "{sign}{value, number} points since first",
     "sparklineAria": "Score development over time"
   }
 }

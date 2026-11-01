@@ -33,11 +33,12 @@
   "active": {
     "eyebrow": "Active program",
     "weeks": "weeks",
-    "volume": "Volume · 4w",
-    "prs": "PRs · 4w",
+    "volume": "Volume · 4 weeks",
+    "prs": "PRs · 4 weeks",
     "streak": "Streak",
     "kgUnit": "kg",
-    "dayUnit": "d"
+    "dayUnit": "d",
+    "tonUnit": "t"
   },
   "trend": {
     "new": "↑ new"
