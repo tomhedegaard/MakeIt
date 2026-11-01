@@ -1,7 +1,7 @@
 {
   "header": {
     "eyebrow": "Train",
-    "title": "Your week.",
+    "title": "Your program.",
     "subtitle": "HQ plans the weights. Munk signs off when it needs a human.",
     "coachChip": "Coach · Mikael Munk",
     "motorChip": "HQ · Adaptive Engine"
@@ -22,23 +22,13 @@
     }
   },
   "today": {
-    "label": "Today · {programCode} · week {week}",
-    "exercises": "Exercises",
-    "sets": "Sets",
-    "estTime": "Est. time",
-    "minuteUnit": "m",
-    "start": "Start session →",
     "mock": {
       "dayLabel": "Day A · Squat",
       "title": "Squat · Top set @ RPE 8, 3×3 backoff"
     },
     "generated": {
       "squatFocus": "Squat focus and the posterior chain"
-    },
-    "emptyEyebrow": "Today",
-    "emptyTitle": "Choose a program",
-    "emptyBody": "Start here, then we build the week. No demo workout.",
-    "emptyCta": "See programs"
+    }
   },
   "active": {
     "eyebrow": "Active program",
@@ -115,5 +105,11 @@
       "unavailable": "No connection. Try again.",
       "failed": "Could not start the program."
     }
+  },
+  "next": {
+    "ariaLabel": "Next session",
+    "eyebrow": "Next session",
+    "meta": "{sets} sets · {minutes} min",
+    "start": "Start"
   }
 }

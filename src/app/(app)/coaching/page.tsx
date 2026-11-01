@@ -2,7 +2,6 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageTitle from "@/components/ui/PageTitle";
-import SectionHeader from "@/components/ui/SectionHeader";
 import { pricing } from "@/lib/pricing";
 import { TODAY_SESSION, totalSets } from "@/lib/workout";
 import { getSession } from "@/lib/auth";
@@ -25,12 +24,6 @@ import {
 } from "@/lib/data/coaching";
 import { hasDemoProgramDetail } from "@/lib/data/coach-programs";
 import StartProgramButton from "./StartProgramButton";
-import AdaptiveReasonStrip from "@/components/adaptive/AdaptiveReasonStrip";
-import {
-  demoEngineStrip,
-  emptyEngineStrip,
-} from "@/lib/adaptive/engine-strip";
-import { loadStripCopy } from "@/lib/ui/sprint-a-copy";
 import {
   computeTrendChip,
   generatedSessionTitleKey,
@@ -48,9 +41,7 @@ export default async function TrainPage() {
   const member = await getSession();
   const memberId = member?.id ?? null;
   const t = await getTranslations("Coaching");
-  const stripCopy = await loadStripCopy();
   const connected = Boolean(SUPABASE_ENABLED && memberId);
-  const engineStrip = connected ? emptyEngineStrip() : demoEngineStrip();
 
   const [todayCardDb, weekDb, activeDb, libraryDb, statsDb, streakDb] =
     connected && memberId
@@ -78,24 +69,25 @@ export default async function TrainPage() {
     demo: mockWeekStrip(),
     empty: emptyWeekStrip(),
   });
-  const active: ActiveProgram | null = activeDb;
   const library: ProgramListing[] = libraryForSurface({
     connected,
     fromDb: libraryDb,
     demo: mockLibrary(t),
   }).map((p) => localizeSeedProgram(p, t));
+  const active: ActiveProgram | null = connected ? activeDb : demoActive(library);
   const sets = today
     ? today.setCount > 0
       ? today.setCount
       : totalSets(TODAY_SESSION)
     : 0;
 
-  const volumeKg = statsDb?.volumeKg ?? 0;
-  const volumeKgPrev = statsDb?.volumeKgPrev ?? 0;
-  const prs4w = statsDb?.prs4w ?? 0;
-  const prsPrev = statsDb?.prsPrev ?? 0;
+  // Demo numbers are the ones I dag showed before the numbers moved here.
+  const volumeKg = statsDb?.volumeKg ?? (connected ? 0 : 84_200);
+  const volumeKgPrev = statsDb?.volumeKgPrev ?? (connected ? 0 : 78_400);
+  const prs4w = statsDb?.prs4w ?? (connected ? 0 : 3);
+  const prsPrev = statsDb?.prsPrev ?? (connected ? 0 : 2);
   // Prefer the dedicated streak getter; fall back to the stats one.
-  const streakDays = streakDb || statsDb?.streakDays || 0;
+  const streakDays = connected ? streakDb || statsDb?.streakDays || 0 : 12;
 
   return (
     <Container className="py-6 lg:py-12 space-y-8">
@@ -111,6 +103,70 @@ export default async function TrainPage() {
           {t("header.subtitle")}
         </p>
       </div>
+
+      {/* Active program progress */}
+      {active ? (
+        <section className="surface-2 rounded-2xl p-5 lg:p-6">
+          <div className="flex items-end justify-between mb-3">
+            <div>
+              <div className="eyebrow mb-1">{t("active.eyebrow")}</div>
+              <div className="font-display text-section">{active.name}</div>
+            </div>
+            <div className="text-right">
+              <div className="numeric text-title">
+                {String(active.currentWeek).padStart(2, "0")}{" "}
+                <span className="text-fg-dim text-copy">/ {active.weeks}</span>
+              </div>
+              <div className="eyebrow">{t("active.weeks")}</div>
+            </div>
+          </div>
+          <div className="h-1.5 bg-bg-3 overflow-hidden">
+            <div
+              className="h-full bg-fg"
+              style={{
+                width: `${Math.min(100, (active.currentWeek / active.weeks) * 100)}%`,
+              }}
+            />
+          </div>
+          <div className="mt-4 grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
+            <MiniWithTrend
+              label={t("active.volume")}
+              value={formatVolume(volumeKg)}
+              suffix={volumeKg >= 1000 ? "" : t("active.kgUnit")}
+              current={volumeKg}
+              previous={volumeKgPrev}
+              newLabel={t("trend.new")}
+            />
+            <MiniWithTrend
+              label={t("active.prs")}
+              value={String(prs4w).padStart(2, "0")}
+              current={prs4w}
+              previous={prsPrev}
+              newLabel={t("trend.new")}
+            />
+            <Mini label={t("active.streak")} value={streakDays} suffix={t("active.dayUnit")} small />
+          </div>
+        </section>
+      ) : null}
+
+      {/* Next session: one line. The full session card lives on I dag. */}
+      {today ? (
+        <section
+          aria-label={t("next.ariaLabel")}
+          className="surface-2 rounded-2xl px-5 py-4 flex items-center gap-4"
+        >
+          <div className="min-w-0 flex-1">
+            <div className="eyebrow mb-1">{t("next.eyebrow")}</div>
+            <div className="text-copy truncate">
+              {today.dayLabel}
+              <span className="text-fg-dim"> · {t("next.meta", { sets, minutes: today.estimatedMinutes })}</span>
+            </div>
+          </div>
+          <Link href={`/session/${today.id}`} className="btn btn-primary btn-sm shrink-0">
+            {t("next.start")}
+          </Link>
+        </section>
+      ) : null}
 
       {/* Week strip — horizontal scroll on mobile */}
       <section
@@ -173,106 +229,6 @@ export default async function TrainPage() {
           })}
         </ol>
       </section>
-
-      {/* Today's session — flagship CTA, or honest empty in connected mode */}
-      {today ? (
-      <section className="surface-2 rounded-2xl overflow-hidden">
-        <div className="px-5 pt-5 pb-4 border-b hairline">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="pulse-dot" />
-            <span className="eyebrow">
-              {t("today.label", {
-                programCode: today.programCode,
-                week: today.week,
-              })}
-            </span>
-          </div>
-          <h2 className="font-display text-section mb-2">
-            {today.dayLabel}
-          </h2>
-          <p className="text-fg-dim text-meta md:text-copy">{today.title}</p>
-        </div>
-
-        <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
-
-        <div className="grid grid-cols-3 gap-px bg-line border-b hairline">
-          <Mini label={t("today.exercises")} value={today.exerciseCount} />
-          <Mini label={t("today.sets")} value={sets} />
-          <Mini
-            label={t("today.estTime")}
-            value={today.estimatedMinutes}
-            suffix={t("today.minuteUnit")}
-          />
-        </div>
-
-        <div className="p-4 lg:p-5">
-          <Link href={`/session/${today.id}`} className="btn btn-primary btn-xl">
-            {t("today.start")}
-          </Link>
-        </div>
-      </section>
-      ) : (
-      <section
-        data-today-empty=""
-        className="surface-2 rounded-2xl overflow-hidden"
-      >
-        <div className="px-5 pt-5 pb-4">
-          <SectionHeader eyebrow={t("today.emptyEyebrow")} title={t("today.emptyTitle")} />
-          <p className="text-fg-dim text-copy">{t("today.emptyBody")}</p>
-        </div>
-        <AdaptiveReasonStrip model={engineStrip} copy={stripCopy} />
-        <div className="p-4 lg:p-5">
-          <a href="#programs" className="btn btn-primary btn-xl">
-            {t("today.emptyCta")}
-          </a>
-        </div>
-      </section>
-      )}
-
-      {/* Active program progress */}
-      {active ? (
-        <section className="surface-2 rounded-2xl p-5 lg:p-6">
-          <div className="flex items-end justify-between mb-3">
-            <div>
-              <div className="eyebrow mb-1">{t("active.eyebrow")}</div>
-              <div className="font-display text-section">{active.name}</div>
-            </div>
-            <div className="text-right">
-              <div className="numeric text-title">
-                {String(active.currentWeek).padStart(2, "0")}{" "}
-                <span className="text-fg-dim text-copy">/ {active.weeks}</span>
-              </div>
-              <div className="eyebrow">{t("active.weeks")}</div>
-            </div>
-          </div>
-          <div className="h-1.5 bg-bg-3 overflow-hidden">
-            <div
-              className="h-full bg-fg"
-              style={{
-                width: `${Math.min(100, (active.currentWeek / active.weeks) * 100)}%`,
-              }}
-            />
-          </div>
-          <div className="mt-4 grid grid-cols-3 gap-px bg-line border hairline rounded-lg overflow-hidden">
-            <MiniWithTrend
-              label={t("active.volume")}
-              value={formatVolume(volumeKg)}
-              suffix={volumeKg >= 1000 ? "" : t("active.kgUnit")}
-              current={volumeKg}
-              previous={volumeKgPrev}
-              newLabel={t("trend.new")}
-            />
-            <MiniWithTrend
-              label={t("active.prs")}
-              value={String(prs4w).padStart(2, "0")}
-              current={prs4w}
-              previous={prsPrev}
-              newLabel={t("trend.new")}
-            />
-            <Mini label={t("active.streak")} value={streakDays} suffix={t("active.dayUnit")} small />
-          </div>
-        </section>
-      ) : null}
 
       {/* Programs library */}
       <section id="programs">
@@ -514,6 +470,24 @@ function todayCardFromMock(t: CoachingT): TodayCard {
       setCount: ex.sets.length,
       slug: ex.library?.slug ?? null,
     })),
+  };
+}
+
+/** Demo has no assignment row: the library's active program stands in. */
+function demoActive(library: ProgramListing[]): ActiveProgram | null {
+  const p = library.find((row) => row.active);
+  if (!p) return null;
+  return {
+    assignmentId: `demo-${p.id}`,
+    programId: p.id,
+    code: p.code,
+    name: p.name,
+    type: p.type,
+    weeks: p.weeks,
+    level: p.level,
+    description: p.description,
+    currentWeek: p.currentWeek ?? 1,
+    coachName: p.coachName,
   };
 }
 

@@ -91,10 +91,10 @@ describe("CDO DA/EN bodycopy — Today / Train / Reps", () => {
   });
 
   it("keeps Train trend / 1:1 spots / library mock in both locales", () => {
-    const daToday = daCoaching.today as { start: string };
-    const enToday = enCoaching.today as { start: string };
-    expect(daToday.start).toBe("Start pas →");
-    expect(enToday.start).toBe("Start session →");
+    const daNext = daCoaching.next as { eyebrow: string };
+    const enNext = enCoaching.next as { eyebrow: string };
+    expect(daNext.eyebrow).toBe("Næste pas");
+    expect(enNext.eyebrow).toBe("Next session");
     const daTrend = daCoaching.trend as { new: string };
     const enTrend = enCoaching.trend as { new: string };
     expect(daTrend.new).toBe("↑ ny");

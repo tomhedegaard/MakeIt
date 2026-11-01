@@ -111,7 +111,7 @@ export const TODAY_SESSION: Session = {
   programName: "PR-Block",
   week: 4,
   dayLabel: "Dag A · Squat",
-  title: "Squat: top set @ RPE 8, 3×3 backoff",
+  title: "Squat: topsæt @ RPE 8, 3×3 backoff",
   estimatedMinutes: 65,
   status: "active",
   exercises: [
