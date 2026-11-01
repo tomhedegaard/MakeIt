@@ -121,6 +121,9 @@ function Card({ item }: { item: ScienceFeedItem }) {
   const locale = useLocale();
   const color = DOMAIN_COLOR[item.domain];
   const measure = item.effectDa ? effectMeasure(item.effectDa) : null;
+  // English pages keep the originals.
+  const titleDa = locale === "da" ? item.titleDa : null;
+  const conclusionDa = locale === "da" ? item.sourceConclusionDa : null;
   return (
     <li className="flex overflow-hidden surface">
       <span className="w-[5px] shrink-0" style={{ background: color }} aria-hidden />
@@ -139,8 +142,16 @@ function Card({ item }: { item: ScienceFeedItem }) {
             </span>
           )}
         </div>
-        {/* The paper's own title: English, left as published. */}
-        <h3 lang="en" className="mb-2 text-card">{item.title}</h3>
+        {/* Danish title when the translation passed the number check; the
+            original stays underneath so the study can be found. */}
+        {titleDa ? (
+          <>
+            <h3 className="text-card">{titleDa}</h3>
+            <p lang="en" className="mb-2 text-meta text-fg-dim">{item.title}</p>
+          </>
+        ) : (
+          <h3 lang="en" className="mb-2 text-card">{item.title}</h3>
+        )}
         <p className="mb-2 leading-relaxed">{localDecimals(item.tldrDa, locale)}</p>
         {item.effectDa && (
           <p className="mb-2 text-meta text-fg-dim">
@@ -151,8 +162,21 @@ function Card({ item }: { item: ScienceFeedItem }) {
         {item.caveatDa && <p className="mb-2 text-meta text-fg-dim">{t("caveatLabel")}: {item.caveatDa}</p>}
         {item.sourceConclusion && (
           <figure className="mb-3 border-l-2 hairline-strong pl-3 text-meta text-fg-dim">
-            <figcaption className="eyebrow mb-1">{t("conclusionLabel")}</figcaption>
-            <blockquote lang="en">{item.sourceConclusion}</blockquote>
+            {conclusionDa ? (
+              <>
+                <figcaption className="eyebrow mb-1">{t("conclusionLabelDa")}</figcaption>
+                <blockquote>{localDecimals(conclusionDa, locale)}</blockquote>
+                <details className="mt-1.5">
+                  <summary className="cursor-pointer text-micro">{t("originalLabel")}</summary>
+                  <blockquote lang="en" className="mt-1">{item.sourceConclusion}</blockquote>
+                </details>
+              </>
+            ) : (
+              <>
+                <figcaption className="eyebrow mb-1">{t("conclusionLabel")}</figcaption>
+                <blockquote lang="en">{item.sourceConclusion}</blockquote>
+              </>
+            )}
           </figure>
         )}
         <div className="flex flex-wrap items-center justify-between gap-3 text-micro text-fg-dim">

@@ -20,7 +20,7 @@ export async function GET() {
   const entries = items
     .map(
       (it) => `  <item>
-    <title>${esc(it.title)}</title>
+    <title>${esc(it.titleDa ?? it.title)}</title>
     <link>${esc(it.sourceUrl ?? `${SITE}/science`)}</link>
     <guid isPermaLink="false">${esc(it.doi ?? it.id)}</guid>
     <category>${esc(DOMAIN_LABEL[it.domain])}</category>

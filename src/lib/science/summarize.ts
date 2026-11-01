@@ -99,3 +99,64 @@ export async function summarizeProd(
   // Guardrail tripped: fall back to the deterministic template (cannot lie).
   return { ...template, method: "template-fallback (LLM bestod ikke guardrail)" };
 }
+
+// ---- Danish title + conclusion ---------------------------------------------
+// The paper title and the verbatim abstract conclusion were shown in English.
+// A translation is kept only if every number in it appears verbatim in the
+// original (same verifyNumbers guardrail); otherwise the English stays.
+
+const TranslationSchema = z.object({
+  title_da: z.string(),
+  source_conclusion_da: z.string().nullable(),
+});
+
+const TRANSLATE_SYSTEM = `Du oversætter titler og konklusioner fra videnskabelige artikler til dansk for et trænings-community.
+Strenge regler:
+- Oversæt tro mod originalen. Tilføj, fjern eller fortolk intet.
+- Behold ALLE tal præcis som i originalen, også decimalpunktum (skriv 0.37, ikke 0,37).
+- Behold forkortelser som RCT, SMD, MD, CI og navne på stoffer og tests.
+- Naturligt, nøgternt dansk. Ingen råd, ingen "du bør".`;
+
+export interface FeedTranslation {
+  title_da: string | null;
+  source_conclusion_da: string | null;
+}
+
+/** The Danish text, or null when it is empty or carries a number the original does not. */
+export function keepVerifiedTranslation(da: string | null | undefined, original: string | null): string | null {
+  const text = (da ?? "").trim();
+  if (!text || !original) return null;
+  return verifyNumbers(text, original).ok && !BANNED.test(text) ? text : null;
+}
+
+export async function translateForFeed(
+  item: { title: string; sourceConclusion: string | null },
+  opts: SummarizeOptions = {},
+): Promise<FeedTranslation> {
+  const apiKey = opts.apiKey ?? process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return { title_da: null, source_conclusion_da: null };
+  const client = new Anthropic({ apiKey });
+  const response = await client.messages.parse({
+    model: SCIENCE_SUMMARY_MODEL,
+    max_tokens: 500,
+    system: [{ type: "text", text: TRANSLATE_SYSTEM, cache_control: { type: "ephemeral" } }],
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: `Titel:\n${item.title}\n\nKonklusion:\n${item.sourceConclusion ?? "(ingen — returnér null)"}`,
+          },
+        ],
+      },
+    ],
+    output_config: { format: zodOutputFormat(TranslationSchema) },
+  });
+  const out = response.parsed_output;
+  if (!out) throw new Error("no parsed output");
+  return {
+    title_da: keepVerifiedTranslation(out.title_da, item.title),
+    source_conclusion_da: keepVerifiedTranslation(out.source_conclusion_da, item.sourceConclusion),
+  };
+}

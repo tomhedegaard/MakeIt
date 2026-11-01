@@ -22,6 +22,9 @@ export interface ScienceFeedItem {
   effectDa: string | null;
   caveatDa: string | null;
   sourceConclusion: string | null;
+  /** Danish title / conclusion when the translation passed the number check. */
+  titleDa: string | null;
+  sourceConclusionDa: string | null;
   verified: boolean;
   score: number | null;
 }
@@ -40,12 +43,14 @@ interface ScienceRow {
   effect_da: string | null;
   caveat_da: string | null;
   source_conclusion: string | null;
+  title_da: string | null;
+  source_conclusion_da: string | null;
   verified: boolean | null;
   score: number | null;
 }
 
 const SELECT =
-  "id, doi, title, journal, domain, evidence_badge, published_date, open_access, source_url, tldr_da, effect_da, caveat_da, source_conclusion, verified, score";
+  "id, doi, title, journal, domain, evidence_badge, published_date, open_access, source_url, tldr_da, effect_da, caveat_da, source_conclusion, title_da, source_conclusion_da, verified, score";
 
 function mapRow(r: ScienceRow): ScienceFeedItem {
   return {
@@ -62,6 +67,8 @@ function mapRow(r: ScienceRow): ScienceFeedItem {
     effectDa: r.effect_da,
     caveatDa: r.caveat_da,
     sourceConclusion: r.source_conclusion,
+    titleDa: r.title_da,
+    sourceConclusionDa: r.source_conclusion_da,
     verified: !!r.verified,
     score: r.score,
   };
@@ -108,6 +115,10 @@ const MOCK_ITEMS: ScienceFeedItem[] = [
     caveatDa: "Effekten ses tydeligst ved ≥ 5 g/dag kombineret med styrketræning.",
     sourceConclusion:
       "In postmenopausal women, creatine, particularly >= 5 g/day with RT, yields small but meaningful gains in lean mass and strength without evidence of harm.",
+    titleDa:
+      "Kreatinmonohydrat for fedtfri masse, styrke og knogletæthed hos postmenopausale kvinder: et systematisk review og en meta-analyse",
+    sourceConclusionDa:
+      "Hos postmenopausale kvinder giver kreatin, især >= 5 g/dag kombineret med styrketræning, små men betydningsfulde gevinster i fedtfri masse og styrke uden tegn på skade.",
     verified: true,
     score: 0.86,
   },
@@ -127,6 +138,9 @@ const MOCK_ITEMS: ScienceFeedItem[] = [
     caveatDa: "Studier af høj kvalitet med længere opfølgning mangler stadig.",
     sourceConclusion:
       "VR-based mindfulness interventions are associated with reductions in depression and anxiety symptoms, though high-quality studies with longer follow-up are needed.",
+    // Not translated yet: shows the English fallback.
+    titleDa: null,
+    sourceConclusionDa: null,
     verified: true,
     score: 0.81,
   },
