@@ -47,12 +47,9 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "mock": {
-      "tomorrowLabel": "Tomorrow",
-      "tomorrowTitle": "Pause bench, ring row, push press",
-      "thuLabel": "Thu",
-      "thuTitle": "Deadlift · building to 90% of 1RM",
-      "friLabel": "Fri",
-      "friTitle": "Hypertrophy: quads + shoulders"
+      "pushTitle": "Pause bench, ring row, push press",
+      "deadliftTitle": "Deadlift · building to 90% of 1RM",
+      "hyperTitle": "Hypertrophy: quads + shoulders"
     }
   },
   "crew": {

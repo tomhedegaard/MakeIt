@@ -60,24 +60,31 @@ export async function getWeekStrip(memberId: string): Promise<WeekDay[] | null> 
  * markup that used to live in the page, with today=Tuesday so the
  * unconnected demo still looks "live".
  */
-export function mockWeekStrip(): WeekDay[] {
-  const monday = copenhagenIsoMonday();
-  const today = copenhagenTodayIso();
-  // Exercise proper names stay English; rest days leave sessionLabel
-  // empty so the page can render Coaching.week.rest in the locale.
-  const labels = ["Squat", "Push", "Pull", "Deadlift", "Hyper", "", ""];
-  return labels.map((label, i) => {
+/**
+ * Demo rotation, anchored on today: the demo's Today card is always
+ * Dag A · Squat, so today is Squat and the rest of the rotation runs
+ * forward from it (and wraps backwards over the earlier, done days).
+ * Exercise proper names stay English; rest days are "" so the page
+ * renders Coaching.week.rest in the locale.
+ */
+export const DEMO_ROTATION = ["Squat", "Push", "Pull", "Deadlift", "Hyper", "", ""] as const;
+
+export function mockWeekStrip(now: Date = new Date()): WeekDay[] {
+  const monday = copenhagenIsoMonday(now);
+  const today = copenhagenTodayIso(now);
+  const todayIdx = WEEK_DAY_KEYS.findIndex((_, i) => isoPlusDays(monday, i) === today);
+  return WEEK_DAY_KEYS.map((dayKey, i) => {
     const iso = isoPlusDays(monday, i);
-    const isRest = i >= 5;
+    const label = DEMO_ROTATION[(i - todayIdx + 7) % 7];
     return {
-      dayKey: WEEK_DAY_KEYS[i],
+      dayKey,
       date: Number(iso.slice(8, 10)),
       iso,
       sessionLabel: label,
       sessionId: null,
-      done: i === 0,
-      today: iso === today,
-      rest: isRest,
+      done: i < todayIdx && label !== "",
+      today: i === todayIdx,
+      rest: label === "",
     };
   });
 }
