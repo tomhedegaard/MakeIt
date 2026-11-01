@@ -18,6 +18,9 @@ import { summarize as templateSummarize, verifyNumbers } from "./pipeline";
 import type { ScienceRecord, ScoredRecord, Summary } from "./types";
 
 export const SCIENCE_SUMMARY_MODEL = "claude-haiku-4-5-20251001"; // cheap, ample for short summaries
+// Haiku's Danish titles had real errors ("vheyprotein", "dramatechnikkernes",
+// 1/11). At most ~10 short translations a day, so Sonnet's price is small.
+export const SCIENCE_TRANSLATE_MODEL = "claude-sonnet-5-5";
 
 const SummarySchema = z.object({
   tldr_da: z.string(),
@@ -144,9 +147,12 @@ export async function translateForFeed(
   const apiKey = opts.apiKey ?? process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return { title_da: null, source_conclusion_da: null };
   const client = scienceClient(apiKey);
+  // ponytail: no server-side refusal fallback (SDK 0.95 predates `fallbacks`);
+  // a refusal leaves the English and the row is retried the next day.
   const response = await client.messages.parse({
-    model: SCIENCE_SUMMARY_MODEL,
-    max_tokens: 500,
+    model: SCIENCE_TRANSLATE_MODEL,
+    // Room for adaptive thinking (on by default) plus the short answer.
+    max_tokens: 2000,
     system: [{ type: "text", text: TRANSLATE_SYSTEM, cache_control: { type: "ephemeral" } }],
     messages: [
       {
@@ -159,10 +165,11 @@ export async function translateForFeed(
         ],
       },
     ],
-    output_config: { format: zodOutputFormat(TranslationSchema) },
+    // A translation needs little reasoning; low effort keeps it fast.
+    output_config: { effort: "low", format: zodOutputFormat(TranslationSchema) },
   });
   const out = response.parsed_output;
-  if (!out) throw new Error("no parsed output");
+  if (!out) throw new Error(`no parsed output (stop_reason ${response.stop_reason})`);
   return {
     title_da: keepVerifiedTranslation(out.title_da, item.title),
     source_conclusion_da: keepVerifiedTranslation(out.source_conclusion_da, item.sourceConclusion),
