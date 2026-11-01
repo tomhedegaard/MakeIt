@@ -319,10 +319,17 @@ export default function SessionClient({
                 </span>
               ) : null}
             </div>
-            <div className="numeric text-section">
-              {fmt(set.targetWeight)}{" "}
-              <span className="text-fg-dim text-meta">kg</span>
-            </div>
+            {set.chooseWeight ? (
+              <>
+                <div className="text-section">{t("targets.choose")}</div>
+                <div className="text-micro text-fg-dim mt-1">{t("targets.chooseHint")}</div>
+              </>
+            ) : (
+              <div className="numeric text-section">
+                {fmt(set.targetWeight)}{" "}
+                <span className="text-fg-dim text-meta">kg</span>
+              </div>
+            )}
             {set.adapted?.kind === "weight_reduced" ? (
               <div className="text-micro text-fg-dim mt-1 numeric">
                 {t("targets.original", { weight: fmt(set.adapted.originalWeight) })}
@@ -389,7 +396,7 @@ export default function SessionClient({
                   <span className="flex-1 numeric">
                     {lg?.done
                       ? `${fmt(lg.weight)} kg × ${lg.reps}${lg.rpe ? ` @ ${fmt(lg.rpe)}` : ""}`
-                      : `${fmt(s.targetWeight)} kg × ${s.targetReps}${s.targetRpe ? ` @ ${fmt(s.targetRpe)}` : ""}`}
+                      : `${s.chooseWeight ? t("targets.choose") : `${fmt(s.targetWeight)} kg`} × ${s.targetReps}${s.targetRpe ? ` @ ${fmt(s.targetRpe)}` : ""}`}
                   </span>
                   {isOptional ? (
                     <span className="text-micro text-fg-dim border hairline px-1.5 py-0.5">

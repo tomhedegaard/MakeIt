@@ -9,7 +9,9 @@
     "reps": "Reps",
     "rpe": "RPE",
     "reducedFrom": "Reduceret fra {weight} kg",
-    "original": "Oprindeligt {weight} kg"
+    "original": "Oprindeligt {weight} kg",
+    "choose": "Vælg selv",
+    "chooseHint": "Start let"
   },
   "steppers": {
     "weight": "Vægt",

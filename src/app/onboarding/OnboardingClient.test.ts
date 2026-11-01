@@ -226,6 +226,15 @@ describe("OnboardingClient DONE pending", () => {
       buttonWith("nav.next").click();
     });
     expect(host.textContent).toContain("step2.introTitle");
+    // Every lift needs an answer before step 2 can continue.
+    expect(buttonWith("nav.next").disabled).toBe(true);
+    const noneLabels = Array.from(host.querySelectorAll("label")).filter(
+      (el) => el.textContent === "mode.none",
+    );
+    expect(noneLabels).toHaveLength(4);
+    act(() => {
+      noneLabels.forEach((el) => el.click());
+    });
     act(() => {
       buttonWith("nav.next").click();
     });

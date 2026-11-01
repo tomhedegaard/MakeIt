@@ -32,6 +32,7 @@
  */
 
 import { copenhagenTodayIso } from "@/lib/dates/copenhagen";
+import { scaleBlueprintDays, type OneRmInput } from "@/lib/programs/one-rm";
 
 export const EMPTY_PROGRAM_DAYS_ERROR =
   "Programmet har ingen dage at generere fra";
@@ -155,6 +156,8 @@ export type AssignFromBlueprintInput = {
    * Defaults to Copenhagen today. Tests pass a fixed date.
    */
   fromDate?: string;
+  /** Onboarding answers: scale blueprint kg to this member. */
+  oneRm?: OneRmInput;
 };
 
 /** Inclusive last week for member Start Program (week 1 when startWeek is 1). */
@@ -486,7 +489,7 @@ export async function assignProgramFromBlueprint(
     programId: input.programId,
     startWeek,
     weeks: bp.weeks,
-    days: bp.days,
+    days: input.oneRm && bp.days ? scaleBlueprintDays(bp.days, input.oneRm) : bp.days,
     throughWeek: input.throughWeek,
     fromDate: input.fromDate,
   });

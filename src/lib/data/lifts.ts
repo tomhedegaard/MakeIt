@@ -12,8 +12,9 @@
  *   "Push Press" | "Overhead Press" | "OHP" → ohp
  */
 import { createClient } from "@/lib/supabase/server";
+import { epley, liftKeyFor, type LiftKey } from "@/lib/programs/one-rm";
 
-export type LiftKey = "squat" | "bench" | "deadlift" | "ohp";
+export type { LiftKey };
 
 export const LIFT_LABELS: Record<LiftKey, string> = {
   squat: "Squat",
@@ -45,25 +46,8 @@ export type LiftStats = {
  * Helpers
  * ---------------------------------------------------------------- */
 
-function epley(weight: number, reps: number): number | null {
-  if (!Number.isFinite(weight) || weight <= 0) return null;
-  if (!Number.isFinite(reps) || reps <= 0) return null;
-  if (reps === 1) return round(weight);
-  if (reps > 10) return null; // Epley unreliable above ~10 reps
-  return round(weight * (1 + reps / 30));
-}
-
 function round(n: number) {
   return Math.round(n * 10) / 10;
-}
-
-function liftKeyFor(name: string): LiftKey | null {
-  const n = name.trim().toLowerCase();
-  if (n === "back squat") return "squat";
-  if (n === "bench press" || n === "paused bench") return "bench";
-  if (n === "conventional deadlift") return "deadlift";
-  if (n === "push press" || n === "overhead press" || n === "ohp") return "ohp";
-  return null;
 }
 
 function isoDate(d: Date | string) {

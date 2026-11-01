@@ -9,7 +9,9 @@
     "reps": "Reps",
     "rpe": "RPE",
     "reducedFrom": "Reduced from {weight} kg",
-    "original": "Originally {weight} kg"
+    "original": "Originally {weight} kg",
+    "choose": "Your pick",
+    "chooseHint": "Start light"
   },
   "steppers": {
     "weight": "Weight",

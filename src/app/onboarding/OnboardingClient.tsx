@@ -12,6 +12,12 @@ import {
   isNextRedirectError,
   nextRedirectPath,
 } from "@/lib/programs/start-program-error";
+import {
+  LIFT_KEYS,
+  liftAnswerToOneRm,
+  type LiftAnswerMode,
+  type LiftKey,
+} from "@/lib/programs/one-rm";
 import { completeOnboardingAction } from "./actions";
 
 type Goal = "strength" | "hypertrophy" | "hybrid" | "deadlift_spec";
@@ -23,6 +29,10 @@ const LEVEL_IDS: Level[] = ["beginner", "intermediate", "advanced"];
 const EQUIP_IDS: Equip[] = ["full", "home_rack", "minimal"];
 
 const FREQ_OPTS = [3, 4, 5] as const;
+const LIFT_MODES: LiftAnswerMode[] = ["max", "set", "none"];
+
+type LiftAnswer = { mode: LiftAnswerMode | null; max: string; setKg: string; setReps: string };
+const EMPTY_ANSWER: LiftAnswer = { mode: null, max: "", setKg: "", setReps: "" };
 
 /** Demo (and a fast connected write) can finish in the same tick.
  *  Keep the overlay up long enough that DONE never looks like a no-op. */
@@ -37,22 +47,29 @@ export default function OnboardingClient({
 }) {
   const t = useTranslations("Onboarding");
   const [step, setStep] = useState(
-    err === "save" || err === "auth" || err === "gen" || err === "freq" ? 3 : 1,
+    err === "save" || err === "auth" || err === "gen" || err === "freq"
+      ? 3
+      : err === "lifts"
+        ? 2
+        : 1,
   );
   const [goal, setGoal] = useState<Goal | null>(null);
   const [level, setLevel] = useState<Level | null>(null);
   const [freq, setFreq] = useState<number>(4);
   const [equip, setEquip] = useState<Equip | null>(null);
-  const [maxSquat, setMaxSquat] = useState("");
-  const [maxBench, setMaxBench] = useState("");
-  const [maxDeadlift, setMaxDeadlift] = useState("");
-  const [maxOhp, setMaxOhp] = useState("");
+  const [lifts, setLifts] = useState<Record<LiftKey, LiftAnswer>>({
+    squat: EMPTY_ANSWER,
+    bench: EMPTY_ANSWER,
+    deadlift: EMPTY_ANSWER,
+    ohp: EMPTY_ANSWER,
+  });
   const [pending, setPending] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   const totalSteps = 3;
   const canNext1 = goal && level && equip;
-  const canNext2 = true; // 1RMs are optional
+  // Every lift needs an answer, "har ikke løftet det" included.
+  const canNext2 = LIFT_KEYS.every((k) => liftAnswerToOneRm(lifts[k]) !== undefined);
 
   async function runComplete() {
     if (pending) return;
@@ -129,10 +146,12 @@ export default function OnboardingClient({
         <input type="hidden" name="experience" value={level ?? ""} />
         <input type="hidden" name="equipment" value={equip ?? ""} />
         <input type="hidden" name="frequency" value={freq} />
-        <input type="hidden" name="maxSquat" value={maxSquat} />
-        <input type="hidden" name="maxBench" value={maxBench} />
-        <input type="hidden" name="maxDeadlift" value={maxDeadlift} />
-        <input type="hidden" name="maxOhp" value={maxOhp} />
+        {LIFT_KEYS.flatMap((k) => [
+          <input key={`${k}Mode`} type="hidden" name={`${k}Mode`} value={lifts[k].mode ?? ""} />,
+          <input key={`${k}Max`} type="hidden" name={`${k}Max`} value={lifts[k].max} />,
+          <input key={`${k}SetKg`} type="hidden" name={`${k}SetKg`} value={lifts[k].setKg} />,
+          <input key={`${k}SetReps`} type="hidden" name={`${k}SetReps`} value={lifts[k].setReps} />,
+        ])}
 
         <Container size="narrow" className="py-8 lg:py-14 flex-1 space-y-10 pb-28 lg:pb-10">
           {err === "goal" || err === "level" || err === "equip" ? (
@@ -142,6 +161,7 @@ export default function OnboardingClient({
           {err === "auth" ? <Banner>{t("step3.errorAuth")}</Banner> : null}
           {err === "gen" ? <Banner>{t("step3.errorGen")}</Banner> : null}
           {err === "freq" ? <Banner>{t("step3.errorFreq")}</Banner> : null}
+          {err === "lifts" ? <Banner>{t("step2.errorBanner")}</Banner> : null}
 
           {step === 1 ? (
             <>
@@ -251,35 +271,16 @@ export default function OnboardingClient({
                 sub={t("step2.introSub")}
               />
 
-              <div className="grid grid-cols-2 gap-3">
-                <NumField
-                  label={t("step2.squat")}
-                  placeholder="-"
-                  value={maxSquat}
-                  onChange={setMaxSquat}
-                  busy={pending}
-                />
-                <NumField
-                  label={t("step2.bench")}
-                  placeholder="-"
-                  value={maxBench}
-                  onChange={setMaxBench}
-                  busy={pending}
-                />
-                <NumField
-                  label={t("step2.deadlift")}
-                  placeholder="-"
-                  value={maxDeadlift}
-                  onChange={setMaxDeadlift}
-                  busy={pending}
-                />
-                <NumField
-                  label={t("step2.ohp")}
-                  placeholder="-"
-                  value={maxOhp}
-                  onChange={setMaxOhp}
-                  busy={pending}
-                />
+              <div className="space-y-3">
+                {LIFT_KEYS.map((k) => (
+                  <LiftCard
+                    key={k}
+                    lift={k}
+                    answer={lifts[k]}
+                    onChange={(next) => setLifts((prev) => ({ ...prev, [k]: next }))}
+                    busy={pending}
+                  />
+                ))}
               </div>
 
               <p className="text-meta text-fg-faint">
@@ -502,13 +503,16 @@ function Choice({
 }
 
 function NumField({
-  label, placeholder, value, onChange, busy,
+  label, placeholder, value, onChange, busy, unit = "kg", step = "2.5", max = "600",
 }: {
   label: string;
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
   busy?: boolean;
+  unit?: string;
+  step?: string;
+  max?: string;
 }) {
   return (
     <label className="block">
@@ -516,10 +520,10 @@ function NumField({
       <div className="relative">
         <input
           type="number"
-          step="2.5"
+          step={step}
           min="0"
-          max="600"
-          inputMode="decimal"
+          max={max}
+          inputMode={step === "1" ? "numeric" : "decimal"}
           readOnly={busy}
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -527,10 +531,82 @@ function NumField({
           placeholder={placeholder}
         />
         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-micro text-fg-faint">
-          kg
+          {unit}
         </span>
       </div>
     </label>
+  );
+}
+
+function LiftCard({
+  lift, answer, onChange, busy,
+}: {
+  lift: LiftKey;
+  answer: LiftAnswer;
+  onChange: (next: LiftAnswer) => void;
+  busy?: boolean;
+}) {
+  const t = useTranslations("Onboarding.step2");
+  const estimate = answer.mode === "set" ? liftAnswerToOneRm(answer) : undefined;
+  const set = (patch: Partial<LiftAnswer>) => {
+    if (!busy) onChange({ ...answer, ...patch });
+  };
+  return (
+    <fieldset className="surface-2 rounded-2xl p-5 space-y-3">
+      <legend className="sr-only">{t(lift)}</legend>
+      <div className="font-display text-section" aria-hidden>
+        {t(lift)}
+      </div>
+      {/* Same sr-only radio in a pill as the frequency question. */}
+      <div className="grid grid-cols-3 gap-2">
+        {LIFT_MODES.map((mode) => (
+          <label
+            key={mode}
+            data-active={answer.mode === mode}
+            className={cn(
+              "pill touch-app min-h-12 h-auto py-2 cursor-pointer text-center leading-tight",
+              "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-fg",
+              busy && "pointer-events-none opacity-60",
+            )}
+          >
+            <input
+              type="radio"
+              name={`${lift}-mode-ui`}
+              value={mode}
+              checked={answer.mode === mode}
+              onChange={() => set({ mode })}
+              aria-disabled={busy}
+              className="sr-only"
+            />
+            {t(`mode.${mode}`)}
+          </label>
+        ))}
+      </div>
+      {answer.mode === "max" ? (
+        <NumField label={t("maxLabel")} placeholder="-" value={answer.max} onChange={(max) => set({ max })} busy={busy} />
+      ) : null}
+      {answer.mode === "set" ? (
+        <>
+          <div className="grid grid-cols-2 gap-3">
+            <NumField label={t("setKgLabel")} placeholder="-" value={answer.setKg} onChange={(setKg) => set({ setKg })} busy={busy} />
+            <NumField
+              label={t("setRepsLabel")}
+              placeholder="-"
+              value={answer.setReps}
+              onChange={(setReps) => set({ setReps })}
+              busy={busy}
+              unit={t("repsUnit")}
+              step="1"
+              max="10"
+            />
+          </div>
+          <p className="text-meta text-fg-dim numeric" aria-live="polite">
+            {estimate != null ? t("estimate", { kg: estimate }) : t("setHint")}
+          </p>
+        </>
+      ) : null}
+      {answer.mode === "none" ? <p className="text-meta text-fg-dim">{t("noneHint")}</p> : null}
+    </fieldset>
   );
 }
 
