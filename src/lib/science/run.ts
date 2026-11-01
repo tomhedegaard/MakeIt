@@ -177,6 +177,11 @@ export async function runScienceFeed(opts: RunOptions = {}): Promise<FeedRunResu
         doi: r.doi,
         title: r.title,
         journal: r.journal,
+        // A bulk upsert fills keys missing from a row with null, not the
+        // column default, and both columns are NOT NULL: the first run that
+        // got this far failed on open_access (1/11).
+        open_access: deduped.find((d) => d.id === r.id)?.openAccess ?? false,
+        verified: false,
         status: "rejected" as const,
         reject_reason: r.reason,
       })),
