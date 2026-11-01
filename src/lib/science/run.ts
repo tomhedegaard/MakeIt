@@ -9,7 +9,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { CONFIG } from "./config";
 import { fetchAll } from "./fetch";
 import { normalize, dedupe, gate, score } from "./pipeline";
-import { summarizeProd } from "./summarize";
+import { summarizeProd, translateForFeed, type FeedTranslation } from "./summarize";
 import type {
   PublishedScienceItem,
   RejectedScienceItem,
@@ -28,6 +28,8 @@ export interface RunOptions {
   now?: Date;
   /** Anthropic API key override (defaults to process.env.ANTHROPIC_API_KEY). */
   apiKey?: string;
+  /** Translator injection for tests (defaults to Claude via translateForFeed). */
+  translate?: Translate;
   log?: (msg: string) => void;
 }
 
@@ -169,9 +171,64 @@ export async function runScienceFeed(opts: RunOptions = {}): Promise<FeedRunResu
     const { error } = await db.from("science_items").upsert(rows, { onConflict: "source_id" });
     if (error) throw new Error(`science_items upsert failed: ${error.message}`);
     log(`[7] PUBLISH    upsert ${rows.length} rækker (${published.length} published / ${rejected.length} rejected)`);
+
+    if (apiKey ?? process.env.ANTHROPIC_API_KEY) {
+      const translate = opts.translate ?? ((item) => translateForFeed(item, { apiKey }));
+      const n = await translateMissing(db, translate, log);
+      log(`[8] TRANSLATE  ${n} studier forsøgt oversat`);
+    }
   } else {
     log(`[7] PUBLISH    dry-run — intet skrevet`);
   }
 
   return { source, generated, published, rejected };
+}
+
+type Translate = (item: { title: string; sourceConclusion: string | null }) => Promise<FeedTranslation>;
+
+/** Per run: few enough to fit the cron's 60 s next to the fetch. */
+export const TRANSLATE_PER_RUN = 10;
+
+/**
+ * Danish title + conclusion for published rows not attempted yet: new
+ * studies from this run and, a batch per day, the existing back catalogue.
+ * translated_at is stamped even when the translation was discarded, so a
+ * study that fails the number check is not retried (and billed) daily.
+ */
+export async function translateMissing(
+  db: SupabaseClient,
+  translate: Translate,
+  log: (msg: string) => void = () => {},
+  limit = TRANSLATE_PER_RUN,
+): Promise<number> {
+  const { data, error } = await db
+    .from("science_items")
+    .select("id, title, source_conclusion")
+    .eq("status", "published")
+    .is("translated_at", null)
+    .order("score", { ascending: false })
+    .limit(limit);
+  if (error) {
+    log(`[8] TRANSLATE  læsning fejlede: ${error.message}`);
+    return 0;
+  }
+  const rows = (data ?? []) as { id: string; title: string; source_conclusion: string | null }[];
+  await Promise.all(
+    rows.map(async (row) => {
+      let t: FeedTranslation = { title_da: null, source_conclusion_da: null };
+      try {
+        t = await translate({ title: row.title, sourceConclusion: row.source_conclusion });
+      } catch (err) {
+        // A failed call is retried tomorrow: leave translated_at null.
+        log(`[8] TRANSLATE  ${row.id} fejlede: ${err instanceof Error ? err.message : String(err)}`);
+        return;
+      }
+      const { error: upErr } = await db
+        .from("science_items")
+        .update({ ...t, translated_at: new Date().toISOString() })
+        .eq("id", row.id);
+      if (upErr) log(`[8] TRANSLATE  ${row.id} kunne ikke gemmes: ${upErr.message}`);
+    }),
+  );
+  return rows.length;
 }

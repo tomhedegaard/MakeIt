@@ -28,5 +28,7 @@
   "effectHelp": {
     "md": "MD: gennemsnitlig forskel mellem grupperne, i den angivne enhed.",
     "smd": "SMD: standardiseret effektstørrelse. Omkring 0,2 er lille, 0,5 middel og 0,8 stor."
-  }
+  },
+  "conclusionLabelDa": "Studiets konklusion",
+  "originalLabel": "Original på engelsk"
 }

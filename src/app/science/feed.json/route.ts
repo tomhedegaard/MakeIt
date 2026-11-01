@@ -21,7 +21,7 @@ export async function GET() {
     items: items.map((it) => ({
       id: it.doi ?? it.id,
       url: it.sourceUrl ?? `${SITE}/science`,
-      title: it.title,
+      title: it.titleDa ?? it.title,
       content_text: it.tldrDa,
       date_published: it.publishedDate,
       tags: [DOMAIN_LABEL[it.domain], it.evidenceBadge],

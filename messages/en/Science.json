@@ -28,5 +28,7 @@
   "effectHelp": {
     "md": "MD: mean difference between groups, in the unit shown.",
     "smd": "SMD: standardised effect size. Around 0.2 is small, 0.5 medium and 0.8 large."
-  }
+  },
+  "conclusionLabelDa": "The study's conclusion",
+  "originalLabel": "Original in English"
 }
