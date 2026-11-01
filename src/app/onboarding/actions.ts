@@ -13,6 +13,7 @@ import {
   type ProfileInput,
 } from "@/lib/data/program-generator";
 import { assignProgramForAuthenticatedMember } from "@/lib/data/assign-program";
+import { parseOneRmForm } from "@/lib/programs/one-rm";
 import { canMemberAssignProgram } from "@/lib/programs/synthetic";
 import { sendWelcomeEmail } from "@/lib/email/templates/welcome";
 import { isLocale, type Locale } from "@/i18n/config";
@@ -29,13 +30,6 @@ const GOALS: GoalFocus[] = [
 ];
 const LEVELS: ExperienceLevel[] = ["beginner", "intermediate", "advanced"];
 const EQUIP: EquipmentLevel[] = ["full", "home_rack", "minimal"];
-
-function num(v: FormDataEntryValue | null): number | null {
-  if (v === null || v === undefined || v === "") return null;
-  const n = Number(v);
-  if (Number.isNaN(n) || n < 0 || n > 600) return null;
-  return n;
-}
 
 export async function completeOnboardingAction(formData: FormData) {
   const goalRaw = String(formData.get("goal") ?? "");
@@ -62,15 +56,26 @@ export async function completeOnboardingAction(formData: FormData) {
     redirect("/onboarding?err=freq");
   }
 
+  // Every lift needs an answer: a 1RM, a recent heavy set, or "har
+  // ikke løftet det". The e1RM is stored and scales week 1.
+  const oneRm = parseOneRmForm((key) => {
+    const v = formData.get(key);
+    return typeof v === "string" ? v : null;
+  });
+  if (!oneRm) {
+    console.info("[onboarding] reject=lifts");
+    redirect("/onboarding?err=lifts");
+  }
+
   const profile: ProfileInput = {
     goalFocus: goalRaw as GoalFocus,
     experienceLevel: levelRaw as ExperienceLevel,
     weeklyFrequency: freqRaw,
     equipmentLevel: equipRaw as EquipmentLevel,
-    maxSquatKg: num(formData.get("maxSquat")),
-    maxBenchKg: num(formData.get("maxBench")),
-    maxDeadliftKg: num(formData.get("maxDeadlift")),
-    maxOhpKg: num(formData.get("maxOhp")),
+    maxSquatKg: oneRm.squat,
+    maxBenchKg: oneRm.bench,
+    maxDeadliftKg: oneRm.deadlift,
+    maxOhpKg: oneRm.ohp,
     notesInjuries: String(formData.get("injuries") ?? "").slice(0, 500) || null,
   };
 
@@ -216,6 +221,7 @@ export async function completeOnboardingAction(formData: FormData) {
       const result = await assignProgramForAuthenticatedMember({
         memberId: user.id,
         programId: prog.id,
+        oneRm,
       });
 
       if (!result.ok) {

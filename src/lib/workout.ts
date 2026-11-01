@@ -31,6 +31,8 @@ export type ExerciseSet = {
   id: string;
   targetReps: number;
   targetWeight: number;
+  /** No target weight (onboarding "har ikke løftet det"): the member picks one. */
+  chooseWeight?: boolean;
   targetRpe?: number;
   // Logged values (populated as user trains)
   loggedReps?: number;

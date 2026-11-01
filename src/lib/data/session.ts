@@ -74,6 +74,7 @@ export async function getFullSession(
           id: s.id,
           targetReps: s.target_reps ?? 0,
           targetWeight: Number(s.target_weight ?? 0),
+          chooseWeight: s.target_weight == null || undefined,
           targetRpe: s.target_rpe != null ? Number(s.target_rpe) : undefined,
           restSec: s.rest_sec ?? 0,
           loggedReps: s.logged_reps ?? undefined,

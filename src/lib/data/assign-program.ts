@@ -22,10 +22,12 @@ import {
   assignProgramFromBlueprint,
   type AssignFromBlueprintResult,
 } from "@/lib/programs/assign-from-blueprint";
+import type { OneRmInput } from "@/lib/programs/one-rm";
 
 export async function assignProgramForAuthenticatedMember(input: {
   memberId: string;
   programId: string;
+  oneRm?: OneRmInput;
 }): Promise<AssignFromBlueprintResult> {
   const svc = createServiceClient();
   return assignProgramFromBlueprint(svc, {
@@ -34,5 +36,6 @@ export async function assignProgramForAuthenticatedMember(input: {
     startWeek: 1,
     throughWeek: MEMBER_SELF_SERVE_THROUGH_WEEK,
     supersedeStatus: "paused",
+    oneRm: input.oneRm,
   });
 }

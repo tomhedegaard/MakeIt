@@ -50,7 +50,7 @@
   "step1": {
     "introEyebrow": "Hey @{handle}",
     "introTitle": "Let's build your program.",
-    "introSub": "Three questions: goal, level, equipment. Then you have a program.",
+    "introSub": "Goal, level, how often and equipment. Then your lifts. Then you have a program.",
     "errorBanner": "Pick an option in each group.",
     "goalEyebrow": "Goal",
     "goalTitle": "What are you aiming for?",
@@ -60,14 +60,27 @@
     "equipTitle": "What do you have access to?"
   },
   "step2": {
-    "introEyebrow": "Maxes",
+    "introEyebrow": "Your lifts",
     "introTitle": "How strong are you today?",
-    "introSub": "Enter your ~1RM for each lift if you know it. Skip it if not. We'll use averages for your level as a starting point.",
+    "introSub": "Answer for each lift. If you don't know your 1RM, enter a heavy set you did recently. Your first week's weights are set from your answers.",
     "squat": "Squat",
-    "bench": "Bench",
+    "bench": "Bench press",
     "deadlift": "Deadlift",
-    "ohp": "OHP",
-    "footnote": "All fields in kg · You can always update them later on your profile."
+    "ohp": "Overhead press",
+    "mode": {
+      "max": "My 1RM",
+      "set": "Not sure",
+      "none": "Haven't done it"
+    },
+    "maxLabel": "1RM",
+    "setKgLabel": "Recent heavy set",
+    "setRepsLabel": "Reps",
+    "repsUnit": "reps",
+    "setHint": "A set of 1 to 10 reps, as close to max as you can.",
+    "estimate": "That is roughly {kg, number} kg as a 1RM.",
+    "noneHint": "The weight is left empty in the session. Start light, and next week builds on what you log.",
+    "footnote": "All in kg. After week 1, weights follow what you log.",
+    "errorBanner": "Answer for each lift. Pick “Haven't done it” if you haven't tried it."
   },
   "step3": {
     "introEyebrow": "Last one",

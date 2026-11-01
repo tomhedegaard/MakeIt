@@ -50,7 +50,7 @@
   "step1": {
     "introEyebrow": "Hej @{handle}",
     "introTitle": "Lad os bygge dit program.",
-    "introSub": "Tre spørgsmål: mål, niveau, udstyr. Så har du et program.",
+    "introSub": "Mål, niveau, hvor ofte og udstyr. Bagefter dine løft. Så har du et program.",
     "errorBanner": "Vælg en option i hver gruppe.",
     "goalEyebrow": "Mål",
     "goalTitle": "Hvad sigter du efter?",
@@ -60,14 +60,27 @@
     "equipTitle": "Hvad har du adgang til?"
   },
   "step2": {
-    "introEyebrow": "Maxes",
+    "introEyebrow": "Dine løft",
     "introTitle": "Hvor stærk er du i dag?",
-    "introSub": "Indtast dit ~1RM for hver løft, hvis du kender det. Spring over, hvis ikke. Så bruger vi gennemsnit til dit niveau som start.",
+    "introSub": "Svar for hvert løft. Kender du ikke dit 1RM, så skriv et tungt sæt, du har lavet for nylig. Din første uges vægte sættes ud fra svarene.",
     "squat": "Squat",
-    "bench": "Bench",
-    "deadlift": "Deadlift",
-    "ohp": "OHP",
-    "footnote": "Alle felter i kg · Du kan altid opdatere dem senere på din profil."
+    "bench": "Bænkpres",
+    "deadlift": "Dødløft",
+    "ohp": "Skulderpres",
+    "mode": {
+      "max": "Mit 1RM",
+      "set": "Ved ikke",
+      "none": "Har ikke løftet det"
+    },
+    "maxLabel": "1RM",
+    "setKgLabel": "Tungt sæt for nylig",
+    "setRepsLabel": "Antal reps",
+    "repsUnit": "reps",
+    "setHint": "Et sæt på 1 til 10 reps, så tæt på max som muligt.",
+    "estimate": "Det svarer til cirka {kg, number} kg i 1RM.",
+    "noneHint": "Vægten står tom i passet. Start let, så bygger næste uge på det, du logger.",
+    "footnote": "Alt i kg. Efter første uge følger vægtene det, du logger.",
+    "errorBanner": "Svar for hvert løft. Vælg «Har ikke løftet det», hvis du ikke har prøvet det."
   },
   "step3": {
     "introEyebrow": "Sidste",
