@@ -21,7 +21,12 @@
   "verifiedTitle": "Tal-verifikation mod kildens abstract",
   "effectLabel": "Effekt",
   "caveatLabel": "Forbehold",
-  "openAccess": "Open Access",
+  "openAccess": "Frit tilgængelig",
   "readSource": "Læs kilden →",
-  "disclaimer": "Forskningsresumeer, ikke individuel sundheds- eller kostrådgivning."
+  "disclaimer": "Forskningsresumeer, ikke individuel sundheds- eller kostrådgivning.",
+  "conclusionLabel": "Studiets konklusion, på engelsk",
+  "effectHelp": {
+    "md": "MD: gennemsnitlig forskel mellem grupperne, i den angivne enhed.",
+    "smd": "SMD: standardiseret effektstørrelse. Omkring 0,2 er lille, 0,5 middel og 0,8 stor."
+  }
 }

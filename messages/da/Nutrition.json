@@ -40,8 +40,8 @@
     "regenerate": "Regenerér ugeplan",
     "generatedByClaude": "AI-udkast",
     "generatedLocally": "Regelbaseret plan (skaleret til dit mål)",
-    "fallbackEyebrow": "Ikke et AI-udkast",
-    "fallbackBody": "HQ nåede ikke at færdiggøre AI-udkastet inden for tiden. Vi har lagt en skaleret standardplan, der rammer dine daglige kcal- og proteinmål. Ikke et ujusteret katalog."
+    "fallbackEyebrow": "Standardplan",
+    "fallbackBody": "HQ blev ikke færdig med din personlige plan i tide. Du har fået en standardplan, der er tilpasset dine daglige mål for kcal og protein."
   },
   "dayLabels": {
     "mon": "Man",

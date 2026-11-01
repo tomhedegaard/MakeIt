@@ -2,8 +2,8 @@
   "metaTitle": "Velkommen · MakeIt // HQ",
   "goals": {
     "strength": {
-      "title": "Strength",
-      "sub": "Squat, bench, DL: bygge til nye PR'er"
+      "title": "Styrke",
+      "sub": "Squat, bænkpres og dødløft: byg op til nye PR'er"
     },
     "hypertrophy": {
       "title": "Hypertrofi",
@@ -14,14 +14,14 @@
       "sub": "Begge dele: tunge topsæt og hjælpeøvelser"
     },
     "deadlift_spec": {
-      "title": "Deadlift spec.",
+      "title": "Dødløft-fokus",
       "sub": "6 uger fokus på en ny PR i dødløftet"
     }
   },
   "levels": {
     "beginner": {
       "title": "Begynder",
-      "sub": "< 1 år struktureret strength-træning"
+      "sub": "Under 1 års struktureret styrketræning"
     },
     "intermediate": {
       "title": "Mellem",
