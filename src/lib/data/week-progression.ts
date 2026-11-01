@@ -82,10 +82,16 @@ export async function maybeAdvanceWeek(
 
   const nextWeek = week + 1;
   const isDeload = isDeloadWeek(nextWeek);
+  const { data: memberRow } = await supabase
+    .from("members")
+    .select("weekly_frequency")
+    .eq("id", memberId)
+    .maybeSingle();
   const nextSessions = progressWeek(
     prev as unknown as PrevSession[],
     isDeload,
     (await isYouthAccount(memberId)) ? YOUTH_PROGRESSION : ADULT_PROGRESSION,
+    memberRow?.weekly_frequency ?? null,
   );
 
   // Promote the assignment first so the dashboard reflects the new week
@@ -95,7 +101,7 @@ export async function maybeAdvanceWeek(
     .update({ current_week: nextWeek })
     .eq("id", pa.id);
 
-  // Insert next week's sessions, scheduled with the same offsets from today.
+  // Insert next week's sessions from today, rest days by training frequency.
   for (const s of nextSessions) {
     const d = new Date();
     d.setDate(d.getDate() + s.scheduledOffsetDays);
