@@ -283,10 +283,20 @@ export default async function TodayPage() {
         kicker={todayHeading(locale)}
         title={t("greeting.title")}
         action={
-          <div className="text-right">
-            <div className="eyebrow mb-1">{t("greeting.streakLabel")}</div>
-            <div className="numeric text-title">{stats?.streakDays ?? (connected ? 0 : 12)}</div>
-            <div className="text-micro text-fg-faint">{t("greeting.streakUnit")}</div>
+          <div className="flex gap-6 sm:text-right">
+            <div>
+              <div className="eyebrow mb-1">{t("greeting.streakLabel")}</div>
+              <div className="numeric text-title">{stats?.streakDays ?? (connected ? 0 : 12)}</div>
+              <div className="text-micro text-fg-faint">{t("greeting.streakUnit")}</div>
+            </div>
+            {/* Reps balance: the numbers card that carried it moved to Træn (#160). */}
+            <Link href="/reps" className="block lift">
+              <div className="eyebrow mb-1">{t("greeting.repsLabel")}</div>
+              <div className="numeric text-title">
+                {new Intl.NumberFormat(intlLocaleTag(locale)).format(stats?.repsBalance ?? (connected ? 0 : 1420))}
+              </div>
+              <div className="text-micro text-fg-faint">{member.tier}</div>
+            </Link>
           </div>
         }
       />
