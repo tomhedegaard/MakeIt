@@ -39,22 +39,22 @@
       "welcome": {
         "eyebrow": "Welcome",
         "title": "You're in the crew.",
-        "body": "Four screens. Then you know where everything lives."
+        "body": "Four more short screens. Then you know where everything lives."
       },
       "today": {
         "eyebrow": "Today",
         "title": "Today's session lives here.",
-        "body": "Every morning you open Today. Tap the big \"Start session\" card and you're off. Weights are set from your 1RMs."
+        "body": "Open Today and tap “Start session” on today's card. Your first week's weights come from the lifts you entered. After that they follow what you log."
       },
       "tabs": {
-        "eyebrow": "Five tabs",
+        "eyebrow": "Tabs and menu",
         "title": "Five tabs carry the whole app.",
-        "body": "Today, Train, Food, Mind and Crew sit at the bottom. Me, Reps, HRV and Science live in the menu behind your initials, top right."
+        "body": "Today, Train, Food, Mind and Crew sit at the bottom. Messages is top right, and behind the person icon next to it you'll find Me, Reps, HRV and Science."
       },
       "formCheck": {
         "eyebrow": "Form check",
         "title": "Technique gets a check.",
-        "body": "Tap \"Form check\" inside a session. Record or upload. HQ gives a first pass; Munk signs off within 24 hours."
+        "body": "Tap “Record set” inside a session. Record or upload. HQ gives a first pass; Munk signs off within 24 hours."
       },
       "reps": {
         "eyebrow": "Reps",

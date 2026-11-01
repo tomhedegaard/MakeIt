@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState, useTransition } from "react";
+import { useCallback, useMemo, useState, useTransition, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -303,118 +303,119 @@ export default function SessionClient({
           }}
           onOpenFormCheck={() => setFormCheckOpen(true)}
           youth={Boolean(youth)}
-        />
-
-        {/* Targets row */}
-        <section className="grid grid-cols-3 gap-px bg-line border hairline overflow-hidden">
-          <div className="bg-bg-2 p-4 text-center">
-            <div className="eyebrow mb-1 flex items-center justify-center gap-1.5">
-              <span>{t("targets.goal")}</span>
+        >
+          {/* Targets row */}
+          <section className="grid grid-cols-3 gap-px bg-line border hairline overflow-hidden">
+            <div className="bg-bg-2 p-4 text-center">
+              <div className="eyebrow mb-1 flex items-center justify-center gap-1.5">
+                <span>{t("targets.goal")}</span>
+                {set.adapted?.kind === "weight_reduced" ? (
+                  <span
+                    className="text-micro px-1.5 py-0.5 bg-bg-3 text-fg-dim"
+                    title={t("targets.reducedFrom", { weight: fmt(set.adapted.originalWeight) })}
+                  >
+                    −{set.adapted.percent}%
+                  </span>
+                ) : null}
+              </div>
+              {set.chooseWeight ? (
+                <>
+                  <div className="text-section">{t("targets.choose")}</div>
+                  <div className="text-micro text-fg-dim mt-1">{t("targets.chooseHint")}</div>
+                </>
+              ) : (
+                <div className="numeric text-section">
+                  {fmt(set.targetWeight)}{" "}
+                  <span className="text-fg-dim text-meta">kg</span>
+                </div>
+              )}
               {set.adapted?.kind === "weight_reduced" ? (
-                <span
-                  className="text-micro px-1.5 py-0.5 bg-bg-3 text-fg-dim"
-                  title={t("targets.reducedFrom", { weight: fmt(set.adapted.originalWeight) })}
-                >
-                  −{set.adapted.percent}%
-                </span>
+                <div className="text-micro text-fg-dim mt-1 numeric">
+                  {t("targets.original", { weight: fmt(set.adapted.originalWeight) })}
+                </div>
               ) : null}
             </div>
-            {set.chooseWeight ? (
-              <>
-                <div className="text-section">{t("targets.choose")}</div>
-                <div className="text-micro text-fg-dim mt-1">{t("targets.chooseHint")}</div>
-              </>
-            ) : (
-              <div className="numeric text-section">
-                {fmt(set.targetWeight)}{" "}
-                <span className="text-fg-dim text-meta">kg</span>
-              </div>
-            )}
-            {set.adapted?.kind === "weight_reduced" ? (
-              <div className="text-micro text-fg-dim mt-1 numeric">
-                {t("targets.original", { weight: fmt(set.adapted.originalWeight) })}
-              </div>
-            ) : null}
-          </div>
-          <div className="bg-bg-2 p-4 text-center">
-            <div className="eyebrow mb-1">{t("targets.reps")}</div>
-            <div className="numeric text-section">{set.targetReps}</div>
-          </div>
-          <div className="bg-bg-2 p-4 text-center">
-            <div className="eyebrow mb-1">{t("targets.rpe")}</div>
-            <div className="numeric text-section">{set.targetRpe ? fmt(set.targetRpe) : "-"}</div>
-          </div>
-        </section>
+            <div className="bg-bg-2 p-4 text-center">
+              <div className="eyebrow mb-1">{t("targets.reps")}</div>
+              <div className="numeric text-section">{set.targetReps}</div>
+            </div>
+            <div className="bg-bg-2 p-4 text-center">
+              <div className="eyebrow mb-1">{t("targets.rpe")}</div>
+              <div className="numeric text-section">{set.targetRpe ? fmt(set.targetRpe) : "-"}</div>
+            </div>
+          </section>
 
-        {/* Steppers */}
-        <section className="space-y-3">
-          <Stepper
-            name="weight"
-            value={current.weight}
-            step={2.5}
-            min={0}
-            unit="kg"
-            label={t("steppers.weight")}
-            onChange={(weight) => patch({ weight })}
-          />
-          <Stepper
-            name="reps"
-            value={current.reps}
-            step={1}
-            min={0}
-            unit="reps"
-            label={t("steppers.reps")}
-            onChange={(reps) => patch({ reps })}
-          />
-        </section>
+          {/* Steppers */}
+          <section className="space-y-3">
+            <Stepper
+              name="weight"
+              value={current.weight}
+              step={2.5}
+              min={0}
+              unit="kg"
+              label={t("steppers.weight")}
+              onChange={(weight) => patch({ weight })}
+            />
+            <Stepper
+              name="reps"
+              value={current.reps}
+              step={1}
+              min={0}
+              unit="reps"
+              label={t("steppers.reps")}
+              onChange={(reps) => patch({ reps })}
+            />
+          </section>
 
-        {/* RPE */}
-        <section>
-          <div className="eyebrow mb-3">{t("rpe.label")}</div>
-          <RpeSelect value={current.rpe} onChange={(rpe) => patch({ rpe })} />
-        </section>
+          {/* RPE */}
+          <section>
+            <div className="eyebrow mb-3">{t("rpe.label")}</div>
+            <RpeSelect value={current.rpe} onChange={(rpe) => patch({ rpe })} />
+          </section>
 
-        {/* Sets list for this exercise */}
-        <section>
-          <div className="eyebrow mb-3">{t("sets.title")}</div>
-          <ol className="surface-2 divide-y hairline overflow-hidden">
-            {ex.sets.map((s, i) => {
-              const sk = setKey(ex.id, s.id);
-              const lg = logged[sk];
-              const isCurrent = i === setIdx;
-              const isOptional = s.optional === true;
-              return (
-                <li
-                  key={s.id}
-                  data-current={isCurrent}
-                  className="px-4 py-3 flex items-center gap-3 text-copy"
-                  style={{ background: isCurrent ? "var(--bg-3)" : undefined }}
-                >
-                  <span className="numeric text-fg-faint w-6 text-micro">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="flex-1 numeric">
-                    {lg?.done
-                      ? `${fmt(lg.weight)} kg × ${lg.reps}${lg.rpe ? ` @ ${fmt(lg.rpe)}` : ""}`
-                      : `${s.chooseWeight ? t("targets.choose") : `${fmt(s.targetWeight)} kg`} × ${s.targetReps}${s.targetRpe ? ` @ ${fmt(s.targetRpe)}` : ""}`}
-                  </span>
-                  {isOptional ? (
-                    <span className="text-micro text-fg-dim border hairline px-1.5 py-0.5">
-                      {t("sets.optional")}
+          {/* Sets list for this exercise */}
+          <section>
+            <div className="eyebrow mb-3">{t("sets.title")}</div>
+            <ol className="surface-2 divide-y hairline overflow-hidden">
+              {ex.sets.map((s, i) => {
+                const sk = setKey(ex.id, s.id);
+                const lg = logged[sk];
+                const isCurrent = i === setIdx;
+                const isOptional = s.optional === true;
+                return (
+                  <li
+                    key={s.id}
+                    data-current={isCurrent}
+                    className="px-4 py-3 flex items-center gap-3 text-copy"
+                    style={{ background: isCurrent ? "var(--bg-3)" : undefined }}
+                  >
+                    <span className="numeric text-fg-faint w-6 text-micro">
+                      {String(i + 1).padStart(2, "0")}
                     </span>
-                  ) : null}
-                  {lg?.done ? (
-                    <span className="text-fg" aria-label={t("sets.done")}>✓</span>
-                  ) : isCurrent ? (
-                    <span className="eyebrow text-fg">{t("sets.now")}</span>
-                  ) : (
-                    <span className="text-fg-faint" aria-hidden>·</span>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
-        </section>
+                    <span className="flex-1 numeric">
+                      {lg?.done
+                        ? `${fmt(lg.weight)} kg × ${lg.reps}${lg.rpe ? ` @ ${fmt(lg.rpe)}` : ""}`
+                        : `${s.chooseWeight ? t("targets.choose") : `${fmt(s.targetWeight)} kg`} × ${s.targetReps}${s.targetRpe ? ` @ ${fmt(s.targetRpe)}` : ""}`}
+                    </span>
+                    {isOptional ? (
+                      <span className="text-micro text-fg-dim border hairline px-1.5 py-0.5">
+                        {t("sets.optional")}
+                      </span>
+                    ) : null}
+                    {lg?.done ? (
+                      <span className="text-fg" aria-label={t("sets.done")}>✓</span>
+                    ) : isCurrent ? (
+                      <span className="eyebrow text-fg">{t("sets.now")}</span>
+                    ) : (
+                      <span className="text-fg-faint" aria-hidden>·</span>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        </ExerciseSection>
+
       </Container>
       </main>
 
@@ -566,6 +567,7 @@ function ExerciseSection({
   earlierThreads,
   onOpenFormCheck,
   youth = false,
+  children,
 }: {
   ex: Exercise;
   exIdx: number;
@@ -587,6 +589,8 @@ function ExerciseSection({
   onOpenFormCheck: () => void;
   /** MakeIt Ung: no coach contact, so no filming for Munk (spec afsnit 3). */
   youth?: boolean;
+  /** The current set's targets and logging, right under the lift name. */
+  children: ReactNode;
 }) {
   const t = useTranslations("Session.exercise");
   const lib = ex.library;
@@ -608,9 +612,12 @@ function ExerciseSection({
     [inlineCues.length, phases.length],
   );
 
+  // Name and set count first, then the logging (children), then the
+  // demo, cues and form check: on a phone the current set's target
+  // used to sit ~1000px down, below the guidance.
   return (
-    <section className="surface-2 p-5 lg:p-7">
-      <div className="flex items-start justify-between gap-4 mb-4">
+    <>
+      <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <h1 className="font-display text-title">
             {ex.name}
@@ -628,118 +635,122 @@ function ExerciseSection({
         </div>
       </div>
 
-      {lib ? (
-        <div className="flex gap-4 border-t hairline pt-4">
-          {demoAssetUrl ? (
-            <SessionExerciseDemo
-              demoAssetUrl={demoAssetUrl}
-              phases={phases}
-              onPhaseChange={handlePhaseChange}
-              label={t("demoAria", { lift: ex.name })}
-              playLabel={t("demoPlay")}
-              pauseLabel={t("demoPause")}
-              eyebrow={t("demo")}
-            />
-          ) : (
-            <Link
-              href={`/train/exercises/${lib.slug}`}
-              className="shrink-0 lift surface p-1.5"
-              aria-label={t("openDetails")}
-            >
-              <AnatomyFigure
-                view={figureView}
-                primary={lib.primaryMuscles}
-                secondary={lib.secondaryMuscles}
-                tertiary={lib.tertiaryMuscles}
-                style={{ width: 56, height: 112 }}
+      {children}
+
+      <section className="surface-2 p-5 lg:p-7">
+        {lib ? (
+          <div className="flex gap-4">
+            {demoAssetUrl ? (
+              <SessionExerciseDemo
+                demoAssetUrl={demoAssetUrl}
+                phases={phases}
+                onPhaseChange={handlePhaseChange}
+                label={t("demoAria", { lift: ex.name })}
+                playLabel={t("demoPlay")}
+                pauseLabel={t("demoPause")}
+                eyebrow={t("demo")}
               />
-            </Link>
-          )}
-
-          <div className="min-w-0 flex-1 space-y-3">
-            {inlineCues.length > 0 ? (
-              <ol className="space-y-1.5">
-                {inlineCues.map((cue, i) => {
-                  const isActive =
-                    demoAssetUrl != null &&
-                    activePhaseIdx != null &&
-                    cuePhaseMap[i] === activePhaseIdx;
-                  return (
-                    <li
-                      key={i}
-                      data-active={isActive}
-                      className={`flex gap-2 text-copy pl-2 -ml-2 border-l-2 transition-colors duration-200 ${
-                        isActive ? "border-l-fg text-fg" : "border-l-transparent"
-                      }`}
-                    >
-                      <span
-                        className={` shrink-0 text-micro mt-0.5 ${
- isActive ? "text-fg" : "text-fg-faint"
- }`}
-                      >
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <span>{cue}</span>
-                    </li>
-                  );
-                })}
-              </ol>
-            ) : null}
-
-            <div className="flex items-center gap-2 flex-wrap">
-              <PrimaryMuscleTags muscles={lib.primaryMuscles} />
+            ) : (
               <Link
                 href={`/train/exercises/${lib.slug}`}
-                className="ml-auto inline-flex min-h-11 items-center text-meta text-fg-dim hover:text-fg transition-colors"
+                className="shrink-0 lift surface p-1.5"
+                aria-label={t("openDetails")}
               >
-                {t("seeFull")}
+                <AnatomyFigure
+                  view={figureView}
+                  primary={lib.primaryMuscles}
+                  secondary={lib.secondaryMuscles}
+                  tertiary={lib.tertiaryMuscles}
+                  style={{ width: 56, height: 112 }}
+                />
               </Link>
+            )}
+
+            <div className="min-w-0 flex-1 space-y-3">
+              {inlineCues.length > 0 ? (
+                <ol className="space-y-1.5">
+                  {inlineCues.map((cue, i) => {
+                    const isActive =
+                      demoAssetUrl != null &&
+                      activePhaseIdx != null &&
+                      cuePhaseMap[i] === activePhaseIdx;
+                    return (
+                      <li
+                        key={i}
+                        data-active={isActive}
+                        className={`flex gap-2 text-copy pl-2 -ml-2 border-l-2 transition-colors duration-200 ${
+                          isActive ? "border-l-fg text-fg" : "border-l-transparent"
+                        }`}
+                      >
+                        <span
+                          className={` shrink-0 text-micro mt-0.5 ${
+   isActive ? "text-fg" : "text-fg-faint"
+   }`}
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span>{cue}</span>
+                      </li>
+                    );
+                  })}
+                </ol>
+              ) : null}
+
+              <div className="flex items-center gap-2 flex-wrap">
+                <PrimaryMuscleTags muscles={lib.primaryMuscles} />
+                <Link
+                  href={`/train/exercises/${lib.slug}`}
+                  className="ml-auto inline-flex min-h-11 items-center text-meta text-fg-dim hover:text-fg transition-colors"
+                >
+                  {t("seeFull")}
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      ) : ex.cue ? (
-        // Legacy fallback — single cue line for free-text exercises
-        <p className="text-meta text-fg-dim border-t hairline pt-4">
-          {ex.cue}
-        </p>
-      ) : null}
+        ) : ex.cue ? (
+          // Legacy fallback — single cue line for free-text exercises
+          <p className="text-meta text-fg-dim">
+            {ex.cue}
+          </p>
+        ) : null}
 
-      {youth ? null : (
-      <button
-        type="button"
-        data-form-film-cta=""
-        data-form-set={setIdx + 1}
-        onClick={onOpenFormCheck}
-        className="mt-4 w-full min-h-11 text-left flex items-start gap-3 px-4 py-3 touch-app border hairline-strong text-fg hover:bg-bg-3 transition-colors duration-200 ease-out overflow-x-clip"
-      >
-        <Camera {...ICON} className="size-5 mt-0.5 shrink-0" />
-        <span className="flex-1 min-w-0">
-          <span className="flex items-baseline justify-between gap-2">
-            <span className="text-copy">{t("formCheck", { set: setIdx + 1 })}</span>
-            <span className="text-micro shrink-0">
-              {t("duration")}
+        {youth ? null : (
+        <button
+          type="button"
+          data-form-film-cta=""
+          data-form-set={setIdx + 1}
+          onClick={onOpenFormCheck}
+          className="mt-4 w-full min-h-11 text-left flex items-start gap-3 px-4 py-3 touch-app border hairline-strong text-fg hover:bg-bg-3 transition-colors duration-200 ease-out overflow-x-clip"
+        >
+          <Camera {...ICON} className="size-5 mt-0.5 shrink-0" />
+          <span className="flex-1 min-w-0">
+            <span className="flex items-baseline justify-between gap-2">
+              <span className="text-copy">{t("formCheck", { set: setIdx + 1 })}</span>
+              <span className="text-micro shrink-0">
+                {t("duration")}
+              </span>
+            </span>
+            <span className="block text-meta text-fg-dim mt-0.5 break-words">
+              {t("formCheckSub", { lift: ex.name })}
+              {overflowCues > 0 ? t("moreCues", { count: overflowCues }) : null}
             </span>
           </span>
-          <span className="block text-meta text-fg-dim mt-0.5 break-words">
-            {t("formCheckSub", { lift: ex.name })}
-            {overflowCues > 0 ? t("moreCues", { count: overflowCues }) : null}
-          </span>
-        </span>
-      </button>
-      )}
+        </button>
+        )}
 
-      <FormCheckThread
-        items={threads}
-        copy={threadCopy}
-      />
-      <FormCheckThread
-        items={earlierThreads.filter((e) => !threads.some((i) => i.id === e.id))}
-        copy={{
-          ...threadCopy,
-          eyebrow: threadCopy.earlierEyebrow,
-          youFilmed: threadCopy.youFilmedEarlier,
-        }}
-      />
-    </section>
+        <FormCheckThread
+          items={threads}
+          copy={threadCopy}
+        />
+        <FormCheckThread
+          items={earlierThreads.filter((e) => !threads.some((i) => i.id === e.id))}
+          copy={{
+            ...threadCopy,
+            eyebrow: threadCopy.earlierEyebrow,
+            youFilmed: threadCopy.youFilmedEarlier,
+          }}
+        />
+      </section>
+    </>
   );
 }
