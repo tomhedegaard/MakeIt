@@ -32,6 +32,14 @@ Strenge regler:
 - Ingen diagnoser, ingen behandlings- eller kostråd, ingen "du bør".
 - Nævn studiedesign (fx meta-analyse), hvad man fandt, og forbehold hvis relevant.`;
 
+// The SDK default is a 10-minute timeout with 2 retries: one hung call could
+// eat the whole cron budget. A slow summary falls back to the template.
+const CALL_TIMEOUT_MS = 20_000;
+
+function scienceClient(apiKey: string): Anthropic {
+  return new Anthropic({ apiKey, timeout: CALL_TIMEOUT_MS, maxRetries: 1 });
+}
+
 // Banned language: the feed references research, it does not advise.
 const BANNED = /\b(du bør|du skal|tag \d|anbefaler dig|din behandling|stil diagnose)\b/i;
 
@@ -40,7 +48,7 @@ interface SummarizeOptions {
 }
 
 async function callClaude(it: ScienceRecord, apiKey: string): Promise<{ tldr_da: string; caveat_da: string | null }> {
-  const client = new Anthropic({ apiKey });
+  const client = scienceClient(apiKey);
   const response = await client.messages.parse({
     model: SCIENCE_SUMMARY_MODEL,
     max_tokens: 400,
@@ -135,7 +143,7 @@ export async function translateForFeed(
 ): Promise<FeedTranslation> {
   const apiKey = opts.apiKey ?? process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return { title_da: null, source_conclusion_da: null };
-  const client = new Anthropic({ apiKey });
+  const client = scienceClient(apiKey);
   const response = await client.messages.parse({
     model: SCIENCE_SUMMARY_MODEL,
     max_tokens: 500,

@@ -14,6 +14,7 @@ import type {
   PublishedScienceItem,
   RejectedScienceItem,
   ScienceRecord,
+  ScoredRecord,
   FeedRunResult,
 } from "./types";
 
@@ -71,6 +72,7 @@ export async function runScienceFeed(opts: RunOptions = {}): Promise<FeedRunResu
   const reject = (it: ScienceRecord, reason: string) =>
     rejected.push({ id: it.id, doi: it.doi, title: it.title, journal: it.journal, reason });
 
+  const candidates: { it: ScienceRecord; scored: ScoredRecord }[] = [];
   for (const it of deduped) {
     const g = gate(it);
     if (!g.ok) {
@@ -93,7 +95,19 @@ export async function runScienceFeed(opts: RunOptions = {}): Promise<FeedRunResu
       continue;
     }
 
-    const summary = await summarizeProd(it, scored, { apiKey });
+    candidates.push({ it, scored });
+  }
+
+  // Summaries in parallel: one at a time (each up to two Claude calls) ran
+  // past the cron's time limit before anything was written.
+  // ponytail: unbounded fan-out; cap concurrency if Anthropic starts 429'ing
+  // (a 429 already falls back to the template summary, so nothing is lost).
+  const summaries = await Promise.all(
+    candidates.map(({ it, scored }) => summarizeProd(it, scored, { apiKey })),
+  );
+
+  for (const [i, { it, scored }] of candidates.entries()) {
+    const summary = summaries[i];
     if (!summary.verification.ok) {
       reject(it, `tal-verifikation fejlede (mangler: ${summary.verification.missing.join(", ")})`);
       continue;
