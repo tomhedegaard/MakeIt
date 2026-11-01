@@ -11,8 +11,8 @@ describe("catalogProgramForProfile", () => {
       programName: "PR-Block",
     });
     expect(catalogProgramForProfile("hybrid")).toEqual({
-      programCode: "STR-12",
-      programName: "PR-Block",
+      programCode: "PWR-10",
+      programName: "Powerbuilding",
     });
     expect(catalogProgramForProfile("hypertrophy")).toEqual({
       programCode: "HYP-08",

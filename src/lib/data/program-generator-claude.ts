@@ -131,7 +131,7 @@ notesInjuries indeholder fritekst på dansk eller engelsk. Læs den nøje:
 | goal_focus       | programCode | programName               |
 |------------------|-------------|---------------------------|
 | strength         | STR-12      | PR-Block                  |
-| hybrid           | STR-12      | PR-Block                  |
+| hybrid           | PWR-10      | Powerbuilding             |
 | hypertrophy      | HYP-08      | Build Phase               |
 | squat_spec       | STR-12      | PR-Block                  |
 | bench_spec       | STR-12      | PR-Block                  |

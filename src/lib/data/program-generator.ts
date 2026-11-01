@@ -352,6 +352,10 @@ export function catalogProgramForProfile(goalFocus: GoalFocus): {
   if (goalFocus === "deadlift_spec") {
     return { programCode: "DL-06", programName: "Deadlift Specialization" };
   }
+  // Checked in prod 2026-11-01: PWR-10 is published, adult, 4 days.
+  if (goalFocus === "hybrid") {
+    return { programCode: "PWR-10", programName: "Powerbuilding" };
+  }
   return { programCode: "STR-12", programName: "PR-Block" };
 }
 
