@@ -3,11 +3,9 @@
     "title": "I dag"
   },
   "greeting": {
-    "eyebrow": "Træn · coach Mikael Munk · HQ Adaptive Engine",
     "streakLabel": "Stribe",
     "streakUnit": "dage",
-    "title": "Din uge.",
-    "subtitle": "HQ planlægger vægtene. Munk skriver under, når det kræver et menneske."
+    "title": "I dag."
   },
   "formChecks": {
     "answeredBefore": "Mikael Munk har besvaret",
@@ -41,13 +39,6 @@
     "keptOriginal": "Du kører den oprindelige plan i dag.",
     "keepOriginalError": "Det gik ikke igennem. Prøv igen."
   },
-  "stats": {
-    "volume": "Volumen",
-    "volumeMeta": "4 uger",
-    "prs": "PR'er",
-    "prsMeta": "4 uger",
-    "reps": "Reps"
-  },
   "upcoming": {
     "title": "Kommende sessioner",
     "seeWeek": "Se uge →",
@@ -78,13 +69,6 @@
       "mariaWhat": "delt formcheck-video",
       "mariaWhen": "32 min"
     }
-  },
-  "trend": {
-    "newActivity": "Ny aktivitet",
-    "new": "↑ ny",
-    "stable": "Stabil",
-    "up": "Op {pct} procent",
-    "down": "Ned {pct} procent"
   },
   "todayProse": {
     "ariaLabel": "I dag",

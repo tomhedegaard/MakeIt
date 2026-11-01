@@ -1,7 +1,7 @@
 {
   "header": {
     "eyebrow": "Træn",
-    "title": "Din uge.",
+    "title": "Dit program.",
     "subtitle": "HQ planlægger vægtene. Munk skriver under når det kræver et menneske.",
     "coachChip": "Coach · Mikael Munk",
     "motorChip": "HQ · Adaptive Engine"
@@ -22,23 +22,13 @@
     }
   },
   "today": {
-    "label": "I dag · {programCode} · uge {week}",
-    "exercises": "Øvelser",
-    "sets": "Sæt",
-    "estTime": "Est. tid",
-    "minuteUnit": "m",
-    "start": "Start pas →",
     "mock": {
       "dayLabel": "Dag A · Squat",
-      "title": "Squat · Top set @ RPE 8, 3×3 backoff"
+      "title": "Squat · topsæt @ RPE 8, 3×3 backoff"
     },
     "generated": {
       "squatFocus": "Squat-fokus og bagside"
-    },
-    "emptyEyebrow": "I dag",
-    "emptyTitle": "Vælg et program",
-    "emptyBody": "Start her, så bygger vi ugen. Ingen demo-pas.",
-    "emptyCta": "Se programmer"
+    }
   },
   "active": {
     "eyebrow": "Aktivt program",
@@ -115,5 +105,11 @@
       "unavailable": "Ingen forbindelse. Prøv igen.",
       "failed": "Kunne ikke starte programmet."
     }
+  },
+  "next": {
+    "ariaLabel": "Næste pas",
+    "eyebrow": "Næste pas",
+    "meta": "{sets} sæt · {minutes} min",
+    "start": "Start"
   }
 }

@@ -3,11 +3,9 @@
     "title": "Today"
   },
   "greeting": {
-    "eyebrow": "Train · coach Mikael Munk · HQ Adaptive Engine",
     "streakLabel": "Streak",
     "streakUnit": "days",
-    "title": "Your week.",
-    "subtitle": "HQ plans the weights. Munk signs off when it takes a human."
+    "title": "Today."
   },
   "formChecks": {
     "answeredBefore": "Mikael Munk has answered",
@@ -41,13 +39,6 @@
     "keptOriginal": "You are running the original plan today.",
     "keepOriginalError": "That did not go through. Try again."
   },
-  "stats": {
-    "volume": "Volume",
-    "volumeMeta": "4 weeks",
-    "prs": "PRs",
-    "prsMeta": "4 weeks",
-    "reps": "Reps"
-  },
   "upcoming": {
     "title": "Upcoming sessions",
     "seeWeek": "See week →",
@@ -78,13 +69,6 @@
       "mariaWhat": "shared a form check video",
       "mariaWhen": "32 min"
     }
-  },
-  "trend": {
-    "newActivity": "New activity",
-    "new": "↑ new",
-    "stable": "Stable",
-    "up": "Up {pct} percent",
-    "down": "Down {pct} percent"
   },
   "todayProse": {
     "ariaLabel": "Today",

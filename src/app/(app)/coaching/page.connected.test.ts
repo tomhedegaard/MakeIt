@@ -14,14 +14,13 @@ describe("coaching connected first-run", () => {
     expect(page).not.toMatch(/libraryDb\s*\?\?\s*mockLibrary/);
   });
 
-  it("hides the demo WHY strip in connected mode", () => {
-    expect(page).toContain("emptyEngineStrip");
-    expect(page).toMatch(/connected\s*\?\s*emptyEngineStrip\(\)\s*:\s*demoEngineStrip\(\)/);
+  it("leaves the session card and WHY strip to I dag", () => {
+    expect(page).not.toContain("AdaptiveReasonStrip");
+    expect(page).toMatch(/\{today \? \(\s*<section\s+aria-label=\{t\("next\.ariaLabel"\)\}/);
   });
 
-  it("renders an honest empty today card", () => {
-    expect(page).toContain("data-today-empty");
-    expect(page).toContain("today.emptyTitle");
+  it("only stands the mock program in for the active one in demo", () => {
+    expect(page).toContain("connected ? activeDb : demoActive(library)");
   });
 
   it("disables Start Program when the catalog row has no days", () => {

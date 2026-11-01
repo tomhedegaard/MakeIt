@@ -37,7 +37,6 @@ import EmptyState from "@/components/ui/EmptyState";
 import PageTitle from "@/components/ui/PageTitle";
 import SectionHeader from "@/components/ui/SectionHeader";
 import NarrativeBand from "@/components/ui/NarrativeBand";
-import Stat from "@/components/ui/Stat";
 import Avatar from "@/components/ui/Avatar";
 import KeepOriginal from "@/components/dashboard/KeepOriginal";
 import MorningSignal from "@/components/dashboard/MorningSignal";
@@ -65,15 +64,6 @@ import {
 import { generatedSessionTitleKey } from "@/lib/i18n/member-bodycopy";
 import YouthToday from "@/components/youth/YouthToday";
 import { youthClaimsFor } from "@/lib/youth/account";
-import {
-  emptyWeekStrip,
-  getWeekStrip,
-  mockWeekStrip,
-  type WeekDay,
-} from "@/lib/data/coaching";
-import { weekStripForSurface } from "@/lib/trust/connected-first-run";
-import { Check } from "lucide-react";
-import { ICON } from "@/components/ui/icon";
 
 type Translator = Awaited<ReturnType<typeof getTranslations<"Dashboard">>>;
 
@@ -170,10 +160,9 @@ export default async function TodayPage() {
 
   const locale = await getLocale();
   const t = await getTranslations("Dashboard");
-  const [stripCopy, dotsCopy, tWeek] = await Promise.all([
+  const [stripCopy, dotsCopy] = await Promise.all([
     loadStripCopy(),
     loadDotsCopy(),
-    getTranslations("Coaching.week"),
   ]);
   const connected = SUPABASE_ENABLED;
   // Everything independent loads in one batch. Demo mode skips the
@@ -190,7 +179,6 @@ export default async function TodayPage() {
     prose,
     intakeRaw,
     demoProfile,
-    weekDb,
     estimateEnabled,
     body,
   ] = await Promise.all([
@@ -212,8 +200,6 @@ export default async function TodayPage() {
     // "0 kcal" without a goal. The demo profile's target, resolved the
     // same way the demo meal plan resolves it, fills that in.
     connected ? null : getOrCreateNutritionProfile(member.id),
-    // Same Mon–Sun strip as Træn, same Today pick.
-    connected ? getWeekStrip(member.id) : null,
     isMealEstimateEnabled(member),
     getMemberBody(member.id),
   ]);
@@ -250,12 +236,6 @@ export default async function TodayPage() {
       }))
     : upcomingRaw;
   const feed = feedForSurface({ connected, fromDb: feedDb });
-  const week = weekStripForSurface({
-    connected,
-    fromDb: weekDb,
-    demo: mockWeekStrip(),
-    empty: emptyWeekStrip(),
-  });
   const stats = statsForSurface({ connected, fromDb: statsDb });
 
   const reviewedCount = myChecks.filter(
@@ -291,12 +271,13 @@ export default async function TodayPage() {
     <Container className="py-6 lg:py-12 space-y-8">
       <FirstTimeTour />
 
-      {/* 1. header (spec §6.1): "Din uge." with the brief's kicker and line;
-          the kicker carries Krop's colour via data-domain. */}
+      {/* 1. header: the date and "I dag." The week, the program and the
+          HQ/Munk line live on Træn, so the two tabs no longer open alike.
+          The kicker carries Krop's colour via data-domain. */}
       <div data-domain="body">
       <PageTitle
         className="pt-2"
-        kicker={t("greeting.eyebrow")}
+        kicker={todayHeading(locale)}
         title={t("greeting.title")}
         action={
           <div className="text-right">
@@ -308,20 +289,6 @@ export default async function TodayPage() {
       />
 
       </div>
-      <p className="-mt-2 max-w-prose text-copy text-fg-body">{t("greeting.subtitle")}</p>
-
-      <WeekStrip
-        week={week}
-        copy={{
-          ariaLabel: tWeek("ariaLabel"),
-          rest: tWeek("rest"),
-          today: tWeek("today"),
-          done: tWeek("done"),
-          days: Object.fromEntries(
-            week.map((d) => [d.dayKey, tWeek(`days.${d.dayKey}`)]),
-          ),
-        }}
-      />
 
       {/*
         From lg: main column (session, prose, insights) beside a side rail
@@ -503,44 +470,6 @@ export default async function TodayPage() {
         )}
       </section>
 
-      {/* 7. stats */}
-      <Card as="section" data-dashboard="stats" className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-1 lg:gap-5">
-        {/* Volumen fylder en hel række på telefon: "84.200 kg" i 2xl
-            støder ellers ind i nabotallet ved 375 px. */}
-        <div className="col-span-2 sm:col-span-1">
-          <Stat
-            label={t("stats.volume")}
-            value={formatKg(stats ? stats.volumeKg : connected ? 0 : 84_200, locale)}
-            unit="kg"
-          />
-          <div className="text-micro text-fg-faint mt-1 flex items-center gap-1">
-            <span>{t("stats.volumeMeta")}</span>
-            {stats ? (
-              <TrendArrow current={stats.volumeKg} previous={stats.volumeKgPrev} t={t} />
-            ) : null}
-          </div>
-        </div>
-        <div>
-          <Stat
-            label={t("stats.prs")}
-            value={stats ? String(stats.prs4w) : connected ? "0" : "3"}
-          />
-          <div className="text-micro text-fg-faint mt-1 flex items-center gap-1">
-            <span>{t("stats.prsMeta")}</span>
-            {stats ? (
-              <TrendArrow current={stats.prs4w} previous={stats.prsPrev} t={t} />
-            ) : null}
-          </div>
-        </div>
-        <div>
-          <Stat
-            label={t("stats.reps")}
-            value={stats ? formatReps(stats.repsBalance, locale) : connected ? "0" : "1.420"}
-          />
-          <div className="text-micro text-fg-faint mt-1">{member.tier}</div>
-        </div>
-      </Card>
-
       {/* 8. crew */}
       <section data-dashboard="crew">
         <SectionHeader
@@ -627,124 +556,15 @@ function CrewRow({
   );
 }
 
-/** Whole kilos with the locale's grouping: 84.200 (da), 84,200 (en). */
-function formatKg(kg: number, locale = "da"): string {
-  return new Intl.NumberFormat(intlLocaleTag(locale), { maximumFractionDigits: 0 }).format(Math.max(0, kg));
-}
-
-function formatReps(n: number, locale = "da"): string {
-  return new Intl.NumberFormat(intlLocaleTag(locale)).format(n);
-}
-
-/** "Deadlift" → "Dead\u00ADlift": a break point before common lift suffixes. */
-function softHyphenateLift(label: string): string {
-  return label.replace(/(?<=\p{L}{3})(lift|press|head|squat|row|pull|push)/giu, "\u00AD$1");
-}
-
-/**
- * Mon–Sun under the header (spec §6.1): "Man 21 Squat". Today carries the
- * 2 px mos stroke, the same marker the tab bar uses for the active tab.
- */
-function WeekStrip({
-  week,
-  copy,
-}: {
-  week: WeekDay[];
-  copy: {
-    ariaLabel: string;
-    rest: string;
-    today: string;
-    done: string;
-    days: Record<string, string>;
-  };
-}) {
-  return (
-    <nav aria-label={copy.ariaLabel} data-dashboard="week">
-      <ol className="grid grid-cols-7 border hairline divide-x hairline">
-        {week.map((day) => {
-          const body = (
-            <>
-              <span className="block text-micro text-fg-dim">{copy.days[day.dayKey]}</span>
-              <span className="flex items-center gap-1 numeric text-copy text-fg">
-                {day.date}
-                {day.done ? (
-                  <Check {...ICON} aria-label={copy.done} className="size-3.5 text-fg-dim" />
-                ) : null}
-              </span>
-              {/* Lift names wrap to two lines at 375 instead of clipping:
-                  a soft hyphen splits compounds ("Dead-lift") even where the
-                  browser has no hyphenation dictionary. */}
-              <span
-                lang={day.rest ? undefined : "en"}
-                className={`block hyphens-auto [overflow-wrap:anywhere] text-micro ${day.rest ? "text-fg-dim" : "text-fg"}`}
-              >
-                {day.sessionLabel ? softHyphenateLift(day.sessionLabel) : copy.rest}
-              </span>
-            </>
-          );
-          const cell = `block h-full px-1 pt-2 pb-2.5 sm:px-3 border-t-2 ${
-            day.today ? "border-t-signal" : "border-t-transparent"
-          }`;
-          return (
-            <li key={day.iso} aria-current={day.today ? "date" : undefined} className="min-w-0">
-              {day.sessionId ? (
-                <Link href={`/session/${day.sessionId}`} className={`${cell} lift`}>
-                  {body}
-                </Link>
-              ) : (
-                <div className={cell}>{body}</div>
-              )}
-              {day.today ? <span className="sr-only">{copy.today}</span> : null}
-            </li>
-          );
-        })}
-      </ol>
-    </nav>
-  );
-}
-
-/**
- * Tiny trend chip: shows "↑ 12%" / "↓ 4%" relative to a previous-
- * period number. Hidden when prev is 0 (no signal) or when both
- * windows are empty. ±2% rounds to flat ("·") to suppress noise.
- */
-function TrendArrow({
-  current,
-  previous,
-  t,
-}: {
-  current: number;
-  previous: number;
-  t: Translator;
-}) {
-  if (previous === 0 && current === 0) return null;
-  if (previous === 0) {
-    return (
-      <span className="text-fg-dim" aria-label={t("trend.newActivity")}>
-        {t("trend.new")}
-      </span>
-    );
-  }
-  const pct = Math.round(((current - previous) / previous) * 100);
-  if (Math.abs(pct) < 3) {
-    return (
-      <span className="text-fg-faint" aria-label={t("trend.stable")}>
-        ·
-      </span>
-    );
-  }
-  return (
-    <span
-      className={pct > 0 ? "text-fg" : "text-fg-dim"}
-      aria-label={
-        pct > 0
-          ? t("trend.up", { pct })
-          : t("trend.down", { pct: Math.abs(pct) })
-      }
-    >
-      {pct > 0 ? "↑" : "↓"} {Math.abs(pct)}%
-    </span>
-  );
+/** "Lørdag 1. november": today's date in Copenhagen, in the member's locale. */
+function todayHeading(locale: string): string {
+  const label = new Date().toLocaleDateString(intlLocaleTag(locale), {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone: "Europe/Copenhagen",
+  });
+  return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
 /** The signed-in user's 18+ confirmation (auth metadata, #126). Demo counts as confirmed. */

@@ -38,7 +38,7 @@ const MOCK_SESSION: EditableSession = {
   programCode: "STR-12",
   week: 4,
   dayLabel: "Dag A — Squat",
-  title: "Squat — Top set @ RPE 8, 3×3 backoff",
+  title: "Squat — topsæt @ RPE 8, 3×3 backoff",
   scheduledFor: new Date().toISOString().slice(0, 10),
   estimatedMinutes: 65,
   status: "scheduled",
