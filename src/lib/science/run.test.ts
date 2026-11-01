@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { runScienceFeed } from "./run";
 
 const NOW = new Date("2026-06-13");
@@ -26,6 +27,22 @@ describe("runScienceFeed (end-to-end on the offline fixture)", () => {
     // Sorted by score, descending.
     const scores = result.published.map((p) => p.total);
     expect([...scores].sort((a, b) => b - a)).toEqual(scores);
+  });
+
+  it("gives every upserted row the NOT NULL columns (bulk upsert fills gaps with null)", async () => {
+    let rows: Record<string, unknown>[] = [];
+    const db = {
+      from: () => ({
+        upsert: async (r: Record<string, unknown>[]) => ((rows = r), { error: null }),
+      }),
+    } as unknown as SupabaseClient;
+    await runScienceFeed({ db, live: false, now: NOW, apiKey: "" });
+    expect(rows).toHaveLength(7);
+    for (const row of rows) {
+      expect(typeof row.open_access).toBe("boolean");
+      expect(typeof row.verified).toBe("boolean");
+      expect(row.title && row.source_id && row.status).toBeTruthy();
+    }
   });
 
   it("never writes when dryRun is set (no db required)", async () => {
