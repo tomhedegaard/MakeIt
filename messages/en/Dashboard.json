@@ -5,7 +5,8 @@
   "greeting": {
     "streakLabel": "Streak",
     "streakUnit": "days",
-    "title": "Today."
+    "title": "Today.",
+    "repsLabel": "Reps"
   },
   "formChecks": {
     "answeredBefore": "Mikael Munk has answered",
