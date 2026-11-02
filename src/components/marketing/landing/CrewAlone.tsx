@@ -43,11 +43,11 @@ export default function CrewAlone() {
   return (
     <section id="crew-alone" aria-labelledby="alone-heading" className="scroll-mt-[68px] overflow-x-clip">
       <div className="mx-auto max-w-[1360px] px-4 py-[clamp(72px,9vw,140px)] md:px-8">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
-          <h2 id="alone-heading" className="font-display max-w-[8em] text-[clamp(52px,8vw,128px)] leading-[0.88]!">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-end lg:gap-16">
+          <h2 id="alone-heading" className="font-display max-w-[8em] text-[clamp(52px,8vw,128px)] leading-[0.88]! lg:order-2 lg:justify-self-end lg:text-right">
             {t("heading")}
           </h2>
-          <p className="max-w-[44ch] text-[clamp(17px,1.35vw,20px)] text-fg-dim">{t("sub")}</p>
+          <p className="max-w-[44ch] text-[clamp(17px,1.35vw,20px)] text-fg-dim lg:order-1">{t("sub")}</p>
         </div>
 
         <div className="spot-wall relative mt-12 lg:mt-16">

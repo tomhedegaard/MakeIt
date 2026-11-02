@@ -218,12 +218,12 @@
       },
       "rack": {
         "heading": "The app, in daylight.",
-        "sub": "Swipe sideways, and scroll down inside each screen.",
+        "sub": "One day in the app, from the morning numbers to the crew at night.",
         "sample": "Sample data",
         "prev": "Previous screen",
         "next": "Next screen",
         "listLabel": "Fifteen app screens",
-        "pinSub": "Scroll, and the phone walks through the day.",
+        "pinSub": "One day in the app, from the morning numbers to the crew at night.",
         "parts": ["The morning", "The session", "The programme", "The food", "Head and crew"]
       }
     },

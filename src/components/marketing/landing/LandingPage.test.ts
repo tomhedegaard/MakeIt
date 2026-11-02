@@ -13,7 +13,7 @@ describe("LandingPage shell", () => {
     const order = [
       "<LandingHero", "<ChapterTrain", "<ChapterFood", "<ChapterHeart", "<MotorStory",
       "<ChapterMind", "<AppRack", "<CrewAlone", "<CrewPlates", "<LandingMunk",
-      "<Voices", "<AccessPanel", "<LandingFaq",
+      "<Voices", "<LandingFaq", "<AccessPanel",
     ];
     const at = order.map((tag) => src.indexOf(tag));
     at.forEach((i, n) => expect(i, order[n]).toBeGreaterThan(-1));

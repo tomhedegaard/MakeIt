@@ -90,15 +90,12 @@ export default function LandingHero() {
                 className={cn("group relative block h-[300px] text-fg no-underline lg:h-[330px]", door.field)}
               >
                 <div className="absolute bottom-[86px] left-1/2 -translate-x-1/2 [perspective:900px]">
-                  <div className="door-phone">{door.screen}</div>
+                  <div data-hero-rise="phone" style={rise(6 + i)} className="door-phone">{door.screen}</div>
                 </div>
                 <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3">
                   <span>
                     <span className={cn("font-display block text-[28px] leading-none", door.ink)}>{d(`${door.key}.name`)}</span>
                     <span className="mt-1.5 block text-[13px] text-fg-dim">{d(`${door.key}.line`)}</span>
-                  </span>
-                  <span aria-hidden="true" className={cn("text-[22px] leading-none", door.ink)}>
-                    ↓
                   </span>
                 </div>
               </TiltDoor>

@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { assertCronAuth } from "@/lib/cron/auth";
 import { createServiceClient } from "@/lib/supabase/service";
-import { mindDb } from "@/lib/data/mind";
 import { sendPushToMember } from "@/lib/push";
 import {
   computeWeeklyInsights,
@@ -31,7 +30,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (unauthorized) return unauthorized;
 
   const svc = createServiceClient();
-  const db = mindDb(svc);
+  const db = svc;
 
   const since = new Date();
   since.setUTCHours(0, 0, 0, 0);

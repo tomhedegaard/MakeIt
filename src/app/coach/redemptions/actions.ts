@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import type { TablesUpdate } from "@/lib/supabase/database.types";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 
 type Status = "pending" | "approved" | "shipped" | "fulfilled" | "cancelled";
@@ -26,7 +27,7 @@ export async function setRedemptionStatusAction(
   } = await supabase.auth.getUser();
   if (!user) return { ok: false };
 
-  const update: Record<string, unknown> = { status };
+  const update: TablesUpdate<"reward_redemptions"> = { status };
   if (status === "fulfilled" || status === "shipped") {
     update.fulfilled_at = new Date().toISOString();
     update.fulfilled_by = user.id;

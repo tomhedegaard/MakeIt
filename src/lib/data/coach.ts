@@ -409,7 +409,7 @@ export async function getMemberDetail(memberId: string): Promise<MemberDetail | 
     recentSessions: (sessRes.data ?? []).map((s) => ({
       id: s.id,
       dayLabel: s.day_label ?? "",
-      status: s.status,
+      status: s.status as SessionRow["status"],
       scheduledFor: s.scheduled_for,
       completedAt: s.completed_at,
       week: s.week,

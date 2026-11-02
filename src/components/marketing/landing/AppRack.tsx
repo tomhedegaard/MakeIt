@@ -71,7 +71,7 @@ export default function AppRack() {
 
   return (
     <section id="systems" aria-labelledby="rack-heading" className="scroll-mt-[68px] overflow-x-clip py-[clamp(72px,8vw,128px)]">
-      <div data-rack data-rack-swipe aria-labelledby="rack-heading" role="region" >
+      <div data-rack data-rack-swipe>
         <ScreenRack
           id="kalk-rack"
           listLabel={t("rack.listLabel")}
@@ -81,9 +81,9 @@ export default function AppRack() {
           items={screens}
           head={
             <div>
-              <h3 id="rack-heading" className="font-display text-[clamp(36px,4vw,56px)] leading-[0.9]!">
+              <h2 id="rack-heading" className="font-display text-[clamp(36px,4vw,56px)] leading-[0.9]!">
                 {t("rack.heading")}
-              </h3>
+              </h2>
               <p className="mt-3 max-w-[46ch] text-[clamp(17px,1.35vw,20px)] text-fg-dim">{t("rack.sub")}</p>
             </div>
           }
@@ -94,13 +94,13 @@ export default function AppRack() {
         </div>
       </div>
 
-      <div data-rack-pin role="region" aria-labelledby="rack-pin-heading" style={{ "--n": RACK_SCREENS.length } as CSSProperties}>
+      <div data-rack-pin style={{ "--n": RACK_SCREENS.length } as CSSProperties}>
         <div className="rack-pin__stage">
           <div className="mx-auto grid h-full max-w-[1360px] grid-cols-[minmax(0,1fr)_auto] items-center gap-24 px-8">
             <div>
-              <h3 id="rack-pin-heading" className="font-display text-[clamp(36px,4vw,56px)] leading-[0.9]!">
+              <h2 id="rack-pin-heading" className="font-display text-[clamp(36px,4vw,56px)] leading-[0.9]!">
                 {t("rack.heading")}
-              </h3>
+              </h2>
               <p className="mt-3 max-w-[46ch] text-[clamp(17px,1.35vw,20px)] text-fg-dim">{t("rack.pinSub")}</p>
               <ol className="mt-10 grid max-w-[420px] list-none p-0">
                 {parts.map((part, i) => (

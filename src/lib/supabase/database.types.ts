@@ -814,6 +814,56 @@ export type Database = {
         }
         Relationships: []
       }
+      food_signals: {
+        Row: {
+          coach_seen_by: string | null
+          coach_seen_until: string | null
+          member_id: string
+          updated_at: string
+        }
+        Insert: {
+          coach_seen_by?: string | null
+          coach_seen_until?: string | null
+          member_id: string
+          updated_at?: string
+        }
+        Update: {
+          coach_seen_by?: string | null
+          coach_seen_until?: string | null
+          member_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_signals_coach_seen_by_fkey"
+            columns: ["coach_seen_by"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "food_signals_coach_seen_by_fkey"
+            columns: ["coach_seen_by"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "food_signals_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: true
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "food_signals_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: true
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       form_checks: {
         Row: {
           ai_drafted_reply: string | null
@@ -904,6 +954,185 @@ export type Database = {
           {
             foreignKeyName: "form_checks_member_id_fkey"
             columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      guardian_notices: {
+        Row: {
+          created_at: string
+          detail: Json
+          email_error: string | null
+          emailed_at: string | null
+          guardian_member_id: string
+          guardianship_id: string
+          id: string
+          level: string
+          observed_from: string | null
+          observed_to: string | null
+          signal: string
+          youth_member_id: string
+          youth_seen_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          detail?: Json
+          email_error?: string | null
+          emailed_at?: string | null
+          guardian_member_id: string
+          guardianship_id: string
+          id?: string
+          level: string
+          observed_from?: string | null
+          observed_to?: string | null
+          signal: string
+          youth_member_id: string
+          youth_seen_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          detail?: Json
+          email_error?: string | null
+          emailed_at?: string | null
+          guardian_member_id?: string
+          guardianship_id?: string
+          id?: string
+          level?: string
+          observed_from?: string | null
+          observed_to?: string | null
+          signal?: string
+          youth_member_id?: string
+          youth_seen_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guardian_notices_guardian_member_id_fkey"
+            columns: ["guardian_member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "guardian_notices_guardian_member_id_fkey"
+            columns: ["guardian_member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "guardian_notices_guardianship_id_fkey"
+            columns: ["guardianship_id"]
+            isOneToOne: false
+            referencedRelation: "guardianships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "guardian_notices_youth_member_id_fkey"
+            columns: ["youth_member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "guardian_notices_youth_member_id_fkey"
+            columns: ["youth_member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      guardianships: {
+        Row: {
+          created_at: string
+          guardian_consent_mind: boolean
+          guardian_consent_recovery: boolean
+          guardian_declared_at: string
+          guardian_member_id: string
+          id: string
+          invite_expires_at: string
+          invite_token_hash: string
+          status: string
+          updated_at: string
+          withdrawn_at: string | null
+          withdrawn_by: string | null
+          youth_birth_date: string
+          youth_consent_mind: boolean
+          youth_consent_recovery: boolean
+          youth_consented_at: string | null
+          youth_email: string
+          youth_first_name: string
+          youth_member_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          guardian_consent_mind?: boolean
+          guardian_consent_recovery?: boolean
+          guardian_declared_at: string
+          guardian_member_id: string
+          id?: string
+          invite_expires_at: string
+          invite_token_hash: string
+          status?: string
+          updated_at?: string
+          withdrawn_at?: string | null
+          withdrawn_by?: string | null
+          youth_birth_date: string
+          youth_consent_mind?: boolean
+          youth_consent_recovery?: boolean
+          youth_consented_at?: string | null
+          youth_email: string
+          youth_first_name: string
+          youth_member_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          guardian_consent_mind?: boolean
+          guardian_consent_recovery?: boolean
+          guardian_declared_at?: string
+          guardian_member_id?: string
+          id?: string
+          invite_expires_at?: string
+          invite_token_hash?: string
+          status?: string
+          updated_at?: string
+          withdrawn_at?: string | null
+          withdrawn_by?: string | null
+          youth_birth_date?: string
+          youth_consent_mind?: boolean
+          youth_consent_recovery?: boolean
+          youth_consented_at?: string | null
+          youth_email?: string
+          youth_first_name?: string
+          youth_member_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guardianships_guardian_member_id_fkey"
+            columns: ["guardian_member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "guardianships_guardian_member_id_fkey"
+            columns: ["guardian_member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "guardianships_youth_member_id_fkey"
+            columns: ["youth_member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "guardianships_youth_member_id_fkey"
+            columns: ["youth_member_id"]
             isOneToOne: false
             referencedRelation: "members"
             referencedColumns: ["id"]
@@ -1412,120 +1641,6 @@ export type Database = {
           },
         ]
       }
-      guardian_notices: {
-        Row: {
-          created_at: string
-          detail: Json
-          email_error: string | null
-          emailed_at: string | null
-          guardian_member_id: string
-          guardianship_id: string
-          id: string
-          level: string
-          observed_from: string | null
-          observed_to: string | null
-          signal: string
-          youth_member_id: string
-          youth_seen_at: string | null
-        }
-        Insert: {
-          created_at?: string
-          detail?: Json
-          email_error?: string | null
-          emailed_at?: string | null
-          guardian_member_id: string
-          guardianship_id: string
-          id?: string
-          level: string
-          observed_from?: string | null
-          observed_to?: string | null
-          signal: string
-          youth_member_id: string
-          youth_seen_at?: string | null
-        }
-        Update: {
-          created_at?: string
-          detail?: Json
-          email_error?: string | null
-          emailed_at?: string | null
-          guardian_member_id?: string
-          guardianship_id?: string
-          id?: string
-          level?: string
-          observed_from?: string | null
-          observed_to?: string | null
-          signal?: string
-          youth_member_id?: string
-          youth_seen_at?: string | null
-        }
-        Relationships: []
-      }
-      guardianships: {
-        Row: {
-          created_at: string
-          guardian_consent_mind: boolean
-          guardian_consent_recovery: boolean
-          guardian_declared_at: string
-          guardian_member_id: string
-          id: string
-          invite_expires_at: string
-          invite_token_hash: string
-          status: string
-          updated_at: string
-          withdrawn_at: string | null
-          withdrawn_by: string | null
-          youth_birth_date: string
-          youth_consent_mind: boolean
-          youth_consent_recovery: boolean
-          youth_consented_at: string | null
-          youth_email: string
-          youth_first_name: string
-          youth_member_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          guardian_consent_mind?: boolean
-          guardian_consent_recovery?: boolean
-          guardian_declared_at: string
-          guardian_member_id: string
-          id?: string
-          invite_expires_at: string
-          invite_token_hash: string
-          status?: string
-          updated_at?: string
-          withdrawn_at?: string | null
-          withdrawn_by?: string | null
-          youth_birth_date: string
-          youth_consent_mind?: boolean
-          youth_consent_recovery?: boolean
-          youth_consented_at?: string | null
-          youth_email: string
-          youth_first_name: string
-          youth_member_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          guardian_consent_mind?: boolean
-          guardian_consent_recovery?: boolean
-          guardian_declared_at?: string
-          guardian_member_id?: string
-          id?: string
-          invite_expires_at?: string
-          invite_token_hash?: string
-          status?: string
-          updated_at?: string
-          withdrawn_at?: string | null
-          withdrawn_by?: string | null
-          youth_birth_date?: string
-          youth_consent_mind?: boolean
-          youth_consent_recovery?: boolean
-          youth_consented_at?: string | null
-          youth_email?: string
-          youth_first_name?: string
-          youth_member_id?: string | null
-        }
-        Relationships: []
-      }
       invite_codes: {
         Row: {
           code: string
@@ -1753,6 +1868,90 @@ export type Database = {
           },
           {
             foreignKeyName: "member_action_logs_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      member_body: {
+        Row: {
+          birth_year: number | null
+          food_question_asked_at: string | null
+          height_cm: number | null
+          hide_numbers: boolean
+          member_id: string
+          pejlemaerke_kg: number | null
+          sex: string | null
+          show_weight_card: boolean
+          updated_at: string
+        }
+        Insert: {
+          birth_year?: number | null
+          food_question_asked_at?: string | null
+          height_cm?: number | null
+          hide_numbers?: boolean
+          member_id: string
+          pejlemaerke_kg?: number | null
+          sex?: string | null
+          show_weight_card?: boolean
+          updated_at?: string
+        }
+        Update: {
+          birth_year?: number | null
+          food_question_asked_at?: string | null
+          height_cm?: number | null
+          hide_numbers?: boolean
+          member_id?: string
+          pejlemaerke_kg?: number | null
+          sex?: string | null
+          show_weight_card?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_body_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: true
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "member_body_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: true
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      member_module_trials: {
+        Row: {
+          first_trialed_at: string
+          member_id: string
+          module_kind: string
+        }
+        Insert: {
+          first_trialed_at?: string
+          member_id: string
+          module_kind: string
+        }
+        Update: {
+          first_trialed_at?: string
+          member_id?: string
+          module_kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_module_trials_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "member_module_trials_member_id_fkey"
             columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "members"
@@ -2096,6 +2295,48 @@ export type Database = {
           },
         ]
       }
+      mental_safety_alerts: {
+        Row: {
+          created_at: string
+          id: string
+          member_id: string
+          status: string
+          summary: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          member_id: string
+          status?: string
+          summary: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          member_id?: string
+          status?: string
+          summary?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mental_safety_alerts_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "mental_safety_alerts_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mental_session_completions: {
         Row: {
           completed_at: string
@@ -2204,48 +2445,6 @@ export type Database = {
           voice?: string | null
         }
         Relationships: []
-      }
-      mental_safety_alerts: {
-        Row: {
-          created_at: string
-          id: string
-          member_id: string
-          status: string
-          summary: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          member_id: string
-          status?: string
-          summary: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          member_id?: string
-          status?: string
-          summary?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "mental_safety_alerts_member_id_fkey"
-            columns: ["member_id"]
-            isOneToOne: false
-            referencedRelation: "member_reps_balance"
-            referencedColumns: ["member_id"]
-          },
-          {
-            foreignKeyName: "mental_safety_alerts_member_id_fkey"
-            columns: ["member_id"]
-            isOneToOne: false
-            referencedRelation: "members"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       mental_settings: {
         Row: {
@@ -2499,8 +2698,8 @@ export type Database = {
         Insert: {
           ai_headline?: string | null
           ai_notes?: string | null
-          created_at?: string
           carbs_g?: number | null
+          created_at?: string
           estimate_confidence?: string | null
           estimate_edited?: boolean
           estimate_items?: Json | null
@@ -2527,8 +2726,8 @@ export type Database = {
         Update: {
           ai_headline?: string | null
           ai_notes?: string | null
-          created_at?: string
           carbs_g?: number | null
+          created_at?: string
           estimate_confidence?: string | null
           estimate_edited?: boolean
           estimate_items?: Json | null
@@ -2829,6 +3028,42 @@ export type Database = {
           },
           {
             foreignKeyName: "nutrition_skip_days_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pejlemaerke_changes: {
+        Row: {
+          created_at: string
+          id: string
+          kg: number | null
+          member_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kg?: number | null
+          member_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kg?: number | null
+          member_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pejlemaerke_changes_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "member_reps_balance"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "pejlemaerke_changes_member_id_fkey"
             columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "members"
@@ -3375,6 +3610,96 @@ export type Database = {
         }
         Relationships: []
       }
+      science_items: {
+        Row: {
+          caveat_da: string | null
+          created_at: string
+          doi: string | null
+          domain: string | null
+          effect_da: string | null
+          evidence_badge: string | null
+          evidence_level: string | null
+          id: string
+          indexed_date: string | null
+          journal: string | null
+          open_access: boolean
+          published_date: string | null
+          reject_reason: string | null
+          score: number | null
+          score_parts: Json | null
+          source_conclusion: string | null
+          source_conclusion_da: string | null
+          source_id: string
+          source_url: string | null
+          status: string
+          summary_method: string | null
+          title: string
+          title_da: string | null
+          tldr_da: string | null
+          translated_at: string | null
+          updated_at: string
+          verified: boolean
+        }
+        Insert: {
+          caveat_da?: string | null
+          created_at?: string
+          doi?: string | null
+          domain?: string | null
+          effect_da?: string | null
+          evidence_badge?: string | null
+          evidence_level?: string | null
+          id?: string
+          indexed_date?: string | null
+          journal?: string | null
+          open_access?: boolean
+          published_date?: string | null
+          reject_reason?: string | null
+          score?: number | null
+          score_parts?: Json | null
+          source_conclusion?: string | null
+          source_conclusion_da?: string | null
+          source_id: string
+          source_url?: string | null
+          status: string
+          summary_method?: string | null
+          title: string
+          title_da?: string | null
+          tldr_da?: string | null
+          translated_at?: string | null
+          updated_at?: string
+          verified?: boolean
+        }
+        Update: {
+          caveat_da?: string | null
+          created_at?: string
+          doi?: string | null
+          domain?: string | null
+          effect_da?: string | null
+          evidence_badge?: string | null
+          evidence_level?: string | null
+          id?: string
+          indexed_date?: string | null
+          journal?: string | null
+          open_access?: boolean
+          published_date?: string | null
+          reject_reason?: string | null
+          score?: number | null
+          score_parts?: Json | null
+          source_conclusion?: string | null
+          source_conclusion_da?: string | null
+          source_id?: string
+          source_url?: string | null
+          status?: string
+          summary_method?: string | null
+          title?: string
+          title_da?: string | null
+          tldr_da?: string | null
+          translated_at?: string | null
+          updated_at?: string
+          verified?: boolean
+        }
+        Relationships: []
+      }
       session_exercises: {
         Row: {
           cue: string | null
@@ -3799,11 +4124,11 @@ export type Database = {
     }
     Functions: {
       award_session_reps: { Args: { p_session_id: string }; Returns: number }
+      consume_invite: { Args: { p_code: string }; Returns: boolean }
       get_hrv_distinct_day_count: {
         Args: { p_member_id: string }
         Returns: number
       }
-      consume_invite: { Args: { p_code: string }; Returns: boolean }
       is_current_user_admin: { Args: never; Returns: boolean }
       is_current_user_coach: { Args: never; Returns: boolean }
       is_current_user_invite_admitted: { Args: never; Returns: boolean }
@@ -3815,6 +4140,10 @@ export type Database = {
       }
       redeem_reward: { Args: { p_reward_id: string }; Returns: string }
       tier_for_balance: { Args: { balance: number }; Returns: string }
+      try_consume_invite_for: {
+        Args: { p_code: string; p_user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
@@ -3832,12 +4161,15 @@ export type Database = {
           created_at: string | null
           file_size_limit: number | null
           id: string
+          lifecycle_configuration: Json | null
+          lifecycle_configuration_generation: string | null
           name: string
           owner: string | null
           owner_id: string | null
           public: boolean | null
           type: Database["storage"]["Enums"]["buckettype"]
           updated_at: string | null
+          versioning_status: string
         }
         Insert: {
           allowed_mime_types?: string[] | null
@@ -3845,12 +4177,15 @@ export type Database = {
           created_at?: string | null
           file_size_limit?: number | null
           id: string
+          lifecycle_configuration?: Json | null
+          lifecycle_configuration_generation?: string | null
           name: string
           owner?: string | null
           owner_id?: string | null
           public?: boolean | null
           type?: Database["storage"]["Enums"]["buckettype"]
           updated_at?: string | null
+          versioning_status?: string
         }
         Update: {
           allowed_mime_types?: string[] | null
@@ -3858,12 +4193,15 @@ export type Database = {
           created_at?: string | null
           file_size_limit?: number | null
           id?: string
+          lifecycle_configuration?: Json | null
+          lifecycle_configuration_generation?: string | null
           name?: string
           owner?: string | null
           owner_id?: string | null
           public?: boolean | null
           type?: Database["storage"]["Enums"]["buckettype"]
           updated_at?: string | null
+          versioning_status?: string
         }
         Relationships: []
       }
@@ -3941,9 +4279,12 @@ export type Database = {
       }
       objects: {
         Row: {
+          archived_at: string | null
           bucket_id: string | null
           created_at: string | null
           id: string
+          is_delete_marker: boolean
+          is_versioned: boolean
           last_accessed_at: string | null
           metadata: Json | null
           name: string | null
@@ -3955,9 +4296,12 @@ export type Database = {
           version: string | null
         }
         Insert: {
+          archived_at?: string | null
           bucket_id?: string | null
           created_at?: string | null
           id?: string
+          is_delete_marker?: boolean
+          is_versioned?: boolean
           last_accessed_at?: string | null
           metadata?: Json | null
           name?: string | null
@@ -3969,9 +4313,12 @@ export type Database = {
           version?: string | null
         }
         Update: {
+          archived_at?: string | null
           bucket_id?: string | null
           created_at?: string | null
           id?: string
+          is_delete_marker?: boolean
+          is_versioned?: boolean
           last_accessed_at?: string | null
           metadata?: Json | null
           name?: string | null
@@ -4162,7 +4509,7 @@ export type Database = {
         Returns: string
       }
       get_size_by_bucket: {
-        Args: never
+        Args: { delete_markers?: string; noncurrent_versions?: string }
         Returns: {
           bucket_id: string
           size: number
@@ -4176,6 +4523,7 @@ export type Database = {
           next_key_token?: string
           next_upload_token?: string
           prefix_param: string
+          raw_prefix_param?: string
         }
         Returns: {
           created_at: string
@@ -4186,28 +4534,38 @@ export type Database = {
       list_objects_with_delimiter: {
         Args: {
           _bucket_id: string
+          delete_markers?: string
           delimiter_param: string
           max_keys?: number
           next_token?: string
+          next_token_archived_at?: string
+          next_token_version?: string
+          noncurrent_versions?: string
           prefix_param: string
           sort_order?: string
           start_after?: string
         }
         Returns: {
+          archived_at: string
           created_at: string
           id: string
+          is_delete_marker: boolean
+          is_versioned: boolean
           last_accessed_at: string
           metadata: Json
           name: string
           updated_at: string
+          version: string
         }[]
       }
       operation: { Args: never; Returns: string }
       search: {
         Args: {
           bucketname: string
+          delete_markers?: string
           levels?: number
           limits?: number
+          noncurrent_versions?: string
           offsets?: number
           prefix: string
           search?: string
@@ -4215,16 +4573,22 @@ export type Database = {
           sortorder?: string
         }
         Returns: {
+          archived_at: string
           created_at: string
           id: string
+          is_delete_marker: boolean
+          is_versioned: boolean
           last_accessed_at: string
           metadata: Json
           name: string
           updated_at: string
+          version: string
         }[]
       }
       search_by_timestamp: {
         Args: {
+          delete_markers?: string
+          noncurrent_versions?: string
           p_bucket_id: string
           p_level: number
           p_limit: number
@@ -4233,36 +4597,50 @@ export type Database = {
           p_sort_column_after: string
           p_sort_order: string
           p_start_after: string
+          p_start_after_version?: string
         }
         Returns: {
+          archived_at: string
           created_at: string
           id: string
+          is_delete_marker: boolean
+          is_versioned: boolean
           key: string
           last_accessed_at: string
           metadata: Json
           name: string
           updated_at: string
+          version: string
         }[]
       }
       search_v2: {
         Args: {
           bucket_name: string
+          delete_markers?: string
           levels?: number
           limits?: number
+          noncurrent_versions?: string
           prefix: string
           sort_column?: string
           sort_column_after?: string
           sort_order?: string
           start_after?: string
+          start_after_archived_at?: string
+          start_after_is_continuation?: boolean
+          start_after_version?: string
         }
         Returns: {
+          archived_at: string
           created_at: string
           id: string
+          is_delete_marker: boolean
+          is_versioned: boolean
           key: string
           last_accessed_at: string
           metadata: Json
           name: string
           updated_at: string
+          version: string
         }[]
       }
     }
@@ -4283,12 +4661,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4312,11 +4690,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4337,11 +4715,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4362,11 +4740,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4379,11 +4757,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }

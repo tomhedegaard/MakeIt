@@ -2,7 +2,6 @@ import { NextResponse, type NextRequest } from "next/server";
 import { assertCronAuth } from "@/lib/cron/auth";
 import { recordWatchedCronRun } from "@/lib/data/cron-runs";
 import { createServiceClient } from "@/lib/supabase/service";
-import { mindDb } from "@/lib/data/mind";
 import { sendPushToMember } from "@/lib/push";
 import { buildCoachContext, computeMentalSignal } from "@/lib/mind/coach-context";
 import { generateMentalCoachOutput } from "@/lib/mind/coach-claude";
@@ -36,7 +35,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (unauthorized) return unauthorized;
 
   const svc = createServiceClient();
-  const db = mindDb(svc);
+  const db = svc;
   const today = new Date().toISOString().slice(0, 10);
 
   const { data: optedIn, error: optedInErr } = await db

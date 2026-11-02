@@ -5,18 +5,11 @@
  * configured. Demo writes (e.g. disclaimer ack) go to a cookie.
  *
  * Spec: docs/superpowers/specs/2026-06-07-mental-health-pillar-v0-design.md
- *
- * NOTE on typing: migration 0046 adds new tables that `database.types.ts`
- * doesn't know about until `npm run db:types` is re-run against the
- * post-0046 live DB. Until then we use the `mindDb()` wrapper below
- * which loosens the `from(table)` signature to accept the new table
- * names. The wrapper still preserves chainable query semantics. Delete
- * once db:types is regenerated.
  */
 
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
-import { createServiceClient } from "@/lib/supabase/service";
+import type { Json, TablesInsert } from "@/lib/supabase/database.types";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import {
   DEFAULT_MENTAL_SETTINGS,
@@ -45,42 +38,6 @@ import {
 } from "@/lib/mind/session-privacy";
 
 export const MIND_DISCLAIMER_COOKIE = "mi_mind_disclaimer_ack";
-
-type MaybeClient = NonNullable<Awaited<ReturnType<typeof createClient>>>;
-
-interface UntypedTable {
-  select: (columns?: string) => UntypedTable;
-  insert: (row: Record<string, unknown> | Record<string, unknown>[]) => UntypedTable;
-  upsert: (
-    row: Record<string, unknown> | Record<string, unknown>[],
-    options?: { onConflict?: string },
-  ) => UntypedTable;
-  update: (row: Record<string, unknown>) => UntypedTable;
-  delete: () => UntypedTable;
-  eq: (col: string, value: unknown) => UntypedTable;
-  in: (col: string, value: unknown[]) => UntypedTable;
-  gte: (col: string, value: unknown) => UntypedTable;
-  is: (col: string, value: unknown) => UntypedTable;
-  order: (col: string, options?: { ascending?: boolean }) => UntypedTable;
-  limit: (n: number) => UntypedTable;
-  maybeSingle: () => Promise<{ data: Record<string, unknown> | null; error: { message: string } | null }>;
-  single: () => Promise<{ data: Record<string, unknown> | null; error: { message: string } | null }>;
-  then: <T>(
-    onfulfilled?: (value: { data: Record<string, unknown>[] | null; error: { message: string } | null }) => T,
-  ) => Promise<T>;
-}
-
-interface UntypedClient {
-  from: (table: string) => UntypedTable;
-}
-
-/**
- * Cast the typed Supabase client to an untyped accessor for tables
- * the generated types don't know about yet (migration 0046).
- */
-export function mindDb(supabase: MaybeClient | ReturnType<typeof createServiceClient>): UntypedClient {
-  return supabase as unknown as UntypedClient;
-}
 
 /**
  * Has the current member acknowledged the mental disclaimer?
@@ -145,7 +102,7 @@ export async function acknowledgeMentalDisclaimer(memberId: string): Promise<voi
   const supabase = await createClient();
   if (!supabase) return;
 
-  const { error } = await mindDb(supabase)
+  const { error } = await supabase
     .from("members")
     .update({ acknowledged_mental_disclaimer_at: new Date().toISOString() })
     .eq("id", memberId)
@@ -169,7 +126,7 @@ export async function getOrCreateMentalSettings(memberId: string): Promise<Menta
   const supabase = await createClient();
   if (!supabase) return mockMentalSettings();
 
-  const db = mindDb(supabase);
+  const db = supabase;
 
   const { data: existing } = await db
     .from("mental_settings")
@@ -217,7 +174,7 @@ export async function getRecentMindCheckLogs(
   since.setUTCHours(0, 0, 0, 0);
   since.setUTCDate(since.getUTCDate() - days);
 
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("mind_check_logs")
     .select("*")
     .eq("member_id", memberId)
@@ -274,7 +231,7 @@ export async function submitMindCheck(
   const supabase = await createClient();
   if (!supabase) return { ok: false, error: "no_supabase_client" };
 
-  const db = mindDb(supabase);
+  const db = supabase;
   const todayDate = new Date().toISOString().slice(0, 10);
 
   const { error } = await db.from("mind_check_logs").upsert(
@@ -382,7 +339,7 @@ export async function getRecentJournalEntries(
   const supabase = await createClient();
   if (!supabase) return [];
 
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("journal_entries")
     .select("*")
     .eq("member_id", memberId)
@@ -481,7 +438,7 @@ export async function submitJournalEntry(
   const supabase = await createClient();
   if (!supabase) return { ok: false, error: "no_supabase_client" };
 
-  const db = mindDb(supabase);
+  const db = supabase;
   const todayDate = new Date().toISOString().slice(0, 10);
 
   // Upsert on (member_id, logged_date) — one entry per day. The
@@ -583,7 +540,7 @@ export async function escalateMentalSafetyToCoach(
 
   const supabase = await createClient();
   if (!supabase) return { ok: false, error: "no_supabase_client" };
-  const db = mindDb(supabase);
+  const db = supabase;
 
   const todayStart = new Date();
   todayStart.setUTCHours(0, 0, 0, 0);
@@ -670,16 +627,14 @@ export async function setMentalSettingFlag(
 
   const supabase = await createClient();
   if (!supabase) return { ok: false, error: "no_supabase_client" };
-  const db = mindDb(supabase);
+  const db = supabase;
 
-  await db.from("mental_settings").upsert(
-    {
-      member_id: memberId,
-      [field]: value,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "member_id" },
-  );
+  const patch: TablesInsert<"mental_settings"> = {
+    member_id: memberId,
+    updated_at: new Date().toISOString(),
+  };
+  patch[field] = value;
+  await db.from("mental_settings").upsert(patch, { onConflict: "member_id" });
 
   // Audit log — best-effort.
   await db.from("mental_settings_log").insert({
@@ -714,7 +669,7 @@ async function maybeFireBuddyMentalShareUnlock(
   supabase: NonNullable<Awaited<ReturnType<typeof createClient>>>,
   memberId: string,
 ): Promise<void> {
-  const db = mindDb(supabase);
+  const db = supabase;
 
   // Find this member's active buddy.
   const { data: pairs } = await db
@@ -839,7 +794,7 @@ export async function getBuddyMindSnapshot(
   since.setUTCHours(0, 0, 0, 0);
   since.setUTCDate(since.getUTCDate() - 7);
 
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("mind_check_logs")
     .select("*")
     .eq("member_id", buddyMemberId)
@@ -921,7 +876,7 @@ export async function getMentalSafetyMetrics(days = 7): Promise<MentalSafetyMetr
   const supabase = await createClient();
   if (!supabase) return unavailable();
 
-  const { data: alerts, error: alertsErr } = await mindDb(supabase)
+  const { data: alerts, error: alertsErr } = await supabase
     .from("mental_safety_alerts")
     .select("id, member_id, summary, status, created_at, updated_at")
     .eq("status", "open")
@@ -991,7 +946,7 @@ export async function getAllCirklerForAdmin(): Promise<
   const supabase = await createClient();
   if (!supabase) return [];
 
-  const { data: cirkler, error } = await mindDb(supabase)
+  const { data: cirkler, error } = await supabase
     .from("mental_cirkler")
     .select("id, name, leader_id, max_members, created_at")
     .order("created_at", { ascending: false });
@@ -1017,12 +972,12 @@ export async function getAllCirklerForAdmin(): Promise<
     .filter((id): id is string => id !== null);
 
   const [{ data: members }, { data: leaders }] = await Promise.all([
-    mindDb(supabase)
+    supabase
       .from("mental_cirkel_members")
       .select("cirkel_id")
       .in("cirkel_id", cirkelIds),
     leaderIds.length > 0
-      ? mindDb(supabase).from("members").select("id, handle").in("id", leaderIds)
+      ? supabase.from("members").select("id, handle").in("id", leaderIds)
       : Promise.resolve({ data: [] }),
   ]);
 
@@ -1058,7 +1013,7 @@ export async function createCirkel(args: {
   }
   const supabase = await createClient();
   if (!supabase) return { ok: false, error: "no_supabase_client" };
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("mental_cirkler")
     .insert({
       name: args.name,
@@ -1084,7 +1039,7 @@ export async function addMemberToCirkel(args: {
   if (!SUPABASE_ENABLED) return { ok: true };
   const supabase = await createClient();
   if (!supabase) return { ok: false, error: "no_supabase_client" };
-  const { error } = await mindDb(supabase)
+  const { error } = await supabase
     .from("mental_cirkel_members")
     .insert({
       cirkel_id: args.cirkelId,
@@ -1119,7 +1074,7 @@ export async function getMyCirkler(memberId: string): Promise<
   const supabase = await createClient();
   if (!supabase) return [];
 
-  const { data: memberships, error } = await mindDb(supabase)
+  const { data: memberships, error } = await supabase
     .from("mental_cirkel_members")
     .select("cirkel_id")
     .eq("member_id", memberId);
@@ -1132,13 +1087,13 @@ export async function getMyCirkler(memberId: string): Promise<
   const ids = ((memberships ?? []) as { cirkel_id: string }[]).map((r) => r.cirkel_id);
   if (ids.length === 0) return [];
 
-  const { data: cirkler } = await mindDb(supabase)
+  const { data: cirkler } = await supabase
     .from("mental_cirkler")
     .select("id, name, leader_id")
     .in("id", ids);
 
   // Per-cirkel member count — separate small query to keep types simple.
-  const { data: members } = await mindDb(supabase)
+  const { data: members } = await supabase
     .from("mental_cirkel_members")
     .select("cirkel_id")
     .in("cirkel_id", ids);
@@ -1173,7 +1128,7 @@ export async function getCirkelFeed(cirkelId: string, limit = 30): Promise<Cirke
 
   const supabase = await createClient();
   if (!supabase) return [];
-  const db = mindDb(supabase);
+  const db = supabase;
 
   const { data: posts, error } = await db
     .from("mental_cirkel_posts")
@@ -1260,7 +1215,7 @@ export async function postToCirkel(args: {
 
   const supabase = await createClient();
   if (!supabase) return { ok: false, error: "no_supabase_client" };
-  const db = mindDb(supabase);
+  const db = supabase;
 
   const { data, error } = await db
     .from("mental_cirkel_posts")
@@ -1328,7 +1283,7 @@ export async function getTodayPersonalSession(memberId: string): Promise<{
   const today = new Date().toISOString().slice(0, 10);
   const slug = personalSessionSlug(memberId, today);
 
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("mental_sessions")
     .select("id, slug, title, subtitle, body_md, visual_pattern, duration_seconds, category, audio_url")
     .eq("slug", slug)
@@ -1363,7 +1318,7 @@ export async function persistPersonalSession(args: {
 
   const slug = personalSessionSlug(args.memberId, args.forDate);
 
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("mental_sessions")
     .upsert(
       {
@@ -1375,7 +1330,7 @@ export async function persistPersonalSession(args: {
         body_md: args.script.body_md,
         visual_pattern: args.script.visual_pattern,
         generated_by: args.generatedBy,
-        prompt_seed: args.promptSeed ?? null,
+        prompt_seed: (args.promptSeed ?? null) as Json,
         locale: args.locale ?? "da",
         is_hero: false,
       },
@@ -1408,7 +1363,7 @@ export async function getRecentSessionCompletions(
   since.setUTCHours(0, 0, 0, 0);
   since.setUTCDate(since.getUTCDate() - days);
 
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("mental_session_completions")
     .select("completed_date")
     .eq("member_id", memberId)
@@ -1434,7 +1389,7 @@ export async function getTodayMentalCoachOutput(
   if (!supabase) return null;
 
   const today = new Date().toISOString().slice(0, 10);
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("mental_coach_outputs")
     .select("*")
     .eq("member_id", memberId)
@@ -1463,14 +1418,14 @@ export async function persistMentalCoachOutput(args: {
   const supabase = await createClient();
   if (!supabase) return null;
 
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("mental_coach_outputs")
     .upsert(
       {
         member_id: args.memberId,
         for_date: args.forDate,
         body_md: args.bodyMd,
-        prompt_seed: args.promptSeed ?? null,
+        prompt_seed: (args.promptSeed ?? null) as Json,
         moderation_status: "clean",
       },
       { onConflict: "member_id,for_date" },
@@ -1503,7 +1458,7 @@ export async function getHeroSessions(locale: "da" | "en" = "da"): Promise<
     return mockHeroSessions().filter((s) => s.locale === locale);
   }
 
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("mental_sessions")
     .select("*")
     .eq("is_hero", true)
@@ -1539,7 +1494,7 @@ export async function getSessionBySlug(
   const supabase = await createClient();
   if (!supabase) return null;
 
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("mental_sessions")
     .select("*")
     .eq("slug", slug)
@@ -1562,7 +1517,7 @@ export async function getCompletedSessionIds(memberId: string): Promise<Set<stri
   const supabase = await createClient();
   if (!supabase) return new Set();
 
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("mental_session_completions")
     .select("session_id")
     .eq("member_id", memberId);
@@ -1593,7 +1548,7 @@ export async function completeMentalSession(args: {
 
   const today = new Date().toISOString().slice(0, 10);
 
-  const { data, error } = await mindDb(supabase)
+  const { data, error } = await supabase
     .from("mental_session_completions")
     .upsert(
       {

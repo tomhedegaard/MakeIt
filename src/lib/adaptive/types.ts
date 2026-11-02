@@ -10,6 +10,7 @@
  * `rule_decision` / `reasoning_output` jsonb columns.
  */
 
+import type { MentalSignal } from "@/lib/mind/types";
 import type { FeelingState } from "@/lib/hrv/lifestyle";
 import type { ReadinessBucket, WarmUpState } from "@/lib/hrv/types";
 
@@ -159,6 +160,14 @@ export interface EngineInput {
     week: number | null;
     exercises: NextSessionExerciseInfo[];
   } | null;
+
+  /**
+   * 7-day mind-check signal (MH-6). `buildEngineInput` reads it and has
+   * already lowered `latestReading.readinessBucket` one step when the
+   * signal is fresh and low; it is kept here so the cron can tag the
+   * decision with the mental reason. Absent in demo and test inputs.
+   */
+  mentalSignal?: MentalSignal | null;
 
   /** Injected so tests can pin the clock. */
   now: Date;
