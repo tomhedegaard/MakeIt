@@ -20,7 +20,8 @@ import AskHq from "./AskHq";
  * Nord landing. The hero opens four doors; each system then gets its own
  * chapter in its domain colour (owner decision 2026-10-05), the motor
  * explains the morning, and the crew closes: not alone, then the road
- * from first session to coach.
+ * from first session to coach. The FAQ answers the last doubts before the
+ * dark access panel, so the page ends on the decision, not on admin.
  */
 export default function LandingPage() {
   return (
@@ -38,8 +39,8 @@ export default function LandingPage() {
         <CrewPlates />
         <LandingMunk />
         <Voices />
-        <AccessPanel />
         <LandingFaq />
+        <AccessPanel />
       </main>
       <LandingFooter />
       <AskHq />
