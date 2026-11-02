@@ -35,6 +35,8 @@ import type {
 import type { Database } from "@/lib/supabase/database.types";
 
 import { formCheckReadableByEngine } from "@/lib/form-queue/queue";
+import { computeMentalSignal } from "@/lib/mind/coach-context";
+import { mentalAwareEngineInput } from "@/lib/mind/snapshot-contribution";
 import type {
   EngineInput,
   LifestyleAggregate,
@@ -49,6 +51,7 @@ const SESSIONS_WINDOW_DAYS = 14;
 const FORM_CHECK_WINDOW_DAYS = 7;
 const LIFESTYLE_WINDOW_DAYS = 3;
 const NEXT_SESSION_WINDOW_DAYS = 2;
+const MIND_WINDOW_DAYS = 7;
 const MS_PER_DAY = 86_400_000;
 
 /* ================================================================== *
@@ -493,25 +496,40 @@ export async function buildEngineInput(
         )
       : null;
 
-  return {
-    memberId,
-    adaptiveProgramEnabled,
-    latestReading,
-    veryLowDaysLast5,
-    rpeDriftLast14d,
-    lifestyle,
-    recentSessions,
-    recentFormChecks,
-    daysSinceHeavyLift,
-    nextSession: {
-      sessionId: nextSessionRow.id as string,
-      scheduledFor: nextSessionRow.scheduled_for as string,
-      title: (nextSessionRow.title as string) ?? "",
-      week: nextSessionRow.week as number | null,
-      exercises: nextSessionExercises,
+  // --- 9) Mind-check signal (MH-6). Seven days of logs; the pure helper
+  //     drops the readiness bucket one step when the run is fresh and low.
+  const mindSince = isoDate(new Date(now.getTime() - MIND_WINDOW_DAYS * MS_PER_DAY));
+  const { data: mindRows, error: mindErr } = await supabase
+    .from("mind_check_logs")
+    .select("logged_date, energy, stress, focus")
+    .eq("member_id", memberId)
+    .gte("logged_date", mindSince);
+  if (mindErr) throw new Error(`buildEngineInput mind checks: ${mindErr.message}`);
+  const mentalSignal = computeMentalSignal(mindRows ?? [], now);
+
+  return mentalAwareEngineInput(
+    {
+      memberId,
+      adaptiveProgramEnabled,
+      latestReading,
+      veryLowDaysLast5,
+      rpeDriftLast14d,
+      lifestyle,
+      recentSessions,
+      recentFormChecks,
+      daysSinceHeavyLift,
+      nextSession: {
+        sessionId: nextSessionRow.id as string,
+        scheduledFor: nextSessionRow.scheduled_for as string,
+        title: (nextSessionRow.title as string) ?? "",
+        week: nextSessionRow.week as number | null,
+        exercises: nextSessionExercises,
+      },
+      mentalSignal,
+      now,
     },
-    now,
-  };
+    mentalSignal,
+  );
 }
 
 /**

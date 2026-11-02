@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { buildEngineInput, loadEligibleMemberIds } from "@/lib/adaptive/data";
 import { assertCronAuth } from "@/lib/cron/auth";
 import { evaluateAdaptation } from "@/lib/adaptive/engine";
+import { decorateDecisionWithMentalReason } from "@/lib/mind/snapshot-contribution";
 import { persistAdaptation } from "@/lib/adaptive/persist";
 import { recordWatchedCronRun } from "@/lib/data/cron-runs";
 import { createServiceClient } from "@/lib/supabase/service";
@@ -86,7 +87,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       }
 
       // 2. Run the rule layer.
-      const decision = evaluateAdaptation(input);
+      const decision = decorateDecisionWithMentalReason(
+        evaluateAdaptation(input),
+        input.mentalSignal ?? null,
+      );
       if (decision.action === "no_change") {
         // Rule layer says no action — don't persist, don't ask Claude.
         skippedNoAction += 1;
