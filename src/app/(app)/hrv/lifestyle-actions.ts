@@ -68,7 +68,8 @@ export async function logLifestyleEvent(
         member_id: memberId,
         logged_for_date: today,
         event_type: eventType,
-        value: normalized,
+        // Spread: the interface types lack the index signature `Json` wants.
+        value: { ...normalized },
       },
       { onConflict: "member_id,logged_for_date,event_type" },
     );

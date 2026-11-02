@@ -9,6 +9,7 @@
 
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import type { Json, TablesInsert } from "@/lib/supabase/database.types";
 import { SUPABASE_ENABLED } from "@/lib/supabase/env";
 import {
   DEFAULT_MENTAL_SETTINGS,
@@ -628,14 +629,12 @@ export async function setMentalSettingFlag(
   if (!supabase) return { ok: false, error: "no_supabase_client" };
   const db = supabase;
 
-  await db.from("mental_settings").upsert(
-    {
-      member_id: memberId,
-      [field]: value,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "member_id" },
-  );
+  const patch: TablesInsert<"mental_settings"> = {
+    member_id: memberId,
+    updated_at: new Date().toISOString(),
+  };
+  patch[field] = value;
+  await db.from("mental_settings").upsert(patch, { onConflict: "member_id" });
 
   // Audit log — best-effort.
   await db.from("mental_settings_log").insert({
@@ -1331,7 +1330,7 @@ export async function persistPersonalSession(args: {
         body_md: args.script.body_md,
         visual_pattern: args.script.visual_pattern,
         generated_by: args.generatedBy,
-        prompt_seed: args.promptSeed ?? null,
+        prompt_seed: (args.promptSeed ?? null) as Json,
         locale: args.locale ?? "da",
         is_hero: false,
       },
@@ -1426,7 +1425,7 @@ export async function persistMentalCoachOutput(args: {
         member_id: args.memberId,
         for_date: args.forDate,
         body_md: args.bodyMd,
-        prompt_seed: args.promptSeed ?? null,
+        prompt_seed: (args.promptSeed ?? null) as Json,
         moderation_status: "clean",
       },
       { onConflict: "member_id,for_date" },

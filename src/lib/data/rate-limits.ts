@@ -19,6 +19,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
+import type { Json } from "@/lib/supabase/database.types";
 
 export type RateLimitedAction =
   | "plan_regen"
@@ -147,7 +148,7 @@ export async function recordAction(
   await supabase.from("member_action_logs").insert({
     member_id: memberId,
     action,
-    metadata: metadata ?? null,
+    metadata: (metadata ?? null) as Json,
   });
 }
 

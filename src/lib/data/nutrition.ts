@@ -1,6 +1,6 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
-import type { Json } from "@/lib/supabase/database.types";
+import type { Json, Tables, TablesInsert } from "@/lib/supabase/database.types";
 import { generateMockPlan } from "@/lib/nutrition/mock-plan";
 import { fallbackPlanNotes } from "@/lib/nutrition/plan-macros";
 import { getMealImage, getMealImagesBatch } from "@/lib/nutrition/unsplash";
@@ -187,7 +187,9 @@ export async function saveNutritionProfile(
     };
   }
 
-  const row = {
+  // Undefined keys are dropped by JSON serialisation, so partial
+  // updates don't NULL out columns.
+  const row: TablesInsert<"nutrition_profiles"> = {
     member_id: memberId,
     goal: patch.goal,
     daily_kcal_target: patch.dailyKcalTarget,
@@ -205,15 +207,9 @@ export async function saveNutritionProfile(
     meal_prep_mode: patch.mealPrepMode,
   };
 
-  // Drop undefined keys so partial updates don't NULL out columns.
-  const cleaned: Record<string, unknown> = { member_id: memberId };
-  for (const [k, v] of Object.entries(row)) {
-    if (v !== undefined) cleaned[k] = v;
-  }
-
   const { data, error } = await supabase
     .from("nutrition_profiles")
-    .upsert(cleaned, { onConflict: "member_id" })
+    .upsert(row, { onConflict: "member_id" })
     .select("*")
     .single();
 
@@ -428,7 +424,7 @@ export async function swapMeal(
   const replacement = swapMockMeal({
     profile,
     dayIndex: existing.day_index,
-    slot: existing.slot,
+    slot: existing.slot as MealSlot,
     avoidTitle: existing.title,
   });
 
@@ -613,36 +609,19 @@ export function estimateDailyKcal(opts: {
  * Row mappers
  * ---------------------------------------------------------------- */
 
-type ProfileRow = {
-  member_id: string;
-  goal: NutritionGoal;
-  daily_kcal_target: number | null;
-  daily_protein_g_target: number | null;
-  meals_per_day: number;
-  household_size: number;
-  cooking_level: CookingLevel;
-  budget_level: BudgetLevel;
-  diet: Diet;
-  allergies: string[] | null;
-  dislikes: string[] | null;
-  preferences: string[] | null;
-  cook_days: string[] | null;
-  fish_per_week: number;
-  meal_prep_mode: boolean | null;
-  updated_at: string;
-};
+type ProfileRow = Tables<"nutrition_profiles">;
 
 function rowToProfile(row: ProfileRow): NutritionProfile {
   return {
     memberId: row.member_id,
-    goal: row.goal,
+    goal: row.goal as NutritionGoal,
     dailyKcalTarget: row.daily_kcal_target,
     dailyProteinGTarget: row.daily_protein_g_target,
     mealsPerDay: row.meals_per_day,
     householdSize: row.household_size,
-    cookingLevel: row.cooking_level,
-    budgetLevel: row.budget_level,
-    diet: row.diet,
+    cookingLevel: row.cooking_level as CookingLevel,
+    budgetLevel: row.budget_level as BudgetLevel,
+    diet: row.diet as Diet,
     allergies: row.allergies ?? [],
     dislikes: row.dislikes ?? [],
     preferences: row.preferences ?? [],
@@ -653,51 +632,17 @@ function rowToProfile(row: ProfileRow): NutritionProfile {
   };
 }
 
-type PlanRow = {
-  id: string;
-  member_id: string;
-  week_start: string;
-  daily_kcal: number | null;
-  daily_protein_g: number | null;
-  daily_carbs_g: number | null;
-  daily_fat_g: number | null;
-  generator: GeneratorKind;
-  generator_model: string | null;
-  notes: string | null;
-  generated_at: string;
-};
+type PlanRow = Tables<"nutrition_plans">;
 
-type MealRow = {
-  id: string;
-  plan_id: string;
-  day_index: number;
-  slot: MealSlot;
-  kind: MealKind;
-  title: string;
-  description: string | null;
-  ingredients: Ingredient[] | null;
-  steps: string[] | null;
-  est_kcal: number | null;
-  est_protein_g: number | null;
-  est_carbs_g: number | null;
-  est_fat_g: number | null;
-  carb_density: CarbDensity;
-  prep_minutes: number | null;
-  swappable: boolean;
-  position: number;
-  image_url: string | null;
-  image_thumb_url: string | null;
-  image_attribution_name: string | null;
-  image_attribution_url: string | null;
-};
+type MealRow = Tables<"nutrition_meals">;
 
 function rowToMeal(row: MealRow): Meal {
   return {
     id: row.id,
     planId: row.plan_id,
     dayIndex: row.day_index,
-    slot: row.slot,
-    kind: row.kind,
+    slot: row.slot as MealSlot,
+    kind: row.kind as MealKind,
     title: row.title,
     description: row.description,
     ingredients: (row.ingredients ?? []) as Ingredient[],
@@ -706,7 +651,7 @@ function rowToMeal(row: MealRow): Meal {
     estProteinG: row.est_protein_g,
     estCarbsG: row.est_carbs_g,
     estFatG: row.est_fat_g,
-    carbDensity: row.carb_density,
+    carbDensity: row.carb_density as CarbDensity,
     prepMinutes: row.prep_minutes,
     swappable: row.swappable,
     position: row.position,
@@ -726,7 +671,7 @@ function rowToPlan(plan: PlanRow, meals: MealRow[]): Plan {
     dailyProteinG: plan.daily_protein_g,
     dailyCarbsG: plan.daily_carbs_g,
     dailyFatG: plan.daily_fat_g,
-    generator: plan.generator,
+    generator: plan.generator as GeneratorKind,
     generatorModel: plan.generator_model,
     notes: plan.notes,
     generatedAt: plan.generated_at,
@@ -734,26 +679,7 @@ function rowToPlan(plan: PlanRow, meals: MealRow[]): Plan {
   };
 }
 
-type LogRow = {
-  id: string;
-  member_id: string;
-  meal_id: string | null;
-  logged_for_date: string;
-  logged_for_slot: MealSlot | null;
-  status: LogStatus | null;
-  off_plan: boolean | null;
-  kcal: number | null;
-  protein_g: number | null;
-  photo_path: string | null;
-  match_score: number | null;
-  protein_estimate: "low" | "on_target" | "high" | null;
-  ai_headline: string | null;
-  ai_notes: string | null;
-  graded_at: string | null;
-  rating: number | null;
-  notes: string | null;
-  created_at: string;
-};
+type LogRow = Tables<"nutrition_logs">;
 
 function rowToLog(row: LogRow): NutritionLog {
   return {
@@ -761,14 +687,14 @@ function rowToLog(row: LogRow): NutritionLog {
     memberId: row.member_id,
     mealId: row.meal_id,
     loggedForDate: row.logged_for_date,
-    loggedForSlot: row.logged_for_slot,
-    status: row.status ?? "eaten",
+    loggedForSlot: row.logged_for_slot as MealSlot | null,
+    status: row.status as LogStatus,
     offPlan: row.off_plan ?? false,
     kcal: row.kcal,
     proteinG: row.protein_g,
     photoPath: row.photo_path,
     matchScore: row.match_score,
-    proteinEstimate: row.protein_estimate,
+    proteinEstimate: row.protein_estimate as NutritionLog["proteinEstimate"],
     aiHeadline: row.ai_headline,
     aiNotes: row.ai_notes,
     gradedAt: row.graded_at,
