@@ -218,12 +218,12 @@
       },
       "rack": {
         "heading": "Appen, i dagslys.",
-        "sub": "Swipe til siden, og scroll ned i hver skærm.",
+        "sub": "Én dag i appen, fra morgenens tal til crewet om aftenen.",
         "sample": "Eksempeldata",
         "prev": "Forrige skærm",
         "next": "Næste skærm",
         "listLabel": "Femten app-skærme",
-        "pinSub": "Scroll, og telefonen går dagen igennem.",
+        "pinSub": "Én dag i appen, fra morgenens tal til crewet om aftenen.",
         "parts": ["Morgenen", "Passet", "Programmet", "Maden", "Hovedet og crewet"]
       }
     },

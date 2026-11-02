@@ -95,8 +95,6 @@ export default function MotorStory() {
           <NightCurve />
         </div>
 
-        <EngineBounds />
-
         {A1_SEQUENCE ? (
           <ScrollSequence
             base={A1_SEQUENCE.base}
@@ -137,6 +135,8 @@ export default function MotorStory() {
         </div>
 
         <TryIt />
+
+        <EngineBounds />
 
         <p className="mt-10 max-w-[52ch] text-micro text-fg-dim lg:mt-24">
           {t("keepOriginalNote")} {t("disclaimer")}
@@ -210,7 +210,7 @@ function ReportLine({ step, domain }: { step: MotorStepKey; domain: string }) {
         aria-hidden="true"
         className={cn(
           "absolute -left-1 top-[calc(50%-90px)] hidden size-[7px] rounded-full border border-line-bright bg-bg lg:block",
-          "transition duration-400 motion-reduce:transition-none",
+          "transition-[transform,background-color,border-color] duration-400 motion-reduce:transition-none",
           style.tickOn,
         )}
       />

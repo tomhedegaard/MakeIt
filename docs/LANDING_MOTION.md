@@ -26,7 +26,7 @@ next one without pulling in an animation library. Companion to
 | Sticky device with steps | `MotorStory` + `MotorStoryRig` | IntersectionObserver picks the step nearest the viewport centre, `data-active` drives Tailwind `group-data` variants |
 | Nat til morgen | `MotorStory` (`data-dawn`) | The decision line's view timeline animates the registered number `--dawn`, every token in the section is `color-mix`ed from it |
 | Scroll-scrubbed image sequence | `ScrollSequence` | Poster `<img>` at rest, canvas draws the frame that matches scroll progress once frames load |
-| Hero load sequence | `LandingHero` (`data-hero-rise`) | CSS keyframes with a `--rise` delay per element; the H1 is unmasked as one line because its test requires a single text node |
+| Hero load sequence | `LandingHero` (`data-hero-rise`) | CSS keyframes with a `--rise` delay per element; the H1 is unmasked as one line because its test requires a single text node. Each door is two planes: the field rises first, the phone (`data-hero-rise="phone"`) rises further and lands after it |
 | Pinned horizontal gallery | `ChapterTrain` + `GalleryRig` | The island sets `data-gallery="on"` and `--gallery-len`; a named view timeline on the block slides the track while its stage is sticky. Swipe row below 1024 px |
 | Stacked cards | `CrewPlates` via `TierLadder`'s `after` slot | Sticky cards with a 16 px step; the card behind scales to 0.96 on its sibling's view timeline (`timeline-scope`) |
 | Magnetic buttons | `Magnetic` around the hero, tier and waitlist CTAs | `pointermove` writes `--mx` and `--my`, CSS moves the span only for a fine pointer with motion allowed |

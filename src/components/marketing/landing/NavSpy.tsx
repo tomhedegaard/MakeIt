@@ -8,8 +8,12 @@ import { useEffect, useRef } from "react";
  * writes to it). It watches every `main section[id]`; the one crossing
  * the middle of the viewport sets `aria-current="location"` on the nav
  * links that point at it, and a section without a link (hero, motor,
- * access) clears the mark. Without JS no link is marked.
+ * access) clears the mark. The plates (`#crew`) keep the Crew mark, so
+ * the ladder does not go dark. It also closes the mobile menu when a
+ * link in it changes the hash. Without JS no link is marked.
  */
+const ALIAS: Record<string, string> = { crew: "crew-alone" };
+
 export default function NavSpy() {
   const ref = useRef<HTMLSpanElement>(null);
 
@@ -28,14 +32,18 @@ export default function NavSpy() {
     const io = new IntersectionObserver(
       (entries) => {
         const hit = entries.find((e) => e.isIntersecting);
-        if (hit) mark(hit.target.id);
+        if (hit) mark(ALIAS[hit.target.id] ?? hit.target.id);
       },
       { rootMargin: "-49% 0px -49% 0px" },
     );
     document.querySelectorAll<HTMLElement>("main section[id]").forEach((s) => io.observe(s));
 
+    const closeMenu = () => nav.querySelector("details[open]")?.removeAttribute("open");
+    window.addEventListener("hashchange", closeMenu);
+
     return () => {
       io.disconnect();
+      window.removeEventListener("hashchange", closeMenu);
       mark(null);
     };
   }, []);

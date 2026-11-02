@@ -156,7 +156,6 @@ export default function HeartLive({ labels }: { labels: HeartLiveLabels }) {
               type="button"
               aria-pressed={device === i}
               onClick={() => setDevice(i)}
-              onPointerEnter={(e) => e.pointerType === "mouse" && setDevice(i)}
               className={cn(
                 "font-display cursor-pointer px-3 py-1.5 text-[clamp(24px,2.6vw,38px)] leading-none transition-colors duration-200 motion-reduce:transition-none",
                 "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg",
