@@ -7,7 +7,7 @@ import MindCheckedScreen from "@/components/marketing/phone/screens/MindCheckedS
 import DecisionScreen from "@/components/marketing/phone/screens/DecisionScreen";
 import { cn } from "@/lib/utils";
 import MotorStoryRig from "./MotorStoryRig";
-import NightCurve from "./NightCurve";
+import NightStage from "./NightStage";
 import ScrollSequence from "./ScrollSequence";
 import { A1_SEQUENCE } from "@/lib/marketing/landing/a1";
 import Rule from "./Rule";
@@ -62,12 +62,13 @@ const SCREENS: Record<MotorStepKey, ReactNode> = {
 };
 
 /**
- * Morning report (spec §4 A1, C2, C3): the night as a chart, four
+ * Morning report (spec §4 A1, C2, C3): the night as an instrument
+ * (NightStage, the page's peak), then the heading in daylight, four
  * report lines, and the phone that follows them. Server component; only
- * the rig is a client island. `data-dawn` lets globals.css open the
- * section in the dark and brighten it toward the decision as the
- * visitor scrolls (nat til morgen); without view timelines or with
- * reduced motion it simply stays light.
+ * the rig is a client island. `data-dawn` lets globals.css hold the
+ * section in the dark the night is read in and brighten it as the night
+ * stage scrolls away (nat til morgen); without view timelines or with
+ * reduced motion the part after the stage simply stays light.
  */
 export default function MotorStory() {
   const t = useTranslations("Marketing.landing.engine");
@@ -77,22 +78,22 @@ export default function MotorStory() {
       id="engine"
       aria-labelledby="engine-heading"
       data-dawn
-      className="scroll-mt-[68px] py-[clamp(72px,8vw,128px)]"
+      className="scroll-mt-[68px] pb-[clamp(72px,8vw,128px)]"
     >
-      <div className="mx-auto max-w-[1360px] px-4 md:px-8">
+      <NightStage />
+      <div className="mx-auto max-w-[1360px] px-4 pt-[clamp(72px,8vw,128px)] md:px-8">
         <Rule />
 
-        <div className="mt-[clamp(48px,6vw,90px)] grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-end lg:gap-16">
+        <div className="mt-[clamp(48px,6vw,90px)] grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
           <div>
             <p className="eyebrow mb-5 inline-flex items-center gap-2.5 before:h-0.5 before:w-7 before:bg-fg">
               {t("eyebrow")}
             </p>
-            <h2 id="engine-heading" className="font-display text-[clamp(46px,6.4vw,96px)]">
+            <h2 id="engine-heading" className="font-display max-w-[9em] text-[clamp(46px,6.4vw,96px)]">
               {t("heading")}
             </h2>
-            <p className="mt-6 max-w-[46ch] text-[clamp(17px,1.35vw,20px)] text-fg-dim">{t("sub")}</p>
           </div>
-          <NightCurve />
+          <p className="max-w-[46ch] text-[clamp(17px,1.35vw,20px)] text-fg-dim lg:pb-3">{t("sub")}</p>
         </div>
 
         {A1_SEQUENCE ? (

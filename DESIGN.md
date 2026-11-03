@@ -210,7 +210,8 @@ En monokrom blæk-og-papir-base med én brand-accent (mos) og fire domænefarver
 - **Nord nat** (`nat-*`-nøglerne) aktiveres kun med `<ThemeScope theme="nat">` på layout-niveau i `/session/[id]` og `/coach`. Nat-blokken løftes til `<html>` via `:has()`, så portalerede sheets og cookie-bar følger med. En nat-scope midt på en lys side gør hele siden mørk; brug den aldrig der.
 - **Tilladt undtagelse: mørke blokke på landingssiden** (beslutning 2026-10-06). Den offentlige landing (`components/marketing/landing/`) må have afgrænsede mørke sektioner, når mørket fortæller noget om indholdet. Tre er godkendt:
     - **Adgangspanelet** (`AccessPanel`) og **HRV-kapitlet** (`ChapterHeart`) som lokale `data-theme="nat"`-blokke, aldrig `ThemeScope` og aldrig `.theme-root`.
-    - **Nat til morgen** i motor-sektionen (`MotorStory`, `data-dawn`): sektionen åbner i nat og bliver Nord lys før beslutningen, drevet af en CSS view-timeline der blander tokens fra nat til lys. Uden view-timelines eller med `prefers-reduced-motion: reduce` står den lys.
+    - **Natten som instrument** øverst i motor-sektionen (`NightStage`, `data-night`, beslutning 2026-11-03): en lokal `data-theme="nat"`-blok, fordi indholdet er natten. Uret løber 23:40 → 06:45, HRV-kurven tegner sig, og de tre aflæsninger lander, alt drevet af blokkens egen view-timeline. Pinnet kun på brede, høje skærme.
+    - **Nat til morgen** i motor-sektionen (`MotorStory`, `data-dawn`): efter nattens stage står sektionen i nat og bliver Nord lys, mens staget scroller væk, drevet af en CSS view-timeline der blander tokens fra nat til lys. Uden view-timelines eller med `prefers-reduced-motion: reduce` står den lys.
     - Nye mørke blokke på landingen kræver samme begrundelse og en linje her. Undtagelsen gælder ikke medlems-, coach-, login- eller onboardingflader.
 
 ### Named Rules

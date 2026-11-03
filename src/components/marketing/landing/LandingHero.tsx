@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-cta";
+import { HERO_SEQUENCE } from "@/lib/marketing/landing/hero";
 import SessionScreen from "@/components/marketing/phone/screens/SessionScreen";
 import FoodScreen from "@/components/marketing/phone/screens/FoodScreen";
 import HrvScreen from "@/components/marketing/phone/screens/HrvScreen";
@@ -9,6 +10,8 @@ import MindScreen from "@/components/marketing/phone/screens/MindScreen";
 import { cn } from "@/lib/utils";
 import TiltDoor from "./TiltDoor";
 import Magnetic from "./Magnetic";
+import ScrollSequence from "./ScrollSequence";
+import HeroPointer from "./HeroPointer";
 
 const DOOR_PHONE = 200;
 
@@ -28,24 +31,34 @@ const DOORS: { key: "train" | "food" | "heart" | "mind"; href: string; field: st
 ];
 
 /**
- * Hero: H1, one sentence, one CTA, and the whole app at a glance. The
- * landing page may put the domain colours on whole surfaces as tints,
- * with the full colour in type (owner decision 2026-10-05); the app keeps
- * the ten percent rule.
+ * Hero: under the bar. Three planes (docs/LANDING_BRIEF.md): the copy
+ * at the back, the lifter in the middle (one back-squat rep from the
+ * MoveKit library, scrubbed by the visitor's scroll), and the four
+ * doors in front, which rise out of the foreground and land over the
+ * lifter's feet when the rep is done.
  *
- * On load the hero rises in order: heading, sentence, call to action,
- * then the doors one by one. Pure CSS (`[data-hero-rise]` in
- * globals.css) from a resting state that already reads, so there is
- * nothing to wait for without JS and nothing at all with reduced motion.
+ * On wide, tall screens the section is pinned (`[data-pin]`, globals.css
+ * `[data-hero]`): the stage (copy and lifter) holds for 78 svh while the
+ * copy drifts up, the lifter squats, and the doors, in flow after the
+ * stage, scroll in over the lifter's feet at the page's own pace. Three
+ * rates, one occlusion, no transform on the doors. Below 1024 px nothing pins:
+ * the lifter follows its own trip through the viewport and the doors
+ * are a row to swipe. The poster (standing) and the plain layout are
+ * the resting state, so there is nothing to wait for without JS and
+ * nothing moves with reduced motion.
+ *
+ * The landing may put the domain colours on whole surfaces as tints,
+ * with the full colour in type (owner decision 2026-10-05).
  */
 export default function LandingHero() {
   const t = useTranslations("Marketing.landing.hero");
   const d = useTranslations("Marketing.landing.chapters.doors");
 
   return (
-    <section aria-labelledby="hero-heading" className="relative overflow-x-clip">
+    <section aria-labelledby="hero-heading" data-hero data-pin className="relative overflow-x-clip">
       <div className="mx-auto max-w-[1360px] px-4 md:px-8">
-        <div className="grid gap-6 pb-2 pt-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-end lg:gap-16 lg:pt-16">
+        <div data-hero-stage className="relative">
+        <div data-hero-plane="copy" className="relative z-10 grid gap-6 pt-10 lg:max-w-[62%] lg:pt-14">
           <h1
             id="hero-heading"
             data-hero-rise="mask"
@@ -54,7 +67,7 @@ export default function LandingHero() {
           >
             {t("heading")}
           </h1>
-          <div className="lg:pb-3">
+          <div>
             <p data-hero-rise style={rise(2)} className="max-w-[34ch] text-[clamp(17px,1.45vw,21px)] text-fg-dim">
               {t("sub")}
             </p>
@@ -74,15 +87,35 @@ export default function LandingHero() {
           </div>
         </div>
 
+        <div
+          data-hero-plane="lifter"
+          data-hero-rise
+          style={rise(4)}
+          className="pointer-events-none relative -mb-10 mt-4 flex justify-end lg:absolute lg:bottom-10 lg:right-[clamp(16px,5vw,96px)] lg:m-0"
+        >
+          <ScrollSequence
+            pinned
+            fit="contain"
+            base={HERO_SEQUENCE.base}
+            frameCount={HERO_SEQUENCE.frameCount}
+            poster={{ ...HERO_SEQUENCE.poster, alt: t("lifterAlt") }}
+            range={{ start: 0.08, end: 0.82 }}
+            className="h-[clamp(240px,62vw,440px)] w-auto aspect-[406/720] lg:h-[clamp(420px,72svh,700px)]"
+          />
+        </div>
+        <HeroPointer />
+        </div>
+
         <ul
           data-doors
-          className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-10 pt-[240px] [scrollbar-width:none] md:-mx-8 md:scroll-px-8 md:px-8 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0 lg:pb-16 lg:pt-[220px]"
+          data-hero-plane="doors"
+          className="relative z-20 -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-10 pt-[240px] [scrollbar-width:none] md:-mx-8 md:scroll-px-8 md:px-8 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0 lg:pb-16 lg:pt-[220px]"
         >
           {DOORS.map((door, i) => (
             <li
               key={door.key}
               data-hero-rise
-              style={rise(4 + i)}
+              style={rise(5 + i)}
               className="w-[74vw] max-w-[320px] shrink-0 snap-start lg:w-auto lg:max-w-none"
             >
               <TiltDoor
@@ -90,7 +123,7 @@ export default function LandingHero() {
                 className={cn("group relative block h-[300px] text-fg no-underline lg:h-[330px]", door.field)}
               >
                 <div className="absolute bottom-[86px] left-1/2 -translate-x-1/2 [perspective:900px]">
-                  <div data-hero-rise="phone" style={rise(6 + i)} className="door-phone">{door.screen}</div>
+                  <div data-hero-rise="phone" style={rise(7 + i)} className="door-phone">{door.screen}</div>
                 </div>
                 <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3">
                   <span>

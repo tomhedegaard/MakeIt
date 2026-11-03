@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { frameIndexFor, frameUrl, loadOrder, progressThrough } from "@/lib/marketing/landing/scroll-sequence";
+import { frameIndexFor, frameUrl, loadOrder, pinProgress, progressThrough } from "@/lib/marketing/landing/scroll-sequence";
 
 type Props = {
   /** Frame path without the index and extension: `/landing/a1/a1-squat-frame`. */
@@ -12,6 +12,15 @@ type Props = {
   poster: { src: string; alt: string; width: number; height: number };
   /** Part of the scroll travel the sequence plays over; the rest holds the first or last frame. */
   range?: { start: number; end: number };
+  /**
+   * Follow the travel of the closest `[data-pin]` ancestor (a block with a
+   * sticky stage) instead of this block's own trip through the viewport.
+   * When that block is no taller than the viewport (no pin at this size)
+   * the sequence falls back to its own travel.
+   */
+  pinned?: boolean;
+  /** `cover` fills the box (A1); `contain` keeps the whole figure visible (the hero's lifter). */
+  fit?: "cover" | "contain";
   className?: string;
 };
 
@@ -25,7 +34,7 @@ type Props = {
  * one per animation frame at most, and nothing while the block is off
  * screen (an IntersectionObserver arms and disarms the scroll listener).
  */
-export default function ScrollSequence({ base, frameCount, poster, range, className }: Props) {
+export default function ScrollSequence({ base, frameCount, poster, range, pinned, fit = "cover", className }: Props) {
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
 
@@ -37,6 +46,7 @@ export default function ScrollSequence({ base, frameCount, poster, range, classN
 
     const ctx = cv.getContext("2d");
     if (!ctx) return;
+    const pin = pinned ? root.closest<HTMLElement>("[data-pin]") : null;
 
     const frames: (HTMLImageElement | undefined)[] = new Array(frameCount);
     let drawn = -1;
@@ -63,15 +73,21 @@ export default function ScrollSequence({ base, frameCount, poster, range, classN
     const draw = () => {
       raf = 0;
       const box = root.getBoundingClientRect();
-      const p = progressThrough(box.top, box.height, window.innerHeight);
+      const vh = window.innerHeight;
+      const pinBox = pin?.getBoundingClientRect();
+      const p =
+        pinBox && pinBox.height > vh
+          ? pinProgress(pinBox.top, pinBox.height, vh)
+          : progressThrough(box.top, box.height, vh);
       const index = frameIndexFor(p, frameCount, range);
       const img = nearest(index);
       if (!img || index === drawn) return;
       drawn = index;
-      const scale = Math.max(cv.width / img.naturalWidth, cv.height / img.naturalHeight);
+      const scale = (fit === "contain" ? Math.min : Math.max)(cv.width / img.naturalWidth, cv.height / img.naturalHeight);
       const w = img.naturalWidth * scale;
       const h = img.naturalHeight * scale;
-      ctx.drawImage(img, (cv.width - w) / 2, (cv.height - h) / 2, w, h);
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      ctx.drawImage(img, (cv.width - w) / 2, cv.height - h, w, h);
       root.dataset.sequence = "live";
     };
 
@@ -93,6 +109,8 @@ export default function ScrollSequence({ base, frameCount, poster, range, classN
       frames[index] = img;
     };
 
+    // The pinned block is what scrolls; observe it so the listener stays
+    // armed for the whole pin, not only while the figure's own box is in view.
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !armed) {
@@ -109,7 +127,7 @@ export default function ScrollSequence({ base, frameCount, poster, range, classN
 
     size();
     window.addEventListener("resize", size);
-    io.observe(root);
+    io.observe(pin ?? root);
     load(loadOrder(frameCount), 0);
 
     return () => {
@@ -120,7 +138,7 @@ export default function ScrollSequence({ base, frameCount, poster, range, classN
       if (raf) cancelAnimationFrame(raf);
       delete root.dataset.sequence;
     };
-  }, [base, frameCount, range]);
+  }, [base, frameCount, range, pinned, fit]);
 
   return (
     <div ref={wrap} data-scroll-sequence className={cn("group/seq relative", className)}>
@@ -130,7 +148,10 @@ export default function ScrollSequence({ base, frameCount, poster, range, classN
         alt={poster.alt}
         width={poster.width}
         height={poster.height}
-        className="block h-full w-full object-cover"
+        className={cn(
+          "block h-full w-full object-bottom transition-opacity duration-300 motion-reduce:transition-none group-data-[sequence=live]/seq:opacity-0",
+          fit === "contain" ? "object-contain" : "object-cover",
+        )}
       />
       <canvas
         ref={canvas}

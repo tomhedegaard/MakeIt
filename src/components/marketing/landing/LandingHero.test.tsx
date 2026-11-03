@@ -23,6 +23,12 @@ describe("LandingHero", () => {
     expect((html.match(/<h1/g) ?? []).length).toBe(1);
   });
 
+  it("stands the lifter on the page as a poster, pinned only by CSS", () => {
+    expect(html).toMatch(/<section[^>]*data-hero[^>]*data-pin/);
+    expect(html).toMatch(/<img[^>]*src="\/landing\/hero\/squat-poster\.webp"[^>]*alt="Løfter i 3D under stangen, back squat"/);
+    expect(html).toMatch(/data-hero-plane="copy"[\s\S]*data-hero-plane="lifter"[\s\S]*data-hero-plane="doors"/);
+  });
+
   it("opens four doors to the chapters, each on its own field", () => {
     for (const [href, field] of [["#train", "bg-bg-3"], ["#food", "bg-food-tint"], ["#hrv", "bg-heart-tint"], ["#mind", "bg-mind-tint"]]) {
       expect(html).toMatch(new RegExp(`<a href="${href}"[^>]*${field}`));

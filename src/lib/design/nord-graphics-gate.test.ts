@@ -36,7 +36,7 @@ const GRAPHICS: Record<string, string> = {
   "components/ui/RestTimer.tsx": "progress ring (data)",
   "components/marketing/landing/LandingMunk.tsx": "Munk's signature",
   "components/marketing/landing/HeartLive.tsx": "chart",
-  "components/marketing/landing/NightCurve.tsx": "chart",
+  "components/marketing/landing/NightStage.tsx": "chart: the night's HRV curve",
   "components/marketing/phone/PhoneFrame.tsx": "device chrome: signal and battery",
   "components/marketing/phone/screens/HrvScreen.tsx": "chart in the mockup",
   "components/marketing/phone/screens/MindCheckedScreen.tsx": "chart in the mockup",
