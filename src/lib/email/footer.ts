@@ -20,6 +20,8 @@ import type { Locale } from "@/i18n/config";
 import daMessages from "../../../messages/da";
 import enMessages from "../../../messages/en";
 
+const HOST = COMPANY.appUrl;
+
 function legalLineParts(): string[] {
   return [COMPANY.legal.entity ?? COMPANY.name, COMPANY.legal.address ?? ""]
     .filter(Boolean) as string[];
@@ -30,6 +32,15 @@ export function emailFooterHtml(): string {
   const legal = legalLineParts().join(" · ");
   const link = `<a href="${COMPANY.marketingUrl}" style="color:#5E5E59;">${COMPANY.marketingDomain}</a>`;
   return `${legal} · ${link}`;
+}
+
+/**
+ * The MakeIt A in front of the product name in mail headers
+ * (docs/BRAND_MARK.md): a hosted 2× PNG, since mail clients do not
+ * render SVG. Empty alt: the name beside it carries the meaning.
+ */
+export function emailMarkHtml(): string {
+  return `<img src="${HOST}/brand/a-mark.png" width="14" height="12" alt="" style="display:inline-block;vertical-align:-1px;margin-right:7px;">`;
 }
 
 /** Plain-text equivalent for text/plain mime parts. */

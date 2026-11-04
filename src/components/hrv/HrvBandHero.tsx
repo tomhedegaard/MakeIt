@@ -1,5 +1,7 @@
 import ChartEmptyFrame from "@/components/ui/ChartEmptyFrame";
 import HrvBandRange from "@/components/hrv/HrvBandRange";
+import { ReadyMark } from "@/components/brand/MakeItMark";
+import { readyLevel } from "@/lib/hrv/band";
 import {
   buildBandRangeModel,
   type HrvBandView,
@@ -86,8 +88,8 @@ export default function HrvBandHero({
                 data-qualitative={view.qualitative}
                 className="inline-flex items-center gap-3 font-display text-title"
               >
-                {/* Same dot as today's mark on the band below. */}
-                <span aria-hidden className="size-2.5 rounded-full bg-domain" />
+                {/* The MakeIt A as the readiness meter (docs/BRAND_MARK.md). */}
+                <ReadyMark level={readyLevel(view.qualitative)} label="" className="h-[0.7em] text-domain" />
                 {copy.qualitative[view.qualitative]}
               </p>
             ) : (

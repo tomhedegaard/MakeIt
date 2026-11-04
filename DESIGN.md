@@ -215,6 +215,8 @@ En monokrom blæk-og-papir-base med én brand-accent (mos) og fire domænefarver
     - Nye mørke blokke på landingen kræver samme begrundelse og en linje her. Undtagelsen gælder ikke medlems-, coach-, login- eller onboardingflader.
 
 ### Named Rules
+**The Signature Rule.** MakeIt-A'et er afsenderens signatur i HQ, ikke et skilt: i x-højde foran "MakeIt // HQ", som "by MakeIt" under "HQ" på login, og i fuld størrelse kun i app-ikonet. Aldrig i hero, overskrifter, knapper, kort eller som mønster. Som data må det stå to steder: klar-måleren ved HRV-tallet og op-tegnet. Ordmærket MAKEIT bruges ikke i HQ. Regler og doser: `docs/BRAND_MARK.md`.
+
 **The Mos Is Not Paint Rule.** Mos er aldrig knapfyld og aldrig en stor flade. Primærknappen er blæk.
 
 **The Ten Percent Rule.** Domænefarve må dække højst ca. 10 % af en flade og kun som: kicker, data-blæk i grafer, aktiv nav-markør, dots, badge-tint (12 % flade + 32 % kant + farvet tekst) og dashboard-tilens 24 × 2 px streg (`.domain-stroke`). Aldrig i knapper, brødtekst, overskrifter, kortbaggrunde eller alerts.

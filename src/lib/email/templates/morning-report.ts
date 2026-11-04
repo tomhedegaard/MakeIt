@@ -20,8 +20,7 @@ import {
   dateLocaleTag,
   emailFooterHtml,
   emailTranslator,
-  type EmailT,
-} from "@/lib/email/footer";
+  type EmailT, emailMarkHtml } from "@/lib/email/footer";
 import type { MorningReportPayload, MorningUrgency } from "@/lib/coach/types";
 import type { Locale } from "@/i18n/config";
 
@@ -169,7 +168,7 @@ function renderHtml(args: {
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
         <tr><td style="padding-bottom:32px;">
           <span style="font-weight:500;letter-spacing:-0.02em;font-size:14px;color:#111111;">
-            MakeIt <span style="color:#696964;margin:0 6px;">//</span> HQ
+            ${emailMarkHtml()}MakeIt <span style="color:#696964;margin:0 6px;">//</span> HQ
           </span>
         </td></tr>
         <tr><td style="padding-bottom:8px;">

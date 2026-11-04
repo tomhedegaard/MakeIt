@@ -1,7 +1,7 @@
 /**
- * Generates the PWA/app icon suite from the MakeIt logo mark
- * (same paths as src/components/Logo.tsx, mark variant) on the
- * brand background #0A0A0B.
+ * Generates the PWA/app icon suite from the MakeIt A (same paths as
+ * src/components/brand/MakeItMark.tsx) on Nord ink. The icon is the
+ * one place the sender's mark stands at full size (docs/BRAND_MARK.md).
  *
  * Two layouts:
  *  - standard: mark at ~62% of the tile (any-purpose icons, apple-touch)
@@ -14,24 +14,32 @@
 import sharp from "sharp";
 import { mkdir } from "node:fs/promises";
 
-const BG = "#0A0A0B";
-const FG = "#F5F2EC";
+const BG = "#111111";
+const FG = "#FFFFFF";
 
-/** The 32×32 logo mark, scaled and centered on a 1024 canvas. */
+/** The A's two chevrons in the file's units; its box is x 54–533, y 45–444 (479 × 399). */
+const OUTER =
+  "M499.4 386.8L419.9 254.2 294.6 45h-1.9L145.3 291.3l-11.4 19.4L54.4 443.6h64.3l42.4-70.8 79.4-132.8 52.5-87.7h1.9l83.3 139 11.5 19.2 79.5 132.7h64.2z";
+const INNER = "M293.7 197.4L146.3 443.7h64.4l83.1-139h1.9l83.3 139h64.2L295.6 197.4z";
+const BOX = { x: 54, y: 45, w: 479, h: 399 };
+
+/** The A scaled to `markScale` of the tile's width and centered on a square canvas. */
+function markGroup(canvas, markScale) {
+  const s = (canvas * markScale) / BOX.w;
+  const ox = (canvas - BOX.w * s) / 2 - BOX.x * s;
+  const oy = (canvas - BOX.h * s) / 2 - BOX.y * s;
+  return `<g transform="translate(${ox} ${oy}) scale(${s})" fill="${FG}"><path d="${OUTER}"/><path d="${INNER}"/></g>`;
+}
+
 function iconSvg(markScale) {
-  const s = (1024 * markScale) / 32;
-  const offset = (1024 - 32 * s) / 2;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
   <rect width="1024" height="1024" fill="${BG}"/>
-  <g transform="translate(${offset} ${offset}) scale(${s})">
-    <path d="M8 22 V10 L13 18 L18 10 V22" stroke="${FG}" stroke-width="2.2" fill="none" stroke-linejoin="miter"/>
-    <rect x="21" y="14" width="3" height="8" fill="${FG}"/>
-  </g>
+  ${markGroup(1024, markScale)}
 </svg>`;
 }
 
-const standard = Buffer.from(iconSvg(0.62));
-const maskable = Buffer.from(iconSvg(0.47));
+const standard = Buffer.from(iconSvg(0.6));
+const maskable = Buffer.from(iconSvg(0.46));
 
 const OUT = new URL("../public/icons/", import.meta.url).pathname;
 await mkdir(OUT, { recursive: true });
@@ -59,16 +67,21 @@ const ASSETS = new URL("../assets/", import.meta.url).pathname;
 await mkdir(ASSETS, { recursive: true });
 
 function splashSvg() {
-  const s = (2732 * 0.14) / 32;
-  const offset = (2732 - 32 * s) / 2;
   return Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2732 2732">
   <rect width="2732" height="2732" fill="${BG}"/>
-  <g transform="translate(${offset} ${offset}) scale(${s})">
-    <path d="M8 22 V10 L13 18 L18 10 V22" stroke="${FG}" stroke-width="2.2" fill="none" stroke-linejoin="miter"/>
-    <rect x="21" y="14" width="3" height="8" fill="${FG}"/>
-  </g>
+  ${markGroup(2732, 0.1)}
 </svg>`);
 }
+
+/* The 2× PNG of the mark for mail headers, which cannot show SVG. */
+const BRAND = new URL("../public/brand/", import.meta.url).pathname;
+await mkdir(BRAND, { recursive: true });
+await sharp(
+  Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${BOX.x} ${BOX.y} ${BOX.w} ${BOX.h}" width="56" height="48"><g fill="${BG}"><path d="${OUTER}"/><path d="${INNER}"/></g></svg>`),
+)
+  .png()
+  .toFile(`${BRAND}a-mark.png`);
+console.log("✓ public/brand/a-mark.png (56×48)");
 
 const nativeJobs = [
   { src: standard, size: 1024, file: "icon-only.png" },

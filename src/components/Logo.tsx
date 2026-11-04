@@ -1,34 +1,48 @@
 import { cn } from "@/lib/utils";
 import { COMPANY } from "@/lib/company";
+import MakeItMark from "@/components/brand/MakeItMark";
 
+/**
+ * The product's name with the sender's signature (docs/BRAND_MARK.md).
+ *
+ *   full    "MakeIt // HQ" in the house face with the MakeIt A in
+ *           x-height in front: app and coach chrome, onboarding, legal
+ *           pages, the landing nav.
+ *   mark    the A alone, 24 px: where only a glyph fits.
+ *   sender  "HQ" large with "by MakeIt" under it: login and the
+ *           password pages, where HQ introduces itself and MakeIt
+ *           signs. HQ is the product; MakeIt is who makes it.
+ */
 export default function Logo({
   className,
   variant = "full",
 }: {
   className?: string;
-  variant?: "full" | "mark";
+  variant?: "full" | "mark" | "sender";
 }) {
   if (variant === "mark") {
+    return <MakeItMark className={cn("h-6", className)} />;
+  }
+  if (variant === "sender") {
     return (
-      <svg viewBox="0 0 32 32" className={cn("h-6 w-6", className)} aria-hidden>
-        <rect x="1" y="1" width="30" height="30" rx="0" stroke="currentColor" strokeWidth="1.5" fill="none" />
-        <path d="M8 22 V10 L13 18 L18 10 V22" stroke="currentColor" strokeWidth="2.2" fill="none" strokeLinejoin="miter" />
-        <rect x="21" y="14" width="3" height="8" fill="currentColor" />
-      </svg>
+      <div className={cn("flex flex-col gap-1.5 select-none", className)} aria-label={COMPANY.product}>
+        <span className="font-display text-title">HQ</span>
+        <span className="flex items-center gap-1.5 text-micro text-fg-dim">
+          by
+          <MakeItMark className="h-[0.7em]" />
+          <span className="font-medium text-fg">{COMPANY.name}</span>
+        </span>
+      </div>
     );
   }
   return (
     <div
-      className={cn("flex items-center gap-2.5 select-none", className)}
+      className={cn("flex items-center gap-2 select-none", className)}
       aria-label={COMPANY.product}
     >
-      <svg viewBox="0 0 32 32" className="h-5 w-5" aria-hidden>
-        <rect x="1" y="1" width="30" height="30" rx="0" stroke="currentColor" strokeWidth="1.5" fill="none" />
-        <path d="M8 22 V10 L13 18 L18 10 V22" stroke="currentColor" strokeWidth="2.2" fill="none" strokeLinejoin="miter" />
-        <rect x="21" y="14" width="3" height="8" fill="currentColor" />
-      </svg>
+      <MakeItMark className="h-[0.78em]" />
       <span className="font-display text-copy tracking-[-0.02em]">
-        MakeIt
+        {COMPANY.name}
         <span className="mx-1.5 text-fg-faint" aria-hidden>{"//"}</span>
         HQ
       </span>

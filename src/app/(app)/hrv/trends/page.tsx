@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import { ReadyMark } from "@/components/brand/MakeItMark";
+import { readyLevel } from "@/lib/hrv/band";
 import { getTranslations } from "next-intl/server";
 import Container from "@/components/Container";
 import PageHeader from "@/components/app/PageHeader";
@@ -159,11 +161,12 @@ function StateActive({
                 {latestMs}
                 <span className="text-fg-dim text-meta ml-1">{copy.unit}</span>
               </span>
-              {qualitative ? (
+              {qualitative && band.qualitative ? (
                 <span
                   data-qualitative={band.qualitative}
-                  className="font-display text-section"
+                  className="inline-flex items-center gap-2 font-display text-section"
                 >
+                  <ReadyMark level={readyLevel(band.qualitative)} label="" className="h-[0.7em] text-domain" />
                   {qualitative}
                 </span>
               ) : null}

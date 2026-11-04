@@ -337,7 +337,8 @@
       "slogan": "Made for those who lift.",
       "privacy": "Privacy",
       "terms": "Terms",
-      "sample": "Numbers and screens on this page are sample data."
+      "sample": "Numbers and screens on this page are sample data.",
+      "sender": "A product by MakeIt · {address}"
     },
     "screens": {
       "time": "05:31",

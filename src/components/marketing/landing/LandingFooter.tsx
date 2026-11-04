@@ -2,12 +2,14 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { COMPANY, SUPPORT_MAILTO } from "@/lib/company";
 import Rule from "./Rule";
+import MakeItMark from "@/components/brand/MakeItMark";
 
 const LINK = "border-b border-line-strong pb-0.5 text-xs no-underline hover:border-fg";
 
 /**
- * Footer (reference B `.foot`): wordmark, legal links, support email
- * and the sample-data disclaimer. No eyebrow — the third and last one
+ * Footer (reference B `.foot`): wordmark, legal links, support email,
+ * the sample-data disclaimer, and the sender line with the MakeIt A as
+ * the page's last words (docs/BRAND_MARK.md). No eyebrow — the third and last one
  * belongs to the access panel above (spec F2 rule 4).
  */
 export default function LandingFooter() {
@@ -39,6 +41,10 @@ export default function LandingFooter() {
           <span>{t("sample")}</span>
           <span>{t("slogan")}</span>
         </div>
+        <p className="mt-5 flex items-center gap-2 text-micro text-fg-dim">
+          <MakeItMark className="h-[0.8em]" />
+          <span>{t("sender", { address: COMPANY.legal.address })}</span>
+        </p>
       </div>
     </footer>
   );

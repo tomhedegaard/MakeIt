@@ -337,7 +337,8 @@
       "slogan": "Made for those who lift.",
       "privacy": "Privatliv",
       "terms": "Vilkår",
-      "sample": "Tal og skærme på siden er eksempeldata."
+      "sample": "Tal og skærme på siden er eksempeldata.",
+      "sender": "Et produkt fra MakeIt · {address}"
     },
     "screens": {
       "time": "05:31",

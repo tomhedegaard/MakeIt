@@ -42,7 +42,7 @@ export default async function NewPasswordPage({
         <div className="relative z-10 w-full max-w-md">
           <div className="mb-12">
             <Link href="/" className="inline-block text-fg">
-              <Logo />
+              <Logo variant="sender" />
             </Link>
           </div>
 
