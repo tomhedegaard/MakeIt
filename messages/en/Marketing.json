@@ -99,7 +99,8 @@
       "link": "See how HQ works",
       "plateOld": "150",
       "plateNew": "135",
-      "plateUnit": "kg"
+      "plateUnit": "kg",
+      "lifterAlt": "3D lifter under the bar, back squat"
     },
     "demo": {
       "todayLabel": "Today",
@@ -224,7 +225,13 @@
         "next": "Next screen",
         "listLabel": "Fifteen app screens",
         "pinSub": "One day in the app, from the morning numbers to the crew at night.",
-        "parts": ["The morning", "The session", "The programme", "The food", "Head and crew"]
+        "parts": [
+          "The morning",
+          "The session",
+          "The programme",
+          "The food",
+          "Head and crew"
+        ]
       }
     },
     "munk": {

@@ -99,7 +99,8 @@
       "link": "Se hvordan HQ virker",
       "plateOld": "150",
       "plateNew": "135",
-      "plateUnit": "kg"
+      "plateUnit": "kg",
+      "lifterAlt": "Løfter i 3D under stangen, back squat"
     },
     "demo": {
       "todayLabel": "I dag",
@@ -224,7 +225,13 @@
         "next": "Næste skærm",
         "listLabel": "Femten app-skærme",
         "pinSub": "Én dag i appen, fra morgenens tal til crewet om aftenen.",
-        "parts": ["Morgenen", "Passet", "Programmet", "Maden", "Hovedet og crewet"]
+        "parts": [
+          "Morgenen",
+          "Passet",
+          "Programmet",
+          "Maden",
+          "Hovedet og crewet"
+        ]
       }
     },
     "munk": {

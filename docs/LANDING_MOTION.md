@@ -22,11 +22,13 @@ next one without pulling in an animation library. Companion to
 | Block | Where | How |
 | --- | --- | --- |
 | Reveal in view | `CrewAlone` (`.spot-card`) | `animation-timeline: view()` with a staggered `--i` |
-| Draw once in view | `NightCurve` + `NightCurveReveal` | IntersectionObserver sets `data-in-view`, CSS animates `stroke-dashoffset` |
+| The night as an instrument | `NightStage` (`[data-night]`) | CSS only, the page's peak (docs/LANDING_BRIEF.md). The block's view timeline `--night` drives a registered `<integer>` (`--night-min`, minutes since 23:40) that two CSS counters with `round()` and `mod()` print as the clock, draws the curve via `stroke-dashoffset` (`pathLength=1`), and lands each reading and its dot at `--at`, its fraction of the night. Ranges are the variables `--nr`/`--n0`/`--n1`: `contain` over the pin on wide, tall screens, `cover` while the block passes elsewhere. Without view timelines the clock reads 23:40; under reduced motion it is 06:45 |
+| Scroll-scrubbed image sequence, pinned | `LandingHero` + `ScrollSequence pinned fit="contain"` | Progress comes from the closest `[data-pin]` block (`pinProgress`) when it is taller than the viewport, else from the sequence's own travel. Frames are alpha WebP keyed off the MoveKit demo (`public/landing/hero/`), so the lifter stands on the page itself |
 | Sticky device with steps | `MotorStory` + `MotorStoryRig` | IntersectionObserver picks the step nearest the viewport centre, `data-active` drives Tailwind `group-data` variants |
 | Nat til morgen | `MotorStory` (`data-dawn`) | The decision line's view timeline animates the registered number `--dawn`, every token in the section is `color-mix`ed from it |
 | Scroll-scrubbed image sequence | `ScrollSequence` | Poster `<img>` at rest, canvas draws the frame that matches scroll progress once frames load |
 | Hero load sequence | `LandingHero` (`data-hero-rise`) | CSS keyframes with a `--rise` delay per element; the H1 is unmasked as one line because its test requires a single text node. Each door is two planes: the field rises first, the phone (`data-hero-rise="phone"`) rises further and lands after it |
+| Hero pin, three planes | `LandingHero` (`[data-hero][data-pin]`, `data-hero-plane`) | On wide, tall screens with motion the section grows by 78 svh and the stage (copy and lifter) sticks under the nav. The block's view timeline drifts the copy up and fades it (`hero-copy`), the lifter squats one rep over the pin, and the doors, in flow after the stage, scroll in over its feet at the page's pace. `HeroPointer` writes `--px`/`--py` for a fine pointer; CSS leans the lifter toward it and the copy away via `translate`, so the scroll keyframes on `transform` still run |
 | Pinned horizontal gallery | `ChapterTrain` + `GalleryRig` | The island sets `data-gallery="on"` and `--gallery-len`; a named view timeline on the block slides the track while its stage is sticky. Swipe row below 1024 px |
 | Stacked cards | `CrewPlates` via `TierLadder`'s `after` slot | Sticky cards with a 16 px step; the card behind scales to 0.96 on its sibling's view timeline (`timeline-scope`) |
 | Magnetic buttons | `Magnetic` around the hero, tier and waitlist CTAs | `pointermove` writes `--mx` and `--my`, CSS moves the span only for a fine pointer with motion allowed |
@@ -47,16 +49,16 @@ next one without pulling in an animation library. Companion to
 ## Nat til morgen
 
 `[data-dawn]` on the engine section. `globals.css` registers `--dawn`
-with `@property` (initial 1, light) and animates it 0 to 1 on the
-decision line's own view timeline (`--dawn-at`, shared up through
-`timeline-scope`), over the first 160 px of it entering from below. A
-range in percent of the section put the mid-grey crossing on the
-decision itself on a phone. The section's tokens (`--bg`,
-`--fg`, lines, signal, domain colours) are mixed between the Nord nat and
-Nord values, so phones, rules and copy follow without classes.
+with `@property` (initial 1, light) and animates it 0 to 1 on the night
+stage's view timeline (`--night`, shared up through `timeline-scope`)
+over `exit 30%` to `exit 80%`: as the stage scrolls away, the heading
+that follows brightens from the night it was read in to daylight. The
+stage itself is a local nat block and stays dark. The section's tokens
+(`--bg`, `--fg`, lines, signal, domain colours) are mixed between the
+Nord nat and Nord values, so phones, rules and copy follow without classes.
 
-Tuning: move the range to shift where the morning breaks. The first
-report line (sleep) should still be in the dark, the decision in daylight.
+Tuning: move the range to shift where the morning breaks. The heading
+should enter in the dark and be read in daylight.
 
 ## Scroll-scrubbed image sequence (asset A1)
 
@@ -98,7 +100,7 @@ and let the sticky rig carry the story there.
 1. Write the resting state first and check it reads without JS.
 2. Try `animation-timeline: view()` inside `@supports` and
    `prefers-reduced-motion: no-preference`.
-3. If JS is needed, copy the shape of `NightCurveReveal`: observe, set a
+3. If JS is needed, copy the shape of `InViewOnce`: observe, set a
    `data-*` attribute, let CSS animate.
 4. Add the reduced variant in the `prefers-reduced-motion: reduce` block
    in `globals.css` if the effect has an animated resting state.

@@ -133,9 +133,12 @@ describe("Nord structure (spec §3, §7)", () => {
     expect(css).toMatch(/@media \(pointer: coarse\), \(max-width: 40rem\)/);
   });
 
-  it("nattens kurve har et statisk slutbillede ved reduceret bevægelse", () => {
+  it("natten står færdig ved reduceret bevægelse: uret på 06:45, kurven kun tegnet under en view-timeline", () => {
     expect(css).toMatch(
-      /@media \(prefers-reduced-motion: reduce\)\s*\{[^@]*?\.night-curve__path\s*\{[^}]*stroke-dashoffset:\s*0/,
+      /@media \(prefers-reduced-motion: reduce\)\s*\{[^@]*?\[data-night\]\s*\{[^}]*--night-min:\s*425/,
     );
+    // The draw (dashoffset from 1) only exists inside the motion block, so
+    // the resting curve is complete everywhere else.
+    expect(css).not.toMatch(/\.night-path\s*\{[^}]*stroke-dashoffset:\s*1/);
   });
 });

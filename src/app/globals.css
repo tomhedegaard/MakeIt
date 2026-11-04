@@ -960,9 +960,9 @@ nav.tabbar {
   to   { transform: scale(0.96); }
 }
 
-/* Nat til morgen (MotorStory): the engine section opens in the dark the
- * night is read in and brightens to Nord as the visitor scrolls down to
- * the decision. A view timeline drives one registered number, --dawn,
+/* Nat til morgen (MotorStory): after the night stage the engine section
+ * is still in the dark the night was read in and brightens to Nord as
+ * the stage scrolls away. A view timeline drives one registered number, --dawn,
  * and every token the section's children use is mixed from it, so the
  * phones, lines and copy all follow without a class of their own. No JS
  * and no scroll listener. Only where view timelines exist and motion is
@@ -973,7 +973,7 @@ nav.tabbar {
   inherits: true;
   initial-value: 1;
 }
-[data-theme="nord"] [data-dawn] article[data-step="decision"] { view-timeline-name: --dawn-at; }
+[data-theme="nord"] [data-night] { view-timeline-name: --night; }
 @keyframes landing-dawn {
   from { --dawn: 0; }
   to   { --dawn: 1; }
@@ -981,14 +981,15 @@ nav.tabbar {
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     [data-theme="nord"] [data-dawn] {
-      /* Anchored to the decision line, over a fixed 160 px as it enters
-       * from below: morning has broken before the decision is read, at
-       * every screen size. (A share of the section put the mid-grey
-       * crossing right on the decision on a phone.) */
-      timeline-scope: --dawn-at;
+      /* Anchored to the night stage (NightStage, `[data-night]`): the
+       * part of the section after it starts in the dark the night was
+       * read in and brightens as the stage scrolls away, so morning
+       * breaks on the heading that follows. The stage itself is a
+       * local nat block and stays dark. */
+      timeline-scope: --night;
       animation: landing-dawn linear both;
-      animation-timeline: --dawn-at;
-      animation-range: cover 0% cover 160px;
+      animation-timeline: --night;
+      animation-range: exit 30% exit 80%;
       --dawn-mix: calc(var(--dawn) * 100%);
       /* Ink flips in the middle of the ground's change, so text never
        * rests as grey on grey. */
@@ -1027,26 +1028,10 @@ nav.tabbar {
   [data-theme="nord"] [data-motor-story] { --rig-s: 0.76; }
 }
 
-/* Night curve: hidden until NightCurveReveal (a small IntersectionObserver
- * island, same shape as the motor rig's) marks the figure in view, then
- * draws itself once via stroke-dashoffset. */
-[data-theme="nord"] .night-curve__path {
-  stroke-dasharray: 1400;
-  stroke-dashoffset: 1400;
-  transition: stroke-dashoffset 1.6s ease-out;
-}
-[data-theme="nord"] [data-night-curve][data-in-view="true"] .night-curve__path {
-  stroke-dashoffset: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
   [data-theme="nord"] .strike-signal::after {
     animation: none;
     transform: rotate(-8deg);
-  }
-  [data-theme="nord"] .night-curve__path {
-    stroke-dashoffset: 0;
-    transition: none;
   }
   [data-theme="nord"] [data-demo-card][data-motion="run"] .landing-topset {
     animation: none;
@@ -1341,4 +1326,138 @@ nav.tabbar {
   15%  { opacity: 1; }
   85%  { opacity: 1; }
   100% { opacity: 0; transform: var(--sync-to); }
+}
+
+/* Hero, under the bar (LandingHero, docs/LANDING_BRIEF.md). Three planes:
+ * copy at the back, the lifter in the middle (ScrollSequence scrubs one
+ * back-squat rep over the pin), the doors in front. On wide, tall
+ * screens with motion and view timelines the section grows by 78 svh,
+ * the stage (copy and lifter) sticks under the nav, the block's own view
+ * timeline drifts the copy up, and the doors, in flow after the stage,
+ * scroll in over the lifter's feet. Everywhere else the plain layout stands. */
+@supports (animation-timeline: view()) {
+  @media (min-width: 1024px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+    [data-theme="nord"] [data-hero] {
+      height: calc(100svh + 78svh);
+      view-timeline-name: --hero;
+    }
+    [data-theme="nord"] [data-hero] [data-hero-stage] {
+      position: sticky;
+      top: 68px; /* the sticky nav */
+      height: calc(100svh - 68px);
+    }
+    [data-theme="nord"] [data-hero-plane="copy"] {
+      animation: hero-copy linear both;
+      animation-timeline: --hero;
+      animation-range: contain 0% contain 100%;
+    }
+    /* The doors sit after the stage in the same block: a beat of only
+     * the lifter, then they scroll in over its feet at the page's pace. */
+    [data-theme="nord"] [data-hero-plane="doors"] {
+      margin-top: 14svh;
+    }
+  }
+}
+@keyframes hero-copy {
+  from { transform: none; opacity: 1; }
+  40%  { opacity: 1; }
+  to   { transform: translateY(-9vh); opacity: 0.22; }
+}
+/* The hero's one embodiment: HeroPointer writes --px/--py on the section
+ * for a fine pointer; the lifter leans a few pixels toward the mouse and
+ * the copy the other way. `translate`, so the scroll keyframes above
+ * (on transform) still run underneath. */
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  [data-theme="nord"] [data-hero-plane="lifter"] {
+    translate: calc(var(--px, 0) * 10px) calc(var(--py, 0) * 6px);
+    transition: translate 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  [data-theme="nord"] [data-hero-plane="copy"] {
+    translate: calc(var(--px, 0) * -4px) calc(var(--py, 0) * -2px);
+    transition: translate 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+}
+
+/* The night as an instrument (NightStage, the page's peak). The block's
+ * own view timeline (--night) drives everything: a registered integer
+ * is the minutes since 23:40 and two CSS counters print it as a clock;
+ * the curve draws via stroke-dashoffset; the three readings and their
+ * dots land at their place on the curve (--at, a fraction of the night).
+ * The ranges are variables so the same keyframes run over the pin on
+ * wide, tall screens (contain) and over the block's pass elsewhere
+ * (cover). Without view timelines the clock reads 23:40 and the curve
+ * stands complete; with reduced motion the night is over: 06:45. */
+@property --night-min {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+[data-theme="nord"] [data-night] {
+  --night-min: 0;
+  --nr: cover;
+  --n0: 26%; /* the block passes unpinned: the clock runs while it is mostly in view */
+  --n1: 74%;
+  --ns: calc(var(--n1) - var(--n0));
+}
+[data-theme="nord"] .night-clock::before {
+  counter-reset:
+    nh calc(mod(23 + round(down, (40 + var(--night-min)) / 60, 1), 24))
+    nm calc(mod(40 + var(--night-min), 60));
+  content: counter(nh, decimal-leading-zero) ":" counter(nm, decimal-leading-zero);
+}
+@keyframes night-clock {
+  from { --night-min: 0; }
+  to   { --night-min: 425; }
+}
+@keyframes night-draw {
+  from { stroke-dashoffset: 1; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes night-land {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes night-dot {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-theme="nord"] [data-night] {
+      animation: night-clock linear both;
+      animation-timeline: --night;
+      animation-range: var(--nr) var(--n0) var(--nr) var(--n1);
+    }
+    [data-theme="nord"] .night-path {
+      stroke-dasharray: 1;
+      animation: night-draw linear both;
+      animation-timeline: --night;
+      animation-range: var(--nr) var(--n0) var(--nr) var(--n1);
+    }
+    [data-theme="nord"] .night-reading,
+    [data-theme="nord"] .night-dot {
+      animation: night-land linear both;
+      animation-timeline: --night;
+      animation-range:
+        var(--nr) calc(var(--n0) + var(--ns) * var(--at, 0))
+        var(--nr) calc(var(--n0) + var(--ns) * var(--at, 0) + 7%);
+    }
+    [data-theme="nord"] .night-dot { animation-name: night-dot; }
+  }
+  @media (min-width: 1024px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+    [data-theme="nord"] [data-night] {
+      --nr: contain;
+      --n0: 0%;
+      --n1: 86%;
+      height: calc(100svh + 220svh);
+    }
+    [data-theme="nord"] .night-stage {
+      position: sticky;
+      top: 68px;
+      height: calc(100svh - 68px);
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="nord"] [data-night] { --night-min: 425; }
 }

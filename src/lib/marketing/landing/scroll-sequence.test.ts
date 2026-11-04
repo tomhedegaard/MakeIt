@@ -63,3 +63,20 @@ describe("loadOrder", () => {
     expect(new Set(order).size).toBe(17);
   });
 });
+
+describe("pinProgress", () => {
+  it("runs 0 to 1 over the block's travel past the viewport", async () => {
+    const { pinProgress } = await import("./scroll-sequence");
+    expect(pinProgress(0, 1800, 900)).toBe(0);
+    expect(pinProgress(-450, 1800, 900)).toBe(0.5);
+    expect(pinProgress(-900, 1800, 900)).toBe(1);
+    expect(pinProgress(200, 1800, 900)).toBe(0);
+    expect(pinProgress(-2000, 1800, 900)).toBe(1);
+  });
+
+  it("reads 0 for a block with no travel", async () => {
+    const { pinProgress } = await import("./scroll-sequence");
+    expect(pinProgress(-100, 900, 900)).toBe(0);
+    expect(pinProgress(-100, 600, 900)).toBe(0);
+  });
+});

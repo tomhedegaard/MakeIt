@@ -51,3 +51,15 @@ export function loadOrder(frameCount: number, stride = 8): number[] {
   for (let i = 0; i < frameCount; i += 1) (i % stride === 0 ? first : rest).push(i);
   return [...first, ...rest];
 }
+
+/**
+ * Progress of a pinned block: 0 while its top is at the viewport's top
+ * edge, 1 when the sticky stage inside it has run out of block to stick
+ * to (the block's bottom meets the viewport's bottom). A block no taller
+ * than the viewport has no pinned travel and reads 0.
+ */
+export function pinProgress(top: number, height: number, viewportHeight: number): number {
+  const travel = height - viewportHeight;
+  if (travel <= 0) return 0;
+  return Math.min(1, Math.max(0, -top / travel));
+}
