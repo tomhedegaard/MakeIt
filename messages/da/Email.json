@@ -31,16 +31,16 @@
       "newMembers": "Nye medlemmer: {count}",
       "topPostsHeader": "Top posts:",
       "open": "Åbn: {url}",
-      "signoff": "— MakeIt // HQ"
+      "signoff": "— HQ by MakeIt"
     }
   },
   "welcome": {
     "subject": "Velkommen til crewet, @{handle}",
-    "title": "Velkommen til crewet — MakeIt // HQ",
+    "title": "Velkommen til crewet — HQ by MakeIt",
     "eyebrow": "Velkommen til crewet",
     "greeting": "Hej @{handle}.",
     "youAreIn": "Du er inde.",
-    "intro": "Tak fordi du valgte at være en del af MakeIt // HQ. Mit navn er <strong>Mikael Munk</strong> — head coach i crewet, og jeg gennemgår alle dine form-checks personligt. Skriv direkte til mig på denne mail (eller @Munk i feedet) hvis du har spørgsmål.",
+    "intro": "Tak fordi du valgte at være en del af HQ by MakeIt. Mit navn er <strong>Mikael Munk</strong> — head coach i crewet, og jeg gennemgår alle dine form-checks personligt. Skriv direkte til mig på denne mail (eller @Munk i feedet) hvis du har spørgsmål.",
     "programLabel": "Dit program",
     "firstSession": "Første session: {label}",
     "getStarted": "Sådan kommer du i gang:",
@@ -70,7 +70,7 @@
   },
   "mention": {
     "subject": "@{author} nævnte dig i en kommentar",
-    "title": "Du blev nævnt — MakeIt // HQ",
+    "title": "Du blev nævnt — HQ by MakeIt",
     "eyebrow": "Du blev nævnt",
     "headline": "@{author} nævnte dig i en kommentar.",
     "greeting": "Hej @{recipient} — her er hvad de skrev:",
@@ -80,30 +80,30 @@
       "postHeader": "Posten:\n{context}",
       "commentHeader": "Kommentar:\n{content}",
       "open": "Åbn: {url}",
-      "signoff": "— MakeIt // HQ"
+      "signoff": "— HQ by MakeIt"
     }
   },
   "coachReview": {
     "subject": "Mikael Munk har besvaret din {exercise}",
     "fallbackExercise": "form-check",
-    "title": "Form-check besvaret — MakeIt // HQ",
+    "title": "Form-check besvaret — HQ by MakeIt",
     "eyebrow": "Form-check besvaret",
     "headline": "Mikael Munk har gennemgået din {exercise}.",
     "greeting": "Hej @{handle} — her er hans note:",
     "coachByline": "Mikael Munk · @Munk",
     "aiAssessment": "AI-vurdering · {score}/100",
-    "cta": "Åbn på MakeIt // HQ →",
+    "cta": "Åbn i HQ →",
     "text": {
       "headline": "Mikael Munk har gennemgået din {exercise}.",
       "greeting": "Hej @{handle} — her er hans note:",
       "aiAssessment": "AI-vurdering · {score}/100",
       "open": "Åbn: {url}",
-      "signoff": "— MakeIt // HQ"
+      "signoff": "— HQ by MakeIt"
     }
   },
   "coachAdherenceDigest": {
     "subject": "Crew adherence · {range}",
-    "title": "Crew adherence — MakeIt // HQ",
+    "title": "Crew adherence — HQ by MakeIt",
     "eyebrow": "Crew adherence · {range}",
     "greeting": "Hej @{handle}.",
     "emptyCrew": "Crewet er tomt — ingen onboarded medlemmer endnu.",
@@ -124,12 +124,12 @@
       "atRiskHeader": "TJEK IND MED DISSE:",
       "strongHeader": "ANERKEND DISSE STÆRKE UGER:",
       "open": "Åbn: {url}",
-      "signoff": "— MakeIt // HQ"
+      "signoff": "— HQ by MakeIt"
     }
   },
   "coachMorningReport": {
     "subject": "Morgenrapport · {date}",
-    "title": "Morgenrapport — MakeIt // HQ",
+    "title": "Morgenrapport — HQ by MakeIt",
     "eyebrow": "Morgenrapport · {date}",
     "greeting": "Hej @{handle}.",
     "urgentHeader": "Kræver dig nu",
@@ -157,7 +157,7 @@
       "yesterdayHeader": "I GÅR:",
       "yesterdayLine": "Sessioner: {completed} gennemført, {skipped} sprunget · PR'er: {prs} · Form-checks: {uploads} · Tilpasninger: {accepted}/{modifiers} accepteret",
       "open": "Åbn: {url}",
-      "signoff": "— MakeIt // HQ"
+      "signoff": "— HQ by MakeIt"
     }
   }
 }

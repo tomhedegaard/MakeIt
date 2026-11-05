@@ -20,7 +20,7 @@ const MOCK_SETTINGS: MemberSettings = {
   handle: "Munk",
   displayName: "Mikael Munk",
   email: "munk@nowmakeit.eu",
-  bio: "Head coach for MakeIt // HQ. 1.000+ deadlifts, hadet morgen-cardio, elsker en rolig pause-bench.",
+  bio: "Head coach for HQ by MakeIt. 1.000+ deadlifts, hadet morgen-cardio, elsker en rolig pause-bench.",
   tier: "Legend",
   joinedAt: "2024-09-12",
   notifFormCheckReview: true,

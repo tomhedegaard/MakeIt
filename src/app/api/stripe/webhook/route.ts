@@ -17,7 +17,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Stripe → MakeIt // HQ subscription bridge.
+ * Stripe → HQ by MakeIt subscription bridge.
  * Listens for checkout completion and subscription lifecycle events,
  * upserts the matching row in public.subscriptions.
  *

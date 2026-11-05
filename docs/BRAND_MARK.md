@@ -35,9 +35,16 @@ styrke og IT i 60 %, som i filen. Ingen mos i mærket.
   tilstande, som punkttegn eller mønster.
 - Ung-mails signerer "Ung by MAKEIT" efter samme mønster.
 
-Navnet i løbende tekst, fanetitel, vilkår og App Store er stadig
-"MakeIt // HQ" (`COMPANY.product`). Om det skal følge mærket er en
-navnebeslutning, der ikke er taget.
+## Navnet i tekst
+
+Navnet udadtil er "HQ by MakeIt" (`COMPANY.product`, besluttet
+2026-11-05): fanetitel, vilkår, privatliv, mails, offline-side og
+dataeksport. I tekst skrives MakeIt med stort M og I, aldrig i versaler;
+versalerne hører til ordmærket. I løbende tekst inde i appen er det bare
+"HQ". "MakeIt // HQ" bruges ikke mere.
+
+Under ikonet på hjemmeskærmen står stadig "MakeIt" (`COMPANY.name`,
+Capacitor `appName`). Det og navnet i App Store er ikke besluttet.
 
 ## Tegnet som data
 

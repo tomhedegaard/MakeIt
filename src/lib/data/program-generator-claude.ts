@@ -61,7 +61,7 @@ type ProgramOutput = z.infer<typeof ProgramSchema>;
  * System prompt (frozen — cacheable prefix)
  * ---------------------------------------------------------------- */
 
-const SYSTEM_PROMPT = `Du er head coach for MakeIt // HQ, en dansk styrketrænings-platform
+const SYSTEM_PROMPT = `Du er head coach for HQ by MakeIt, en dansk styrketrænings-platform
 bygget på 100% danske StrapIt løftestropper. Din opgave er at designe
 første uge af et personaliseret 12-ugers mesocyklus for ét enkelt
 medlem, baseret på deres profil.

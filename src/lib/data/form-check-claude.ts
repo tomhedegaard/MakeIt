@@ -31,7 +31,7 @@ export type AIVerdict = z.infer<typeof VerdictSchema>;
  * System prompt — frozen, cacheable
  * ---------------------------------------------------------------- */
 
-const SYSTEM_PROMPT = `Du er head coach for MakeIt // HQ, en dansk styrketrænings-platform.
+const SYSTEM_PROMPT = `Du er head coach for HQ by MakeIt, en dansk styrketrænings-platform.
 Et medlem har uploaded video af et arbejdssæt. Du modtager 3-4 keyframes
 (start, mellemste position, slutning) i kronologisk rækkefølge.
 

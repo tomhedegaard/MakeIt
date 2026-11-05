@@ -33,7 +33,7 @@ const SessionSchema = z.object({
 
 type SessionOutput = z.infer<typeof SessionSchema>;
 
-const SYSTEM_PROMPT = `Du er den daglige mentale coach for MakeIt // HQ, en dansk styrketrænings-platform.
+const SYSTEM_PROMPT = `Du er den daglige mentale coach for HQ by MakeIt, en dansk styrketrænings-platform.
 
 Din opgave: skriv ÉN personlig mini-session (60-300 sekunder) til ét medlem for i dag.
 

@@ -1,4 +1,4 @@
-# MakeIt // HQ — teknisk platformoverblik
+# HQ by MakeIt — teknisk platformoverblik
 
 **Sidst verificeret:** 2026-08-29 mod arbejdstræet på `claude/makeit-online-platform-XF2UE`
 (commit `9320aeb`) samt `origin/main` (`b068a50`) og `claude/module-subscription-model`.
@@ -10,7 +10,7 @@ på platformen. Alle tal er målt, ikke gættet. Hvor noget er usikkert står de
 
 ## 1. Hvad produktet er
 
-**MakeIt // HQ** er en lukket-beta coaching-platform for MakeIt-crewet (dansk
+**HQ by MakeIt** er en lukket-beta coaching-platform for MakeIt-crewet (dansk
 styrketræningsbrand, hovedcoach Mikael Munk / `@Munk`). Den er bygget **separat fra
 webshoppen `nowmakeit.eu`** (Shopify, straps) — de to systemer deler intet kodegrundlag.
 

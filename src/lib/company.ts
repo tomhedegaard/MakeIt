@@ -6,7 +6,7 @@
  * file → redeploy → the change propagates everywhere on the next
  * build.
  *
- * If you find yourself typing "MakeIt // HQ" or "munk@nowmakeit.eu"
+ * If you find yourself typing "HQ by MakeIt" or "munk@nowmakeit.eu"
  * directly in a component, stop — add the missing field here and
  * import COMPANY instead. The compiler can then verify every call
  * site if a field is renamed.
@@ -17,7 +17,7 @@ export const COMPANY = {
   name: "MakeIt",
 
   /** Full product line used in page titles + chrome. */
-  product: "MakeIt // HQ",
+  product: "HQ by MakeIt",
 
   /** One-line description shown in footer + OG meta. */
   tagline:

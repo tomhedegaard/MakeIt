@@ -1,4 +1,4 @@
-# MakeIt // HQ — bring-up guide
+# HQ by MakeIt — bring-up guide
 
 Komplet trin-for-trin opsætning af et nyt MakeIt-miljø. Følg
 rækkefølgen — hver fase låser den næste op.
