@@ -35,12 +35,12 @@ export function emailFooterHtml(): string {
 }
 
 /**
- * The MakeIt A in front of the product name in mail headers
- * (docs/BRAND_MARK.md): a hosted 2× PNG, since mail clients do not
- * render SVG. Empty alt: the name beside it carries the meaning.
+ * The mail header's name (docs/BRAND_MARK.md): the product, then
+ * "by" and the MakeIt wordmark as a hosted 2× PNG, since mail clients
+ * do not render SVG. With images blocked the alt reads "by MakeIt".
  */
-export function emailMarkHtml(): string {
-  return `<img src="${HOST}/brand/a-mark.png" width="14" height="12" alt="" style="display:inline-block;vertical-align:-1px;margin-right:7px;">`;
+export function emailBrandHtml(product = "HQ"): string {
+  return `${product}<span style="font-weight:400;font-size:11px;color:#696964;margin:0 5px 0 7px;">by</span><img src="${HOST}/brand/makeit-wordmark.png" width="48" height="10" alt="${COMPANY.name}" style="display:inline-block;border:0;">`;
 }
 
 /** Plain-text equivalent for text/plain mime parts. */

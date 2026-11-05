@@ -1,17 +1,16 @@
 import { cn } from "@/lib/utils";
-import { COMPANY } from "@/lib/company";
-import MakeItMark from "@/components/brand/MakeItMark";
+import MakeItMark, { MakeItWordmark } from "@/components/brand/MakeItMark";
 
 /**
- * The product's name with the sender's signature (docs/BRAND_MARK.md).
+ * The product's name with its sender (docs/BRAND_MARK.md). HQ is the
+ * product; MakeIt is who makes it, so the name is "HQ" and MakeIt signs
+ * it with the wordmark: "HQ by MAKEIT".
  *
- *   full    "MakeIt // HQ" in the house face with the MakeIt A in
- *           x-height in front: app and coach chrome, onboarding, legal
+ *   full    one line, for bars: app and coach chrome, onboarding, legal
  *           pages, the landing nav.
+ *   sender  stacked, "HQ" large with the by-line under it: login and the
+ *           password pages, where HQ introduces itself.
  *   mark    the A alone, 24 px: where only a glyph fits.
- *   sender  "HQ" large with "by MakeIt" under it: login and the
- *           password pages, where HQ introduces itself and MakeIt
- *           signs. HQ is the product; MakeIt is who makes it.
  */
 export default function Logo({
   className,
@@ -23,28 +22,13 @@ export default function Logo({
   if (variant === "mark") {
     return <MakeItMark className={cn("h-6", className)} />;
   }
-  if (variant === "sender") {
-    return (
-      <div className={cn("flex flex-col gap-1.5 select-none", className)} aria-label={COMPANY.product}>
-        <span className="font-display text-title">HQ</span>
-        <span className="flex items-center gap-1.5 text-micro text-fg-dim">
-          by
-          <MakeItMark className="h-[0.7em]" />
-          <span className="font-medium text-fg">{COMPANY.name}</span>
-        </span>
-      </div>
-    );
-  }
+  const stacked = variant === "sender";
   return (
-    <div
-      className={cn("flex items-center gap-2 select-none", className)}
-      aria-label={COMPANY.product}
-    >
-      <MakeItMark className="h-[0.78em]" />
-      <span className="font-display text-copy tracking-[-0.02em]">
-        {COMPANY.name}
-        <span className="mx-1.5 text-fg-faint" aria-hidden>{"//"}</span>
-        HQ
+    <div className={cn("flex select-none", stacked ? "flex-col gap-1.5" : "items-baseline gap-2", className)}>
+      <span className={cn("font-display", stacked ? "text-title" : "text-section")}>HQ</span>
+      <span className="flex items-baseline gap-1.5 text-micro text-fg-dim">
+        by
+        <MakeItWordmark className="text-fg" />
       </span>
     </div>
   );

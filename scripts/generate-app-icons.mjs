@@ -73,15 +73,23 @@ function splashSvg() {
 </svg>`);
 }
 
-/* The 2× PNG of the mark for mail headers, which cannot show SVG. */
+/*
+ * The 2× PNG of the MAKEIT wordmark for mail headers, which cannot show
+ * SVG: "HQ by MAKEIT" (docs/BRAND_MARK.md). Same paths as MakeItWordmark
+ * in components/brand/MakeItMark.tsx; MAKE in ink, IT in the dim grey.
+ */
+const WORD_MAKE =
+  "M114.7 0.1L115.1 120.1L91.5 120.2L91.4 69.2L57.8 118.3L57.6 118.3L23.7 69.4L23.9 120.4L0.3 120.5L0 0.4L1.3 0.4L57.6 77.7L113.4 0.1ZM258.2 102.8L258.2 102.8L234.2 62.9L234.1 62.9L196.2 0L195.6 0L151.4 74.3L151.5 74.3L148 80.2L148 80.2L124.1 120.3L143.5 120.2L156.2 98.9L156.2 98.9L180.1 58.8L180 58.8L195.8 32.3L196.3 32.3L221.5 74.1L221.5 74.1L225 79.9L225 79.9L249.1 119.9L268.4 119.8ZM196.1 45.9L151.9 120.3L171.2 120.2L196.2 78.3L196.8 78.3L222 120.1L241.3 120L196.6 45.9ZM334 118.6L298.3 67.4L298.4 118.7L275 118.7L274.6 1.6L298.1 1.6L298.3 52.2L331 1.5L358.2 1.4L320.8 58.8L362.7 118.5ZM397.1 24.5L397.2 47.4L437.6 47.2L437.7 70.7L397.3 70.8L397.3 95L444.4 94.9L444.5 118.3L373.9 118.5L373.5 1.4L444.2 1.2L444.2 24.3Z";
+const WORD_IT =
+  "M461.4 1.1L485 1.1L485.3 118.2L461.8 118.2ZM579.5 24.1L550.7 24.2L551 118L527.4 118.1L527.1 24.3L498.3 24.3L498.2 1L579.4 0.8Z";
 const BRAND = new URL("../public/brand/", import.meta.url).pathname;
 await mkdir(BRAND, { recursive: true });
 await sharp(
-  Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${BOX.x} ${BOX.y} ${BOX.w} ${BOX.h}" width="56" height="48"><g fill="${BG}"><path d="${OUTER}"/><path d="${INNER}"/></g></svg>`),
+  Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 121" width="96" height="20"><path fill="${BG}" d="${WORD_MAKE}"/><path fill="#696964" d="${WORD_IT}"/></svg>`),
 )
   .png()
-  .toFile(`${BRAND}a-mark.png`);
-console.log("✓ public/brand/a-mark.png (56×48)");
+  .toFile(`${BRAND}makeit-wordmark.png`);
+console.log("✓ public/brand/makeit-wordmark.png (96×20)");
 
 const nativeJobs = [
   { src: standard, size: 1024, file: "icon-only.png" },

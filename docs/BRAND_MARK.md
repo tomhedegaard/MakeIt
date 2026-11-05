@@ -1,32 +1,47 @@
-# Mærket: MakeIt i HQ
+# Mærket: HQ by MAKEIT
 
 HQ er produktet. MakeIt er afsenderen. Som når et lille mærke laver en
-collab med et stort: det lille navn står under det store, og det store
-mærkes tegn går igen uden at råbe. Beslutning 2026-11-04 efter to
-canvas-runder (A: logo som skilt, forkastet; B: signatur, valgt).
+collab med et stort: produktets navn står først, og det store mærke
+signerer med sit eget logo. Beslutning 2026-11-05 efter tre runder
+(A: logo som skilt, forkastet. B: A'et som signatur foran
+"MakeIt // HQ", bygget og afløst. C: "HQ by MAKEIT" overalt, valgt).
 
-## Tegnet
+## Mærket
 
-A'et fra MAKEIT-ordmærket: to stablede chevroner, tegnet som
-`components/brand/MakeItMark.tsx` fra `Logos/A only.ai`. Altid
-`currentColor`, så det følger blæk og nat uden egen variant. Ingen mos i
-mærket. Ordmærket MAKEIT bruges ikke i HQ; det tilhører moderbrandet.
+`HQ` i husets skrift, `by` i dim, og ordmærket MAKEIT bagefter.
+`components/Logo.tsx` har det i to stillinger:
 
-## Tre doser
-
-| Dosis | Hvor | Hvordan |
+| Stilling | Hvor | Hvordan |
 |---|---|---|
-| **Signatur** | App-topbar, coach-konsol, onboarding, vilkår, landing-nav, mail-header | `Logo` (full): A'et i x-højde foran "MakeIt // HQ". Aldrig større end navnet |
-| **Afsender** | Login, ny adgangskode, landingens sidste linje | `Logo variant="sender"`: "HQ" stort, "by ▲ MakeIt" under. Footeren: "Et produkt fra MakeIt · København" |
-| **Ikon** | App-ikon, favicon, splash | A'et i fuld størrelse på blæk. Det ene sted, afsenderen fylder |
+| **Én linje** (`full`) | App-sidebar og topbar, coach-konsol, onboarding, vilkår, privatliv, ung-invitation, landing-nav, mail-header | "HQ" i `text-section`, by-linjen på samme grundlinje i `text-micro` |
+| **Stablet** (`sender`) | Login, ny adgangskode, landingens footer | "HQ" stort, by-linjen under |
+| **Ikon** | App-ikon, favicon, splash | A'et alene i fuld størrelse på blæk |
 
-Hvor det ikke står: hero, overskrifter, knapper, kort, kapitler, tomme
-tilstande, som punkttegn eller mønster. Samme regel som mos: aldrig
-maling, altid signal.
+Ordmærket er tegnet fra `Logos/MAKEIT (only).ai` som `MakeItWordmark`
+i `components/brand/MakeItMark.tsx`. Altid `currentColor`: MAKE i fuld
+styrke og IT i 60 %, som i filen. Ingen mos i mærket.
+
+## Regler
+
+- Ordmærket står kun i by-linjen. Aldrig alene, aldrig større end "HQ".
+- By-linjen er aldrig højere end versalhøjden i den tekst, den står i
+  (`h-[0.8em]`). I footeren følger den sidens bredde, men "HQ" er altid
+  mindst fem gange så højt.
+- A'et står ikke længere foran navnet. Det står alene i ikonet og som
+  data (nedenfor).
+- De to skråstreger er HQ's stemmemærke inde i appen ("// HQ" foran det,
+  HQ siger). De er ikke en del af navnet.
+- Hvor det ikke står: hero, overskrifter, knapper, kort, kapitler, tomme
+  tilstande, som punkttegn eller mønster.
+- Ung-mails signerer "Ung by MAKEIT" efter samme mønster.
+
+Navnet i løbende tekst, fanetitel, vilkår og App Store er stadig
+"MakeIt // HQ" (`COMPANY.product`). Om det skal følge mærket er en
+navnebeslutning, der ikke er taget.
 
 ## Tegnet som data
 
-To læsninger af samme form, så brandet går igennem tallene uden et andet
+To læsninger af A'et, så brandet går igennem tallene uden et andet
 ikonsprog:
 
 - **Klar-måleren** (`ReadyMark`): A'et som tre trin af klar. Inderste
@@ -38,9 +53,10 @@ ikonsprog:
 
 ## Filer
 
-- `components/brand/MakeItMark.tsx`: mærket, `ReadyMark`, `UpMark`.
-- `components/Logo.tsx`: full, mark, sender.
-- `scripts/generate-app-icons.mjs`: ikoner og splash fra samme stier.
-- `public/brand/a-mark.png`: 2× PNG til mails, der ikke viser SVG.
+- `components/brand/MakeItMark.tsx`: A'et, `MakeItWordmark`, `ReadyMark`, `UpMark`.
+- `components/Logo.tsx`: full, sender, mark.
+- `lib/email/footer.ts`: `emailBrandHtml()` til mail-headers.
+- `scripts/generate-app-icons.mjs`: ikoner, splash og
+  `public/brand/makeit-wordmark.png` (2× PNG til mails, der ikke viser SVG).
 - Gate: `nord-graphics-gate.test.ts` tillader SVG i `MakeItMark.tsx`
   som brandmærke.
