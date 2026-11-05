@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { UpMark } from "@/components/brand/MakeItMark";
 
 /**
  * "Hep" on a sample crew card: press it and the count goes up by one,
@@ -35,11 +36,11 @@ export default function CheerButton({
       <span
         aria-hidden="true"
         className={cn(
-          "inline-block transition-transform duration-300 ease-out motion-reduce:transition-none",
+          "inline-flex transition-transform duration-300 ease-out motion-reduce:transition-none",
           on ? "scale-125" : "group-hover/cheer:-translate-y-0.5",
         )}
       >
-        ↑
+        <UpMark className="h-[0.7em]" />
       </span>
       <span>{on ? cheered : cheer}</span>
       <span key={on ? "on" : "off"} className="numeric spot-count">

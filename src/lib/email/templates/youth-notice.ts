@@ -8,7 +8,7 @@ import "server-only";
 import { COMPANY } from "@/lib/company";
 import type { Locale } from "@/i18n/config";
 import { sendEmail, type SendResult } from "@/lib/email/resend";
-import { emailFooterHtml, emailFooterPlain, emailTranslator } from "@/lib/email/footer";
+import { emailFooterHtml, emailFooterPlain, emailTranslator, emailBrandHtml } from "@/lib/email/footer";
 import { levelOf, noticeValues, type NoticeSignal, type SignalDetail } from "@/lib/youth/signals";
 
 function esc(s: string): string {
@@ -48,7 +48,7 @@ export async function sendYouthNoticeEmail(args: {
     <tr><td align="center" style="padding:40px 16px;">
       <table role="presentation" width="540" cellpadding="0" cellspacing="0" style="max-width:540px;width:100%;">
         <tr><td style="padding-bottom:32px;">
-          <span style="font-weight:500;font-size:14px;color:#111111;">MakeIt <span style="color:#696964;margin:0 6px;">//</span> Ung</span>
+          <span style="font-weight:500;font-size:14px;color:#111111;">${emailBrandHtml("Ung")}</span>
         </td></tr>
         <tr><td style="padding-bottom:8px;">
           <span style="font-size:13px;font-weight:500;color:#2E4A3B;">${esc(eyebrow)}</span>

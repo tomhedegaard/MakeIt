@@ -4,6 +4,7 @@ import { PUBLIC_LOGIN_HREF, PUBLIC_WAITLIST_HREF } from "@/lib/marketing/public-
 import { Menu, X } from "lucide-react";
 import { ICON } from "@/components/ui/icon";
 import NavSpy from "./NavSpy";
+import Logo from "@/components/Logo";
 
 const SECTIONS = [
   { href: "#train", key: "train" },
@@ -17,8 +18,9 @@ const SECTIONS = [
 const LINK = "text-xs text-fg-dim no-underline transition-colors hover:text-fg aria-[current=location]:text-fg";
 
 /**
- * Kalk header (reference B `.hdr`). Six section links, login and one
- * access pill. From 1024 px everything sits on one line; below that the
+ * Kalk header (reference B `.hdr`). "HQ by MAKEIT" on one line
+ * (docs/BRAND_MARK.md), six section
+ * links, login and one access pill. From 1024 px everything sits on one line; below that the
  * section links live in a native `<details>` menu, so it works without JS.
  * NavSpy marks the chapter being read; on the desktop row the mark is a
  * 2 px ink line under the link.
@@ -30,11 +32,8 @@ export default function LandingNav() {
   return (
     <header className="safe-top sticky top-0 z-50 border-b border-line bg-bg">
       <div className="mx-auto flex h-[68px] max-w-[1360px] items-center justify-between gap-4 px-4 md:px-8">
-        <Link
-          href="/"
-          className="font-display whitespace-nowrap text-[20px] tracking-[0.02em]! no-underline sm:text-[24px]"
-        >
-          MakeIt <span className="text-fg-dim">{"//"} HQ</span>
+        <Link href="/" className="whitespace-nowrap no-underline">
+          <Logo />
         </Link>
 
         <nav className="flex items-center gap-4 lg:gap-7">

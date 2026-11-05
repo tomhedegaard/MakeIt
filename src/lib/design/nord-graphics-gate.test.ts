@@ -23,7 +23,7 @@ const files = walk(SRC)
 /** Files allowed to draw their own SVG, and why. */
 const GRAPHICS: Record<string, string> = {
   "app/login/page.tsx": "Google and Apple sign-in logos (third-party brand marks)",
-  "components/Logo.tsx": "the MakeIt // HQ wordmark",
+  "components/brand/MakeItMark.tsx": "the MakeIt A: brand mark, readiness meter and up sign (docs/BRAND_MARK.md)",
   "components/adaptive/MotorGlyph.tsx": "the HQ mark: the wordmark's double slash",
   "components/anatomy/AnatomyFigure.tsx": "the muscle figure",
   "components/anatomy/AnatomySprite.tsx": "the muscle figure, defined once for a list",

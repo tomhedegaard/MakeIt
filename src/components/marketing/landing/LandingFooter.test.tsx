@@ -8,8 +8,9 @@ const html = render(<LandingFooter />);
 const f = da.Marketing.landing.footer;
 
 describe("LandingFooter", () => {
-  it("carries the wordmark and the English slogan (spec D4)", () => {
-    expect(html).toContain("MakeIt");
+  it("ends on HQ by MAKEIT and the English slogan (spec D4, docs/BRAND_MARK.md)", () => {
+    expect(html).toMatch(/>HQ<\/p>[\s\S]*by[\s\S]*<svg[^>]*aria-label="MakeIt"/);
+    expect(html).not.toContain("//");
     expect(html).toContain(f.slogan);
   });
 

@@ -20,6 +20,8 @@ import type { Locale } from "@/i18n/config";
 import daMessages from "../../../messages/da";
 import enMessages from "../../../messages/en";
 
+const HOST = COMPANY.appUrl;
+
 function legalLineParts(): string[] {
   return [COMPANY.legal.entity ?? COMPANY.name, COMPANY.legal.address ?? ""]
     .filter(Boolean) as string[];
@@ -30,6 +32,15 @@ export function emailFooterHtml(): string {
   const legal = legalLineParts().join(" · ");
   const link = `<a href="${COMPANY.marketingUrl}" style="color:#5E5E59;">${COMPANY.marketingDomain}</a>`;
   return `${legal} · ${link}`;
+}
+
+/**
+ * The mail header's name (docs/BRAND_MARK.md): the product, then
+ * "by" and the MakeIt wordmark as a hosted 2× PNG, since mail clients
+ * do not render SVG. With images blocked the alt reads "by MakeIt".
+ */
+export function emailBrandHtml(product = "HQ"): string {
+  return `${product}<span style="font-weight:400;font-size:11px;color:#696964;margin:0 5px 0 7px;">by</span><img src="${HOST}/brand/makeit-wordmark.png" width="48" height="10" alt="${COMPANY.name}" style="display:inline-block;border:0;">`;
 }
 
 /** Plain-text equivalent for text/plain mime parts. */

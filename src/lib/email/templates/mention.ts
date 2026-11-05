@@ -9,8 +9,7 @@ import { sendEmail, type SendResult } from "@/lib/email/resend";
 import {
   emailFooterHtml,
   emailTranslator,
-  type EmailT,
-} from "@/lib/email/footer";
+  type EmailT, emailBrandHtml } from "@/lib/email/footer";
 import type { Locale } from "@/i18n/config";
 
 export type MentionEmailArgs = {
@@ -57,7 +56,7 @@ function renderHtml(args: MentionEmailArgs & { t: EmailT; tFooter: EmailT }): st
       <table role="presentation" width="540" cellpadding="0" cellspacing="0" style="max-width:540px;width:100%;">
         <tr><td style="padding-bottom:32px;">
           <span style="font-weight:500;letter-spacing:-0.02em;font-size:14px;color:#111111;">
-            MakeIt <span style="color:#696964;margin:0 6px;">//</span> HQ
+            ${emailBrandHtml()}
           </span>
         </td></tr>
         <tr><td style="padding-bottom:8px;">

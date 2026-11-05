@@ -1,36 +1,34 @@
 import { cn } from "@/lib/utils";
-import { COMPANY } from "@/lib/company";
+import MakeItMark, { MakeItWordmark } from "@/components/brand/MakeItMark";
 
+/**
+ * The product's name with its sender (docs/BRAND_MARK.md). HQ is the
+ * product; MakeIt is who makes it, so the name is "HQ" and MakeIt signs
+ * it with the wordmark: "HQ by MAKEIT".
+ *
+ *   full    one line, for bars: app and coach chrome, onboarding, legal
+ *           pages, the landing nav.
+ *   sender  stacked, "HQ" large with the by-line under it: login and the
+ *           password pages, where HQ introduces itself.
+ *   mark    the A alone, 24 px: where only a glyph fits.
+ */
 export default function Logo({
   className,
   variant = "full",
 }: {
   className?: string;
-  variant?: "full" | "mark";
+  variant?: "full" | "mark" | "sender";
 }) {
   if (variant === "mark") {
-    return (
-      <svg viewBox="0 0 32 32" className={cn("h-6 w-6", className)} aria-hidden>
-        <rect x="1" y="1" width="30" height="30" rx="0" stroke="currentColor" strokeWidth="1.5" fill="none" />
-        <path d="M8 22 V10 L13 18 L18 10 V22" stroke="currentColor" strokeWidth="2.2" fill="none" strokeLinejoin="miter" />
-        <rect x="21" y="14" width="3" height="8" fill="currentColor" />
-      </svg>
-    );
+    return <MakeItMark className={cn("h-6", className)} />;
   }
+  const stacked = variant === "sender";
   return (
-    <div
-      className={cn("flex items-center gap-2.5 select-none", className)}
-      aria-label={COMPANY.product}
-    >
-      <svg viewBox="0 0 32 32" className="h-5 w-5" aria-hidden>
-        <rect x="1" y="1" width="30" height="30" rx="0" stroke="currentColor" strokeWidth="1.5" fill="none" />
-        <path d="M8 22 V10 L13 18 L18 10 V22" stroke="currentColor" strokeWidth="2.2" fill="none" strokeLinejoin="miter" />
-        <rect x="21" y="14" width="3" height="8" fill="currentColor" />
-      </svg>
-      <span className="font-display text-copy tracking-[-0.02em]">
-        MakeIt
-        <span className="mx-1.5 text-fg-faint" aria-hidden>{"//"}</span>
-        HQ
+    <div className={cn("flex select-none", stacked ? "flex-col gap-1.5" : "items-baseline gap-2", className)}>
+      <span className={cn("font-display", stacked ? "text-title" : "text-section")}>HQ</span>
+      <span className="flex items-baseline gap-1.5 text-micro text-fg-dim">
+        by
+        <MakeItWordmark className="text-fg" />
       </span>
     </div>
   );

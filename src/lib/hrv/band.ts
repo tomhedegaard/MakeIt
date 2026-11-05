@@ -66,6 +66,11 @@ export function qualitativeFromBucket(
   return "lav";
 }
 
+/** The three steps of the readiness meter (brand mark as data): lav 1, midt 2, ro 3. */
+export function readyLevel(band: QualitativeBand): 1 | 2 | 3 {
+  return band === "ro" ? 3 : band === "midt" ? 2 : 1;
+}
+
 export function isOutOfBand(bucket: ReadinessBucket | null): boolean {
   return bucket != null && bucket !== "normal";
 }
