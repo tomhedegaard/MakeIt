@@ -31,16 +31,16 @@
       "newMembers": "New members: {count}",
       "topPostsHeader": "Top posts:",
       "open": "Open: {url}",
-      "signoff": "— MakeIt // HQ"
+      "signoff": "— HQ by MakeIt"
     }
   },
   "welcome": {
     "subject": "Welcome to the crew, @{handle}",
-    "title": "Welcome to the crew — MakeIt // HQ",
+    "title": "Welcome to the crew — HQ by MakeIt",
     "eyebrow": "Welcome to the crew",
     "greeting": "Hey @{handle}.",
     "youAreIn": "You're in.",
-    "intro": "Thanks for joining MakeIt // HQ. I'm <strong>Mikael Munk</strong> — head coach in the crew, and I review every form-check personally. Write me directly on this email (or @Munk in the feed) if you have questions.",
+    "intro": "Thanks for joining HQ by MakeIt. I'm <strong>Mikael Munk</strong> — head coach in the crew, and I review every form-check personally. Write me directly on this email (or @Munk in the feed) if you have questions.",
     "programLabel": "Your program",
     "firstSession": "First session: {label}",
     "getStarted": "How to get going:",
@@ -70,7 +70,7 @@
   },
   "mention": {
     "subject": "@{author} mentioned you in a comment",
-    "title": "You were mentioned — MakeIt // HQ",
+    "title": "You were mentioned — HQ by MakeIt",
     "eyebrow": "You were mentioned",
     "headline": "@{author} mentioned you in a comment.",
     "greeting": "Hey @{recipient} — here's what they wrote:",
@@ -80,30 +80,30 @@
       "postHeader": "The post:\n{context}",
       "commentHeader": "Comment:\n{content}",
       "open": "Open: {url}",
-      "signoff": "— MakeIt // HQ"
+      "signoff": "— HQ by MakeIt"
     }
   },
   "coachReview": {
     "subject": "Mikael Munk replied to your {exercise}",
     "fallbackExercise": "form-check",
-    "title": "Form-check answered — MakeIt // HQ",
+    "title": "Form-check answered — HQ by MakeIt",
     "eyebrow": "Form-check answered",
     "headline": "Mikael Munk reviewed your {exercise}.",
     "greeting": "Hey @{handle} — here's his note:",
     "coachByline": "Mikael Munk · @Munk",
     "aiAssessment": "AI assessment · {score}/100",
-    "cta": "Open in MakeIt // HQ →",
+    "cta": "Open in HQ →",
     "text": {
       "headline": "Mikael Munk reviewed your {exercise}.",
       "greeting": "Hey @{handle} — here's his note:",
       "aiAssessment": "AI assessment · {score}/100",
       "open": "Open: {url}",
-      "signoff": "— MakeIt // HQ"
+      "signoff": "— HQ by MakeIt"
     }
   },
   "coachAdherenceDigest": {
     "subject": "Crew adherence · {range}",
-    "title": "Crew adherence — MakeIt // HQ",
+    "title": "Crew adherence — HQ by MakeIt",
     "eyebrow": "Crew adherence · {range}",
     "greeting": "Hey @{handle}.",
     "emptyCrew": "Crew is empty — no onboarded members yet.",
@@ -124,12 +124,12 @@
       "atRiskHeader": "CHECK IN WITH THESE:",
       "strongHeader": "RECOGNISE THESE STRONG WEEKS:",
       "open": "Open: {url}",
-      "signoff": "— MakeIt // HQ"
+      "signoff": "— HQ by MakeIt"
     }
   },
   "coachMorningReport": {
     "subject": "Morning report · {date}",
-    "title": "Morning report — MakeIt // HQ",
+    "title": "Morning report — HQ by MakeIt",
     "eyebrow": "Morning report · {date}",
     "greeting": "Hey @{handle}.",
     "urgentHeader": "Needs you now",
@@ -157,7 +157,7 @@
       "yesterdayHeader": "YESTERDAY:",
       "yesterdayLine": "Sessions: {completed} done, {skipped} skipped · PRs: {prs} · Form-checks: {uploads} · Adaptations: {accepted}/{modifiers} accepted",
       "open": "Open: {url}",
-      "signoff": "— MakeIt // HQ"
+      "signoff": "— HQ by MakeIt"
     }
   }
 }

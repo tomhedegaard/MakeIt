@@ -1,4 +1,4 @@
-/* MakeIt // HQ — service worker
+/* HQ by MakeIt — service worker
  *
  * Two responsibilities (docs/APP_STORE_PLAN.md Fase 1):
  *  1. Web Push — payload contract from src/lib/push.ts:

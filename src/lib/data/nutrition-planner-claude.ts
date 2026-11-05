@@ -65,7 +65,7 @@ type ParsedPlan = z.infer<typeof PlanSchema>;
 
 const ALLOWLIST_BLOCK = flattenAllowlist();
 
-const SYSTEM_PROMPT = `Du er head nutrition-coach for MakeIt // HQ, en dansk styrketræningsplatform.
+const SYSTEM_PROMPT = `Du er head nutrition-coach for HQ by MakeIt, en dansk styrketræningsplatform.
 Du planlægger ugentlige måltidsplaner for medlemmer der træner styrke 3-5 gange om ugen.
 
 # Brand-stemme

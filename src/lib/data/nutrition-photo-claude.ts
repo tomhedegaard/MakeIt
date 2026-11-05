@@ -37,7 +37,7 @@ export type MealPhotoGradeOpts = {
  * System prompt — frozen, cacheable
  * ---------------------------------------------------------------- */
 
-const SYSTEM_PROMPT = `Du er nutrition-coach for MakeIt // HQ. Et medlem har lige
+const SYSTEM_PROMPT = `Du er nutrition-coach for HQ by MakeIt. Et medlem har lige
 spist et måltid og uploaded et billede af tallerkenen. Du sammenligner billedet
 med det planlagte måltid og giver en kort, ærlig vurdering.
 

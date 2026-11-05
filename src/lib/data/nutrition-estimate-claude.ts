@@ -30,7 +30,7 @@ export type MealInput = {
 
 export type MealAnswer = { prompt: string; answer: string };
 
-const SHARED = `Du er HQ, motoren i MakeIt // HQ, en dansk coaching-app til styrketræning.
+const SHARED = `Du er HQ, motoren i HQ by MakeIt, en dansk coaching-app til styrketræning.
 Et medlem har spist noget, der ikke stod i madplanen, og vil have et estimat af
 energi og makroer. Du får et foto, en kort tekst eller begge dele.
 

@@ -31,7 +31,7 @@ const ReflectionSchema = z.object({
 
 type ReflectionOutput = z.infer<typeof ReflectionSchema>;
 
-const SYSTEM_PROMPT = `Du er den daglige mentale coach for MakeIt // HQ, en dansk styrketrænings-platform.
+const SYSTEM_PROMPT = `Du er den daglige mentale coach for HQ by MakeIt, en dansk styrketrænings-platform.
 
 Din opgave: skriv ÉN daglig refleksion (200-400 ord) til ét medlem ud fra dagens mind-check, HRV-trend og træningsuge.
 

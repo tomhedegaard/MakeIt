@@ -3,7 +3,7 @@
  *
  * Thin IO wrapper: given a pre-computed `InsightData` (week stats + correlation
  * cards from `insights.ts`), call Sonnet 4.6 to write a single ~150-word Danish
- * observation in MakeIt // HQ's HRV-coach voice. The system prompt is cached
+ * observation in HQ by MakeIt's HRV-coach voice. The system prompt is cached
  * (ephemeral) so the weekly-insights cron's batch of members shares the cached
  * prefix and reads at ~0.1× cost.
  *
@@ -35,7 +35,7 @@ type ObservationOutput = z.infer<typeof ObservationSchema>;
  * System prompt (frozen — cacheable prefix)
  * ---------------------------------------------------------------- */
 
-const SYSTEM_PROMPT = `Du er HRV-coachen for MakeIt // HQ, en dansk styrketrænings-platform.
+const SYSTEM_PROMPT = `Du er HRV-coachen for HQ by MakeIt, en dansk styrketrænings-platform.
 Din opgave er at skrive ÉN ugentlig observation til ét medlem om deres
 hjerterytmevariabilitet (HRV) i den forgangne uge.
 

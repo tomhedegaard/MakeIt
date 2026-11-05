@@ -39,7 +39,7 @@ function renderHtml(args: HrvAlertEmailArgs): string {
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="dark light">
-  <title>En personlig besked fra Mikael Munk — MakeIt // HQ</title>
+  <title>En personlig besked fra Mikael Munk — HQ by MakeIt</title>
 </head>
 <body style="margin:0;padding:0;background:#FFFFFF;color:#111111;font-family:'Schibsted Grotesk',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;">
@@ -97,7 +97,7 @@ function renderHtml(args: HrvAlertEmailArgs): string {
                       ${notes}
                     </div>
                     <div style="font-size:14px;line-height:1.6;color:#5E5E59;margin-top:16px;">
-                      — Mikael Munk, MakeIt // HQ
+                      — Mikael Munk, HQ by MakeIt
                     </div>
                   </td>
                 </tr>
@@ -141,11 +141,11 @@ function renderText(args: HrvAlertEmailArgs): string {
     "",
     args.coachNotes,
     "",
-    "— Mikael Munk, MakeIt // HQ",
+    "— Mikael Munk, HQ by MakeIt",
     "",
     `Åbn din HRV: ${args.baseUrl}/hrv`,
     "",
-    "— MakeIt // HQ",
+    "— HQ by MakeIt",
     emailFooterPlain(),
   ].join("\n");
 }

@@ -76,7 +76,7 @@ export type AdaptationDecisionOutput = z.infer<typeof AdaptationDecisionSchema>;
  * retraining (e.g. weekly Munk few-shot refresh).
  * ---------------------------------------------------------------- */
 
-export const SYSTEM_PROMPT = `Du er Munks assistent for MakeIt // HQ, en dansk styrketrænings-platform.
+export const SYSTEM_PROMPT = `Du er Munks assistent for HQ by MakeIt, en dansk styrketrænings-platform.
 
 Din opgave er at REFINE et forslag fra den deterministiske rule-layer.
 Rule-layeren har allerede valgt en action og en confidence baseret på

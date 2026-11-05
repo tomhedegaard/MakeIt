@@ -1,5 +1,5 @@
 ---
-name: MakeIt // HQ
+name: HQ by MakeIt
 description: Dansk coaching-app til styrketræning i retning Nord. Hvid flade, én skrift, 1 px linjer, mos som eneste accent.
 colors:
   ink: "#111111"
@@ -157,7 +157,7 @@ components:
     typography: "{typography.micro}"
 ---
 
-# Design System: MakeIt // HQ
+# Design System: HQ by MakeIt
 
 Kilde: den shippede kode (`src/app/globals.css`, `src/components/ui/*`, `src/components/app/*`), briefen `docs/superpowers/specs/2026-09-26-nord-redesign-design.md` og `docs/DOMAIN_COLOR_SYSTEM.md`. Hvor koden og briefen er uenige, gælder koden, og afvigelsen står her. Frontmatter er normativ; prosaen forklarer brugen.
 
@@ -215,7 +215,7 @@ En monokrom blæk-og-papir-base med én brand-accent (mos) og fire domænefarver
     - Nye mørke blokke på landingen kræver samme begrundelse og en linje her. Undtagelsen gælder ikke medlems-, coach-, login- eller onboardingflader.
 
 ### Named Rules
-**The Signature Rule.** HQ er produktet, MakeIt er afsenderen. Navnet står som "HQ by MAKEIT": "HQ" i husets skrift, "by" i dim og ordmærket MAKEIT bagefter. På én linje i bjælker, stablet hvor HQ præsenterer sig (login, landingens footer). Ordmærket bruges kun i by-linjen og aldrig alene. A'et står alene i fuld størrelse kun i app-ikonet og som data to steder: klar-måleren ved HRV-tallet og op-tegnet. Aldrig i hero, overskrifter, knapper, kort eller som mønster. De to skråstreger er HQ's stemmemærke inde i appen, ikke en del af navnet. Regler: `docs/BRAND_MARK.md`.
+**The Signature Rule.** HQ er produktet, MakeIt er afsenderen. Navnet står som "HQ by MAKEIT": "HQ" i husets skrift, "by" i dim og ordmærket MAKEIT bagefter. På én linje i bjælker, stablet hvor HQ præsenterer sig (login, landingens footer). Ordmærket bruges kun i by-linjen og aldrig alene. A'et står alene i fuld størrelse kun i app-ikonet og som data to steder: klar-måleren ved HRV-tallet og op-tegnet. Aldrig i hero, overskrifter, knapper, kort eller som mønster. De to skråstreger er HQ's stemmemærke inde i appen, ikke en del af navnet. I tekst hedder produktet "HQ by MakeIt". Regler: `docs/BRAND_MARK.md`.
 
 **The Mos Is Not Paint Rule.** Mos er aldrig knapfyld og aldrig en stor flade. Primærknappen er blæk.
 

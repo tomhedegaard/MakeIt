@@ -1,4 +1,4 @@
-# MakeIt // HQ
+# HQ by MakeIt
 
 Det interne univers for MakeIt-crewet. Lukket beta. Bygget separat fra
 webshoppen [nowmakeit.eu](https://www.nowmakeit.eu) — webshoppen røres ikke.
@@ -233,7 +233,7 @@ email-delen og fortsætter normalt):
 
 ```env
 RESEND_API_KEY=re_...                                   # API-nøgle
-RESEND_FROM_EMAIL=MakeIt // HQ <hq@nowmakeit.eu>        # verificeret domæne
+RESEND_FROM_EMAIL=HQ by MakeIt <hq@nowmakeit.eu>        # verificeret domæne
 RESEND_REPLY_TO=munk@nowmakeit.eu                       # default: Mikael
 ```
 

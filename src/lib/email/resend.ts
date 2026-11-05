@@ -12,12 +12,12 @@ export const RESEND_ENABLED = Boolean(process.env.RESEND_API_KEY);
 
 /**
  * From-address for all outbound mail. In production: verify a domain
- * in Resend and set RESEND_FROM_EMAIL to e.g. "MakeIt // HQ <hq@nowmakeit.eu>".
+ * in Resend and set RESEND_FROM_EMAIL to e.g. "HQ by MakeIt <hq@nowmakeit.eu>".
  * For local dev / unverified accounts, Resend's onboarding sandbox
  * accepts mail addressed to your own account email.
  */
 const FROM_EMAIL =
-  process.env.RESEND_FROM_EMAIL ?? "MakeIt // HQ <onboarding@resend.dev>";
+  process.env.RESEND_FROM_EMAIL ?? "HQ by MakeIt <onboarding@resend.dev>";
 
 /** Reply-to defaults to the head coach's address. */
 const REPLY_TO = process.env.RESEND_REPLY_TO ?? "munk@nowmakeit.eu";
